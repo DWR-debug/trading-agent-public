@@ -178,7 +178,7 @@ def job_duration_benchmarks(
                 continue
             duration = max(0, int((finished - started).total_seconds()))
             job_name = str(job.get("name") or "")
-            for candidate in ("Q218", "Q219", "Q220", "Q221"):
+            for candidate in ("Q104:I19", "Q218", "Q220", "Q221"):
                 if candidate in job_name:
                     samples.setdefault(candidate, []).append(duration)
                     break
@@ -264,9 +264,17 @@ def infer_resource(workflow: str, job: str, runner: str | None) -> str:
 
 
 def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    hidden_non_research = {
+        "Resource Dashboard Update",
+        "Current Operational Status Synchronizer",
+        "Current Status Drift Guard",
+        "Spine Next-Gate Autonomous Router",
+    }
     active = [
         x for x in runs
-        if isinstance(x, dict) and x.get("status") in {"queued", "in_progress", "waiting", "pending"}
+        if isinstance(x, dict)
+        and x.get("status") in {"queued", "in_progress", "waiting", "pending"}
+        and str(x.get("name") or "") not in hidden_non_research
     ]
     active.sort(key=lambda x: str(x.get("created_at", "")), reverse=True)
     out = []
@@ -342,13 +350,13 @@ def candidate_pipeline(
     job_benchmarks: dict[str, dict[str, int | str]],
 ) -> list[dict[str, Any]]:
     result = []
-    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in ("Q218", "Q219", "Q220", "Q221")}
+    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in ("Q104:I19", "Q218", "Q220", "Q221")}
     for item in work:
         text_value = f"{item.get('task', '')} {item.get('job', '')}"
         for candidate in active_by_candidate:
             if candidate in text_value:
                 active_by_candidate[candidate].append(item)
-    for candidate in ("Q218", "Q219", "Q220", "Q221"):
+    for candidate in ("Q104:I19", "Q218", "Q220", "Q221"):
         row = next((x for x in top4 if str(x.get("code")) == candidate), None)
         if not row:
             continue
@@ -469,6 +477,214 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "current_tasks": [w.get("task") for w in assignments[:4]],
         })
     return out
+
+
+
+def planned_capacity_plan(
+    resources: list[dict[str, Any]],
+    work: list[dict[str, Any]],
+    top4: list[dict[str, Any]],
+    job_benchmarks: dict[str, dict[str, int | str]],
+    os_state: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Compile a non-authorizing next-work plan from the real bounded backlog.
+
+    The plan is intentionally conservative: active candidate work is excluded,
+    blocked prerequisites are displayed as blocked rather than executable, and
+    nothing is invented to occupy free capacity.
+    """
+    active_text = [f"{x.get('task','')} {x.get('job','')}".lower() for x in work]
+
+    overlay = os_state.get("top_candidate_capacity_overlay", {})
+    a_priority = [str(x) for x in overlay.get("windows_A", {}).get("priority", [])]
+    b_priority = [str(x) for x in overlay.get("windows_B", {}).get("priority", [])]
+    queue = [
+        {
+            "plan_id": "Q104-I19-COMPILER",
+            "candidate": "Q104:I19",
+            "lane": "FORMAL READINESS",
+            "task": "concept-specific PIT compiler after 13F acceptance-time join",
+            "preferred": ["Windows self-hosted A", "GitHub-hosted Ubuntu x64"],
+            "readiness": "READY_AFTER_ACCEPTANCE_JOIN",
+            "basis": "frozen Q104:I19 contract + current acceptance-time join PR",
+        },
+        {
+            "plan_id": "Q104-I19-INDEPENDENT-REPRO",
+            "candidate": "Q104:I19",
+            "lane": "FORMAL READINESS",
+            "task": "independent reproduction of compiler/PIT result",
+            "preferred": ["Windows self-hosted C", "GitHub-hosted ARM64"],
+            "readiness": "BLOCKED_UNTIL_COMPILER_RECEIPT",
+            "basis": "next gate explicitly requires independent reproduction",
+        },
+        {
+            "plan_id": "Q218-PIT",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "historical mandatory/voluntary 10-K → 8-K pairing and PIT lineage",
+            "preferred": ["Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
+            "readiness": "READY_SOURCE_PIT",
+            "basis": "current Q218 source/PIT workpack",
+        },
+        {
+            "plan_id": "Q219-PIT",
+            "candidate": "Q219",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "historical options breadth and deterministic post-filing response PIT",
+            "preferred": ["GitHub-hosted Ubuntu x64", "Windows self-hosted B"],
+            "readiness": "READY_SOURCE_PIT",
+            "basis": "Q129 reproduction plus Q219 breadth lead; PIT still must be proven",
+        },
+        {
+            "plan_id": "Q220-PIT",
+            "candidate": "Q220",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "deterministic narrative/XBRL presentation mapping and PIT",
+            "preferred": ["Windows self-hosted B", "GitHub-hosted ARM64"],
+            "readiness": "READY_SOURCE_SCHEMA",
+            "basis": "SEC FSN schema gate + XBRL concept-freeze audit",
+        },
+        {
+            "plan_id": "Q221-PIT",
+            "candidate": "Q221",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "historical USAspending public boundary and issuer/entity mapping",
+            "preferred": ["GitHub-hosted Ubuntu x64", "Windows self-hosted B"],
+            "readiness": "READY_SOURCE_CLOCK",
+            "basis": "USAspending public-clock contract ready; applicability/entity mapping open",
+        },
+        {
+            "plan_id": "Q224-EDGAR-LOG",
+            "candidate": "Q224",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "modern EDGAR access-log archive census and request→filing decoding",
+            "preferred": ["Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
+            "readiness": "READY_DISCOVERY",
+            "basis": "official EDGAR log channel; archive/schema/identity gate remains",
+        },
+        {
+            "plan_id": "Q228-CORRESPONDENCE",
+            "candidate": "Q228",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "historical SEC correspondence census, release clock and review identity",
+            "preferred": ["Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
+            "readiness": "READY_DISCOVERY",
+            "basis": "SEC correspondence source gate; selection mechanism remains a control",
+        },
+        {
+            "plan_id": "Q231-FOIA",
+            "candidate": "Q231",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "historical SEC FOIA publication clock and requester/issuer mapping",
+            "preferred": ["GitHub-hosted Ubuntu x64", "Windows self-hosted B"],
+            "readiness": "READY_DISCOVERY",
+            "basis": "official monthly FOIA logs; exact publication clock still open",
+        },
+        {
+            "plan_id": "Q218-ADVERSARIAL",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "bounded adversarial contract review of Q218 source/PIT assumptions",
+            "preferred": ["Free AI pool"],
+            "readiness": "READY_AI_FABRIC",
+            "basis": "independent adversarial review; AI output is non-scientific and non-authorizing",
+            "allow_parallel_with_candidate": True,
+        },
+        {
+            "plan_id": "Q221-ADVERSARIAL",
+            "candidate": "Q221",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "bounded adversarial contract review of Q221 public-clock/entity-map assumptions",
+            "preferred": ["Free AI pool"],
+            "readiness": "READY_AI_FABRIC",
+            "basis": "independent adversarial review; AI output is non-scientific and non-authorizing",
+            "allow_parallel_with_candidate": True,
+        },
+    ]
+
+    def priority_bonus(item: dict[str, Any]) -> int:
+        candidate = str(item.get("candidate"))
+        if candidate == "Q104:I19" and any("Q104 I19" in x for x in a_priority):
+            return -100
+        if candidate in {x for x in b_priority}:
+            return -50
+        return 0
+
+    # Each resource receives at most one next action. Existing active work blocks
+    # that candidate globally to prevent dashboard planning from recommending duplicates.
+    assigned_candidates: set[str] = set()
+    plans: dict[str, list[dict[str, Any]]] = {str(r["name"]): [] for r in resources}
+
+    for item in sorted(queue, key=lambda x: (priority_bonus(x), queue.index(x))):
+        candidate = str(item["candidate"])
+        candidate_active = any(candidate.lower() in value for value in active_text)
+        if candidate_active and not item.get("allow_parallel_with_candidate", False):
+            continue
+        if candidate in assigned_candidates and not item.get("allow_parallel_with_candidate", False):
+            continue
+        if item.get("plan_id") == "Q218-ADVERSARIAL" and any("free ai" in value and "q218" in value for value in active_text):
+            continue
+        if item.get("plan_id") == "Q221-ADVERSARIAL" and any("free ai" in value and "q221" in value for value in active_text):
+            continue
+        if item["readiness"].startswith("BLOCKED_"):
+            continue
+        placed = False
+        for resource_name in item["preferred"]:
+            if plans.get(resource_name):
+                continue
+            resource = next((r for r in resources if str(r["name"]) == resource_name), None)
+            if resource is None:
+                continue
+            if resource.get("capacity_state") == "operating":
+                continue
+            benchmark = job_benchmarks.get(candidate)
+            plans[resource_name].append({
+                "plan_id": item["plan_id"],
+                "candidate": candidate,
+                "lane": item["lane"],
+                "task": item["task"],
+                "readiness": item["readiness"],
+                "basis": item["basis"],
+                "scheduled": True,
+                "execution_status": "planned_not_started",
+                "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
+                "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
+            })
+            assigned_candidates.add(candidate)
+            placed = True
+            break
+        if placed:
+            continue
+
+    # Surface genuinely useful blocked follow-on capacity without presenting it as queued work.
+    c_resource = "Windows self-hosted C"
+    if c_resource in plans and not plans[c_resource] and not any("q104:i19" in value for value in active_text):
+        plans[c_resource].append({
+            "plan_id": "Q104-I19-INDEPENDENT-REPRO",
+            "candidate": "Q104:I19",
+            "lane": "FORMAL READINESS",
+            "task": "independent reproduction of compiler/PIT result",
+            "readiness": "BLOCKED_UNTIL_COMPILER_RECEIPT",
+            "basis": "next gate explicitly requires independent reproduction",
+            "scheduled": False,
+            "execution_status": "blocked_on_prerequisite",
+            "expected_duration_seconds": None,
+            "duration_sample_count": 0,
+        })
+
+    rows=[]
+    for resource in resources:
+        name=str(resource["name"])
+        rows.append({
+            "resource": name,
+            "current_assignments": int(resource.get("current_assignments") or 0),
+            "capacity_state": str(resource.get("capacity_state") or "unknown"),
+            "planned_assignments": plans.get(name, []),
+            "planned_count": sum(1 for x in plans.get(name, []) if x.get("scheduled")),
+            "blocked_count": sum(1 for x in plans.get(name, []) if not x.get("scheduled")),
+            "unallocated_reason": None if plans.get(name) else "no independent ready non-duplicate work assigned by bounded planner",
+        })
+    return rows
 
 
 
@@ -603,8 +819,15 @@ def main() -> None:
         {"name": "GitHub-hosted ARM64", "type": "cloud", "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
         {"name": "Free AI pool", "type": "cloud", "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
     ]
-    priority_codes = {"Q218","Q219","Q220","Q221"}
+    priority_codes = {"Q104:I19","Q218","Q220","Q221"}
     top4 = [x for x in state_board if x.get("code") in priority_codes]
+    planned_capacity = planned_capacity_plan(
+        enrich_resources(configured_resources, runners, work),
+        work,
+        top4,
+        job_benchmarks,
+        os_state,
+    )
 
     payload = {
         "schema_version": 2,
@@ -624,10 +847,15 @@ def main() -> None:
             "ai_providers": len(ai),
             "active_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "operating"),
             "available_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "available"),
+            "planned_capacity_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if item.get("scheduled")),
+            "blocked_planned_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if not item.get("scheduled")),
+            "unallocated_routable_items": sum(1 for row in planned_capacity if row.get("capacity_state") == "available" and not row.get("planned_assignments")),
+            "planned_capacity_note": "bounded advisory plan only; not an execution queue, receipt or scientific authorization.",
         },
         "resources": enrich_resources(configured_resources, runners, work),
         "runner_live_snapshot": runners,
         "work_assignments": work,
+        "planned_capacity": planned_capacity,
         "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks),
         "duration_benchmarks": workflow_benchmarks,
         "job_duration_benchmarks": job_benchmarks,
@@ -639,6 +867,7 @@ def main() -> None:
             "highlights": recent_research_highlights(status_text),
             "research_board": state_board,
             "top4": top4,
+            "planned_capacity_note": "bounded advisory plan only; not an execution queue, receipt or scientific authorization.",
         },
         "lane_model": {
             "lane_a": os_state.get("two_lane_research_mode", {}).get("lane_a", {}),
