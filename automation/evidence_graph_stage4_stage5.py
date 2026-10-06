@@ -62,6 +62,53 @@ def jac(a,b):
     u=a|b
     return len(a&b)/len(u) if u else 1.0
 
+def candidate_signature(spec,links):
+    """Stable public helper used by Stage 5 unit tests and external diagnostics."""
+    normalized=defaultdict(set)
+    for cid,values in (links or {}).items():
+        normalized[str(cid)].update(str(v) for v in (values or []))
+    return sig(spec,normalized)
+
+
+def jaccard(a,b):
+    return jac(set(a),set(b))
+
+
+def novelty_analysis(candidates):
+    rows=[]
+    ids=sorted(candidates)
+    for a in ids:
+        best=0;peer=None;top=[]
+        for b in ids:
+            if a==b: continue
+            sa,sb=candidates[a],candidates[b]
+            tj=jaccard(sa["tokens"],sb["tokens"]); cj=jaccard(sa["components"],sb["components"]); dj=jaccard(sa["source_domains"],sb["source_domains"])
+            score=.60*tj+.25*cj+.15*dj
+            top.append((b,score,tj,cj,dj))
+            if score>best: best=score;peer=b
+        cls="POTENTIAL_CONVERGENCE" if best>=.78 else "AMBIGUOUS" if best>=.45 else "LIKELY_ORTHOGONAL"
+        rows.append({"candidate":a,"max_convergence_score":round(best,6),"most_overlapping_peer":peer,
+                     "novelty_score":round(1-best,6),"overlap_class":cls,
+                     "top_peers":[{"candidate":b,"score":round(s,6),"token_jaccard":round(t,6),"component_jaccard":round(c,6),"domain_jaccard":round(d,6)}
+                                  for b,s,t,c,d in sorted(top,key=lambda x:-x[1])[:5]]})
+    return rows
+
+
+def bridge_proposals(candidates):
+    out=[];ids=sorted(candidates)
+    for i,a in enumerate(ids):
+        for b in ids[i+1:]:
+            sa,sb=candidates[a],candidates[b]
+            shared=sorted(set(sa["components"]) & set(sb["components"]))
+            mo=jaccard(sa["tokens"],sb["tokens"])
+            if shared and mo<.45:
+                out.append({"proposal_id":"HYP-"+sha({"a":a,"b":b,"shared":shared})[:16],"type":"shared-structure-different-mechanism",
+                            "candidates":[a,b],"shared_components":shared,"mechanism_overlap":round(mo,6),
+                            "status":"HYPOTHESIS_PROPOSAL_REVIEW_REQUIRED",
+                            "text":"Shared deterministic infrastructure may expose a cross-channel state-transition hypothesis; no composite candidate is created."})
+    return out
+
+
 def build():
     node_map={}; edges=[]; docs=[]; components=defaultdict(set)
     contract=load_json(ROOT/"research/governance/knowledge_relation_graph_contract_2026_10_06.json") or {}
