@@ -17,7 +17,6 @@ def test_top4_capacity_has_exact_four_candidates_and_no_authority():
 def test_top4_workpacks_are_mechanistically_separate():
     q104=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q104:I19"])
     q218=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q218"])
-    q219=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q219"])
     q220=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q220"])
     q221=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q221"])
     assert "q104_i19_xbrl_pit_compiler" in q104
