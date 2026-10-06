@@ -2,12 +2,28 @@
   "schema_version": "1.0",
   "record_type": "persistent_literature_research_policy",
   "status": "ACTIVE",
-  "effective_date_utc": "2026-10-05",
+  "effective_date_utc": "2026-10-06",
   "purpose": "Continuously discover high-value scientific mechanisms and public information channels without allowing discovery to bypass PIT, robustness, performance or safety gates.",
+  "source_scope": {
+    "free_access_only": true,
+    "include_classes": [
+      "open_access_peer_reviewed_literature",
+      "preprints_working_papers_dissertations_conference_papers",
+      "public_research_technical_regulatory_and_standards_documents",
+      "public_blogs_essays_and_research_notes",
+      "public_github_repositories_readmes_issues_and_pull_requests",
+      "public_data_portals_and_documentation",
+      "other_legally_accessible_public_web_sources"
+    ],
+    "paywalled_only_sources_excluded": true,
+    "license_and_terms_must_allow_access": true,
+    "exhaustiveness": "broad_continuous_discovery; not a claim of exhaustive coverage of every free source"
+  },
   "cadence": {
     "assistant_daily_literature_radar": "daily",
     "assistant_weekly_deep_research": "weekly",
     "repository_public_metadata_scout": "every_6_hours",
+    "public_web_blog_repo_discovery": "every_6_hours",
     "research_round_chaining": "after bounded rounds when prerequisites are satisfied"
   },
   "search_axes": [
