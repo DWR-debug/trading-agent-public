@@ -590,7 +590,7 @@
         "SEC_EDGAR_SUBMISSIONS"
       ],
       "source_sample_statuses": {
-        "PYPI_STATS": "INFRA_ACCESS_BLOCKED",
+        "PYPI_STATS": "SOURCE_DATA_SAMPLE_REACHABLE",
         "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
       }
     },
@@ -694,7 +694,7 @@
       }
     }
   ],
-  "receipt_fingerprint": "b28f7a3842eb65bed41671aaabcc7af9110dd7fa2cc0bc1d529bcb0ff84bf091",
+  "receipt_fingerprint": "53e91c6e4bceceaf8e661676c8a88b301ec3f79502453bb6af44c356f8026dce",
   "receipt_type": "q133_q170_pit_readiness_r1",
   "safety": {
     "AUTOMATIC_PROMOTION": false,
@@ -726,7 +726,7 @@
   },
   "source_results": {
     "BTS_FAF": {
-      "content_sha256": "2c47e3f6dc2ac7018ed81fc83176b5005ab26dbff8295eb06028188c167a0ed1",
+      "content_sha256": "e22257be54c7bfc68ede396b9c8e216cd4ad25dce834020089074e26fba48968",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -734,7 +734,7 @@
       "url": "https://www.bts.gov/faf"
     },
     "CFTC_RELEASE": {
-      "content_sha256": "04a77597f0f8df7c4eee5b8f12cced20460ccfdf164327e313f8686734de7ee6",
+      "content_sha256": "b5f5e40932db0a3c3eaac94b4199165686cf3882ce11f0a8f07d8afdf2edab58",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -742,7 +742,7 @@
       "url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm"
     },
     "COURTLISTENER": {
-      "content_sha256": "acf65d8114ac619e9a2a1a228eb837b2a4ea83403bb1500bfb979495f3ad3fdb",
+      "content_sha256": "ff02a090c896ddf4f8ad1d052fe612eb91cbe9cb842ea6644594f20a1043df1a",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -750,7 +750,7 @@
       "url": "https://www.courtlistener.com/help/"
     },
     "CROSSREF_API": {
-      "content_sha256": "6b2ea956468708d85705826e8520a86b2ae5c16223624f3545263b3623f00b1e",
+      "content_sha256": "bec79b4bed63c4629b404f63a053e1cf03319d4d734d8c4a4aea258b8ea555b2",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -769,7 +769,7 @@
       "url": "https://www.justice.gov/atr/press-releases"
     },
     "EIA_OPEN": {
-      "content_sha256": "2d3c3890c0aebb07b9929f9405e796ae82c8e50b295a2bb3efc167ab4c0a95d3",
+      "content_sha256": "87074337c5bd0d515e2b1ac23047490c186c4c4cf4e98b91e14f0f51b7094918",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -785,7 +785,7 @@
       "url": "https://www.epa.gov/enviro/envirofacts-data-service-api"
     },
     "FTC_DATA": {
-      "content_sha256": "f075879c27e8d1f5d68bac6804ad0e7712347c0342ef6989f1a7a611b1e7b874",
+      "content_sha256": "bc6e9c11f0659a5f076e4cb84fac741446ed219567d49cabbae0eb4eeb5839d1",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -793,7 +793,7 @@
       "url": "https://search.ftc.gov/policy-notices/open-government/data-sets"
     },
     "GOVINFO": {
-      "content_sha256": "1a6c61ef29d573dda5cd3ab788639e252efe40491e2fec7703e5519ef74992e6",
+      "content_sha256": "0e2ac34b6b581a0a0046a5879942f59a047baa96131144939965f388afa61ac7",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -809,7 +809,7 @@
       "url": "https://lda.gov/api/tos/"
     },
     "NOAA_SWPC": {
-      "content_sha256": "5220670dc0dfa81c9a513174218ef0f76d19f6424cd7a9673334614af191607b",
+      "content_sha256": "888fa68ae9388d13082a0cad2f695165a883bd1c1cd03cbffddb962730b7154f",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -833,13 +833,10 @@
       "url": "https://api.fda.gov/drug/drugsfda.json?limit=1"
     },
     "PYPI_STATS": {
-      "content_sha256": "9f4db6ae2ec6f3bfbb3903a914e53dab52eba5b1cf9a26974064578a6ec29211",
-      "http_status": 429,
-      "missing_markers": [
-        "data",
-        "last_day"
-      ],
-      "sample_status": "INFRA_ACCESS_BLOCKED",
+      "content_sha256": "7d58d63205b6cab2cbb91624fb220b7b4eeb676075a7d08bda2510d7a428adae",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
       "source_id": "PYPI_STATS",
       "url": "https://pypistats.org/api/packages/requests/recent"
     },
@@ -852,7 +849,7 @@
       "url": "https://data.sec.gov/submissions/CIK0000320193.json"
     },
     "SEC_FOIA": {
-      "content_sha256": "6f658d2c3bc727b4b679aef57d06f6dd12d3c300e14c196f3216205422196cf8",
+      "content_sha256": "072041da7bab894393269ffc4774bcb9075f713dbaec31cfe8539c45214c109c",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -868,7 +865,7 @@
       "url": "https://api.usaspending.gov/docs/endpoints"
     },
     "USGS_EARTHQUAKE": {
-      "content_sha256": "a816d4e3460238208c85e57163c89f7a825fdb6b6c55ae8dc9d3709d57dbd688",
+      "content_sha256": "e46eaaaab4709ef8b96a203db94a59355bb5e8928d7af5d02cb7b5bbec84fe28",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
