@@ -29,7 +29,7 @@
     "CONFORMED SUBMISSION TYPE must be CT ORDER",
     "ACCEPTANCE-DATETIME must be explicitly present and parseable in the SEC public filing representations; permitted sources are filing header, filing detail page, or complete submission header",
     "accession number must match the filename-derived accession",
-    "filed-as-of-date must match the form-index filing date"
+    "filed-as-of-date must match the form-index filing date when present; legacy representations may omit the field, in which case the form-index filing date is retained as the authoritative filing-date value"
   ],
   "linked_archive_contract": [
     "complete submission text URL is derivable from filer CIK and accession",
@@ -46,6 +46,7 @@
     "one or more fixed quarterly SEC index transports cannot be retrieved through any official equivalent transport",
     "CT ORDER rows cannot be deterministically parsed",
     "the permitted SEC public filing representations lack acceptance time or contradict index metadata",
+
     "complete submission text or CT ORDER document is not recoverable for sampled rows",
     "event density is too sparse to support a meaningful later structural census",
     "archive identity depends on hindsight or a third-party source"
