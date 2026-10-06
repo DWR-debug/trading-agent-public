@@ -137,6 +137,20 @@ Critical invariants are fail-closed: public-observation time cannot be later tha
 The scheduler may reuse T/I/S infrastructure across candidates and prioritize shared unresolved prerequisites by downstream unblocking value. It may not infer scientific similarity or performance from shared infrastructure.
 
 Current active wave objective: independently validate the spine on three Windows lanes, hosted x64 integration and hosted ARM64 reproduction, then use the resulting structural readiness to accelerate Q218/Q219/Q220/Q221 plus Q224/Q228/Q229/Q230/Q231 source/PIT work. This is discovery/source/PIT work only.
+
+## 2ae. Evidence Knowledge Graph + Hypothesis Convergence — 2026-10-06
+
+Stufe 4 und Stufe 5 sind jetzt als eigene, ausführbare OS-Ebene aktiviert:
+
+- **Stufe 4 — Evidence-Bus -> automatisch wachsender Wissensgraph:** `automation/evidence_graph_stage4_stage5.py` liest neue Evidence-, Governance-, Candidate- und Preregistration-Receipts, normalisiert daraus Knoten und Relationen und erhält Negativ-/Revisionsinformationen mit Provenienz.
+- **Stufe 5 — automatische Hypothesen-Konvergenz-/Neuheitsprüfung:** Derselbe Engine bildet einen eingefrorenen Mechanismus-Signaturraum und berechnet deterministische Überschneidung zwischen Kandidaten. Ergebnisse werden als `POTENTIAL_CONVERGENCE`, `AMBIGUOUS` oder `LIKELY_ORTHOGONAL` ausgewiesen.
+- Gemeinsam genutzte Infrastruktur, gleiche Datenquellen oder ähnliche Sprache erzeugen **keine** wissenschaftliche Gleichheit. Konvergenz bleibt ein Review-Hinweis; Neuheit beeinflusst nur Discovery-/Konsolidierungspriorität.
+- Brücken zwischen zwei unterschiedlichen Mechanismen auf gemeinsamer Infrastruktur werden als `HYPOTHESIS_PROPOSAL_REVIEW_REQUIRED` materialisiert. Daraus wird niemals automatisch ein Composite Candidate.
+- Die laufende Research-Wave `.github/workflows/evidence-graph-stage4-stage5-wave.yml` führt vier parallele Auswertungen und ein material-change-getriebenes Event-Bus-Fenster über 70 Minuten. Der Event-Bus rechnet nur bei neuen materialisierten Inputs erneut; die Zeitsteuerung ist keine Compute-Padding-Logik.
+- Der Graph bleibt fail-closed gegenüber Performance, Holdout-Auswahl, Ranking, Tuning, Promotion und Live-Ausführung. Diese Stufe darf bestehende Trials nicht rückwirkend verändern.
+
+Verbindlicher Contract: `research/governance/evidence_graph_stage4_stage5_contract_2026_10_06.json`.
+Aktueller persistierter Output: `research/evidence/evidence_graph_stage4_stage5_latest.json`.
 ## 2a. Persistent acceleration policy
 ## 2b. Permanent literature-research plane
 
