@@ -13,10 +13,7 @@ def test_archive_discovery_and_partition():
     assert len([x for x in a if SHARDS["2022-2025-09"][0]<=date.fromisoformat(x["period_start"])<SHARDS["2022-2025-09"][1]])==1
 
 def test_future_filing_is_excluded():
-    sub="ACCESSION_NUMBER	FILING_DATE	PERIODOFREPORT
-A1	01-JUL-2017	30-JUN-2017
-A2	01-NOV-2025	30-SEP-2025
-"
+    sub="ACCESSION_NUMBER\tFILING_DATE\tPERIODOFREPORT\nA1\t01-JUL-2017\t30-JUN-2017\nA2\t01-NOV-2025\t30-SEP-2025\n"
     info="ACCESSION_NUMBER	NAMEOFISSUER	TITLEOFCLASS	CUSIP
 A1	Old Name Corp	Common Stock	78409V104
 A2	Future Name Corp	Common Stock	78409V104
