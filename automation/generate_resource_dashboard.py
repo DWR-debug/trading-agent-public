@@ -485,6 +485,7 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "busy": state == "operating",
             "labels": runner.get("labels", []) if runner else [],
             "current_assignments": len(assignments),
+            "research_capacity_slots": max(1, int(resource.get("research_capacity_slots", 1))),
             "current_tasks": [w.get("task") for w in assignments[:4]],
         })
     return out
@@ -612,8 +613,8 @@ def planned_capacity_plan(
             return -50
         return 0
 
-    # Each resource receives at most one next action. Existing active work blocks
-    # that candidate globally to prevent dashboard planning from recommending duplicates.
+    # Each resource receives only as many next actions as its bounded research-slot capacity allows.
+    # Active candidate work still blocks duplicate candidate plans unless explicitly marked parallel-safe.
     assigned_candidates: set[str] = set()
     plans: dict[str, list[dict[str, Any]]] = {str(r["name"]): [] for r in resources}
 
@@ -632,12 +633,12 @@ def planned_capacity_plan(
             continue
         placed = False
         for resource_name in item["preferred"]:
-            if plans.get(resource_name):
-                continue
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
             if resource is None:
                 continue
-            if resource.get("capacity_state") == "operating":
+            slots = max(1, int(resource.get("research_capacity_slots", 1)))
+            current = int(resource.get("current_assignments") or 0)
+            if current + len(plans.get(resource_name, [])) >= slots:
                 continue
             benchmark = job_benchmarks.get(candidate)
             plans[resource_name].append({
@@ -681,6 +682,8 @@ def planned_capacity_plan(
             "resource": name,
             "current_assignments": int(resource.get("current_assignments") or 0),
             "capacity_state": str(resource.get("capacity_state") or "unknown"),
+            "research_capacity_slots": max(1, int(next((r.get("research_capacity_slots", 1) for r in resources if str(r["name"]) == name), 1))),
+            "remaining_research_slots": max(0, max(1, int(next((r.get("research_capacity_slots", 1) for r in resources if str(r["name"]) == name), 1))) - int(resource.get("current_assignments") or 0) - sum(1 for x in plans.get(name, []) if x.get("scheduled"))),
             "planned_assignments": plans.get(name, []),
             "planned_count": sum(1 for x in plans.get(name, []) if x.get("scheduled")),
             "blocked_count": sum(1 for x in plans.get(name, []) if not x.get("scheduled")),
@@ -814,12 +817,12 @@ def main() -> None:
     ai = ai_provider_state()
 
     configured_resources = [
-        {"name": "Windows self-hosted A", "type": "physical", "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
-        {"name": "Windows self-hosted B", "type": "physical", "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
-        {"name": "Windows self-hosted C", "type": "physical", "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
-        {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing operational capacity"},
-        {"name": "GitHub-hosted ARM64", "type": "cloud", "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
-        {"name": "Free AI pool", "type": "cloud", "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
+        {"name": "Windows self-hosted A", "type": "physical", "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "Windows self-hosted B", "type": "physical", "research_capacity_slots": 1, "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "Windows self-hosted C", "type": "physical", "research_capacity_slots": 1, "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "research_capacity_slots": 2, "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing operational capacity"},
+        {"name": "GitHub-hosted ARM64", "type": "cloud", "research_capacity_slots": 2, "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
+        {"name": "Free AI pool", "type": "cloud", "research_capacity_slots": 1, "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
     ]
     priority_codes = {"Q104:I19","Q218","Q220","Q221"}
     top4 = [x for x in state_board if x.get("code") in priority_codes]
@@ -855,6 +858,7 @@ def main() -> None:
         "dashboard_summary": {
             "active_work_items": len(work),
             "configured_resources": len(configured_resources),
+            "research_capacity_slots": sum(int(r.get("research_capacity_slots", 1)) for r in configured_resources),
             "runner_api_visible": len(runners) if runners else None,
             "busy_runners": sum(1 for r in runners if r.get("busy") is True) if runners else None,
             "runner_api_status": "available" if runners else "unavailable_or_empty",
