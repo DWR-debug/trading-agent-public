@@ -72,6 +72,7 @@ def main()->int:
     failed=[r["index"] for r in results if r["returncode"]!=0]
     manifest={
         "schema_version":1,"candidate":args.candidate,
+        "workpack_contract_version":"top4-2026-10-06-v3",
         "workpack_purpose":WORKPACK_PURPOSES[args.candidate],
         "source_commit":os.environ.get("GITHUB_SHA"),
         "runner_name":os.environ.get("RUNNER_NAME"),
