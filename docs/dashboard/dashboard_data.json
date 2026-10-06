@@ -1,14 +1,14 @@
 {
   "ai_fabric": [
     {
-      "cost": 0,
+      "cost": null,
       "free_only": true,
-      "observed_at_utc": "2026-10-05T19:04:31.270222Z",
+      "observed_at_utc": "2026-10-06T00:19:54.647576Z",
       "provider": "openrouter_free",
       "response_model": "openrouter/free",
       "scientific_evidence": false,
-      "status": "SUCCESS",
-      "task": "AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT"
+      "status": "FAILED_PROVIDER",
+      "task": "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT"
     },
     {
       "cost": null,
@@ -109,42 +109,18 @@
       "**Q121-R5:** `Q121R5_DUAL_INDEX_POPULATION_RECONCILIATION_COMPLETED`; the form-index and master-index populations are exactly equal as multisets on the frozen window/form scope: 61,818 rows, 61,818 unique canonical keys, zero left-only/right-only keys. Receipt fingerprint `897bc13c5f722d9a701ae7994b237fe7afd233f15cdc5e644061aa674b8f26c1`. This is source-population evidence only; acceptance timestamps, revision lineage and same-day PIT safety remain unproven.",
       "**Q127-R1:** `Q127R1_SOURCE_PIT_FEASIBILITY_COMPLETED`; four fixed historical dates were retrieved and parsed. Revision lineage and same-day PIT safety remain unresolved. Receipt fingerprint `60815a092421762ac1da2a96d003865b72f25eb640778287964a9648cdfc5b74`.",
       "**Q130-R1:** `Q130R1_SOURCE_FEASIBILITY_COMPLETED`; the frozen historical Wikimedia source probe passed, while publication/revision timing remains outside formal same-day PIT safety.",
-      "Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `00371bfe6f7c5e67418f1b7b5f53582ca2c54ffecac7d0f33bcd7a28d560f688`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.",
-      "Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `00371bfe6f7c5e67418f1b7b5f53582ca2c54ffecac7d0f33bcd7a28d560f688`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.",
-      "Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `fb2f5fe50fb34696bd3c6426f57e9c5f9d75894cfe7b8bd270ee36bf856e7e38`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.",
-      "Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `fb2f5fe50fb34696bd3c6426f57e9c5f9d75894cfe7b8bd270ee36bf856e7e38`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.",
+      "Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `08961aeca5008706ce46e844c74f2a3b505fda6705fbf70aa542788846ced9a4`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.",
+      "Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `08961aeca5008706ce46e844c74f2a3b505fda6705fbf70aa542788846ced9a4`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.",
+      "Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `e1e6fc5322adf3373c1d9b3b5ca0baf43d0635c3c92a9dd78c37ef33e60f057c`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.",
+      "Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `e1e6fc5322adf3373c1d9b3b5ca0baf43d0635c3c92a9dd78c37ef33e60f057c`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.",
       "Q198 historical PIT clock census: **Q198_PIT_CLOCK_CENSUS_COMPLETED**; pages parsed **4** / **4**, with fixed dates **2020/01/10, 2020/04/22, 2020/12/16, 2026/10/02**.",
-      "Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `46d7a2813ea4b97b15702905d62e72bc1c3b67642081b9d0683f2af1ab6fe81b`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.",
-      "Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `46d7a2813ea4b97b15702905d62e72bc1c3b67642081b9d0683f2af1ab6fe81b`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.",
-      "Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `46d7a2813ea4b97b15702905d62e72bc1c3b67642081b9d0683f2af1ab6fe81b`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.",
+      "Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `dd72846b4da698685b8e5336b34efddf1da1fb6e515d4cc7ca4326e0168a8efd`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.",
+      "Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `dd72846b4da698685b8e5336b34efddf1da1fb6e515d4cc7ca4326e0168a8efd`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.",
+      "Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `dd72846b4da698685b8e5336b34efddf1da1fb6e515d4cc7ca4326e0168a8efd`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.",
       "Q202–Q204 remain source/PIT discovery tracks only: performance, holdout selection, ranking, tuning, promotion and live execution remain closed. Source feasibility is not PIT validation."
     ],
     "latest_formal_result": "**performance_completed_no_arm_passed_all_13_gates** for `T-2026-10-01-H06P2R3-PERFORMANCE-01`.",
     "research_board": [
-      {
-        "code": "082",
-        "issue_number": 580,
-        "lane": "LEGACY / FEASIBILITY",
-        "next_gate": "",
-        "performance_authorization_allowed": false,
-        "state": "DESIGN_ONLY"
-      },
-      {
-        "code": "FRONTIER-20260928",
-        "issue_number": 591,
-        "lane": "FRONTIER DISCOVERY",
-        "next_gate": "",
-        "performance_authorization_allowed": false,
-        "state": "DESIGN_ONLY"
-      },
-      {
-        "code": "104",
-        "issue_number": 739,
-        "lane": "FORMAL READINESS",
-        "next_gate": "",
-        "performance_authorization_allowed": false,
-        "state": "SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED"
-      },
       {
         "code": "105",
         "issue_number": 740,
@@ -434,6 +410,30 @@
         "state": "DESIGN_ONLY_ACTIVE"
       },
       {
+        "code": "Q224",
+        "issue_number": null,
+        "lane": "FRONTIER DISCOVERY",
+        "next_gate": "schema-variant normalization + request-quality contamination bounds + filing-acceptance/public-boundary join + mutation/PIT checks + independent reproduction",
+        "performance_authorization_allowed": false,
+        "state": "SOURCE_ARCHIVE_INTEGRITY_COMPLETED_NO_PERFORMANCE"
+      },
+      {
+        "code": "Q230",
+        "issue_number": 1102,
+        "lane": "FRONTIER DISCOVERY",
+        "next_gate": "free public FINRA EOD trade-panel route + exact free-field availability audit + bond security-master/issuer mapping + lifecycle/revision controls + independent PIT reproduction",
+        "performance_authorization_allowed": false,
+        "state": "SOURCE_FEASIBILITY_ACTIVE"
+      },
+      {
+        "code": "Q229",
+        "issue_number": 1101,
+        "lane": "FRONTIER DISCOVERY",
+        "next_gate": "historical CFPB release-link validation + public-observation batch reconstruction + complaint taxonomy freeze + company-to-issuer mapping + publication-selection audit",
+        "performance_authorization_allowed": false,
+        "state": "SOURCE_HISTORY_CENSUS_COMPLETED"
+      },
+      {
         "code": "Q202",
         "issue_number": 1073,
         "lane": "FRONTIER DISCOVERY",
@@ -475,7 +475,7 @@
     "website_update_button": "opens GitHub Actions workflow dispatch page"
   },
   "dashboard_summary": {
-    "active_work_items": 16,
+    "active_work_items": 1,
     "ai_providers": 4,
     "busy_runners": null,
     "configured_resources": 12,
@@ -484,7 +484,7 @@
     "runner_api_status": "unavailable_or_empty",
     "runner_api_visible": null
   },
-  "generated_at_utc": "2026-10-05T20:04:09.562904+00:00",
+  "generated_at_utc": "2026-10-06T03:51:46.932881+00:00",
   "governance_notes": [
     "Operational resource availability and active jobs are separate from scientific evidence.",
     "AI worker output is never scientific evidence.",
@@ -520,170 +520,170 @@
       "slot": "Windows self-hosted B"
     }
   },
-  "master_sha": "d492369d5e2fe6950f2cb0e39b1bfef75ca534ff",
-  "operational_snapshot_sha": "1c2835345e3babce39a6916b437366d5d577d7b5",
+  "master_sha": "65ae860b1ce56d9eab7696a9015bf4b4cd88405c",
+  "operational_snapshot_sha": "dafe5dbc06531befd281c97b9a6e1b86063ffd9d",
   "recent_activity_24h": [
     {
       "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:01:42Z",
-      "created_at": "2026-10-05T20:00:49Z",
-      "run_id": 37367080944,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367080944",
-      "status": "skipped",
-      "task": "Q121-R6 Independent Windows Reproduction (Permanent PC)"
+      "completed_at": "2026-10-06T03:47:05Z",
+      "created_at": "2026-10-06T03:46:19Z",
+      "run_id": 37410550865,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37410550865",
+      "status": "failure",
+      "task": "Unified Research Orchestrator"
     },
     {
       "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:03:33Z",
-      "created_at": "2026-10-05T20:00:48Z",
-      "run_id": 37367078603,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367078603",
-      "status": "cancelled",
+      "completed_at": "2026-10-06T02:56:26Z",
+      "created_at": "2026-10-06T02:56:15Z",
+      "run_id": 37406568185,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37406568185",
+      "status": "success",
+      "task": "Capacity Saturation and Rolling Research Waves"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-06T02:45:14Z",
+      "created_at": "2026-10-06T02:42:56Z",
+      "run_id": 37405475773,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37405475773",
+      "status": "failure",
+      "task": "Windows Independent Capacity Pulse"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-06T02:27:36Z",
+      "created_at": "2026-10-06T02:27:25Z",
+      "run_id": 37404212896,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37404212896",
+      "status": "success",
+      "task": "AI Credit Availability Planner"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-06T02:18:38Z",
+      "created_at": "2026-10-06T02:17:38Z",
+      "run_id": 37403418131,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37403418131",
+      "status": "failure",
+      "task": "Autonomous Agent Request Queue"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-06T01:54:24Z",
+      "created_at": "2026-10-06T01:50:58Z",
+      "run_id": 37401228804,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37401228804",
+      "status": "success",
+      "task": "Permanent Windows Local Research Loop"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-06T01:51:02Z",
+      "created_at": "2026-10-06T01:50:46Z",
+      "run_id": 37401211787,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37401211787",
+      "status": "success",
       "task": "Continuous Useful Capacity Replenisher"
     },
     {
       "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:00:46Z",
-      "created_at": "2026-10-05T20:00:45Z",
-      "run_id": 37367073703,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367073703",
-      "status": "skipped",
-      "task": "Autonomous Agent Request Queue"
+      "completed_at": "2026-10-06T01:47:40Z",
+      "created_at": "2026-10-06T01:47:22Z",
+      "run_id": 37400934211,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37400934211",
+      "status": "success",
+      "task": "Q179-Q184 Source Feasibility"
     },
     {
       "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:03:59Z",
-      "created_at": "2026-10-05T20:00:45Z",
-      "run_id": 37367073437,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367073437",
-      "status": "skipped",
-      "task": "T052 Exact Master CI Gate"
+      "completed_at": "2026-10-06T01:50:44Z",
+      "created_at": "2026-10-06T01:47:16Z",
+      "run_id": 37400924944,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37400924944",
+      "status": "success",
+      "task": "Permanent Windows Local Research Loop"
     },
     {
       "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:00:46Z",
-      "created_at": "2026-10-05T20:00:45Z",
-      "run_id": 37367073429,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367073429",
-      "status": "skipped",
+      "completed_at": "2026-10-06T01:46:40Z",
+      "created_at": "2026-10-06T01:46:25Z",
+      "run_id": 37400854012,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37400854012",
+      "status": "success",
       "task": "Paper Forward Persistent MTM"
     },
     {
       "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:00:47Z",
-      "created_at": "2026-10-05T20:00:45Z",
-      "run_id": 37367073413,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367073413",
-      "status": "skipped",
-      "task": "Q121-R6 SEC Acceptance-Time Compilation"
+      "completed_at": "2026-10-06T01:47:45Z",
+      "created_at": "2026-10-06T01:45:51Z",
+      "run_id": 37400806149,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37400806149",
+      "status": "success",
+      "task": "Hosted Deterministic Frontier Research Loop"
     },
     {
       "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:00:46Z",
-      "created_at": "2026-10-05T20:00:45Z",
-      "run_id": 37367073383,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367073383",
-      "status": "skipped",
-      "task": "Q077-R1 One-Shot Authorization"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:00:53Z",
-      "created_at": "2026-10-05T20:00:45Z",
-      "run_id": 37367073316,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367073316",
-      "status": "skipped",
-      "task": "Q017 Coverage First Standalone"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:00:46Z",
-      "created_at": "2026-10-05T20:00:45Z",
-      "run_id": 37367073306,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367073306",
-      "status": "skipped",
-      "task": "Q148-R1 Persist WPSR Source Clock Receipt"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:00:46Z",
-      "created_at": "2026-10-05T20:00:45Z",
-      "run_id": 37367073234,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367073234",
-      "status": "skipped",
+      "completed_at": "2026-10-06T01:45:27Z",
+      "created_at": "2026-10-06T01:45:12Z",
+      "run_id": 37400750116,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37400750116",
+      "status": "success",
       "task": "Paper Forward Persistent MTM 2000 EUR"
     },
     {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-06T01:44:16Z",
+      "created_at": "2026-10-06T01:44:01Z",
+      "run_id": 37400648053,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37400648053",
+      "status": "success",
+      "task": "Current Operational Status Synchronizer"
+    },
+    {
       "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:02:59Z",
-      "created_at": "2026-10-05T20:00:34Z",
-      "run_id": 37367051496,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367051496",
+      "completed_at": "2026-10-06T01:44:04Z",
+      "created_at": "2026-10-06T01:43:51Z",
+      "run_id": 37400634588,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37400634588",
+      "status": "success",
+      "task": "Current Status Drift Guard"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-06T01:41:52Z",
+      "created_at": "2026-10-06T01:41:35Z",
+      "run_id": 37400446627,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37400446627",
+      "status": "success",
+      "task": "Autonomous Resource Control Plane"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-06T01:21:56Z",
+      "created_at": "2026-10-06T01:14:52Z",
+      "run_id": 37398185345,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37398185345",
       "status": "success",
       "task": "Runner C Pre-PIT Falsification Workpack"
     },
     {
       "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:00:46Z",
-      "created_at": "2026-10-05T19:59:38Z",
-      "run_id": 37366950409,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366950409",
-      "status": "cancelled",
-      "task": "T052 Exact Master CI Gate"
+      "completed_at": "2026-10-06T01:14:25Z",
+      "created_at": "2026-10-06T01:14:13Z",
+      "run_id": 37398132501,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37398132501",
+      "status": "success",
+      "task": "Continuous Useful Capacity Replenisher"
     },
     {
       "actor": "DWR-debug",
-      "completed_at": "2026-10-05T19:59:44Z",
-      "created_at": "2026-10-05T19:59:22Z",
-      "run_id": 37366924240,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366924240",
-      "status": "cancelled",
-      "task": "CI"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:00:41Z",
-      "created_at": "2026-10-05T19:59:21Z",
-      "run_id": 37366923961,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366923961",
-      "status": "failure",
-      "task": "Full Suite Verification"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T19:59:39Z",
-      "created_at": "2026-10-05T19:59:21Z",
-      "run_id": 37366923935,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366923935",
-      "status": "cancelled",
-      "task": "T052 Exact Master CI Gate"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T19:59:23Z",
-      "created_at": "2026-10-05T19:59:20Z",
-      "run_id": 37366920990,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366920990",
-      "status": "cancelled",
-      "task": "CI"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T20:03:29Z",
-      "created_at": "2026-10-05T19:59:18Z",
-      "run_id": 37366919255,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366919255",
-      "status": "cancelled",
-      "task": "Permanent Windows Local Research Loop"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T19:59:22Z",
-      "created_at": "2026-10-05T19:59:18Z",
-      "run_id": 37366919130,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366919130",
-      "status": "cancelled",
-      "task": "T052 Exact Master CI Gate"
+      "completed_at": "2026-10-06T01:09:23Z",
+      "created_at": "2026-10-06T01:08:15Z",
+      "run_id": 37397618062,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37397618062",
+      "status": "skipped",
+      "task": "Q121-R6 Independent Windows Reproduction (Permanent PC)"
     }
   ],
   "resources": [
@@ -725,31 +725,24 @@
     },
     {
       "authority": "non-authorizing unless an exact formal gate says otherwise",
-      "busy": true,
+      "busy": false,
       "configured_runner": "ubuntu-24.04",
-      "current_assignments": 4,
-      "current_tasks": [
-        "S10 Receipt Sync",
-        "S10 Receipt Sync",
-        "Orthogonal PIT Next-Gate Compiler",
-        "Orthogonal Candidate Development"
-      ],
+      "current_assignments": 0,
+      "current_tasks": [],
       "labels": [],
-      "live_status": "active work assigned (4)",
+      "live_status": "not assigned in snapshot",
       "name": "GitHub-hosted Ubuntu x64",
       "role": "Deterministic frontier, CI, source/PIT workflows",
       "type": "cloud"
     },
     {
       "authority": "non-authorizing unless an exact formal gate says otherwise",
-      "busy": true,
+      "busy": false,
       "configured_runner": "ubuntu-24.04-arm",
-      "current_assignments": 1,
-      "current_tasks": [
-        "CI"
-      ],
+      "current_assignments": 0,
+      "current_tasks": [],
       "labels": [],
-      "live_status": "active work assigned (1)",
+      "live_status": "not assigned in snapshot",
       "name": "GitHub-hosted ARM64",
       "role": "Architecture-diverse CI / reproduction",
       "type": "cloud"
@@ -780,15 +773,12 @@
     },
     {
       "authority": "AI output never authorizes performance or promotion",
-      "busy": true,
+      "busy": false,
       "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral",
-      "current_assignments": 2,
-      "current_tasks": [
-        "Free AI Worker Fabric",
-        "Groq Free Adversarial Research Worker"
-      ],
+      "current_assignments": 0,
+      "current_tasks": [],
       "labels": [],
-      "live_status": "active work assigned (2)",
+      "live_status": "not assigned in snapshot",
       "name": "Free AI pool",
       "role": "Adversarial / design / engineering review",
       "type": "cloud"
@@ -833,13 +823,12 @@
       "authority": "read-only operational snapshot",
       "busy": true,
       "configured_runner": "GitHub Pages",
-      "current_assignments": 2,
+      "current_assignments": 1,
       "current_tasks": [
-        "Deploy Resource Dashboard to GitHub Pages",
         "Resource Dashboard Update"
       ],
       "labels": [],
-      "live_status": "active work assigned (2)",
+      "live_status": "active work assigned (1)",
       "name": "Dashboard / GitHub Pages",
       "role": "Operational visibility and status publication",
       "type": "service"
@@ -859,222 +848,21 @@
     {
       "actor": "DWR-debug",
       "authority": "non-authorizing operational work",
-      "job": "",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted CI",
-      "run_id": 37367367010,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367367010",
-      "started_at": "2026-10-05T20:03:32Z",
-      "status": "pending",
-      "task": "Continuous Useful Capacity Replenisher",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "sync",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted Ubuntu x64",
-      "run_id": 37367359751,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367359751",
-      "started_at": "2026-10-05T20:03:28Z",
-      "status": "queued",
-      "task": "S10 Receipt Sync",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "sync",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted Ubuntu x64",
-      "run_id": 37367283755,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37367283755",
-      "started_at": "2026-10-05T20:02:44Z",
-      "status": "queued",
-      "task": "S10 Receipt Sync",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "test (ubuntu-24.04)",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted CI",
-      "run_id": 37366957527,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366957527",
-      "started_at": "2026-10-05T19:59:42Z",
-      "status": "queued",
-      "task": "CI",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "test (ubuntu-24.04-arm)",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted ARM64",
-      "run_id": 37366957527,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366957527",
-      "started_at": "2026-10-05T19:59:42Z",
-      "status": "queued",
-      "task": "CI",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "replenish",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted CI",
-      "run_id": 37366925612,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366925612",
-      "started_at": "2026-10-05T19:59:23Z",
-      "status": "pending",
-      "task": "Continuous Useful Capacity Replenisher",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "deploy",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "Dashboard / GitHub Pages",
-      "run_id": 37366924097,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366924097",
-      "started_at": "2026-10-05T19:59:22Z",
-      "status": "queued",
-      "task": "Deploy Resource Dashboard to GitHub Pages",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "synchronize",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "OS control plane",
-      "run_id": 37366923981,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366923981",
-      "started_at": "2026-10-05T19:59:21Z",
-      "status": "queued",
-      "task": "Current Operational Status Synchronizer",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "compile",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted Ubuntu x64",
-      "run_id": 37366923954,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366923954",
-      "started_at": "2026-10-05T19:59:21Z",
-      "status": "queued",
-      "task": "Orthogonal PIT Next-Gate Compiler",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "plan_openrouter",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "Free AI pool",
-      "run_id": 37366915275,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366915275",
-      "started_at": "2026-10-05T19:59:16Z",
-      "status": "queued",
-      "task": "Free AI Worker Fabric",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
       "job": "update",
       "lane": "PLATFORM / GOVERNANCE",
       "resource": "Dashboard / GitHub Pages",
-      "run_id": 37366867352,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366867352",
-      "started_at": "2026-10-05T19:58:49Z",
+      "run_id": 37410957939,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37410957939",
+      "started_at": "2026-10-06T03:51:37Z",
       "status": "in_progress",
       "task": "Resource Dashboard Update",
-      "worker": "GitHub Actions 1000027556"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "dispatch",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted CI",
-      "run_id": 37366848460,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366848460",
-      "started_at": "2026-10-05T19:58:37Z",
-      "status": "queued",
-      "task": "Capacity Saturation and Rolling Research Waves",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "groq_worker",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "Free AI pool",
-      "run_id": 37366807287,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366807287",
-      "started_at": "2026-10-05T19:58:13Z",
-      "status": "queued",
-      "task": "Groq Free Adversarial Research Worker",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "validate",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted Ubuntu x64",
-      "run_id": 37366767369,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366767369",
-      "started_at": "2026-10-05T19:57:50Z",
-      "status": "queued",
-      "task": "Orthogonal Candidate Development",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "actionlint",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted CI",
-      "run_id": 37366767354,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366767354",
-      "started_at": "2026-10-05T19:57:50Z",
-      "status": "queued",
-      "task": "Workflow Lint",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "Windows self-hosted",
-      "run_id": 37366725538,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37366725538",
-      "started_at": "2026-10-05T19:57:25Z",
-      "status": "pending",
-      "task": "Research Governance Audit (hosted Windows)",
-      "worker": "pending runner assignment"
+      "worker": "GitHub Actions 1000028162"
     }
   ],
   "workload_by_lane": {
-    "PLATFORM / GOVERNANCE": 16
+    "PLATFORM / GOVERNANCE": 1
   },
   "workload_by_resource": {
-    "Dashboard / GitHub Pages": 2,
-    "Free AI pool": 2,
-    "GitHub-hosted ARM64": 1,
-    "GitHub-hosted CI": 5,
-    "GitHub-hosted Ubuntu x64": 4,
-    "OS control plane": 1,
-    "Windows self-hosted": 1
+    "Dashboard / GitHub Pages": 1
   }
 }
