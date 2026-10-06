@@ -32,3 +32,28 @@ def test_dashboard_research_board_exposes_q202_to_q205_without_duplicates():
     for candidate_id in ("Q202", "Q203", "Q204", "Q205"):
         assert candidate_id in ids
         assert ids.count(candidate_id) == 1
+
+
+
+def test_dashboard_duration_benchmark_excludes_cancelled_and_uses_median():
+    from automation.generate_resource_dashboard import duration_benchmarks
+
+    runs = [
+        {"name":"Demo","status":"completed","conclusion":"success","run_started_at":"2026-10-06T10:00:00Z","completed_at":"2026-10-06T10:01:00Z"},
+        {"name":"Demo","status":"completed","conclusion":"success","run_started_at":"2026-10-06T10:00:00Z","completed_at":"2026-10-06T10:02:00Z"},
+        {"name":"Demo","status":"completed","conclusion":"cancelled","run_started_at":"2026-10-06T10:00:00Z","completed_at":"2026-10-06T10:20:00Z"},
+    ]
+    bench = duration_benchmarks(runs)
+    assert bench["Demo"]["p50_seconds"] == 90
+    assert bench["Demo"]["sample_count"] == 2
+
+
+def test_dashboard_capacity_state_is_explicit():
+    from automation.generate_resource_dashboard import capacity_state
+
+    physical = {"type":"physical"}
+    cloud = {"type":"cloud"}
+    assert capacity_state(physical, {"status":"online","busy":True}, []) == "operating"
+    assert capacity_state(physical, {"status":"online","busy":False}, []) == "available"
+    assert capacity_state(physical, None, []) == "unknown"
+    assert capacity_state(cloud, None, []) == "available"
