@@ -22,8 +22,10 @@ permissions:
   contents: read
 
 concurrency:
-  group: trading-agent-temporal-identity-state-spine
-  cancel-in-progress: true
+  group: trading-agent-temporal-identity-state-spine-${{ github.event_name }}
+  # Human source pushes may supersede obsolete research snapshots.
+  # Bot/status pushes must never interrupt a useful in-flight wave.
+  cancel-in-progress: ${{ github.event_name == 'push' && github.actor != 'github-actions[bot]' }}
 
 jobs:
   windows:
