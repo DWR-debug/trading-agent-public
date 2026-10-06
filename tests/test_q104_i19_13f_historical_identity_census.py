@@ -14,10 +14,7 @@ def test_archive_discovery_and_partition():
 
 def test_future_filing_is_excluded():
     sub="ACCESSION_NUMBER\tFILING_DATE\tPERIODOFREPORT\nA1\t01-JUL-2017\t30-JUN-2017\nA2\t01-NOV-2025\t30-SEP-2025\n"
-    info="ACCESSION_NUMBER	NAMEOFISSUER	TITLEOFCLASS	CUSIP
-A1	Old Name Corp	Common Stock	78409V104
-A2	Future Name Corp	Common Stock	78409V104
-"
+    info="ACCESSION_NUMBER\tNAMEOFISSUER\tTITLEOFCLASS\tCUSIP\nA1\tOld Name Corp\tCommon Stock\t78409V104\nA2\tFuture Name Corp\tCommon Stock\t78409V104\n"
     b=io.BytesIO()
     with zipfile.ZipFile(b,"w",zipfile.ZIP_DEFLATED) as z:z.writestr("SUBMISSION.tsv",sub);z.writestr("INFOTABLE.tsv",info)
     r=scan_archive(b.getvalue(),{"url":"synthetic://q104","label":"2017 Q3","period_start":"2017-07-01"},{"SPGI":{"78409V104"}})
