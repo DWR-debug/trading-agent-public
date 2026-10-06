@@ -93,17 +93,17 @@ def accession_header_url(cik,accession):
     cik10=str(cik).strip().zfill(10)
     normalized=str(accession).strip().replace("-","")
     acc=str(accession).strip()
-    if not re.fullmatch(r"\\d{10}-\\d{2}-\\d{6}",acc):
+    if not re.fullmatch(r"\d{10}-\d{2}-\d{6}",acc):
         raise ValueError("SEC_ACCESSION_UNPARSEABLE:"+acc)
     return f"https://www.sec.gov/Archives/edgar/data/{int(cik10)}/{normalized}/{acc}-index-headers.html"
 
 
 def parse_acceptance_header(text,expected_cik,expected_accession,expected_form,expected_filing_date):
-    accepted=re.search(r"<ACCEPTANCE-DATETIME>\\s*([0-9]{14})",text,re.I)
-    accession_m=re.search(r"ACCESSION NUMBER:\\s*([0-9]{10}-[0-9]{2}-[0-9]{6})",text,re.I)
-    cik_m=re.search(r"CENTRAL INDEX KEY:\\s*([0-9]{10})",text,re.I)
-    form_m=re.search(r"CONFORMED SUBMISSION TYPE:\\s*([^\\s<]+)",text,re.I)
-    filed_m=re.search(r"FILED AS OF DATE:\\s*([0-9]{8})",text,re.I)
+    accepted=re.search(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})",text,re.I)
+    accession_m=re.search(r"ACCESSION NUMBER:\s*([0-9]{10}-[0-9]{2}-[0-9]{6})",text,re.I)
+    cik_m=re.search(r"CENTRAL INDEX KEY:\s*([0-9]{10})",text,re.I)
+    form_m=re.search(r"CONFORMED SUBMISSION TYPE:\s*([^\s<]+)",text,re.I)
+    filed_m=re.search(r"FILED AS OF DATE:\s*([0-9]{8})",text,re.I)
     if not accepted: raise ValueError("MISSING_ACCEPTANCE_DATETIME")
     if not accession_m or accession_m.group(1)!=expected_accession: raise ValueError("ACCESSION_MISMATCH")
     if not cik_m or cik_m.group(1)!=str(expected_cik).zfill(10): raise ValueError("FILER_CIK_MISMATCH")
@@ -181,8 +181,8 @@ def scan_archive(blob,archive,targets,enrich_acceptance=False):
             for accession in h["accessions"]:
                 if accession in acceptance_records: by_accession[accession]=acceptance_records[accession]
             h["acceptance_records"]=by_accession
-            h["acceptance_complete"]=(len(by_accession)==len(h["accessions"]) and not any(x in h["accessions"] for x in acceptance_failures))
-    return {"archive":archive,"archive_sha256":hashlib.sha256(blob).hexdigest(),"archive_bytes":len(blob),"target_hits":hits,"security_identity_conflicts":sorted(conflicts),"acceptance_failures":acceptance_failures,"acceptance_record_count":len(acceptance_records)}
+            h["acceptance_complete"]=(len(by_accession)==len(h["accessions"]) and not acceptance_failures)
+    return {"archive":archive,"archive_sha256":hashlib.sha256(blob).hexdigest(),"archive_bytes":len(blob),"target_hits":hits,"security_identity_conflicts":sorted(conflicts),"acceptance_failures":acceptance_failures,"acceptance_record_count":len(acceptance_records),"target_unique_accession_count":len({acc for h in hits.values() for acc in h["accessions"]})}
 
 def load_page(page_file=None):
     return Path(page_file).read_bytes() if page_file else fetch(PAGE)
@@ -221,8 +221,8 @@ def main():
     for q in receipt["archives"]:
         for acc,err in q.get("acceptance_failures",{}).items(): receipt["acceptance_failures"][acc]=err
     acceptance_checked=sum(q.get("acceptance_record_count",0) for q in receipt["archives"])
-    acceptance_targets=sum(len(h.get("accessions",[])) for q in receipt["archives"] for h in q["target_hits"].values())
-    receipt["acceptance_time_join"]={"records_checked":acceptance_checked,"target_accession_references":acceptance_targets,"failures":len(receipt["acceptance_failures"]),"complete":acceptance_targets==acceptance_checked and not receipt["acceptance_failures"]}
+    acceptance_targets=sum(q.get("target_unique_accession_count",0) for q in receipt["archives"])
+    receipt["acceptance_time_join"]={"records_checked":acceptance_checked,"target_unique_accessions":acceptance_targets,"failures":len(receipt["acceptance_failures"]),"complete":acceptance_targets==acceptance_checked and not receipt["acceptance_failures"],"timezone_inference":False}
     receipt["archive_completeness_for_shard"]=len(selected)>0 and len(receipt["archives"])==len(selected)
     receipt["receipt_fingerprint"]=hashlib.sha256(json.dumps(receipt,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode()).hexdigest()
     a.output.parent.mkdir(parents=True,exist_ok=True); a.output.write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
