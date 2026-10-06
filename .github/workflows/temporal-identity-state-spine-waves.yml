@@ -74,7 +74,11 @@ jobs:
           "%PY_EXE%" --version || exit /b 1
           "%PY_EXE%" -m pip --version >nul 2>&1
           if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
-          "%PY_EXE%" -m pip install --disable-pip-version-check pytest || exit /b 1
+          set "PIP_OK="
+          for /l %%I in (1,1,4) do if not defined PIP_OK (
+            "%PY_EXE%" -m pip install --disable-pip-version-check pytest >"%RUNNER_TEMP%\spine-pip-%%I.log" 2>&1 && set "PIP_OK=1" || timeout /t %%I >nul
+          )
+          if not defined PIP_OK exit /b 1
           echo SPINE_PY_EXE=%PY_EXE%>>"%GITHUB_ENV%"
           endlocal
 
