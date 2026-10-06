@@ -77,7 +77,7 @@ def nsmap(text:str)->dict[str,str]: return {p:u for p,u in re.findall(r'xmlns:([
 def ix_textblocks(html:bytes)->list[dict[str,object]]:
     text=html.decode("utf-8",errors="replace"); prefixes=nsmap(text); out=[]
     for m in re.finditer(r"<ix:nonNumeric\b([^>]*)>",text,re.I|re.S):
-        attrs=dict(re.findall(r'([A-Za-z_:][\w:.-]*)\s*=\s*["\']([^"\']*)["\']',m.group(1),re.I|re.S))
+        attrs={k.lower():v for k,v in re.findall(r'([A-Za-z_:][\w:.-]*)\s*=\s*["\']([^"\']*)["\']',m.group(1),re.I|re.S)}
         name=attrs.get("name")
         if not name or not local_name(name).lower().endswith("textblock"): continue
         prefix=name.split(":",1)[0] if ":" in name else ""

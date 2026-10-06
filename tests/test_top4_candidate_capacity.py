@@ -24,7 +24,8 @@ def test_top4_workpacks_are_mechanistically_separate():
     assert "q104_i19_xbrl_concept_freeze" in q104
     assert "q218_sec_multichannel_source_gate" in q218
     assert "q104_xbrl_concept_freeze_audit.py" in q220
-    assert "q220_fsn_schema_gate" in q220
+    assert "q220_as_filed_xbrl_population_gate" in q220
+    assert "q220_fsn_schema_gate" not in q220
     assert "q221_usaspending_public_clock_gate" in q221
     assert "q104_i19_xbrl_pit_compiler.py" in q220
     assert "top_candidate_source_preflight" in q221
