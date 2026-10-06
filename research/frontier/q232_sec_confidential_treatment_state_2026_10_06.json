@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "research_id": "Q232",
+  "title": "SEC confidential-treatment expiry / unsealing information state",
+  "state": "DISCOVERY_QUARANTINED",
+  "priority": "FRONTIER_DISCOVERY",
+  "scientific_boundary": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "ranking_allowed": false,
+    "parameter_search_allowed": false,
+    "promotion_allowed": false,
+    "live_execution_allowed": false
+  },
+  "hypothesis": {
+    "mechanism": "Public transitions in the confidentiality state of SEC-filed material contracts may reveal information previously withheld from the public, distinct from EDGAR demand, SEC review dialogue, FOIA requests and generic filing complexity.",
+    "event_clock": "Only the first independently reproducible public SEC observation is eligible; latent expiry is not a tradable clock unless publicly exposed.",
+    "observable_states": [
+      "REDACTED_WITH_ACTIVE_CTR",
+      "CTR_EXTENSION",
+      "UNREDACTED_REFILE",
+      "OTHER_PUBLIC_RELEASE"
+    ],
+    "potential_features": [
+      "newly unredacted exhibit",
+      "redaction-density delta",
+      "extension-versus-unredaction outcome",
+      "contract category",
+      "time since prior confidentiality event",
+      "repeated confidentiality state"
+    ]
+  },
+  "evidence_basis": [
+    {
+      "source": "SEC official guidance",
+      "finding": "Near confidential-treatment expiry, registrants may refile unredacted exhibits or seek extensions.",
+      "url": "https://www.sec.gov/newsroom/whats-new/streamlined-procedure-confidential-treatment-extensions"
+    },
+    {
+      "source": "SEC official guidance",
+      "finding": "Post-2019 redacted-exhibit rules permit certain immaterial competitively harmful redactions; traditional confidential treatment remains available.",
+      "url": "https://www.sec.gov/rules-regulations/staff-guidance/disclosure-guidance/corpfinconfidential-treatment-applicationshtm"
+    },
+    {
+      "source": "Thompson, Urcan & Yoon (2023), The Accounting Review",
+      "finding": "Redacted material-contract filings are associated with slower price discovery and greater insider trading.",
+      "doi": "10.2308/TAR-2020-0703"
+    },
+    {
+      "source": "Kolev, Lee & Neamtiu (2023), Journal of Accounting and Public Policy",
+      "finding": "Confidential-treatment requests are associated with more SEC monitoring/comment activity and longer resolution.",
+      "doi": "10.1016/j.jaccpubpol.2023.107069"
+    },
+    {
+      "source": "Adelson & Nyarko (2025), Material Contracts Corpus",
+      "finding": "The public corpus contains 1,038,766 unique SEC contract URLs from 2000–2023 with filing metadata, document format and amendment status.",
+      "arxiv": "2504.02864"
+    }
+  ],
+  "cheap_falsifiers": [
+    "Public archive cannot deterministically reconstruct approval/extension/unredacted-refile lineage.",
+    "The useful clock is latent expiry rather than public observation.",
+    "Post-2019 regime break prevents valid interpretation.",
+    "Event density is too sparse for stable research.",
+    "Issuer or contract mapping requires hindsight.",
+    "The mechanism collapses to Q218, Q224, Q228 or Q231 under blinded ablation."
+  ],
+  "gates": [
+    "historical CT-order/exhibit completeness",
+    "public observation-clock reconstruction",
+    "deterministic accession/exhibit/issuer lineage",
+    "pre/post-2019 regime-break audit",
+    "as-filed redaction/unredaction structural measurement",
+    "orthogonality audit vs Q218/Q224/Q228/Q231",
+    "independent PIT reproduction"
+  ],
+  "status_note": "Discovery lead only; not in formal performance candidate registry and carries no performance authorization."
+}

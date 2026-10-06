@@ -284,6 +284,142 @@ def expanded_candidate_board(
     return board
 
 
+
+def capacity_pipeline(
+    configured: list[dict[str, Any]],
+    work: list[dict[str, Any]],
+    ai: list[dict[str, Any]],
+    os_state: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Publish current observed work plus policy-planned next work per capacity.
+
+    Planned rows are routing policy, not observed queue entries and never create
+    scientific authority.
+    """
+    current_by_resource: dict[str, list[dict[str, Any]]] = {}
+    for row in work:
+        current_by_resource.setdefault(str(row.get("resource") or ""), []).append(row)
+
+    top4_wf = ".github/workflows/top4-candidate-research-capacity.yml"
+    overlay = os_state.get("top_candidate_capacity_overlay", {})
+    lane_a = overlay.get("windows_A", {}).get("priority", [])
+    lane_b = overlay.get("windows_B", {}).get("priority", [])
+    runner_c = overlay.get("runner_C", {})
+
+    def current_text(name: str) -> str:
+        rows = current_by_resource.get(name, [])
+        if not rows:
+            return "—"
+        vals = []
+        for row in rows[:3]:
+            task = str(row.get("task") or "")
+            job = str(row.get("job") or "")
+            vals.append(f"{task}{' / ' + job if job else ''}")
+        return " · ".join(vals)
+
+    provider_states = {
+        str(x.get("provider")): str(x.get("status") or "")
+        for x in ai
+        if isinstance(x, dict)
+    }
+    usable_ai = [
+        provider for provider, status in provider_states.items()
+        if any(k in status.upper() for k in ("PASS", "READY", "AVAILABLE", "SUCCESS"))
+        and "RATE_LIMIT" not in status.upper()
+        and "BLOCK" not in status.upper()
+        and "NO RECENT" not in status.upper()
+    ]
+
+    policy: dict[str, dict[str, Any]] = {
+        "Windows self-hosted A": {
+            "planned_next": "Q104 I19/I20/I22 formal-readiness gate closure",
+            "next_gate": "historical 13F completeness → frozen event-state/PIT compiler",
+            "basis": f"Lane A priority: {', '.join(map(str, lane_a[:3]))}",
+            "mode": "POLICY_PLANNED",
+        },
+        "Windows self-hosted B": {
+            "planned_next": "Top-4 Q218–Q221 source/PIT workpack fan-out",
+            "next_gate": "Q218 pairing/PIT · Q219 post-filing options PIT · Q220 deterministic XBRL mapping/PIT · Q221 public-boundary/issuer mapping",
+            "basis": f"Lane B priority: {', '.join(map(str, lane_b[:4]))}",
+            "mode": "POLICY_PLANNED",
+        },
+        "Windows self-hosted C": {
+            "planned_next": "Independent reproduction / long deterministic research",
+            "next_gate": "repeat the next completed structural gate on an independent execution path",
+            "basis": f"Runner-C role: {runner_c.get('role', 'LONG_DETERMINISTIC_RESEARCH / INDEPENDENT_QA')}",
+            "mode": "POLICY_PLANNED",
+        },
+        "GitHub-hosted Ubuntu x64": {
+            "planned_next": "Top-4 Q218–Q221 hosted deterministic source/PIT workpack",
+            "next_gate": "independent x64 verification of source/PIT contracts",
+            "basis": f"workflow: {top4_wf}",
+            "mode": "POLICY_PLANNED",
+        },
+        "GitHub-hosted ARM64": {
+            "planned_next": "Top-4 Q218–Q221 independent ARM64 reproduction",
+            "next_gate": "architecture-diverse independent structural/PIT reproduction",
+            "basis": f"workflow: {top4_wf}",
+            "mode": "POLICY_PLANNED",
+        },
+        "Free AI pool": {
+            "planned_next": (
+                "Material-change adversarial review via free provider"
+                if usable_ai else
+                "No AI job until a free provider is available and an independent review task exists"
+            ),
+            "next_gate": "free-only entitlement + new high-value review task/material change",
+            "basis": "event-driven AI review; never scientific authority",
+            "mode": "READY" if usable_ai else "PROVIDER_GATED",
+        },
+        "Bounded Agent Queue": {
+            "planned_next": "Demand-driven bounded engineering/review request",
+            "next_gate": "concrete bounded request required; no filler requests",
+            "basis": "agent-request queue contract",
+            "mode": "DEMAND_DRIVEN",
+        },
+        "Codespaces fallback": {
+            "planned_next": "None — manual interactive fallback only",
+            "next_gate": "real debugging/data-QA need not covered elsewhere",
+            "basis": "fallback policy",
+            "mode": "FALLBACK_ONLY",
+        },
+        "Paper Forward / Shadow": {
+            "planned_next": "Next scheduled paper/shadow monitoring + MTM ledger update",
+            "next_gate": "closed-candle update loop; simulation only",
+            "basis": "paper/forward infrastructure",
+            "mode": "SCHEDULED",
+        },
+        "Dashboard / GitHub Pages": {
+            "planned_next": "Next snapshot generation + Pages deployment",
+            "next_gate": "resource-dashboard-update workflow",
+            "basis": "dashboard update/deploy workflow",
+            "mode": "SCHEDULED",
+        },
+    }
+
+    out = []
+    for index, resource in enumerate(configured, 1):
+        name = str(resource["name"])
+        item = policy.get(name, {
+            "planned_next": "No policy-defined next job",
+            "next_gate": "No deterministic routing contract available",
+            "basis": "not configured",
+            "mode": "UNSPECIFIED",
+        })
+        rows = current_by_resource.get(name, [])
+        out.append({
+            "slot_order": index,
+            "resource": name,
+            "current": current_text(name),
+            "current_active": bool(rows),
+            "planned_next": item["planned_next"],
+            "next_gate": item["next_gate"],
+            "basis": item["basis"],
+            "mode": item["mode"],
+            "pipeline_authority": "non-authorizing; planned routing only",
+        })
+    return out
+
 def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, Any]], work: list[dict[str, Any]]) -> list[dict[str, Any]]:
     out = []
     runner_by_name = {str(r.get("name")): r for r in runners}
@@ -460,6 +596,7 @@ def main() -> None:
         "resources": enrich_resources(configured_resources, runners, work),
         "runner_live_snapshot": runners,
         "work_assignments": work,
+        "capacity_pipeline": capacity_pipeline(configured_resources, work, ai, os_state),
         "workload_by_resource": {name: sum(1 for w in work if w.get("resource") == name) for name in sorted({w.get("resource") for w in work if w.get("resource")})},
         "workload_by_lane": {lane: sum(1 for w in work if w.get("lane") == lane) for lane in sorted({w.get("lane") for w in work if w.get("lane")})},
         "recent_activity_24h": recent_activity(),
