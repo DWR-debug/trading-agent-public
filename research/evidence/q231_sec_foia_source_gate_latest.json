@@ -1,0 +1,161 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-06-Q231-SEC-FOIA-SOURCE-GATE",
+  "candidate_id": "Q231",
+  "status": "SOURCE_ARCHIVE_SCHEMA_GATE_INCOMPLETE",
+  "generated_at_utc": "2026-10-06T06:09:03.109219+00:00",
+  "source_contract": {
+    "official_source": "https://www.sec.gov/foia/frequently-requested-documents/foia-logs",
+    "historical_log_start": "January 2006",
+    "historical_log_end_observed": "August 2026",
+    "monthly_logs_observed": true,
+    "annual_logs_observed": true,
+    "controls": [
+      "latest_monthly",
+      "monthly_midpoint",
+      "annual_recent",
+      "annual_early"
+    ]
+  },
+  "archive_page": {
+    "http_status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes_read": 203207,
+    "sha256": "7ec2a8e53d624bf9a9a023ca0ff1530970a899a3efff7e8bb5f04579312a3716",
+    "discovered_log_link_count": 174,
+    "missing_controls": []
+  },
+  "probes": [
+    {
+      "label": "latest_monthly",
+      "link_text": "August 2026",
+      "url": "https://www.sec.gov/files/data/other/foia-logs/foia-log-august-2026_0.csv",
+      "reachable": true,
+      "http_status": 200,
+      "content_type": "application/octet-stream",
+      "bytes_read": 132060,
+      "sha256": "159730539cf6af38aaeb17935eea01fcce03879f9d81d302a067050dc17a404d",
+      "header": [
+        "request id",
+        "requester name",
+        "organization",
+        "requester category",
+        "request description",
+        "requested date",
+        "received date",
+        "request status",
+        "closed date",
+        "final disposition",
+        ""
+      ],
+      "expected_columns_present": false,
+      "notes": [
+        "schema_header_does_not_cover_documented_foia_log_fields"
+      ]
+    },
+    {
+      "label": "monthly_midpoint",
+      "link_text": "January 2020",
+      "url": "https://www.sec.gov/files/data/foia-logs/foia-log-january-2020.csv",
+      "reachable": true,
+      "http_status": 200,
+      "content_type": "application/octet-stream",
+      "bytes_read": 213147,
+      "sha256": "ea62eb8c8bf963ddbcfd86a2d89c7cdbe49be773f7450105b699889dc6f582ab",
+      "header": [
+        "foia log for the month of janary 2020",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "expected_columns_present": false,
+      "notes": [
+        "schema_header_does_not_cover_documented_foia_log_fields"
+      ]
+    },
+    {
+      "label": "annual_recent",
+      "link_text": "2018",
+      "url": "https://www.sec.gov/files/data/foia-logs/foia-log-fy2018.csv",
+      "reachable": true,
+      "http_status": 200,
+      "content_type": "application/octet-stream",
+      "bytes_read": 2474264,
+      "sha256": "3a5f320d4a66b630db421020d60705de507167eb65546093aee63097e4d62ddc",
+      "header": [
+        "request id",
+        "requester name",
+        "organization",
+        "requester category",
+        "request description",
+        "received date",
+        "request status",
+        "closed date",
+        "final disposition",
+        ""
+      ],
+      "expected_columns_present": false,
+      "notes": [
+        "schema_header_does_not_cover_documented_foia_log_fields"
+      ]
+    },
+    {
+      "label": "annual_early",
+      "link_text": "2006",
+      "url": "https://www.sec.gov/files/data/foia-logs/foia-log-fy2006.csv",
+      "reachable": true,
+      "http_status": 200,
+      "content_type": "application/octet-stream",
+      "bytes_read": 1497608,
+      "sha256": "a04a220b6fda6874fd8825b79dac348540899ddc162b2f210263651e60094545",
+      "header": [
+        "request id",
+        "requester name",
+        "organization",
+        "requester type",
+        "request description",
+        "requested date",
+        "received date",
+        "request status",
+        "closed date",
+        "final disposition"
+      ],
+      "expected_columns_present": false,
+      "notes": [
+        "schema_header_does_not_cover_documented_foia_log_fields"
+      ]
+    }
+  ],
+  "pit_contract": {
+    "latent_request_time_is_not_tradable_clock": true,
+    "public_observation_clock": "first public SEC FOIA log release containing the request",
+    "monthly_annual_cadence_must_be_reconstructed": true,
+    "exact_historical_publication_timestamp_proven_by_this_gate": false,
+    "requester_classification_hindsight_allowed": false,
+    "future_closed_disposition_rewrites_historical_prefix": false
+  },
+  "orthogonality_contract": {
+    "distinct_from_q224_edgar_access_demand": true,
+    "q224_measure": "requests/access to published SEC records",
+    "q231_measure": "explicit FOIA requests for otherwise non-public SEC records",
+    "formal_orthogonality_testing_allowed": false
+  },
+  "scientific_boundary": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "ranking_allowed": false,
+    "parameter_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "promotion_allowed": false,
+    "live_execution_allowed": false
+  },
+  "next_gate": "historical publication-clock reconstruction + deterministic requester/category compiler + request-description issuer mapping + Q224 orthogonality audit + independent PIT reproduction",
+  "receipt_fingerprint": "f781d0a617e0cd9e1486391ad37a01e37e428a04372f5ddecfb74e5e3697e966"
+}
