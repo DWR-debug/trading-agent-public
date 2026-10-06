@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -749,6 +750,93 @@ def recent_activity() -> list[dict[str, Any]]:
     return out
 
 
+
+def _is_platform_commit_message(message: str) -> bool:
+    normalized = " ".join(str(message or "").lower().split())
+    excluded = (
+        "refresh resource dashboard snapshot",
+        "synchronize current operational status",
+        "record ai worker state",
+        "current operational status synchronizer",
+    )
+    return any(token in normalized for token in excluded)
+
+
+def _is_material_milestone_commit(message: str) -> bool:
+    normalized = " ".join(str(message or "").lower().split())
+    if not normalized or _is_platform_commit_message(normalized):
+        return False
+    prefixes = ("research:", "evidence:", "science:", "governance:", "fix:", "ops:")
+    return normalized.startswith(prefixes)
+
+
+def _is_research_milestone_run(run: dict[str, Any]) -> bool:
+    if not isinstance(run, dict) or run.get("status") != "completed" or run.get("conclusion") != "success":
+        return False
+    name = " ".join(str(run.get(key) or "") for key in ("name", "display_title")).lower()
+    excluded = (
+        "resource dashboard", "current operational status", "status synchronizer",
+        "workflow lint", "full suite verification", "spine next-gate autonomous router",
+        "ci", "pages",
+    )
+    if any(token in name for token in excluded):
+        return False
+    keywords = (
+        "research", "candidate", "reproduction", "feasibility", "source", "pit", "census",
+        "13f", "xbrl", "sec", "edgar", "foia", "correspondence", "procurement", "trace",
+        "literature", "frontier",
+    )
+    return any(token in name for token in keywords) or bool(re.search(r"\bq\d{2,4}\b", name, re.IGNORECASE))
+
+
+def milestone_history_12h() -> list[dict[str, Any]]:
+    now = datetime.now(timezone.utc)
+    since = now - timedelta(hours=12)
+    since_iso = since.isoformat().replace("+00:00", "Z")
+    entries: list[dict[str, Any]] = []
+
+    commits = run_cmd_json([f"/repos/{REPO}/commits?since={since_iso}&until={now.isoformat().replace('+00:00','Z')}&per_page=100"])
+    if isinstance(commits, list):
+        for commit in commits:
+            message = str((commit.get("commit") or {}).get("message") or "").splitlines()[0]
+            if not _is_material_milestone_commit(message):
+                continue
+            ts = (
+                (commit.get("commit") or {}).get("committer", {}).get("date")
+                or (commit.get("commit") or {}).get("author", {}).get("date")
+            )
+            entries.append({
+                "timestamp": ts, "kind": "COMMIT", "status": "recorded",
+                "title": message,
+                "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+                "url": commit.get("html_url") or "", "source": "GitHub commit history",
+            })
+
+    runs = run_cmd_json([f"/repos/{REPO}/actions/runs?created=>={since_iso}&per_page=100"])
+    if isinstance(runs, dict):
+        for run in runs.get("workflow_runs", []):
+            if not _is_research_milestone_run(run):
+                continue
+            entries.append({
+                "timestamp": run.get("completed_at") or run.get("updated_at"),
+                "kind": "RUN", "status": "success",
+                "title": str(run.get("name") or "Research run"),
+                "detail": f"Erfolgreich abgeschlossener Research-Run #{run.get('run_number')} (Run {run.get('id')}).",
+                "url": run.get("html_url") or "", "source": "GitHub Actions",
+            })
+
+    entries.sort(key=lambda x: str(x.get("timestamp") or ""))
+    deduped: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    for item in entries:
+        key = (str(item.get("kind")), str(item.get("title")))
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(item)
+    return deduped[-24:]
+
+
 def ai_provider_state() -> list[dict[str, Any]]:
     directory = ROOT / "ops" / "ai_worker_state"
     latest: dict[str, dict[str, Any]] = {}
@@ -867,11 +955,13 @@ def main() -> None:
             "blocked_planned_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if not item.get("scheduled")),
             "unallocated_routable_items": sum(1 for row in planned_capacity if row.get("capacity_state") == "available" and not row.get("planned_assignments")),
             "planned_capacity_note": "bounded advisory plan only; not an execution queue, receipt or scientific authorization.",
+            "milestones_12h": len(milestones_12h),
         },
         "resources": enrich_resources(configured_resources, runners, work),
         "runner_live_snapshot": runners,
         "work_assignments": work,
         "planned_capacity": planned_capacity,
+        "milestone_history_12h": milestones_12h,
         "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks),
         "duration_benchmarks": workflow_benchmarks,
         "job_duration_benchmarks": job_benchmarks,
