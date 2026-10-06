@@ -206,9 +206,5 @@ jobs:
             fi
             sleep "$attempt"
           done
-          exit 1      - name: Download frozen SEC source snapshot
-        uses: actions/download-artifact@v6
-        with:
-          name: q104-i19-sec-source-snapshot-${{ github.run_id }}-${{ github.run_attempt }}
-          path: research/runs/q104_i19_13f_census/source_snapshot
+          exit 1
 
