@@ -18,6 +18,8 @@ Vor PROJECT_STATUS.md wird jetzt immer auch der dauerhafte Trading Agent OS-Vert
 - docs/SAMSUNG_ANDROID_PHONE_FLEET.md
 - ops/android_phone_resources.json
 - research/candidates/orthogonal_candidate_specs_2026-10-05.json
+- research/governance/knowledge_relation_graph_contract_2026_10_06.json
+- research/evidence/knowledge_relation_index_latest.json
 - research/reviews/grok_bounded_review_2026-10-04.json
 
 Diese beiden Dateien beschreiben ausschließlich den aktuellen operativen Zustand und werden über
@@ -25,7 +27,7 @@ Diese beiden Dateien beschreiben ausschließlich den aktuellen operativen Zustan
 PROJECT_STATUS.md bleibt für historische Rekonstruktion erhalten und darf aktuelle SHA-, PR-,
 Runner- oder Queue-Angaben nicht überstimmen.
 
-Stand: 2026-10-04
+Stand: 2026-10-06
 
 Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit
 `trading agent` beginnen.
@@ -111,6 +113,14 @@ Daher gilt verbindlich:
 Die Ressourcenlage beeinflusst die Architektur: kostenlose Agentencredits werden gezielt für
 hochwertige Hypothesen-/Design-/Review-Arbeit eingesetzt, während deterministische Berechnung
 über vorhandene kostenlose Runner bzw. lokale Ressourcen erfolgt.
+
+### Knowledge-Relation-Reconciliation
+
+Vor fachlicher Arbeit wird der Knowledge-Relation-Index als Metadaten-Control-Plane geprüft.
+Gemeinsame Quellen, öffentliche Uhren und Identity-Maps dürfen effizient wiederverwendet werden;
+daraus darf jedoch keine transitive wissenschaftliche Autorität abgeleitet werden.
+Cross-candidate relations sind Hypothesen-/Routingmaterial und werden niemals als Performance-,
+Ranking- oder Holdout-Information verwendet.
 
 ## Verbindlicher Startablauf
 
