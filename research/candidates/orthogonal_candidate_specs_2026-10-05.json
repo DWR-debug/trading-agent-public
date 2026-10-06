@@ -832,7 +832,8 @@
         "paid_data_dependency",
         "future_trade_correction_invariance",
         "free_eod_trade_structure_fields_unavailable_or_nonreproducible",
-        "publication_artifact_explains_trade_quality_state"
+        "publication_artifact_explains_trade_quality_state",
+        "free_FINRA_symbol_to_issuer_history_not_PIT_stable"
       ],
       "gates": [
         "free_TRACE_historical_source_census",
@@ -842,7 +843,8 @@
         "matched_issuer_panel",
         "bond_lifecycle_trade_status_audit",
         "independent_PIT_reproduction_on_symbol_disjoint_issuers",
-        "free_eod_field_availability_audit_for_trade_status_asof_side_counterparty_reporting_party"
+        "free_eod_field_availability_audit_for_trade_status_asof_side_counterparty_reporting_party",
+        "free_FINRA_symbol_issuer_name_security_master_availability_audit"
       ],
       "non_overlap": [
         "Q214",
@@ -858,7 +860,7 @@
       ],
       "scientific_boundary": "discovery_contract_only",
       "priority": "P1_SOURCE_FEASIBILITY",
-      "implementation_note": "Issuer-level bond state must be orthogonalized against broad rates and the freely accessible FINRA Corporate Debt Market Breadth/Sentiment state before any later outcome test. This control is predeclared and is not itself an alpha candidate. The public trade-structure fields documented by FINRA (Trade Status, As-Of, Side, Contra Party Type, Reporting Party Type, etc.) are to be treated first as provenance/robustness controls, not alpha. Their admissibility is conditional on the exact free EOD route exposing the field consistently across the frozen historical panel. Future corrections/cancellations may be used only as a mutation/exclusion-sensitivity audit; they must never rewrite the historical decision prefix."
+      "implementation_note": "Issuer-level bond state must be orthogonalized against broad rates and the freely accessible FINRA Corporate Debt Market Breadth/Sentiment state before any later outcome test. This control is predeclared and is not itself an alpha candidate. The public trade-structure fields documented by FINRA (Trade Status, As-Of, Side, Contra Party Type, Reporting Party Type, etc.) are to be treated first as provenance/robustness controls, not alpha. Their admissibility is conditional on the exact free EOD route exposing the field consistently across the frozen historical panel. Future corrections/cancellations may be used only as a mutation/exclusion-sensitivity audit; they must never rewrite the historical decision prefix. FINRA documents a free proprietary fixed-income Symbol and public issuer-name/security attributes; Q230 should prefer these free identifiers when the frozen EOD historical route exposes them consistently, and must not introduce a paid CUSIP dependency merely to solve identity. Current-vs-historical issuer mapping remains a separate PIT gate."
     }
   ],
   "blocked_or_composite_tracks": {
