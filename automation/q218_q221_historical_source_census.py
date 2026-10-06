@@ -55,16 +55,18 @@ def sec_submission_census() -> dict:
                 continue
             accession = recent["accessionNumber"][i]
             primary = recent["primaryDocument"][i]
-            index_headers = (
+            archive_base = (
                 f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/"
-                f"{accession.replace('-', '')}/{accession}-index-headers.html"
+                f"{accession.replace('-', '')}/"
             )
+            index_headers = archive_base + f"{accession}-index-headers.html"
+            primary_url = archive_base + primary
             try:
                 _, _, page = fetch(index_headers, None)
                 text = page.decode("utf-8", errors="replace")
                 acceptance = re.findall(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})", text, flags=re.I)
                 exhibit_991 = bool(re.search(r"EXHIBIT\s+99\.1", text, flags=re.I))
-                earnings_release = bool(re.search(r"EARNINGS\s+RELEASE", text, flags=re.I))
+                earnings_release = bool(re.search(r"EARNINGS\s+RELEASE|PRESS\s+RELEASE", text, flags=re.I))
                 rows.append({
                     "form": form,
                     "filing_date": filing_date,
@@ -76,6 +78,9 @@ def sec_submission_census() -> dict:
                     "acceptance_datetime": acceptance[0] if acceptance else None,
                     "exhibit_99_1": exhibit_991,
                     "earnings_release_marker": earnings_release,
+                    "item_2_02_marker": False,
+                    "primary_publication_terms_marker": False,
+                    "primary_url": primary_url,
                 })
             except Exception as exc:
                 rows.append({
@@ -88,8 +93,38 @@ def sec_submission_census() -> dict:
                     "error": type(exc).__name__ + ":" + str(exc),
                 })
         annual = [r for r in rows if r["form"] == "10-K"]
-        voluntary = [r for r in rows if r["form"] == "8-K" and r.get("exhibit_99_1") and r.get("earnings_release_marker")]
         annual_dates = {r.get("report_date") for r in annual if r.get("report_date")}
+        pair_candidates = [
+            r for r in rows
+            if r["form"] == "8-K" and r.get("report_date") in annual_dates
+        ]
+        for row in pair_candidates:
+            try:
+                _, _, primary_page = fetch(row["primary_url"], None)
+                primary_text = primary_page.decode("utf-8", errors="replace")
+                row["item_2_02_marker"] = bool(
+                    re.search(
+                        r"ITEM\s+2\.02|RESULTS\s+OF\s+OPERATIONS\s+AND\s+FINANCIAL\s+CONDITION",
+                        primary_text,
+                        flags=re.I,
+                    )
+                )
+                row["primary_publication_terms_marker"] = bool(
+                    re.search(
+                        r"EARNINGS|FINANCIAL\s+RESULTS|QUARTERLY\s+RESULTS|FULL[-\s]?YEAR\s+RESULTS",
+                        primary_text,
+                        flags=re.I,
+                    )
+                )
+            except Exception as exc:
+                row["primary_fetch_error"] = type(exc).__name__ + ":" + str(exc)
+        voluntary = [
+            r for r in pair_candidates
+            if r.get("exhibit_99_1")
+            or r.get("item_2_02_marker")
+            or r.get("earnings_release_marker")
+            or r.get("primary_publication_terms_marker")
+        ]
         matched_dates = sorted({r.get("report_date") for r in voluntary if r.get("report_date") in annual_dates})
         issuer_results[symbol] = {
             "cik": cik,
@@ -117,31 +152,58 @@ def sec_notes_census() -> dict:
     with zipfile.ZipFile(io.BytesIO(body)) as archive:
         names = archive.namelist()
     lower = {name.lower() for name in names}
-    required_markers = ["sub.txt", "tag.txt", "dim.txt", "num.txt", "txt.txt"]
+    variant_groups = {
+        "sub": {"sub.txt", "sub.tsv"},
+        "tag": {"tag.txt", "tag.tsv"},
+        "dim": {"dim.txt", "dim.tsv"},
+        "num": {"num.txt", "num.tsv"},
+        "txt": {"txt.txt", "txt.tsv"},
+    }
+    present = {
+        key: any(candidate in lower for candidate in variants)
+        for key, variants in variant_groups.items()
+    }
     return {
         "status": status,
         "content_type": content_type,
         "archive_sha256": hashlib.sha256(body).hexdigest(),
         "archive_bytes": len(body),
         "zip_parse_ok": True,
-        "required_member_markers_present": {marker: marker in lower for marker in required_markers},
+        "required_member_markers_present": present,
+        "required_member_variants": {key: sorted(variants) for key, variants in variant_groups.items()},
         "member_count": len(names),
         "members_sample": names[:20],
     }
 
 
+USA_USASPENDING_ABOUT_DATA_URL = "https://www.usaspending.gov/data/about-the-data-download.pdf"
+USA_USASPENDING_API_DOCS_URL = "https://api.usaspending.gov/docs/endpoints"
+
+
+def _extract_pdf_text(body: bytes) -> str:
+    from pypdf import PdfReader
+    reader = PdfReader(io.BytesIO(body))
+    return "\n".join(page.extract_text() or "" for page in reader.pages)
+
+
 def usa_rdtne_census() -> dict:
-    status, content_type, body = fetch(USA_RDTNE_URL, None)
-    text = body.decode("utf-8", errors="replace")
+    status, content_type, body = fetch(USA_USASPENDING_ABOUT_DATA_URL, None)
+    text = _extract_pdf_text(body)
     upper = re.sub(r"\s+", " ", text).upper()
+    api_status, api_content_type, api_body = fetch(USA_USASPENDING_API_DOCS_URL, None)
+    api_text = re.sub(r"\s+", " ", api_body.decode("utf-8", errors="replace")).upper()
     return {
         "status": status,
         "content_type": content_type,
         "content_sha256": hashlib.sha256(body).hexdigest(),
         "content_bytes": len(body),
-        "rdtne_marker_found": "RESEARCH DEVELOPMENT TEST AND EVALUATION" in upper,
-        "competition_marker_found": "COMPETITION" in upper,
-        "transaction_marker_found": "TRANSACTION" in upper or "MODIFICATION" in upper,
+        "public_clock_section_found": "FREQUENCY OF UPDATES TO PRIME AWARD DATA FOR CONTRACTS" in upper,
+        "contract_modification_within_five_days_found": "WITHIN FIVE DAYS" in upper,
+        "publication_sequence_found": "PUBLISHED TO USASPENDING.GOV" in upper and "FOLLOWING MORNING" in upper,
+        "transactions_endpoint_documented": "/API/V2/TRANSACTIONS/" in api_text,
+        "api_status": api_status,
+        "api_content_type": api_content_type,
+        "api_content_bytes": len(api_body),
         "lookahead_used": False,
     }
 
