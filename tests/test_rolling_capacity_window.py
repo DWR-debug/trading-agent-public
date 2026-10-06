@@ -9,6 +9,7 @@ def test_current_bounded_capacity_window_contract():
     end = datetime.fromisoformat(p["end_utc"].replace("Z","+00:00"))
     assert (end-start).total_seconds() == 120 * 60
     assert p["cadence_minutes"] == 10
+    assert p["recent_success_cooldown_minutes"] >= 60
     assert p["safety"]["PAPER_ONLY"] is True
     assert all(p["safety"][k] is False for k in ("performance","holdout_selection","ranking","tuning","promotion","live_execution"))
 
