@@ -270,6 +270,29 @@
     "ranking": false,
     "tuning": false,
     "promotion": false,
-    "live_execution": false
+    "live_execution": false,
+    "autonomous_next_gate_router": {
+      "workflow": ".github/workflows/spine-next-gate-autonomous-router.yml",
+      "planner": "automation/spine_next_gate_router.py",
+      "requires_latest_spine_success": true,
+      "duplicate_protection": true,
+      "recent_success_suppression_minutes": 360,
+      "max_dispatches_per_pulse": 5,
+      "allowed_targets": [
+        "q224-edgar-modern-source-gate.yml",
+        "q229-historical-release-census.yml",
+        "q229-q230-source-feasibility.yml",
+        "q230-windows-trace-connectivity.yml",
+        "q231-sec-foia-source-gate.yml"
+      ],
+      "forbidden_targets": [
+        "performance",
+        "holdout",
+        "ranking",
+        "tuning",
+        "promotion",
+        "live_execution"
+      ]
+    }
   }
 }
