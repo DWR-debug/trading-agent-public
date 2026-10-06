@@ -18,7 +18,17 @@ function relativeRemaining(sec){
 }
 function candidateFrom(text){
   text=String(text||"");
-  return ["Q218","Q219","Q220","Q221"].find(function(c){return text.indexOf(c)>=0;})||"—";
+  return ["Q104:I19","Q218","Q220","Q221","Q219"].find(function(c){return text.indexOf(c)>=0;})||"—";
+}
+function updateClock(){
+  var now=new Date();
+  try{
+    $("clockTime").textContent=new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(now);
+    $("clockDate").textContent=new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",weekday:"long",year:"numeric",month:"long",day:"numeric"}).format(now);
+  }catch(e){
+    $("clockTime").textContent=now.toLocaleTimeString("de-DE");
+    $("clockDate").textContent=now.toLocaleDateString("de-DE");
+  }
 }
 function capacityClass(x){
   var s=String(x.capacity_state||"unknown");
@@ -115,6 +125,8 @@ function load(){
   }).then(function(){if(timeoutId!==null)clearTimeout(timeoutId);});
 }
 document.addEventListener("DOMContentLoaded",function(){
+  updateClock();
+  setInterval(updateClock,1000);
   $("refresh").addEventListener("click",load);
   $("update").addEventListener("click",function(){});
   load();
