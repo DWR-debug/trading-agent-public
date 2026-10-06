@@ -878,14 +878,14 @@
     {
       "code": "Q224",
       "class": "sec_edgar_document_demand_acquisition_shock",
-      "state": "SOURCE_COMPONENT_READY_WITH_HISTORICAL_GAP",
+      "state": "SOURCE_ARCHIVE_INTEGRITY_COMPLETED_NO_PERFORMANCE",
       "parent_code": "LITERATURE-DISCOVERY-PLANE",
       "candidate_inventory_path": "research/frontier/q224_edgar_document_demand_2026_10_05.json",
       "design_document": "docs/research_design/DEEP_CANDIDATE_RESEARCH_SYNTHESIS_2026-10-05.md",
       "performance_authorization_allowed": false,
       "priority": "P1",
-      "next_gate": "bounded modern-window historical log reconstruction + request-quality audit + filing-boundary join + mutation/PIT checks",
-      "note": "Modern SEC EDGAR request-demand source is feasible only on the documented modern window; the 2017-07-01 through 2020-05-18 gap and legacy/modern schema differences are retained as a hard boundary. Q224 remains outside the Q218-Q221 top-candidate wave until source/PIT and separability gates pass."
+      "next_gate": "schema-variant normalization + request-quality contamination bounds + filing-acceptance/public-boundary join + mutation/PIT checks + independent reproduction",
+      "note": "Modern SEC EDGAR request-demand source is archive-integrity validated on fixed controls across the modern window. The 2017-07-01 through 2020-05-18 gap, modern field-name drift and unresolved traffic-contamination/public-boundary issues remain hard gates; Q224 stays outside the Q218-Q221 top-candidate wave until separability/PIT passes."
     },
     {
       "code": "Q230",
