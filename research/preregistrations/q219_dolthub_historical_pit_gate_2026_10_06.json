@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "candidate_id": "Q219",
+  "task_id": "Q-2026-10-06-Q219-DOLTHUB-HISTORICAL-PIT",
+  "status": "PREREGISTERED_NON_AUTHORIZING_GATE",
+  "purpose": "Determine whether the public DoltHub options repository exposes a commit snapshot at or before the fixed 2025-08-01 observation date, and independently verify two immutable AS OF snapshots.",
+  "source": {
+    "provider": "DoltHub",
+    "repository_owner": "post-no-preference",
+    "repository": "options",
+    "branch": "master"
+  },
+  "fixed_target_date": "2025-08-01",
+  "fixed_target_symbols": [
+    "AAPL",
+    "AMZN",
+    "DIS",
+    "JPM",
+    "MSFT",
+    "NVDA",
+    "WMT",
+    "XOM"
+  ],
+  "fixed_requirements": [
+    "Observe DOLT_LOG() commit history.",
+    "Require a commit dated on or before 2025-08-01 for true historical PIT readiness.",
+    "Query exactly two observed commits with SELECT ... AS OF <commit> on option_chain at the fixed date.",
+    "Hash returned rows exactly as received.",
+    "No future data, returns, ranking, tuning, holdout selection or performance."
+  ],
+  "interpretation_rule": {
+    "PIT_READY": "Only when a valid option_chain commit at or before 2025-08-01 is observed and two AS OF snapshots are reproducibly queried.",
+    "PIT_UNPROVEN": "If history exists but no commit at or before the target date is observed; later commits may document revision behavior but do not establish historical PIT."
+  },
+  "governance": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  }
+}
