@@ -27,3 +27,8 @@ def test_capacity_dispatcher_ignores_feature_branch_runs_for_master_research():
 def test_capacity_dispatcher_matches_runs_by_workflow_path():
     workflow = open(".github/workflows/capacity-saturation-rolling-waves.yml", encoding="utf-8").read()
     assert '.path == $workflow_path' in workflow
+
+
+def test_capacity_dispatcher_does_not_use_legacy_workflow_url_match():
+    workflow = open(".github/workflows/capacity-saturation-rolling-waves.yml", encoding="utf-8").read()
+    assert '.workflow_url == $wf' not in workflow
