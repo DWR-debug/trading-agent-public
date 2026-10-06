@@ -161,7 +161,7 @@ def main()->int:
     args=ap.parse_args()
     result=compile_spine(load(args.contract),load(args.relation),load(args.specs),load(args.registry))
     args.output.parent.mkdir(parents=True,exist_ok=True)
-    args.output.write_text(json.dumps(result,indent=2,ensure_ascii=False)+"\\n",encoding="utf-8")
+    args.output.write_text(json.dumps(result,indent=2,ensure_ascii=False)+chr(10),encoding="utf-8")
     print(json.dumps(result,sort_keys=True))
     return 0
 if __name__=="__main__":
