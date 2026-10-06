@@ -150,11 +150,14 @@ jobs:
         with:
           ref: master
           fetch-depth: 1
-      - uses: actions/download-artifact@v6
-        with:
-          pattern: q104-i19-census-*
-          path: research/runs/q104_i19_13f_census/merged
-          merge-multiple: false
+      - name: Download shard artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/q104_i19_13f_census/merged
+          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --pattern "q104-i19-census-*" --dir research/runs/q104_i19_13f_census/merged
       - name: Merge and publish receipt
         env:
           GH_TOKEN: ${{ github.token }}
