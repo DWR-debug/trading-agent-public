@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T12:52:17.904414+00:00",
+    "generated_at_utc": "2026-10-06T12:54:16.303813+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "b1304d70cd96996266cad5911400a33144174f3b"
+    "source_master_sha": "4efa436a187a94b33bb06ed31ea8198968075a7d"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T12:52:17.904414+00:00",
+  "generated_at_utc": "2026-10-06T12:54:16.303813+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4490,6 +4490,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: retry transient self-hosted Spine pytest bootstrap",
+        "sha": "4efa436a187a94b33bb06ed31ea8198968075a7d",
+        "timestamp": "2026-10-06T14:54:02+02:00"
+      },
+      {
+        "message": "FIX: correct Q104 synthetic TSV test literal",
+        "sha": "93254c06d2ed3f6d0da50a7e95f6a8ddf3728c40",
+        "timestamp": "2026-10-06T14:53:59+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c1110b2db070a84b782ae0215275afda0aed69d2",
+        "timestamp": "2026-10-06T12:52:21Z"
+      },
+      {
         "message": "FIX: quote spine router output path",
         "sha": "b1304d70cd96996266cad5911400a33144174f3b",
         "timestamp": "2026-10-06T14:52:04+02:00"
@@ -4513,21 +4528,6 @@
         "message": "TEST: cover Q104 frozen source snapshot input",
         "sha": "93f2d2d0eb3bccd543f8f6f5096f572ef407b71d",
         "timestamp": "2026-10-06T14:50:37+02:00"
-      },
-      {
-        "message": "FIX: repair Q104 standalone merge utility",
-        "sha": "a9017dc3dbe42e3d56b84a3463361f5abdaebdbf",
-        "timestamp": "2026-10-06T14:50:30+02:00"
-      },
-      {
-        "message": "FIX: pin Q104 SEC source snapshot across shards",
-        "sha": "f17f1b8e8f70d37daa2e5a4b353d9be86432c8a4",
-        "timestamp": "2026-10-06T14:50:23+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "30a3ac70a86b282437da79ca4623361dc4010c1f",
-        "timestamp": "2026-10-06T12:50:06Z"
       }
     ]
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b1304d70cd96996266cad5911400a33144174f3b",
+  "source_master_sha": "4efa436a187a94b33bb06ed31ea8198968075a7d",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4739,6 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37466413836"
+    "run_id": "37466658774"
   }
 }
