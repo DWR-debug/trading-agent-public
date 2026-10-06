@@ -121,11 +121,13 @@ def compile_gate(census: dict, specs: dict, q129_contract: dict | None = None) -
 
     q220_notes = q.get("Q220", {}).get("sec_notes_census", {})
     required = q220_notes.get("required_member_markers_present", {})
-    q220_ready = (
-        q220_notes.get("zip_parse_ok") is True
-        and required
-        and all(required.get(marker) is True for marker in ("sub.txt", "tag.txt", "dim.txt", "num.txt", "txt.txt"))
-    )
+    canonical_required = ("sub", "tag", "dim", "num", "txt")
+    legacy_required = ("sub.txt", "tag.txt", "dim.txt", "num.txt", "txt.txt")
+    if all(marker in required for marker in canonical_required):
+        q220_required_ok = all(required.get(marker) is True for marker in canonical_required)
+    else:
+        q220_required_ok = all(required.get(marker) is True for marker in legacy_required)
+    q220_ready = q220_notes.get("zip_parse_ok") is True and q220_required_ok
     out["results"]["Q220"] = {
         "status": "XBRL_SOURCE_STRUCTURE_READY_FOR_DETERMINISTIC_MAPPING" if q220_ready else "XBRL_SOURCE_STRUCTURE_INCOMPLETE",
         "zip_parse_ok": bool(q220_notes.get("zip_parse_ok")),
