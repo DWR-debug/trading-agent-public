@@ -886,6 +886,17 @@
       "priority": "P1",
       "next_gate": "bounded modern-window historical log reconstruction + request-quality audit + filing-boundary join + mutation/PIT checks",
       "note": "Modern SEC EDGAR request-demand source is feasible only on the documented modern window; the 2017-07-01 through 2020-05-18 gap and legacy/modern schema differences are retained as a hard boundary. Q224 remains outside the Q218-Q221 top-candidate wave until source/PIT and separability gates pass."
+    },
+    {
+      "code": "Q230",
+      "issue_number": 1102,
+      "class": "cross_capital_structure_bond_equity_information_state",
+      "state": "SOURCE_FEASIBILITY_ACTIVE",
+      "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+      "performance_authorization_allowed": false,
+      "priority": "P1",
+      "next_gate": "free public FINRA EOD trade-panel route + exact free-field availability audit + bond security-master/issuer mapping + lifecycle/revision controls + independent PIT reproduction",
+      "note": "Economic mechanism is externally supported, but free historical implementation remains the bottleneck. Trade-structure/revision fields are provenance and robustness controls, not additional alpha, and future corrections may not rewrite the historical prefix."
     }
   ],
   "active_research_registry": {
