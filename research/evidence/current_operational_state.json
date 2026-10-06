@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T07:36:41.452999+00:00",
+    "generated_at_utc": "2026-10-06T07:38:01.546393+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "0346821ef0b3294d1ae0122ad7a0998d5da2a4e5"
+    "source_master_sha": "46e11abda2d307804236329b42d30123dc14d25e"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T07:36:41.452999+00:00",
+  "generated_at_utc": "2026-10-06T07:38:01.546393+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4490,44 +4490,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: refresh Top-4 AI review context after worker repair",
-        "sha": "0346821ef0b3294d1ae0122ad7a0998d5da2a4e5",
-        "timestamp": "2026-10-06T09:36:28+02:00"
+        "message": "FIX: resolve Top-4 AI task files in worker workflow",
+        "sha": "46e11abda2d307804236329b42d30123dc14d25e",
+        "timestamp": "2026-10-06T09:37:57+02:00"
+      },
+      {
+        "message": "DOCS: bind automatic capacity routing to Top-4 wave",
+        "sha": "c7ffc5cfbc98bd7185b60d1f431bf2b8610614f5",
+        "timestamp": "2026-10-06T09:37:24+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "380f540e7f60cdf95bf8020e8f6672912df464a7",
+        "timestamp": "2026-10-06T07:37:00Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "fac707b9b9b7c8fa5b2172ebe410aacdf8364a28",
+        "timestamp": "2026-10-06T07:36:57Z"
+      },
+      {
+        "message": "DOCS: persist Top-4 active capacity wave",
+        "sha": "78e53965bc5ddba4df0a07391b5275e42fb7048d",
+        "timestamp": "2026-10-06T09:36:53+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "1f9977163a45e9e81028ad120d37ac5abf5d62a0",
+        "timestamp": "2026-10-06T07:36:50Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "62b11b30a5d0619281a033c152df870e1bbdac1d",
+        "timestamp": "2026-10-06T07:36:49Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "41f5513b8b5ff0c156399c0dd47fc2802764d918",
-        "timestamp": "2026-10-06T07:34:54Z"
-      },
-      {
-        "message": "OPS: trigger AI fabric when worker implementation changes",
-        "sha": "b94047e6d82913b88d521085a42b5d7aff65c803",
-        "timestamp": "2026-10-06T09:34:40+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4096833e822f4e3eb336f511d57d93ae1943dd33",
-        "timestamp": "2026-10-06T07:33:52Z"
-      },
-      {
-        "message": "FIX: remove extra AI worker context dictionary brace",
-        "sha": "0306c63eab3d88a0cabd574aeb5e3f7303826786",
-        "timestamp": "2026-10-06T09:33:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "bc4963d5b1c5c4fdb6c6a709245d61a634206770",
-        "timestamp": "2026-10-06T07:32:27Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "dbca008845c8172523cbfa597420d99918473c20",
-        "timestamp": "2026-10-06T07:32:13Z"
-      },
-      {
-        "message": "RESEARCH: de-duplicate shared census and focus Q218 source workpack",
-        "sha": "0e45c31a0a474ac7219cf6415378218eadd47a01",
-        "timestamp": "2026-10-06T09:32:08+02:00"
+        "sha": "1c45d804d5827df5b4ea2a300375f45020315a61",
+        "timestamp": "2026-10-06T07:36:45Z"
       }
     ]
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0346821ef0b3294d1ae0122ad7a0998d5da2a4e5",
+  "source_master_sha": "46e11abda2d307804236329b42d30123dc14d25e",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4739,6 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37430725781"
+    "run_id": "37430766887"
   }
 }
