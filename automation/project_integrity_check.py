@@ -259,6 +259,10 @@ ACTIVE_WORKFLOWS = {
     "q224-edgar-modern-source-gate.yml",
     "q231-sec-foia-source-gate.yml",
     "windows-independent-capacity-pulse.yml",
+    "knowledge-relation-plane.yml",
+    "temporal-identity-state-spine-waves.yml",
+    "spine-next-gate-autonomous-router.yml",
+    "q228-sec-correspondence-source-gate.yml",
 }
 
 REQUIRED_FILES = (

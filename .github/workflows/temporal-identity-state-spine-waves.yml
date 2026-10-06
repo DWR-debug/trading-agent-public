@@ -1,0 +1,111 @@
+name: Temporal Identity State Spine Waves
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+    paths:
+      - research/governance/temporal_identity_state_spine_contract_2026_10_06.json
+      - research/governance/knowledge_relation_graph_contract_2026_10_06.json
+      - research/candidates/orthogonal_candidate_specs_2026-10-05.json
+      - research/governance/research_os_source_registry_2026_09_30.json
+      - automation/temporal_identity_state_spine.py
+      - tests/test_temporal_identity_state_spine.py
+      - research/run_requests/temporal_identity_state_spine_waves_2026_10_06.json
+      - automation/project_integrity_check.py
+      - .github/workflows/temporal-identity-state-spine-waves.yml
+  schedule:
+    - cron: '*/20 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-temporal-identity-state-spine
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        wave: [W-TEMPORAL,W-IDENTITY,W-STATE]
+    concurrency:
+      group: trading-agent-spine-${{ matrix.wave }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - run: python -m pip install --disable-pip-version-check pytest
+      - name: Run deterministic spine wave
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          if not exist "research\runs\spine\${{ matrix.wave }}\%GITHUB_RUN_ID%" mkdir "research\runs\spine\${{ matrix.wave }}\%GITHUB_RUN_ID%"
+          python -m automation.temporal_identity_state_spine --output "research\runs\spine\${{ matrix.wave }}\%GITHUB_RUN_ID%\spine.json"
+          python -m pytest -q tests/test_temporal_identity_state_spine.py tests/test_spine_evidence_adapter.py
+          endlocal
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: spine-windows-${{ matrix.wave }}-${{ github.run_id }}
+          path: research/runs/spine/${{ matrix.wave }}/${{ github.run_id }}/
+          retention-days: 14
+
+  hosted_x64:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - run: python -m pip install --disable-pip-version-check pytest
+      - name: Run integration/reuse wave
+        run: |
+          mkdir -p research/runs/spine/W-INTEGRATION/${{ github.run_id }}
+          python -m automation.temporal_identity_state_spine --output research/runs/spine/W-INTEGRATION/${{ github.run_id }}/spine.json
+          python -m pytest -q tests/test_temporal_identity_state_spine.py tests/test_spine_evidence_adapter.py tests/test_knowledge_relation_index.py
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: spine-hosted-x64-${{ github.run_id }}
+          path: research/runs/spine/W-INTEGRATION/${{ github.run_id }}/
+          retention-days: 14
+
+  hosted_arm64:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - run: python -m pip install --disable-pip-version-check pytest
+      - name: Independent reproduction wave
+        run: |
+          mkdir -p research/runs/spine/W-REPRO/${{ github.run_id }}
+          python -m automation.temporal_identity_state_spine --output research/runs/spine/W-REPRO/${{ github.run_id }}/spine.json
+          python -m pytest -q tests/test_temporal_identity_state_spine.py tests/test_knowledge_relation_index.py
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: spine-hosted-arm64-${{ github.run_id }}
+          path: research/runs/spine/W-REPRO/${{ github.run_id }}/
+          retention-days: 14

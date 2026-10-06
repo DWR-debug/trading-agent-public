@@ -119,23 +119,91 @@
     }
   ],
   "candidate_component_links": [
-    {"candidate": "Q218", "component": "SEC_ACCEPTANCE_CLOCK", "role": "event_clock"},
-    {"candidate": "Q218", "component": "SEC_AS_FILED_PREFIX", "role": "filing_prefix"},
-    {"candidate": "Q218", "component": "SEC_ISSUER_IDENTITY_MAP", "role": "identity"},
-    {"candidate": "Q218", "component": "SEC_10K_8K_EVENT_ARCHIVE", "role": "two_channel_event_source"},
-    {"candidate": "Q219", "component": "SEC_ACCEPTANCE_CLOCK", "role": "event_clock"},
-    {"candidate": "Q219", "component": "SEC_AS_FILED_PREFIX", "role": "filing_prefix"},
-    {"candidate": "Q219", "component": "SEC_ISSUER_IDENTITY_MAP", "role": "identity"},
-    {"candidate": "Q219", "component": "Q129_OPTIONS_EOD_PIT", "role": "post_filing_response_source"},
-    {"candidate": "Q220", "component": "SEC_AS_FILED_PREFIX", "role": "filing_prefix"},
-    {"candidate": "Q220", "component": "SEC_ISSUER_IDENTITY_MAP", "role": "identity"},
-    {"candidate": "Q220", "component": "XBRL_TEXTBLOCK_PRESENTATION", "role": "representation_structure"},
-    {"candidate": "Q221", "component": "USASPENDING_PUBLICATION_CLOCK", "role": "event_clock"},
-    {"candidate": "Q221", "component": "SEC_ISSUER_IDENTITY_MAP", "role": "identity_bridge_when_applicable"},
-    {"candidate": "Q114", "component": "13F_POSITION_TRANSITION_COMPILER", "role": "position_state"},
-    {"candidate": "Q116", "component": "13F_POSITION_TRANSITION_COMPILER", "role": "transition_population"},
-    {"candidate": "Q115", "component": "TREASURY_DEMAND_STATE_COMPILER", "role": "auction_state"},
-    {"candidate": "Q117", "component": "TREASURY_DEMAND_STATE_COMPILER", "role": "population"}
+    {
+      "candidate": "Q218",
+      "component": "SEC_ACCEPTANCE_CLOCK",
+      "role": "event_clock"
+    },
+    {
+      "candidate": "Q218",
+      "component": "SEC_AS_FILED_PREFIX",
+      "role": "filing_prefix"
+    },
+    {
+      "candidate": "Q218",
+      "component": "SEC_ISSUER_IDENTITY_MAP",
+      "role": "identity"
+    },
+    {
+      "candidate": "Q218",
+      "component": "SEC_10K_8K_EVENT_ARCHIVE",
+      "role": "two_channel_event_source"
+    },
+    {
+      "candidate": "Q219",
+      "component": "SEC_ACCEPTANCE_CLOCK",
+      "role": "event_clock"
+    },
+    {
+      "candidate": "Q219",
+      "component": "SEC_AS_FILED_PREFIX",
+      "role": "filing_prefix"
+    },
+    {
+      "candidate": "Q219",
+      "component": "SEC_ISSUER_IDENTITY_MAP",
+      "role": "identity"
+    },
+    {
+      "candidate": "Q219",
+      "component": "Q129_OPTIONS_EOD_PIT",
+      "role": "post_filing_response_source"
+    },
+    {
+      "candidate": "Q220",
+      "component": "SEC_AS_FILED_PREFIX",
+      "role": "filing_prefix"
+    },
+    {
+      "candidate": "Q220",
+      "component": "SEC_ISSUER_IDENTITY_MAP",
+      "role": "identity"
+    },
+    {
+      "candidate": "Q220",
+      "component": "XBRL_TEXTBLOCK_PRESENTATION",
+      "role": "representation_structure"
+    },
+    {
+      "candidate": "Q221",
+      "component": "USASPENDING_PUBLICATION_CLOCK",
+      "role": "event_clock"
+    },
+    {
+      "candidate": "Q221",
+      "component": "SEC_ISSUER_IDENTITY_MAP",
+      "role": "identity_bridge_when_applicable"
+    },
+    {
+      "candidate": "Q114",
+      "component": "13F_POSITION_TRANSITION_COMPILER",
+      "role": "position_state"
+    },
+    {
+      "candidate": "Q116",
+      "component": "13F_POSITION_TRANSITION_COMPILER",
+      "role": "transition_population"
+    },
+    {
+      "candidate": "Q115",
+      "component": "TREASURY_DEMAND_STATE_COMPILER",
+      "role": "auction_state"
+    },
+    {
+      "candidate": "Q117",
+      "component": "TREASURY_DEMAND_STATE_COMPILER",
+      "role": "population"
+    }
   ],
   "candidate_relations": [
     {
@@ -173,25 +241,40 @@
     {
       "id": "M1_TWO_CHANNEL_STATE_CONFIRMATION",
       "pattern": "originator_public_state -> independent_regulator_or_structured_confirmation",
-      "examples": ["Q233", "Q218", "Q220"],
+      "examples": [
+        "Q233",
+        "Q218",
+        "Q220"
+      ],
       "rule": "Candidate is about the state transition between channels, not a generic event count."
     },
     {
       "id": "M2_DISCLOSURE_TO_MARKET_RESPONSE",
       "pattern": "public_filing -> separately timestamped market/instrument response",
-      "examples": ["Q219"],
+      "examples": [
+        "Q219"
+      ],
       "rule": "Response source clock must be independently proven; same-day leakage is fail-closed."
     },
     {
       "id": "M3_PUBLIC_ADMINISTRATIVE_STATE_TO_CORPORATE_EXPOSURE",
       "pattern": "public_government_or_regulator_state -> frozen issuer exposure",
-      "examples": ["Q221", "Q197", "Q203", "Q235"],
+      "examples": [
+        "Q221",
+        "Q197",
+        "Q203",
+        "Q235"
+      ],
       "rule": "Exposure mapping must be pre-event and reproducible; action dates are not public-observation clocks."
     },
     {
       "id": "M4_MULTI_REPRESENTATION_CONSISTENCY",
       "pattern": "same underlying filing -> narrative/structured/market representations",
-      "examples": ["Q218", "Q219", "Q220"],
+      "examples": [
+        "Q218",
+        "Q219",
+        "Q220"
+      ],
       "rule": "Do not collapse representations into one factor; preserve channel-specific provenance and gates."
     }
   ],
@@ -202,5 +285,23 @@
     "negative_evidence_inheritance": "A failed source contract may close all dependent candidate paths until a new falsifiable source route is declared.",
     "independent_reproduction": "Critical shared components should be reproduced once by an independent route before being treated as reusable structural infrastructure.",
     "scheduler_use": "Prioritize unresolved shared components with the highest number of blocked independent downstream tasks, but do not use performance outcomes to set this priority."
+  },
+  "temporal_identity_state_spine": {
+    "contract": "research/governance/temporal_identity_state_spine_contract_2026_10_06.json",
+    "layers": [
+      "T_TEMPORAL",
+      "I_IDENTITY",
+      "S_STATE",
+      "R_RELATION"
+    ],
+    "rule": "Every reusable event/state relation should resolve to an explicit public clock, identity mapping and state/revision lineage before candidate-specific PIT use.",
+    "shared_structural_priority": "number_of_independent_downstream_tasks_unblocked",
+    "scientific_authority": false,
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
   }
 }

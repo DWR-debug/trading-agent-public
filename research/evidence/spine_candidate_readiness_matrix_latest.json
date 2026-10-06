@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "record_type": "spine_candidate_readiness_matrix",
+  "status": "SOURCE_PIT_STRUCTURE_ONLY",
+  "generated_at_utc": "2026-10-06T09:51:31.288Z",
+  "scientific_evidence": false,
+  "performance_authorization": false,
+  "holdout_selection": false,
+  "ranking": false,
+  "tuning": false,
+  "promotion": false,
+  "live_execution": false,
+  "candidates": {
+    "Q218": {
+      "temporal": "SEC acceptance observed",
+      "identity": "SEC issuer map reusable with candidate audit",
+      "state": "10-K/8-K event pair still next gate",
+      "next_gate": "deterministic event pairing + PIT lineage"
+    },
+    "Q219": {
+      "temporal": "SEC acceptance proven; options EOD only",
+      "identity": "issuer/security mapping inherited candidate audit",
+      "state": "filing vs smirk response",
+      "next_gate": "historical options breadth + deterministic post-filing join"
+    },
+    "Q220": {
+      "temporal": "as-filed SEC boundary",
+      "identity": "SEC issuer/security map",
+      "state": "narrative vs structured XBRL",
+      "next_gate": "deterministic text-block/presentation mapping"
+    },
+    "Q221": {
+      "temporal": "USAspending clock contract ready; historical applicability open",
+      "identity": "recipient-to-issuer map open",
+      "state": "R&D award -> procurement option-value state",
+      "next_gate": "historical public-boundary + entity mapping"
+    },
+    "Q224": {
+      "temporal": "EDGAR log request-time fields proven for modern window",
+      "identity": "CIK/accession recovery open",
+      "state": "post-filing document acquisition demand",
+      "next_gate": "schema-variant + filing-boundary join"
+    },
+    "Q228": {
+      "temporal": "SEC correspondence public-release boundary",
+      "identity": "review-cycle filing identity mapping open",
+      "state": "SEC scrutiny dialogue",
+      "next_gate": "historical correspondence census + release clock + filing/review identity + PIT"
+    },
+    "Q229": {
+      "temporal": "publication rule conditional and historical release archives observed",
+      "identity": "company-to-issuer mapping open",
+      "state": "complaint -> company response",
+      "next_gate": "historical public release clock + issuer map"
+    },
+    "Q230": {
+      "temporal": "FINRA EOD / historical disclosure semantics open",
+      "identity": "bond security-master/issuer map open",
+      "state": "bond -> equity information differential",
+      "next_gate": "free TRACE panel + identity"
+    },
+    "Q231": {
+      "temporal": "FOIA public-log cadence observed; exact publication clock open",
+      "identity": "request-description -> issuer mapping open",
+      "state": "requester/topic -> public FOIA state",
+      "next_gate": "publication clock + deterministic mapping"
+    }
+  },
+  "routing": {
+    "shared_components": [
+      "SEC_ACCEPTANCE_CLOCK",
+      "SEC_AS_FILED_PREFIX",
+      "SEC_ISSUER_IDENTITY_MAP"
+    ],
+    "highest_unblocking_component": "SEC_ISSUER_IDENTITY_MAP",
+    "discovery_rule": "Prefer shared structural closure when it unblocks multiple independent candidates; never use performance outcomes."
+  }
+}
