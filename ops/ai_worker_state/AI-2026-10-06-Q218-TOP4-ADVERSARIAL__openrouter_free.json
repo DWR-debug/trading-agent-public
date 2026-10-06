@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "0d93716d6d4b736aa803ad74ce919d8d57856360bc03cfdecc14b0a671220ee1",
-  "context_fingerprint": "33915b9e1f23702a277dcea7b4cec34d8dea9c134f91cec0c697b83b12ab7774",
-  "observed_at_utc": "2026-10-06T08:33:31.285165Z",
+  "context_fingerprint": "2b531c478e6bb86f612521b4e96932f1a41a089cba0fa11e7ccc2a7fd6dca31a",
+  "observed_at_utc": "2026-10-06T08:35:33.331766Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 110.406,
-  "stdout": "**Q218 Methods Review: Adversarial Source/PIT Fracture Analysis**\n\n### Findings (failure modes in 10-K → 8-K deterministic pairing)\n\n| Failure Mode | Why it breaks the pairing | Smallest deterministic falsifier | Exact artifact required |\n|---|---|---|---|\n| **1. Acceptance-timestamp vs filing-date mismatch** | Pairing rule cites “SEC acceptance timestamp”; census code uses `filingDate` from SEC submissions JSON. `acceptance_datetime` may be absent, null, or differ from `filingDate`. | Two issuers in same window where `acceptance_datetime` is missing/epoch-zero while `",
+  "duration_seconds": 44.546,
+  "stdout": "\n\n## Q218 Methods Review — Adversarial Attack\n\n### 1. Amendment Ambiguity (10-K vs. 10-K/A as Pairing Anchor)\n\n**Failure mode:** The census code filters for `\"10-K\", \"10-K/A\"` and pairs an 8-K to the *\"preceding 10-K acceptance\"* and *\"target 10-K acceptance.\"* When a 10-K/A is filed after the original 10-K, the pairing rule does not specify whether the amendment supersedes the original as the pairing anchor or creates a second competing interval. An 8-K falling between the original 10-K acceptance and the 10-K/A acceptance could be paired to either anchor, producing different pairability outcomes deterministically.\n\n**Smallest deterministic falsifier:** Construct a synthetic SEC submission JSON containing exactly three filings: (a) 10-K accepted at T0, (b) 8-K (Item 2.02) accepted at T1 where T0 < T1 < T2, (c) 10-K/A accepted at T2. Feed this into `sec_submission_census()` and assert that the 8-K is paired to the 10-K (not the 10-K/A) and that `pairability_observed` is `True`. Then mutate only the 10-K/A acceptance timestamp to T0+ (i.e., file the amendment before the original 10-K) and re-run. The pairing must not change; if it does, the anchor selection is order-dependent rather than substance-dependent.\n\n**Exact artifact required:** Synthetic CIK JSON with three filings, each with `form`, `filingDate`, `acceptanceDateTime` (simulated), `accessionNumber`, and `items` fields; a deterministic test harness that calls `sec_submission_census()` with `FIXED_START`/`FIXED_END` wide enough to include all three.\n\n---\n\n### 2. Report-Date vs. Event-Date Ambiguity\n\n**Failure mode:** The census code uses `filingDate` to filter in-window filings but the pairing interval is defined by acceptance timestamps. The `reportDate` (period-end date) is retained only as metadata. If an 8-K's `filingDate` precedes the target 10-K's `reportDate` but its acceptance timestamp falls after the 10-K acceptance, the 8-K is included in the interval despite the economic event (the earnings release) having been made public before the 10-K's period-end. The pairing conflates *filing* timing with *information* timing.\n\n**Smallest deterministic falsifier:** Find a real CIK where an 8-K has `filingDate` < `reportDate` of the target 10-K but `acceptanceDateTime` > `acceptanceDateTime` of the target 10-K. Assert that the census pairs this 8-K. Then verify that the 8-K's `filingDate` is earlier than the 10-K's `reportDate` by at least one calendar day. If both hold, the pairing has admitted an 8-K whose information was publicly available before the 10-K's reported period even ended — a forward-looking information leak that violates the pre-formal-robustness gate.\n\n**Exact artifact required:** The raw SEC submission JSON for one CIK containing at least one such 8-K/10-K pair; a deterministic script that extracts `filingDate`, `reportDate`, and `acceptanceDateTime` for all 8-K/10-K pairs and flags any 8-K where `filingDate` < `10-K.reportDate` < `8-K.acceptanceDateTime`.\n\n---\n\n### 3. False Pairing of Earnings Releases (Item 2.02 vs. Exhibit 99.1)\n\n**Failure mode:** The pairing rule references *\"latest eligible Item-2.02/Exhibit-99.1-style 8-K\"* but the census code does not actually inspect the `items` array to verify that the selected 8-K contains Item 2.02 or Exhibit 99.1. An 8-K containing only Item 8.01 (Other Events) or Item 7.01 (Regulation FD Disclosure) could be the \"latest eligible\" by acceptance timestamp and be paired as if it were an earnings release. The semantic content of the paired document is not verified.\n\n**Smallest deterministic falsifier:** For each CIK in `SEC_CIKS`, extract all 8-Ks in the pairing interval and check the `items` array. Assert that every paired 8-K contains `\"2.02\"` in its `items` list or has `\"EX-99.1\"` in its `exhibits` list. If",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791275611-8lqTLk5XDLgmijsxaLmm",
+  "response_id": "gen-1791275733-CoeAYfM2I5CCIx7L5jlD",
   "usage": {
-    "prompt_tokens": 5584,
+    "prompt_tokens": 5247,
     "completion_tokens": 3200,
-    "total_tokens": 8784,
+    "total_tokens": 8447,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 3086,
+      "reasoning_tokens": 2200,
       "image_tokens": 0,
       "audio_tokens": 0
     }
