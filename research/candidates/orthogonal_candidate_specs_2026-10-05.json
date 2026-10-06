@@ -816,7 +816,9 @@
         "bond_equity_information_disagreement",
         "bond_trading_intensity_or_liquidity_state_when_free_source_supports",
         "persistence_before_equity_response",
-        "broad_finra_credit_market_control_state"
+        "broad_finra_credit_market_control_state",
+        "bond_public_trade_quality_control_state_when_free_eod_exposes_fields",
+        "bond_revision_late_report_intensity_control_when_free_eod_exposes_fields"
       ],
       "direction": "two-sided outcome; no sign assumed ex ante",
       "cheap_falsifiers": [
@@ -827,7 +829,10 @@
         "issuer_mapping_incomplete",
         "free_TRACE_history_inadequate",
         "timing_disappears_under_conservative_boundary",
-        "paid_data_dependency"
+        "paid_data_dependency",
+        "future_trade_correction_invariance",
+        "free_eod_trade_structure_fields_unavailable_or_nonreproducible",
+        "publication_artifact_explains_trade_quality_state"
       ],
       "gates": [
         "free_TRACE_historical_source_census",
@@ -836,7 +841,8 @@
         "bond_security_master_and_issuer_mapping",
         "matched_issuer_panel",
         "bond_lifecycle_trade_status_audit",
-        "independent_PIT_reproduction_on_symbol_disjoint_issuers"
+        "independent_PIT_reproduction_on_symbol_disjoint_issuers",
+        "free_eod_field_availability_audit_for_trade_status_asof_side_counterparty_reporting_party"
       ],
       "non_overlap": [
         "Q214",
@@ -852,7 +858,7 @@
       ],
       "scientific_boundary": "discovery_contract_only",
       "priority": "P1_SOURCE_FEASIBILITY",
-      "implementation_note": "Issuer-level bond state must be orthogonalized against broad rates and the freely accessible FINRA Corporate Debt Market Breadth/Sentiment state before any later outcome test. This control is predeclared and is not itself an alpha candidate."
+      "implementation_note": "Issuer-level bond state must be orthogonalized against broad rates and the freely accessible FINRA Corporate Debt Market Breadth/Sentiment state before any later outcome test. This control is predeclared and is not itself an alpha candidate. The public trade-structure fields documented by FINRA (Trade Status, As-Of, Side, Contra Party Type, Reporting Party Type, etc.) are to be treated first as provenance/robustness controls, not alpha. Their admissibility is conditional on the exact free EOD route exposing the field consistently across the frozen historical panel. Future corrections/cancellations may be used only as a mutation/exclusion-sensitivity audit; they must never rewrite the historical decision prefix."
     }
   ],
   "blocked_or_composite_tracks": {
