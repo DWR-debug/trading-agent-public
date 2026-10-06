@@ -1,6 +1,7 @@
 (function(){
 "use strict";
 var WORKFLOW_URL="https://github.com/DWR-debug/trading-agent-public/actions/workflows/resource-dashboard-update.yml";
+var lastSnapshotIso=null;
 function $(id){return document.getElementById(id);}
 function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
 function ts(v){if(!v)return "—";try{return new Date(v).toLocaleString(undefined,{dateStyle:"short",timeStyle:"medium"});}catch(e){return String(v);}}
@@ -15,6 +16,22 @@ function fmtDuration(sec){
 function relativeRemaining(sec){
   if(sec==null)return "—";
   return sec>0 ? "noch ca. "+fmtDuration(sec) : "voraussichtlich fertig";
+}
+function fmtSnapshotAge(sec){
+  if(sec==null||Number.isNaN(Number(sec)))return "Alter: —";
+  sec=Math.max(0,Math.round(Number(sec)));
+  if(sec<60)return "Alter: "+sec+" s";
+  var min=Math.floor(sec/60), rem=sec%60;
+  if(min<60)return "Alter: "+min+" min "+rem+" s";
+  var h=Math.floor(min/60), m=min%60;
+  return "Alter: "+h+" h "+m+" min";
+}
+function updateSnapshotAge(){
+  if(!lastSnapshotIso)return;
+  var t=Date.parse(lastSnapshotIso);
+  if(!Number.isFinite(t))return;
+  var sec=Math.max(0,(Date.now()-t)/1000);
+  $("snapshotAge").textContent=fmtSnapshotAge(sec);
 }
 function candidateFrom(text){
   text=String(text||"");
@@ -48,7 +65,16 @@ function render(data){
   var work=data.work_assignments||[];
   var pipeline=data.pipeline||[];
   var cr=data.current_research||{};
+  lastSnapshotIso=data.generated_at_utc||null;
   $("meta").innerHTML="Snapshot <code>"+esc(data.generated_at_utc)+"</code> · master <code>"+esc(data.master_sha)+"</code> · Status-Quelle <code>"+esc(data.operational_snapshot_sha||"nicht synchron")+"</code>";
+  try{
+    var snapDate=data.generated_at_utc?new Date(data.generated_at_utc):null;
+    if(snapDate&&!Number.isNaN(snapDate.getTime())){
+      $("snapshotTime").textContent=new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(snapDate);
+      $("snapshotDate").textContent=new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",weekday:"long",year:"numeric",month:"long",day:"numeric"}).format(snapDate);
+    }
+  }catch(e){}
+  updateSnapshotAge();
 
   var order={"Windows self-hosted A":0,"Windows self-hosted B":1,"Windows self-hosted C":2,"GitHub-hosted Ubuntu x64":3,"GitHub-hosted ARM64":4,"Free AI pool":5};
   resources.sort(function(a,b){return order[a.name]-order[b.name];});
@@ -66,14 +92,14 @@ function render(data){
       "</div>";
   }).join("")+"</div>";
 
-  $("work").innerHTML=work.length ? "<table><thead><tr><th>Kapazität</th><th>Candidate</th><th>Job</th><th>Status</th><th>Start</th><th>Erwartete Dauer</th><th>ETA / Rest</th></tr></thead><tbody>"+work.map(function(x){
+  $("work").innerHTML=work.length ? "<table><thead><tr><th>Kapazität</th><th>Candidate</th><th>Job</th><th>Status</th><th>Startzeit</th><th>Erwartete Dauer</th><th>Vorauss. Ende</th></tr></thead><tbody>"+work.map(function(x){
     return "<tr><td class='rowtitle'>"+esc(x.resource)+"<div class='small muted'>"+esc(x.worker)+"</div></td>"+
       "<td>"+esc(candidateFrom((x.task||"")+" "+(x.job||"")))+"<div class='small'>"+esc(x.task||"")+"</div></td>"+
       "<td>"+esc(x.job||"—")+"<div class='small'>Run "+esc(x.run_id||"—")+"</div></td>"+
       "<td>"+stateBadge(x.status)+"</td>"+
       "<td>"+esc(ts(x.started_at))+"</td>"+
       "<td>"+fmtDuration(x.expected_duration_seconds)+"<div class='small muted'>n="+esc(x.duration_sample_count||0)+"</div></td>"+
-      "<td>"+relativeRemaining(x.remaining_seconds)+"<div class='small'>"+(x.expected_finish_at?esc(ts(x.expected_finish_at)):"—")+"</div></td></tr>";
+      "<td>"+(x.expected_finish_at?esc(ts(x.expected_finish_at)):"—")+"<div class='small muted'>"+(x.remaining_seconds!=null?esc(relativeRemaining(x.remaining_seconds)):"keine belastbare Dauerbasis")+"</div></td></tr>";
   }).join("")+"</tbody></table>" : "<div class='empty'>Aktuell ist kein aktiver GitHub-Actions-Job im Snapshot sichtbar.</div>";
 
   var planned=data.planned_capacity||[];
@@ -134,6 +160,7 @@ function load(){
 document.addEventListener("DOMContentLoaded",function(){
   updateClock();
   setInterval(updateClock,1000);
+  setInterval(updateSnapshotAge,1000);
   $("refresh").addEventListener("click",load);
   $("update").addEventListener("click",function(){});
   load();
