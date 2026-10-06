@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "8419c6c6479e293d31a59a4a342b571a095821564b1f5a96744ad19a78d9f946",
-  "context_fingerprint": "865bb0fec4d570c871b78e1e552d519f6d5ce7ec12c789f8a12481025ef84e8c",
-  "observed_at_utc": "2026-10-06T08:34:03.093254Z",
+  "context_fingerprint": "2c25b66a7bf8c8deeb74720452f66ff60fc4fca717213f7e35e85cc025291e22",
+  "observed_at_utc": "2026-10-06T08:57:52.682854Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 3.671,
-  "stdout": "User Safety: safe",
+  "duration_seconds": 45.342,
+  "stdout": "\n\n## Q221 Adversarial Methods Review — USAspending Public Clock\n\n### 1. Findings (Attacks on Assumptions)\n\n**A. The clock contract is a current-document snapshot, not a historical artifact.**\nThe gate script (`q221_usaspending_public_clock_gate.py`) reads the *current* About-the-Data PDF and checks for phrases like \"WITHIN FIVE DAYS\" and \"FOLLOWING MORNING.\" It then sets `historical_applicability_proven: False`. This is correct but fatal: the script itself admits it has not established that the same publication timing applied to transactions in 2020, 2021, 2022, 2023, or 2024. A candidate clock derived from current documentation cannot be retroactively applied to a historical prefix without an explicit, dated, transaction-class-specific provenance chain. The PDF may describe *current* policy, but historical data may have been published under different rules, backfilled, or retroactively corrected.\n\n**B. Award-vs-modification semantics are collapsed.**\nThe script checks for the phrase \"CONTRACT OR MODIFICATION\" but does not test whether awards and modifications actually share a publication clock. In USAspending, a modification to an existing award may be published on a different cycle than a new award, or may inherit the original award's publication timestamp rather than generating a new one. If the candidate treats every transaction row as an independent \"event\" with a fresh clock, modifications will be systematically mis-timed. The script provides no falsifier for this.\n\n**C. Transaction history depth and backfill risk are unexamined.**\nThe script confirms `/API/V2/TRANSACTIONS/` is documented but does not verify:\n- How far back the API's transaction history extends\n- Whether historical records have been backfilled or retroactively modified (e.g., FPDS data refreshes)\n- Whether the schema is stable across the historical range\nA transaction that appeared in 2022 may have been re-published in 2025 with updated fields. If the candidate uses the *current* record as the event source, future information leaks into the historical prefix.\n\n**D. R&D classification is unverified and may conflate research with production.**\nThe script does not check whether USAspending reliably distinguishes R&D/prototype contracts from production contracts. A contract that begins as R&D may transition to full production via modification. If the record only reflects the final (production) state, the R&D signal is lost. Conversely, if the record retains the original R&D classification but the contract later became a production award, the candidate may be measuring production contracts, not R&D. No falsifier exists for this.\n\n**E. Competition fields, PSC stability, and recipient-to-issuer mapping are entirely unchecked.**\nThe script does not verify:\n- Whether competition type fields (full and open, sole source, etc.) exist and are consistently populated\n- Whether Product Service Codes (PSCs) are stable across the historical period\n- Whether recipient names map cleanly to public issuers, or whether parent/subsidiary relationships, name changes, and acquisitions break the mapping\nThese are not cosmetic: if a defense contractor rebrands or is acquired mid-window, the recipient-to-issuer mapping silently breaks, and the candidate's \"fixed economic transmission channel\" becomes undefined.\n\n**F. Future production contracts leaking into the historical prefix.**\nIf the candidate uses a historical prefix (e.g., 2020–2024) to establish a baseline and then looks at future contracts, there is a risk that production contracts (not R&D) are included in the \"R&D\" category, or that the classification of what counts as \"R&D\" has changed over time. The script provides no mechanism to detect this.\n\n**G. Pre-event capability proxies are unexamined.**\nThe script checks current documentation but does not verify whether the *historical* data would have supported the same inference at the time. For example, if the candidate infers \"R&D capability\" from a PSC code, but that PSC code was not assigned until after the contract was awarded, the inference is post-event.\n\n### 2. Counterarguments (What the Current Artifacts Do Provide)\n\n- The preflight script (`top_candidate_source_preflight.py`) confirms that the USAspending home page and a sample award page are reachable, which establishes baseline connectivity but says nothing about historical depth or clock stability.\n- The clock gate script does correctly flag `historical_applicability_proven: False`, which is an honest admission of the gap rather than a false claim of readiness.\n- The candidate contract (`orthogonal_candidate_specs_2026-10-05.json`) sets `pre_formal_robustness_gate: true` and `scientific_authority: false`, which at least prevents premature claims of evidence.\n\n### 3. Concrete Next Actions (Minimal Deterministic Falsifiers)\n\n**Falsifier 1: Publication-timing language drift across historical snapshots.**\n- Fetch archived versions of the About-the-Data PDF from the Wayback Machine for 2020-01-01, 2021-01-01, 2022-01-01, 2023-01-01, 2024-01-01, and 2025-01-01.\n- Extract and compare the publication-timing language (e.g., \"within five days,\" \"following morning,\" \"three business days\") for each vintage.\n- If the language differs across vintages, the clock contract is not stable and cannot be retroactively applied.\n- **Missing artifact:** Archived PDF vintages with extraction logs.\n\n**Falsifier 2: Award-vs-modification publication delay divergence.**\n- Sample 100 recent awards and 100 recent modifications from the USAspending API.\n- For each, compute the delta between the award/modification date and the first appearance date in USAspending.\n- Compare the distributions. If they differ significantly (e.g., modifications take longer or are batch-published), treating them as a single clock is invalid.\n- **Missing artifact:** Sample transaction records with both dates, distribution comparison output.\n\n**Falsifier 3: Historical API schema stability.**\n- Fetch the same transaction ID (e.g., a known 2020 award) from the current API and from a historical snapshot/dump (if available) or from an archived API response.\n- Compare all fields. If fields differ, the PIT compiler will produce different results for the same event depending on which snapshot is used.\n- **Missing artifact:** Side-by-side field comparison for N historical transaction IDs.\n\n**Falsifier 4: R&D-to-production transition detection.**\n- Find contracts that began as R&D (identified by PSC or NAICS code) and later received modifications that changed the PSC/NAICS to a production code.\n- Check whether the USAspending record reflects both phases or only the final state.\n- If only the final state is retained, the",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791275643-cNplhFhIhhmCLlRqFx5v",
+  "response_id": "gen-1791277073-ysuToy3R39RJKW3CNaun",
   "usage": {
-    "prompt_tokens": 5830,
-    "completion_tokens": 185,
-    "total_tokens": 6015,
+    "prompt_tokens": 5263,
+    "completion_tokens": 3200,
+    "total_tokens": 8463,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 212,
+      "reasoning_tokens": 2003,
       "image_tokens": 0,
       "audio_tokens": 0
     }
