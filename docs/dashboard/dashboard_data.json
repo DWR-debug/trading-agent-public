@@ -475,7 +475,7 @@
     "website_update_button": "opens GitHub Actions workflow dispatch page"
   },
   "dashboard_summary": {
-    "active_work_items": 4,
+    "active_work_items": 2,
     "ai_providers": 4,
     "busy_runners": null,
     "configured_resources": 12,
@@ -484,7 +484,7 @@
     "runner_api_status": "unavailable_or_empty",
     "runner_api_visible": null
   },
-  "generated_at_utc": "2026-10-06T07:49:34.994690+00:00",
+  "generated_at_utc": "2026-10-06T08:09:54.517297+00:00",
   "governance_notes": [
     "Operational resource availability and active jobs are separate from scientific evidence.",
     "AI worker output is never scientific evidence.",
@@ -520,9 +520,18 @@
       "slot": "Windows self-hosted B"
     }
   },
-  "master_sha": "ba02bae4a2a3273ed7928a5b611b440dbc113f89",
+  "master_sha": "f980dcfa795ab7acca5e4cdb2bfe2fc66085c29d",
   "operational_snapshot_sha": "1fefaecd5a1f346e5edc24bfe0e51939cf7d5dc8",
   "recent_activity_24h": [
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-06T08:09:51Z",
+      "created_at": "2026-10-06T08:09:40Z",
+      "run_id": 37434260534,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37434260534",
+      "status": "success",
+      "task": "Current Status Drift Guard"
+    },
     {
       "actor": "DWR-debug",
       "completed_at": "2026-10-06T07:43:07Z",
@@ -597,6 +606,15 @@
     },
     {
       "actor": "DWR-debug",
+      "completed_at": "2026-10-06T07:56:22Z",
+      "created_at": "2026-10-06T07:41:56Z",
+      "run_id": 37431289772,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37431289772",
+      "status": "cancelled",
+      "task": "Top-4 Candidate Research Capacity"
+    },
+    {
+      "actor": "DWR-debug",
       "completed_at": "2026-10-06T07:42:34Z",
       "created_at": "2026-10-06T07:41:56Z",
       "run_id": 37431289759,
@@ -666,65 +684,41 @@
       "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37431098262",
       "status": "success",
       "task": "Current Operational Status Synchronizer"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-06T07:42:31Z",
-      "created_at": "2026-10-06T07:40:08Z",
-      "run_id": 37431098223,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37431098223",
-      "status": "cancelled",
-      "task": "Top-4 Candidate Research Capacity"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-06T07:40:26Z",
-      "created_at": "2026-10-06T07:40:08Z",
-      "run_id": 37431098191,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37431098191",
-      "status": "cancelled",
-      "task": "CI"
     }
   ],
   "resources": [
     {
       "authority": "bounded capacity; no automatic performance authorization",
-      "busy": true,
+      "busy": false,
       "configured_runner": "LHT-N133732",
-      "current_assignments": 1,
-      "current_tasks": [
-        "Top-4 Candidate Research Capacity"
-      ],
+      "current_assignments": 0,
+      "current_tasks": [],
       "labels": [],
-      "live_status": "active work assigned (1)",
+      "live_status": "configured / live runner state unavailable",
       "name": "Windows self-hosted A",
       "role": "Formal readiness / local reproduction",
       "type": "physical"
     },
     {
       "authority": "bounded capacity; no automatic performance authorization",
-      "busy": true,
+      "busy": false,
       "configured_runner": "LHT-N133732-2",
-      "current_assignments": 1,
-      "current_tasks": [
-        "Top-4 Candidate Research Capacity"
-      ],
+      "current_assignments": 0,
+      "current_tasks": [],
       "labels": [],
-      "live_status": "active work assigned (1)",
+      "live_status": "configured / live runner state unavailable",
       "name": "Windows self-hosted B",
       "role": "Frontier discovery / data QA",
       "type": "physical"
     },
     {
       "authority": "bounded capacity; no automatic performance authorization",
-      "busy": true,
+      "busy": false,
       "configured_runner": "LHT-N133732-3",
-      "current_assignments": 1,
-      "current_tasks": [
-        "Top-4 Candidate Research Capacity"
-      ],
+      "current_assignments": 0,
+      "current_tasks": [],
       "labels": [],
-      "live_status": "active work assigned (1)",
+      "live_status": "configured / live runner state unavailable",
       "name": "Windows self-hosted C",
       "role": "Long deterministic runs / independent reproduction",
       "type": "physical"
@@ -852,6 +846,19 @@
   "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json + ops/trading_agent_os_state.json",
   "work_assignments": [
     {
+      "actor": "github-actions[bot]",
+      "authority": "non-authorizing operational work",
+      "job": "synchronize",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "OS control plane",
+      "run_id": 37434275023,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37434275023",
+      "started_at": "2026-10-06T08:09:48Z",
+      "status": "queued",
+      "task": "Current Operational Status Synchronizer",
+      "worker": "GitHub Actions 1000028709"
+    },
+    {
       "actor": "DWR-debug",
       "authority": "non-authorizing operational work",
       "job": "update",
@@ -859,58 +866,17 @@
       "resource": "Dashboard / GitHub Pages",
       "run_id": 37432069965,
       "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37432069965",
-      "started_at": "2026-10-06T07:49:23Z",
+      "started_at": "2026-10-06T08:09:42Z",
       "status": "in_progress",
       "task": "Resource Dashboard Update",
-      "worker": "GitHub Actions 1000028702"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "Windows Top-4 Q218",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "Windows self-hosted B",
-      "run_id": 37431289772,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37431289772",
-      "started_at": "2026-10-06T07:41:56Z",
-      "status": "pending",
-      "task": "Top-4 Candidate Research Capacity",
-      "worker": "LHT-N133732-2"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "Windows Top-4 Q220",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "Windows self-hosted C",
-      "run_id": 37431289772,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37431289772",
-      "started_at": "2026-10-06T07:41:56Z",
-      "status": "pending",
-      "task": "Top-4 Candidate Research Capacity",
-      "worker": "LHT-N133732-3"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "Windows Top-4 Q219",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "Windows self-hosted A",
-      "run_id": 37431289772,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37431289772",
-      "started_at": "2026-10-06T07:41:56Z",
-      "status": "pending",
-      "task": "Top-4 Candidate Research Capacity",
-      "worker": "LHT-N133732"
+      "worker": "GitHub Actions 1000028708"
     }
   ],
   "workload_by_lane": {
-    "PLATFORM / GOVERNANCE": 4
+    "PLATFORM / GOVERNANCE": 2
   },
   "workload_by_resource": {
     "Dashboard / GitHub Pages": 1,
-    "Windows self-hosted A": 1,
-    "Windows self-hosted B": 1,
-    "Windows self-hosted C": 1
+    "OS control plane": 1
   }
 }
