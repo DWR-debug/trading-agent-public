@@ -57,14 +57,15 @@
     </div>
     <div class="actions">
       <button id="refresh">Refresh snapshot</button>
-      <a class="button" id="update" target="_blank" rel="noopener"
-         href="https://github.com/DWR-debug/trading-agent-public/actions/workflows/resource-dashboard-update.yml">Update now</a>
+      <a class="button primary" id="update" target="_blank" rel="noopener"
+         href="https://github.com/DWR-debug/trading-agent-public/actions/workflows/resource-dashboard-update.yml">Update &amp; deploy</a>
       <a class="button" target="_blank" rel="noopener"
          href="https://github.com/DWR-debug/trading-agent-public/actions">Actions</a>
     </div>
   </header>
 
   <div id="error" hidden class="error"></div>
+  <div class="notice"><strong>Research priority:</strong> Q218 · Q219 · Q220 · Q221 &nbsp;|&nbsp; Android fleet: reserve-only. <span class="statusline" id="updateStatus">Updater uses the authenticated GitHub Actions workflow; the public Pages site never embeds a write token.</span></div>
   <noscript><div class="error">JavaScript is required for the interactive Research Control Board.</div></noscript>
 
   <section id="app" class="grid" hidden>
@@ -83,6 +84,11 @@
       <div id="resources"></div>
     </article>
 
+    <article class="card wide">
+      <h2>Top-4 candidate frontier</h2>
+      <div id="top4"></div>
+    </article>
+
     <article class="card">
       <h2>Research lanes</h2>
       <div id="lanes"></div>
@@ -91,11 +97,6 @@
     <article class="card">
       <h2>AI / agent fabric</h2>
       <div id="ai"></div>
-    </article>
-
-    <article class="card">
-      <h2>Android fleet</h2>
-      <div id="android"></div>
     </article>
 
     <article class="card wide">
