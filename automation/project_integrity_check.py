@@ -225,6 +225,7 @@ ACTIVE_WORKFLOWS = {
     "q121r6-windows-independent-reproduction.yml",
     "windows-local-ai-worker.yml",
     "resource-dashboard-update.yml",
+    "top4-candidate-research-capacity.yml",
     "groq-free-adversarial-worker.yml",
     "groq-api-key-smoke-test.yml",
     "github-pages-dashboard.yml",
