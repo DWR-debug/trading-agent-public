@@ -102,7 +102,7 @@ def test_q218_sec_submission_census_excludes_8k_amendments_from_event_pairing(mo
             elif "000002" in url:
                 stamp = "20250201130000"
             else:
-                stamp = "20250201120000"
+                stamp = "20250201150000"
             return 200, "text/html", f"<ACCEPTANCE-DATETIME>{stamp}".encode()
         if url.endswith("a8k.htm"):
             return 200, "text/html", b"EARNINGS RELEASE RESULTS"
