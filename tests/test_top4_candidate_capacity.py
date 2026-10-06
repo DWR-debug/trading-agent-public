@@ -36,7 +36,7 @@ def test_top4_workflow_uses_three_windows_and_hosted_x64_arm64():
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "runs-on: ubuntu-24.04" in text
     assert "runs-on: ubuntu-24.04-arm" in text
-    assert "candidate: [Q104:I19,Q218,Q220,Q221]" in text
+    assert "candidate: ["Q104:I19",Q218,Q220,Q221]" in text
     assert 'cron: "*/15 * * * *"' in text
 
 def test_legacy_research_loops_are_manual_only():
