@@ -39,8 +39,8 @@ def _census():
         "q220_sec_notes_census": {
             "zip_parse_ok": True,
             "required_member_markers_present": {
-                "sub.txt": True, "tag.txt": True, "dim.txt": True,
-                "num.txt": True, "txt.txt": True,
+                "sub": True, "tag": True, "dim": True,
+                "num": True, "txt": True,
             },
         },
         "q221_usa_rdtne_census": {
