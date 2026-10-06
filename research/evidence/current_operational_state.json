@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T18:12:16.960284+00:00",
+    "generated_at_utc": "2026-10-06T18:20:00.959883+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "7405eb246c753975e0ec8ae264677ac6d3603e90"
+    "source_master_sha": "666e2becdfb12acc50470ff55626ec5ef2a4450d"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T18:12:16.960284+00:00",
+  "generated_at_utc": "2026-10-06T18:20:00.959883+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2804,7 +2804,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "468ffd81b04185cdc32cafe49d0b4a190ed801a2f37bca19eaa3da8ebb5abeb1",
+    "receipt_fingerprint": "354cbacbb73d131068e6039898cbfb641614e8905bf5888f1012847fbb3894d0",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2839,7 +2839,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "f5bf68f0bd3ab69a750c1be0e961d7ed06bc5249de245bbb83bbc52337dd1ade",
+        "content_sha256": "039e1889420f18ad066d1ff6fbafc019483a2f1a70a7326b3ff092033c644380",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2863,7 +2863,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "b7485b7dfd017ed97d6518dd918da0126b18450d90292d91594e5bc75acf1d02",
+        "content_sha256": "d733c90f4be7e4f79d0717202f5b73ac0dfc3bd7c4f7ed6239798e251538e297",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -2884,7 +2884,7 @@
           }
         ],
         "clock_contract": "For post-2023 grants the official eGrant provides a documented public-access boundary; earlier history requires separate proof.",
-        "content_sha256": "2a4513b6d2b6c84bff65a9f044d1b29ebae022e18e326a9e994b08a5257f4f7d",
+        "content_sha256": "c6aec546561288a6ccb39c194dc7174b6009b75b138449204086d1dca1dc9acb",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2901,7 +2901,7 @@
           }
         ],
         "clock_contract": "The Official Gazette is an official weekly publication boundary; issue date is distinct from later bulk-data refreshes.",
-        "content_sha256": "86acb8650e7e82e6d157d2807bf877003c99239da74561befae8bd34439b9eef",
+        "content_sha256": "541fd6ee33e103356b97189d09b75df86fc3b8532ee28dbd9bc6441bc2f395e1",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2918,7 +2918,7 @@
           }
         ],
         "clock_contract": "PatentsView bulk refresh/vintage is distinct from patent issue/publication timing.",
-        "content_sha256": "d8ac8fdc5f709abd713920f08737eb08b63f79395bbe7fdc4e328f3025961ab0",
+        "content_sha256": "b548ccc803c8fe880bb6ebda42034d1f869ffd7d9f67576c88205f8e074257ff",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2988,7 +2988,7 @@
       "historical_weekly_grant_route_proven": false,
       "legacy_bibliographic_route_may_be_redirected": true
     },
-    "receipt_fingerprint": "7e5259da102fb29163c0b33cbeba3439383aeb4a9dc38fc2e5fa04984ad9c7ed",
+    "receipt_fingerprint": "f0e4f70be3eb8447d414ddbfbe1c741322d54a266b4d0db2b086ee5ee735c3eb",
     "receipt_type": "q186_pit_readiness_r2",
     "safety": {
       "AUTOMATIC_PROMOTION": false,
@@ -3011,14 +3011,14 @@
     },
     "source_results": {
       "USPTO_EGRANTS": {
-        "content_sha256": "2a4513b6d2b6c84bff65a9f044d1b29ebae022e18e326a9e994b08a5257f4f7d",
+        "content_sha256": "c6aec546561288a6ccb39c194dc7174b6009b75b138449204086d1dca1dc9acb",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
         "url": "https://www.uspto.gov/patents/apply/patent-center/egrants"
       },
       "USPTO_GAZETTE_INDEX": {
-        "content_sha256": "86acb8650e7e82e6d157d2807bf877003c99239da74561befae8bd34439b9eef",
+        "content_sha256": "541fd6ee33e103356b97189d09b75df86fc3b8532ee28dbd9bc6441bc2f395e1",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -3056,14 +3056,14 @@
         "url": "https://developer.uspto.gov/product/patent-grant-bibliographic-datasgml"
       },
       "USPTO_PATENTSVIEW": {
-        "content_sha256": "97468166c01ceb197b41cb641b92edf285790d3a3c985e37d77876f62ad80ad2",
+        "content_sha256": "899b4787009ffd3e536a8bd3f9701029f895ce97822bc0812d15075eb5eb61c8",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
         "url": "https://www.uspto.gov/ip-policy/economic-research/patentsview"
       },
       "USPTO_PATENT_AUTHORITY": {
-        "content_sha256": "c17326cf0178ae218d1e4cfb1de1a35b7a34aa23c8a333940bbecc5ad21d9f61",
+        "content_sha256": "227fd8e6eaa290d2bab8b56c25ecccc2c7b0fc829fba063d719423fd83667680",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -4490,6 +4490,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/candidate-triage-20261006",
+        "number": 1126,
+        "title": "RESEARCH: persist candidate prospect and source triage",
+        "updatedAt": "2026-10-06T18:18:02Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1126"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "ops/spine-bot-push-cancel-guard-20261006",
         "number": 1114,
         "title": "OPS: prevent bot commits from canceling useful spine waves",
@@ -4515,6 +4523,36 @@
     ],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "666e2becdfb12acc50470ff55626ec5ef2a4450d",
+        "timestamp": "2026-10-06T18:19:48Z"
+      },
+      {
+        "message": "OPS: balance research capacity and add live Berlin clock (#1125)",
+        "sha": "c969eaa1ca686cad12075f5a9b43a26cfa265dbf",
+        "timestamp": "2026-10-06T20:19:44+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "565d92a42455c3b82a0d459573a25019318f7c2c",
+        "timestamp": "2026-10-06T18:19:09Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "4e509f6430da5ce166fd8fd121563dd1ef72f1e7",
+        "timestamp": "2026-10-06T18:18:51Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "5b9e7c924371fc3db47c6f0afdae44b78bdbae24",
+        "timestamp": "2026-10-06T18:18:32Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b897a18c7b903d15fb3ad40ed7bc94ff4ee259f7",
+        "timestamp": "2026-10-06T18:12:20Z"
+      },
+      {
         "message": "FIX: remove obsolete Q219 top-4 matrix lanes (#1124)",
         "sha": "7405eb246c753975e0ec8ae264677ac6d3603e90",
         "timestamp": "2026-10-06T20:12:01+02:00"
@@ -4523,36 +4561,6 @@
         "message": "OPS: refresh resource dashboard snapshot",
         "sha": "2d77a6ab01441cb2287c48a73ec9e6d56c1ff9be",
         "timestamp": "2026-10-06T18:05:49Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "4a6423da25b0bcef7a3eb05ebfa30f647f54aac2",
-        "timestamp": "2026-10-06T17:56:30Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "2451f387f75f2031c771d0daecef1cbd669051d3",
-        "timestamp": "2026-10-06T17:55:00Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "b5ca9fe2a23526074ac31ec773207515bce4cd72",
-        "timestamp": "2026-10-06T17:54:43Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "cb7cc5342b235c90acfd3c062aa4105fc4a02c9a",
-        "timestamp": "2026-10-06T17:54:33Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "61baf1f432bfbd5eeeeb4263c156a8763e011b5c",
-        "timestamp": "2026-10-06T17:53:58Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "f686e5e4929e77bc27b8eb6bb461cd0a89169a42",
-        "timestamp": "2026-10-06T17:53:54Z"
       }
     ]
   },
@@ -4650,7 +4658,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7405eb246c753975e0ec8ae264677ac6d3603e90",
+  "source_master_sha": "666e2becdfb12acc50470ff55626ec5ef2a4450d",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4764,6 +4772,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37509460903"
+    "run_id": "37510457277"
   }
 }
