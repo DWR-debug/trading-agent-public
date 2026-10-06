@@ -267,7 +267,17 @@
     },
     "self_hosted_windows_availability": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
     "windows_a_role": "FORMAL_READINESS / local_reproduction",
-    "windows_b_role": "FRONTIER_DISCOVERY / data_qa"
+    "windows_b_role": "FRONTIER_DISCOVERY / data_qa",
+    "android_fleet": "RESERVE_ONLY",
+    "samsung_android_fleet": "RESERVE_ONLY",
+    "active_research_capacity": [
+      "Windows self-hosted A",
+      "Windows self-hosted B",
+      "Windows self-hosted C",
+      "GitHub-hosted Ubuntu x64",
+      "GitHub-hosted ARM64",
+      "Free AI pool"
+    ]
   },
   "chatless_night_policy": {
     "enabled": true,
@@ -595,5 +605,11 @@
       "live_execution": false
     },
     "principle": "New receipts grow the metadata graph; deterministic convergence/novelty outputs can trigger review proposals but never create authority or mutate frozen trials."
+  },
+  "dashboard_control": {
+    "update_workflow": ".github/workflows/resource-dashboard-update.yml",
+    "deploy_workflow": ".github/workflows/resource-dashboard-update.yml",
+    "update_button_mode": "authenticated workflow dispatch page; no public write token",
+    "android_fleet": "reserve-only"
   }
 }
