@@ -130,9 +130,9 @@ def parse_index(body: bytes) -> list[dict[str, str]]:
 
 
 def accession_from_filename(filename: str) -> str:
-    match = re.search(r"/(\d{18})/", filename)
+    match = re.search(r"(?:^|/)(\d{18})(?:/|\\.|$)", filename)
     if not match:
-        match = re.search(r"/(\d{10}-\d{2}-\d{6})", filename)
+        match = re.search(r"(?:^|/)(\d{10}-\d{2}-\d{6})(?:/|\\.|$)", filename)
         if not match:
             raise ValueError(f"ACCESSION_NOT_FOUND:{filename}")
         return match.group(1)
