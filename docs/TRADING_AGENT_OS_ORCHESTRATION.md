@@ -2,7 +2,7 @@
 
 # Trading Agent OS — Persistent Orchestration
 
-Stand: 2026-10-05
+Stand: 2026-10-06
 
 ## Zweck
 
@@ -65,6 +65,53 @@ Windows A / Formal Readiness receives inherited-source consistency, PIT-contract
 A top-candidate overlay may advance only source/PIT/structure readiness. It must fail closed when a historical public clock, identity mapping, revision lineage or deterministic feature definition cannot be proven. Literature-derived mechanisms do not become project evidence merely because a paper reports an effect.
 
 This overlay is a routing rule, not a scientific ranking rule. It does not authorize performance, holdout selection, threshold or parameter search, asset selection, promotion or live execution.
+
+## 2ac. Knowledge Relation Plane — 2026-10-06
+
+The OS now maintains a deterministic **Knowledge Relation Plane** in
+`research/governance/knowledge_relation_graph_contract_2026_10_06.json`.
+It is a metadata/control-plane layer, not a strategy layer.
+
+Its job is to connect reusable structural facts that already exist across the
+project: source components, public clocks, entity maps, event anchors, state
+transitions, candidate contracts, receipts and negative evidence.
+
+The central rule is: **reuse infrastructure, never inherit conclusions**.
+
+This creates four useful effects:
+
+1. **Shared-component reuse:** one verified SEC clock, identity map, XBRL structure,
+   options PIT chain or government-publication clock can feed several independent
+   candidates without rerunning identical source work.
+2. **Cross-channel alignment:** independently timestamped representations of the
+   same public event can be joined for mechanism discovery — e.g. filing channel,
+   structured XBRL state and post-filing options response — without treating the
+   join as a composite strategy.
+3. **Dependency-aware routing:** the scheduler can prioritize unresolved structural
+   components that block multiple independent candidates, while remaining blind to
+   performance outcomes.
+4. **Negative-evidence propagation:** a failed source/clock/identity contract can
+   close dependent paths until a new falsifiable route is declared, preventing
+   cyclic rediscovery and wasted compute.
+
+The deterministic materialization is
+`automation/knowledge_relation_index.py`, with the current metadata snapshot in
+`research/evidence/knowledge_relation_index_latest.json`.
+
+The graph may contain explicit discovery motifs such as:
+- originator public state -> independent regulatory/structured confirmation;
+- public filing -> separately timestamped market/instrument response;
+- public administrative state -> frozen issuer exposure;
+- narrative -> structured -> market multi-representation consistency.
+
+These motifs are hypothesis-discovery aids only. A graph edge never authorizes
+performance, selects assets/parameters/holdouts, changes a frozen trial, or
+creates a composite candidate. Any composition requires separate candidate
+contracts and candidate-specific PIT/coverage/independent-reproduction gates.
+
+When a shared component is refreshed, all dependent candidate lanes inherit only
+the deterministic structural artifact and its provenance. Candidate-specific
+semantic and scientific gates are evaluated independently.
 
 ## 2a. Persistent acceleration policy
 ## 2b. Permanent literature-research plane
@@ -186,7 +233,7 @@ Diese Invarianten gelten auch im Nachtbetrieb und für jeden Unteragenten.
 
 ## 8. Verbindliche Quellen
 
-Die maschinenlesbare Version dieses Zustands ist ops/trading_agent_os_state.json.
+Die maschinenlesbare Version dieses Zustands ist ops/trading_agent_os_state.json.\nDie Knowledge-Relation-Regel ist research/governance/knowledge_relation_graph_contract_2026_10_06.json; der aktuelle Metadaten-Index ist research/evidence/knowledge_relation_index_latest.json.
 Der aktuelle operative Zustand bleibt research/evidence/current_operational_state.json.
 Der Chat-Einstiegspunkt bleibt docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.
 Die wiederverwendbare Android-/Samsung-Integrationsvorlage ist docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md.

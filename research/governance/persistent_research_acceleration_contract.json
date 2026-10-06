@@ -235,5 +235,15 @@
     "no_padding": true,
     "no_duplicate_work": true,
     "no_scientific_authority_change": true
+  },
+  "knowledge_relation_plane": {
+    "status": "ACTIVE",
+    "contract": "research/governance/knowledge_relation_graph_contract_2026_10_06.json",
+    "index_builder": "automation/knowledge_relation_index.py",
+    "latest_index": "research/evidence/knowledge_relation_index_latest.json",
+    "purpose": "Reuse deterministic source/clock/identity infrastructure across independent candidate lanes and discover cross-channel state-transition motifs without inheriting scientific conclusions.",
+    "scheduler_rule": "Prioritize unresolved shared structural components by the number of independent downstream tasks they unblock; never use performance outcomes for this priority.",
+    "composition_rule": "Graph relations do not create composite candidates. Any composition requires a separate frozen contract and independent candidate-specific PIT/coverage/reproduction gates.",
+    "w4_role": "metadata consolidation, overlap audit, dependency routing and negative-evidence deduplication"
   }
 }

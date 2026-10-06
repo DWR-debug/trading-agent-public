@@ -4542,8 +4542,8 @@
       "starts_utc": "2026-10-01T00:00:00Z"
     },
     "free_resources_only": true,
-    "hypothetical_reference_capital_eur": 2000.0,
-    "legacy_operational_canary_capital_eur": 500.0,
+    "hypothetical_reference_capital_eur": 2000,
+    "legacy_operational_canary_capital_eur": 500,
     "paid_agent_budget_usd": 0,
     "paid_api_budget_usd": 0
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "56a786639fc92503618b211cb820f020e491364d",
+  "source_master_sha": "e231038585683712cf4800cb4db76b6ebc25c879",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4740,5 +4740,25 @@
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
     "run_id": "37439632531"
+  },
+  "knowledge_relation_plane": {
+    "status": "ACTIVE_METADATA_ONLY",
+    "contract": "research/governance/knowledge_relation_graph_contract_2026_10_06.json",
+    "latest_index": "research/evidence/knowledge_relation_index_latest.json",
+    "index_builder": "automation/knowledge_relation_index.py",
+    "shared_component_count": 10,
+    "active_candidate_links": 17,
+    "explicit_candidate_relations": 5,
+    "discovery_motifs": 4,
+    "purpose": "Efficient reuse of deterministic source/clock/identity infrastructure and structured cross-channel discovery without transitive scientific authority.",
+    "next_useful_action": "Use relation dependencies to schedule shared structural gates first when they block multiple independent candidates; then fan out candidate-specific PIT/identity/revision gates.",
+    "scientific_boundary": {
+      "performance": false,
+      "holdout_selection": false,
+      "ranking": false,
+      "tuning": false,
+      "promotion": false,
+      "live_execution": false
+    }
   }
 }

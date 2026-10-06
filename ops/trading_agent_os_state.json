@@ -2,7 +2,7 @@
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
   "effective_date_utc": "2026-10-04T19:00:00+02:00",
-  "source_master_sha": "2cc117dce3335bdfff625f8d72c8729cd82e9bf3",
+  "source_master_sha": "e231038585683712cf4800cb4db76b6ebc25c879",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
   "capacity_pulse_policy": "10-minute schedule with independent lane-scoped Windows concurrency; local_reproduction shares the explicit long-reproduction priority group while data_qa remains independently schedulable",
@@ -176,7 +176,8 @@
       "Q215",
       "Q216",
       "Q217"
-    ]
+    ],
+    "knowledge_relation_plane": "Active: SEC filing/event substrate, XBRL structure, options PIT, USAspending clock, 13F transitions and Treasury demand are connected as reusable metadata components; cross-channel motifs are discovery-only."
   },
   "resource_routing": {
     "self_hosted_windows": [
@@ -543,5 +544,21 @@
       "live_execution": false
     },
     "last_refreshed_utc": "2026-10-05T19:22:11.737Z"
+  },
+  "knowledge_relation_plane": {
+    "status": "ACTIVE_METADATA_ONLY",
+    "contract": "research/governance/knowledge_relation_graph_contract_2026_10_06.json",
+    "index_builder": "automation/knowledge_relation_index.py",
+    "latest_index": "research/evidence/knowledge_relation_index_latest.json",
+    "purpose": "Connect reusable data/clock/identity infrastructure and explicit cross-candidate relations for efficient routing and overlap-aware discovery.",
+    "shared_component_rule": "Compute or verify a deterministic structural prerequisite once, then fan out candidate-specific validation.",
+    "no_transitive_authority": true,
+    "composition_requires_separate_contract": true,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
   }
 }
