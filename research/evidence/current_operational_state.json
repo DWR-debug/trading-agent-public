@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T21:18:20.740096+00:00",
+    "generated_at_utc": "2026-10-06T21:23:27.375706+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "cd1a82283e31b8cde72624446397edd13115320e"
+    "source_master_sha": "8c124b5bbd4d2c50a2150c6008237bbf92c3e697"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T21:18:20.740096+00:00",
+  "generated_at_utc": "2026-10-06T21:23:27.375706+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2804,7 +2804,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "be0a533d8db2a0f4fcd6e349e0687f46785f588b0341fb0196533a46eb4c7ec9",
+    "receipt_fingerprint": "ae34db7efbc727847f39e520b1d29645c4d457106b6eeee4a45d0c41cea034f5",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2839,7 +2839,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "1b65b1ccffcf0ceef27db9b6d39d341663a5ca0c4eee7e888c8fbd4c83429899",
+        "content_sha256": "a35c5e695150c28e1ff58a9fd7051fa3e0245e58874dc06305a20412dd4eca81",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2863,7 +2863,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "5019a9dc3451557b9090e9dc04b58fed8e81911b7b51f7ff4725d5b877186bc8",
+        "content_sha256": "9576f309d015f6b4af8bddd2e3087c3dc845851a89136d30e217724c288295f1",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -4184,7 +4184,7 @@
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "3a904097477a9757e6bd71b4c8a9855ad0726388ec44f9d92cfbc0d023f2329b",
+    "receipt_fingerprint": "971b1f456864f24410e7b2c91f5338a2bd69a5562754113c519f046b860b6e81",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4258,7 +4258,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "f041a41804ac78f3c9cd68cb40178f3847b6d42391e8789725d80bd04f6e4be1",
+        "content_sha256": "29fc5a38964b430e7772690632d3349b18ff4ba040c5ce7234140c7a98c50360",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4491,6 +4491,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/q219-dolthub-historical-pit-gate-20261006",
+        "number": 1146,
+        "title": "RESEARCH: add Q219 DoltHub historical PIT feasibility gate",
+        "updatedAt": "2026-10-06T21:22:03Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1146"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "ops/q219-routing-state-consistency-20261006",
         "number": 1143,
         "title": "OPS: align routing state with Q219 Top-4 capacity",
@@ -4500,44 +4508,44 @@
     ],
     "recent_commits": [
       {
-        "message": "RESEARCH: support SEC inline-XBRL presentation source fallback",
-        "sha": "cd1a82283e31b8cde72624446397edd13115320e",
-        "timestamp": "2026-10-06T23:18:07+02:00"
+        "message": "RESEARCH: fix Q220 prefixed XBRL presentation mapping",
+        "sha": "8c124b5bbd4d2c50a2150c6008237bbf92c3e697",
+        "timestamp": "2026-10-06T23:23:15+02:00"
       },
       {
-        "message": "OPS: update AI credit availability plan",
-        "sha": "128b0eddef9fe0a38e841a2dd7f47f95c249c826",
-        "timestamp": "2026-10-06T21:10:58Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "843c726d9260a512fea9027b6ac080cef87bdf88",
+        "timestamp": "2026-10-06T21:19:25Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "02c85356bba0f00b7bf3400ca74885d40b2babfd",
-        "timestamp": "2026-10-06T21:10:25Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "d8915b2529faa1c835fabb1c5765b3d33127cc23",
+        "timestamp": "2026-10-06T21:19:20Z"
       },
       {
-        "message": "RESEARCH: repair Q220 route coverage and Windows receipt publish",
-        "sha": "1eb8cbc2062a9913289e9c98d8b7bbb6e3b9ec27",
-        "timestamp": "2026-10-06T23:10:04+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "4a081590eff1848599bc7a6be8d6c1171de21869",
+        "timestamp": "2026-10-06T21:19:04Z"
       },
       {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "f6dcb39d1e7c64845d10ac0d0bff6f3f5bb851df",
-        "timestamp": "2026-10-06T21:07:11Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "57ad96580180c3f9cec200091afaaa3c00d5fd80",
+        "timestamp": "2026-10-06T21:19:00Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1f42f553409251114f5f719b4835c824ebe5b5a7",
-        "timestamp": "2026-10-06T21:07:08Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "3ffc3dc75354236aa2ff585ae102efde37c38671",
+        "timestamp": "2026-10-06T21:18:57Z"
       },
       {
-        "message": "OPS: align dashboard candidate tracking with Q219",
-        "sha": "1815d53da012fb40c996b12c90dcd9b35cb923b1",
-        "timestamp": "2026-10-06T23:06:48+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "1fbeb1be6ae19b88d39f1422deba46af39f75e03",
+        "timestamp": "2026-10-06T21:18:54Z"
       },
       {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "5404420660c19db3c52a2f608c6b8bc8b2633b2f",
-        "timestamp": "2026-10-06T21:04:33Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "d3ffc4069a19c9383a8ecbb1fa1107e4f9730261",
+        "timestamp": "2026-10-06T21:18:50Z"
       }
     ]
   },
@@ -4635,7 +4643,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "cd1a82283e31b8cde72624446397edd13115320e",
+  "source_master_sha": "8c124b5bbd4d2c50a2150c6008237bbf92c3e697",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4749,6 +4757,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37532903260"
+    "run_id": "37533519483"
   }
 }
