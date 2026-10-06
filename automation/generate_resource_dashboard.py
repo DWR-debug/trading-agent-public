@@ -56,10 +56,6 @@ def planned_capacity_plan(
     nothing is invented to occupy free capacity.
     """
     active_text = [f"{x.get('task','')} {x.get('job','')}".lower() for x in work]
-    active_candidates = {
-        candidate for candidate in ("Q104:I19", "Q218", "Q219", "Q220", "Q221", "Q224", "Q228", "Q231")
-        if any(candidate.lower() in value for value in active_text)
-    }
 
     overlay = os_state.get("top_candidate_capacity_overlay", {})
     a_priority = [str(x) for x in overlay.get("windows_A", {}).get("priority", [])]
@@ -146,6 +142,26 @@ def planned_capacity_plan(
             "readiness": "READY_DISCOVERY",
             "basis": "official monthly FOIA logs; exact publication clock still open",
         },
+        {
+            "plan_id": "Q218-ADVERSARIAL",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "bounded adversarial contract review of Q218 source/PIT assumptions",
+            "preferred": ["Free AI pool"],
+            "readiness": "READY_AI_FABRIC",
+            "basis": "independent adversarial review; AI output is non-scientific and non-authorizing",
+            "allow_parallel_with_candidate": True,
+        },
+        {
+            "plan_id": "Q221-ADVERSARIAL",
+            "candidate": "Q221",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "bounded adversarial contract review of Q221 public-clock/entity-map assumptions",
+            "preferred": ["Free AI pool"],
+            "readiness": "READY_AI_FABRIC",
+            "basis": "independent adversarial review; AI output is non-scientific and non-authorizing",
+            "allow_parallel_with_candidate": True,
+        },
     ]
 
     def priority_bonus(item: dict[str, Any]) -> int:
@@ -163,7 +179,14 @@ def planned_capacity_plan(
 
     for item in sorted(queue, key=lambda x: (priority_bonus(x), queue.index(x))):
         candidate = str(item["candidate"])
-        if candidate in active_candidates or candidate in assigned_candidates:
+        candidate_active = any(candidate.lower() in value for value in active_text)
+        if candidate_active and not item.get("allow_parallel_with_candidate", False):
+            continue
+        if candidate in assigned_candidates and not item.get("allow_parallel_with_candidate", False):
+            continue
+        if item.get("plan_id") == "Q218-ADVERSARIAL" and any("free ai" in value and "q218" in value for value in active_text):
+            continue
+        if item.get("plan_id") == "Q221-ADVERSARIAL" and any("free ai" in value and "q221" in value for value in active_text):
             continue
         if item["readiness"].startswith("BLOCKED_"):
             continue
@@ -197,7 +220,7 @@ def planned_capacity_plan(
 
     # Surface genuinely useful blocked follow-on capacity without presenting it as queued work.
     c_resource = "Windows self-hosted C"
-    if c_resource in plans and not plans[c_resource] and "Q104:I19" not in active_candidates:
+    if c_resource in plans and not plans[c_resource] and not any("q104:i19" in value for value in active_text):
         plans[c_resource].append({
             "plan_id": "Q104-I19-INDEPENDENT-REPRO",
             "candidate": "Q104:I19",
