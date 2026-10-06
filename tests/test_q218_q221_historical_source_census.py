@@ -124,3 +124,6 @@ def test_q218_sec_submission_census_excludes_8k_amendments_from_event_pairing(mo
     event = issuer["paired_10k_events"][0]
     assert event["paired_8k_accession"] == "0000320193-25-000002"
     assert event["paired_8k_is_amendment"] is False
+    assert len(issuer["eligible_8k_events"]) == 1
+    assert issuer["eligible_8k_events"][0]["accession"] == "0000320193-25-000002"
+    assert issuer["eligible_8k_events"][0]["form"] == "8-K"
