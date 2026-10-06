@@ -81,3 +81,9 @@ def test_hosted_slots_are_explicitly_leased():
     assert "trading-agent-research-hosted-ubuntu-24.04-arm-slot-2" in text
     assert "trading-agent-research-hosted-${{ matrix.runner }}-slot-${{ matrix.slot }}" in q104
     assert 'slot: "1"' in q104
+
+
+def test_top4_workflow_triggers_on_q219_gate_changes():
+    workflow = (ROOT / ".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
+    assert '"automation/q219_options_source_breadth_gate.py"' in workflow
+    assert '"tests/test_q219_options_source_breadth_gate.py"' in workflow
