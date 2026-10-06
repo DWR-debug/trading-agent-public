@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-06-232-SEC-CT-SOURCE-CENSUS",
+  "candidate_id": "Q232",
+  "parent_discovery": "Q232-SEC-CT-CONFIDENTIAL-TREATMENT-STATE",
+  "status": "PREREGISTERED_SOURCE_FEASIBILITY_PIT_ONLY",
+  "purpose": "Cheap falsification of the historical SEC confidential-treatment order source route before any candidate performance work.",
+  "fixed_window": {"start": "2015-01-01", "end": "2025-12-31", "quarters": "2015Q1-2025Q4"},
+  "source": {
+    "primary": "https://www.sec.gov/Archives/edgar/full-index",
+    "index_file": "form.idx",
+    "official_equivalent_transports": ["form.zip", "form.gz", "form.idx"],
+    "form": "CT ORDER"
+  },
+  "row_contract": [
+    "form must equal CT ORDER",
+    "filing date must be a valid ISO date inside the fixed window",
+    "CIK must be numeric and normalized to 10 digits",
+    "archive filename must begin with edgar/data/"
+  ],
+  "deterministic_header_sample": {
+    "rule": "For each calendar year, inspect the first, median and last recovered CT ORDER accession in filing-date/accession lexical order; fewer than three rows yields all available rows.",
+    "maximum_sample": 33,
+    "purpose": "Route and archive integrity only; the sample is not an issuer-selection or outcome-selection device."
+  },
+  "header_contract": [
+    "index-header page must be HTTP 200",
+    "CONFORMED SUBMISSION TYPE must be CT ORDER",
+    "ACCEPTANCE-DATETIME must be explicitly present and parseable",
+    "accession number must match the filename-derived accession",
+    "filed-as-of-date must match the form-index filing date"
+  ],
+  "linked_archive_contract": [
+    "complete submission text URL is derivable from filer CIK and accession",
+    "index-header document list must expose a CT ORDER document",
+    "primary CT ORDER document must be retrievable from the exact SEC archive path"
+  ],
+  "pit_boundary": {
+    "acceptance_datetime_preserved": true,
+    "first_public_availability_time_proven": false,
+    "same_day_pit_safe": false,
+    "latent_ct_expiry_is_not_a_trading_clock": true
+  },
+  "cheap_falsifiers": [
+    "one or more fixed quarterly SEC index transports cannot be retrieved through any official equivalent transport",
+    "CT ORDER rows cannot be deterministically parsed",
+    "sampled headers lack acceptance time or contradict index metadata",
+    "complete submission text or CT ORDER document is not recoverable for sampled rows",
+    "event density is too sparse to support a meaningful later structural census",
+    "archive identity depends on hindsight or a third-party source"
+  ],
+  "governance": {
+    "performance": false, "holdout_selection": false, "ranking": false, "parameter_search": false,
+    "threshold_search": false, "horizon_search": false, "asset_search": false, "variant_search": false,
+    "promotion": false, "performance_authorized": false, "automatic_promotion": false, "live_execution": false
+  },
+  "safety": {"PAPER_ONLY": true, "LIVE_TRADING_ENABLED": false, "ORDERS_ENABLED": false, "AUTOMATIC_PROMOTION": false}
+}
