@@ -47,8 +47,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p research/runs/spine/router/${GITHUB_RUN_ID}
-          gh api "/repos/${GITHUB_REPOSITORY}/actions/runs?per_page=200" > research/runs/spine/router/${GITHUB_RUN_ID}/runs.json
-          python -m automation.spine_next_gate_router --runs research/runs/spine/router/${GITHUB_RUN_ID}/runs.json --output research/runs/spine/router/${GITHUB_RUN_ID}/dispatch_plan.json --max-dispatches 5
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/runs?per_page=200" > "research/runs/spine/router/${GITHUB_RUN_ID}/runs.json"
+          python -m automation.spine_next_gate_router --runs "research/runs/spine/router/${GITHUB_RUN_ID}/runs.json" --output "research/runs/spine/router/${GITHUB_RUN_ID}/dispatch_plan.json" --max-dispatches 5
           export ROUTER_RUN_ID="${GITHUB_RUN_ID}"
           export ROUTER_RUNS_PATH="research/runs/spine/router/${GITHUB_RUN_ID}/runs.json"
           export ROUTER_PLAN_PATH="research/runs/spine/router/${GITHUB_RUN_ID}/dispatch_plan.json"
@@ -58,7 +58,7 @@ jobs:
             echo 'SPINE_NOT_READY=NO_DOWNSTREAM_DISPATCH'
             exit 0
           fi
-          jq -r '.dispatches[]?' research/runs/spine/router/${GITHUB_RUN_ID}/dispatch_plan.json | while IFS= read -r workflow; do
+          jq -r '.dispatches[]?' "research/runs/spine/router/${GITHUB_RUN_ID}/dispatch_plan.json" | while IFS= read -r workflow; do
             [[ -n "${workflow}" ]] || continue
             echo "DISPATCH ${workflow}"
             gh workflow run "${workflow}" --repo "${GITHUB_REPOSITORY}" --ref master || echo "DISPATCH_FAILED_NONBLOCKING ${workflow}"
