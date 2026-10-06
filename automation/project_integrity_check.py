@@ -262,6 +262,7 @@ ACTIVE_WORKFLOWS = {
     "knowledge-relation-plane.yml",
     "temporal-identity-state-spine-waves.yml",
     "spine-next-gate-autonomous-router.yml",
+    "q228-sec-correspondence-source-gate.yml",
 }
 
 REQUIRED_FILES = (
