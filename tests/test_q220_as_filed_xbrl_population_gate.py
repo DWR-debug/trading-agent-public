@@ -47,7 +47,7 @@ def test_q220_route_includes_fiscal_year_end_q4():
     assert ROUTE_QUARTERS[-3:] == ((2025, 1), (2025, 2), (2025, 3))
 
 
-def test_q220_windows_receipt_publish_uses_powershell_not_bash():
+def test_q220_windows_receipt_publish_uses_cmd_not_powershell():
     workflow = (ROOT / '.github/workflows/q220-as-filed-xbrl-population.yml').read_text(encoding='utf-8')
     publish = workflow.split('      - name: Publish population receipt', 1)[1].split('      - uses: actions/upload-artifact@v6', 1)[0]
     assert 'shell: powershell' in publish
