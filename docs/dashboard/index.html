@@ -47,6 +47,8 @@
     th{font-size:12px;color:var(--muted);font-weight:600}
     .badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 7px;font-size:11px;margin:1px 4px 1px 0}
     .active-badge{color:var(--operating);border-color:color-mix(in srgb,var(--operating) 40%,var(--border))}
+    .planned-badge{color:var(--info);border-color:color-mix(in srgb,var(--info) 40%,var(--border))}
+    .blocked-badge{color:var(--offline);border-color:color-mix(in srgb,var(--offline) 40%,var(--border))}
     .good{color:var(--available)}
     .unknown{color:var(--offline)}
     .rowtitle{font-weight:650}
@@ -78,7 +80,7 @@
   <div id="error" hidden class="error"></div>
 
   <div class="notice">
-    <strong>Priorität:</strong> Q218 → Q219 → Q220 → Q221 · nur Source/PIT/Structure.
+    <strong>Priorität:</strong> Q218 → Q219 → Q220 → Q221 · nur Source/PIT/Structure.<br>Geplante Kapazität wird separat von tatsächlich laufender Arbeit ausgewiesen.
     <div class="legend">
       <span><span class="dot operating"></span>Rot = sinnvolle Arbeit läuft</span>
       <span><span class="dot available"></span>Grün = Kapazität verfügbar/routierbar</span>
@@ -99,6 +101,16 @@
     <article class="card">
       <h2>Aktive Jobs</h2>
       <div id="work"></div>
+    </article>
+
+    <article class="card">
+      <h2>Geplante Kapazität</h2>
+      <div id="plannedSummary" class="small muted" style="margin-bottom:10px">Noch kein Plan-Snapshot.</div>
+      <div id="planned"></div>
+      <div class="small muted" style="margin-top:10px">
+        Planung = deterministischer nächster sinnvoller Bounded-Workpack. Geplant bedeutet nicht gestartet,
+        nicht bestätigt und nicht wissenschaftlich autorisiert. Blockierte Folgearbeit wird nicht als ausführbar disponiert.
+      </div>
     </article>
 
     <article class="card">
