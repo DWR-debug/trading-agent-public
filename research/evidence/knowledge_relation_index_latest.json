@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "record_type": "knowledge_relation_index",
+  "status": "METADATA_ONLY_NO_SCIENTIFIC_EVIDENCE",
+  "generated_from": {
+    "contract": "research/governance/knowledge_relation_graph_contract_2026_10_06.json",
+    "candidate_specs": "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+    "active_registry": "research/governance/active_research_registry.json"
+  },
+  "design_state": "INITIAL_GRAPH_DEFINED",
+  "use_case": "Reusable deterministic source/clock/identity infrastructure plus explicit cross-candidate relation motifs for scheduling, overlap audits, source reuse and hypothesis discovery.",
+  "active_examples": [
+    {
+      "from": "Q218",
+      "to": "Q220",
+      "relation": "shared SEC filing substrate, different information mechanism"
+    },
+    {
+      "from": "Q218",
+      "to": "Q219",
+      "relation": "same public filing anchor, separate market-response endpoint"
+    },
+    {
+      "from": "Q220",
+      "to": "Q219",
+      "relation": "same public filing event, representation vs option-response state"
+    },
+    {
+      "from": "Q221",
+      "to": "Q203",
+      "relation": "shared USAspending/public-observation infrastructure, distinct economic mechanisms"
+    },
+    {
+      "from": "Q114",
+      "to": "Q116",
+      "relation": "shared deterministic 13F transition compiler"
+    }
+  ],
+  "new_discovery_motifs": [
+    "two-channel state confirmation",
+    "disclosure-to-market-response",
+    "public administrative state to corporate exposure",
+    "multi-representation consistency"
+  ],
+  "critical_rule": "Relations guide data reuse and research scheduling only. They do not create a composite strategy, select assets/parameters/holdouts, authorize performance, or imply any return sign.",
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false,
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  }
+}
