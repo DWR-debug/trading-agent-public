@@ -99,6 +99,8 @@ jobs:
           retention-days: 30
 
   hosted_x64:
+    env:
+      TOP4_EXECUTION_MODE: INDEPENDENT_ARCH_REPRODUCTION
     concurrency:
       group: trading-agent-top4-${{ matrix.candidate }}
       cancel-in-progress: false
@@ -118,9 +120,6 @@ jobs:
         with:
           python-version: "3.13"
       - run: python -m pip install --disable-pip-version-check pytest pandas exchange-calendars pypdf
-      - name: Mark bounded architecture-diverse research mode
-        shell: bash
-        run: echo "TOP4_EXECUTION_MODE=INDEPENDENT_ARCH_REPRODUCTION" >> "$GITHUB_ENV"
       - run: |
           mkdir -p "research/runs/top4/${{ matrix.candidate }}/${{ github.run_id }}"
           python -m automation.top4_candidate_capacity --candidate "${{ matrix.candidate }}" --output-dir "research/runs/top4/${{ matrix.candidate }}/${{ github.run_id }}"
@@ -133,6 +132,8 @@ jobs:
           retention-days: 30
 
   hosted_arm64:
+    env:
+      TOP4_EXECUTION_MODE: INDEPENDENT_ARCH_REPRODUCTION
     concurrency:
       group: trading-agent-top4-${{ matrix.candidate }}
       cancel-in-progress: false
