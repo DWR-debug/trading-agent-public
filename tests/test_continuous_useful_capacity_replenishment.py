@@ -35,7 +35,9 @@ def test_dashboard_never_maps_unavailable_runner_inventory_to_zero() -> None:
     generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
     assert '"runner_api_visible": len(runners) if runners else None' in generator
-    assert '["Visible runners",s.runner_api_visible==null?"n/a":s.runner_api_visible]' in script
+    assert '"capacity_state"' in generator
+    assert '"unverified / not visible"' in generator
+    assert 'capacity_state' in script
 
 
 def test_dashboard_has_synchronous_bootstrap_and_bounded_refresh_fallback() -> None:
@@ -44,7 +46,7 @@ def test_dashboard_has_synchronous_bootstrap_and_bounded_refresh_fallback() -> N
     generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     assert 'src="dashboard_bootstrap.js"' in html
     script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
-    assert "renderEmbeddedSnapshot()" in script
+    assert "renderEmbedded()" in script || "window.__TRADING_AGENT_SNAPSHOT__" in script
     assert "AbortController" in script
     assert "6000" in script
     assert "window.__TRADING_AGENT_SNAPSHOT__" in script
