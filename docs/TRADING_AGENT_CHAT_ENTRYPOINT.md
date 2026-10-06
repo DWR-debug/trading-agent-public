@@ -19,6 +19,8 @@ Vor PROJECT_STATUS.md wird jetzt immer auch der dauerhafte Trading Agent OS-Vert
 - ops/android_phone_resources.json
 - research/candidates/orthogonal_candidate_specs_2026-10-05.json
 - research/governance/knowledge_relation_graph_contract_2026_10_06.json
+- research/governance/temporal_identity_state_spine_contract_2026_10_06.json
+- research/evidence/spine_candidate_readiness_matrix_latest.json
 - research/evidence/knowledge_relation_index_latest.json
 - research/reviews/grok_bounded_review_2026-10-04.json
 
@@ -115,6 +117,9 @@ hochwertige Hypothesen-/Design-/Review-Arbeit eingesetzt, während deterministis
 über vorhandene kostenlose Runner bzw. lokale Ressourcen erfolgt.
 
 ### Knowledge-Relation-Reconciliation
+
+Die Knowledge-Relation-Reconciliation umfasst zusätzlich die T/I/S/R-Spine: Zeitanker, Identität, beobachtbarer Zustand und Revisionslinie werden getrennt geprüft, bevor ein Kandidat die Relationsebene als belastbaren Struktur-Unterbau verwenden darf. Cross-candidate Wiederverwendung bleibt rein strukturell.
+
 
 Vor fachlicher Arbeit wird der Knowledge-Relation-Index als Metadaten-Control-Plane geprüft.
 Gemeinsame Quellen, öffentliche Uhren und Identity-Maps dürfen effizient wiederverwendet werden;
