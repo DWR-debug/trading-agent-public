@@ -3,7 +3,7 @@ from automation import top4_candidate_capacity as worker
 
 ROOT = Path(__file__).parents[1]
 
-def test_top4_capacity_has_exact_four_candidates_and_no_authority():
+def test_top4_capacity_has_formal_lane_plus_four_frontier_candidates_and_no_authority():
     assert list(worker.LANES) == ["Q104:I19", "Q218", "Q219", "Q220", "Q221"]
     for candidate, commands in worker.LANES.items():
         assert commands
