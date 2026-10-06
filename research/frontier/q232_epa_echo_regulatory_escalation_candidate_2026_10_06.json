@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "candidate_id": "Q232",
+  "date": "2026-10-06",
+  "status": "DISCOVERY_CANDIDATE_UNVALIDATED",
+  "issue_number": 1106,
+  "name": "EPA/ECHO regulatory escalation state",
+  "mechanism": "A facility moving through an environmental regulatory state machine (inspection/evaluation -> violation/noncompliance -> significant noncompliance -> enforcement action -> settlement/remediation) may reveal a regulator's escalating assessment of operational/legal exposure before an issuer summarizes that exposure in periodic corporate disclosure. The object is the stage transition and cross-program escalation state, not a generic ESG score or raw violation count.",
+  "event_clock": "Earliest reproducible public ECHO state/record boundary from an immutable historical snapshot. Current ECHO refreshes weekly, so no same-day or publication-time claim is allowed until a historical snapshot clock is proven; otherwise use the next regular trading-session boundary.",
+  "features": [
+    "inspection_evaluation_intensity_and_recency",
+    "violation_severity_and_significant_noncompliance_transition",
+    "enforcement_escalation_stage_and_action_type",
+    "penalty_or_relief_magnitude_when_publicly_fixed",
+    "cross_program_escalation_state",
+    "repeat_offender_and_unresolved_case_state",
+    "facility_to_parent_exposure_aggregation_via_frs"
+  ],
+  "cheap_falsifiers": [
+    "raw event counts add no structure beyond size/industry/regulatory-exposure controls",
+    "state labels are fully explained by firm size, industry, prior violations or already-public issuer disclosure",
+    "issuer mapping is not historically stable under frozen FRS relationships",
+    "weekly ECHO refreshes cannot yield a defensible public-observation boundary",
+    "corrections or re-reporting rewrite the historical prefix",
+    "the apparent information state disappears after conservative SEC/news observability controls",
+    "useful fields require paid EPA data"
+  ],
+  "gates": [
+    "historical ECHO and ICIS-FE&C archive census",
+    "exact historical public-refresh/publication boundary or conservative next-session rule",
+    "frozen FRS facility/program/parent relationship mapping",
+    "violation/enforcement correction and revision lineage audit",
+    "independent symbol-disjoint PIT reconstruction"
+  ],
+  "source_basis": [
+    "EPA ECHO Data Downloads: https://echo.epa.gov/tools/data-downloads",
+    "EPA ECHO About the Data: https://echo.epa.gov/resources/echo-data/about-the-data",
+    "EPA FRS Download Summary and Data Element Dictionary: https://echo.epa.gov/tools/data-downloads/frs-download-summary",
+    "Le, EPA Enforcement Actions and Property Prices, Accounting & Finance (2026), DOI 10.1111/acfi.70222",
+    "From facilities to balance sheets: Environmental reputational risk and financial leverage, Finance Research Letters (2026), DOI 10.1016/j.frl.2026.110601"
+  ],
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "notes": [
+    "Discovery/source-feasibility lead only. This file does not establish PIT validity, ranking, performance authorization or promotion.",
+    "EPA ECHO provides inspection/compliance, violation, enforcement and penalty information; downloads are typically refreshed weekly, while all years of EPA formal enforcement-action data are available through the Enforcement Case Search.",
+    "FRS provides a unique facility identifier and cross-program linkage, with organization and parent relationships. Name/ownership changes make historical identity stability an explicit gate.",
+    "The mechanism is deliberately framed around regulator-state transitions and escalation, not a generic environmental score or raw event count."
+  ]
+}
