@@ -1,0 +1,188 @@
+{
+  "schema_version": "1.0",
+  "document_type": "orthogonal_discovery_seed_pack",
+  "generated_utc": "2026-10-06T09:00:00Z",
+  "status": "DISCOVERY_ONLY_NOT_ACTIVE_TOP4",
+  "purpose": "Record genuinely new public-information relationships discovered from current and historical source review without changing the active Top-4 candidate shortlist. No performance, ranking, tuning, holdout selection, promotion or live execution.",
+  "candidate_seeds": [
+    {
+      "id": "Q233",
+      "name": "FDA recall regulator-confirmation state",
+      "mechanism": "A firm-initiated product recall can become public before FDA completes its hazard assessment and assigns a formal recall class. The incremental information state is therefore the regulator-confirmation layer: pending-classification -> Class I/II/III transition, confirmation lag, and classification change, rather than raw recall occurrence.",
+      "economic_relation": "firm-originated operational disclosure -> independent regulator hazard assessment -> public severity confirmation",
+      "event_clock": "first admissible public observation of the firm recall notice, followed by the first public FDA Enforcement Report state for the same recall. Later history records are revision diagnostics and cannot rewrite the earlier prefix.",
+      "fixed_features": [
+        "new_firm_recall_public_state",
+        "pending_classification_state",
+        "classification_transition",
+        "classification_lag_in_sessions",
+        "severity_change_state_when_history_records_an_update"
+      ],
+      "why_distinct": [
+        "Q189/Q155 concern recall events themselves; Q233 measures the second-stage regulatory confirmation process.",
+        "Q194 concerns shortages/therapeutic substitution; Q233 concerns regulator-assessed hazard severity for an already public recall.",
+        "Q204 is generic release latency; Q233 has a defined economic second-stage confirmation mechanism and severity state.",
+        "Q228 is SEC disclosure-review dialogue; Q233 is FDA product-safety confirmation."
+      ],
+      "source_evidence": {
+        "official": [
+          "FDA Enforcement Reports",
+          "FDA Recalls, Corrections and Removals"
+        ],
+        "observations": [
+          "FDA states firms often issue public recall statements before FDA completes classification.",
+          "FDA began publishing recalls pending classification in 2017, then updates them after hazard assessment.",
+          "FDA history feature tracks changes to classification, reason for recall, code information and product description from July 24, 2018 onward.",
+          "A current August 28, 2026 FDA example states the firm's July 17, 2026 recall notice remained unchanged while FDA later published its classification."
+        ]
+      },
+      "cheap_falsifiers": [
+        "classification lag is only a deterministic weekly-publication artifact after calendar controls",
+        "transition state collapses to raw recall severity available in the original firm announcement",
+        "product/manufacturer-to-issuer mapping is unstable without hindsight",
+        "history corrections make the original public prefix unrecoverable",
+        "the candidate cannot be reproduced after excluding non-tradable same-week ambiguity"
+      ],
+      "gates": [
+        "historical firm recall press-release archive completeness",
+        "FDA Enforcement Report weekly archive completeness",
+        "stable recall/event identifier join",
+        "first-public-observation reconstruction for both channels",
+        "classification-history mutation audit",
+        "frozen manufacturer/product/issuer mapping",
+        "independent PIT reproduction"
+      ],
+      "priority": "P1_SOURCE_PIT_FEASIBILITY",
+      "status": "DISCOVERY_CANDIDATE_UNVALIDATED",
+      "scientific_boundary": {
+        "performance": false,
+        "holdout_selection": false,
+        "ranking": false,
+        "tuning": false,
+        "promotion": false,
+        "live_execution": false
+      }
+    },
+    {
+      "id": "Q234",
+      "name": "HSR merger clearance-friction state",
+      "mechanism": "After a merger is publicly announced, the speed and presence of FTC/DOJ early termination can reveal the regulator's observed competitive-risk state before the transaction closes. The object is transaction-specific regulatory friction, not a generic antitrust-event count.",
+      "economic_relation": "public deal announcement -> regulatory review -> early-termination or ordinary-waiting-period state",
+      "event_clock": "public deal announcement boundary from a frozen issuer/acquirer disclosure, followed by the earliest public FTC early-termination notice when granted. HSR filing/receipt times are latent unless independently public.",
+      "fixed_features": [
+        "early_termination_granted_state",
+        "announcement_to_early_termination_elapsed_time",
+        "transaction_class_state_when_publicly determinable_before_event",
+        "regulatory_review_outcome_state"
+      ],
+      "why_distinct": [
+        "Q165 concerns competition-enforcement shocks across firms/industry networks; Q234 is transaction-level pre-closing regulatory friction.",
+        "Q197/Q203 concern government demand/procurement, not merger regulation.",
+        "Q204 measures generic public-information latency; Q234 links latency to a specific regulatory review process.",
+        "The signal can be two-sided and need not assume that fast clearance is always bullish."
+      ],
+      "source_evidence": {
+        "official": [
+          "FTC Early Termination Notices",
+          "FTC Premerger Notification and the Merger Review Process"
+        ],
+        "observations": [
+          "FTC's current searchable early-termination database displays 28,145 notices.",
+          "HSR waiting period is generally 30 calendar days, with 15-day exceptions for certain cash-tender/bankruptcy transactions.",
+          "Parties may request early termination and the agencies may grant it when the transaction is unlikely to substantially lessen competition.",
+          "FTC says early termination notices are made public soon after parties are notified and provides an API.",
+          "FTC's current 2026 guidance notes that the HSR form changed in 2025 and was subsequently vacated in March 2026, so any historical compiler must version the regulatory form/contract by effective interval."
+        ]
+      },
+      "cheap_falsifiers": [
+        "announcement-to-clearance timing is entirely explained by transaction size/type and calendar mechanics",
+        "positive early-termination selection cannot be separated from the censored no-early-termination population",
+        "deal-to-issuer/acquirer mapping requires hindsight",
+        "regulatory form changes destroy stable historical comparability",
+        "the public notice date is insufficiently precise for the intended decision boundary"
+      ],
+      "gates": [
+        "complete historical early-termination archive census",
+        "API schema/version and timestamp semantics",
+        "frozen transaction-to-public-issuer mapping",
+        "public merger-announcement archive",
+        "censoring rule for transactions without early termination",
+        "regulatory-form/version lineage audit",
+        "independent PIT reproduction"
+      ],
+      "priority": "P1_SOURCE_PIT_FEASIBILITY",
+      "status": "DISCOVERY_CANDIDATE_UNVALIDATED",
+      "scientific_boundary": {
+        "performance": false,
+        "holdout_selection": false,
+        "ranking": false,
+        "tuning": false,
+        "promotion": false,
+        "live_execution": false
+      }
+    },
+    {
+      "id": "Q235",
+      "name": "FDA import-alert supply-constraint state",
+      "mechanism": "A newly published FDA Import Alert establishes a public detention-without-physical-examination policy for specified products, manufacturers, countries or regulatory conditions. For issuers with a frozen, externally verified import/manufacturing exposure, the event can represent an upstream supply-access constraint distinct from a downstream recall or shortage.",
+      "economic_relation": "regulatory border restriction -> upstream input/product availability constraint -> issuer operating exposure",
+      "event_clock": "FDA Import Alert publish date/publication boundary. Later alert revisions are mutation diagnostics and may not rewrite the initial decision prefix.",
+      "fixed_features": [
+        "new_import_alert_publication_state",
+        "affected_product_or_manufacturer_scope_state",
+        "country_scope_state",
+        "alert_revision_or_expansion_state_when_public",
+        "fixed_issuer_exposure_to_affected_supplier_or_product"
+      ],
+      "why_distinct": [
+        "Q194 is drug-shortage/therapeutic substitution; Q235 is an upstream border-control state that may precede shortage.",
+        "Q189/Q155 are recall events; an import alert is a preventative or compliance-based detention state and need not involve a recall.",
+        "Q190/Q195/Q232 concern facility enforcement/compliance; Q235 operates at the import/product access layer.",
+        "The economic channel is supply accessibility, not regulator severity of a defective marketed product."
+      ],
+      "source_evidence": {
+        "official": [
+          "FDA Import Alerts by Publish Date",
+          "FDA Import Alert individual records"
+        ],
+        "observations": [
+          "The FDA currently publishes Import Alerts with explicit publish dates and DWPE classification.",
+          "The live archive contains alerts published through October 2026 and identifies product/country/regulatory scopes.",
+          "Individual alert pages expose publication dates and describe revisions to guidance and affected product/manufacturer conditions."
+        ]
+      },
+      "cheap_falsifiers": [
+        "issuer exposure cannot be frozen from public supplier/manufacturer data without hindsight",
+        "alerts are policy-text updates without economically traceable product flow",
+        "the channel collapses to existing recalls/shortages after fixed supply-exposure controls",
+        "historical alert revisions rewrite the original public prefix",
+        "exposure requires proprietary import transaction data"
+      ],
+      "gates": [
+        "historical Import Alert archive completeness",
+        "publish-date and revision lineage reconstruction",
+        "fixed product/manufacturer/country identity compiler",
+        "pre-event supplier/import exposure mapping from admissible public data",
+        "overlap audit against Q194/Q189/Q195/Q232",
+        "independent PIT reproduction"
+      ],
+      "priority": "P2_EXPLORATORY_SOURCE_FEASIBILITY",
+      "status": "DISCOVERY_CANDIDATE_UNVALIDATED",
+      "scientific_boundary": {
+        "performance": false,
+        "holdout_selection": false,
+        "ranking": false,
+        "tuning": false,
+        "promotion": false,
+        "live_execution": false
+      }
+    }
+  ],
+  "selection_rule": "These seeds are not added to the active Top-4 shortlist. Promotion requires a dedicated source/PIT gate and successful universal pre-formal robustness assessment. The project must retain negative or incomplete results.",
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  }
+}
