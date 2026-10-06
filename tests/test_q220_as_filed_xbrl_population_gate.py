@@ -70,3 +70,9 @@ def test_q220_prefixed_qname_matches_sec_presentation_fragment():
     gate = (ROOT / 'automation/q220_as_filed_xbrl_population_gate.py').read_text(encoding='utf-8')
     assert 'return f"{prefix}_{local}"' in gate
     assert 'qname_fragment(q)' in gate
+
+
+def test_q220_mapping_completion_uses_qnames_after_qname_normalization():
+    gate = (ROOT / "automation/q220_as_filed_xbrl_population_gate.py").read_text(encoding="utf-8")
+    assert "len(hits)>=len(qnames)" in gate
+    assert "len(hits)>=len(locals_)" not in gate

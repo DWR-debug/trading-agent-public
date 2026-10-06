@@ -169,7 +169,7 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
             "primary_document_bytes":len(p),"xsd":xsd_names[0],"xsd_metadata":xm,"presentation_linkbase":pre_names[0],"presentation_source_type":presentation_source[1],"presentation_metadata":pm,
             "instance_document":instance_name,"instance_available":bool(instance_name),"textblock_fact_count":len(tb),
             "textblock_concepts":sorted(set(x["qname"] for x in tb)),"presentation_mapped_textblock_concepts":hits,
-            "presentation_mapping_complete_for_observed_textblocks":bool(tb) and len(hits)>=len(locals_),"raw_archive_as_filed":True,
+            "presentation_mapping_complete_for_observed_textblocks":bool(tb) and len(hits)>=len(qnames),"raw_archive_as_filed":True,
             "performance_authorization":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False}
 
 def concept_spec()->dict[str,object]:
