@@ -34,7 +34,8 @@ LANES={
         [PYTHON,"-m","pytest","-q","tests/test_q218_q221_historical_source_census.py","tests/test_q218_q221_candidate_gate_compiler.py"],
     ],
     "Q219":[
-        [PYTHON,"-m","pytest","-q","tests/test_q129_options_source_feasibility.py","tests/test_q129_options_pit_reproduction.py"],
+        [PYTHON,"-m","automation.q219_options_source_breadth_gate","--output","{OUT}/q219_options_source_breadth_gate.json"],
+        [PYTHON,"-m","pytest","-q","tests/test_q129_options_source_feasibility.py","tests/test_q129_options_pit_reproduction.py","tests/test_q219_options_source_breadth_gate.py"],
         [PYTHON,"-m","pytest","-q","tests/test_q218_q221_candidate_gate_compiler.py"],
     ],
     "Q220":[
