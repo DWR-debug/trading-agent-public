@@ -44,9 +44,12 @@ def _census():
             },
         },
         "q221_usa_rdtne_census": {
-            "rdtne_marker_found": True,
-            "competition_marker_found": True,
-            "transaction_marker_found": True,
+            "source_clock_contract_ready": True,
+            "contract_update_within_five_days": True,
+            "publication_following_morning": True,
+            "transactions_endpoint_documented": True,
+            "dod_90_day_delay_exception_found": True,
+            "fpds_three_business_days_found": True,
             "lookahead_used": False,
         },
     }
@@ -60,6 +63,8 @@ def test_compiler_keeps_all_four_candidates_non_authorizing():
     assert result["promotion_authorization"] is False
     assert result["live_execution"] is False
     assert result["results"]["Q219"]["same_day_use_allowed"] is False
+    assert result["results"]["Q221"]["source_clock_contract_ready"] is True
+    assert result["results"]["Q221"]["transactions_endpoint_documented"] is True
 
 
 def test_compiler_handles_missing_latest_8k_without_crashing():
