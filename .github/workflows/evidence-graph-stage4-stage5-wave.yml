@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   parallel_analysis:
-    name: Stage 4-5 $${{ matrix.mode }}
+    name: Stage 4-5 ${{ matrix.mode }}
     strategy:
       fail-fast: true
       max-parallel: 4
@@ -45,15 +45,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/$${{ matrix.mode }}"
+          mkdir -p "research/runs/evidence_graph_stage4_stage5/${{ github.run_id }}/${{ matrix.mode }}"
           python -m automation.evidence_graph_stage4_stage5 \
-            --mode "$${{ matrix.mode }}" \
-            --output "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/$${{ matrix.mode }}/result.json"
+            --mode "${{ matrix.mode }}" \
+            --output "research/runs/evidence_graph_stage4_stage5/${{ github.run_id }}/${{ matrix.mode }}/result.json"
       - name: Upload analysis receipt
         uses: actions/upload-artifact@v6
         with:
-          name: stage4-stage5-$${{ matrix.mode }}-$${{ github.run_id }}
-          path: research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/$${{ matrix.mode }}/result.json
+          name: stage4-stage5-${{ matrix.mode }}-${{ github.run_id }}
+          path: research/runs/evidence_graph_stage4_stage5/${{ github.run_id }}/${{ matrix.mode }}/result.json
           if-no-files-found: error
           retention-days: 30
 
@@ -73,14 +73,14 @@ jobs:
           python-version: "3.13"
       - name: Run material-change-driven 70 minute research window
         env:
-          GH_TOKEN: $${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           START="$(date +%s)"
           CYCLE=0
           LAST=""
-          mkdir -p "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus"
+          mkdir -p "research/runs/evidence_graph_stage4_stage5/${{ github.run_id }}/event_bus"
           while true; do
             NOW="$(date +%s)"
             ELAPSED=$((NOW-START))
@@ -110,10 +110,10 @@ jobs:
               echo "MATERIAL_INPUT_CHANGE cycle=$CYCLE sha=$CURRENT"
               python -m automation.evidence_graph_stage4_stage5 \
                 --mode full \
-                --output "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/latest_full.json"
+                --output "research/runs/evidence_graph_stage4_stage5/${{ github.run_id }}/event_bus/latest_full.json"
               LAST="$CURRENT"
               echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) cycle=$CYCLE manifest=$CURRENT" >> \
-                "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/material_changes.log"
+                "research/runs/evidence_graph_stage4_stage5/${{ github.run_id }}/event_bus/material_changes.log"
             else
               echo "NO_MATERIAL_INPUT_CHANGE cycle=$CYCLE"
             fi
@@ -121,16 +121,16 @@ jobs:
           done
       - name: Persist latest Stage 4-5 synthesis
         env:
-          GH_TOKEN: $${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ ! -f "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/latest_full.json" ]; then
+          if [ ! -f "research/runs/evidence_graph_stage4_stage5/${{ github.run_id }}/event_bus/latest_full.json" ]; then
             python -m automation.evidence_graph_stage4_stage5 \
               --mode full \
-              --output "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/latest_full.json"
+              --output "research/runs/evidence_graph_stage4_stage5/${{ github.run_id }}/event_bus/latest_full.json"
           fi
-          cp "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/latest_full.json" \
+          cp "research/runs/evidence_graph_stage4_stage5/${{ github.run_id }}/event_bus/latest_full.json" \
              research/evidence/evidence_graph_stage4_stage5_latest.json
           for attempt in 1 2 3 4 5; do
             current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
@@ -148,7 +148,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: stage4-stage5-event-bus-$${{ github.run_id }}
-          path: research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/
+          name: stage4-stage5-event-bus-${{ github.run_id }}
+          path: research/runs/evidence_graph_stage4_stage5/${{ github.run_id }}/event_bus/
           if-no-files-found: error
           retention-days: 30
