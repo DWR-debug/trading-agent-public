@@ -294,5 +294,43 @@
         "live_execution"
       ]
     }
+  },
+  "evidence_graph_stage4_stage5": {
+    "status": "ACTIVE",
+    "contract": "research/governance/evidence_graph_stage4_stage5_contract_2026_10_06.json",
+    "engine": "automation/evidence_graph_stage4_stage5.py",
+    "latest_receipt": "research/evidence/evidence_graph_stage4_stage5_latest.json",
+    "workflow": ".github/workflows/evidence-graph-stage4-stage5-wave.yml",
+    "stage4": {
+      "role": "material-change-driven Evidence-Bus -> automatically growing knowledge graph",
+      "inputs": [
+        "research/evidence",
+        "research/governance",
+        "research/candidates",
+        "research/preregistrations"
+      ],
+      "negative_revision_preservation": true,
+      "explicit_relation_only": true,
+      "no_transitive_authority": true
+    },
+    "stage5": {
+      "role": "deterministic hypothesis novelty/convergence review",
+      "outputs": [
+        "novelty_score",
+        "convergence_score",
+        "overlap_class",
+        "shared_component_profile",
+        "hypothesis_bridge_proposal"
+      ],
+      "candidate_creation_automatic": false,
+      "optimization_automatic": false,
+      "scientific_authority": false
+    },
+    "continuous_wave": {
+      "duration_target_minutes": 70,
+      "recompute_on_material_input_change_only": true,
+      "duplicate_work_forbidden": true,
+      "padding_forbidden": true
+    }
   }
 }
