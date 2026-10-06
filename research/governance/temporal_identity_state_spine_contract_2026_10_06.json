@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0",
+  "record_type": "temporal_identity_state_spine_contract",
+  "effective_date_utc": "2026-10-06T00:00:00Z",
+  "status": "ACTIVE_METADATA_ONLY",
+  "purpose": "Provide a deterministic temporal, identity and state-transition substrate for connecting heterogeneous public data without silently mixing occurrence time, public-observation time, revisions or entity identities.",
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false,
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "spine_layers": [
+    {
+      "id": "T",
+      "name": "Temporal Spine",
+      "role": "Normalize event time, public-observation time, release/publication time, retrieval time and revision time while preserving source semantics."
+    },
+    {
+      "id": "I",
+      "name": "Identity Spine",
+      "role": "Normalize source-specific entity identifiers to frozen canonical issuer/security/organization identities with validity intervals and provenance."
+    },
+    {
+      "id": "S",
+      "name": "State Spine",
+      "role": "Represent observable states and deterministic state transitions with as-of boundaries, revision lineage and source evidence."
+    },
+    {
+      "id": "R",
+      "name": "Relation Spine",
+      "role": "Connect T/I/S nodes to candidate contracts, receipts, negative evidence and discovery motifs without creating transitive authority."
+    }
+  ],
+  "temporal_contract": {
+    "required_fields": [
+      "source_id",
+      "source_record_id",
+      "event_time",
+      "public_observed_at",
+      "retrieved_at",
+      "revision_time",
+      "clock_semantics"
+    ],
+    "invariants": [
+      "timestamps are timezone-aware",
+      "public_observed_at is the admissible information boundary unless a candidate-specific contract explicitly proves a tighter boundary",
+      "retrieved_at is metadata and never substituted for public_observed_at",
+      "event_time/action_time is metadata unless public observability is independently proven",
+      "revision_time may only mutate post-boundary state and may not rewrite the historical prefix",
+      "same-day ambiguity fails closed when source dissemination time is not proven"
+    ],
+    "admissible_clocks": [
+      "SEC_ACCEPTANCE_CLOCK",
+      "USASPENDING_PUBLICATION_CLOCK",
+      "Q129_OPTIONS_EOD_PIT"
+    ]
+  },
+  "identity_contract": {
+    "required_fields": [
+      "source_id",
+      "source_entity_id",
+      "canonical_entity_id",
+      "mapping_version",
+      "valid_from",
+      "valid_to",
+      "mapping_status",
+      "evidence_fingerprint"
+    ],
+    "invariants": [
+      "mapping is frozen for the candidate/trial prefix",
+      "identity validity interval must cover the event boundary",
+      "source-specific identifier changes require explicit lineage",
+      "parent/subsidiary/corporate-action ambiguity is excluded or explicitly classified",
+      "mapping provenance is independently reproducible before cross-candidate reuse"
+    ],
+    "reusable_maps": [
+      "SEC_ISSUER_IDENTITY_MAP"
+    ]
+  },
+  "state_contract": {
+    "required_fields": [
+      "state_id",
+      "entity_id",
+      "state_before",
+      "state_after",
+      "transition_observed_at",
+      "source_component",
+      "revision_lineage",
+      "historical_prefix_fingerprint"
+    ],
+    "invariants": [
+      "state_after cannot be observed before transition_observed_at",
+      "future revisions cannot alter a closed historical prefix",
+      "every transition points to a public-observation boundary",
+      "state labels are deterministic and predeclared",
+      "state transitions do not imply return direction"
+    ]
+  },
+  "composition_rules": {
+    "reuse_structural_substrate": true,
+    "no_transitive_authority": true,
+    "candidate_specific_pit_required": true,
+    "candidate_specific_identity_required": true,
+    "candidate_specific_revision_lineage_required": true,
+    "composite_candidate_requires_new_contract": true
+  },
+  "high_value_patterns": [
+    "originator_public_state -> regulator_confirmation",
+    "public_filing -> structured_representation",
+    "public_filing -> market_response",
+    "administrative_state -> issuer_exposure",
+    "narrative -> structured -> market consistency",
+    "planned_state -> realized_state"
+  ],
+  "scheduler_policy": {
+    "priority_metric": "number_of_independent_downstream_tasks_unblocked",
+    "secondary_metric": "cheap_falsifiability_then_source_quality_then_reproducibility",
+    "forbidden_metrics": [
+      "holdout_return",
+      "performance_rank",
+      "future_information",
+      "candidate_preference"
+    ]
+  }
+}
