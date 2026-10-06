@@ -31,7 +31,7 @@ WORKPACK_PURPOSES={
 WORKPACK_GATE_PATHS={
     "Q104:I19":["automation/q104_i19_13f_historical_identity_census.py","automation/q104_i19_xbrl_pit_compiler.py","automation/q104_xbrl_concept_freeze_audit.py"],
     "Q218":["automation/q218_sec_multichannel_source_gate.py"],
-    "Q219":["automation/q219_options_source_breadth_gate.py","tests/test_q219_options_source_breadth_gate.py"],
+    "Q219":["automation/q219_options_source_breadth_gate.py","automation/q219_dolthub_historical_pit_gate.py","tests/test_q219_options_source_breadth_gate.py","tests/test_q219_dolthub_historical_pit_gate.py"],
     "Q220":["tests/test_q220_as_filed_xbrl_population_gate.py","automation/q104_xbrl_concept_freeze_audit.py","automation/q104_i19_xbrl_pit_compiler.py"],
     "Q221":["automation/q221_usaspending_public_clock_gate.py","automation/top_candidate_source_preflight.py"],
 }
@@ -49,6 +49,7 @@ LANES={
     ],
     "Q219":[
         [PYTHON,"-m","automation.q219_options_source_breadth_gate","--output","{OUT}/q219_options_source_breadth_gate.json"],
+        [PYTHON,"-m","automation.q219_dolthub_historical_pit_gate","--output","{OUT}/q219_dolthub_historical_pit_gate.json"],
         [PYTHON,"-m","pytest","-q",*COMMON_TESTS],
         [PYTHON,"-m","pytest","-q","tests/test_q219_options_source_breadth_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
     ],
