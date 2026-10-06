@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "candidate_id": "Q236",
+  "task_id": "Q-2026-10-06-232-R1-CT-DOCUMENT-TEMPORAL-ANCHOR",
+  "status": "Q236_R1_DOCUMENT_TEMPORAL_ANCHOR_FALSIFIED",
+  "source_run_id": 37477416567,
+  "head_sha": "294f6671461748de50ce95d831bfde6e81d409d7",
+  "artifact_id": 11420260178,
+  "artifact_sha256": "56290f9254a31fc62a2014355ac4e2b7db103478c5954e4bf1dbf0cbd3d984a0",
+  "receipt_fingerprint": "ba6e225725bb9ce102d28d5aeeb2ecb177246e88da5a669b027ca32442f62d68",
+  "fixed_window": {"start":"2015-01-01","end":"2025-12-31"},
+  "sample_rule": "first/median/last recovered CT ORDER accession per calendar year",
+  "sample_size": 33,
+  "observed": {
+    "pdf_retrieved": 33,
+    "text_extraction_success": 33,
+    "temporal_anchor_hits": 0,
+    "temporal_anchor_fraction": 0.0,
+    "decision_anchor_hits": 13
+  },
+  "interpretation": {
+    "scientific_result": "The CT ORDER PDF itself did not provide a deterministic state-term-plus-explicit-date anchor under the frozen extraction contract on the fixed sample.",
+    "scope": "This falsifies the document-PDF temporal-anchor sub-hypothesis only; it does not falsify the broader Q236 public-state-transition mechanism.",
+    "no_threshold_relaxation": true,
+    "next_route": "public filing/event sequence: CT ORDER -> later CT/SEC STAFF action or refiling/unredaction, using SEC acceptance time as the public clock",
+    "latent_expiry_not_tradable_clock": true
+  },
+  "governance": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "performance_authorized": false,
+    "automatic_promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  },
+  "primary_source_context": [
+    "https://www.sec.gov/rules-regulations/staff-guidance/disclosure-guidance/corpfinconfidential-treatment-applicationshtm",
+    "https://www.sec.gov/newsroom/whats-new/streamlined-procedure-confidential-treatment-extensions"
+  ]
+}
