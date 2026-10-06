@@ -141,7 +141,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          OUT="research/runs/literature_frontier/$GITHUB_RUN_ID"
           python - <<'PY'
           import json, os, urllib.parse, urllib.request
           from pathlib import Path
