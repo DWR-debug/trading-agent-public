@@ -1,4 +1,4 @@
-"""Q232 R1: deterministic temporal-anchor feasibility on SEC CT ORDER PDFs."""
+"""Q236 R1: deterministic temporal-anchor feasibility on SEC CT ORDER PDFs."""
 from __future__ import annotations
 
 import argparse
@@ -10,7 +10,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from automation.q232_sec_ct_source_census import (
+from automation.q236_sec_ct_source_census import (
     END,
     START,
     REQUEST_GAP_SECONDS,
@@ -75,8 +75,8 @@ def extraction_version() -> str:
 def extract_pdf_text(pdf_bytes: bytes) -> tuple[str, str]:
     binary = shutil.which("pdftotext")
     if not binary:
-        raise RuntimeError("Q232_PDFTOTEXT_MISSING")
-    with tempfile.TemporaryDirectory(prefix="q232-r1-") as td:
+        raise RuntimeError("Q236_PDFTOTEXT_MISSING")
+    with tempfile.TemporaryDirectory(prefix="q236-r1-") as td:
         pdf = Path(td) / "ct_order.pdf"
         txt = Path(td) / "ct_order.txt"
         pdf.write_bytes(pdf_bytes)
@@ -87,7 +87,7 @@ def extract_pdf_text(pdf_bytes: bytes) -> tuple[str, str]:
             check=False,
         )
         if proc.returncode != 0:
-            raise RuntimeError(f"Q232_PDFTEXT_EXIT_{proc.returncode}:{proc.stderr[-500:]}")
+            raise RuntimeError(f"Q236_PDFTEXT_EXIT_{proc.returncode}:{proc.stderr[-500:]}")
         return txt.read_text(encoding="utf-8", errors="replace"), extraction_version()
 
 
@@ -99,11 +99,11 @@ def pdf_url_for_row(row: dict[str, str]) -> str:
     time.sleep(REQUEST_GAP_SECONDS)
     status, body = fetch(submission_url)
     if status != 200:
-        raise RuntimeError(f"Q232_R1_SUBMISSION_HTTP_{status}:{accession}")
+        raise RuntimeError(f"Q236_R1_SUBMISSION_HTTP_{status}:{accession}")
     complete = body.decode("utf-8", errors="replace")
     document_name = declared_ct_document_name(complete)
     if not document_name:
-        raise RuntimeError(f"Q232_R1_CT_DOCUMENT_NOT_DECLARED:{accession}")
+        raise RuntimeError(f"Q236_R1_CT_DOCUMENT_NOT_DECLARED:{accession}")
     return f"https://www.sec.gov/Archives/edgar/data/{cik}/{accession.replace('-', '')}/{document_name}"
 
 
@@ -130,7 +130,7 @@ def run(output: Path) -> dict[str, object]:
         time.sleep(REQUEST_GAP_SECONDS)
         status, pdf = fetch(url)
         if status != 200 or not pdf:
-            raise RuntimeError(f"Q232_R1_PDF_HTTP_{status}:{accession}")
+            raise RuntimeError(f"Q236_R1_PDF_HTTP_{status}:{accession}")
         text, _ = extract_pdf_text(pdf)
         compact = normalize(text)
         observations.append({
@@ -151,8 +151,8 @@ def run(output: Path) -> dict[str, object]:
     result = {
         "schema_version": "1.0",
         "task_id": "Q-2026-10-06-232-R1-CT-DOCUMENT-TEMPORAL-ANCHOR",
-        "candidate_id": "Q232",
-        "status": "Q232_R1_DOCUMENT_TEMPORAL_GATE_COMPLETED",
+        "candidate_id": "Q236",
+        "status": "Q236_R1_DOCUMENT_TEMPORAL_GATE_COMPLETED",
         "window": {"start": START.isoformat(), "end": END.isoformat()},
         "sample_rule": "first/median/last per calendar year",
         "sample_size": len(observations),

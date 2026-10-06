@@ -1,4 +1,4 @@
-"""Q232 SEC confidential-treatment order source/PIT feasibility census.
+"""Q236 SEC confidential-treatment order source/PIT feasibility census.
 
 Discovery/source only. No prices, returns, holdouts, ranking, tuning,
 promotion or live execution.
@@ -21,7 +21,7 @@ from pathlib import Path
 START = date(2015, 1, 1)
 END = date(2025, 12, 31)
 REQUEST_GAP_SECONDS = 0.35
-UA = "DWR-debug-trading-agent-public/Q232-sec-ct-source-census/1"
+UA = "DWR-debug-trading-agent-public/Q236-sec-ct-source-census/1"
 TRANSPORTS = ("form.zip", "form.gz", "form.idx")
 
 
@@ -203,7 +203,7 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
     time.sleep(REQUEST_GAP_SECONDS)
     hstatus, hbody = fetch(hurl)
     if hstatus != 200:
-        raise RuntimeError(f"Q232_HEADER_HTTP_{hstatus}:{row['filename']}")
+        raise RuntimeError(f"Q236_HEADER_HTTP_{hstatus}:{row['filename']}")
     htext = hbody.decode("utf-8", errors="replace")
 
     accession = extract_tag(htext, "ACCESSION NUMBER")
@@ -216,7 +216,7 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
     time.sleep(REQUEST_GAP_SECONDS)
     dstatus, dbody = fetch(detail_url_value)
     if dstatus != 200:
-        raise RuntimeError(f"Q232_DETAIL_HTTP_{dstatus}:{expected_accession}")
+        raise RuntimeError(f"Q236_DETAIL_HTTP_{dstatus}:{expected_accession}")
     detail = extract_detail_metadata(dbody.decode("utf-8", errors="replace"))
     accession = accession or detail["accession"]
     accepted = accepted or (
@@ -232,7 +232,7 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
     time.sleep(REQUEST_GAP_SECONDS)
     status_text, body_text = fetch(submission_text_url(row["filename"]))
     if status_text != 200:
-        raise RuntimeError(f"Q232_SUBMISSION_TEXT_HTTP_{status_text}:{expected_accession}")
+        raise RuntimeError(f"Q236_SUBMISSION_TEXT_HTTP_{status_text}:{expected_accession}")
     complete_text = gzip.decompress(body_text) if body_text.startswith(b"\x1f\x8b") else body_text
     complete = complete_text.decode("utf-8", errors="replace")
     submission = extract_submission_metadata(complete)
@@ -241,18 +241,18 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
     conformed = conformed or submission["form"]
 
     if accession and accession != expected_accession:
-        raise RuntimeError(f"Q232_ACCESSION_MISMATCH:{accession}!={expected_accession}")
+        raise RuntimeError(f"Q236_ACCESSION_MISMATCH:{accession}!={expected_accession}")
     if conformed and conformed.upper() != "CT ORDER":
-        raise RuntimeError(f"Q232_FORM_MISMATCH:{conformed}")
+        raise RuntimeError(f"Q236_FORM_MISMATCH:{conformed}")
     if not accepted:
-        raise RuntimeError(f"Q232_ACCEPTANCE_MISSING:{expected_accession}")
+        raise RuntimeError(f"Q236_ACCEPTANCE_MISSING:{expected_accession}")
     normalized_filed = (
         f"{filed_as_of[:4]}-{filed_as_of[4:6]}-{filed_as_of[6:8]}"
         if filed_as_of and re.fullmatch(r"\d{8}", filed_as_of)
         else filed_as_of
     )
     if normalized_filed != row["filed_date"]:
-        raise RuntimeError(f"Q232_FILED_DATE_MISMATCH:{expected_accession}:{filed_as_of}:{row['filed_date']}")
+        raise RuntimeError(f"Q236_FILED_DATE_MISMATCH:{expected_accession}:{filed_as_of}:{row['filed_date']}")
 
     pdf_name_match = re.search(
         r"<DOCUMENT>.*?<TYPE>\s*CT ORDER\b.*?<FILENAME>\s*([^\s<]+)",
@@ -260,14 +260,14 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
         re.IGNORECASE | re.DOTALL,
     )
     if not pdf_name_match:
-        raise RuntimeError(f"Q232_CT_ORDER_DOCUMENT_NOT_DECLARED:{expected_accession}")
+        raise RuntimeError(f"Q236_CT_ORDER_DOCUMENT_NOT_DECLARED:{expected_accession}")
     document_name = pdf_name_match.group(1).strip()
     cik, accession_dashed = archive_base(row["filename"])
     pdf_url = f"https://www.sec.gov/Archives/edgar/data/{cik}/{accession_dashed.replace('-', '')}/{document_name}"
     time.sleep(REQUEST_GAP_SECONDS)
     pdf_status, pdf_body = fetch(pdf_url)
     if pdf_status != 200 or not pdf_body:
-        raise RuntimeError(f"Q232_CT_ORDER_DOCUMENT_HTTP_{pdf_status}:{expected_accession}:{document_name}")
+        raise RuntimeError(f"Q236_CT_ORDER_DOCUMENT_HTTP_{pdf_status}:{expected_accession}:{document_name}")
 
     return {
         "accession_number": expected_accession,
@@ -325,7 +325,7 @@ def run(output: Path) -> dict[str, object]:
     for row in all_rows:
         accession = accession_from_filename(row["filename"])
         if accession in by_accession and by_accession[accession] != row:
-            raise RuntimeError(f"Q232_DUPLICATE_ACCESSION_CONFLICT:{accession}")
+            raise RuntimeError(f"Q236_DUPLICATE_ACCESSION_CONFLICT:{accession}")
         by_accession[accession] = row
 
     unique_rows = sorted(by_accession.values(), key=lambda x: (x["filed_date"], accession_from_filename(x["filename"])))
@@ -336,7 +336,7 @@ def run(output: Path) -> dict[str, object]:
     result: dict[str, object] = {
         "schema_version": "1.0",
         "task_id": "Q-2026-10-06-232-SEC-CT-SOURCE-CENSUS",
-        "status": "Q232_SEC_CT_SOURCE_CENSUS_COMPLETED",
+        "status": "Q236_SEC_CT_SOURCE_CENSUS_COMPLETED",
         "window": {"start": START.isoformat(), "end": END.isoformat()},
         "quarters_checked": len(quarter_receipts),
         "quarter_receipts": quarter_receipts,

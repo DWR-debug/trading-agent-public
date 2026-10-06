@@ -1,4 +1,4 @@
-from automation.q232_sec_ct_source_census import (
+from automation.q236_sec_ct_source_census import (
     accession_from_filename,
     extract_detail_metadata,
     parse_index,
@@ -84,6 +84,6 @@ def test_extract_detail_metadata_acceptance_fallback():
 
 
 def test_submission_text_url_preserves_dashed_ct_order_accession():
-    from automation.q232_sec_ct_source_census import submission_text_url
+    from automation.q236_sec_ct_source_census import submission_text_url
     url = submission_text_url("edgar/data/1368148/999999999715010856/9999999997-15-010856-index.htm")
     assert url.endswith("/999999999715010856/9999999997-15-010856.txt")
