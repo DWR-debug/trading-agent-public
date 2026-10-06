@@ -48,3 +48,14 @@ def test_legacy_research_loops_are_manual_only():
         assert "workflow_dispatch:" in text
         assert "\n  schedule:" not in text
         assert "\n  push:" not in text
+
+
+def test_top4_balances_hosted_capacity_slots():
+    text=(ROOT/".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
+    assert 'candidate: [Q218,Q220,Q221]' in text
+    assert text.count('candidate: [Q221]') == 1
+    assert text.count('candidate: [Q220]') == 1
+    hosted = text.split("  hosted_x64:", 1)[1]
+    assert "Q219" not in hosted
+    assert "trading-agent-research-hosted-ubuntu-24.04" in hosted
+    assert "trading-agent-research-hosted-ubuntu-24.04-arm" in hosted
