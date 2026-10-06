@@ -1,35 +1,9 @@
 name: Hosted Deterministic Frontier Research Loop
 
 on:
-  schedule:
-    - cron: "*/10 * * * *"
+  # Automatic research capacity is owned by the dedicated Top-4 dispatcher.
+  # Legacy broad workpacks remain available for explicit manual recovery only.
   workflow_dispatch:
-  push:
-    branches: [master]
-    paths:
-      - "automation/self_hosted_research_worker.py"
-      - "automation/candidate_robustness_gate.py"
-      - "automation/research_hypothesis_compiler.py"
-      - "automation/q119_treasury_source_feasibility.py"
-      - "automation/q120_cftc_source_feasibility.py"
-      - "automation/q122_cftc_release_date_evidence.py"
-      - "automation/q104_i22_filing_arrival_compiler.py"
-      - "automation/q104_xbrl_concept_freeze_audit.py"
-      - "automation/q109_n7_common_holder_graph.py"
-      - "automation/q121_sec_beneficial_ownership_timing.py"
-      - "automation/q126_q132_frontier_feasibility.py"
-      - "automation/q211_q213_literature_source_feasibility.py"
-      - "tests/test_candidate_robustness_gate.py"
-      - "tests/test_q119_treasury_source_feasibility.py"
-      - "tests/test_q120_cftc_source_feasibility.py"
-      - "tests/test_q122_cftc_release_date_evidence.py"
-      - "tests/test_q104_i22_filing_arrival_compiler.py"
-      - "tests/test_q104_xbrl_concept_freeze_audit.py"
-      - "tests/test_q109_n7_common_holder_graph.py"
-      - "tests/test_q121_sec_beneficial_ownership_timing.py"
-      - "tests/test_q126_q132_frontier_feasibility.py"
-      - "tests/test_q211_q213_literature_frontier.py"
-      - ".github/workflows/hosted-deterministic-frontier.yml"
 
 permissions:
   contents: read
