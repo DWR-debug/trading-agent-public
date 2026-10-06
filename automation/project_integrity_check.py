@@ -265,6 +265,8 @@ ACTIVE_WORKFLOWS = {
     "temporal-identity-state-spine-waves.yml",
     "spine-next-gate-autonomous-router.yml",
     "q228-sec-correspondence-source-gate.yml",
+    "q236-sec-ct-source-census.yml",
+    "q236-sec-ct-document-temporal-gate.yml",
 }
 
 REQUIRED_FILES = (
