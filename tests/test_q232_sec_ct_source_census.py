@@ -54,3 +54,8 @@ def test_deterministic_sample_first_median_last_per_year():
         "edgar/data/3/000000000020000003/c-index.htm",
         "edgar/data/4/000000000021000001/d-index.htm",
     ]
+
+
+def test_accession_filename_without_archive_directory():
+    filename = "edgar/data/7032/999999999720001304.txt"
+    assert accession_from_filename(filename) == "9999999997-20-001304"
