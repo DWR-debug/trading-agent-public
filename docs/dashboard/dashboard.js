@@ -45,11 +45,13 @@ function render(data){
   $("capacity").innerHTML="<div class='capacity-grid'>"+resources.map(function(x){
     var cls=capacityClass(x);
     var state=cls==="operating"?"ARBEITET":cls==="available"?"VERFÜGBAR":"NICHT SICHTBAR";
+    var plannedCount=(data.planned_capacity||[]).filter(function(p){return p.resource===x.name;}).reduce(function(n,p){return n+Number(p.planned_count||0);},0);
     return "<div class='capacity "+cls+"'>"+
       "<div class='name'>"+esc(x.name)+"</div>"+
       "<div class='state'>"+state+"</div>"+
       "<div class='role'>"+esc(x.role)+"</div>"+
       "<div class='jobs'>"+esc(x.current_assignments||0)+" aktiver Job"+((x.current_assignments||0)===1?"":"s")+"</div>"+
+      "<div class='small muted'>"+esc(plannedCount)+" geplant</div>"+
       "</div>";
   }).join("")+"</div>";
 
@@ -62,6 +64,17 @@ function render(data){
       "<td>"+fmtDuration(x.expected_duration_seconds)+"<div class='small muted'>n="+esc(x.duration_sample_count||0)+"</div></td>"+
       "<td>"+relativeRemaining(x.remaining_seconds)+"<div class='small'>"+(x.expected_finish_at?esc(ts(x.expected_finish_at)):"—")+"</div></td></tr>";
   }).join("")+"</tbody></table>" : "<div class='empty'>Aktuell ist kein aktiver GitHub-Actions-Job im Snapshot sichtbar.</div>";
+
+  var planned=data.planned_capacity||[];
+  $("planned").innerHTML=planned.length ? "<table><thead><tr><th>Kapazität</th><th>Aktuell</th><th>Geplante nächste Arbeit</th><th>Bereitschaft</th><th>Erwartete Dauer</th><th>Planstatus</th></tr></thead><tbody>"+planned.map(function(x){
+    var p=(x.planned_assignments||[])[0];
+    var label=p ? (esc(p.candidate)+" — "+esc(p.task)) : "keine unabhängige Ready-Arbeit";
+    var readiness=p ? esc(p.readiness) : "—";
+    var dur=p ? fmtDuration(p.expected_duration_seconds) : "—";
+    var status=p ? (p.scheduled ? "<span class='badge planned-badge'>GEPLANT / NICHT GESTARTET</span>" : "<span class='badge blocked-badge'>BLOCKIERT / KEINE DISPOSITION</span>") : "<span class='badge unknown'>nicht zugewiesen</span>";
+    var basis=p ? "<div class='small muted'>"+esc(p.basis)+"</div>" : "<div class='small muted'>"+esc(x.unallocated_reason||"")+"</div>";
+    return "<tr><td class='rowtitle'>"+esc(x.resource)+"</td><td>"+esc(x.current_assignments||0)+" aktiver Job"+((x.current_assignments||0)===1?"":"s")+"</td><td>"+label+basis+"</td><td>"+readiness+"</td><td>"+dur+(p?"<div class='small muted'>n="+esc(p.duration_sample_count||0)+"</div>":"")+"</td><td>"+status+"</td></tr>";
+  }).join("")+"</tbody></table>" : "<div class='empty'>Kein bounded Plan im Snapshot.</div>";
 
   $("pipeline").innerHTML=pipeline.length ? "<table><thead><tr><th>Candidate</th><th>Stage</th><th>Nächster Gate</th><th>Aktuell</th><th>Erwartete Jobdauer</th><th>Samples</th></tr></thead><tbody>"+pipeline.map(function(x){
     var active=x.active;
@@ -79,6 +92,8 @@ function render(data){
     "<div style='margin-top:10px'>"+(highlights.length?highlights.map(function(x){return "<div style='margin:7px 0'>"+esc(x)+"</div>";}).join(""):"<div class='empty'>Keine Highlights im Snapshot.</div>")+"</div>"+
     "<div class='small muted' style='margin-top:10px'>Performance, Holdout, Ranking, Tuning, Promotion und Live-Ausführung bleiben fail-closed.</div>";
 
+  var pcs=s.planned_capacity_items||0, pbs=s.blocked_planned_items||0, urs=s.unallocated_routable_items||0;
+  $("plannedSummary").textContent="Geplant: "+pcs+" · Blockiert auf Prerequisite: "+pbs+" · Nicht zugewiesen: "+urs;
   $("app").hidden=false;
 }
 function renderEmbedded(){
