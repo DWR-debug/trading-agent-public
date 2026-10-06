@@ -452,10 +452,10 @@
     "website_update_button": "opens authenticated GitHub Actions dispatch page; static Pages cannot safely dispatch a write-authorized workflow without a user-authenticated GitHub session or token"
   },
   "dashboard_summary": {
-    "active_capacity_items": 3,
-    "active_work_items": 4,
+    "active_capacity_items": 2,
+    "active_work_items": 3,
     "ai_providers": 4,
-    "available_capacity_items": 2,
+    "available_capacity_items": 3,
     "busy_runners": null,
     "configured_resources": 6,
     "research_tracks": 43,
@@ -513,21 +513,15 @@
       "source": "recent completed runs; cancelled runs excluded"
     },
     "Q185-Q186 A-Priority Source and PIT Readiness": {
-      "p50_seconds": 41,
-      "p90_seconds": 45,
-      "sample_count": 6,
+      "p50_seconds": 38,
+      "p90_seconds": 53,
+      "sample_count": 5,
       "source": "recent completed runs; cancelled runs excluded"
     },
     "Q188-Q192 PIT Historical Census R2": {
       "p50_seconds": 18,
       "p90_seconds": 18,
       "sample_count": 6,
-      "source": "recent completed runs; cancelled runs excluded"
-    },
-    "Q218 Event Pair PIT Gate": {
-      "p50_seconds": 52,
-      "p90_seconds": 52,
-      "sample_count": 1,
       "source": "recent completed runs; cancelled runs excluded"
     },
     "Q224 EDGAR Modern Source Gate": {
@@ -567,15 +561,15 @@
       "source": "recent completed runs; cancelled runs excluded"
     },
     "Resource Dashboard Update": {
-      "p50_seconds": 44,
-      "p90_seconds": 45,
-      "sample_count": 2,
+      "p50_seconds": 45,
+      "p90_seconds": 48,
+      "sample_count": 3,
       "source": "recent completed runs; cancelled runs excluded"
     },
     "Spine Next-Gate Autonomous Router": {
-      "p50_seconds": 5,
+      "p50_seconds": 2,
       "p90_seconds": 26,
-      "sample_count": 10,
+      "sample_count": 11,
       "source": "recent completed runs; cancelled runs excluded"
     },
     "T052 Exact Master CI Gate": {
@@ -585,9 +579,9 @@
       "source": "recent completed runs; cancelled runs excluded"
     },
     "Temporal Identity State Spine Waves": {
-      "p50_seconds": 87,
+      "p50_seconds": 88,
       "p90_seconds": 177,
-      "sample_count": 5,
+      "sample_count": 6,
       "source": "recent completed runs; cancelled runs excluded"
     },
     "Wide Search Research Lane": {
@@ -609,7 +603,7 @@
       "source": "recent completed runs; cancelled runs excluded"
     }
   },
-  "generated_at_utc": "2026-10-06T17:21:37.650977+00:00",
+  "generated_at_utc": "2026-10-06T17:24:12.582095+00:00",
   "governance_notes": [
     "Operational resource availability and active jobs are separate from scientific evidence.",
     "AI worker output is never scientific evidence.",
@@ -671,17 +665,17 @@
       "slot": "Windows self-hosted B"
     }
   },
-  "master_sha": "1e165c5aabcebc47aa9cf653759a947383420e50",
+  "master_sha": "53e62dd97c7461895396c3cdd6a35f4d9926ab9b",
   "operational_snapshot_sha": "2f7903aa7ca004fad3782b42ab882ddc1343c767",
   "pipeline": [
     {
       "active": false,
       "active_jobs": 0,
       "code": "Q218",
-      "duration_p90_seconds": 52,
-      "duration_sample_count": 1,
-      "duration_source": "recent completed runs; cancelled runs excluded",
-      "expected_duration_seconds": 52,
+      "duration_p90_seconds": null,
+      "duration_sample_count": 0,
+      "duration_source": "no verified duration history",
+      "expected_duration_seconds": null,
       "issue_number": 1094,
       "next_gate": "not recorded",
       "performance_authorization_allowed": false,
@@ -730,13 +724,15 @@
   "resources": [
     {
       "authority": "bounded capacity; no automatic performance authorization",
-      "busy": false,
-      "capacity_state": "unknown",
+      "busy": true,
+      "capacity_state": "operating",
       "configured_runner": "LHT-N133732",
-      "current_assignments": 0,
-      "current_tasks": [],
+      "current_assignments": 1,
+      "current_tasks": [
+        "Temporal Identity State Spine Waves"
+      ],
       "labels": [],
-      "live_status": "unverified / not visible",
+      "live_status": "operating",
       "name": "Windows self-hosted A",
       "role": "Formal readiness / local reproduction",
       "type": "physical"
@@ -758,30 +754,26 @@
     },
     {
       "authority": "bounded capacity; no automatic performance authorization",
-      "busy": true,
-      "capacity_state": "operating",
+      "busy": false,
+      "capacity_state": "unknown",
       "configured_runner": "LHT-N133732-3",
-      "current_assignments": 1,
-      "current_tasks": [
-        "Temporal Identity State Spine Waves"
-      ],
+      "current_assignments": 0,
+      "current_tasks": [],
       "labels": [],
-      "live_status": "operating",
+      "live_status": "unverified / not visible",
       "name": "Windows self-hosted C",
       "role": "Long deterministic runs / independent reproduction",
       "type": "physical"
     },
     {
       "authority": "non-authorizing operational capacity",
-      "busy": true,
-      "capacity_state": "operating",
+      "busy": false,
+      "capacity_state": "available",
       "configured_runner": "ubuntu-24.04",
-      "current_assignments": 1,
-      "current_tasks": [
-        "Temporal Identity State Spine Waves"
-      ],
+      "current_assignments": 0,
+      "current_tasks": [],
       "labels": [],
-      "live_status": "operating",
+      "live_status": "available",
       "name": "GitHub-hosted Ubuntu x64",
       "role": "Deterministic frontier, CI, source/PIT workflows",
       "type": "cloud"
@@ -827,68 +819,49 @@
     {
       "actor": "DWR-debug",
       "authority": "non-authorizing operational work",
-      "duration_sample_count": 2,
+      "duration_sample_count": 3,
       "duration_source": "recent completed runs; cancelled runs excluded",
-      "elapsed_seconds": 15,
-      "expected_duration_seconds": 44,
-      "expected_finish_at": "2026-10-06T17:22:06.319832+00:00",
+      "elapsed_seconds": 19,
+      "expected_duration_seconds": 45,
+      "expected_finish_at": "2026-10-06T17:24:38.356501+00:00",
       "job": "update",
       "lane": "PLATFORM / GOVERNANCE",
-      "remaining_seconds": 29,
+      "remaining_seconds": 26,
       "resource": "Dashboard / GitHub Pages",
-      "run_id": 37502899160,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37502899160",
-      "started_at": "2026-10-06T17:21:22Z",
+      "run_id": 37503227710,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37503227710",
+      "started_at": "2026-10-06T17:23:53Z",
       "status": "in_progress",
       "task": "Resource Dashboard Update",
-      "worker": "GitHub Actions 1000029965"
+      "worker": "GitHub Actions 1000029969"
     },
     {
       "actor": "DWR-debug",
       "authority": "non-authorizing operational work",
-      "duration_sample_count": 5,
+      "duration_sample_count": 6,
       "duration_source": "recent completed runs; cancelled runs excluded",
-      "elapsed_seconds": 328,
-      "expected_duration_seconds": 87,
-      "expected_finish_at": "2026-10-06T17:23:04.319832+00:00",
-      "job": "",
+      "elapsed_seconds": 483,
+      "expected_duration_seconds": 88,
+      "expected_finish_at": "2026-10-06T17:24:12.356501+00:00",
+      "job": "windows (W-TEMPORAL)",
       "lane": "PLATFORM / GOVERNANCE",
-      "remaining_seconds": 87,
-      "resource": "GitHub-hosted Ubuntu x64",
+      "remaining_seconds": 0,
+      "resource": "Windows self-hosted A",
       "run_id": 37502225676,
       "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37502225676",
       "started_at": "2026-10-06T17:16:09Z",
-      "status": "pending",
-      "task": "Temporal Identity State Spine Waves",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "duration_sample_count": 5,
-      "duration_source": "recent completed runs; cancelled runs excluded",
-      "elapsed_seconds": 432,
-      "expected_duration_seconds": 87,
-      "expected_finish_at": "2026-10-06T17:21:37.319832+00:00",
-      "job": "windows (W-STATE)",
-      "lane": "PLATFORM / GOVERNANCE",
-      "remaining_seconds": 0,
-      "resource": "Windows self-hosted C",
-      "run_id": 37501995145,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37501995145",
-      "started_at": "2026-10-06T17:14:25Z",
       "status": "in_progress",
       "task": "Temporal Identity State Spine Waves",
-      "worker": "LHT-N133732-3"
+      "worker": "LHT-N133732"
     },
     {
       "actor": "github-actions[bot]",
       "authority": "non-authorizing operational work",
       "duration_sample_count": 2,
       "duration_source": "Top-4 candidate job history; cancelled jobs excluded",
-      "elapsed_seconds": 575,
+      "elapsed_seconds": 730,
       "expected_duration_seconds": 176,
-      "expected_finish_at": "2026-10-06T17:21:37.319832+00:00",
+      "expected_finish_at": "2026-10-06T17:24:12.356501+00:00",
       "job": "Windows Top-4 Q221",
       "lane": "PLATFORM / GOVERNANCE",
       "remaining_seconds": 0,
@@ -902,12 +875,11 @@
     }
   ],
   "workload_by_lane": {
-    "PLATFORM / GOVERNANCE": 4
+    "PLATFORM / GOVERNANCE": 3
   },
   "workload_by_resource": {
     "Dashboard / GitHub Pages": 1,
-    "GitHub-hosted Ubuntu x64": 1,
-    "Windows self-hosted B": 1,
-    "Windows self-hosted C": 1
+    "Windows self-hosted A": 1,
+    "Windows self-hosted B": 1
   }
 }
