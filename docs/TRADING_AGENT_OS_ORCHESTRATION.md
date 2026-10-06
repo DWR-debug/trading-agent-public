@@ -31,6 +31,20 @@ Permanent background capacity remains active outside the window: Windows A/B and
 
 This capacity rule never creates scientific authority. Performance, holdout selection, ranking, tuning, promotion and live execution remain closed unless the independent existing governance chain authorizes them.
 
+## 2ab. Top-4 automatic capacity routing — 2026-10-06
+
+The automatic research dispatcher for the active four-candidate wave is `.github/workflows/top4-candidate-research-capacity.yml`. It routes bounded workpacks for **Q218/Q219/Q220/Q221** across three self-hosted Windows slots, GitHub-hosted x64 and hosted ARM64. Legacy broad frontier loops remain manual-only and are not used as filler work.
+
+Each matrix job binds checkout to `github.sha`, records the candidate-specific workpack contract and gate paths, and uses stale-run cancellation so a new source/PIT gate state supersedes obsolete work. Free AI reviews are task-local and non-authorizing.
+
+The candidate routing is deliberately orthogonal:
+- Q218: SEC multichannel source/event pairing and acceptance lineage.
+- Q219: options source breadth, Q129 PIT and post-filing leakage.
+- Q220: as-filed XBRL/FSN schema and narrative-structured mapping.
+- Q221: USAspending public-observation clock and agency-specific exceptions.
+
+No automatic Top-4 dispatcher step performs performance, ranking, tuning, holdout selection, promotion or live execution.
+
 ## 2ab. Top-candidate development overlay — 2026-10-05
 ### Q222 design-only extension — 2026-10-05
 
