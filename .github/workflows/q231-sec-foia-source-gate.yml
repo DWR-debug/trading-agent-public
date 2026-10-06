@@ -1,0 +1,72 @@
+name: Q231 SEC FOIA Source Gate
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q231_sec_foia_source_gate.py"
+      - ".github/workflows/q231-sec-foia-source-gate.yml"
+      - "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
+  schedule:
+    - cron: "27 */6 * * *"
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: trading-agent-q231-sec-foia-source-gate
+  cancel-in-progress: true
+jobs:
+  source_gate:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Run bounded SEC FOIA source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q231_sec_foia_source_gate.py \
+            --output "research/runs/q231_sec_foia_source_gate/${GITHUB_RUN_ID}.json"
+      - name: Validate non-authorizing boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path("research/runs/q231_sec_foia_source_gate")/f"{os.environ['GITHUB_RUN_ID']}.json"
+          d=json.loads(p.read_text(encoding="utf-8"))
+          assert d["candidate_id"]=="Q231"
+          assert d["pit_contract"]["latent_request_time_is_not_tradable_clock"] is True
+          assert d["pit_contract"]["exact_historical_publication_timestamp_proven_by_this_gate"] is False
+          assert d["orthogonality_contract"]["formal_orthogonality_testing_allowed"] is False
+          assert all(v is False for v in d["scientific_boundary"].values())
+          print("Q231_SEC_FOIA_SOURCE_GATE_BOUNDARY_OK")
+          PY
+      - name: Persist latest receipt
+        if: success() && github.ref == 'refs/heads/master'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          input="research/runs/q231_sec_foia_source_gate/${GITHUB_RUN_ID}.json"
+          latest="research/evidence/q231_sec_foia_source_gate_latest.json"
+          cp "$input" "$latest"
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file "$latest=$latest"; then exit 0; fi
+            sleep "$attempt"
+          done
+          exit 1
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q231-sec-foia-source-gate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q231_sec_foia_source_gate/
+          if-no-files-found: error
+          retention-days: 30
