@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-06-Q224-EDGAR-MODERN-WINDOW-SOURCE-GATE",
   "status": "SOURCE_ARCHIVE_INTEGRITY_COMPLETED_NO_PERFORMANCE",
-  "generated_at_utc": "2026-10-06T20:10:40.800800+00:00",
+  "generated_at_utc": "2026-10-06T21:39:31.754086+00:00",
   "candidate_id": "Q224",
   "source_contract": {
     "official_dataset": "SEC EDGAR Log File Data Sets",
@@ -19,55 +19,16 @@
     {
       "control_date": "2020-05-19",
       "url": "https://www.sec.gov/dera/data/Public-EDGAR-log-file-data/2020/Qtr2/log20200519.zip",
-      "reachable": true,
-      "http_status": 200,
-      "content_length": "3887187",
-      "content_type": "application/zip",
-      "accept_ranges": "bytes",
-      "etag": "\"8a9978ea2598251ad40bbf8cd87605ca\"",
-      "sha256": "cfde448ca5ed11f5b3c5c282fcc96e2ba0b98e8d3b29fe850fd5e24989a65103",
-      "zip_valid": true,
-      "schema": {
-        "member": "log20200519.csv",
-        "member_count": 1,
-        "header": [
-          "_time",
-          "uri_path"
-        ],
-        "request_time_column": "_time",
-        "expected_columns_present": true,
-        "traffic_quality_columns_present": [],
-        "traffic_quality_fields_absent_in_modern_schema": true,
-        "sample_rows_read": 250,
-        "sample_uri_regex_matches": 215,
-        "sample_uri_match_rate": 0.86,
-        "first_rows_sha256": "97184e1d3474dd54642dea61f7dcde0ec9f77f2f7d22bddb9a49102aea76bb8d",
-        "request_time_parse_rate": 1.0,
-        "request_time_examples": [
-          {
-            "raw": "2020-05-19T18:50:41.000-0400",
-            "normalized_iso": "2020-05-19T18:50:41-04:00"
-          },
-          {
-            "raw": "2020-05-19T18:50:41.000-0400",
-            "normalized_iso": "2020-05-19T18:50:41-04:00"
-          },
-          {
-            "raw": "2020-05-19T18:50:41.000-0400",
-            "normalized_iso": "2020-05-19T18:50:41-04:00"
-          },
-          {
-            "raw": "2020-05-19T18:50:41.000-0400",
-            "normalized_iso": "2020-05-19T18:50:41-04:00"
-          },
-          {
-            "raw": "2020-05-19T18:50:41.000-0400",
-            "normalized_iso": "2020-05-19T18:50:41-04:00"
-          }
-        ]
-      },
-      "error": null,
-      "download_bytes": 3887187
+      "reachable": false,
+      "http_status": null,
+      "content_length": null,
+      "content_type": null,
+      "accept_ranges": null,
+      "etag": null,
+      "sha256": null,
+      "zip_valid": false,
+      "schema": null,
+      "error": "HTTPError:HTTP Error 503: Service Unavailable"
     },
     {
       "control_date": "2022-12-30",
@@ -179,17 +140,15 @@
   "request_quality": {
     "modern_schema_has_request_time_and_uri": true,
     "request_time_columns_observed": [
-      "_time",
       "time"
     ],
-    "schema_field_name_drift_detected": true,
+    "schema_field_name_drift_detected": false,
     "modern_schema_exposes_legacy_crawler_fields": false,
     "traffic_contamination_fully_resolvable_from_modern_schema": false,
     "policy": "Do not infer latent investor identity or sophistication; contamination remains an explicit unresolved limitation."
   },
   "pit_contract": {
     "request_time_fields_observed": [
-      "_time",
       "time"
     ],
     "filing_identity_recovery": "Deterministic CIK/accession recovery from uri_path is required.",
@@ -210,5 +169,5 @@
     "2017_07_01_to_2020_05_18_available": false,
     "legacy_modern_schema_splice_allowed": false
   },
-  "receipt_fingerprint": "b7132a3dfa96684f37763a242f69d2c43be0cea166181201bc83a9104ef94a17"
+  "receipt_fingerprint": "f738a527b9badf50e34cafa2122acae5e3198400ea26a6ebaed45a4e9fd04c22"
 }
