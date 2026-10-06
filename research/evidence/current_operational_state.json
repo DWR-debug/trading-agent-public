@@ -549,6 +549,17 @@
         "performance_authorization_allowed": false,
         "priority": "P1",
         "state": "SOURCE_HISTORY_CENSUS_COMPLETED"
+      },
+      {
+        "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "class": "sec_foia_information_acquisition_state",
+        "code": "Q231",
+        "issue_number": 1104,
+        "next_gate": "official SEC FOIA log archive census + monthly/annual publication-clock reconstruction + deterministic requester/issuer parsing + Q224 orthogonality audit",
+        "note": "SEC FOIA logs provide a distinct institutional search-action channel from EDGAR access demand. Latent request/receipt time is not the tradable clock; first public log observation must be reconstructed. Q231 remains outside the Q218-Q221 top-candidate wave.",
+        "performance_authorization_allowed": false,
+        "priority": "P1",
+        "state": "SOURCE_FEASIBILITY_ACTIVE"
       }
     ],
     "active_research_registry": {
@@ -1459,7 +1470,8 @@
       "Q221",
       "Q224",
       "Q230",
-      "Q229"
+      "Q229",
+      "Q231"
     ],
     "canonical_sources": {
       "active_research_registry": "research/governance/active_research_registry.json",
@@ -1475,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T01:44:10.097830+00:00",
+    "generated_at_utc": "2026-10-06T06:08:08.889474+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1483,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "dafe5dbc06531befd281c97b9a6e1b86063ffd9d"
+    "source_master_sha": "c65f50591dedbb283c95221ef779a8570c3ccd3a"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1781,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T01:44:10.097830+00:00",
+  "generated_at_utc": "2026-10-06T06:08:08.889474+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2558,7 +2570,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "43f448b3fb1e39b20b99421bcf63b6438d3630f7ef6a0b441c9818d505cbbed8",
+    "receipt_fingerprint": "c87a298d4c2d5809f24e5ae74fb16cea6c9ea964d4a684e79ac34e5beb8d4d98",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2606,7 +2618,7 @@
           }
         ],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
-        "content_sha256": "c8929dc4e82c990d8e8b2e83b61f35d5893e2c2aaa942104ce90031159be8e99",
+        "content_sha256": "86a3429b2e475b126e796dd0c67bec142cbfbe4b59533a2bce7d16e171fd0823",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2636,7 +2648,7 @@
           }
         ],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
-        "content_sha256": "babcd7c92dbc01aebcc010555fece62503dbca1b6d99d2bd2e5d9572f7822e68",
+        "content_sha256": "5964b79d6da250388915d70967acd5ec1dbe6c1803327293067eda54d8edeca9",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2657,7 +2669,7 @@
           }
         ],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
-        "content_sha256": "4a8939d73d2a23e7e9a096e1f6ff70b12eba3b2cb2660d5400e915a3e7f9c1a0",
+        "content_sha256": "069f2caff8381c7204c3685369994e0061701281b67cc07c808f2572c0c49a27",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2674,7 +2686,7 @@
           }
         ],
         "clock_contract": "Investigation event and publication times remain distinct.",
-        "content_sha256": "6332a6c25379f851b5bd009f90bd2d6a58d615111a6c4d562a5c3a9d569f46a5",
+        "content_sha256": "d733c71cd0d3c420ee298f04111d3ac2037a73f2d69981cb3639a7da707ff360",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2691,7 +2703,7 @@
           }
         ],
         "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
-        "content_sha256": "b565e1a83023b30f8638a2d7550d58637fc0d1d1c31f72bdd6213c303d7da6b3",
+        "content_sha256": "3a9b1758b2a4ee068bf7bb7da129b38de8e678bb503284ee8f4f4eb94eff0a26",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -4478,44 +4490,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "dafe5dbc06531befd281c97b9a6e1b86063ffd9d",
-        "timestamp": "2026-10-06T01:08:10Z"
+        "message": "RESEARCH: register Q231 SEC FOIA source-feasibility gate",
+        "sha": "c65f50591dedbb283c95221ef779a8570c3ccd3a",
+        "timestamp": "2026-10-06T08:08:04+02:00"
       },
       {
-        "message": "RESEARCH: register Q229 source-history gate",
-        "sha": "4870a0c5672d345e2cb979e707a2c1b2fa1bf460",
-        "timestamp": "2026-10-06T03:07:56+02:00"
+        "message": "RESEARCH: add Q231 SEC FOIA information-acquisition candidate",
+        "sha": "0b54a477956f7ef49ab7aaf07f40557bca4c7a37",
+        "timestamp": "2026-10-06T08:07:58+02:00"
       },
       {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "31c2e83231ea5fb1505039036a10406ec96c8a61",
-        "timestamp": "2026-10-06T01:07:54Z"
+        "message": "OPS: synchronize Android phone fleet receipts",
+        "sha": "42d7a59cfca5aa1a93c50210d87c052dc655baad",
+        "timestamp": "2026-10-06T04:20:33Z"
       },
       {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "3159935ffcc6e1b8644f945b146290e3645d421f",
-        "timestamp": "2026-10-06T01:07:50Z"
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "35646c8b7e7d751d7d596d4b0a7191e0bf9d8e8a",
+        "timestamp": "2026-10-06T03:51:48Z"
       },
       {
-        "message": "RESEARCH: make CFPB release ZIP probe byte-accurate",
-        "sha": "68c4c549a6f3648fca965c73af7175b9a3bde00e",
-        "timestamp": "2026-10-06T03:07:41+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ccec7eb9c985a8e9965bae7cd68deeecc65662aa",
-        "timestamp": "2026-10-06T01:07:24Z"
+        "message": "OPS: update AI credit availability plan",
+        "sha": "65ae860b1ce56d9eab7696a9015bf4b4cd88405c",
+        "timestamp": "2026-10-06T02:27:33Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "762a8bb96ab590c14cd99e81806c1db4c7f4e6c0",
-        "timestamp": "2026-10-06T01:07:19Z"
+        "sha": "be52ae06e12eb0df6b14b664e6dfc4ef414f1638",
+        "timestamp": "2026-10-06T01:47:34Z"
       },
       {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "ffd08b67bb4e0a749122fee8ec70dab587b09939",
-        "timestamp": "2026-10-06T01:07:17Z"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "c3762ca5eaa1bace250c1f968be51577312aff02",
+        "timestamp": "2026-10-06T01:46:36Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "f1c405682ff4e1d17f52790b1df4b8a0a9b3cf0f",
+        "timestamp": "2026-10-06T01:45:23Z"
       }
     ]
   },
@@ -4613,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "dafe5dbc06531befd281c97b9a6e1b86063ffd9d",
+  "source_master_sha": "c65f50591dedbb283c95221ef779a8570c3ccd3a",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4727,6 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37400648053"
+    "run_id": "37422085255"
   }
 }
