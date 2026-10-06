@@ -69,3 +69,18 @@ def test_dashboard_filters_platform_work_from_research_capacity():
         {"id": 2, "name": "CI", "status": "in_progress", "created_at": "2026-10-06T18:01:00Z"},
     ]
     assert current_work_from_runs(runs) == []
+
+
+def test_dashboard_models_elastic_hosted_research_slots():
+    from automation.generate_resource_dashboard import enrich_resources
+    configured=[
+        {"name":"GitHub-hosted Ubuntu x64","type":"cloud","research_capacity_slots":2,"configured_runner":"ubuntu-24.04"},
+        {"name":"Windows self-hosted A","type":"physical","research_capacity_slots":1,"configured_runner":"A"},
+    ]
+    work=[{"resource":"GitHub-hosted Ubuntu x64","task":"Q104","job":"census","status":"in_progress"}]
+    rows=enrich_resources(configured,[],work)
+    x=next(r for r in rows if r["name"]=="GitHub-hosted Ubuntu x64")
+    a=next(r for r in rows if r["name"]=="Windows self-hosted A")
+    assert x["research_capacity_slots"]==2
+    assert x["current_assignments"]==1
+    assert a["research_capacity_slots"]==1
