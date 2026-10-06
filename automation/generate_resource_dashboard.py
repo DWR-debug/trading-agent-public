@@ -179,7 +179,7 @@ def job_duration_benchmarks(
                 continue
             duration = max(0, int((finished - started).total_seconds()))
             job_name = str(job.get("name") or "")
-            for candidate in ("Q104:I19", "Q218", "Q220", "Q221"):
+            for candidate in ("Q104:I19", "Q218", "Q219", "Q220", "Q221"):
                 if candidate in job_name:
                     samples.setdefault(candidate, []).append(duration)
                     break
@@ -362,13 +362,13 @@ def candidate_pipeline(
     job_benchmarks: dict[str, dict[str, int | str]],
 ) -> list[dict[str, Any]]:
     result = []
-    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in ("Q104:I19", "Q218", "Q220", "Q221")}
+    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in ("Q104:I19", "Q218", "Q219", "Q220", "Q221")}
     for item in work:
         text_value = f"{item.get('task', '')} {item.get('job', '')}"
         for candidate in active_by_candidate:
             if candidate in text_value:
                 active_by_candidate[candidate].append(item)
-    for candidate in ("Q104:I19", "Q218", "Q220", "Q221"):
+    for candidate in ("Q104:I19", "Q218", "Q219", "Q220", "Q221"):
         row = next((x for x in top4 if str(x.get("code")) == candidate), None)
         if not row:
             continue
@@ -916,7 +916,7 @@ def main() -> None:
         {"name": "GitHub-hosted ARM64", "type": "cloud", "research_capacity_slots": 2, "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
         {"name": "Free AI pool", "type": "cloud", "research_capacity_slots": 1, "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
     ]
-    priority_codes = {"Q104:I19","Q218","Q220","Q221"}
+    priority_codes = {"Q104:I19","Q218","Q219","Q220","Q221"}
     top4 = [x for x in state_board if x.get("code") in priority_codes]
     q104_parent = next((x for x in state_board if str(x.get("code")) == "104"), None)
     if q104_parent:
