@@ -17,19 +17,37 @@ def pair_issuer(issuer):
         issuer.get("paired_10k_events", []),
         key=lambda e: (e.get("ten_k_acceptance_datetime") or "", e.get("ten_k_accession") or ""),
     )
+    candidates = [
+        row for row in issuer.get("eligible_8k_events", [])
+        if row.get("form") == "8-K"
+        and row.get("is_eligible_earnings_release_8k") is True
+        and row.get("acceptance_datetime")
+    ]
     for event in events:
         target_raw = event.get("ten_k_acceptance_datetime")
         pair_acc = event.get("paired_8k_accession")
         if not target_raw:
             raise SystemExit(f"Q218_MISSING_TARGET_ACCEPTANCE:{issuer.get('cik')}:{event.get('ten_k_accession')}")
         target_dt = parse_acceptance(target_raw, "target_10k")
+        eligible = []
+        for candidate in candidates:
+            cand_dt = parse_acceptance(candidate.get("acceptance_datetime"), "candidate_8k")
+            if cand_dt < target_dt and (lower_dt is None or cand_dt > lower_dt):
+                eligible.append((cand_dt, candidate))
+        if any(eligible[i][0] == eligible[i-1][0] for i in range(1, len(eligible))):
+            raise SystemExit(f"Q218_AMBIGUOUS_8K_TIMESTAMP:{issuer.get('cik')}:{event.get('ten_k_accession')}")
+        expected = max(eligible, key=lambda item: item[0])[1] if eligible else None
         if pair_acc is None:
+            if expected is not None:
+                raise SystemExit(f"Q218_MISSING_EXPECTED_PAIR:{issuer.get('cik')}:{event.get('ten_k_accession')}")
             unpaired.append({"ten_k_accession": event.get("ten_k_accession"), "status": "NO_ELIGIBLE_PAIR"})
             continue
         pair_raw = event.get("paired_8k_acceptance_datetime")
         pair_dt = parse_acceptance(pair_raw, "paired_8k")
         lower_raw = event.get("pair_lower_bound_acceptance")
         lower_dt = parse_acceptance(lower_raw, "lower_bound") if lower_raw else None
+        if expected is None or expected.get("accession") != pair_acc:
+            raise SystemExit(f"Q218_NONDETERMINISTIC_SELECTED_PAIR:{issuer.get('cik')}:{event.get('ten_k_accession')}:{pair_acc}:{expected.get('accession') if expected else None}")
         if event.get("paired_8k_form", "8-K") != "8-K" or event.get("paired_8k_is_amendment") is True:
             raise SystemExit(f"Q218_AMENDED_OR_INVALID_PAIR:{issuer.get('cik')}:{pair_acc}")
         if pair_dt >= target_dt:
