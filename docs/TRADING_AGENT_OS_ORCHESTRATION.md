@@ -233,7 +233,8 @@ Diese Invarianten gelten auch im Nachtbetrieb und für jeden Unteragenten.
 
 ## 8. Verbindliche Quellen
 
-Die maschinenlesbare Version dieses Zustands ist ops/trading_agent_os_state.json.\nDie Knowledge-Relation-Regel ist research/governance/knowledge_relation_graph_contract_2026_10_06.json; der aktuelle Metadaten-Index ist research/evidence/knowledge_relation_index_latest.json.
+Die maschinenlesbare Version dieses Zustands ist ops/trading_agent_os_state.json.
+Die Knowledge-Relation-Regel ist research/governance/knowledge_relation_graph_contract_2026_10_06.json; der aktuelle Metadaten-Index ist research/evidence/knowledge_relation_index_latest.json.
 Der aktuelle operative Zustand bleibt research/evidence/current_operational_state.json.
 Der Chat-Einstiegspunkt bleibt docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.
 Die wiederverwendbare Android-/Samsung-Integrationsvorlage ist docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md.
