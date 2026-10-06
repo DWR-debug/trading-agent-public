@@ -26,3 +26,11 @@ A2	Future Name Corp	Common Stock	78409V104
 
 def test_synthetic_contract():
     assert all(synthetic_contract().values())
+
+
+def test_frozen_source_page_loader(tmp_path):
+    from automation.q104_i19_13f_historical_identity_census import load_page
+    p=tmp_path/"source_page.html"
+    payload=b"<html>frozen</html>"
+    p.write_bytes(payload)
+    assert load_page(p)==payload
