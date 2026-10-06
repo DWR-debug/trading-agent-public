@@ -70,3 +70,11 @@ def test_q220_prefixed_qname_matches_sec_presentation_fragment():
     gate = (ROOT / 'automation/q220_as_filed_xbrl_population_gate.py').read_text(encoding='utf-8')
     assert 'return f"{prefix}_{local}"' in gate
     assert 'qname_fragment(q)' in gate
+
+
+def test_q220_publish_step_avoids_windows_powershell_execution_policy():
+    workflow = (ROOT / ".github/workflows/q220-as-filed-xbrl-population.yml").read_text(encoding="utf-8")
+    publish = workflow.split("      - name: Publish population receipt", 1)[1].split("      - uses: actions/upload-artifact@v6", 1)[0]
+    assert "shell: cmd" in publish
+    assert "shell: powershell" not in publish
+    assert "github_contents_publish.py" in publish
