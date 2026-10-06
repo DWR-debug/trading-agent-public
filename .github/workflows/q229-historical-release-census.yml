@@ -75,17 +75,20 @@ jobs:
           ]
           release_probes=[]
           for url in release_targets:
-              rec={"url":url,"reachable":False,"http_status":None,"content_type":None,"content_length":None,"accept_ranges":None,"bytes_read":0,"is_zip_signature":False}
+              rec={"url":url,"reachable":False,"http_status":None,"content_type":None,"content_length":None,"content_range":None,"content_encoding":None,"accept_ranges":None,"bytes_read":0,"first_bytes_hex":None,"zip_magic_at_stream_start":False}
               try:
-                  req=Request(url,headers={"User-Agent":UA,"Accept":"application/zip,*/*","Range":"bytes=0-4095"})
+                  req=Request(url,headers={"User-Agent":UA,"Accept":"application/zip,*/*","Accept-Encoding":"identity"})
                   with urlopen(req,timeout=30) as r:
-                      body=r.read(4096)
+                      body=r.read(4)
                       st=getattr(r,"status",200)
                       ctype=(r.headers.get("Content-Type") or "").lower()
-                      rec.update(reachable=st in (200,206),http_status=st,content_type=ctype,
+                      rec.update(reachable=st==200,http_status=st,content_type=ctype,
                                  content_length=r.headers.get("Content-Length"),
+                                 content_range=r.headers.get("Content-Range"),
+                                 content_encoding=r.headers.get("Content-Encoding"),
                                  accept_ranges=r.headers.get("Accept-Ranges"),
-                                 bytes_read=len(body),is_zip_signature=body[:4]==b"PK\\x03\\x04")
+                                 bytes_read=len(body),first_bytes_hex=body.hex(),
+                                 zip_magic_at_stream_start=body[:4]==b"PK\\x03\\x04")
               except (HTTPError,URLError,OSError,TimeoutError) as e:
                   rec["error"]=f"{type(e).__name__}:{e}"
               release_probes.append(rec)
