@@ -106,7 +106,7 @@ def test_dashboard_exposes_bounded_hosted_research_slots():
 
 
 def test_dashboard_tracks_q219_in_top4_candidate_capacity():
-    from automation.generate_resource_dashboard import duration_benchmarks, candidate_pipeline
+    from automation.generate_resource_dashboard import candidate_pipeline
     top4 = [{"code": "Q219", "state": "DESIGN_ONLY_ACTIVE"}]
     rows = candidate_pipeline(top4, [], {}, {})
     assert [x["code"] for x in rows] == ["Q219"]
