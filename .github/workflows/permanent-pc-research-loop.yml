@@ -1,57 +1,8 @@
 name: Permanent Windows Local Research Loop
 
 on:
-  schedule:
-    - cron: "*/10 * * * *"
-  push:
-    branches: [master]
-    paths:
-      - "automation/self_hosted_research_worker.py"
-      - "research/preregistrations/q109_n7_graph_integrity_2026_10_02.json"
-      - "tests/test_self_hosted_research_worker.py"
-      - "tests/test_persistent_research_acceleration_contract.py"
-      - "research/governance/persistent_research_acceleration_contract.json"
-      - "research/frontier/q185_q186_candidate_wave_2026_10_04.json"
-      - "research/frontier/q187_q192_candidate_wave_2026_10_04.json"
-      - "research/frontier/q193_q196_candidate_wave_2026_10_04.json"
-      - "research/frontier/q197_q198_candidate_wave_2026_10_04.json"
-      - "docs/research_design/Q197_Q198_DEEP_LITERATURE_AND_CANDIDATE_WAVE_2026-10-04.md"
-      - "automation/q197_q198_source_feasibility.py"
-      - "automation/q198_pit_clock_census.py"
-      - "research/frontier/q199_q201_candidate_wave_2026_10_04.json"
-      - "research/frontier/q202_q204_candidate_wave_2026_10_04.json"
-      - "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
-      - "research/frontier/q206_q210_information_dissemination_wave_2026_10_05.json"
-      - "docs/research_design/INFORMATION_DISSEMINATION_LITERATURE_2026-10-05.md"
-      - "docs/research_design/TRADINGAGENTS_ARCHITECTURE_REPLICATION_2026-10-05.md"
-      - "research/frontier/q205_nlrb_union_certification_candidate_2026_10_05.json"
-      - "research/frontier/q211_q213_literature_frontier_2026_10_05.json"
-      - "research/frontier/q214_disclosure_risk_state_2026_10_05.json"
-      - "docs/research_design/Q215_Q217_FRONTIER_DESIGN_2026-10-05.md"
-      - "research/frontier/q217_cognitive_processing_friction_2026_10_05.json"
-      - "research/frontier/q216_rt_vintage_pit_2026_10_05.json"
-      - "research/frontier/q215_nhtsa_sec_bridge_2026_10_05.json"
-      - "docs/research_design/LITERATURE_FRONTIER_EXPANSION_2026-10-05.md"
-      - "automation/q211_q213_literature_source_feasibility.py"
-      - "automation/top_candidate_source_preflight.py"
-      - "automation/q218_q221_historical_source_census.py"
-      - "tests/test_top_candidate_source_preflight.py"
-      - "tests/test_q218_q221_historical_source_census.py"
-      - "automation/q218_q221_candidate_gate_compiler.py"
-      - "tests/test_q218_q221_candidate_gate_compiler.py"
-      - "tests/test_q211_q213_literature_frontier.py"
-
-      - "tests/test_q198_pit_clock_census.py"
-      - "agent_runtime/**"
-      - "tests/test_paper_intent.py"
-      - "tests/test_decision_adapter.py"
-      - "tests/test_shadow_replay.py"
-      - "tests/test_signal_adapter.py"
-      - "automation/q179_q184_source_feasibility.py"
-      - "automation/q185_q186_source_feasibility.py"
-      - "automation/q187_q192_source_feasibility.py"
-      - "automation/q193_q196_source_feasibility.py"
-      - ".github/workflows/permanent-pc-research-loop.yml"
+  # Automatic research capacity is owned by the dedicated Top-4 dispatcher.
+  # Legacy broad workpacks remain available for explicit manual recovery only.
   workflow_dispatch:
 
 permissions:
