@@ -906,6 +906,7 @@ def main() -> None:
     )
     runners = runner_snapshot()
     ai = ai_provider_state()
+    milestones_12h = milestone_history_12h()
 
     configured_resources = [
         {"name": "Windows self-hosted A", "type": "physical", "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
