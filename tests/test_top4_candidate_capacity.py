@@ -19,7 +19,7 @@ def test_top4_workpacks_are_mechanistically_separate():
     q219=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q219"])
     q220=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q220"])
     q221=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q221"])
-    assert "q218_q221_historical_source_census" in q218
+    assert "q218_sec_multichannel_source_gate" in q218
     assert "q129_options_source_feasibility.py" in q219
     assert "q129_options_pit_reproduction.py" in q219
     assert "q219_options_source_breadth_gate" in q219
@@ -36,7 +36,7 @@ def test_top4_workflow_uses_three_windows_and_hosted_x64_arm64():
     assert "runs-on: ubuntu-24.04" in text
     assert "runs-on: ubuntu-24.04-arm" in text
     assert "candidate: [Q218,Q219,Q220,Q221]" in text
-    assert 'cron: "*/10 * * * *"' in text
+    assert 'cron: "*/15 * * * *"' in text
 
 def test_legacy_research_loops_are_manual_only():
     for path in (
