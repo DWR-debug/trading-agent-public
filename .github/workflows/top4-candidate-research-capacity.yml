@@ -16,13 +16,11 @@ on:
       - "automation/q218_sec_multichannel_source_gate.py"
       - "automation/q218_q221_historical_source_census.py"
       - "automation/q218_q221_candidate_gate_compiler.py"
-      - "automation/q219_options_source_breadth_gate.py"
       - "automation/q220_fsn_schema_gate.py"
       - "automation/q221_usaspending_public_clock_gate.py"
       - "tests/test_q218_sec_multichannel_source_gate.py"
       - "tests/test_q218_q221_historical_source_census.py"
       - "tests/test_q218_q221_candidate_gate_compiler.py"
-      - "tests/test_q219_options_source_breadth_gate.py"
       - "tests/test_q220_fsn_schema_gate.py"
       - "tests/test_q221_usaspending_public_clock_gate.py"
       - ".github/workflows/top4-candidate-research-capacity.yml"
@@ -107,7 +105,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        candidate: [Q218,Q219,Q220,Q221]
+        candidate: ["Q104:I19",Q218,Q220,Q221]
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
