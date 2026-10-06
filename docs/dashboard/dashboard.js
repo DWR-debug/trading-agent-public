@@ -64,7 +64,25 @@ function load(){
   if(!rendered){$("meta").textContent="Operational snapshot is not embedded; requesting the published data file…";}
   var url=new URL("dashboard_data.json",document.baseURI);
   url.searchParams.set("ts",String(Date.now()));
-  fetch(url.toString(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(function(data){render(data);}).catch(function(e){if(!rendered){$("error").textContent="Dashboard snapshot could not be loaded: "+(e&&e.message||String(e));$("error").hidden=false;}else{$("meta").insertAdjacentHTML("beforeend"," · <span class='warn'>fresh refresh unavailable: "+esc(e&&e.message||String(e))+"; embedded snapshot shown</span>");}});
+  var controller=typeof AbortController==="function" ? new AbortController() : null;
+  var timeoutId=controller ? setTimeout(function(){controller.abort();},6000) : null;
+  var requestOptions={cache:"no-store"};
+  if(controller){requestOptions.signal=controller.signal;}
+  fetch(url.toString(),requestOptions).then(function(r){
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    return r.json();
+  }).then(function(data){
+    render(data);
+  }).catch(function(e){
+    if(!rendered){
+      $("error").textContent="Dashboard snapshot could not be loaded: "+(e&&e.message||String(e));
+      $("error").hidden=false;
+    }else{
+      $("meta").insertAdjacentHTML("beforeend"," · <span class='warn'>fresh refresh unavailable: "+esc(e&&e.message||String(e))+"; embedded snapshot shown</span>");
+    }
+  }).then(function(){
+    if(timeoutId!==null)clearTimeout(timeoutId);
+  });
 }
 document.addEventListener("DOMContentLoaded",function(){
   $("refresh").addEventListener("click",load);
