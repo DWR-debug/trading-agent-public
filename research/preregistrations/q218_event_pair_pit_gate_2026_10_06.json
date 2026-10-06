@@ -1,0 +1,15 @@
+{
+  "schema_version":"1.0",
+  "task_id":"Q-2026-10-06-218-EVENT-PAIR-PIT-GATE",
+  "candidate_id":"Q218",
+  "status":"PREREGISTERED_SOURCE_PIT_STRUCTURE_ONLY",
+  "fixed_window":{"start":"2025-01-01","end":"2026-10-05"},
+  "input":"q218_q221_historical_source_census",
+  "pairing_rule":"For each in-window original 10-K, validate the census-selected latest eligible original 8-K whose SEC acceptance timestamp is strictly after the previous original 10-K acceptance and strictly before the target 10-K acceptance. Eligible means 8-K, not 8-K/A, with a predeclared earnings marker.",
+  "predeclared_earnings_markers":["Item 2.02","EXHIBIT 99.1","EARNINGS RELEASE","PRESS RELEASE","EARNINGS","FINANCIAL RESULTS","QUARTERLY RESULTS","FULL-YEAR RESULTS"],
+  "pit_rule":"Use only SEC public filing metadata and acceptance timestamps. Missing timestamps are never imputed. Equal-second target/pair timestamps are rejected as temporally ambiguous.",
+  "fail_closed":["malformed timestamps","missing target acceptance","missing pair acceptance","pair outside strict interval","amended 8-K","duplicate 8-K assignment","equal-second target/pair timestamp"],
+  "diagnostics_not_gates":["report_date equality","earnings-period semantic agreement"],
+  "governance":{"performance":false,"performance_authorization":false,"holdout_selection":false,"ranking":false,"tuning":false,"threshold_search":false,"horizon_search":false,"asset_selection":false,"variant_search":false,"promotion":false,"live_execution":false},
+  "safety":{"PAPER_ONLY":true,"LIVE_TRADING_ENABLED":false,"ORDERS_ENABLED":false,"AUTOMATIC_PROMOTION":false}
+}
