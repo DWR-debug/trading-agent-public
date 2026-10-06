@@ -45,5 +45,20 @@
     "live_execution": false
   },
   "anti_artificial_work": true,
-  "completion_rule": "After each wave, route the next useful gate only when an explicit downstream dependency is satisfied; never pad runtime."
+  "completion_rule": "After each wave, route the next useful gate only when an explicit downstream dependency is satisfied; never pad runtime.",
+  "autonomous_router": {
+    "workflow": ".github/workflows/spine-next-gate-autonomous-router.yml",
+    "status": "ACTIVE_ON_MASTER",
+    "trigger": "every 20 minutes plus relevant master changes",
+    "prerequisite": "latest Temporal Identity State Spine Waves run must succeed",
+    "duplicate_policy": "skip active work and suppress successful targets for 360 minutes",
+    "max_dispatches_per_pulse": 5,
+    "targets": [
+      "q224-edgar-modern-source-gate.yml",
+      "q229-historical-release-census.yml",
+      "q229-q230-source-feasibility.yml",
+      "q230-windows-trace-connectivity.yml",
+      "q231-sec-foia-source-gate.yml"
+    ]
+  }
 }
