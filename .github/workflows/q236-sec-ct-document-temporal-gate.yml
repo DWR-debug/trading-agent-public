@@ -43,11 +43,13 @@ jobs:
           import json
           from pathlib import Path
           p=json.loads(Path("research/runs/q236_sec_ct_document_temporal_gate/result.json").read_text())
-          assert p["status"] in ("Q236_R1_DOCUMENT_TEMPORAL_GATE_COMPLETED", "Q236_R1_DOCUMENT_TEMPORAL_ANCHOR_FALSIFIED")
           assert p["sample_size"] == 33
           assert p["pdf_retrieved"] == 33
           assert p["text_extraction_success"] == 33
-          assert p["temporal_anchor_hits"] == 0 or p["temporal_anchor_hits"] >= 1
+          if p["temporal_anchor_hits"] == 0:
+              assert p["status"] == "Q236_R1_DOCUMENT_TEMPORAL_ANCHOR_FALSIFIED"
+          else:
+              assert p["status"] == "Q236_R1_DOCUMENT_TEMPORAL_GATE_COMPLETED"
           assert p["pit_boundary"]["document_expiry_date_is_latent_not_public_observation_clock"] is True
           assert p["pit_boundary"]["same_day_pit_safe"] is False
           assert p["pit_boundary"]["public_observation_time_proven"] is False
