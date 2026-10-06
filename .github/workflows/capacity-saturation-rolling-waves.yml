@@ -69,7 +69,7 @@ jobs:
             [[ -n "$workflow" ]] || continue
             if (( count >= limit )); then echo "SKIP_DISPATCH_LIMIT ${phase_id} ${workflow}"; continue; fi
             [[ -f ".github/workflows/${workflow}" ]] || { echo "SKIP_MISSING ${phase_id} ${workflow}"; continue; }
-            active="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/${workflow}" '[.workflow_runs[] | select(.status != "completed") | select(.workflow_url == $wf) | select(.head_branch == "master")] | length')"
+            active="$(printf '%s' "$runs" | jq --arg workflow_path ".github/workflows/${workflow}" '[.workflow_runs[] | select(.status != "completed") | select(.path == $workflow_path) | select(.head_branch == "master")] | length')"
             if (( active > 0 )); then echo "SKIP_ACTIVE ${phase_id} ${workflow} active=${active}"; continue; fi
             recent_success="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/${workflow}" --argjson cooldown_epoch "${cooldown_epoch}" '[.workflow_runs[] | select(.conclusion == "success") | select(.workflow_url == $wf) | select(.head_branch == "master") | select((.created_at | fromdateiso8601) >= $cooldown_epoch)] | length')"
             if (( recent_success > 0 )); then echo "SKIP_RECENT_SUCCESS ${phase_id} ${workflow} cooldown=${cooldown_minutes}m"; continue; fi
