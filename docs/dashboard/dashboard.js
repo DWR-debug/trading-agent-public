@@ -96,6 +96,12 @@ function render(data){
       "<td>"+esc(x.duration_sample_count||0)+"</td></tr>";
   }).join("")+"</tbody></table>" : "<div class='empty'>Keine Top-4-Pipeline im Snapshot.</div>";
 
+  var milestones=data.milestone_history_12h||[];
+  $("milestones12h").innerHTML=milestones.length ? "<table><thead><tr><th>Zeit</th><th>Typ</th><th>Meilenstein</th><th>Ergebnis</th></tr></thead><tbody>"+milestones.map(function(x){
+    var link=x.url ? "<a href='"+esc(x.url)+"' target='_blank' rel='noopener'>"+esc(x.title||"Meilenstein")+"</a>" : esc(x.title||"Meilenstein");
+    return "<tr><td>"+esc(ts(x.timestamp))+"</td><td>"+esc(x.kind||"—")+"</td><td class='rowtitle'>"+link+"<div class='small muted'>"+esc(x.detail||"")+"</div></td><td>"+esc(x.status||"—")+"</td></tr>";
+  }).join("")+"</tbody></table>" : "<div class='empty'>In den letzten 12 Stunden wurden keine passenden abgeschlossenen Research-/Evidence-Meilensteine aufgezeichnet.</div>";
+
   var highlights=(cr.highlights||[]).slice(-6);
   $("achieved").innerHTML=
     "<div class='small'><strong>Letztes formales Ergebnis:</strong> "+esc(cr.latest_formal_result||"nicht aufgezeichnet")+"</div>"+
