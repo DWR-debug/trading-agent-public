@@ -152,3 +152,21 @@ def test_dashboard_research_note_excludes_platform_load():
     generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     assert "CI, Status-Synchronisierung und Pages" in html
     assert '"CI"' in generator and '"Full Suite Verification"' in generator
+
+def test_dashboard_integrates_12h_milestone_history_into_snapshot():
+    root = Path(__file__).parents[1]
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    assert "milestones_12h = milestone_history_12h()" in generator
+    assert '"milestones_12h": len(milestones_12h)' in generator
+    assert '"milestone_history_12h": milestones_12h' in generator
+    assert 'id="milestones12h"' in html
+    assert "data.milestone_history_12h||[]" in script
+
+
+def test_dashboard_milestone_filter_excludes_platform_only_runs():
+    from automation.generate_resource_dashboard import _is_research_milestone_run
+    assert _is_research_milestone_run({"status": "completed", "conclusion": "success", "name": "Q220 As-Filed SEC-XBRL Population Repair"}) is True
+    assert _is_research_milestone_run({"status": "completed", "conclusion": "success", "name": "Resource Dashboard Update"}) is False
+    assert _is_research_milestone_run({"status": "completed", "conclusion": "success", "name": "CI"}) is False
