@@ -85,15 +85,18 @@ jobs:
           endlocal
       - name: Publish population receipt
         if: success()
-        shell: bash
+        shell: powershell
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          set -euo pipefail
-          src="research/runs/q220/as_filed_population/${{ github.run_id }}/receipt.json"
-          test -f "$src"
-          master_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
-          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$master_sha" --file "research/evidence/q220_as_filed_xbrl_population_latest.json=$src"
+          $src = Join-Path $env:GITHUB_WORKSPACE "research\runs\q220\as_filed_population\${{ github.run_id }}\receipt.json"
+          if (-not (Test-Path $src)) { throw "Q220 receipt not found: $src" }
+          $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = "application/vnd.github+json"; "X-GitHub-Api-Version" = "2022-11-28" }
+          $ref = Invoke-RestMethod -Headers $headers -Uri "https://api.github.com/repos/$env:GITHUB_REPOSITORY/git/ref/heads/master"
+          $master_sha = $ref.object.sha
+          $py = Join-Path $env:RUNNER_TEMP "python-3.13.15-nuget-q220\tools\python.exe"
+          & $py automation/github_contents_publish.py --repository $env:GITHUB_REPOSITORY --branch master --base-sha $master_sha --file "research/evidence/q220_as_filed_xbrl_population_latest.json=$src"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/upload-artifact@v6
         if: always()
         with:

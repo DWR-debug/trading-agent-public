@@ -1,5 +1,5 @@
 from pathlib import Path
-from automation.q220_as_filed_xbrl_population_gate import TARGET_ISSUERS,WINDOW_START,WINDOW_END,concept_spec,ix_textblocks,xsd_metadata,presentation_metadata
+from automation.q220_as_filed_xbrl_population_gate import TARGET_ISSUERS,WINDOW_START,WINDOW_END,ROUTE_QUARTERS,concept_spec,ix_textblocks,xsd_metadata,presentation_metadata
 ROOT=Path(__file__).parents[1]
 
 def test_q220_population_window_and_identity_are_frozen():
@@ -40,3 +40,16 @@ def test_q220_presentation_mapping_resolves_loc_labels_to_concepts():
     pm=presentation_metadata(pre)
     assert pm["loc_count"]==2
     assert "RiskFactorsTextBlock" in pm["loc_concepts"]
+
+
+def test_q220_route_includes_fiscal_year_end_q4():
+    assert ROUTE_QUARTERS[0] == (2024, 4)
+    assert ROUTE_QUARTERS[-3:] == ((2025, 1), (2025, 2), (2025, 3))
+
+
+def test_q220_windows_receipt_publish_uses_powershell_not_bash():
+    workflow = (ROOT / '.github/workflows/q220-as-filed-xbrl-population.yml').read_text(encoding='utf-8')
+    publish = workflow.split('      - name: Publish population receipt', 1)[1].split('      - uses: actions/upload-artifact@v6', 1)[0]
+    assert 'shell: powershell' in publish
+    assert 'shell: bash' not in publish
+    assert 'github_contents_publish.py' in publish

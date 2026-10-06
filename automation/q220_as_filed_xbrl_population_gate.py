@@ -6,7 +6,7 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 
 TARGET_ISSUERS={"SPGI":"0000064040","NDAQ":"0001120193","AMP":"0000820027","RJF":"0000720005","WMB":"0000107263","VLO":"0001035002","DVN":"0001090012","EMN":"0000915389"}
-FORMS={"10-K","10-K/A"}; WINDOW_START=date(2019,1,1); WINDOW_END=date(2025,9,24); ROUTE_QUARTERS=((2025,1),(2025,2),(2025,3))
+FORMS={"10-K","10-K/A"}; WINDOW_START=date(2019,1,1); WINDOW_END=date(2025,9,24); ROUTE_QUARTERS=((2024,4),(2025,1),(2025,2),(2025,3))
 UA="DWR-debug/trading-agent-public Q220 as-filed XBRL repair/1.0 research@example.invalid"; GAP=0.22
 
 def sha256(data:bytes)->str: return hashlib.sha256(data).hexdigest()
