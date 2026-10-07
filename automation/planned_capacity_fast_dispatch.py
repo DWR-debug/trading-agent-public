@@ -26,6 +26,7 @@ PLATFORM_NAMES = {
 }
 
 TOP4_CANDIDATES = {"Q218", "Q219", "Q220", "Q221"}
+SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 
 
 def active_research_items(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
@@ -61,6 +62,8 @@ def candidate_is_active(candidate: str, work: list[dict[str, Any]], *, exclude_r
 
 
 def workflow_is_active(workflow: str, paths: set[str], runs: list[dict[str, Any]]) -> bool:
+    if workflow == SLOT_SCOPED_WORKFLOW:
+        return False
     needle = workflow.rsplit("/", 1)[-1]
     if workflow in paths or needle in paths:
         return True
@@ -97,7 +100,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
 
     # Prefer the canonical Top-4 cohort, then direct next-gate workflows,
     # while preserving the dashboard's deterministic order.
-    rank = {"Q218": 0, "Q219": 0, "Q220": 0, "Q221": 0, "Q224": 10, "Q228": 20, "Q231": 30}
+    rank = {"Q104:I19": -100, "Q218": 0, "Q219": 0, "Q220": 0, "Q221": 0, "Q224": 10, "Q228": 20, "Q231": 30}
     planned.sort(
         key=lambda x: (
             100 if str(x.get("execution_workflow") or "").endswith("ai-worker-fabric.yml") else 0,
@@ -111,7 +114,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     zero_active = len(work) == 0
     decisions = []
     dispatches = []
-    seen_workflows: set[str] = set()
+    seen_dispatch_keys: set[tuple[str, str, str]] = set()
     top4_candidate_active = any(
         any(
             c.lower() in f"{item.get('task', '')} {item.get('job', '')}".lower()
@@ -139,8 +142,10 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_CANDIDATE_ACTIVE"})
             continue
 
-        if workflow in seen_workflows:
-            decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_WORKFLOW_ALREADY_SELECTED"})
+        resource = str(item.get("resource") or "")
+        dispatch_key = (workflow, candidate, resource) if workflow == SLOT_SCOPED_WORKFLOW else (workflow, "", "")
+        if dispatch_key in seen_dispatch_keys:
+            decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_DISPATCH_SCOPE_ALREADY_SELECTED"})
             continue
 
         if workflow_is_active(workflow, active_paths, runs):
@@ -151,19 +156,27 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_DISPATCH_CAP"})
             continue
 
+        inputs = dict(item.get("execution_workflow_inputs") or {})
+        if workflow == SLOT_SCOPED_WORKFLOW:
+            resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
+            if resource_input:
+                inputs.update({"candidate": candidate, "resource": resource_input})
         dispatches.append({
             "plan_id": item.get("plan_id"),
             "candidate": candidate,
-            "resource": item.get("resource"),
+            "resource": resource,
             "workflow": workflow,
-            "inputs": item.get("execution_workflow_inputs") or {},
+            "inputs": inputs,
+            "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
         })
-        seen_workflows.add(workflow)
+        seen_dispatch_keys.add(dispatch_key)
         decisions.append({
             "plan_id": item.get("plan_id"),
             "decision": "DISPATCH",
             "mode": "ZERO_ACTIVE_FAST_PATH" if zero_active else "FILL_FREE_READY_CAPACITY",
         })
+        if item.get("exclusive_dispatch", False):
+            break
 
     return {
         "schema_version": 1,

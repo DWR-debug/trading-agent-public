@@ -211,7 +211,41 @@
     "start_alignment": "2026-10-05T16:11:31Z",
     "dispatch_authority": "capacity-saturation-rolling-waves.yml = sole automatic dispatcher; priority-research-wave-dispatch.yml = manual-only",
     "anti_scheinbeschäftigung": "Do not rerun successful source probes or tests merely to occupy a runner. Route only defined receipt-dependent next gates, independent reproductions, candidate/source/PIT closures, or materially useful governance/provenance QA. Idle is valid only when no useful independent executable backlog exists.",
-    "session_mode": "ACTIVE_28_MIN_AUTONOMOUS"
+    "session_mode": "ACTIVE_28_MIN_AUTONOMOUS",
+    "slotwise_replenishment": {
+      "status": "PERMANENT",
+      "purpose": "Bind every free reachable research slot to the highest-priority real next gate without serializing unrelated candidates behind one workflow file.",
+      "automatic_dispatch_order": [
+        "receipt-defined next gate",
+        "independent reproduction",
+        "source/PIT closure",
+        "provenance/data-contract QA",
+        "negative-evidence consolidation"
+      ],
+      "slot_scoped_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+      "supported_resources": [
+        "windows",
+        "ubuntu_x64",
+        "ubuntu_arm64"
+      ],
+      "multi_resource_exclusive_workflows": [
+        ".github/workflows/q104-i19-13f-historical-identity-census.yml"
+      ],
+      "rules": [
+        "A running Q218/Q219/Q220/Q221 slot job blocks only the same candidate, not the entire slot workflow.",
+        "The same slot-scoped workflow may be dispatched concurrently for independent candidates and resources.",
+        "A multi-resource workflow is dispatched as an exclusive pulse item because it internally leases multiple research pools.",
+        "Free ARM64 and Ubuntu x64 are independently fillable whenever an admissible non-duplicate workpack exists.",
+        "Free AI remains a separate bounded lane and may run in parallel when its review task is genuinely independent.",
+        "Successful or blocked work is never used as capacity filler."
+      ],
+      "implementation": {
+        "planner": "automation/planned_capacity_fast_dispatch.py",
+        "slot_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+        "legacy_cohort_workflow": ".github/workflows/top4-candidate-research-capacity.yml",
+        "legacy_cohort_mode": "manual_only"
+      }
+    }
   },
   "chat_continuity": {
     "state_store": "repository",

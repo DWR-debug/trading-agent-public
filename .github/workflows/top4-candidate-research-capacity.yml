@@ -1,38 +1,6 @@
 name: Top-4 Candidate Research Capacity
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "automation/top4_candidate_capacity.py"
-      - "automation/q104_i19_13f_historical_identity_census.py"
-      - "automation/q104_i19_xbrl_pit_compiler.py"
-      - "automation/q104_xbrl_concept_freeze_audit.py"
-      - "tests/test_q104_i19_13f_historical_identity_census.py"
-      - "tests/test_q104_i19_historical_identity_census.py"
-      - "tests/test_q104_i19_xbrl_concept_freeze.py"
-      - "tests/test_q104_i19_xbrl_pit_compiler.py"
-      - "tests/test_q104_candidate_wave_contract.py"
-      - "automation/q218_sec_multichannel_source_gate.py"
-      - "automation/q219_options_source_breadth_gate.py"
-      - "automation/q219_dolthub_historical_pit_gate.py"
-      - "research/preregistrations/q219_dolthub_historical_pit_gate_2026_10_06.json"
-      - "tests/test_q219_options_source_breadth_gate.py"
-      - "tests/test_q219_dolthub_historical_pit_gate.py"
-      - "automation/q218_q221_historical_source_census.py"
-      - "automation/q218_q221_candidate_gate_compiler.py"
-      - "automation/q220_as_filed_xbrl_population_gate.py"
-      - "automation/q221_usaspending_public_clock_gate.py"
-      - "tests/test_q218_sec_multichannel_source_gate.py"
-      - "tests/test_q218_q221_historical_source_census.py"
-      - "tests/test_q218_q221_candidate_gate_compiler.py"
-      - "tests/test_q220_as_filed_xbrl_population_gate.py"
-      - "tests/test_q221_usaspending_public_clock_gate.py"
-      - ".github/workflows/top4-candidate-research-capacity.yml"
-      - "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
-      - "research/evidence/orthogonal_next_gate_latest.json"
-  schedule:
-    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:

@@ -1,0 +1,130 @@
+name: Top-4 Candidate Slot Research
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate:
+        description: "One independent bounded Top-4 candidate workpack"
+        required: true
+        type: choice
+        options:
+          - Q218
+          - Q219
+          - Q220
+          - Q221
+      resource:
+        description: "Exact capacity class to fill"
+        required: true
+        type: choice
+        options:
+          - windows
+          - ubuntu_x64
+          - ubuntu_arm64
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    if: ${{ inputs.resource == 'windows' }}
+    name: Top-4 slot Windows ${{ inputs.candidate }}
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run bounded candidate workpack
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-top4-slot"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-top4-slot.nupkg"
+          if not exist "%PY_EXE%" (
+          	curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+          	if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+          	tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" -m pip install --disable-pip-version-check pytest pandas exchange-calendars pypdf || exit /b 1
+          cd /d "%GITHUB_WORKSPACE%" || exit /b 1
+          set "PYTHONPATH=%GITHUB_WORKSPACE%"
+          if not exist "%GITHUB_WORKSPACE%\research\runs\top4\${{ inputs.candidate }}\%GITHUB_RUN_ID%" mkdir "%GITHUB_WORKSPACE%\research\runs\top4\${{ inputs.candidate }}\%GITHUB_RUN_ID%"
+          "%PY_EXE%" -m automation.top4_candidate_capacity --candidate "${{ inputs.candidate }}" --output-dir "%GITHUB_WORKSPACE%\research\runs\top4\${{ inputs.candidate }}\%GITHUB_RUN_ID%"
+          if errorlevel 1 exit /b 1
+          endlocal
+      - name: Enforce scientific boundary
+        shell: cmd
+        run: echo SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: top4-slot-windows-${{ inputs.candidate }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/top4/${{ inputs.candidate }}/${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 30
+
+  ubuntu_x64:
+    if: ${{ inputs.resource == 'ubuntu_x64' }}
+    name: Top-4 slot Ubuntu x64 ${{ inputs.candidate }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: python -m pip install --disable-pip-version-check pytest pandas exchange-calendars pypdf
+      - name: Run bounded candidate workpack
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "research/runs/top4/${{ inputs.candidate }}/${GITHUB_RUN_ID}"
+          python -m automation.top4_candidate_capacity --candidate "${{ inputs.candidate }}" --output-dir "research/runs/top4/${{ inputs.candidate }}/${GITHUB_RUN_ID}"
+      - name: Enforce scientific boundary
+        run: echo SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: top4-slot-ubuntu-x64-${{ inputs.candidate }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/top4/${{ inputs.candidate }}/${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 30
+
+  ubuntu_arm64:
+    if: ${{ inputs.resource == 'ubuntu_arm64' }}
+    name: Top-4 slot ARM64 ${{ inputs.candidate }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: python -m pip install --disable-pip-version-check pytest pandas exchange-calendars pypdf
+      - name: Run bounded candidate workpack
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "research/runs/top4/${{ inputs.candidate }}/${GITHUB_RUN_ID}"
+          python -m automation.top4_candidate_capacity --candidate "${{ inputs.candidate }}" --output-dir "research/runs/top4/${{ inputs.candidate }}/${GITHUB_RUN_ID}"
+      - name: Enforce scientific boundary
+        run: echo SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: top4-slot-ubuntu-arm64-${{ inputs.candidate }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/top4/${{ inputs.candidate }}/${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 30
