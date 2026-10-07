@@ -508,7 +508,7 @@ def planned_capacity_plan(
     blocked prerequisites are displayed as blocked rather than executable, and
     nothing is invented to occupy free capacity.
     """
-    active_text = [f"{x.get('task','')} {x.get('job','')}".lower() for x in work]
+    active_text = [f"{x.get('resource','')} {x.get('task','')} {x.get('job','')}".lower() for x in work]
 
     overlay = os_state.get("top_candidate_capacity_overlay", {})
     a_priority = [str(x) for x in overlay.get("windows_A", {}).get("priority", [])]
@@ -645,7 +645,7 @@ def planned_capacity_plan(
 
     for item in sorted(queue, key=lambda x: (priority_bonus(x), queue.index(x))):
         candidate = str(item["candidate"])
-        candidate_active = any(candidate.lower() in value for value in active_text)
+        candidate_active = any(candidate.lower() in value and "free ai" not in value for value in active_text)
         if candidate_active and not item.get("allow_parallel_with_candidate", False):
             continue
         if candidate in assigned_candidates and not item.get("allow_parallel_with_candidate", False):
