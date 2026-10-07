@@ -118,3 +118,53 @@ def test_fast_dispatch_allows_top4_with_parallel_ai_review():
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
     assert plan["dispatches"][0]["workflow"].endswith("top4-candidate-research-capacity.yml")
+
+
+def test_fast_dispatch_allows_independent_candidates_on_one_slot_workflow():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "GitHub-hosted Ubuntu x64",
+            "current_assignments": 0,
+            "research_capacity_slots": 2,
+            "planned_assignments": [
+                {"plan_id":"Q218-PIT","candidate":"Q218","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
+                {"plan_id":"Q219-PIT","candidate":"Q219","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
+            ],
+        }],
+    }
+    plan = dispatch_candidates(snapshot, [], max_dispatches=4)
+    assert [x["candidate"] for x in plan["dispatches"]] == ["Q218", "Q219"]
+
+
+def test_fast_dispatch_stops_after_exclusive_multi_resource_workflow():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    snapshot = {
+        "work_assignments": [],
+        "planned_capacity": [
+            {
+                "resource": "Windows self-hosted A",
+                "current_assignments": 0,
+                "research_capacity_slots": 1,
+                "planned_assignments": [{
+                    "plan_id":"Q104-I19-CENSUS","candidate":"Q104:I19",
+                    "scheduled":True,"dispatchable":True,"exclusive_dispatch":True,
+                    "execution_workflow":".github/workflows/q104-i19-13f-historical-identity-census.yml",
+                }],
+            },
+            {
+                "resource": "GitHub-hosted Ubuntu x64",
+                "current_assignments": 0,
+                "research_capacity_slots": 2,
+                "planned_assignments": [{
+                    "plan_id":"Q218-PIT","candidate":"Q218","scheduled":True,"dispatchable":True,
+                    "execution_workflow":".github/workflows/top4-candidate-slot-research.yml",
+                }],
+            },
+        ],
+    }
+    plan = dispatch_candidates(snapshot, [], max_dispatches=4)
+    assert len(plan["dispatches"]) == 1
+    assert plan["dispatches"][0]["candidate"] == "Q104:I19"
