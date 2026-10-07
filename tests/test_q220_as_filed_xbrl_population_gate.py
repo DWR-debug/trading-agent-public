@@ -34,45 +34,44 @@ def test_top4_q220_lane_uses_contract_qa_not_network_scan():
     assert "tests/test_q220_as_filed_xbrl_population_gate.py" in text
     assert "q220_fsn_schema_gate" not in text
 
-
 def test_q220_presentation_mapping_resolves_loc_labels_to_concepts():
     pre=b'''<link:presentationLink><link:loc xlink:label="l1" xlink:href="custom.xsd#RiskFactorsTextBlock"/><link:loc xlink:label="l2" xlink:href="custom.xsd#Root"/><link:presentationArc xlink:from="l2" xlink:to="l1"/></link:presentationLink>'''
     pm=presentation_metadata(pre)
     assert pm["loc_count"]==2
     assert "RiskFactorsTextBlock" in pm["loc_concepts"]
 
-
 def test_q220_route_includes_fiscal_year_end_q4():
     assert ROUTE_QUARTERS[0] == (2024, 4)
     assert ROUTE_QUARTERS[-3:] == ((2025, 1), (2025, 2), (2025, 3))
 
-
-def test_q220_windows_receipt_publish_uses_powershell_not_bash():
+def test_q220_windows_receipt_publish_uses_cmd_not_powershell():
     workflow = (ROOT / '.github/workflows/q220-as-filed-xbrl-population.yml').read_text(encoding='utf-8')
     publish = workflow.split('      - name: Publish population receipt', 1)[1].split('      - uses: actions/upload-artifact@v6', 1)[0]
-    assert 'shell: powershell' in publish
-    assert 'shell: bash' not in publish
+    assert 'shell: cmd' in publish
+    assert 'shell: powershell' not in publish
     assert 'github_contents_publish.py' in publish
-
 
 def test_q220_presentation_source_falls_back_to_inline_xbrl_instance():
     items=["dvn-20241231.htm","dvn-20241231.xsd","dvn-20241231_htm.xml","FilingSummary.xml"]
     assert choose_presentation_source(items) == ("dvn-20241231_htm.xml", "xbrl_instance_embedded_presentation")
 
-
 def test_q220_presentation_source_prefers_dedicated_linkbase():
     items=["foo.htm","foo.xsd","foo_htm.xml","foo_pre.xml"]
     assert choose_presentation_source(items) == ("foo_pre.xml", "dedicated_presentation_linkbase")
 
-
 def test_q220_prefixed_qname_matches_sec_presentation_fragment():
-    import re
     gate = (ROOT / 'automation/q220_as_filed_xbrl_population_gate.py').read_text(encoding='utf-8')
     assert 'return f"{prefix}_{local}"' in gate
     assert 'qname_fragment(q)' in gate
-
 
 def test_q220_mapping_completion_uses_qnames_after_qname_normalization():
     gate = (ROOT / "automation/q220_as_filed_xbrl_population_gate.py").read_text(encoding="utf-8")
     assert "len(hits)>=len(qnames)" in gate
     assert "len(hits)>=len(locals_)" not in gate
+
+def test_q220_publish_step_avoids_windows_powershell_execution_policy():
+    workflow = (ROOT / ".github/workflows/q220-as-filed-xbrl-population.yml").read_text(encoding="utf-8")
+    publish = workflow.split("      - name: Publish population receipt", 1)[1].split("      - uses: actions/upload-artifact@v6", 1)[0]
+    assert "shell: cmd" in publish
+    assert "shell: powershell" not in publish
+    assert "github_contents_publish.py" in publish
