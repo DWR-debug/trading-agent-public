@@ -135,7 +135,12 @@
 
     <article class="card">
       <h2>Geplante Kapazität</h2>
-      <div id="plannedSummary" class="small muted" style="margin-bottom:10px">Noch kein Plan-Snapshot.</div>
+      <section class="panel">
+  <h2>Mindestens 6 geplante nächste Forschungsjobs</h2>
+  <div class="small muted">Bounded Future-Research-Queue; aktiv laufende Arbeit bleibt getrennt.</div>
+  <div id="plannedQueue"></div>
+</section>
+<div id="plannedSummary" class="small muted" style="margin-bottom:10px">Noch kein Plan-Snapshot.</div>
       <div id="planned"></div>
       <div class="small muted" style="margin-top:10px">
         Planung = deterministischer nächster sinnvoller Bounded-Workpack. READY / AUTO-DISPATCH bedeutet,
