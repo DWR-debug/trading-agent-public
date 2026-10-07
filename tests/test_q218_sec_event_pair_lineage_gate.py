@@ -67,11 +67,16 @@ def test_q218_rejects_future_8k_pair(tmp_path, monkeypatch):
             }
         }
     }
+    acceptance_map = {
+        "0000320193-25-000001": "20250102120000",
+        "0000320193-25-000002": "20250104120000",
+    }
 
     def fake_fetch(url):
         if "/submissions/CIK" in url:
             return json.dumps(payload).encode()
-        return b"<ACCEPTANCE-DATETIME>20250104120000"
+        accession = url.split("/")[-1].replace("-index-headers.html", "")
+        return f"<ACCEPTANCE-DATETIME>{acceptance_map[accession]}".encode()
 
     monkeypatch.setattr(gate, "fetch", fake_fetch)
     result = gate.run(tmp_path / "receipt.json")
