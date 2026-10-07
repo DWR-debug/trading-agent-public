@@ -199,3 +199,49 @@ def test_fast_dispatch_skips_successful_same_slot_but_allows_other_architecture(
     }]
     plan2 = dispatch_candidates(base, completed_x64, max_dispatches=4)
     assert plan2["dispatches"] == []
+
+
+def test_fast_dispatch_allows_one_retry_after_failed_slot_but_blocks_second_failure():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted B",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-PIT",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+    failed_once = [{
+        "status": "completed",
+        "conclusion": "failure",
+        "name": "Top-4 Candidate Slot Research",
+        "display_title": "Top-4 Slot windows Q218",
+        "run_name": "Top-4 Slot windows Q218",
+    }]
+    retry_plan = dispatch_candidates(snapshot, failed_once, max_dispatches=4)
+    assert [x["candidate"] for x in retry_plan["dispatches"]] == ["Q218"]
+
+    failed_twice = failed_once + [{
+        "status": "completed",
+        "conclusion": "failure",
+        "name": "Top-4 Candidate Slot Research",
+        "display_title": "Top-4 Slot windows Q218",
+        "run_name": "Top-4 Slot windows Q218",
+    }]
+    blocked = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
+    assert blocked["dispatches"] == []
+
+
+def test_top4_windows_slot_workflow_avoids_setup_python_action():
+    text = (ROOT / ".github/workflows/top4-candidate-slot-research.yml").read_text(encoding="utf-8")
+    windows = text.split("  windows:", 1)[1].split("  ubuntu_x64:", 1)[0]
+    assert "actions/setup-python@v6" not in windows
+    assert "python-3.13.15-nuget-top4-slot" in windows
