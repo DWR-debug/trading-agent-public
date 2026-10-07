@@ -227,6 +227,37 @@ def test_fast_dispatch_reserves_only_explicit_multi_resource_leases():
     assert candidates == ["Q104:I19", "Q218", "Q221"]
     assert all(x["candidate"] != "Q220" for x in plan["dispatches"])
 
+def test_fast_dispatch_backfills_free_slot_after_completed_top4_candidate():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted B",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-PIT",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+    runs = [{
+        "status": "completed",
+        "conclusion": "success",
+        "name": "Top-4 Candidate Slot Research",
+        "display_title": "Top-4 Slot windows Q218",
+        "run_name": "Top-4 Slot windows Q218",
+    }]
+    plan = dispatch_candidates(snapshot, runs, max_dispatches=4)
+    assert any(x["candidate"] == "Q219" for x in plan["dispatches"])
+    assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in plan["decisions"])
+
+
 def test_fast_dispatch_skips_successful_same_slot_but_allows_other_architecture():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
