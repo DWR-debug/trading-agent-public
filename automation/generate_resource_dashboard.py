@@ -8,7 +8,12 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context
+try:
+    from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context
+except ModuleNotFoundError:
+    # When executed as "python automation/generate_resource_dashboard.py",
+    # Python places automation/ on sys.path rather than the repository root.
+    from planned_capacity_fast_dispatch import ai_task_completed_with_current_context
 
 ROOT = Path(__file__).parents[1]
 OUT = ROOT / "docs" / "dashboard" / "dashboard_data.json"
