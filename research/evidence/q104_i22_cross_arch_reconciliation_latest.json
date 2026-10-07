@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q104_i22_cross_arch_reconciliation",
+  "task_id": "Q-2026-10-01-104-I22-CROSS-ARCH-RECONCILIATION",
+  "candidate_id": "Q104:I22",
+  "status": "I22_PIT_COMPILER_RECONCILED_X64_ARM64_NO_PERFORMANCE",
+  "source_workflow_run_id": 37579436305,
+  "source_master_sha": "016aa2713a0121ffce9d3c24f64de1ca495430a7",
+  "x64_receipt_fingerprint": "1d103e2f7476487f27fc1282407cbdcfacbfb9572f6256980eea2b70ff51f03a",
+  "arm64_receipt_fingerprint": "1d103e2f7476487f27fc1282407cbdcfacbfb9572f6256980eea2b70ff51f03a",
+  "source_response_fingerprint": "eb943bdc3d233f54644ba916f261651460a0b94f6fbf29dbf3c1788271b17bf9",
+  "summary": {
+    "filings": 2209,
+    "eligible_sessions": 2059
+  },
+  "mutation_tests": {
+    "input_order_invariance": true,
+    "future_acceptance_invariance": true,
+    "amendment_accession_separation": true
+  },
+  "architecture_equality": true,
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "next_gate": "Q104:I22 candidate-specific non-overlap audit + independent PIT reproduction against frozen Q107/Q108 inputs",
+  "receipt_fingerprint": "a2fc77719eea946089f0d126895b60ad85c3926faf593ed2225d453ec698fe1a"
+}
