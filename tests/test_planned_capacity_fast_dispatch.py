@@ -439,3 +439,14 @@ def test_fast_dispatch_normalizes_candidate_identity_before_duplicate_guard():
         }],
     }
     assert dispatch_candidates(snapshot, [], max_dispatches=4)["dispatches"] == []
+
+def test_dashboard_planner_preserves_parallel_ai_dispatch_flag():
+    from automation.generate_resource_dashboard import planned_capacity_plan
+    resources = [{"name":"Free AI pool","type":"cloud","research_capacity_slots":1,"current_assignments":0,"capacity_state":"available"}]
+    work = []
+    top4 = []
+    plan = planned_capacity_plan(resources, work, top4, {}, {}, {})
+    # The production queue currently contains Q220/Q221 AI reviews; the exact
+    # propagation field is asserted in source so the dispatcher can honor it.
+    generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    assert '"allow_parallel_with_candidate": bool(item.get("allow_parallel_with_candidate", False))' in generator
