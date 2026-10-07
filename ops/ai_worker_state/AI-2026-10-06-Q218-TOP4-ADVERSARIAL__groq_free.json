@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
   "context_fingerprint": "aac6322f1f52a1a4d8b2e11da08b565678b3eddf005198fc8a6acbfcb8f657cf",
-  "observed_at_utc": "2026-10-07T13:12:02.123967Z",
+  "observed_at_utc": "2026-10-07T23:01:17.752764Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 3.971,
-  "stdout": "**Worker Handoff – Q218 Deterministic Pairing Review**\n\n| # | Failure Mode | Smallest Deterministic Falsifier | Exact Artifact Required | Counter‑Argument / Mitigation | Next Action |\n|---|--------------|----------------------------------|-------------------------|------------------------------|-------------|\n| 1 | **Missing / incorrect SEC acceptance timestamps** | Use a filing whose JSON contains `acceptance_datetime_found: false` or a malformed timestamp (e.g., “2026‑13‑01T00:00:00Z”). | `SEC_CIKS` filing JSON for the target symbol (e.g., `AAPL.json`) showing the missing/invalid field. | The spec assumes `acceptance_datetime_found` is always true; if false, the pairing rule cannot be applied. | Verify that every 10‑K in the census has a valid `acceptance_datetime_found`. Flag any that do not. |\n| 2 | **8‑K is an amendment, not a new earnings release** | Select a filing where `form == \"8‑K\"` and `amendment` flag is true (or `primaryDocument` indicates “amendment”). | SEC filing JSON for the 8‑K with `amendment: true`. | The pairing rule only considers “latest eligible Item‑2.02/Exhibit‑99.1‑style 8‑K”; an amendment may not contain new earnings data. | Ensure the census logic filters out amendments or explicitly records them as separate candidates. |\n| 3 | **Report‑date vs event‑date ambiguity** | Pick a 10‑K where `reportDate` ≠ `filingDate` (e.g., filing on 2026‑09‑30 but reportDate 2026‑09‑25). | SEC filing JSON showing both dates. | The spec uses `acceptance_datetime_found` as the event clock; if reportDate is used instead, the pairing window shifts. | Confirm that the census uses `acceptance_datetime_found` consistently and document any cases where reportDate differs. |\n| 4 | **False pairing of earnings releases** | Use an 8‑K that contains no Item‑2.02 (e.g., a “material event” 8‑K). | SEC filing JSON for the 8‑K lacking Item‑2.02. | The pairing rule requires “eligible Item‑2.02/Exhibit‑99.1‑style”; a non‑earnings 8‑K would be incorrectly paired. | Add a pre‑filter in the census that checks for the presence of Item‑2.02 before pairing. |\n| 5 | **Voluntary vs mandatory channel classification** | Identify a 10‑K that is filed voluntarily (e.g., a “voluntary 10‑K” for a non‑public company). | SEC filing JSON with `voluntary: true`. | The spec does not distinguish voluntary filings; pairing a voluntary 10‑K with an 8‑K could violate the intended “mandatory” channel. | Flag voluntary 10‑Ks and exclude them from the census or treat them as a separate channel. |\n| 6 | **Issuer identity drift** | Use a filing where the `issuerName` changes between two consecutive 10‑Ks (e.g., a merger). | Two consecutive SEC filing JSONs for the same CIK showing different `issuerName`. | The census assumes a stable issuer mapping; drift could cause mis‑pairing or duplicate counting. | Maintain a mapping history table and verify that the census uses the correct issuer identity for each period. |\n| 7 | **Semantic wedge collapse (length/complexity/global similarity)** | Compare the Q218 candidate spec to an existing price‑only lineage spec (e.g., a momentum strategy) and compute a similarity metric (e.g., Levenshtein distance on feature lists). | Candidate spec JSON (`orthogonal_candidate_specs_2026-10-05.json`) and a price‑only spec JSON. | If similarity > threshold, the wedge may collapse, violating orthogonality. | Run a deterministic similarity check and flag any candidate whose feature set is > 80 % identical to a price‑only lineage. |\n\n---\n\n### Findings\n\n1. **Timestamp reliability** – The census currently assumes every 10‑K has a valid `acceptance_datetime_found`. No evidence that this holds for all filings.\n2. **Amendment handling** – The code does not explicitly exclude 8‑K amendments; risk of pairing stale earnings data.\n3. **Date ambiguity** – ReportDate vs FilingDate differences are not accounted for; could shift pairing windows.\n4. **Earnings‑release validation** – No check for Item‑2.02 presence; potential false positives.\n5. **Voluntary filings** – No flagging mechanism; may contaminate the mandatory channel.\n6. **Issuer drift** – No historical issuer mapping; risk of mis‑identification.\n7. **Orthogonality** – No automated similarity check; semantic wedge could collapse to a price‑only lineage.\n\n---\n\n### Counter‑Arguments / Mitigations\n\n- **Timestamp** – SEC’s acceptance timestamps are generally reliable; however, missing data can occur (e.g., delayed acceptance). A fallback to filingDate may be considered but must be documented.\n- **Amendments** – Many 8‑Ks are amendments; the rule could be broadened to include them if they contain new earnings data, but this requires explicit detection.\n- **Date ambiguity** – Using `acceptance_datetime_found` mitigates reportDate issues, but a sanity check against reportDate is prudent.\n- **Earnings‑release validation** – The presence of Item‑2.02 is a strong indicator; adding a filter is low‑cost.\n- **Voluntary filings** – The majority of 10‑Ks are mandatory; voluntary filings are rare but should be flagged to preserve channel integrity.\n- **Issuer drift** – CIKs are stable; issuerName changes can be tracked via the SEC’s “issuerName” field history.\n- **Orthogonality** – A deterministic similarity metric can be computed; a threshold (e.g., 0.8) can be enforced.\n\n---\n\n### Concrete Next Actions\n\n1. **Timestamp audit** – Run a script over the census to flag any 10‑K with `acceptance_datetime_found: false`. Output a CSV of offending symbols and dates.\n2. **Amendment filter** – Extend the census logic to skip 8‑K filings where `amendment: true`. Validate with a unit test on a known amendment.\n3. **Date sanity check** – Compare `filingDate` and `reportDate` for all 10‑Ks; flag discrepancies > 3 days.\n4. **Item‑2.02 presence** – Add a pre‑filter that requires `items` list to contain `Item‑2.02` or `Exhibit‑99.1`. Test on a sample of 8‑Ks lacking earnings data.\n5. **Voluntary flag** – Parse the `voluntary` field (if present) or infer from filing type; exclude or tag such 10‑Ks.\n6. **Issuer mapping history** – Build a small lookup table of CIK → issuerName over time; verify that the census uses the correct name for each period.\n7. **Similarity check** – Compute Levenshtein distance between feature lists of Q218 and a baseline price‑only spec. Flag any candidate with distance < 20% of max length.\n\nAll artifacts (JSON files, CSV reports, unit tests) should be stored in the `research/evidence` directory with clear versioning. No performance data or market outcomes should be referenced.\n\n---\n\n### Uncertainty\n\n- **Data completeness** – The SEC JSON may omit certain fields; the audit may miss hidden inconsistencies.\n- **Threshold selection** – The similarity threshold (e.g., 0.8) is arbitrary; further discussion needed to set a defensible value.\n- **Voluntary filing detection** – The SEC API may not expose a `voluntary` flag; inference may be imperfect.\n- **Issuer drift detection** – CIKs are stable, but name changes may not be fully captured in the JSON; cross‑checking with external sources may be required.\n\nThese actions will surface deterministic failure modes without invoking any market‑based evidence, keeping the review within the bounded research‑support scope.",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.39,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5631, Requested 5340. Please try again in 22.2825s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-23b7687f-16ac-4ae8-a8ea-6daf2bf37bd2",
-  "usage": {
-    "queue_time": 0.193495823,
-    "prompt_tokens": 4989,
-    "prompt_time": 0.449735837,
-    "completion_tokens": 2441,
-    "completion_time": 2.799415141,
-    "total_tokens": 7430,
-    "total_time": 3.249150978,
-    "completion_tokens_details": {
-      "reasoning_tokens": 691
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-07T23:01:18.142894Z",
+    "blocked_until_utc": "2026-10-08T00:01:18.142894Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5631, Requested 5340. Please try again in 22.2825s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
