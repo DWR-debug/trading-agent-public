@@ -37,3 +37,19 @@ def test_legacy_bundled_top4_is_manual_fallback_only():
     assert "workflow_dispatch:" in text
     assert "\n  schedule:" not in text
     assert "\n  push:" not in text
+
+
+
+
+
+
+def test_fast_dispatch_default_ceiling_is_six():
+    planner = (ROOT / "automation/planned_capacity_fast_dispatch.py").read_text(encoding="utf-8")
+    assert '--max-dispatches", type=int, default=6' in planner
+
+
+def test_dashboard_three_minute_live_refresh_and_five_minute_server_refresh():
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    assert "setInterval(load,180000)" in js
+    assert 'cron: "*/5 * * * *"' in workflow

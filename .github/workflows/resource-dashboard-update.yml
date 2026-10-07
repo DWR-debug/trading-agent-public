@@ -2,7 +2,7 @@ name: Resource Dashboard Update
 
 on:
   schedule:
-    - cron: "35 3 * * *"
+    - cron: "*/5 * * * *"
   push:
     branches: [master]
     paths:
@@ -15,20 +15,21 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: write
-  actions: read
+  contents: read
   pages: write
   id-token: write
 
 concurrency:
   group: trading-agent-resource-dashboard
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
-  update:
+  update_and_deploy:
     if: github.repository == 'DWR-debug/trading-agent-public'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    environment:
+      name: github-pages
     steps:
       - name: Checkout exact master
         uses: actions/checkout@v5
@@ -36,7 +37,7 @@ jobs:
           ref: master
           fetch-depth: 1
 
-      - name: Generate dashboard snapshot
+      - name: Generate current live dashboard
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -44,46 +45,12 @@ jobs:
           set -euo pipefail
           python3 automation/generate_resource_dashboard.py
 
-      - name: Persist changed snapshot
+      - name: Validate dashboard snapshot
         shell: bash
         run: |
           set -euo pipefail
-          for attempt in 1 2 3 4 5; do
-            if git diff --quiet -- docs/dashboard/dashboard_data.json docs/dashboard/dashboard_bootstrap.js; then
-              echo "DASHBOARD_UPDATE=UNCHANGED"
-              exit 0
-            fi
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add docs/dashboard/dashboard_data.json docs/dashboard/dashboard_bootstrap.js
-            git commit -m "OPS: refresh resource dashboard snapshot"
-            if git push origin HEAD:master; then
-              echo "DASHBOARD_UPDATE=PERSISTED attempt=$attempt"
-              exit 0
-            fi
-            echo "Dashboard snapshot push raced with another master update on attempt $attempt; rebasing snapshot onto current master."
-            git fetch origin master
-            git reset --hard origin/master
-            python3 automation/generate_resource_dashboard.py
-            sleep "$attempt"
-          done
-          echo "Unable to persist dashboard snapshot after retries." >&2
-          exit 1
-
-  deploy_pages:
-    needs: update
-    if: github.repository == 'DWR-debug/trading-agent-public' && needs.update.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Checkout published master
-        uses: actions/checkout@v6
-        with:
-          ref: master
-          fetch-depth: 1
+          test -s docs/dashboard/dashboard_data.json
+          test -s docs/dashboard/dashboard_bootstrap.js
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -96,3 +63,14 @@ jobs:
       - name: Deploy current dashboard
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Upload refresh snapshot
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: resource-dashboard-update-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            docs/dashboard/dashboard_data.json
+            docs/dashboard/dashboard_bootstrap.js
+          if-no-files-found: error
+          retention-days: 7

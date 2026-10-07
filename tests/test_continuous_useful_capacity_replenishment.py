@@ -61,11 +61,13 @@ def test_dashboard_pages_has_single_automatic_publisher() -> None:
     assert '  push:\n    branches: [master]' not in text
 
 
-def test_dashboard_update_persists_bootstrap() -> None:
+def test_dashboard_update_deploys_ephemeral_snapshot_without_master_commit_churn() -> None:
     root = Path(__file__).parents[1]
     workflow = (root / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
-    assert "git diff --quiet -- docs/dashboard/dashboard_data.json docs/dashboard/dashboard_bootstrap.js" in workflow
-    assert "git add docs/dashboard/dashboard_data.json docs/dashboard/dashboard_bootstrap.js" in workflow
+    assert "upload-pages-artifact" in workflow
+    assert "deploy-pages" in workflow
+    assert "git push origin HEAD:master" not in workflow
+    assert "git add docs/dashboard/dashboard_data.json" not in workflow
 
 
 def test_dashboard_bootstrap_ends_with_real_newline_not_literal_escape() -> None:
@@ -175,3 +177,34 @@ def test_dashboard_milestone_filter_excludes_platform_only_runs():
     assert _is_research_milestone_run({"status": "completed", "conclusion": "success", "name": "Q220 As-Filed SEC-XBRL Population Repair"}) is True
     assert _is_research_milestone_run({"status": "completed", "conclusion": "success", "name": "Resource Dashboard Update"}) is False
     assert _is_research_milestone_run({"status": "completed", "conclusion": "success", "name": "CI"}) is False
+
+
+def test_dashboard_exposes_six_job_future_queue():
+    root = Path(__file__).parents[1]
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    assert "planned_research_backlog" in generator
+    assert '"planned_research_queue_target": 6' in generator
+    assert '"planned_research_queue_items"' in generator
+    assert "planned_research_queue" in script
+    assert 'id="plannedQueue"' in html
+
+
+def test_dashboard_exposes_six_active_lane_target():
+    root = Path(__file__).parents[1]
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    assert '"active_research_lanes_target": 6' in generator
+    assert '"active_research_lanes_target_met"' in generator
+    assert "active_research_lanes_target" in script
+    assert 'id="laneTargetSummary"' in html
+
+
+def test_dashboard_three_minute_live_refresh_and_five_minute_server_refresh():
+    root = Path(__file__).parents[1]
+    js = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    workflow = (root / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    assert "setInterval(load,180000)" in js
+    assert 'cron: "*/5 * * * *"' in workflow

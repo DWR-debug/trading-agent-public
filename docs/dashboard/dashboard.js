@@ -102,6 +102,10 @@ function render(data){
       "<td>"+(x.expected_finish_at?esc(ts(x.expected_finish_at)):"—")+"<div class='small muted'>"+(x.remaining_seconds!=null?esc(relativeRemaining(x.remaining_seconds)):"keine belastbare Dauerbasis")+"</div></td></tr>";
   }).join("")+"</tbody></table>" : "<div class='empty'>Aktuell ist kein aktiver GitHub-Actions-Job im Snapshot sichtbar.</div>";
 
+  var plannedQueue=data.planned_research_queue||[];
+  $("plannedQueue").innerHTML=plannedQueue.length ? "<table><thead><tr><th>Rang</th><th>Candidate</th><th>Nächster Gate</th><th>Workflow</th></tr></thead><tbody>"+plannedQueue.map(function(x){
+    return "<tr><td>"+esc(x.queue_rank)+"</td><td class='rowtitle'>"+esc(x.candidate)+"<div class='small muted'>"+esc(x.lane)+"</div></td><td>"+esc(x.next_gate)+"</td><td>"+esc(x.execution_workflow)+"</td></tr>";
+  }).join("")+"</tbody></table>" : "<div class='empty'>Kein bounded Future-Research-Backlog verfügbar.</div>";
   var planned=data.planned_capacity||[];
   $("planned").innerHTML=planned.length ? "<table><thead><tr><th>Kapazität</th><th>Aktuell</th><th>Geplante nächste Arbeit</th><th>Bereitschaft</th><th>Erwartete Dauer</th><th>Planstatus</th></tr></thead><tbody>"+planned.map(function(x){
     var p=(x.planned_assignments||[])[0];
@@ -136,6 +140,8 @@ function render(data){
     "<div class='small muted' style='margin-top:10px'>Performance, Holdout, Ranking, Tuning, Promotion und Live-Ausführung bleiben fail-closed.</div>";
 
   var pcs=s.planned_capacity_items||0, pbs=s.blocked_planned_items||0, urs=s.unallocated_routable_items||0;
+  var activeLanes=Number(s.active_research_lanes||0), laneTarget=Number(s.active_research_lanes_target||6), plannedTarget=Number(s.planned_research_queue_target||6), plannedQueueCount=Number(s.planned_research_queue_items||0);
+  $("laneTargetSummary").textContent="Aktive Forschungs-Lanes: "+activeLanes+"/"+laneTarget+" · Zukunfts-Backlog: "+plannedQueueCount+"/"+plannedTarget;
   $("plannedSummary").textContent="Geplant: "+pcs+" · Blockiert auf Prerequisite: "+pbs+" · Nicht zugewiesen: "+urs;
   $("app").hidden=false;
 }
@@ -164,5 +170,8 @@ document.addEventListener("DOMContentLoaded",function(){
   $("refresh").addEventListener("click",load);
   $("update").addEventListener("click",function(){});
   load();
+  // GitHub Actions cron is five-minute minimum. Keep the open dashboard live at
+  // a three-minute cadence without committing a snapshot on every refresh.
+  setInterval(load,180000);
 });
 })();

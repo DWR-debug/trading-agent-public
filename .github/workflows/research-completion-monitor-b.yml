@@ -1,0 +1,52 @@
+name: Research Completion Monitor B
+
+on:
+  workflow_run:
+    workflows:
+      - "Q198 Historical PIT Clock Census"
+      - "Q199-Q201 Source Feasibility"
+      - "Q202-Q204 Information Timing Feasibility"
+      - "Q205 NLRB Source Feasibility"
+      - "Q214 Disclosure Risk-State Feasibility"
+      - "Q215 NHTSA to SEC Bridge Feasibility"
+      - "Q215 Public-Source Observability Gap Feasibility"
+      - "Q216 Macro-Vintage Revision Exposure Feasibility"
+      - "Q216 RT Vintage PIT Feasibility"
+      - "Q217 Cognitive Processing Friction Feasibility"
+      - "Q217 Q131 Orthogonality Audit"
+      - "Q220 As-Filed SEC-XBRL Population Repair"
+      - "Q193-Q196 Source Feasibility"
+      - "Q197-Q198 Source Feasibility"
+      - "Q148-R1 EIA WPSR Source Clock Feasibility"
+      - "Q169 NOAA SWPC PIT Independent Reproduction R4"
+      - "Q169 NOAA SWPC PIT Readiness R3"
+      - "Q121-R6 SEC Acceptance-Time Compilation"
+      - "Q121-R6 Independent Windows Reproduction (Permanent PC)"
+      - "Q171 Public Source Frontier Feasibility"
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: trading-agent-research-completion-monitor
+  cancel-in-progress: true
+
+jobs:
+  wake:
+    if: github.repository == 'DWR-debug/trading-agent-public' && github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == github.event.repository.default_branch
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Wake bounded capacity dispatcher
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "RESEARCH_COMPLETION=${{ github.event.workflow_run.name }}"
+          echo "RESEARCH_COMPLETION_CONCLUSION=${{ github.event.workflow_run.conclusion }}"
+          gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master
+          echo "CAPACITY_DISPATCH_WAKE=SUCCESS"

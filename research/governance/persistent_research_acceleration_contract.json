@@ -181,6 +181,22 @@
   },
   "rolling_capacity_wave_control": {
     "status": "ACTIVE",
+    "six_lane_target": {
+      "status": "PERMANENT",
+      "active_research_capacity_lanes_target": 6,
+      "planned_future_research_jobs_minimum": 6,
+      "definition": "Six independent execution lanes should be occupied whenever six safe independent bounded workpacks can be executed; at least six real next-gate jobs remain planned behind them.",
+      "lease_aware": true,
+      "multi_resource_runs_count_by_consumed_capacity_lanes": true,
+      "exceptions": [
+        "no independent useful bounded work exists",
+        "scientific prerequisite genuinely blocked",
+        "hard resource/quota/platform constraint",
+        "higher-priority multi-resource lease consumes the relevant capacity"
+      ],
+      "padding_forbidden": true,
+      "scientific_authority_unchanged": true
+    },
     "contract_path": "research/run_requests/rolling_capacity_window_2026-10-05.json",
     "workflow": ".github/workflows/capacity-saturation-rolling-waves.yml",
     "scheduler_cadence": "every_10_minutes",
@@ -210,6 +226,18 @@
     },
     "start_alignment": "2026-10-05T16:11:31Z",
     "dispatch_authority": "planned-capacity-fast-dispatch.yml = sole automatic Top-4/slot-capacity dispatcher; spine-next-gate router handles only its explicitly allowed non-Top-4 downstream workflows; manual cohort remains fallback",
+    "completion_monitor": {
+      "status": "PERMANENT",
+      "trigger": "workflow_run.completed",
+      "research_workflow_globs": ["Q*", "Top-4*", "*Research*", "*PIT*", "*Source*", "*Census*", "*Frontier*", "*Identity*", "*Capacity*", "*Reproduction*", "*AI Worker*", "*Literature*"],
+      "branch_scope": "default branch only",
+      "control_plane_exclusions": ["CI", "Full Suite Verification", "T052 Exact Master CI Gate", "Workflow Lint", "Current Operational Status Synchronizer", "Current Status Drift Guard", "Resource Dashboard Update", "Spine Next-Gate Autonomous Router", "Unified Research Orchestrator", "Planned Capacity Fast Dispatch"],
+      "purpose": "Every completed bounded research workflow wakes the current planner so a newly free resource is refilled immediately; failure/cancellation also wakes the planner so the single bounded retry policy can act.",
+      "max_dispatches_per_wakeup": 6,
+      "cron_role": "recovery_and_health_check_only",
+      "duplicate_prevention": true,
+      "padding_forbidden": true
+    },
     "anti_scheinbeschäftigung": "Do not rerun successful source probes or tests merely to occupy a runner. Route only defined receipt-dependent next gates, independent reproductions, candidate/source/PIT closures, or materially useful governance/provenance QA. Idle is valid only when no useful independent executable backlog exists.",
     "session_mode": "ACTIVE_28_MIN_AUTONOMOUS",
     "slotwise_replenishment": {
