@@ -2,69 +2,22 @@
   "schema_version": "1.0",
   "record_type": "rolling_capacity_window",
   "status": "ACTIVE",
-  "window_id": "TA-2H-2026-10-06-2025Z",
-  "start_utc": "2026-10-06T20:25:00Z",
-  "end_utc": "2026-10-06T22:25:00Z",
+  "window_id": "TA-2H-2026-10-07-RUNNER-C-CANDIDATE",
+  "start_utc": "2026-10-07T06:35:00Z",
+  "end_utc": "2026-10-07T08:35:00Z",
   "cadence_minutes": 10,
-  "max_dispatch_per_tick": 10,
+  "max_dispatch_per_tick": 1,
   "retry_limit_per_workflow_per_phase": 1,
   "recent_success_cooldown_minutes": 360,
   "principle": "Keep every genuinely useful free research lane occupied when backlog exists; never create duplicate or artificial work.",
   "phases": [
     {
-      "id": "W1",
-      "start_after_minutes": 0,
-      "name": "SOURCE_PIT_CLOSURE",
-      "objective": "Close currently open source/PIT and clock gates first.",
-      "workflows": [
-        "q121r6-sec-acceptance-time-compilation.yml",
-        "q185-q186-source-feasibility.yml",
-        "q187-q192-source-feasibility.yml",
-        "q187-q192-pit-readiness-r1.yml",
-        "q188-q192-pit-census-r2.yml",
-        "q197-q198-source-feasibility.yml",
-        "q198-pit-clock-census.yml",
-        "q199-q201-source-feasibility.yml",
-        "q214-disclosure-risk-feasibility.yml",
-        "q229-q230-source-feasibility.yml",
-        "windows-runner-c-long-research.yml"
-      ]
-    },
-    {
-      "id": "W2",
-      "start_after_minutes": 30,
-      "name": "CANDIDATE_AND_INFORMATION_TIMING",
-      "objective": "Compile bounded candidate contracts and information-timing components without performance.",
-      "workflows": [
-        "q193-q196-source-feasibility.yml",
-        "orthogonal-candidate-development.yml",
-        "q202-q204-information-timing-feasibility.yml",
-        "q205-nlrb-source-feasibility.yml",
-        "q119-treasury-source-feasibility.yml",
-        "q215-nhtsa-sec-bridge-feasibility.yml",
-        "q216-rt-vintage-pit-feasibility.yml",
-        "q217-q131-orthogonality-audit.yml"
-      ]
-    },
-    {
       "id": "W3",
-      "start_after_minutes": 60,
-      "name": "NEXT_GATE_AND_REPRODUCTION",
-      "objective": "Compile next logical gates and keep the independent long deterministic lane occupied.",
+      "start_after_minutes": 0,
+      "name": "RUNNER_C_INDEPENDENT_CANDIDATE_DEVELOPMENT",
+      "objective": "Use one free Windows Runner C for an independent long deterministic candidate-development/readiness workpack; do not duplicate the active Top-4 or Q104:I19 waves.",
       "workflows": [
-        "orthogonal-pit-next-gate.yml",
         "windows-runner-c-long-research.yml"
-      ]
-    },
-    {
-      "id": "W4",
-      "start_after_minutes": 90,
-      "name": "DISCOVERY_AND_CONSOLIDATION",
-      "objective": "Refresh literature discovery and deterministic orchestration only after the earlier lanes have materialized new state.",
-      "workflows": [
-        "literature-frontier-scout.yml",
-        "research-orchestrator.yml",
-        "orthogonal-pit-next-gate.yml"
       ]
     }
   ],
@@ -89,12 +42,12 @@
     "Scientific authority remains unchanged; this scheduler only allocates execution capacity.",
     "Successful source-feasibility workflows are not re-run as filler; only their explicit next-gate workflows may be scheduled."
   ],
-  "retargeted_at_utc": "2026-10-06T20:25:00Z",
-  "retarget_reason": "User-authorized autonomous candidate development; previous window expired; renewed bounded useful capacity while suppressing recent successful duplicates.",
+  "retargeted_at_utc": "2026-10-07T06:35:00Z",
+  "retarget_reason": "User-authorized autonomous parallel candidate development; dedicate exactly one free Runner C slot to useful independent long deterministic research while current Top-4 and Q104:I19 lanes remain occupied.",
   "session_mode": {
     "status": "ACTIVE_2H",
     "duration_minutes": 120,
-    "directive": "Autonomous orchestration and candidate development; immediately refill useful free capacity when bounded executable backlog exists.",
+    "directive": "Use one otherwise-idle Runner C slot for bounded independent candidate development and PIT-readiness work; preserve scientific gates and suppress duplicates.",
     "no_artificial_work": true,
     "no_duplicate_work": true,
     "scientific_boundary_unchanged": true
