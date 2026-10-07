@@ -3,17 +3,31 @@
 Source/PIT structure only. No market outcomes or authorization.
 """
 from __future__ import annotations
-import argparse,hashlib,json,re,urllib.request
+import argparse,hashlib,json,re,time,urllib.error,urllib.request
 from datetime import datetime,timezone
 from pathlib import Path
 
 ISSUERS={"AAPL":"320193","MSFT":"789019","AMZN":"1018724","JPM":"19617","XOM":"34088","NVDA":"1045810","WMT":"104169","DIS":"1744489"}
 START="2025-01-01"; END="2026-10-05"
 UA={"User-Agent":"TradingAgent-Public-Research/1.0 research@example.invalid","Accept-Encoding":"identity"}
+FETCH_TIMEOUT_SECONDS=30
+MAX_TRANSIENT_FETCH_ATTEMPTS=3
+FETCH_BACKOFF_SECONDS=2
 
 def fetch(url:str)->bytes:
     req=urllib.request.Request(url,headers=UA)
-    with urllib.request.urlopen(req,timeout=30) as r:return r.read()
+    last_error: Exception | None = None
+    for attempt in range(1,MAX_TRANSIENT_FETCH_ATTEMPTS + 1):
+        try:
+            with urllib.request.urlopen(req,timeout=FETCH_TIMEOUT_SECONDS) as r:return r.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code not in {408,425,429,500,502,503,504}: raise
+            last_error=exc
+        except (urllib.error.URLError,TimeoutError) as exc:
+            last_error=exc
+        if attempt < MAX_TRANSIENT_FETCH_ATTEMPTS:
+            time.sleep(FETCH_BACKOFF_SECONDS * attempt)
+    raise last_error or RuntimeError("SEC_FETCH_FAILED")
 
 def acceptance(cik:str,accession:str)->str|None:
     base=f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accession.replace("-","")}/"
@@ -40,7 +54,7 @@ def run(output:Path)->dict:
                 a=acceptance(cik,accession); earnings.append({"form":form,"filing_date":fd,"report_date":report,"accession":accession,"primary_document":docs[i] if i<len(docs) else None,"acceptance_datetime":a,"items":item_field})
                 if form.endswith("/A"): amendments.append({"form":form,"filing_date":fd,"report_date":report,"accession":accession})
         issuer_results[symbol]={"cik":cik,"ten_k_count":len(tenks),"item_2_02_8k_count":len(earnings),"amendment_count":len(amendments),"ten_k_acceptance_count":sum(bool(r["acceptance_datetime"]) for r in tenks),"item_2_02_acceptance_count":sum(bool(r["acceptance_datetime"]) for r in earnings),"ten_k_sample":tenks[:3],"item_2_02_sample":earnings[:5],"event_pairing_deferred":True}
-    out={"schema_version":1,"record_type":"q218_sec_multichannel_source_gate","candidate_id":"Q218","generated_at_utc":datetime.now(timezone.utc).isoformat(),"fixed_window":{"start":START,"end":END},"issuer_results":issuer_results,"issuer_count":len(issuer_results),"issuers_with_10k":sum(x["ten_k_count"]>0 for x in issuer_results.values()),"issuers_with_item_2_02_8k":sum(x["item_2_02_8k_count"]>0 for x in issuer_results.values()),"all_required_issuer_channels_observed":all(x["ten_k_count"]>0 and x["item_2_02_8k_count"]>0 and x["ten_k_acceptance_count"]>0 and x["item_2_02_acceptance_count"]>0 for x in issuer_results.values()),"scientific_evidence":False,"performance_authorization":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False}
+    out={"schema_version":1,"record_type":"q218_sec_multichannel_source_gate","candidate_id":"Q218","generated_at_utc":datetime.now(timezone.utc).isoformat(),"fixed_window":{"start":START,"end":END},"network_retry_policy":{"timeout_seconds":FETCH_TIMEOUT_SECONDS,"max_transient_attempts":MAX_TRANSIENT_FETCH_ATTEMPTS,"backoff_seconds_per_attempt":FETCH_BACKOFF_SECONDS,"retryable_http_statuses":[408,425,429,500,502,503,504]},"issuer_results":issuer_results,"issuer_count":len(issuer_results),"issuers_with_10k":sum(x["ten_k_count"]>0 for x in issuer_results.values()),"issuers_with_item_2_02_8k":sum(x["item_2_02_8k_count"]>0 for x in issuer_results.values()),"all_required_issuer_channels_observed":all(x["ten_k_count"]>0 and x["item_2_02_8k_count"]>0 and x["ten_k_acceptance_count"]>0 and x["item_2_02_acceptance_count"]>0 for x in issuer_results.values()),"scientific_evidence":False,"performance_authorization":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False}
     out["next_gate"]="DETERMINISTIC_10K_8K_EVENT_PAIR_AND_AMENDMENT_LINEAGE" if out["all_required_issuer_channels_observed"] else "REPAIR_SEC_MULTICHANNEL_COVERAGE"
     out["receipt_fingerprint"]=hashlib.sha256(json.dumps(out,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode()).hexdigest()
     output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(out,indent=2,ensure_ascii=False)+"\n",encoding="utf-8"); return out

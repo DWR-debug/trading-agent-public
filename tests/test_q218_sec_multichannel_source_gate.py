@@ -13,3 +13,46 @@ def test_q218_source_gate_uses_item_2_02_and_is_non_authorizing(tmp_path,monkeyp
     assert r["all_required_issuer_channels_observed"] is True
     assert r["performance_authorization"] is False
     assert r["next_gate"]=="DETERMINISTIC_10K_8K_EVENT_PAIR_AND_AMENDMENT_LINEAGE"
+
+def test_q218_fetch_retries_transient_timeout_then_succeeds(monkeypatch):
+    calls = []
+    sleeps = []
+
+    class Response:
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            return False
+        def read(self):
+            return b"ok"
+
+    def fake_urlopen(req, timeout):
+        calls.append(timeout)
+        if len(calls) < 3:
+            raise TimeoutError("temporary SEC timeout")
+        return Response()
+
+    monkeypatch.setattr(gate.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(gate.time, "sleep", sleeps.append)
+
+    assert gate.fetch("https://example.invalid") == b"ok"
+    assert calls == [30, 30, 30]
+    assert sleeps == [2, 4]
+
+
+def test_q218_fetch_exhausts_transient_timeouts(monkeypatch):
+    calls = []
+    sleeps = []
+
+    def fake_urlopen(req, timeout):
+        calls.append(timeout)
+        raise TimeoutError("persistent SEC timeout")
+
+    monkeypatch.setattr(gate.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(gate.time, "sleep", sleeps.append)
+
+    import pytest
+    with pytest.raises(TimeoutError, match="persistent SEC timeout"):
+        gate.fetch("https://example.invalid")
+    assert calls == [30, 30, 30]
+    assert sleeps == [2, 4]
