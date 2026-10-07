@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `d6a7735df47f8e9cbae68319799b345d0d56113e`
+**Current operational snapshot:** `c7f077a0ae699c83f3a515cb7f9af6f954bd005f`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-07T06:25:56.041910+00:00`
+**Generated (UTC):** `2026-10-07T06:37:42.907031+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -34,7 +34,7 @@
 ### Permanent Capacity Saturation & Rolling Research Waves
 
 - **STATUS: ACTIVE_AND_PERSISTENT.** Useful free compute is continuously routed whenever a real bounded backlog exists.
-- **Current two-hour activation:** `TA-2H-2026-10-06-2025Z`, `2026-10-06T20:25:00Z–2026-10-06T22:25:00Z`.
+- **Current two-hour activation:** `TA-2H-2026-10-07-RUNNER-C-CANDIDATE`, `2026-10-07T06:35:00Z–2026-10-07T08:35:00Z`.
 - **Scheduler:** every 10 minutes; active duplicates are skipped, phase-successful work is not rerun, and only one bounded retry is permitted after failure/cancellation.
 - **Wave order:** W1 source/PIT/clock closure -> W2 candidate/contracts and information timing -> W3 next-gate compilation and independent reproduction -> W4 literature discovery/consolidation.
 - **Utilization rule:** maximize useful occupancy across Windows A/B/C, hosted Linux, bounded free-AI lanes and S10/mobile support when those resources are reachable and the work is independent and useful. Never manufacture work to consume quota.
@@ -125,7 +125,7 @@
 - Source-feasibility latest receipt: **DISCOVERY_SOURCE_FEASIBILITY_COMPLETED**.
 - Q179 ClinicalTrials.gov, Q180 NHTSA, Q181 OSHA/DOL, Q183 NTSB and Q184 FCC currently pass the bounded source probe; Q182 FERC eLibrary remains **runner-access blocked** where the GitHub-hosted probe receives HTTP 403.
 - PIT Readiness R1 latest receipt: **PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE**.
-- Latest Q179–Q184 PIT receipt fingerprint: `0a2180608c02cbe4e26508a788857ba064d0c07d42fea5345b8934f29f46c001`.
+- Latest Q179–Q184 PIT receipt fingerprint: `ee33548569f8c44ad24356e1cc3b81769380a4fd2d813ee580e21bfafb85add0`.
 - Candidate-level PIT status remains non-authorizing; all six current statuses are surfaced directly in `research/evidence/q179_q184_pit_readiness_r1_latest.json`.
 - Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
 ### Q197–Q201 Orthogonal Information Frontier
