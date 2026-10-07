@@ -105,39 +105,58 @@ jobs:
             if git ls-remote --exit-code --heads "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${branch}" >/dev/null 2>&1; then
               continue
             fi
-            selected="$request_file"
-            {
-              echo "issue_number=$issue_number"
-              echo "request_file=$request_file"
-              echo "task_id=$task_id"
-              echo "run=true"
-            } >> "$GITHUB_OUTPUT"
-            break
+            gh api "/repos/${GITHUB_REPOSITORY}/issues/${issue_number}" > "${RUNNER_TEMP}/candidate_issue.json"
+            if python - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          issue=json.loads(Path(os.environ["RUNNER_TEMP"],"candidate_issue.json").read_text(encoding="utf-8"))
+          owner_ok = issue.get("user", {}).get("login") == os.environ["GITHUB_REPOSITORY_OWNER"]
+          label_ok = any(label.get("name") in {"agent", "agent-ready", "agent-cli-ready"} for label in issue.get("labels", []))
+          open_ok = issue.get("state") == "open"
+          if not open_ok:
+              print("QUEUE_SKIP_CLOSED")
+          elif not owner_ok:
+              print("QUEUE_SKIP_FOREIGN_ISSUE")
+          elif not label_ok:
+              print("QUEUE_SKIP_NON_AGENT_ISSUE")
+          raise SystemExit(0 if (open_ok and owner_ok and label_ok) else 1)
+          PY
+            then
+              selected="$request_file"
+              cp "${RUNNER_TEMP}/candidate_issue.json" "${RUNNER_TEMP}/issue.json"
+              {
+                echo "issue_number=$issue_number"
+                echo "request_file=$request_file"
+                echo "task_id=$task_id"
+                echo "run=true"
+              } >> "$GITHUB_OUTPUT"
+              break
+            fi
+            echo "Skipping queued request $request_file: issue #$issue_number is not an eligible agent request."
           done
           if [ -z "$selected" ]; then
-            echo "No unclaimed queued request for lane ${{ matrix.lane }}."
+            echo "No eligible agent request for lane ${{ matrix.lane }}."
             echo "run=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          gh api "/repos/${GITHUB_REPOSITORY}/issues/${issue_number}" > "$RUNNER_TEMP/issue.json"
-          issue_state="$(python -c 'import json,sys; print(json.load(open(sys.argv[1],encoding="utf-8"))["state"])' "$RUNNER_TEMP/issue.json")"
-          if [ "$issue_state" != "open" ]; then
-            echo "Issue #$issue_number is closed; retiring stale queue request $selected."
-            rm -f "$selected"
-            echo "run=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
+      - name: Validate selected agent request
+        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
           python - <<'PY'
           import json, os
           from pathlib import Path
           issue=json.loads(Path(os.environ["RUNNER_TEMP"],"issue.json").read_text(encoding="utf-8"))
-          assert issue["user"]["login"] == os.environ["GITHUB_REPOSITORY_OWNER"]
-          assert any(label["name"] in {"agent", "agent-ready", "agent-cli-ready"} for label in issue.get("labels", []))
+          if issue.get("state") != "open":
+              raise SystemExit("Agent request issue is no longer open")
+          if issue.get("user", {}).get("login") != os.environ["GITHUB_REPOSITORY_OWNER"]:
+              raise SystemExit("Agent request issue owner mismatch")
+          if not any(label.get("name") in {"agent", "agent-ready", "agent-cli-ready"} for label in issue.get("labels", [])):
+              raise SystemExit("Agent request is not marked agent-ready")
           Path(os.environ["RUNNER_TEMP"],"event.json").write_text(json.dumps({"issue":issue}),encoding="utf-8")
           PY
-          python -m automation.agent_dispatch --event-json "$RUNNER_TEMP/event.json" --master-sha "$GITHUB_SHA" --active-agent-count 0 --output "$RUNNER_TEMP/agent_task_manifest.json"
-          cp "$RUNNER_TEMP/agent_task_manifest.json" "$RUNNER_TEMP/task_contract.json"
 
       - name: Stop idle lane
         if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run != 'true'
