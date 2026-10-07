@@ -1,0 +1,52 @@
+name: Research Completion Monitor A
+
+on:
+  workflow_run:
+    workflows:
+      - "Q104 I19 Historical 13F Identity Census"
+      - "Top-4 Candidate Slot Research"
+      - "Q224 SEC EDGAR Modern Source Gate"
+      - "Q228 SEC Correspondence Source Gate"
+      - "Q231 SEC FOIA Source Gate"
+      - "Q229 Historical CFPB Release Census"
+      - "Q229-Q230 Source Feasibility"
+      - "Q230 Windows TRACE Connectivity"
+      - "Free AI Worker Fabric"
+      - "Orthogonal PIT Next-Gate Compiler"
+      - "Evidence Graph Stage 4-5 Research Wave"
+      - "Temporal Identity State Spine Waves"
+      - "Q179-Q184 Source Feasibility"
+      - "Q179-Q184 PIT Readiness R1"
+      - "Q133-Q170 PIT Readiness R1"
+      - "Q188-Q192 PIT Historical Census R2"
+      - "Q185-Q186 A-Priority Source and PIT Readiness"
+      - "Q187-Q192 Source Feasibility"
+      - "Deep Frontier Public Source Feasibility"
+      - "Wide Search Research Lane"
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: trading-agent-research-completion-monitor
+  cancel-in-progress: true
+
+jobs:
+  wake:
+    if: github.repository == 'DWR-debug/trading-agent-public' && github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == github.event.repository.default_branch
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Wake bounded capacity dispatcher
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "RESEARCH_COMPLETION=${{ github.event.workflow_run.name }}"
+          echo "RESEARCH_COMPLETION_CONCLUSION=${{ github.event.workflow_run.conclusion }}"
+          gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master
+          echo "CAPACITY_DISPATCH_WAKE=SUCCESS"
