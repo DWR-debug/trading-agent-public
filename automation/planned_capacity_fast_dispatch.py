@@ -27,6 +27,7 @@ PLATFORM_NAMES = {
 }
 
 TOP4_CANDIDATES = {"Q218", "Q219", "Q220", "Q221"}
+TOP4_PRIORITY = ("Q218", "Q219", "Q220", "Q221")
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 
 
@@ -236,6 +237,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     decisions = []
     dispatches = []
     seen_dispatch_keys: set[tuple[str, str, str]] = set()
+    chosen_slot_scopes: set[tuple[str, str]] = set()
     leased_resources: set[str] = set()
     top4_candidate_active = any(
         any(
@@ -281,6 +283,37 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             scope = (resource_input, candidate) if resource_input else None
             if scope and scope in completed_slots:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ALREADY_COMPLETED"})
+                fallback = top4_slot_fallback(
+                    resource,
+                    candidate,
+                    work,
+                    runs,
+                    completed_slots,
+                    failure_counts,
+                    chosen_slot_scopes,
+                )
+                if fallback:
+                    fallback_scope = (resource_input, fallback)
+                    dispatch_key = (workflow, fallback, resource)
+                    if dispatch_key not in seen_dispatch_keys and fallback_scope not in completed_slots and failure_counts.get(fallback_scope, 0) < 2:
+                        inputs = dict(item.get("execution_workflow_inputs") or {})
+                        inputs.update({"candidate": fallback, "resource": resource_input})
+                        dispatches.append({
+                            "plan_id": f"{item.get('plan_id')}-BACKFILL-{fallback}",
+                            "candidate": fallback,
+                            "resource": resource,
+                            "workflow": workflow,
+                            "inputs": inputs,
+                            "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
+                        })
+                        seen_dispatch_keys.add(dispatch_key)
+                        chosen_slot_scopes.add(fallback_scope)
+                        decisions.append({
+                            "plan_id": item.get("plan_id"),
+                            "decision": "DISPATCH_SLOT_BACKFILL",
+                            "fallback_candidate": fallback,
+                            "mode": "FILL_FREE_READY_CAPACITY",
+                        })
                 continue
             failures = failure_counts.get(scope, 0) if scope else 0
             if failures >= 2:
@@ -322,6 +355,10 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
         })
         seen_dispatch_keys.add(dispatch_key)
+        if workflow == SLOT_SCOPED_WORKFLOW:
+            resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
+            if resource_input:
+                chosen_slot_scopes.add((resource_input, candidate))
         for leased in (item.get("resource_leases") or []):
             leased_resources.add(str(leased))
         decisions.append({
@@ -350,6 +387,38 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         "live_execution": False,
         "paper_only": True,
     }
+
+
+def top4_slot_fallback(
+    resource: str,
+    skipped_candidate: str,
+    work: list[dict[str, Any]],
+    runs: list[dict[str, Any]],
+    completed_slots: set[tuple[str, str]],
+    failure_counts: dict[tuple[str, str], int],
+    chosen_scopes: set[tuple[str, str]],
+) -> str | None:
+    """Choose the next uncompleted Top-4 candidate for a now-free slot."""
+    resource_input = {
+        "Windows self-hosted A": "windows",
+        "Windows self-hosted B": "windows",
+        "Windows self-hosted C": "windows",
+        "GitHub-hosted Ubuntu x64": "ubuntu_x64",
+        "GitHub-hosted ARM64": "ubuntu_arm64",
+    }.get(resource)
+    if not resource_input or skipped_candidate not in TOP4_CANDIDATES:
+        return None
+    start = TOP4_PRIORITY.index(skipped_candidate) + 1 if skipped_candidate in TOP4_PRIORITY else 0
+    for candidate in TOP4_PRIORITY[start:]:
+        scope = (resource_input, candidate)
+        if scope in completed_slots or scope in chosen_scopes:
+            continue
+        if failure_counts.get(scope, 0) >= 2:
+            continue
+        if candidate_is_active(candidate, work, exclude_resources={"Free AI pool"}):
+            continue
+        return candidate
+    return None
 
 
 def run_dispatches(plan: dict[str, Any], repo: str) -> dict[str, Any]:
