@@ -61,11 +61,13 @@ def test_dashboard_pages_has_single_automatic_publisher() -> None:
     assert '  push:\n    branches: [master]' not in text
 
 
-def test_dashboard_update_persists_bootstrap() -> None:
+def test_dashboard_update_deploys_ephemeral_snapshot_without_master_commit_churn() -> None:
     root = Path(__file__).parents[1]
     workflow = (root / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
-    assert "git diff --quiet -- docs/dashboard/dashboard_data.json docs/dashboard/dashboard_bootstrap.js" in workflow
-    assert "git add docs/dashboard/dashboard_data.json docs/dashboard/dashboard_bootstrap.js" in workflow
+    assert "upload-pages-artifact" in workflow
+    assert "deploy-pages" in workflow
+    assert "git push origin HEAD:master" not in workflow
+    assert "git add docs/dashboard/dashboard_data.json" not in workflow
 
 
 def test_dashboard_bootstrap_ends_with_real_newline_not_literal_escape() -> None:
@@ -198,3 +200,10 @@ def test_dashboard_exposes_six_active_lane_target():
     assert '"active_research_lanes_target_met"' in generator
     assert "active_research_lanes_target" in script
     assert 'id="laneTargetSummary"' in html
+
+
+def test_dashboard_three_minute_live_refresh_and_five_minute_server_refresh():
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    assert "setInterval(load,180000)" in js
+    assert 'cron: "*/5 * * * *"' in workflow
