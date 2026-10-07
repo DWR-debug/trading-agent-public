@@ -765,6 +765,7 @@ def planned_capacity_plan(
                 "execution_workflow_inputs": item.get("execution_workflow_inputs", {}),
                 "execution_status": "planned_not_started",
                 "dispatch_state": "READY_FOR_FAST_DISPATCH" if item.get("dispatchable", False) else "PLANNED_ADVISORY",
+                "dispatch_condition": "FREE_SLOT" if item.get("dispatchable", False) else "ADVISORY_ONLY",
                 "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
                 "resource_leases": list(item.get("resource_leases") or []),
                 "allow_parallel_with_candidate": bool(item.get("allow_parallel_with_candidate", False)),
