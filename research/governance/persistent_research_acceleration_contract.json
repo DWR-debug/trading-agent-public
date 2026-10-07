@@ -213,6 +213,11 @@
     "anti_scheinbeschäftigung": "Do not rerun successful source probes or tests merely to occupy a runner. Route only defined receipt-dependent next gates, independent reproductions, candidate/source/PIT closures, or materially useful governance/provenance QA. Idle is valid only when no useful independent executable backlog exists.",
     "session_mode": "ACTIVE_28_MIN_AUTONOMOUS",
     "slotwise_replenishment": {
+    "repeat_policy": {
+      "same_candidate_same_resource": "suppress_after_successful_slot_run",
+      "same_candidate_different_resource": "allowed_only_as_architecture_diverse_reproduction",
+      "run_identity_source": "workflow_run_name_or_display_title_from_slot_run_name"
+    },
       "status": "PERMANENT",
       "purpose": "Bind every free reachable research slot to the highest-priority real next gate without serializing unrelated candidates behind one workflow file.",
       "automatic_dispatch_order": [
