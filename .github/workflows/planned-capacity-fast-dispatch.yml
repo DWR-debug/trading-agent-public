@@ -45,11 +45,14 @@ jobs:
           queued="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=queued&per_page=100")"
           waiting="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=waiting&per_page=100")"
           pending="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=pending&per_page=100")"
+          # Keep the general snapshot bounded, but fetch complete Top-4 slot
+          # history so old technical failures cannot age out of the retry budget.
+          slot_history="$(gh api --paginate "/repos/$GITHUB_REPOSITORY/actions/workflows/top4-candidate-slot-research.yml/runs?per_page=100")"
           jq -s '
             [ .[] | .workflow_runs[]? ]
             | map(select(.id != null))
             | unique_by(.id)
-          ' <(printf '%s\n' "$recent") <(printf '%s\n' "$in_progress") <(printf '%s\n' "$queued") <(printf '%s\n' "$waiting") <(printf '%s\n' "$pending") > "$RUNNER_TEMP/current_runs.json"
+          ' <(printf '%s\n' "$recent") <(printf '%s\n' "$in_progress") <(printf '%s\n' "$queued") <(printf '%s\n' "$waiting") <(printf '%s\n' "$pending") <(printf '%s\n' "$slot_history") > "$RUNNER_TEMP/current_runs.json"
 
       - name: Dispatch executable ready capacity
         env:
