@@ -21,6 +21,7 @@ def test_missing_history_is_dispatchable():
     assert len(out["dispatches"])==2
 
 
-def test_top4_frontier_has_priority():
-    out=plan_dispatches([], now=__import__("datetime").datetime.fromisoformat("2026-10-06T10:30:00+00:00"), max_dispatches=1)
-    assert out["dispatches"] == [".github/workflows/top4-candidate-research-capacity.yml"]
+def test_top4_is_not_an_autonomous_spine_router_target():
+    out=plan_dispatches([], now=__import__("datetime").datetime.fromisoformat("2026-10-06T10:30:00+00:00"), max_dispatches=10)
+    assert ".github/workflows/top4-candidate-research-capacity.yml" not in out["dispatches"]
+    assert ".github/workflows/q224-edgar-modern-source-gate.yml" in out["dispatches"]
