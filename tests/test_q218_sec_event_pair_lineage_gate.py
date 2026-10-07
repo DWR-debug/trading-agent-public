@@ -161,3 +161,53 @@ def test_q218_fetch_does_not_retry_non_transient_http_error(monkeypatch):
     with pytest.raises(gate.urllib.error.HTTPError) as exc:
         gate.fetch("https://example.invalid")
     assert exc.value.code == 404
+
+
+def test_q218_uses_explicit_parent_filing_date_for_amendment(tmp_path, monkeypatch):
+    import json
+
+    payload = {
+        "filings": {
+            "recent": {
+                "form": ["8-K", "10-K", "8-K/A"],
+                "filingDate": ["2025-11-14", "2026-03-13", "2026-01-16"],
+                "accessionNumber": [
+                    "0000104169-25-000172",
+                    "0000104169-26-000055",
+                    "0000104169-26-000024",
+                ],
+                "primaryDocument": ["wmt-20251111.htm", "wmt-20260131.htm", "wmt-20251113.htm"],
+                "reportDate": ["2025-11-11", "2026-01-31", "2025-11-13"],
+                "items": ["5.02,9.01", "", "5.02"],
+            }
+        }
+    }
+    acceptance_map = {
+        "0000104169-25-000172": "20251114080030",
+        "0000104169-26-000055": "20260313160624",
+        "0000104169-26-000024": "20260116090305",
+    }
+
+    def fake_fetch(url):
+        if "/submissions/CIK" in url:
+            return json.dumps(payload).encode()
+        accession = url.split("/")[-1].replace("-index-headers.html", "")
+        if accession in acceptance_map:
+            return f"<ACCEPTANCE-DATETIME>{acceptance_map[accession]}".encode()
+        if url.endswith("/wmt-20251111.htm"):
+            return b"Initial CEO succession filing"
+        if url.endswith("/wmt-20260131.htm"):
+            return b"Annual report"
+        if url.endswith("/wmt-20251113.htm"):
+            return (
+                b"As previously reported in a Current Report on Form 8-K "
+                b"filed with the Securities and Exchange Commission on November 14, 2025 "
+                b"(the Initial Form 8-K)."
+            )
+        return b""
+
+    monkeypatch.setattr(gate, "fetch", fake_fetch)
+    result = gate.run(tmp_path / "receipt.json")
+    wmt = result["issuer_results"]["WMT"]
+    assert wmt["all_lineage_valid"] is True
+    assert wmt["amendment_lineage"][0]["parent_candidate_accession"] == "0000104169-25-000172"
