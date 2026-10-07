@@ -619,6 +619,20 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
         ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A"),
         ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B"),
     ]
+    by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
+    backlog = []
+    for rank, (code, workflow, resource) in enumerate(order, start=1):
+        item = by_code.get(code)
+        backlog.append({
+            "queue_rank": rank,
+            "candidate": code,
+            "lane": str(item.get("lane") or ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY")) if item else ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY"),
+            "next_gate": str(item.get("next_gate") or "next receipt-defined research gate") if item else "next receipt-defined research gate",
+            "execution_workflow": workflow,
+            "resource_hint": resource,
+            "planned_status": "READY_NEXT_GATE",
+            "non_authorizing": True,
+        })
     return backlog[:2]
 
 
