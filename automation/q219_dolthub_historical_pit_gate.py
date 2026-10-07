@@ -22,6 +22,7 @@ TARGET_DATE = "2025-08-01"
 TARGET_SYMBOLS = ["AAPL", "AMZN", "DIS", "JPM", "MSFT", "NVDA", "WMT", "XOM"]
 HEAD_LOG_LIMIT = 50
 BOUNDED_HISTORY_SCAN_LIMIT = 200
+HISTORY_SCAN_FALLBACK_LIMITS = (200, 100, 50)
 UA = "TradingAgent-Public-Q219-DoltHub-PIT-Gate/1.0"
 QUERY_TIMEOUT_SECONDS = 90
 MAX_TRANSIENT_QUERY_ATTEMPTS = 2
@@ -57,6 +58,20 @@ def fetch_sql(query: str) -> dict:
     raise last_error or RuntimeError("DOLTHUB_QUERY_ERROR:unknown")
 
 
+def fetch_history_sql(base_query: str) -> tuple[dict, int]:
+    last_error: Exception | None = None
+    for limit in HISTORY_SCAN_FALLBACK_LIMITS:
+        query = base_query.replace("__HISTORY_LIMIT__", str(limit))
+        try:
+            return fetch_sql(query), limit
+        except RuntimeError as exc:
+            message = str(exc).lower()
+            if not any(marker in message for marker in TRANSIENT_QUERY_MARKERS):
+                raise
+            last_error = exc
+    raise last_error or RuntimeError("DOLTHUB_HISTORY_QUERY_ERROR:unknown")
+
+
 def sha256_json(value: object) -> str:
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
@@ -69,9 +84,10 @@ SELECT commit_hash, date, message
 FROM DOLT_LOG('master', '--tables', 'option_chain')
 WHERE date <= {repr(TARGET_DATE + " 23:59:59")}
 ORDER BY date DESC
-LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}
+LIMIT __HISTORY_LIMIT__
 """.strip()
-    history_payload = fetch_sql(history_query)
+    history_payload, history_scan_limit_used = fetch_history_sql(history_query)
+    effective_history_query = history_query.replace("__HISTORY_LIMIT__", str(history_scan_limit_used))
     scanned_rows = history_payload.get("rows") or []
     history_rows = [
         row for row in scanned_rows
@@ -147,6 +163,7 @@ LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}
         "query_retry_policy": {
             "timeout_seconds": QUERY_TIMEOUT_SECONDS,
             "max_transient_attempts": MAX_TRANSIENT_QUERY_ATTEMPTS,
+            "history_scan_fallback_limits": list(HISTORY_SCAN_FALLBACK_LIMITS),
             "backoff_seconds": 2,
             "transient_markers": TRANSIENT_QUERY_MARKERS,
         },
@@ -155,8 +172,10 @@ LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}
             "latest_commit_date": latest,
             "commit_count_bounded_scan": commit_count,
             "option_chain_update_commits_observed": len(history_rows),
-            "commit_log_query": history_query,
+            "commit_log_query": effective_history_query,
             "bounded_scan_limit": BOUNDED_HISTORY_SCAN_LIMIT,
+            "history_scan_limit_used": history_scan_limit_used,
+            "history_scan_fallback_limits": list(HISTORY_SCAN_FALLBACK_LIMITS),
             "prior_commit_query": prior_query,
         },
         "historical_pit": {
