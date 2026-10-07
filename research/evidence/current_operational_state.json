@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T20:59:16.208558+00:00",
+    "generated_at_utc": "2026-10-07T21:00:10.247735+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "204a2853cbb9e1adc6131676cb678c07f9dedaa0"
+    "source_master_sha": "9bb33cb3bcc0c3e73205526f09cb0507cf3a7a59"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T20:59:16.208558+00:00",
+  "generated_at_utc": "2026-10-07T21:00:10.247735+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4597,6 +4597,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: gate Q218 independent dispatch on verified prerequisites",
+        "sha": "9bb33cb3bcc0c3e73205526f09cb0507cf3a7a59",
+        "timestamp": "2026-10-07T22:59:56+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c02c638b18999f5c75cf2c10492920e446b9687e",
+        "timestamp": "2026-10-07T20:59:18Z"
+      },
+      {
         "message": "ROUTE: open Q218 independent PIT after positive source gates",
         "sha": "204a2853cbb9e1adc6131676cb678c07f9dedaa0",
         "timestamp": "2026-10-07T22:59:03+02:00"
@@ -4625,16 +4635,6 @@
         "message": "RESEARCH: route Q218 to independent architecture PIT reproduction",
         "sha": "298af1aa4235a661c3dd6bedc32861f0d25e9010",
         "timestamp": "2026-10-07T22:57:10+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "24ed5c6b7db2ebbc51886841097098341e91242e",
-        "timestamp": "2026-10-07T20:57:03Z"
-      },
-      {
-        "message": "RESEARCH: add Q218 independent architecture PIT reproduction",
-        "sha": "9390ff7be46ba02e477680a58dc6daf9af68e4ed",
-        "timestamp": "2026-10-07T22:56:49+02:00"
       }
     ]
   },
@@ -4732,7 +4732,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "204a2853cbb9e1adc6131676cb678c07f9dedaa0",
+  "source_master_sha": "9bb33cb3bcc0c3e73205526f09cb0507cf3a7a59",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4846,6 +4846,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37686115249"
+    "run_id": "37686219708"
   }
 }
