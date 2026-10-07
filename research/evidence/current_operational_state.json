@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T13:57:09.022981+00:00",
+    "generated_at_utc": "2026-10-07T14:30:27.702792+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "89d8a41b09cc4cab7a42bbd6c8f1756361a4df95"
+    "source_master_sha": "e78d7915cdd5135e249078b366a6c0aba699de15"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T13:57:09.022981+00:00",
+  "generated_at_utc": "2026-10-07T14:30:27.702792+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2429,7 +2429,7 @@
         "source_id": "FCC_ULS"
       }
     ],
-    "receipt_fingerprint": "ee33548569f8c44ad24356e1cc3b81769380a4fd2d813ee580e21bfafb85add0",
+    "receipt_fingerprint": "fa3057eedb20836560098afca237b7fdcfb605bda1c71b8643c372d2656ffe69",
     "receipt_type": "q179_q184_pit_readiness_r1",
     "safety": {
       "AUTOMATIC_PROMOTION": false,
@@ -2460,21 +2460,21 @@
       },
       "https://catalog.data.gov/dataset/dol-enforcement-data-inspection": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "086062975021fc4e194cf4380c928bd8c8e632b2956557b0b28034dfa764694a",
+        "content_sha256": "dca9114c77b3381b4b8e6feb1e41e7b4a0ac9e104554639da538acfda5ce28c0",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
       },
       "https://clinicaltrials.gov/api/v2/studies/NCT00125528": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "99b3290c4c25e3dbb6fe7be319b1ee3a64987a20d33b8d1768afd6c439da5568",
+        "content_sha256": "78b561528e38cd48731d65a9bd7fd7fbcb48ea45fcbef7db62e8efc0bf68603e",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
       },
       "https://ferc.gov/what-elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "caf55a7ca1ef0388bad4b3c23247707e46055657f31ad6cac77db3513ae4a1f5",
+        "content_sha256": "fd6166f13a25d1e99b69cabfc55bea306501dccc814fc83b90449ae194f907bb",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2485,14 +2485,14 @@
       },
       "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "7564c96a55b6bdb1d3c4f709dc78f2a6106d2c78634d22fbae899da734e36823",
+        "content_sha256": "0c4f99e3682cbccb869411e1635cc626378ec43805e2cbacbef521a4d9737527",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
       },
       "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "627ffb300e5a6a630241888498a9a2259fb6d77adcfec0f4cbaa156f4482c7da",
+        "content_sha256": "b6d2524332c383d18e5a8e28192881fbb654da4db0e473b2b8a9964232042220",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2503,21 +2503,21 @@
       },
       "https://www.nhtsa.gov/nhtsa-datasets-and-apis": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "e79e050f01c87cc8286fed96a8352a2bd1563806098732e53aa53b107398d999",
+        "content_sha256": "2d75d4dade1ecee580e06ed1ba6bf3c430c43ee14d3ee3c6b33f1c6bde5deade",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
       },
       "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "497965c3c9b85a0760b279b991b27f4848f65239aa9bb8293bb670ad101e140c",
+        "content_sha256": "611e57937bda38d69e11670145c1060c189d0af7b992a12e7aec8cb7f9325c11",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx"
       },
       "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "36362d5937eb545e6f8604c5a8cb602733b27f3ece489e37f9669f7036766bf5",
+        "content_sha256": "d584144d2ab4b009b43d723a924495f993e4caf41708178c78e4a838f3c13241",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx"
@@ -4524,6 +4524,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "fix/q218-sec-network-retry-20261007",
+        "number": 1191,
+        "title": "FIX: harden Q218 SEC transport reads against transient timeouts",
+        "updatedAt": "2026-10-07T14:24:32Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1191"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/instant-capacity-backfill-on-completion-20261007",
         "number": 1189,
         "title": "FIX: instantly backfill freed research capacity",
@@ -4581,44 +4589,44 @@
     ],
     "recent_commits": [
       {
-        "message": "FIX: make free capacity dispatch and dashboard refresh immediate",
-        "sha": "89d8a41b09cc4cab7a42bbd6c8f1756361a4df95",
-        "timestamp": "2026-10-07T15:56:52+02:00"
+        "message": "FIX: backfill Top-4 slots after technical retry exhaustion (#1192)",
+        "sha": "e78d7915cdd5135e249078b366a6c0aba699de15",
+        "timestamp": "2026-10-07T16:30:14+02:00"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "6a0b6a79e903b0cfa1ef75850c28de49d83ed080",
-        "timestamp": "2026-10-07T13:55:54Z"
+        "sha": "da7e38031e6646810a8af12a3119f4dd8cdbd013",
+        "timestamp": "2026-10-07T14:20:28Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "61c8cc452b4a622cfdc2da635bd0c0eb80999696",
-        "timestamp": "2026-10-07T13:55:08Z"
+        "sha": "94c239364f309db6f50812fdc8ca5c4120c3a131",
+        "timestamp": "2026-10-07T14:01:11Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "d2257c968c7486e12dbb64009409391e17682dbf",
-        "timestamp": "2026-10-07T13:51:56Z"
+        "sha": "4a48aa7d141065cb29f9632ecc0a8484e27630f3",
+        "timestamp": "2026-10-07T14:00:14Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "2b94c4fda0206811d70b704ad2390b9a8bc679de",
-        "timestamp": "2026-10-07T13:51:33Z"
+        "sha": "e23e05b334b823b3fea83c4535b20bbd8135d702",
+        "timestamp": "2026-10-07T13:59:17Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "97af61bda91a76580f70afeb07e76c74a0e52b1b",
-        "timestamp": "2026-10-07T13:50:49Z"
+        "sha": "3ebe85b00d384130c9c65550c02c585b73c93cf4",
+        "timestamp": "2026-10-07T13:58:36Z"
       },
       {
-        "message": "OPS: persist latest Q133-Q170 PIT-readiness material receipt",
-        "sha": "a34e11c99aa264ff2d32e651fb66fe9d0dfdd931",
-        "timestamp": "2026-10-07T13:49:52Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "ce1f815365c7863c45b569b8bfbb4a3b81d9066a",
+        "timestamp": "2026-10-07T13:58:19Z"
       },
       {
-        "message": "EVIDENCE: persist Q137-Q144 micro PIT receipt",
-        "sha": "78cee85f8fcf772a8587d499869aa5ecfe79f8d6",
-        "timestamp": "2026-10-07T13:49:48Z"
+        "message": "OPS: synchronize current operational status",
+        "sha": "4ab227af6b059e9ceb300afb5f2b302e7da5c546",
+        "timestamp": "2026-10-07T13:57:13Z"
       }
     ]
   },
@@ -4716,7 +4724,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "89d8a41b09cc4cab7a42bbd6c8f1756361a4df95",
+  "source_master_sha": "e78d7915cdd5135e249078b366a6c0aba699de15",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4830,6 +4838,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37632615292"
+    "run_id": "37637238896"
   }
 }
