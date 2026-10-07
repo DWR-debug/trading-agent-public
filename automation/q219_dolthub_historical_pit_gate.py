@@ -10,6 +10,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -21,6 +23,9 @@ TARGET_SYMBOLS = ["AAPL", "AMZN", "DIS", "JPM", "MSFT", "NVDA", "WMT", "XOM"]
 HEAD_LOG_LIMIT = 50
 BOUNDED_HISTORY_SCAN_LIMIT = 200
 UA = "TradingAgent-Public-Q219-DoltHub-PIT-Gate/1.0"
+QUERY_TIMEOUT_SECONDS = 90
+MAX_TRANSIENT_QUERY_ATTEMPTS = 2
+TRANSIENT_QUERY_MARKERS = ("deadline exceeded", "timeout", "timed out")
 
 
 def fetch_sql(query: str) -> dict:
@@ -29,18 +34,27 @@ def fetch_sql(query: str) -> dict:
         f"{API_BASE}?{params}",
         headers={"User-Agent": UA, "Accept": "application/json"},
     )
-    with urllib.request.urlopen(req, timeout=60) as response:
-        status = int(getattr(response, "status", 200))
-        body = response.read()
-    payload = json.loads(body.decode("utf-8", errors="replace"))
-    if status != 200:
-        raise RuntimeError(f"DOLTHUB_HTTP_{status}")
-    if payload.get("query_execution_status") != "Success":
-        raise RuntimeError(
-            "DOLTHUB_QUERY_ERROR:"
-            + str(payload.get("query_execution_message") or "unknown")
-        )
-    return payload
+    last_error = None
+    for attempt in range(1, MAX_TRANSIENT_QUERY_ATTEMPTS + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=QUERY_TIMEOUT_SECONDS) as response:
+                status = int(getattr(response, "status", 200))
+                body = response.read()
+            payload = json.loads(body.decode("utf-8", errors="replace"))
+            if status != 200:
+                raise RuntimeError(f"DOLTHUB_HTTP_{status}")
+            if payload.get("query_execution_status") == "Success":
+                return payload
+            message = str(payload.get("query_execution_message") or "unknown")
+            error = RuntimeError("DOLTHUB_QUERY_ERROR:" + message)
+            if not any(marker in message.lower() for marker in TRANSIENT_QUERY_MARKERS):
+                raise error
+            last_error = error
+        except (urllib.error.URLError, TimeoutError) as exc:
+            last_error = RuntimeError(f"DOLTHUB_TRANSPORT_ERROR:{type(exc).__name__}:{exc}")
+        if attempt < MAX_TRANSIENT_QUERY_ATTEMPTS:
+            time.sleep(2)
+    raise last_error or RuntimeError("DOLTHUB_QUERY_ERROR:unknown")
 
 
 def sha256_json(value: object) -> str:
@@ -129,6 +143,12 @@ LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}
             "target_date": TARGET_DATE,
             "target_symbols": TARGET_SYMBOLS,
             "head_log_limit": HEAD_LOG_LIMIT,
+        },
+        "query_retry_policy": {
+            "timeout_seconds": QUERY_TIMEOUT_SECONDS,
+            "max_transient_attempts": MAX_TRANSIENT_QUERY_ATTEMPTS,
+            "backoff_seconds": 2,
+            "transient_markers": TRANSIENT_QUERY_MARKERS,
         },
         "history": {
             "earliest_commit_date": earliest,
