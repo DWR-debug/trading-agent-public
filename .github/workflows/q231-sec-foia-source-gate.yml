@@ -10,6 +10,7 @@ on:
     - cron: "27 */6 * * *"
   workflow_dispatch: {}
 permissions:
+  actions: write
   contents: write
 concurrency:
   group: trading-agent-q231-sec-foia-source-gate
