@@ -1,0 +1,143 @@
+name: Q218 Independent Architecture PIT Reproduction
+
+on:
+  workflow_run:
+    workflows: ["Top-4 Candidate Slot Research"]
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: trading-agent-q218-independent-architecture-pit
+  cancel-in-progress: true
+
+jobs:
+  reproduce:
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event.workflow_run.conclusion == 'success' &&
+          contains(github.event.workflow_run.display_title, 'Q218 event_pair')
+        )
+      )
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - name: Checkout triggering source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Locate current positive Q218 source/event receipts
+        id: locate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TRIGGER_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          runs="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?branch=master&per_page=100")"
+          source_run="$(jq -r --arg sha "$TRIGGER_SHA" '.workflow_runs[] | select(.name=="Top-4 Candidate Slot Research" and .conclusion=="success" and .head_sha==$sha and (.display_title | contains("Q218 source"))) | .id' <<<"$runs" | head -n1)"
+          event_run="$(jq -r --arg sha "$TRIGGER_SHA" '.workflow_runs[] | select(.name=="Top-4 Candidate Slot Research" and .conclusion=="success" and .head_sha==$sha and (.display_title | contains("Q218 event_pair"))) | .id' <<<"$runs" | head -n1)"
+          test -n "$source_run" && test "$source_run" != "null"
+          test -n "$event_run" && test "$event_run" != "null"
+          source_artifact="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run/artifacts" --jq '.artifacts[] | select(.expired==false) | .name' | head -n1)"
+          event_artifact="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$event_run/artifacts" --jq '.artifacts[] | select(.expired==false) | .name' | head -n1)"
+          test -n "$source_artifact" && test -n "$event_artifact"
+          {
+            echo "source_run=$source_run"
+            echo "event_run=$event_run"
+            echo "source_artifact=$source_artifact"
+            echo "event_artifact=$event_artifact"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Download canonical positive receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/q218-source" "$RUNNER_TEMP/q218-event"
+          gh run download "${{ steps.locate.outputs.source_run }}" --repo "$GITHUB_REPOSITORY" --name "${{ steps.locate.outputs.source_artifact }}" --dir "$RUNNER_TEMP/q218-source"
+          gh run download "${{ steps.locate.outputs.event_run }}" --repo "$GITHUB_REPOSITORY" --name "${{ steps.locate.outputs.event_artifact }}" --dir "$RUNNER_TEMP/q218-event"
+
+      - name: Locate receipts
+        id: paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_path="$(find "$RUNNER_TEMP/q218-source" -name receipt.json -print -quit)"
+          event_path="$(find "$RUNNER_TEMP/q218-event" -name receipt.json -print -quit)"
+          test -f "$source_path" && test -f "$event_path"
+          echo "source_path=$source_path" >> "$GITHUB_OUTPUT"
+          echo "event_path=$event_path" >> "$GITHUB_OUTPUT"
+
+      - name: Run independent Q218 PIT reproduction
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "research/runs/q218-independent-architecture/${GITHUB_RUN_ID}"
+          python -m automation.q218_independent_architecture_pit_reproduction \
+            --source "${{ steps.paths.outputs.source_path }}" \
+            --event "${{ steps.paths.outputs.event_path }}" \
+            --output "research/runs/q218-independent-architecture/${GITHUB_RUN_ID}/pit_receipt.json"
+
+      - name: Enforce independent PIT boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path("research/runs/q218-independent-architecture") / os.environ["GITHUB_RUN_ID"] / "pit_receipt.json"
+          data = json.loads(p.read_text(encoding="utf-8"))
+          assert data["status"] == "Q218_INDEPENDENT_ARCHITECTURE_PIT_REPRODUCED"
+          assert data["independent_method"]["reused_q218_gate_functions"] is False
+          assert data["reproduction"]["all_checks_passed"] is True
+          assert data["reproduction"]["same_day_decision_use_allowed"] is False
+          assert data["scientific_boundary"]["performance"] is False
+          assert data["scientific_boundary"]["candidate_ranking"] is False
+          assert data["safety"]["paper_only"] is True
+          assert data["safety"]["live_trading_enabled"] is False
+          assert data["safety"]["orders_enabled"] is False
+          assert data["safety"]["automatic_promotion"] is False
+          print("Q218_INDEPENDENT_ARCHITECTURE_PIT_BOUNDARY=PASS")
+          PY
+
+      - name: Publish positive independent receipt
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="research/evidence/q218_independent_architecture_pit_reproduction_latest.json"
+          new_receipt="$GITHUB_WORKSPACE/research/runs/q218-independent-architecture/${GITHUB_RUN_ID}/pit_receipt.json"
+          if gh api "/repos/$GITHUB_REPOSITORY/contents/$target?ref=master" --jq '.content' 2>/dev/null | base64 -d > "$RUNNER_TEMP/existing.json"; then
+            if python - "$RUNNER_TEMP/existing.json" "$new_receipt" <<'PY'
+import json,sys
+from pathlib import Path
+old=json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+new=json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
+raise SystemExit(0 if old.get("status")==new.get("status") and old.get("upstream_receipts")==new.get("upstream_receipts") else 1)
+PY
+            then
+              echo "Q218_INDEPENDENT_RECEIPT_ALREADY_CURRENT=TRUE"
+              exit 0
+            fi
+          fi
+          cp "$new_receipt" "$target"
+          for attempt in 1 2 3; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file "$target=$target"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
