@@ -2,7 +2,7 @@ name: Resource Dashboard Update
 
 on:
   schedule:
-    - cron: "35 3 * * *"
+    - cron: "*/5 * * * *"
   push:
     branches: [master]
     paths:
