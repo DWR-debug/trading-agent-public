@@ -170,3 +170,12 @@ def test_dashboard_milestone_filter_excludes_platform_only_runs():
     assert _is_research_milestone_run({"status": "completed", "conclusion": "success", "name": "Q220 As-Filed SEC-XBRL Population Repair"}) is True
     assert _is_research_milestone_run({"status": "completed", "conclusion": "success", "name": "Resource Dashboard Update"}) is False
     assert _is_research_milestone_run({"status": "completed", "conclusion": "success", "name": "CI"}) is False
+
+def test_dashboard_supports_dedicated_runner_status_token_without_guessing():
+    root = Path(__file__).parents[1]
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    workflow = (root / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    assert 'os.environ.get("RUNNER_STATUS_TOKEN")' in generator
+    assert "token=runner_token" in generator
+    assert "RUNNER_STATUS_TOKEN: ${{ secrets.RUNNER_STATUS_TOKEN }}" in workflow
+    assert "unverified / not visible" in generator
