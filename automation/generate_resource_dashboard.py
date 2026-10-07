@@ -807,7 +807,7 @@ def planned_capacity_plan(
             if current_assignments + planned_for_resource >= capacity_slots:
                 continue
             benchmark = benchmark_for_planned_item(item, workflow_benchmarks, job_benchmarks)
-            plans[resource_name].append({}
+            plans[resource_name].append({
                 "plan_id": item["plan_id"],
                 "candidate": candidate,
                 "lane": item["lane"],
