@@ -8,9 +8,6 @@ import argparse, json
 from datetime import datetime, timezone
 
 DEFAULTS = [
-    # Frontier lane: the canonical Top-4 candidate workpack must be considered first.
-    # One workflow fans out across Q218-Q221 on Windows/x64/ARM64.
-    {"workflow": ".github/workflows/top4-candidate-research-capacity.yml", "label": "TOP4-Q218-Q221", "min_success_age_minutes": 60},
     {"workflow": ".github/workflows/q224-edgar-modern-source-gate.yml", "label": "Q224", "min_success_age_minutes": 360},
     {"workflow": ".github/workflows/q229-historical-release-census.yml", "label": "Q229-HIST", "min_success_age_minutes": 360},
     {"workflow": ".github/workflows/q229-q230-source-feasibility.yml", "label": "Q229-Q230-SOURCE", "min_success_age_minutes": 360},
