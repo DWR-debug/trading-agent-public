@@ -105,7 +105,7 @@ def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding
     ]
     work = [{"candidate": "Q218", "task": "Q218 work", "job": "Q218 PIT"}]
     top4 = [{"code": c, "next_gate": "gate"} for c in ("Q218", "Q219", "Q220", "Q221")]
-    plan = planned_capacity_plan(resources, work, top4, {}, {})
+    plan = planned_capacity_plan(resources, work, top4, {}, {}, {})
     by_resource = {x["resource"]: x for x in plan}
     planned_candidates = [
         x["planned_assignments"][0]["candidate"]
@@ -208,3 +208,34 @@ def test_dashboard_three_minute_live_refresh_and_five_minute_server_refresh():
     workflow = (root / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
     assert "setInterval(load,180000)" in js
     assert 'cron: "*/5 * * * *"' in workflow
+
+
+def test_dashboard_exposes_worker_purpose_target_and_eta_fields():
+    root = Path(__file__).parents[1]
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    assert '"worker_status"' in generator
+    assert '"purpose"' in generator
+    assert '"target_worker"' in generator
+    assert '"expected_start_at"' in generator
+    assert '"expected_finish_at"' in generator
+    assert '"open_pull_requests": prs' in generator
+    assert 'id="workboardSummary"' in html
+    assert 'id="prs"' in html
+    assert 'Wer / Ressource' in script
+    assert 'Nächster geplanter Start' in script
+    assert 'data.open_pull_requests||[]' in script
+
+
+def test_dashboard_open_prs_are_read_only_operational_metadata():
+    root = Path(__file__).parents[1]
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    assert "def open_pull_requests()" in generator
+    assert '"/pulls?state=open&per_page=100&sort=updated&direction=desc"' in generator
+    assert '"open_pull_requests": prs' in generator
+    assert '"author"' in generator
+    assert '"head_branch"' in generator
+    assert '"base_branch"' in generator
+    assert "prs.map" in script
