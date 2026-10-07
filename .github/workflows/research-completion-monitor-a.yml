@@ -3,28 +3,24 @@ name: Research Completion Monitor A
 on:
   workflow_run:
     workflows:
-      - "Q104 I19 Historical 13F Identity Census"
-      - "Top-4 Candidate Slot Research"
-      - "Q224 EDGAR Modern Source Gate"
-      - "Q228 SEC Correspondence Source Gate"
-      - "Q231 SEC FOIA Source Gate"
-      - "Q229 Historical CFPB Release Census"
-      - "Q229-Q230 Source Feasibility"
-      - "Q230 Windows TRACE Connectivity"
-      - "Free AI Worker Fabric"
-      - "Orthogonal PIT Next-Gate Compiler"
-      - "Evidence Graph Stage 4-5 Research Wave"
-      - "Temporal Identity State Spine Waves"
-      - "Q179-Q184 Source Feasibility"
-      - "Q179-Q184 PIT Readiness R1"
-      - "Q133-Q170 PIT Readiness R1"
-      - "Q188-Q192 PIT Historical Census R2"
-      - "Q185-Q186 A-Priority Source and PIT Readiness"
-      - "Q187-Q192 Source Feasibility"
-      - "Deep Frontier Public Source Feasibility"
-      - "Wide Search Research Lane"
+      - "Q*"
+      - "Top-4*"
+      - "*PIT*"
+      - "*Source*"
+      - "*Census*"
+      - "*Frontier*"
+      - "*Identity*"
+      - "*Reproduction*"
+      - "*AI Worker*"
+      - "*Literature*"
+      - "Evidence Graph*"
+      - "Temporal Identity*"
+      - "Wide Search*"
+      - "H06-P2*"
+      - "Permanent Windows Local Research Loop"
     types: [completed]
   workflow_dispatch: {}
+
 
 permissions:
   actions: write
@@ -36,7 +32,22 @@ concurrency:
 
 jobs:
   wake:
-    if: github.repository == 'DWR-debug/trading-agent-public' && github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == github.event.repository.default_branch
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.head_branch == github.event.repository.default_branch &&
+      github.event.workflow_run.name != 'Planned Capacity Fast Dispatch' &&
+      github.event.workflow_run.name != 'Resource Dashboard Update' &&
+      github.event.workflow_run.name != 'Current Operational Status Synchronizer' &&
+      github.event.workflow_run.name != 'Current Status Drift Guard' &&
+      github.event.workflow_run.name != 'Spine Next-Gate Autonomous Router' &&
+      github.event.workflow_run.name != 'Workflow Lint' &&
+      github.event.workflow_run.name != 'CI' &&
+      github.event.workflow_run.name != 'Full Suite Verification' &&
+      github.event.workflow_run.name != 'T052 Exact Master CI Gate' &&
+      github.event.workflow_run.name != 'Unified Research Orchestrator' &&
+      github.event.workflow_run.name != 'Research Completion Monitor A' &&
+      github.event.workflow_run.name != 'Research Completion Monitor B'
     runs-on: ubuntu-24.04
     timeout-minutes: 3
     steps:

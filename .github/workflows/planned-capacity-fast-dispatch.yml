@@ -13,7 +13,8 @@ permissions:
 
 concurrency:
   group: trading-agent-planned-capacity-fast-dispatch
-  cancel-in-progress: true
+  # Keep an active dispatch pulse intact; only one newest pending pulse may wait behind it.
+  cancel-in-progress: false
 
 jobs:
   dispatch:
