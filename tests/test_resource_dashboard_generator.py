@@ -86,6 +86,34 @@ def test_dashboard_runner_busy_does_not_inflate_research_work():
     assert enriched["research_slots_free"] == 0
 
 
+def test_planned_capacity_keeps_one_step_lookahead_while_resource_is_active():
+    from automation.generate_resource_dashboard import planned_capacity_plan
+
+    resources = [
+        {"name":"Windows self-hosted A","capacity_state":"operating","current_assignments":1},
+        {"name":"Windows self-hosted B","capacity_state":"available","current_assignments":0},
+        {"name":"Windows self-hosted C","capacity_state":"available","current_assignments":0},
+        {"name":"GitHub-hosted Ubuntu x64","capacity_state":"available","current_assignments":0},
+        {"name":"GitHub-hosted ARM64","capacity_state":"available","current_assignments":0},
+        {"name":"Free AI pool","capacity_state":"available","current_assignments":0},
+    ]
+    work = [{"candidate":"Q104:I19","task":"Q104 I19","job":"historical census","resource":"Windows self-hosted A","lane":"FORMAL READINESS"}]
+    top4 = [{"code": c, "next_gate":"gate"} for c in ("Q218","Q219","Q220","Q221")]
+    plan = planned_capacity_plan(resources, work, top4, {}, {})
+    by_resource = {x["resource"]: x for x in plan}
+    assert by_resource["Windows self-hosted A"]["current_assignments"] == 1
+    assert by_resource["Windows self-hosted A"]["planned_count"] == 1
+    assert by_resource["Windows self-hosted A"]["planned_assignments"][0]["scheduled"] is True
+
+
+def test_planned_research_backlog_is_bounded_to_target():
+    from automation.generate_resource_dashboard import planned_research_backlog
+    board = [{"code": code, "lane":"FRONTIER DISCOVERY", "next_gate":"gate"} for code in ("Q218","Q219","Q220","Q221","Q224","Q229","Q230","Q231","Q205","Q198")]
+    queue = planned_research_backlog(board)
+    assert len(queue) == 6
+    assert [x["candidate"] for x in queue] == ["Q218","Q219","Q220","Q221","Q224","Q229"]
+
+
 def test_dashboard_filters_platform_work_from_research_capacity():
     from automation.generate_resource_dashboard import current_work_from_runs
     runs = [
