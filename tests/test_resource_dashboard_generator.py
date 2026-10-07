@@ -164,6 +164,13 @@ def test_candidate_progress_percentages_are_deterministic():
     assert candidate_overall_progress("unknown_state")[0] == 0
 
 
+def test_candidate_milestone_progress_is_zero_without_active_workflow():
+    from automation.generate_resource_dashboard import candidate_milestone_progress
+    progress, basis = candidate_milestone_progress("Q218", [])
+    assert progress == 0
+    assert "not started" in basis
+
+
 def test_dashboard_tracks_q219_in_top4_candidate_capacity():
     from automation.generate_resource_dashboard import candidate_pipeline
     top4 = [{"code": "Q219", "state": "DESIGN_ONLY_ACTIVE"}]
