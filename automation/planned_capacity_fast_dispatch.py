@@ -82,10 +82,13 @@ def completed_slot_scopes(runs: list[dict[str, Any]]) -> set[tuple[str, str]]:
     return slot_scopes(runs, conclusion="success")
 
 
+TECHNICAL_FAILURE_CONCLUSIONS = {"failure", "startup_failure", "timed_out"}
+
+
 def slot_failure_counts(runs: list[dict[str, Any]]) -> dict[tuple[str, str], int]:
     counts: dict[tuple[str, str], int] = {}
     for run in runs:
-        if not isinstance(run, dict) or run.get("status") != "completed" or run.get("conclusion") != "failure":
+        if not isinstance(run, dict) or run.get("status") != "completed" or run.get("conclusion") not in TECHNICAL_FAILURE_CONCLUSIONS:
             continue
         title = " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
         marker = "Top-4 Slot "
@@ -96,6 +99,34 @@ def slot_failure_counts(runs: list[dict[str, Any]]) -> dict[tuple[str, str], int
             key = (scope[0], scope[1])
             counts[key] = counts.get(key, 0) + 1
     return counts
+
+
+def workflow_failure_streaks(runs: list[dict[str, Any]]) -> dict[str, int]:
+    """Count consecutive technical failures per workflow, resetting after a success."""
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") != "completed":
+            continue
+        path = str(run.get("path") or run.get("workflow_path") or "")
+        if not path:
+            continue
+        grouped.setdefault(path, []).append(run)
+
+    streaks: dict[str, int] = {}
+    for path, items in grouped.items():
+        items.sort(key=lambda x: str(x.get("created_at") or x.get("updated_at") or ""))
+        streak = 0
+        for run in reversed(items):
+            conclusion = str(run.get("conclusion") or "")
+            if conclusion == "success":
+                break
+            if conclusion in TECHNICAL_FAILURE_CONCLUSIONS:
+                streak += 1
+                continue
+            break
+        streaks[path] = streak
+        streaks[path.rsplit("/", 1)[-1]] = streak
+    return streaks
 
 
 def workflow_is_active(workflow: str, paths: set[str], runs: list[dict[str, Any]]) -> bool:
@@ -150,6 +181,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     active_paths = active_workflow_paths(runs)
     completed_slots = completed_slot_scopes(runs)
     failure_counts = slot_failure_counts(runs)
+    workflow_failure_streak = workflow_failure_streaks(runs)
     zero_active = len(work) == 0
     decisions = []
     dispatches = []
@@ -187,6 +219,13 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_RESOURCE_RESERVED_BY_MULTI_RESOURCE_RUN"})
             continue
         dispatch_key = (workflow, candidate, resource) if workflow == SLOT_SCOPED_WORKFLOW else (workflow, "", "")
+        if workflow != SLOT_SCOPED_WORKFLOW:
+            failures = workflow_failure_streak.get(workflow, workflow_failure_streak.get(workflow.rsplit("/", 1)[-1], 0))
+            if failures >= 2:
+                decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_WORKFLOW_TECHNICAL_RETRY_EXHAUSTED"})
+                continue
+            if failures == 1:
+                decisions.append({"plan_id": item.get("plan_id"), "decision": "WORKFLOW_TECHNICAL_RETRY_PERMITTED"})
         if workflow == SLOT_SCOPED_WORKFLOW:
             resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
             scope = (resource_input, candidate) if resource_input else None
