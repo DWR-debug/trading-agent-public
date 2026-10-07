@@ -60,7 +60,7 @@ jobs:
             [ .[] | .workflow_runs[]? ]
             | map(select(.id != null))
             | unique_by(.id)
-          ' <(printf '%s\n' "$recent") <(printf '%s\n' "$in_progress") <(printf '%s\n' "$queued") <(printf '%s\n' "$waiting") <(printf '%s\n' "$pending") > "$RUNNER_TEMP/current_runs.json"
+          ' <(printf '%s\n' "$recent") <(printf '%s\n' "$in_progress") <(printf '%s\n' "$queued") <(printf '%s\n' "$waiting") <(printf '%s\n' "$pending") <(printf '%s\n' "$slot_history") > "$RUNNER_TEMP/current_runs.json"
 
       - name: Dispatch executable ready capacity
         env:
