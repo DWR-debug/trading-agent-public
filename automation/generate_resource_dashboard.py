@@ -669,6 +669,23 @@ def planned_capacity_plan(
             "execution_workflow": ".github/workflows/q104-i19-13f-historical-identity-census.yml",
         },
         {
+            "plan_id": "Q218-FOCUSED-ADVERSARIAL",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "neuer unabhängiger adversarial Review der fokussierten Q218 Source/PIT-Annahmen",
+            "preferred": ["Free AI pool"],
+            "readiness": "READY_AI_FABRIC",
+            "basis": "focused-wave methods review; neuer Task-Kontext verhindert die Wiederholung des bereits abgeschlossenen R5-Reviews",
+            "allow_parallel_with_candidate": True,
+            "dispatchable": True,
+            "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
+            "execution_workflow_inputs": {
+                "task_id": "AI-2026-10-07-Q218-FOCUSED-ADVERSARIAL",
+                "run_secondary_provider": "false",
+                "use_litellm_transport": "false",
+            },
+        },
+        {
             "plan_id": "Q218-PIT",
             "candidate": "Q218",
             "lane": "FRONTIER DISCOVERY",
