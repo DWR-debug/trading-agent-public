@@ -9,7 +9,14 @@ def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backsto
     monitor_a = (ROOT / ".github/workflows/research-completion-monitor-a.yml").read_text(encoding="utf-8")
     monitor_b = (ROOT / ".github/workflows/research-completion-monitor-b.yml").read_text(encoding="utf-8")
     assert 'cron: "*/5 * * * *"' in dispatcher
-    assert "workflow_run:" not in dispatcher
+    assert "workflow_run:" in dispatcher
+    for workflow_name in (
+        "Top-4 Candidate Slot Research",
+        "Top-4 Candidate Research Capacity",
+        "Q104 I19 Historical 13F Identity Census",
+        "Free AI Worker Fabric",
+    ):
+        assert workflow_name in dispatcher
     assert "cancel-in-progress: false" in dispatcher
     assert "workflow_run:" in monitor_a
     assert '      - "Q*"' in monitor_a
@@ -439,3 +446,15 @@ def test_fast_dispatch_normalizes_candidate_identity_before_duplicate_guard():
         }],
     }
     assert dispatch_candidates(snapshot, [], max_dispatches=4)["dispatches"] == []
+
+
+def test_planned_capacity_preserves_parallel_ai_metadata():
+    from automation.generate_resource_dashboard import planned_capacity_plan
+    resources = [
+        {"name": "Free AI pool", "type": "cloud", "capacity_state": "available", "current_assignments": 0, "research_capacity_slots": 1},
+    ]
+    work = [{"candidate": "Q220", "task": "Q220 PIT research", "job": "Q220 PIT", "lane": "FRONTIER DISCOVERY", "resource": "Windows self-hosted B"}]
+    plan = planned_capacity_plan(resources, work, [], {}, {}, {})
+    ai = next(x for x in plan if x["resource"] == "Free AI pool")
+    item = next(x for x in ai["planned_assignments"] if x.get("plan_id") == "Q220-ADVERSARIAL")
+    assert item["allow_parallel_with_candidate"] is True
