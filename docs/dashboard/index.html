@@ -66,6 +66,23 @@
     .progress{height:8px;border:1px solid var(--border);border-radius:999px;overflow:hidden;background:Canvas;margin-top:5px;min-width:120px}
     .progress-fill{height:100%;background:var(--info);transition:width .25s ease}
     .progress-label{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+    .focus-summary{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:10px;margin-bottom:14px}
+    .focus-kpi{border:1px solid var(--border);border-radius:12px;padding:14px;background:color-mix(in srgb,Canvas 99%,CanvasText 1%)}
+    .focus-kpi strong{display:block;font-size:22px;margin-top:3px}.focus-kpi span:last-child{font-size:11px;color:var(--muted)}
+    .candidate-focus{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .candidate-card{border:1px solid var(--border);border-radius:16px;padding:17px;background:color-mix(in srgb,Canvas 99%,CanvasText 1%)}
+    .candidate-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.candidate-code{font-size:25px;font-weight:850;letter-spacing:-.02em}.candidate-stage{font-size:11px;color:var(--muted);margin-top:3px}
+    .candidate-main{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;margin-top:14px}.ring-wrap{display:flex;justify-content:center}
+    .progress-ring{--pct:0;width:136px;height:136px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--info) calc(var(--pct)*1%),color-mix(in srgb,CanvasText 10%,Canvas) 0)}
+    .progress-ring>div{width:102px;height:102px;border-radius:50%;background:Canvas;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .progress-ring strong{font-size:28px}.progress-ring span{font-size:11px;color:var(--muted)}
+    .metric-title{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:800}.milestone{font-size:15px;font-weight:700;line-height:1.4;margin:4px 0 13px}
+    .metric-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}.progress.large{height:11px}.candidate-foot{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--border);padding-top:10px;margin-top:13px;color:var(--muted);font-size:11px}
+    .support-card{border:1px solid var(--border);border-radius:14px;padding:15px;background:color-mix(in srgb,Canvas 99%,CanvasText 1%)}.support-ok{border-left:5px solid var(--available)}.support-unknown{border-left:5px solid var(--offline)}
+    .support-title{font-size:20px;font-weight:800;margin-top:2px}.support-role{font-size:11px;color:var(--muted)}.support-status{display:flex;align-items:center;gap:8px;margin-top:8px}.support-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.support-grid div{display:flex;flex-direction:column;gap:3px;font-size:11px}.support-grid div span{color:var(--muted)}
+    .ops-strip{display:flex;gap:18px;flex-wrap:wrap;border:1px solid var(--border);border-radius:12px;padding:11px 13px;margin-top:14px;font-size:12px;background:color-mix(in srgb,var(--info) 4%,Canvas)}
+    .queue-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.queue-item{display:flex;gap:10px;border:1px solid var(--border);border-radius:11px;padding:11px}.queue-rank{font-weight:900;color:var(--info)}
+    .scientific-lock{margin-top:12px;border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--muted);font-size:11px}
     .rowtitle{font-weight:650}
     .small{font-size:12px}
     .empty{padding:16px;border:1px dashed var(--border);border-radius:10px;color:var(--muted)}
@@ -113,57 +130,48 @@
   <div id="error" hidden class="error"></div>
 
   <div class="notice">
-    <strong>Priorität:</strong> Q104:I19 → Q218 → Q219 → Q220 → Q221 · nur Source/PIT/Structure.<br>Geplante Kapazität wird separat von tatsächlich laufender Arbeit ausgewiesen.
-    <div class="legend">
-      <span><span class="dot operating"></span>Rot = sinnvolle Arbeit läuft</span>
-      <span><span class="dot available"></span>Grün = Kapazität verfügbar/routierbar</span>
-      <span><span class="dot unknown"></span>Grau = offline oder aktuell nicht beobachtbar</span>
-    </div>
+    <strong>Forschungsfokus:</strong>
+    <span class="badge active-badge">Q104:I19</span>
+    <span class="badge active-badge">Q218</span>
+    · ausschließlich Source / PIT / Structure.<br>
+    <span class="muted">Gesamtentwicklung und Milestone-Fortschritt sind Entwicklungsstatus, keine Erfolgswahrscheinlichkeit, Renditeprognose oder Autorisierung.</span>
   </div>
 
   <section id="app" class="grid" hidden>
     <article class="card">
-      <h2>Aktive Kapazitäten</h2>
+      <div class="focus-summary" id="focusSummary"></div>
+      <div id="candidateFocus" class="candidate-focus"></div>
+      <div id="opsSummary" class="ops-strip"></div>
+    </article>
+
+    <article class="card">
+      <h2>Kapazitätsfabrik</h2>
       <div id="capacity"></div>
       <div class="small muted" style="margin-top:10px">
-        Grün bei Hosted-Ressourcen bedeutet routierbare Konfiguration; es ist kein Ausführungsreceipt.
-        Self-Hosted-Runner-Online/Busy wird aus der GitHub-Runner-Telemetrie übernommen, wenn die authentifizierte Runner-API sichtbar ist;
-        bei fehlender Berechtigung bleibt der Zustand unbestätigt statt fälschlich als offline/0 dargestellt. Die Runner-Seite zeigt denselben operativen Bestand.
-        Die Jobzahl hier umfasst ausschließlich Research-/Kandidatenarbeit; CI, Status-Synchronisierung und Pages sind getrennte Plattformlast. Hosted-Kapazität wird zusätzlich als begrenzte logische Research-Slots ausgewiesen.
+        ARBEITET = sichtbare Research-Arbeit. RUNNER BESETZT = physischer Runner belegt, aber Research-Zuordnung nicht sichtbar.
+        AUTO-DISPATCH = bereits definierte, nicht-authorisierende Folgearbeit. Keine künstliche Beschäftigung.
       </div>
     </article>
 
     <article class="card">
-      <h2>Aktive Jobs</h2>
+      <h2>S10 · technische Support-Kapazität</h2>
+      <div id="s10"></div>
+    </article>
+
+    <article class="card">
+      <h2>Aktive fokussierte Jobs</h2>
       <div id="work"></div>
     </article>
 
     <article class="card">
-      <h2>Geplante Kapazität</h2>
-      <section class="panel">
-  <h2>Mindestens 6 geplante nächste Forschungsjobs</h2>
-  <div class="small muted">Bounded Future-Research-Queue; aktiv laufende Arbeit bleibt getrennt.</div>
-  <div id="plannedQueue"></div>
-</section>
-<div id="laneTargetSummary" class="small muted" style="margin:8px 0 14px"></div>
-<div id="plannedSummary" class="small muted" style="margin-bottom:10px">Noch kein Plan-Snapshot.</div>
-      <div id="planned"></div>
-      <div class="small muted" style="margin-top:10px">
-        Planung = deterministischer nächster sinnvoller Bounded-Workpack. READY / AUTO-DISPATCH bedeutet,
-        dass ein bereits definierter Workflow bei freier Kapazität ereignisgetrieben bzw. spätestens im 5-Minuten-Recovery-Pfad disponiert wird.
-        Geplant bedeutet nicht bestätigt und nicht wissenschaftlich autorisiert. Blockierte/non-dispatchable Folgearbeit wird nie automatisch gestartet.
-      </div>
-    </article>
-
-    <article class="card">
-      <h2>Forschungspipeline</h2>
-      <div id="pipeline"></div>
+      <h2>Next-Gate-Backlog · nur Q104:I19 / Q218</h2>
+      <div id="plannedQueue"></div>
+      <div id="planned" style="margin-top:12px"></div>
     </article>
 
     <article class="card">
       <h2>Milestones · letzte 12 Stunden</h2>
       <div id="milestones12h"></div>
-      <div class="small muted" style="margin-top:10px">Nur extern aufgezeichnete, abgeschlossene Research-/Evidence-/Governance-Meilensteine. Dashboard-, Status- und reine Plattformlast wird nicht als Meilenstein gezählt.</div>
     </article>
 
     <article class="card">
