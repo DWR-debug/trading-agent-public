@@ -102,8 +102,10 @@ jobs:
       cancel-in-progress: false
     needs: [source_snapshot]
     if: github.repository == 'DWR-debug/trading-agent-public'
+    # Complete every historical shard even when a sibling shard fails.
+    # The merge job remains fail-closed and requires all three successful shard receipts.
     strategy:
-      fail-fast: true
+      fail-fast: false
       max-parallel: 2
       matrix:
         include:
