@@ -509,7 +509,8 @@ def run_dispatches(plan: dict[str, Any], repo: str) -> dict[str, Any]:
         workflow = str(item["workflow"])
         cmd = ["gh", "workflow", "run", workflow, "--repo", repo, "--ref", "master"]
         for key, value in (item.get("inputs") or {}).items():
-            cmd.extend(["-f", f"{key}={value}"])
+            serialized = str(value).lower() if isinstance(value, bool) else str(value)
+            cmd.extend(["-f", f"{key}={serialized}"])
         proc = subprocess.run(cmd, text=True, capture_output=True, check=False)
         results.append({
             "plan_id": item.get("plan_id"),
