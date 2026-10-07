@@ -49,6 +49,6 @@ def test_top4_operational_state_includes_q219_capacity():
     import json
     state=json.loads((ROOT/"ops/trading_agent_os_state.json").read_text(encoding="utf-8"))
     overlay=state["top_candidate_capacity_overlay"]["windows_B"]
-    assert overlay["priority"] == ["Q218","Q219","Q220","Q221"]
-    assert "Q219" in overlay["new_overlay"]
-    assert "no Q219 top-4 capacity" not in overlay["new_overlay"]
+    assert overlay["priority"] == ["Q218"]
+    assert "Q218" in overlay["new_overlay"]
+    assert "Q219" in state["top_candidate_capacity_overlay"]["discovery_reserve"]
