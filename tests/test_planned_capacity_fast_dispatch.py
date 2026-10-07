@@ -32,6 +32,26 @@ def test_fast_dispatch_normalizes_list_run_payload():
     assert normalize_runs_payload(payload) == [payload[0], payload[2]]
 
 
+def test_fast_dispatch_ai_success_is_deduped_by_current_context(tmp_path, monkeypatch):
+    from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context
+
+    task_id = "AI-2026-10-06-Q220-TOP4-ADVERSARIAL"
+    task_path = tmp_path / "ai_requests" / f"{task_id}.json"
+    state_path = tmp_path / "ops" / "ai_worker_state" / f"{task_id}__openrouter_free.json"
+    task_path.parent.mkdir(parents=True)
+    state_path.parent.mkdir(parents=True)
+    task_path.write_text('{"schema_version":1,"task_id":"' + task_id + '"}', encoding="utf-8")
+    state_path.write_text(
+        '{"status":"SUCCESS","context_fingerprint":"ctx-123"}',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        "automation.planned_capacity_fast_dispatch.subprocess.check_output",
+        lambda *args, **kwargs: "ctx-123\n",
+    )
+    assert ai_task_completed_with_current_context(task_id, root=tmp_path) is True
+
+
 def test_fast_dispatch_zero_active_starts_top4_once_and_ai_when_free():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
 
