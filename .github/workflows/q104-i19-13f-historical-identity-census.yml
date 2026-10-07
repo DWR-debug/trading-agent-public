@@ -11,6 +11,7 @@ on:
       - ".github/workflows/q104-i19-13f-historical-identity-census.yml"
   workflow_dispatch: {}
 permissions:
+  actions: write
   contents: write
 concurrency:
   group: trading-agent-q104-i19-13f-historical-identity-census
