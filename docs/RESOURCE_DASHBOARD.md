@@ -80,6 +80,11 @@ The dashboard remains deliberately non-authorizing. Active/busy runners, provide
 
 The dashboard snapshot is still refreshed deliberately rather than every few minutes to avoid consuming hosted compute merely to produce activity.
 
+
+## Candidate progress semantics — 2026-10-07
+
+The candidate pipeline no longer uses expected job duration as a progress indicator. **Gesamtentwicklung** is a deterministic lifecycle index across six common research milestones: design/robustness, source feasibility, coverage, PIT, independent reproduction, and performance validation. **Fortschritt zum nächsten Milestone** is the percentage of successful completed jobs within the currently active candidate workflow; when that workflow has not started, it is 0%. These percentages describe recorded development execution only, not the probability of success, expected return, or authorization state.
+
 ## Capacity-state semantics — 2026-10-07
 
 The resource card distinguishes four operational states. **ARBEITET** requires at least one visible active research job for that resource. A busy self-hosted runner without a mapped research job is shown as **RUNNER BESETZT** and does not masquerade as research work. When there is no active research job but a scheduled executable next-gate exists, the state is **AUTO-DISPATCH BEREIT**. **VERFÜGBAR** is reserved for capacity with neither active research work nor a pending executable plan.
