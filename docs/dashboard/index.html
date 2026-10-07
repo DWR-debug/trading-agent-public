@@ -63,6 +63,9 @@
     .blocked-badge{color:var(--offline);border-color:color-mix(in srgb,var(--offline) 40%,var(--border))}
     .good{color:var(--available)}
     .unknown{color:var(--offline)}
+    .progress{height:8px;border:1px solid var(--border);border-radius:999px;overflow:hidden;background:Canvas;margin-top:5px;min-width:120px}
+    .progress-fill{height:100%;background:var(--info);transition:width .25s ease}
+    .progress-label{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
     .rowtitle{font-weight:650}
     .small{font-size:12px}
     .empty{padding:16px;border:1px dashed var(--border);border-radius:10px;color:var(--muted)}
@@ -110,7 +113,7 @@
   <div id="error" hidden class="error"></div>
 
   <div class="notice">
-    <strong>Priorität:</strong> Q104:I19 → Q218 → Q220 → Q221 · nur Source/PIT/Structure.<br>Geplante Kapazität wird separat von tatsächlich laufender Arbeit ausgewiesen.
+    <strong>Priorität:</strong> Q104:I19 → Q218 → Q219 → Q220 → Q221 · nur Source/PIT/Structure.<br>Geplante Kapazität wird separat von tatsächlich laufender Arbeit ausgewiesen.
     <div class="legend">
       <span><span class="dot operating"></span>Rot = sinnvolle Arbeit läuft</span>
       <span><span class="dot available"></span>Grün = Kapazität verfügbar/routierbar</span>
