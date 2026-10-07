@@ -52,7 +52,8 @@ def sha256_json(value: object) -> str:
 def run(output: Path) -> dict:
     history_query = f"""
 SELECT commit_hash, date, message
-FROM DOLT_LOG()
+FROM DOLT_LOG('master', '--tables', 'option_chain')
+WHERE date <= {repr(TARGET_DATE + " 23:59:59")}
 ORDER BY date DESC
 LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}
 """.strip()
