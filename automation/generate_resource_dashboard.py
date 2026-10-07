@@ -705,6 +705,7 @@ def planned_capacity_plan(
                 "execution_workflow_inputs": item.get("execution_workflow_inputs", {}),
                 "execution_status": "planned_not_started",
                 "dispatch_state": "READY_FOR_FAST_DISPATCH" if item.get("dispatchable", False) else "PLANNED_ADVISORY",
+                "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
                 "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
                 "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
             })
