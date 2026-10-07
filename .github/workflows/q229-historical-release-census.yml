@@ -134,3 +134,10 @@ jobs:
           path: research/runs/q229_historical_release_census/release_census.json
           if-no-files-found: error
           retention-days: 30
+
+  completion_relay:
+    if: always()
+    needs: [census]
+    uses: ./.github/workflows/research-completion-relay.yml
+    with:
+      source_workflow: "Q229 Historical CFPB Release Census"
