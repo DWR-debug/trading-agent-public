@@ -31,13 +31,13 @@ Permanent background capacity remains active outside the window: Windows A/B and
 
 This capacity rule never creates scientific authority. Performance, holdout selection, ranking, tuning, promotion and live execution remain closed unless the independent existing governance chain authorizes them.
 
-## 2ab. Top-4 automatic capacity routing — 2026-10-06
+## 2ab. Top-4 automatic capacity routing — 2026-10-07
 
-The automatic research dispatcher for the active four-candidate wave is `.github/workflows/top4-candidate-research-capacity.yml`. It routes bounded workpacks for **Q218/Q219/Q220/Q221** across three self-hosted Windows slots, GitHub-hosted x64 and hosted ARM64. Legacy broad frontier loops remain manual-only and are not used as filler work.
+Automatic Top-4 replenishment is now **slot-scoped**. The sole automatic Top-4 capacity dispatcher is `.github/workflows/planned-capacity-fast-dispatch.yml`, which feeds independent invocations of `.github/workflows/top4-candidate-slot-research.yml` to free Windows, Ubuntu x64 and ARM64 capacity. The bundled `.github/workflows/top4-candidate-research-capacity.yml` remains a manual fallback only.
 
-Each matrix job binds checkout to `github.sha`, records the candidate-specific workpack contract and gate paths, and uses stale-run cancellation so a new source/PIT gate state supersedes obsolete work. Free AI reviews are task-local and non-authorizing.
+Q104:I19 is a higher-priority multi-resource workpack. Its dedicated historical 13F census is treated as an exclusive dispatch item because the workflow internally leases Windows plus hosted x64/ARM64 shards. Independent Q218/Q219/Q220/Q221 slot runs may run concurrently on different candidates/resources; a successful same candidate/resource slot is not repeated, while a different architecture may be used once as an explicit architecture-diverse reproduction.
 
-The candidate routing is deliberately orthogonal:
+The candidate routing remains deliberately orthogonal:
 - Q218: SEC multichannel source/event pairing and acceptance lineage.
 - Q219: options source breadth, Q129 PIT and post-filing leakage.
 - Q220: as-filed XBRL/FSN schema and narrative-structured mapping.
