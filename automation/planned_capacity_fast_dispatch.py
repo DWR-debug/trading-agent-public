@@ -27,8 +27,8 @@ PLATFORM_NAMES = {
 }
 
 FOCUS_CANDIDATES = {"Q104:I19", "Q218"}
-TOP4_CANDIDATES = {"Q218"}
-TOP4_PRIORITY = ("Q218",)
+TOP4_CANDIDATES = {"Q218", "Q219", "Q220", "Q221"}
+TOP4_PRIORITY = ("Q218", "Q219", "Q220", "Q221")
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 
 
