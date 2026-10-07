@@ -32,6 +32,77 @@ TOP4_PRIORITY = ("Q218", "Q219", "Q220", "Q221")
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 
 
+Q218_INDEPENDENT_WORKFLOW = ".github/workflows/q218-independent-architecture-pit-reproduction.yml"
+Q218_GATE_NAMES = {"source", "event_pair"}
+
+
+def gate_files_unchanged_since_run(run: dict[str, Any], gate: str) -> bool:
+    """Fail closed unless the relevant Q218 gate implementation is unchanged."""
+    head_sha = str(run.get("head_sha") or "")
+    if not head_sha:
+        return False
+    if gate == "source":
+        paths = ["automation/q218_sec_multichannel_source_gate.py"]
+    elif gate == "event_pair":
+        paths = ["automation/q218_sec_event_pair_lineage_gate.py"]
+    else:
+        return False
+    try:
+        proc = subprocess.run(
+            ["git", "diff", "--quiet", head_sha, "HEAD", "--", *paths],
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+    except OSError:
+        return False
+    return proc.returncode == 0
+
+
+def completed_q218_gates_for_current_context(runs: list[dict[str, Any]]) -> set[str]:
+    out: set[str] = set()
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") != "completed" or run.get("conclusion") != "success":
+            continue
+        title = " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
+        if "Top-4 Slot " not in title or "Q218" not in title:
+            continue
+        parts = title.split("Top-4 Slot ", 1)[1].strip().split()
+        if len(parts) < 3 or parts[2] not in Q218_GATE_NAMES:
+            continue
+        if gate_files_unchanged_since_run(run, parts[2]):
+            out.add(parts[2])
+    return out
+
+
+def q218_independent_reproduction_current(runs: list[dict[str, Any]]) -> bool:
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") != "completed" or run.get("conclusion") != "success":
+            continue
+        title = " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
+        if "Q218 Independent Architecture PIT Reproduction" not in title:
+            continue
+        head_sha = str(run.get("head_sha") or "")
+        if not head_sha:
+            continue
+        try:
+            proc = subprocess.run(
+                [
+                    "git", "diff", "--quiet", head_sha, "HEAD", "--",
+                    "automation/q218_independent_architecture_pit_reproduction.py",
+                    Q218_INDEPENDENT_WORKFLOW,
+                ],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+        except OSError:
+            continue
+        if proc.returncode == 0:
+            return True
+    return False
+
+
 def active_research_items(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
     return [
         x for x in snapshot.get("work_assignments", [])
@@ -272,6 +343,22 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         if not item["resource_free"]:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_RESOURCE_BUSY"})
             continue
+
+        if candidate == "Q218" and str(item.get("plan_id") or "") == "Q218-INDEPENDENT-ARCH":
+            q218_completed_gates = completed_q218_gates_for_current_context(runs)
+            if not Q218_GATE_NAMES.issubset(q218_completed_gates):
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_Q218_INDEPENDENT_PREREQUISITES_INCOMPLETE",
+                    "completed_gates": sorted(q218_completed_gates),
+                })
+                continue
+            if q218_independent_reproduction_current(runs):
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_Q218_INDEPENDENT_ALREADY_COMPLETED_CURRENT_CONTEXT",
+                })
+                continue
 
         # Automatic candidate execution is hard-locked to the focused pair.
         focus_candidates = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
