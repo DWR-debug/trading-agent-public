@@ -70,3 +70,10 @@ jobs:
           path: research/runs/q231_sec_foia_source_gate/
           if-no-files-found: error
           retention-days: 30
+
+  completion_relay:
+    if: always()
+    needs: [source_gate]
+    uses: ./.github/workflows/research-completion-relay.yml
+    with:
+      source_workflow: "Q231 SEC FOIA Source Gate"
