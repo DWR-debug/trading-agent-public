@@ -36,9 +36,6 @@ jobs:
         with:
           ref: master
           fetch-depth: 1
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
       - name: Run bounded candidate workpack
         shell: cmd
         run: |
