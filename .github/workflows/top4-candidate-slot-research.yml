@@ -69,7 +69,6 @@ jobs:
           set "PYTHONPATH=%GITHUB_WORKSPACE%"
           if not exist "%GITHUB_WORKSPACE%\research\runs\top4\${{ inputs.candidate }}\%GITHUB_RUN_ID%" mkdir "%GITHUB_WORKSPACE%\research\runs\top4\${{ inputs.candidate }}\%GITHUB_RUN_ID%"
           if /I "${{ inputs.gate }}"=="all" (
-          if /I "${{ inputs.gate }}"=="all" (
             "%PY_EXE%" -m automation.top4_candidate_capacity --candidate "${{ inputs.candidate }}" --output-dir "%GITHUB_WORKSPACE%\research\runs\top4\${{ inputs.candidate }}\%GITHUB_RUN_ID%"
             if errorlevel 1 exit /b 1
           ) else if /I "${{ inputs.gate }}"=="source" (
@@ -85,7 +84,6 @@ jobs:
             "%PY_EXE%" -m pytest -q tests/test_q218_sec_event_pair_lineage_gate.py tests/test_q218_q221_candidate_gate_compiler.py
             if errorlevel 1 exit /b 1
           )
-          if errorlevel 1 exit /b 1
           endlocal
             if /I not "${{ inputs.candidate }}"=="Q218" exit /b 1
             "%PY_EXE%" -m automation.q218_sec_multichannel_source_gate --output "%GITHUB_WORKSPACE%\research\runs\top4\Q218\%GITHUB_RUN_ID%\source\receipt.json"
