@@ -168,3 +168,34 @@ def test_fast_dispatch_stops_after_exclusive_multi_resource_workflow():
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
     assert len(plan["dispatches"]) == 1
     assert plan["dispatches"][0]["candidate"] == "Q104:I19"
+
+
+def test_fast_dispatch_skips_successful_same_slot_but_allows_other_architecture():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    base = {
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "GitHub-hosted Ubuntu x64",
+            "current_assignments": 0,
+            "research_capacity_slots": 2,
+            "planned_assignments": [{
+                "plan_id":"Q220-PIT","candidate":"Q220","scheduled":True,"dispatchable":True,
+                "execution_workflow":workflow,
+            }],
+        }],
+    }
+    completed_arm = [{
+        "status":"completed","conclusion":"success","name":"Top-4 Candidate Slot Research",
+        "display_title":"Top-4 Slot ubuntu_arm64 Q220","run_name":"Top-4 Slot ubuntu_arm64 Q220"
+    }]
+    plan = dispatch_candidates(base, completed_arm, max_dispatches=4)
+    assert plan["dispatches"][0]["candidate"] == "Q220"
+    assert plan["dispatches"][0]["inputs"]["resource"] == "ubuntu_x64"
+
+    completed_x64 = completed_arm+[{
+        "status":"completed","conclusion":"success","name":"Top-4 Candidate Slot Research",
+        "display_title":"Top-4 Slot ubuntu_x64 Q220","run_name":"Top-4 Slot ubuntu_x64 Q220"
+    }]
+    plan2 = dispatch_candidates(base, completed_x64, max_dispatches=4)
+    assert plan2["dispatches"] == []
