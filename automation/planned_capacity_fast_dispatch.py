@@ -175,7 +175,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             "decision": "DISPATCH",
             "mode": "ZERO_ACTIVE_FAST_PATH" if zero_active else "FILL_FREE_READY_CAPACITY",
         })
-        if item.get("exclusive_dispatch", False):
+        if item.get("exclusive_dispatch", False) or workflow in {".github/workflows/q104-i19-13f-historical-identity-census.yml"}:
             break
 
     return {
