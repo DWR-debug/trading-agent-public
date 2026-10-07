@@ -32,6 +32,63 @@ TOP4_PRIORITY = ("Q218", "Q219", "Q220", "Q221")
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 
 
+Q218_GATE_INDEX_PATH = Path("research/evidence/q218_focus_gate_receipt_index_latest.json")
+Q218_INDEPENDENT_WORKFLOW = ".github/workflows/q218-independent-architecture-pit-reproduction.yml"
+
+
+def q218_positive_gate_index_current() -> set[str]:
+    """Return positive Q218 gates only when the immutable index matches current code."""
+    try:
+        index = json.loads(Q218_GATE_INDEX_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return set()
+    if index.get("status") != "Q218_SOURCE_AND_EVENT_PAIR_GATES_COMPLETE":
+        return set()
+    out: set[str] = set()
+    checks = {
+        "source": (
+            bool(index.get("source_gate", {}).get("verified_positive_complete")),
+            "automation/q218_sec_multichannel_source_gate.py",
+            str(index.get("source_gate", {}).get("gate_code_blob_sha") or ""),
+        ),
+        "event_pair": (
+            bool(index.get("event_pair_gate", {}).get("verified_positive_complete")),
+            "automation/q218_sec_event_pair_lineage_gate.py",
+            str(index.get("event_pair_gate", {}).get("gate_code_blob_sha") or ""),
+        ),
+    }
+    for gate, (positive, path, expected_sha) in checks.items():
+        if not positive or not expected_sha:
+            continue
+        try:
+            actual_sha = subprocess.check_output(
+                ["git", "hash-object", path], text=True
+            ).strip()
+        except (OSError, subprocess.CalledProcessError):
+            continue
+        if actual_sha == expected_sha:
+            out.add(gate)
+    return out
+
+
+def q218_independent_reproduction_current() -> bool:
+    try:
+        receipt = json.loads(
+            Path("research/evidence/q218_independent_architecture_pit_reproduction_latest.json")
+            .read_text(encoding="utf-8")
+        )
+        index = json.loads(Q218_GATE_INDEX_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return (
+        receipt.get("status") == "Q218_INDEPENDENT_ARCHITECTURE_PIT_REPRODUCED"
+        and receipt.get("upstream_receipts", {}).get("source_receipt_fingerprint")
+        == index.get("source_gate", {}).get("receipt_fingerprint")
+        and receipt.get("upstream_receipts", {}).get("event_pair_receipt_fingerprint")
+        == index.get("event_pair_gate", {}).get("receipt_fingerprint")
+    )
+
+
 Q218_INDEPENDENT_WORKFLOW = ".github/workflows/q218-independent-architecture-pit-reproduction.yml"
 Q218_GATE_NAMES = {"source", "event_pair"}
 
