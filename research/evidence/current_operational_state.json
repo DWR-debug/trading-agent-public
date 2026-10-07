@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T10:27:29.694225+00:00",
+    "generated_at_utc": "2026-10-07T10:38:17.908976+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "57d2cd949738894a1c49d4bb57396dbf84deedd5"
+    "source_master_sha": "839f56abc22245cdaac71cc349f4091106c480d9"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T10:27:29.694225+00:00",
+  "generated_at_utc": "2026-10-07T10:38:17.908976+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4557,6 +4557,36 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: install orchestrator test dependencies",
+        "sha": "839f56abc22245cdaac71cc349f4091106c480d9",
+        "timestamp": "2026-10-07T12:38:15+02:00"
+      },
+      {
+        "message": "TEST: align Q219 routing assertion with slot workflow",
+        "sha": "dc9490046b3ad24b391f5722158956ca4dd9af68",
+        "timestamp": "2026-10-07T12:38:10+02:00"
+      },
+      {
+        "message": "FIX: avoid setup-python on policy-constrained Windows slots",
+        "sha": "76c0acd6db4926b8772a7cebe69c2f2e199625b4",
+        "timestamp": "2026-10-07T12:38:07+02:00"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "4e546de8d8ec378197dfc25681ae67d0728c354d",
+        "timestamp": "2026-10-07T10:33:17Z"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "ba4ffe466338eff72cb63e03fc8ac3c767c50739",
+        "timestamp": "2026-10-07T10:30:54Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4ea3e3b92faaa4b76b832ae29763046198a1148d",
+        "timestamp": "2026-10-07T10:27:33Z"
+      },
+      {
         "message": "OPS: synchronize S10 phone runtime status",
         "sha": "57d2cd949738894a1c49d4bb57396dbf84deedd5",
         "timestamp": "2026-10-07T10:16:44Z"
@@ -4565,36 +4595,6 @@
         "message": "OPS: synchronize S10 phone runtime status",
         "sha": "0d6cdef024cd74ecb9190797490542cc42b45715",
         "timestamp": "2026-10-07T10:09:11Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "32bf2be920b6edb49edb8fe735cf32a36a52b1ff",
-        "timestamp": "2026-10-07T10:07:02Z"
-      },
-      {
-        "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "da1cb9e327188bd18d3d4a6dc91d50c92bf0b6ff",
-        "timestamp": "2026-10-07T10:06:47Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "0a04f7fbd7619d03dfea958e7246d795ff351bbe",
-        "timestamp": "2026-10-07T10:06:46Z"
-      },
-      {
-        "message": "ORCH: make capacity dispatcher latest-state-wins",
-        "sha": "a0ab883b8b996cf1eadf8f239938b0f98be8ae4c",
-        "timestamp": "2026-10-07T12:06:40+02:00"
-      },
-      {
-        "message": "DOCS: document permanent slotwise Top-4 routing",
-        "sha": "f586c5690043189b2a00cd0c250daf29dd2b37ed",
-        "timestamp": "2026-10-07T12:06:32+02:00"
-      },
-      {
-        "message": "GOVERNANCE: make Top-4 dispatcher authority unambiguous",
-        "sha": "4e76d7e71479b05068fe6547324c75538654771b",
-        "timestamp": "2026-10-07T12:06:29+02:00"
       }
     ]
   },
@@ -4692,7 +4692,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "57d2cd949738894a1c49d4bb57396dbf84deedd5",
+  "source_master_sha": "839f56abc22245cdaac71cc349f4091106c480d9",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4806,6 +4806,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37607499540"
+    "run_id": "37608706397"
   }
 }
