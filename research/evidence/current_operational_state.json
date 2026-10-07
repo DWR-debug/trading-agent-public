@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T12:57:31.876529+00:00",
+    "generated_at_utc": "2026-10-07T13:38:23.961913+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "8e12e75e25da5700b84cfd119deea33045f5611b"
+    "source_master_sha": "54ddf4b9a8a1fab16f78f75411f9cb0c89814c87"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T12:57:31.876529+00:00",
+  "generated_at_utc": "2026-10-07T13:38:23.961913+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2819,7 +2819,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "4ef678a2df1adad2957d47f7bdeeb5a982c7ea38541f2c4134f75e768ba06308",
+    "receipt_fingerprint": "b0ddf981243f98fe86d8e1967a415829c412dff540510c5f59ab0dc1c69a731f",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2854,7 +2854,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "5e9714d07b4dcbbfebb6926964bf27be746219435bd7d2c1260af408404e9be7",
+        "content_sha256": "2b0c97212ba141451f216a5ba36225c66e2bb405ae8a96a0e4f4128788641d77",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2878,7 +2878,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "012c6bbc68cc838695848db417c1e87167d2e5de540308df62c177844003565e",
+        "content_sha256": "432813fa9183ed9c6bfe123160a853ed74193b8475b73a5a5842d2f2953fef39",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -4199,7 +4199,7 @@
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "1d9788c459f2cc59956c4f4226ac471c6361fcdb9f5b6e9f3fa2f4fc7e4fc707",
+    "receipt_fingerprint": "a4c8b63ac6039b6687459183fd422bd6658d25b30e62c41a32c1ad5b922005dc",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4273,7 +4273,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "b5c41b5944596f52f53de2e9c34b5a7c6d9a948779b1626ec2375ab06fd703d5",
+        "content_sha256": "24791dbb60cffb65392c7ab296787ba747a4d85cad5376edecdf4e27554b8597",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4524,6 +4524,30 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "feat/dashboard-operational-workboard-v2-20261007",
+        "number": 1185,
+        "title": "FEAT: clearer operational workboard and open-PR pipeline view",
+        "updatedAt": "2026-10-07T13:37:12Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1185"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/literature-scout-install-pytest-20261007",
+        "number": 1184,
+        "title": "FIX: install pytest before literature scout self-test",
+        "updatedAt": "2026-10-07T13:27:14Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1184"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/agent-queue-skip-non-agent-requests-20261007",
+        "number": 1183,
+        "title": "FIX: skip non-agent queue requests without failing lane",
+        "updatedAt": "2026-10-07T13:27:11Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1183"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "opt/q219-dolthub-log-fastpath-20261007",
         "number": 1179,
         "title": "OPT: accelerate Q219 DoltHub historical PIT query",
@@ -4537,14 +4561,6 @@
         "title": "FIX: freeze Top-4 research cohorts to latest master",
         "updatedAt": "2026-10-07T09:43:11Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/pull/1174"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/dashboard-runner-api-status-token-20261007",
-        "number": 1171,
-        "title": "FEAT: enable live self-hosted runner telemetry in dashboard",
-        "updatedAt": "2026-10-07T08:37:45Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1171"
       },
       {
         "baseRefName": "master",
@@ -4565,44 +4581,44 @@
     ],
     "recent_commits": [
       {
-        "message": "FIX: enforce dispatch cap on slot backfill",
-        "sha": "8e12e75e25da5700b84cfd119deea33045f5611b",
-        "timestamp": "2026-10-07T14:57:19+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "54ddf4b9a8a1fab16f78f75411f9cb0c89814c87",
+        "timestamp": "2026-10-07T13:38:15Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6a002b8a8520a5e120a94a872f02828a5afe09d6",
-        "timestamp": "2026-10-07T12:56:59Z"
+        "message": "FIX: enable read-only self-hosted runner telemetry from current master",
+        "sha": "8881aac205677bde609ecf86491106f4f2ca849a",
+        "timestamp": "2026-10-07T15:38:10+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7d7cbe6e64544a9bc0bf90445d4f5eda4f2193d7",
-        "timestamp": "2026-10-07T12:56:40Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "39e7167446dd7d78b20d65794942b6a9fbd99783",
+        "timestamp": "2026-10-07T13:37:21Z"
       },
       {
-        "message": "TEST: cover Top-4 slot backfill",
-        "sha": "55e1bd55ed2bd79b7ed6d3871d6931c43149b0c5",
-        "timestamp": "2026-10-07T14:56:30+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "7dbe109a4f7ba1ca6162c033d83314aaf5c147fb",
+        "timestamp": "2026-10-07T13:37:00Z"
       },
       {
-        "message": "FIX: backfill freed Top-4 research slots",
-        "sha": "32c9b6a85f66ee81e4185a53d6df5bde34a36a1d",
-        "timestamp": "2026-10-07T14:56:22+02:00"
+        "message": "OPS: record Groq API key smoke test",
+        "sha": "9e05419873f724c3d0f517e34e3bc4a1b996e7b5",
+        "timestamp": "2026-10-07T13:27:23Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ee3537dea0b8399a7c87158e0869e1bcdba8345a",
-        "timestamp": "2026-10-07T12:41:38Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "518d868a30f403e541f7449f34023f915ae6af3e",
+        "timestamp": "2026-10-07T13:23:53Z"
       },
       {
-        "message": "OPS: record Groq free adversarial worker state",
-        "sha": "b7b8f4bb23c55b3d3033a87c8f192647e3084a04",
-        "timestamp": "2026-10-07T12:41:33Z"
+        "message": "OPS: persist latest Q171 WARC material receipt",
+        "sha": "8c929a1d8d988edaf3bc4fa6f891470e0774587e",
+        "timestamp": "2026-10-07T13:23:49Z"
       },
       {
-        "message": "OPS: record Groq free adversarial worker state",
-        "sha": "68ef3ae06702a232c0d2f9436ebebd9392ba45b1",
-        "timestamp": "2026-10-07T12:41:30Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "8be73ae7977e51d575f1ef0ef55f28e331d9d023",
+        "timestamp": "2026-10-07T13:23:35Z"
       }
     ]
   },
@@ -4700,7 +4716,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8e12e75e25da5700b84cfd119deea33045f5611b",
+  "source_master_sha": "54ddf4b9a8a1fab16f78f75411f9cb0c89814c87",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4814,6 +4830,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37624770731"
+    "run_id": "37630076980"
   }
 }
