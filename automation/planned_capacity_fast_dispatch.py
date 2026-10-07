@@ -318,6 +318,41 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             failures = failure_counts.get(scope, 0) if scope else 0
             if failures >= 2:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_RETRY_EXHAUSTED"})
+                fallback = top4_slot_fallback(
+                    resource,
+                    candidate,
+                    work,
+                    runs,
+                    completed_slots,
+                    failure_counts,
+                    chosen_slot_scopes,
+                )
+                if fallback and len(dispatches) < max_dispatches and scope:
+                    fallback_scope = (resource_input, fallback)
+                    dispatch_key = (workflow, fallback, resource)
+                    if (
+                        dispatch_key not in seen_dispatch_keys
+                        and fallback_scope not in completed_slots
+                        and failure_counts.get(fallback_scope, 0) < 2
+                    ):
+                        inputs = dict(item.get("execution_workflow_inputs") or {})
+                        inputs.update({"candidate": fallback, "resource": resource_input})
+                        dispatches.append({
+                            "plan_id": f"{item.get('plan_id')}-BACKFILL-{fallback}",
+                            "candidate": fallback,
+                            "resource": resource,
+                            "workflow": workflow,
+                            "inputs": inputs,
+                            "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
+                        })
+                        seen_dispatch_keys.add(dispatch_key)
+                        chosen_slot_scopes.add(fallback_scope)
+                        decisions.append({
+                            "plan_id": item.get("plan_id"),
+                            "decision": "DISPATCH_SLOT_BACKFILL",
+                            "fallback_candidate": fallback,
+                            "mode": "TECHNICAL_RETRY_EXHAUSTION_BACKFILL",
+                        })
                 continue
             if failures == 1:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SLOT_RETRY_PERMITTED"})
