@@ -145,7 +145,7 @@ function render(data){
       "<div><div class='eyebrow'>Technische Support-Kapazität</div><div class='support-title'>S10 · Android / Termux</div><div class='support-role'>"+esc(s10.role||"bounded support")+"</div></div>"+
       "<div class='support-status'><span class='badge "+(s10Good?"active-badge":"unknown")+"'>"+esc(s10.status||"UNVERIFIED")+"</span><strong>"+(s10Good?"einsatzfähig":"nicht verifiziert")+"</strong></div>"+
       "<div class='support-grid'><div><span>Runner</span><strong>"+esc(s10.runner_name||"S10-TERMUX")+"</strong></div><div><span>Architektur</span><strong>"+esc(s10.architecture||"ARM64")+"</strong></div><div><span>Mode</span><strong>"+esc(s10.mode||"mechanical QA")+"</strong></div><div><span>Letztes Receipt</span><strong>"+esc(s10.latest_workflow_run_id||"—")+"</strong></div></div>"+
-      "<div class='small muted'>Mechanische/provenance-/capacity-QA בלבד. Keine wissenschaftliche Evidenz und keine Performance-Autorisierung.</div>"+
+      "<div class='small muted'>Mechanische/provenance-/capacity-QA nur. Keine wissenschaftliche Evidenz und keine Performance-Autorisierung.</div>"+
     "</div>";
 
   $("work").innerHTML=work.length?
