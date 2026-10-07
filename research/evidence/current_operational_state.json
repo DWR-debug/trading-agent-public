@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T14:34:35.799295+00:00",
+    "generated_at_utc": "2026-10-07T14:42:18.523270+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "2afc4a7e3b30bbd2eebd3008d2d08558fe2558a9"
+    "source_master_sha": "b476dabd47848ea23fb5e4b011ddd720025804b9"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T14:34:35.799295+00:00",
+  "generated_at_utc": "2026-10-07T14:42:18.523270+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2585,7 +2585,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "920da16ba6764767422f1c54cf5071d5db50a5af49c9df1414292891f289f646",
+    "receipt_fingerprint": "e385f4500562e49b80bfb519bfdc8ad845d79e3a633efe9cc2f6495e3c96d3e1",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2616,7 +2616,7 @@
           }
         ],
         "clock_contract": "API posted-date fields define public availability; submitted dates are separate.",
-        "content_sha256": "99b3290c4c25e3dbb6fe7be319b1ee3a64987a20d33b8d1768afd6c439da5568",
+        "content_sha256": "78b561528e38cd48731d65a9bd7fd7fbcb48ea45fcbef7db62e8efc0bf68603e",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2633,7 +2633,7 @@
           }
         ],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
-        "content_sha256": "c3270204636c8761052823c6855fa75d60d2b962adc6cd8c557ba5243d4442db",
+        "content_sha256": "dd3bc43d9b9271f3411c6dcb79999649213f48bbac4b72164f7b911b2cdf09f4",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2663,7 +2663,7 @@
           }
         ],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
-        "content_sha256": "5beb0cb5324240367559d53632732ee1773d873f2cece168405517f13a8e5506",
+        "content_sha256": "a4334bc1bcdc0b8a48e5b17c7610c20711777554929cb3ca79a971ee6c8bd43b",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2684,7 +2684,7 @@
           }
         ],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
-        "content_sha256": "dd79b634b234f05ac2fd611771c838af2f3873ffadefc691911930b52e85b8d8",
+        "content_sha256": "4a3217c2f2800d5bbd60d4b443442cc5cb0cb244f3dd217f7bfa04bf2db852b6",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2701,7 +2701,7 @@
           }
         ],
         "clock_contract": "Investigation event and publication times remain distinct.",
-        "content_sha256": "da4aa912b9dd5ee15816256077a92318067f931737ec54be5df0b5d705442b8b",
+        "content_sha256": "dff12febde0ae1139846c21d353c18627f42919e88315bc8d45f2ee9e3895684",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2718,7 +2718,7 @@
           }
         ],
         "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
-        "content_sha256": "ad1919dbfbbe4ba9dc2b52bcaff2ea4a48cd3595fc8572a6ace5226c955fe195",
+        "content_sha256": "56f8b1675f71104fc92d54397b44c26001125bbad4e6ba76ac19cc9c0105bb84",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -4597,6 +4597,21 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: separate PR validation from research capacity accounting (#1195)",
+        "sha": "b476dabd47848ea23fb5e4b011ddd720025804b9",
+        "timestamp": "2026-10-07T16:42:04+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "e744e987978bfce1d18e1c6479e45b5d92d536b3",
+        "timestamp": "2026-10-07T14:37:14Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4e8d1e13482c8c46281600a74790eced244832dc",
+        "timestamp": "2026-10-07T14:34:38Z"
+      },
+      {
         "message": "FIX: harden Q218 SEC transport reads on current master (#1193)",
         "sha": "2afc4a7e3b30bbd2eebd3008d2d08558fe2558a9",
         "timestamp": "2026-10-07T16:34:23+02:00"
@@ -4620,21 +4635,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "94c239364f309db6f50812fdc8ca5c4120c3a131",
         "timestamp": "2026-10-07T14:01:11Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "4a48aa7d141065cb29f9632ecc0a8484e27630f3",
-        "timestamp": "2026-10-07T14:00:14Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "e23e05b334b823b3fea83c4535b20bbd8135d702",
-        "timestamp": "2026-10-07T13:59:17Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "3ebe85b00d384130c9c65550c02c585b73c93cf4",
-        "timestamp": "2026-10-07T13:58:36Z"
       }
     ]
   },
@@ -4732,7 +4732,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2afc4a7e3b30bbd2eebd3008d2d08558fe2558a9",
+  "source_master_sha": "b476dabd47848ea23fb5e4b011ddd720025804b9",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4846,6 +4846,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37637826518"
+    "run_id": "37638914187"
   }
 }
