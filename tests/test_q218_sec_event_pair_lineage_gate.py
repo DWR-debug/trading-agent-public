@@ -71,7 +71,7 @@ def test_q218_rejects_future_8k_pair(tmp_path, monkeypatch):
     def fake_fetch(url):
         if "/submissions/CIK" in url:
             return json.dumps(payload).encode()
-        return b"<ACCEPTANCE-DATETIME>20250103120000"
+        return b"<ACCEPTANCE-DATETIME>20250104120000"
 
     monkeypatch.setattr(gate, "fetch", fake_fetch)
     result = gate.run(tmp_path / "receipt.json")
