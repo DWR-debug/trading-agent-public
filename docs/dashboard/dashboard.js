@@ -79,9 +79,25 @@ function render(data){
   var order={"Windows self-hosted A":0,"Windows self-hosted B":1,"Windows self-hosted C":2,"GitHub-hosted Ubuntu x64":3,"GitHub-hosted ARM64":4,"Free AI pool":5};
   resources.sort(function(a,b){return order[a.name]-order[b.name];});
   $("capacity").innerHTML="<div class='capacity-grid'>"+resources.map(function(x){
+    var plannedRows=(data.planned_capacity||[]).filter(function(p){return p.resource===x.name;});
+    var plannedItems=plannedRows.reduce(function(acc,p){return acc.concat(p.planned_assignments||[]);},[]);
+    var plannedCount=plannedItems.filter(function(p){return p.scheduled;}).length;
+    var dispatchableCount=plannedItems.filter(function(p){return p.scheduled && p.dispatchable;}).length;
+    var activeResearch=Number(x.current_assignments||0);
+    var runnerBusy=Boolean(x.runner_busy);
     var cls=capacityClass(x);
-    var state=cls==="operating"?"ARBEITET":cls==="available"?"VERFÜGBAR":"NICHT SICHTBAR";
-    var plannedCount=(data.planned_capacity||[]).filter(function(p){return p.resource===x.name;}).reduce(function(n,p){return n+Number(p.planned_count||0);},0);
+    var state;
+    if(activeResearch>0){
+      cls="operating"; state="ARBEITET";
+    }else if(runnerBusy){
+      cls="unknown"; state="RUNNER BESETZT";
+    }else if(dispatchableCount>0){
+      cls="planned"; state="AUTO-DISPATCH BEREIT";
+    }else if(cls==="available"){
+      state="VERFÜGBAR";
+    }else{
+      state="NICHT VERIFIZIERT";
+    }
     return "<div class='capacity "+cls+"'>"+
       "<div class='name'>"+esc(x.name)+"</div>"+
       "<div class='state'>"+state+"</div>"+
