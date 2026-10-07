@@ -110,3 +110,11 @@ def test_dashboard_tracks_q219_in_top4_candidate_capacity():
     top4 = [{"code": "Q219", "state": "DESIGN_ONLY_ACTIVE"}]
     rows = candidate_pipeline(top4, [], {}, {})
     assert [x["code"] for x in rows] == ["Q219"]
+
+
+def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
+    root = Path(__file__).parents[1]
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    assert "import sys" in generator
+    assert "if str(ROOT) not in sys.path:" in generator
+    assert "sys.path.insert(0, str(ROOT))" in generator
