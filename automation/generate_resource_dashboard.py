@@ -391,12 +391,73 @@ def enrich_work_durations(
     return out
 
 
+CANDIDATE_DEVELOPMENT_MILESTONES = (
+    "DESIGN / ROBUSTNESS",
+    "SOURCE FEASIBILITY",
+    "COVERAGE",
+    "PIT",
+    "INDEPENDENT REPRODUCTION",
+    "PERFORMANCE VALIDATION",
+)
+
+
+def candidate_overall_progress(stage: str) -> tuple[int, str]:
+    """Map the recorded candidate stage to a deterministic lifecycle percentage.
+
+    This is a development-completion index, not a probability of success and not
+    financial performance. Unknown/unmapped stages conservatively remain at 0%.
+    """
+    s = str(stage or "").upper()
+    if "PERFORMANCE" in s and ("COMPLETED" in s or "AUTHORIZED" in s or "VALIDATED" in s):
+        return 100, CANDIDATE_DEVELOPMENT_MILESTONES[5]
+    if "INDEPENDENT" in s and ("REPRO" in s or "REPRODUCTION" in s):
+        return 83, CANDIDATE_DEVELOPMENT_MILESTONES[4]
+    if "PIT" in s and ("COMPLETED" in s or "VALIDATED" in s):
+        return 67, CANDIDATE_DEVELOPMENT_MILESTONES[3]
+    if "COVERAGE" in s and ("COMPLETED" in s or "VALIDATED" in s):
+        return 50, CANDIDATE_DEVELOPMENT_MILESTONES[2]
+    if "SOURCE_FEASIBILITY" in s and ("COMPLETED" in s or "VALIDATED" in s):
+        return 33, CANDIDATE_DEVELOPMENT_MILESTONES[1]
+    if "DESIGN" in s or "ROBUSTNESS" in s:
+        return 17, CANDIDATE_DEVELOPMENT_MILESTONES[0]
+    return 0, CANDIDATE_DEVELOPMENT_MILESTONES[0]
+
+
+def candidate_milestone_progress(candidate: str, runs: list[dict[str, Any]]) -> tuple[int, str]:
+    """Return execution progress for the candidate's active workflow.
+
+    The percentage is successful completed workflow jobs divided by the jobs in
+    the active workflow. No active workflow means the next milestone is not running.
+    """
+    matching = []
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") not in {"queued", "in_progress", "waiting", "pending"}:
+            continue
+        haystack = " ".join(str(run.get(k) or "") for k in ("name", "display_title", "workflow_name"))
+        if candidate.lower() in haystack.lower():
+            matching.append(run)
+    if not matching:
+        return 0, "not started in visible Actions workflow"
+    matching.sort(key=lambda x: str(x.get("created_at") or ""), reverse=True)
+    run = matching[0]
+    jobs = jobs_for_run(int(run["id"])) if run.get("id") else []
+    if not jobs:
+        return (50 if run.get("status") == "in_progress" else 0), str(run.get("name") or "active workflow")
+    relevant = [j for j in jobs if str(j.get("name") or "").lower() not in {"set up job", "complete job"}]
+    if not relevant:
+        relevant = jobs
+    completed = sum(1 for j in relevant if j.get("status") == "completed" and j.get("conclusion") == "success")
+    return int(round(100 * completed / len(relevant))), str(run.get("name") or "active workflow")
+
+
 def candidate_pipeline(
     top4: list[dict[str, Any]],
     work: list[dict[str, Any]],
     workflow_benchmarks: dict[str, dict[str, int | str]],
     job_benchmarks: dict[str, dict[str, int | str]],
+    runs: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
+    runs = runs or []
     result = []
     active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in ("Q104:I19", "Q218", "Q219", "Q220", "Q221")}
     for item in work:
@@ -410,18 +471,18 @@ def candidate_pipeline(
         row = next((x for x in top4 if str(x.get("code")) == candidate), None)
         if not row:
             continue
-        benchmark = job_benchmarks.get(candidate) if candidate != "Q218" else workflow_benchmarks.get("Q218 Event Pair PIT Gate")
+        overall, overall_basis = candidate_overall_progress(str(row.get("state") or ""))
+        next_progress, milestone_basis = candidate_milestone_progress(candidate, runs)
         result.append({
             "code": candidate,
             "stage": str(row.get("state") or "not recorded"),
             "next_gate": str(row.get("next_gate") or "not recorded"),
-            "issue_number": row.get("issue_number"),
             "active": bool(active_by_candidate[candidate]),
             "active_jobs": len(active_by_candidate[candidate]),
-            "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
-            "duration_p90_seconds": int(benchmark["p90_seconds"]) if benchmark else None,
-            "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
-            "duration_source": str(benchmark["source"]) if benchmark else "no verified duration history",
+            "overall_progress_percent": overall,
+            "overall_progress_basis": overall_basis,
+            "next_milestone_progress_percent": next_progress,
+            "next_milestone_progress_basis": milestone_basis,
             "performance_authorization_allowed": bool(row.get("performance_authorization_allowed", False)),
         })
     return result
