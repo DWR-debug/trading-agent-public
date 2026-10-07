@@ -209,7 +209,7 @@ def job_duration_benchmarks(
                 continue
             duration = max(0, int((finished - started).total_seconds()))
             job_name = str(job.get("name") or "")
-            for candidate in ("Q104:I19", "Q218", "Q219", "Q220", "Q221"):
+            for candidate in FOCUS_CANDIDATES:
                 if candidate in job_name:
                     samples.setdefault(candidate, []).append(duration)
                     break
@@ -375,7 +375,7 @@ def enrich_work_durations(
     out = []
     for item in work:
         workflow = str(item.get("task") or "")
-        candidate = next((c for c in ("Q218", "Q219", "Q220", "Q221") if c in f"{workflow} {item.get('job', '')}"), None)
+        candidate = next((c for c in FOCUS_CANDIDATES if c in f"{workflow} {item.get('job', '')}"), None)
         benchmark = job_benchmarks.get(candidate) if workflow == "Top-4 Candidate Research Capacity" else workflow_benchmarks.get(workflow)
         entry = dict(item)
         expected = int(benchmark["p50_seconds"]) if benchmark and benchmark.get("p50_seconds") else None
@@ -391,14 +391,78 @@ def enrich_work_durations(
     return out
 
 
+CANDIDATE_DEVELOPMENT_MILESTONES = (
+    "DESIGN / ROBUSTNESS",
+    "SOURCE FEASIBILITY",
+    "COVERAGE",
+    "PIT",
+    "INDEPENDENT REPRODUCTION",
+    "PERFORMANCE VALIDATION",
+)
+
+FOCUS_CANDIDATES = ("Q104:I19", "Q218")
+
+
+def candidate_overall_progress(stage: str) -> tuple[int, str]:
+    """Map the recorded candidate stage to a deterministic lifecycle percentage.
+
+    This is a development-completion index, not a probability of success and not
+    financial performance. Unknown/unmapped stages conservatively remain at 0%.
+    """
+    s = str(stage or "").upper()
+    if ("PERFORMANCE" in s and "NO_PERFORMANCE" not in s and "NO_ARM" not in s
+            and ("COMPLETED" in s or "AUTHORIZED" in s or "VALIDATED" in s)):
+        return 100, CANDIDATE_DEVELOPMENT_MILESTONES[5]
+    if "INDEPENDENT" in s and ("REPRO" in s or "REPRODUCTION" in s):
+        return 83, CANDIDATE_DEVELOPMENT_MILESTONES[4]
+    if "PIT" in s and ("COMPLETED" in s or "VALIDATED" in s):
+        return 67, CANDIDATE_DEVELOPMENT_MILESTONES[3]
+    if "COVERAGE" in s and ("COMPLETED" in s or "VALIDATED" in s):
+        return 50, CANDIDATE_DEVELOPMENT_MILESTONES[2]
+    if "SOURCE_FEASIBILITY" in s and ("COMPLETED" in s or "VALIDATED" in s):
+        return 33, CANDIDATE_DEVELOPMENT_MILESTONES[1]
+    if "DESIGN" in s or "ROBUSTNESS" in s:
+        return 17, CANDIDATE_DEVELOPMENT_MILESTONES[0]
+    return 0, CANDIDATE_DEVELOPMENT_MILESTONES[0]
+
+
+def candidate_milestone_progress(candidate: str, runs: list[dict[str, Any]]) -> tuple[int, str]:
+    """Return execution progress for the candidate's active workflow.
+
+    The percentage is successful completed workflow jobs divided by the jobs in
+    the active workflow. No active workflow means the next milestone is not running.
+    """
+    matching = []
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") not in {"queued", "in_progress", "waiting", "pending"}:
+            continue
+        haystack = " ".join(str(run.get(k) or "") for k in ("name", "display_title", "workflow_name"))
+        if candidate.lower() in haystack.lower():
+            matching.append(run)
+    if not matching:
+        return 0, "not started in visible Actions workflow"
+    matching.sort(key=lambda x: str(x.get("created_at") or ""), reverse=True)
+    run = matching[0]
+    jobs = jobs_for_run(int(run["id"])) if run.get("id") else []
+    if not jobs:
+        return (50 if run.get("status") == "in_progress" else 0), str(run.get("name") or "active workflow")
+    relevant = [j for j in jobs if str(j.get("name") or "").lower() not in {"set up job", "complete job"}]
+    if not relevant:
+        relevant = jobs
+    completed = sum(1 for j in relevant if j.get("status") == "completed" and j.get("conclusion") == "success")
+    return int(round(100 * completed / len(relevant))), str(run.get("name") or "active workflow")
+
+
 def candidate_pipeline(
     top4: list[dict[str, Any]],
     work: list[dict[str, Any]],
     workflow_benchmarks: dict[str, dict[str, int | str]],
     job_benchmarks: dict[str, dict[str, int | str]],
+    runs: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
+    runs = runs or []
     result = []
-    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in ("Q104:I19", "Q218", "Q219", "Q220", "Q221")}
+    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in FOCUS_CANDIDATES}
     for item in work:
         if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
             continue
@@ -406,22 +470,22 @@ def candidate_pipeline(
         for candidate in active_by_candidate:
             if candidate in text_value:
                 active_by_candidate[candidate].append(item)
-    for candidate in ("Q104:I19", "Q218", "Q219", "Q220", "Q221"):
+    for candidate in FOCUS_CANDIDATES:
         row = next((x for x in top4 if str(x.get("code")) == candidate), None)
         if not row:
             continue
-        benchmark = job_benchmarks.get(candidate) if candidate != "Q218" else workflow_benchmarks.get("Q218 Event Pair PIT Gate")
+        overall, overall_basis = candidate_overall_progress(str(row.get("state") or ""))
+        next_progress, milestone_basis = candidate_milestone_progress(candidate, runs)
         result.append({
             "code": candidate,
             "stage": str(row.get("state") or "not recorded"),
             "next_gate": str(row.get("next_gate") or "not recorded"),
-            "issue_number": row.get("issue_number"),
             "active": bool(active_by_candidate[candidate]),
             "active_jobs": len(active_by_candidate[candidate]),
-            "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
-            "duration_p90_seconds": int(benchmark["p90_seconds"]) if benchmark else None,
-            "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
-            "duration_source": str(benchmark["source"]) if benchmark else "no verified duration history",
+            "overall_progress_percent": overall,
+            "overall_progress_basis": overall_basis,
+            "next_milestone_progress_percent": next_progress,
+            "next_milestone_progress_basis": milestone_basis,
             "performance_authorization_allowed": bool(row.get("performance_authorization_allowed", False)),
         })
     return result
@@ -493,7 +557,14 @@ def expanded_candidate_board(
 
 
 def capacity_state(resource: dict[str, Any], runner: dict[str, Any] | None, assignments: list[dict[str, Any]]) -> str:
-    if assignments or (runner and runner.get("busy")):
+    """Report research occupancy only; runner busy-state is exposed separately.
+
+    A busy self-hosted runner can be executing non-research/platform work or a
+    research job that the current work snapshot did not classify. It must never
+    inflate the visible research-job count or turn a zero-job resource into
+    "ARBEITET".
+    """
+    if assignments:
         return "operating"
     if runner and str(runner.get("status")).lower() == "online":
         return "available"
@@ -514,7 +585,11 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             if str(w.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"}
         ]
         runner = runner_by_name.get(resource["configured_runner"])
-        state = capacity_state(resource, runner, assignments)
+        state = capacity_state(resource, runner, research_assignments)
+        runner_busy = bool(runner and runner.get("busy"))
+        capacity_slots = max(1, int(resource.get("research_capacity_slots", 1) or 1))
+        physical_in_use = 1 if resource.get("type") == "physical" and runner_busy else 0
+        research_slots_in_use = min(capacity_slots, max(len(research_assignments), physical_in_use))
         if state == "operating":
             live_status = "operating"
         elif state == "available":
@@ -526,12 +601,14 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "capacity_state": state,
             "live_status": live_status,
             "busy": state == "operating",
+            "runner_busy": runner_busy,
+            "runner_status": runner.get("status") if runner else None,
             "labels": runner.get("labels", []) if runner else [],
             "current_assignments": len(research_assignments),
             "total_active_assignments": len(assignments),
-            "research_capacity_slots": max(1, int(resource.get("research_capacity_slots", 1) or 1)),
-            "research_slots_in_use": min(len(research_assignments), max(1, int(resource.get("research_capacity_slots", 1) or 1))),
-            "research_slots_free": max(0, max(1, int(resource.get("research_capacity_slots", 1) or 1)) - len(research_assignments)),
+            "research_capacity_slots": capacity_slots,
+            "research_slots_in_use": research_slots_in_use,
+            "research_slots_free": max(0, capacity_slots - research_slots_in_use),
             "current_tasks": [w.get("task") for w in assignments[:4]],
         })
     return out
@@ -540,36 +617,24 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
 def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Expose a real bounded queue of future next-gate research, independent of live slot occupancy."""
     order = [
-        ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "windows"),
-        ("Q219", ".github/workflows/top4-candidate-slot-research.yml", "ubuntu_x64"),
-        ("Q220", ".github/workflows/top4-candidate-slot-research.yml", "ubuntu_arm64"),
-        ("Q221", ".github/workflows/top4-candidate-slot-research.yml", "windows"),
-        ("Q224", ".github/workflows/q224-edgar-modern-source-gate.yml", None),
-        ("Q229", ".github/workflows/q229-historical-release-census.yml", None),
-        ("Q230", ".github/workflows/q230-windows-trace-connectivity.yml", None),
-        ("Q231", ".github/workflows/q231-sec-foia-source-gate.yml", None),
-        ("Q205", ".github/workflows/q205-nlrb-source-feasibility.yml", None),
-        ("Q198", ".github/workflows/q198-pit-clock-census.yml", None),
-        ("Q199", ".github/workflows/q199-q201-source-feasibility.yml", None),
-        ("Q202", ".github/workflows/q202-q204-information-timing-feasibility.yml", None),
+        ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A"),
+        ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B"),
     ]
     by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
     backlog = []
     for rank, (code, workflow, resource) in enumerate(order, start=1):
         item = by_code.get(code)
-        if not item:
-            continue
         backlog.append({
             "queue_rank": rank,
             "candidate": code,
-            "lane": str(item.get("lane") or "FRONTIER DISCOVERY"),
-            "next_gate": str(item.get("next_gate") or "next receipt-defined research gate"),
+            "lane": str(item.get("lane") or ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY")) if item else ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY"),
+            "next_gate": str(item.get("next_gate") or "next receipt-defined research gate") if item else "next receipt-defined research gate",
             "execution_workflow": workflow,
             "resource_hint": resource,
             "planned_status": "READY_NEXT_GATE",
             "non_authorizing": True,
         })
-    return backlog
+    return backlog[:2]
 
 
 def planned_capacity_plan(
@@ -598,11 +663,66 @@ def planned_capacity_plan(
             "task": "historical SEC 13F archive/security identity census and acceptance-time closure",
             "preferred": ["Windows self-hosted A"],
             "readiness": "READY_HISTORICAL_13F_CENSUS",
-            "basis": "the dedicated three-shard historical 13F census workflow is present and its next gate is receipt-defined; it internally uses Windows plus hosted x64/ARM64 shards",
+            "basis": "dedicated receipt-defined historical 13F completeness gate; the census itself fans out over its declared Windows/hosted shards",
             "dispatchable": True,
             "exclusive_dispatch": True,
             "resource_leases": ["Windows self-hosted A", "GitHub-hosted Ubuntu x64", "GitHub-hosted ARM64"],
             "execution_workflow": ".github/workflows/q104-i19-13f-historical-identity-census.yml",
+        },
+        {
+            "plan_id": "Q218-FOCUSED-ADVERSARIAL",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "neuer unabhängiger adversarial Review der fokussierten Q218 Source/PIT-Annahmen",
+            "preferred": ["Free AI pool"],
+            "readiness": "READY_AI_FABRIC",
+            "basis": "focused-wave methods review; neuer Task-Kontext verhindert die Wiederholung des bereits abgeschlossenen R5-Reviews",
+            "allow_parallel_with_candidate": True,
+            "dispatchable": True,
+            "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
+            "execution_workflow_inputs": {
+                "task_id": "AI-2026-10-07-Q218-FOCUSED-ADVERSARIAL",
+                "run_secondary_provider": "false",
+                "use_litellm_transport": "false",
+            },
+        },
+        {
+            "plan_id": "Q218-SOURCE",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "historische SEC Multi-Channel-Quelle und Acceptance-Time/PIT",
+            "preferred": ["Windows self-hosted B"],
+            "readiness": "READY_SOURCE_PIT",
+            "basis": "Q218 source gate is an explicit receipt-defined part of the current Source/PIT milestone",
+            "dispatchable": True,
+            "allow_parallel_with_candidate": True,
+            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+            "execution_workflow_inputs": {"focus_wave": True, "gate": "source"},
+        },
+        {
+            "plan_id": "Q218-EVENT-PAIR",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "historische 10-K → 8-K Event-Pairing und Amendment-Lineage",
+            "preferred": ["Windows self-hosted C"],
+            "readiness": "READY_SOURCE_PIT",
+            "basis": "Q218 event-pair gate is an independent receipt-defined part of the same Source/PIT milestone",
+            "dispatchable": True,
+            "allow_parallel_with_candidate": True,
+            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+            "execution_workflow_inputs": {"focus_wave": True, "gate": "event_pair"},
+        },
+        {
+            "plan_id": "Q218-INDEPENDENT-ARCH",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "independent architecture reproduction of the Q218 source/event-pair contract",
+            "preferred": ["GitHub-hosted ARM64"],
+            "readiness": "BLOCKED_UNTIL_Q218_SOURCE_PIT_RECEIPTS",
+            "basis": "phase ordering: independent reproduction opens only after the focused source/PIT gates produce the required receipts",
+            "dispatchable": False,
+            "allow_parallel_with_candidate": False,
+            "execution_workflow": None,
         },
         {
             "plan_id": "Q104-I19-COMPILER",
@@ -611,7 +731,7 @@ def planned_capacity_plan(
             "task": "concept-specific PIT compiler after 13F acceptance-time join",
             "preferred": ["Windows self-hosted A", "GitHub-hosted Ubuntu x64"],
             "readiness": "BLOCKED_UNTIL_HISTORICAL_COMPILER_INPUTS",
-            "basis": "historical 13F receipt remains the explicit compiler prerequisite",
+            "basis": "historical 13F receipt is the explicit compiler prerequisite",
             "dispatchable": False,
             "execution_workflow": None,
         },
@@ -622,112 +742,9 @@ def planned_capacity_plan(
             "task": "independent reproduction of compiler/PIT result",
             "preferred": ["Windows self-hosted C", "GitHub-hosted ARM64"],
             "readiness": "BLOCKED_UNTIL_COMPILER_RECEIPT",
-            "basis": "next gate explicitly requires independent reproduction",
+            "basis": "independent reproduction remains downstream of the frozen compiler input",
             "dispatchable": False,
             "execution_workflow": None,
-        },
-        {
-            "plan_id": "Q218-PIT",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-            "candidate": "Q218",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical mandatory/voluntary 10-K → 8-K pairing and PIT lineage",
-            "preferred": ["Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
-            "readiness": "READY_SOURCE_PIT",
-            "basis": "current Q218 source/PIT workpack",
-        },
-        {
-            "plan_id": "Q219-PIT",
-            "candidate": "Q219",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "post-filing options-response information-processing PIT join",
-            "preferred": ["GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Windows self-hosted B"],
-            "readiness": "READY_POST_FILING_PIT",
-            "basis": "Q129 source/PIT fingerprint + fixed post-filing event-time join contract",
-            "dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-        },
-        {
-            "plan_id": "Q220-PIT",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-            "candidate": "Q220",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "deterministic narrative/XBRL presentation mapping and PIT",
-            "preferred": ["Windows self-hosted B", "GitHub-hosted ARM64"],
-            "readiness": "READY_SOURCE_SCHEMA",
-            "basis": "SEC FSN schema gate + XBRL concept-freeze audit",
-        },
-        {
-            "plan_id": "Q221-PIT",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-            "candidate": "Q221",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical USAspending public boundary and issuer/entity mapping",
-            "preferred": ["GitHub-hosted ARM64","GitHub-hosted Ubuntu x64","Windows self-hosted B"],
-            "readiness": "READY_SOURCE_CLOCK",
-            "basis": "USAspending public-clock contract ready; applicability/entity mapping open",
-        },
-        {
-            "plan_id": "Q224-EDGAR-LOG",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/q224-edgar-modern-source-gate.yml",
-            "candidate": "Q224",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "modern EDGAR access-log archive census and request→filing decoding",
-            "preferred": ["GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Windows self-hosted B"],
-            "readiness": "READY_DISCOVERY",
-            "basis": "official EDGAR log channel; archive/schema/identity gate remains",
-        },
-        {
-            "plan_id": "Q228-CORRESPONDENCE",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/q228-sec-correspondence-source-gate.yml",
-            "candidate": "Q228",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical SEC correspondence census, release clock and review identity",
-            "preferred": ["GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Windows self-hosted B"],
-            "readiness": "READY_DISCOVERY",
-            "basis": "SEC correspondence source gate; selection mechanism remains a control",
-        },
-        {
-            "plan_id": "Q231-FOIA",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/q231-sec-foia-source-gate.yml",
-            "candidate": "Q231",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical SEC FOIA publication clock and requester/issuer mapping",
-            "preferred": ["GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Windows self-hosted B"],
-            "readiness": "READY_DISCOVERY",
-            "basis": "official monthly FOIA logs; exact publication clock still open",
-        },
-        {
-            "plan_id": "Q220-ADVERSARIAL",
-            "candidate": "Q220",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "bounded adversarial contract review of Q220 source/PIT assumptions",
-            "preferred": ["Free AI pool"],
-            "readiness": "READY_AI_FABRIC",
-            "basis": "independent adversarial review; Q218 provider attempt already failed and is not repeated merely for utilization",
-            "allow_parallel_with_candidate": True,
-            "dispatchable": True,
-            "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
-            "execution_workflow_inputs": {"task_id": "AI-2026-10-06-Q220-TOP4-ADVERSARIAL", "run_secondary_provider": "false", "use_litellm_transport": "false"},
-        },
-        {
-            "plan_id": "Q221-ADVERSARIAL",
-            "candidate": "Q221",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "bounded adversarial contract review of Q221 public-clock/entity-map assumptions",
-            "preferred": ["Free AI pool"],
-            "readiness": "READY_AI_FABRIC",
-            "basis": "independent adversarial review; AI output is non-scientific and non-authorizing",
-            "allow_parallel_with_candidate": True,
-            "dispatchable": True,
-            "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
-            "execution_workflow_inputs": {"task_id": "AI-2026-10-06-Q221-TOP4-ADVERSARIAL", "run_secondary_provider": "false", "use_litellm_transport": "false"},
         },
     ]
 
@@ -739,8 +756,9 @@ def planned_capacity_plan(
             return -50
         return 0
 
-    # Each resource receives at most one next action. Existing active work blocks
-    # that candidate globally to prevent dashboard planning from recommending duplicates.
+    # Each resource receives at most one next-action preview when a real
+    # non-duplicate item is available. Current occupancy does not suppress the
+    # preview; dispatch remains gated by actual free capacity.
     assigned_candidates: set[str] = set()
     plans: dict[str, list[dict[str, Any]]] = {str(r["name"]): [] for r in resources}
 
@@ -766,12 +784,9 @@ def planned_capacity_plan(
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
             if resource is None:
                 continue
-            capacity_slots = max(1, int(resource.get("research_capacity_slots", 1) or 1))
-            if len(plans.get(resource_name, [])) >= capacity_slots:
-                continue
-            current_assignments = int(resource.get("current_assignments", 0) or 0)
-            planned_for_resource = len(plans.get(resource_name, []))
-            if current_assignments + planned_for_resource >= capacity_slots:
+            # Keep a one-step lookahead independently of current occupancy. The
+            # dispatcher starts this planned item only after actual free capacity.
+            if len(plans.get(resource_name, [])) >= 1:
                 continue
             benchmark = job_benchmarks.get(candidate)
             plans[resource_name].append({
@@ -833,6 +848,39 @@ def planned_capacity_plan(
         })
     return rows
 
+
+
+def s10_support_snapshot(work: list[dict[str, Any]], os_state: dict[str, Any]) -> dict[str, Any]:
+    """Expose S10 as bounded mechanical/support capacity, never candidate authority."""
+    routing = os_state.get("resource_routing", {}).get("s10", {})
+    status_path = ROOT / "ops" / "s10_runtime_status.json"
+    try:
+        status = json.loads(status_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        status = {}
+    assignments = [
+        w for w in work
+        if "S10" in str(w.get("worker") or "") or "S10" in str(w.get("resource") or "")
+    ]
+    return {
+        "resource_id": "S10",
+        "runner_name": str(status.get("runner_name") or routing.get("identity") or "S10-TERMUX"),
+        "architecture": str(status.get("runner_arch") or "ARM64"),
+        "runtime": str(routing.get("runtime") or "Termux"),
+        "status": str(status.get("status") or status.get("receipt_status") or routing.get("status") or "UNVERIFIED"),
+        "eligible": bool(status.get("eligible", False)) and str(status.get("status") or status.get("receipt_status") or "") == "S10_UTILITY_ACCEPTED",
+        "receipt_status": str(status.get("receipt_status") or status.get("status") or ""),
+        "latest_workflow_run_id": status.get("workflow_run_id"),
+        "workflow_updated_at": str(status.get("workflow_run_updated_at") or status.get("generated_at_utc") or ""),
+        "role": str(routing.get("research_role") or "bounded support only"),
+        "mode": str(routing.get("default_mode") or routing.get("runner_mode") or "adaptive_mechanical_research_qa"),
+        "task_rotation": list(routing.get("task_rotation") or []),
+        "current_assignments": len(assignments),
+        "scientific_evidence": False,
+        "performance_authorization": False,
+        "paper_only": True,
+        "note": "S10 liefert ausschließlich mechanische/supportive QA; keine wissenschaftliche Evidenz und keine Autorisierung.",
+    }
 
 
 def android_fleet_snapshot(runners: list[dict[str, Any]], work: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -1043,6 +1091,7 @@ def main() -> None:
     )
     runners = runner_snapshot()
     ai = ai_provider_state()
+    s10_support = s10_support_snapshot(work, os_state)
     milestones_12h = milestone_history_12h()
 
     configured_resources = [
@@ -1053,7 +1102,7 @@ def main() -> None:
         {"name": "GitHub-hosted ARM64", "type": "cloud", "research_capacity_slots": 2, "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
         {"name": "Free AI pool", "type": "cloud", "research_capacity_slots": 1, "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
     ]
-    priority_codes = {"Q104:I19","Q218","Q219","Q220","Q221"}
+    priority_codes = set(FOCUS_CANDIDATES)
     top4 = [x for x in state_board if x.get("code") in priority_codes]
     q104_parent = next((x for x in state_board if str(x.get("code")) == "104"), None)
     if q104_parent:
@@ -1087,10 +1136,11 @@ def main() -> None:
         "scientific_boundary": os_state.get("permanent_safety", {}),
         "dashboard_summary": {
             "active_work_items": len(work),
-            "active_research_lanes": len(work),
+            # A lane is a distinct resource currently occupied by research, not a raw job count.
+            "active_research_lanes": len({str(x.get("resource") or "") for x in work if str(x.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"} and x.get("resource")}),
             "active_research_lanes_target": 6,
-            "active_research_lanes_target_met": len(work) >= 6,
-            "active_research_lanes_shortfall": max(0, 6 - len(work)),
+            "active_research_lanes_target_met": len({str(x.get("resource") or "") for x in work if str(x.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"} and x.get("resource")}) >= 6,
+            "active_research_lanes_shortfall": max(0, 6 - len({str(x.get("resource") or "") for x in work if str(x.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"} and x.get("resource")})),
             "configured_resources": len(configured_resources),
             "runner_api_visible": len(runners) if runners else None,
             "busy_runners": sum(1 for r in runners if r.get("busy") is True) if runners else None,
@@ -1107,7 +1157,8 @@ def main() -> None:
             "available_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "available"),
             "planned_capacity_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if item.get("scheduled")),
             "planned_research_queue_items": len(planned_research_queue),
-            "planned_research_queue_target": 6,
+            "planned_research_queue_target": 2,
+            "candidate_focus_lock": list(FOCUS_CANDIDATES),
             "blocked_planned_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if not item.get("scheduled")),
             "unallocated_routable_items": sum(1 for row in planned_capacity if row.get("capacity_state") == "available" and not row.get("planned_assignments")),
             "planned_capacity_note": "bounded plan; only entries marked dispatchable have an executable workflow route. This plan never creates scientific authorization.",
@@ -1119,12 +1170,13 @@ def main() -> None:
         "planned_capacity": planned_capacity,
         "planned_research_queue": planned_research_queue,
         "milestone_history_12h": milestones_12h,
-        "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks),
+        "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks, recent_runs),
         "duration_benchmarks": workflow_benchmarks,
         "job_duration_benchmarks": job_benchmarks,
         "workload_by_resource": {name: sum(1 for w in work if w.get("resource") == name) for name in sorted({w.get("resource") for w in work if w.get("resource")})},
         "workload_by_lane": {lane: sum(1 for w in work if w.get("lane") == lane) for lane in sorted({w.get("lane") for w in work if w.get("lane")})},
         "ai_fabric": ai,
+        "s10_support": s10_support,
         "current_research": {
             "latest_formal_result": latest_result,
             "highlights": recent_research_highlights(status_text),

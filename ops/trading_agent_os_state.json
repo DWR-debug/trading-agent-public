@@ -163,10 +163,10 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Q218/Q220/Q221/Q219 top-candidate source/PIT development; in parallel close Q121-R6, Q198/Q197/Q199/Q201, Q186 and Q187-Q192 defined gates. All remain discovery/source/PIT only.",
+    "active_next": "Q104:I19 formal historical 13F closure and Q218 SEC multi-channel/PIT development only; no other candidate is automatically dispatched during the focused wave.",
     "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
     "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
-    "discovery_frontier": "Q218 mandatory-voluntary disclosure semantic wedge; Q220 narrative-structured XBRL representation gap; Q221 government R&D to procurement option-value state; Q219 filing-change/options-response processing wedge; plus existing Q211-Q217 frontier. Use source/PIT/structure-first cheap falsification.",
+    "discovery_frontier": "Q218 mandatory-voluntary disclosure semantic wedge; source/PIT/structure-first cheap falsification only.",
     "literature_discovery": "PERMANENT: daily/weekly assistant research plus 6-hour free public-metadata scout; prioritize genuinely orthogonal mechanisms and preserve negative evidence. Current top-candidate wave Q218-Q221 is active design-only.",
     "current_research_frontier": [
       "Q211",
@@ -355,9 +355,7 @@
       "name": "FRONTIER_DISCOVERY",
       "slot": "Windows self-hosted B",
       "focus": [
-        "Q171-Q178",
-        "Q126-Q132",
-        "public-source/PIT frontier"
+        "Q218"
       ],
       "performance_authorization_from_lane": false
     },
@@ -475,7 +473,7 @@
     "workflow": ".github/workflows/capacity-saturation-rolling-waves.yml",
     "lease": "research/run_requests/rolling_capacity_window_2026-10-05.json",
     "cadence_utc": "*/10 * * * *",
-    "objective": "Ideal useful utilization of every available independent lane whenever real bounded backlog exists; no artificial activity.",
+    "objective": "Ideal useful utilization of every available independent lane for Q104:I19 and Q218 whenever receipt-defined bounded backlog exists; no artificial activity.",
     "current_window": {
       "window_id": "TA-28M-2026-10-05-1958Z",
       "start_utc": "2026-10-05T19:58:00Z",
@@ -490,11 +488,11 @@
       "W4 refresh literature discovery and consolidate the next logical state"
     ],
     "existing_continuous_capacity": [
-      "Permanent Windows research loop every 10 minutes",
-      "Hosted deterministic frontier every 10 minutes",
-      "Runner-C opportunistic capacity pulse every 20 minutes",
-      "S10 bounded mechanical QA every 2 hours and relevant pushes",
-      "Free AI fabric every 6 hours when entitlement/auth passes"
+      "Focused candidate fast dispatcher every 5 minutes",
+      "Q104:I19 historical 13F census and receipt-defined downstream chaining",
+      "Q218 source and event-pair gates on independent Windows capacity",
+      "Free AI bounded Q218 adversarial review when the focused task context is not already completed",
+      "S10 bounded mechanical research/governance QA support only"
     ],
     "rules": {
       "no_duplicate_running_work": true,
@@ -515,27 +513,21 @@
   "top_candidate_capacity_overlay": {
     "effective_date_utc": "2026-10-06",
     "status": "ACTIVE",
-    "purpose": "Prioritize the four highest-information-gain candidate-development tracks without changing scientific authority or dashboard display policy.",
+    "purpose": "Focused two-candidate wave: Q104:I19 formal readiness plus Q218 frontier source/PIT development.",
     "windows_A": {
       "role": "FORMAL_READINESS / local_reproduction",
       "priority": [
-        "Q104 I19",
-        "Q104 I20/I22",
-        "Q119/Q120/Q122",
-        "Q198/Q197/Q199/Q201 next gates"
+        "Q104 I19"
       ],
-      "new_overlay": "top-candidate inheritance/PIT consistency audit for Q218-Q221",
+      "new_overlay": "Q104:I19 historical 13F completeness -> PIT compiler -> independent reproduction",
       "scientific_authority": false
     },
     "windows_B": {
       "role": "FRONTIER_DISCOVERY / data_qa",
       "priority": [
-        "Q218",
-        "Q219",
-        "Q220",
-        "Q221"
+        "Q218"
       ],
-      "new_overlay": "deterministic Q218/Q219/Q220/Q221 source-PIT/structure plus bounded Q104:I19 handoff support",
+      "new_overlay": "Q218 SEC multi-channel source/PIT and deterministic event-pair lineage",
       "scientific_authority": false,
       "candidate_gate_compiler": "automation/q218_q221_candidate_gate_compiler.py"
     },
@@ -544,7 +536,7 @@
       "status": "explicitly_reactivated",
       "scientific_authority": false
     },
-    "rule": "When a bounded top-candidate gate is ready and no duplicate is active, route it immediately; reserve Q224/Q228/Q231 remains parallel discovery only; never create artificial filler.",
+    "rule": "Automatic candidate dispatch is limited to Q104:I19 and Q218 during the focused wave. Other candidates remain paused for automatic execution; no artificial filler.",
     "safety": {
       "performance": false,
       "holdout_selection": false,
@@ -556,14 +548,12 @@
     "last_refreshed_utc": "2026-10-05T19:22:11.737Z",
     "active_shortlist": [
       "Q104:I19",
-      "Q218",
-      "Q220",
-      "Q221"
+      "Q218"
     ],
     "discovery_reserve": [
-      "Q224",
-      "Q228",
-      "Q231"
+      "Q219",
+      "Q220",
+      "Q221"
     ]
   },
   "knowledge_relation_plane": {

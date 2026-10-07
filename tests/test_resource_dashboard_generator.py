@@ -57,10 +57,61 @@ def test_dashboard_capacity_state_is_explicit():
 
     physical = {"type":"physical"}
     cloud = {"type":"cloud"}
-    assert capacity_state(physical, {"status":"online","busy":True}, []) == "operating"
+    assert capacity_state(physical, {"status":"online","busy":True}, []) == "available"
+    assert capacity_state(physical, {"status":"online","busy":True}, [{"lane":"FRONTIER DISCOVERY"}]) == "operating"
     assert capacity_state(physical, {"status":"online","busy":False}, []) == "available"
     assert capacity_state(physical, None, []) == "unknown"
     assert capacity_state(cloud, None, []) == "available"
+
+
+def test_dashboard_runner_busy_does_not_inflate_research_work():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    enriched = enrich_resources(
+        [resource],
+        [{"name": "runner-a", "status": "online", "busy": True, "labels": []}],
+        [],
+    )[0]
+    assert enriched["capacity_state"] == "available"
+    assert enriched["current_assignments"] == 0
+    assert enriched["runner_busy"] is True
+    assert enriched["research_slots_in_use"] == 1
+    assert enriched["research_slots_free"] == 0
+
+
+def test_planned_capacity_keeps_one_step_lookahead_while_resource_is_active():
+    from automation.generate_resource_dashboard import planned_capacity_plan
+
+    resources = [
+        {"name":"Windows self-hosted A","capacity_state":"operating","current_assignments":1},
+        {"name":"Windows self-hosted B","capacity_state":"available","current_assignments":0},
+        {"name":"Windows self-hosted C","capacity_state":"available","current_assignments":0},
+        {"name":"GitHub-hosted Ubuntu x64","capacity_state":"available","current_assignments":0},
+        {"name":"GitHub-hosted ARM64","capacity_state":"available","current_assignments":0},
+        {"name":"Free AI pool","capacity_state":"available","current_assignments":0},
+    ]
+    work = [{"candidate":"Q104:I19","task":"Q104 I19","job":"historical census","resource":"Windows self-hosted A","lane":"FORMAL READINESS"}]
+    top4 = [{"code": c, "next_gate":"gate"} for c in ("Q218","Q219","Q220","Q221")]
+    plan = planned_capacity_plan(resources, work, top4, {}, {})
+    by_resource = {x["resource"]: x for x in plan}
+    assert by_resource["Windows self-hosted A"]["current_assignments"] == 1
+    assert by_resource["Windows self-hosted A"]["planned_count"] == 1
+    assert by_resource["Windows self-hosted A"]["planned_assignments"][0]["scheduled"] is True
+
+
+def test_planned_research_backlog_is_locked_to_focus_candidates():
+    from automation.generate_resource_dashboard import planned_research_backlog
+    board = [{"code": code, "lane":"FRONTIER DISCOVERY", "next_gate":"gate"} for code in ("Q104:I19","Q218","Q219","Q220","Q221","Q224","Q229")]
+    queue = planned_research_backlog(board)
+    assert len(queue) == 2
+    assert [x["candidate"] for x in queue] == ["Q104:I19","Q218"]
 
 
 def test_dashboard_filters_platform_work_from_research_capacity():
@@ -105,11 +156,30 @@ def test_dashboard_exposes_bounded_hosted_research_slots():
     assert '"research_capacity_slots_free"' in generator
 
 
-def test_dashboard_tracks_q219_in_top4_candidate_capacity():
+def test_candidate_progress_percentages_are_deterministic():
+    from automation.generate_resource_dashboard import candidate_overall_progress
+    assert candidate_overall_progress("DESIGN_ONLY_ACTIVE")[0] == 17
+    assert candidate_overall_progress("SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED")[0] == 33
+    assert candidate_overall_progress("PIT_COMPLETED_NO_PERFORMANCE")[0] == 67
+    assert candidate_overall_progress("unknown_state")[0] == 0
+
+
+def test_candidate_milestone_progress_is_zero_without_active_workflow():
+    from automation.generate_resource_dashboard import candidate_milestone_progress
+    progress, basis = candidate_milestone_progress("Q218", [])
+    assert progress == 0
+    assert "not started" in basis
+
+
+def test_dashboard_pipeline_is_locked_to_focus_candidates():
     from automation.generate_resource_dashboard import candidate_pipeline
-    top4 = [{"code": "Q219", "state": "DESIGN_ONLY_ACTIVE"}]
+    top4 = [
+        {"code":"Q104:I19","state":"SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED"},
+        {"code":"Q218","state":"DESIGN_ONLY_ACTIVE"},
+        {"code":"Q219","state":"DESIGN_ONLY_ACTIVE"},
+    ]
     rows = candidate_pipeline(top4, [], {}, {})
-    assert [x["code"] for x in rows] == ["Q219"]
+    assert [x["code"] for x in rows] == ["Q104:I19","Q218"]
 
 
 def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
@@ -118,3 +188,22 @@ def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
     assert "import sys" in generator
     assert "if str(ROOT) not in sys.path:" in generator
     assert "sys.path.insert(0, str(ROOT))" in generator
+
+
+def test_dashboard_focused_backlog_is_two_candidates():
+    from automation.generate_resource_dashboard import planned_research_backlog
+    rows = planned_research_backlog([
+        {"code":"Q104:I19","lane":"FORMAL READINESS","next_gate":"13F completeness"},
+        {"code":"Q218","lane":"FRONTIER DISCOVERY","next_gate":"SEC multi-channel/PIT"},
+        {"code":"Q219","lane":"FRONTIER DISCOVERY","next_gate":"options PIT"},
+    ])
+    assert [x["candidate"] for x in rows] == ["Q104:I19","Q218"]
+    assert [x["planned_status"] for x in rows] == ["READY_NEXT_GATE","READY_NEXT_GATE"]
+
+
+def test_dashboard_s10_support_is_non_authorizing():
+    from automation.generate_resource_dashboard import s10_support_snapshot
+    payload = s10_support_snapshot([], {})
+    assert payload["resource_id"] == "S10"
+    assert payload["scientific_evidence"] is False
+    assert payload["performance_authorization"] is False

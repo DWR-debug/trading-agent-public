@@ -101,3 +101,14 @@ def test_dashboard_routes_top4_candidates_to_slot_scoped_workflow_and_i19_to_cen
     assert '.github/workflows/q104-i19-13f-historical-identity-census.yml' in text
     assert '"plan_id": "Q104-I19-CENSUS"' in text
     assert '"exclusive_dispatch": True' in text
+
+
+def test_focused_q218_slot_mode_is_explicit_and_non_authorizing():
+    text=(ROOT/".github/workflows/top4-candidate-slot-research.yml").read_text(encoding="utf-8")
+    assert "focus_wave:" in text
+    assert "type: boolean" in text
+    assert "gate:" in text
+    assert "event_pair" in text
+    assert "automation/q218_sec_multichannel_source_gate" in text
+    assert "automation/q218_sec_event_pair_lineage_gate" in text
+    assert "SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION" in text

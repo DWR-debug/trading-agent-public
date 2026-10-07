@@ -1,21 +1,18 @@
 (function(){
 "use strict";
-var WORKFLOW_URL="https://github.com/DWR-debug/trading-agent-public/actions/workflows/resource-dashboard-update.yml";
 var lastSnapshotIso=null;
+var FOCUS=["Q104:I19","Q218"];
+
 function $(id){return document.getElementById(id);}
-function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
-function ts(v){if(!v)return "—";try{return new Date(v).toLocaleString(undefined,{dateStyle:"short",timeStyle:"medium"});}catch(e){return String(v);}}
-function fmtDuration(sec){
-  if(sec==null||Number.isNaN(Number(sec)))return "—";
-  sec=Math.max(0,Math.round(Number(sec)));
-  var h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=sec%60;
-  if(h)return h+" h "+m+" min";
-  if(m)return m+" min "+s+" s";
-  return s+" s";
+function esc(v){
+  return String(v==null?"":v)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 }
-function relativeRemaining(sec){
-  if(sec==null)return "—";
-  return sec>0 ? "noch ca. "+fmtDuration(sec) : "voraussichtlich fertig";
+function ts(v){
+  if(!v)return "—";
+  try{return new Date(v).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"medium"});}
+  catch(e){return String(v);}
 }
 function fmtSnapshotAge(sec){
   if(sec==null||Number.isNaN(Number(sec)))return "Alter: —";
@@ -30,43 +27,65 @@ function updateSnapshotAge(){
   if(!lastSnapshotIso)return;
   var t=Date.parse(lastSnapshotIso);
   if(!Number.isFinite(t))return;
-  var sec=Math.max(0,(Date.now()-t)/1000);
-  $("snapshotAge").textContent=fmtSnapshotAge(sec);
-}
-function candidateFrom(text){
-  text=String(text||"");
-  return ["Q104:I19","Q218","Q220","Q221","Q219"].find(function(c){return text.indexOf(c)>=0;})||"—";
+  $("snapshotAge").textContent=fmtSnapshotAge(Math.max(0,(Date.now()-t)/1000));
 }
 function updateClock(){
   var now=new Date();
   try{
-    $("clockTime").textContent=new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(now);
-    $("clockDate").textContent=new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",weekday:"long",year:"numeric",month:"long",day:"numeric"}).format(now);
+    $("clockTime").textContent=new Intl.DateTimeFormat("de-DE",{
+      timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
+    }).format(now);
+    $("clockDate").textContent=new Intl.DateTimeFormat("de-DE",{
+      timeZone:"Europe/Berlin",weekday:"long",year:"numeric",month:"long",day:"numeric"
+    }).format(now);
   }catch(e){
     $("clockTime").textContent=now.toLocaleTimeString("de-DE");
     $("clockDate").textContent=now.toLocaleDateString("de-DE");
   }
 }
-function capacityClass(x){
-  var s=String(x.capacity_state||"unknown");
-  return ["operating","available"].indexOf(s)>=0?s:"unknown";
+function candidateFrom(text){
+  text=String(text||"");
+  for(var i=0;i<FOCUS.length;i++)if(text.indexOf(FOCUS[i])>=0)return FOCUS[i];
+  return "—";
 }
-function stateBadge(status){
-  var s=String(status||"");
-  var active=["queued","in_progress","waiting","pending"].indexOf(s)>=0;
-  var cls=active?"active-badge":(["success","completed","ready"].some(function(k){return s.toLowerCase().indexOf(k)>=0;})?"good":"unknown");
-  return "<span class='badge "+cls+"'>"+esc(s||"—")+"</span>";
+function pct(v){return Math.max(0,Math.min(100,Number(v)||0));}
+function progressBar(v,large){
+  v=pct(v);
+  return "<div class='meter "+(large?"large":"")+"'><div class='meter-fill' style='width:"+v+"%'></div></div>";
+}
+function capacityState(x,data){
+  var plannedRows=(data.planned_capacity||[]).filter(function(p){return p.resource===x.name;});
+  var items=plannedRows.reduce(function(a,p){return a.concat(p.planned_assignments||[]);},[]);
+  var dispatchable=items.some(function(p){return p.scheduled&&p.dispatchable;});
+  var active=Number(x.current_assignments||0)>0;
+  var runnerBusy=Boolean(x.runner_busy);
+  var runnerOnline=String(x.runner_status||"").toLowerCase()==="online";
+  if(active)return {cls:"operating",label:"ARBEITET"};
+  if(runnerBusy)return {cls:"unknown",label:"RUNNER BESETZT"};
+  if(dispatchable)return {
+    cls:"planned",
+    label:(x.type==="physical"&&!runnerOnline)?"AUTO-DISPATCH GEPLANT":"AUTO-DISPATCH BEREIT"
+  };
+  if(String(x.capacity_state||"") === "available")return {cls:"available",label:"VERFÜGBAR"};
+  return {cls:"unknown",label:"NICHT VERIFIZIERT"};
 }
 function render(data){
   var s=data.dashboard_summary||{};
   var resources=(data.resources||[]).filter(function(x){
     return ["Windows self-hosted A","Windows self-hosted B","Windows self-hosted C","GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Free AI pool"].indexOf(x.name)>=0;
   });
-  var work=data.work_assignments||[];
-  var pipeline=data.pipeline||[];
+  var pipeline=(data.pipeline||[]).filter(function(x){return FOCUS.indexOf(x.code)>=0;});
+  var work=(data.work_assignments||[]).filter(function(x){return FOCUS.indexOf(candidateFrom((x.task||"")+" "+(x.job||"")))>=0;});
+  var planned=(data.planned_capacity||[]).filter(function(x){
+    return (x.planned_assignments||[]).some(function(p){return FOCUS.indexOf(p.candidate)>=0;});
+  });
+  var queue=(data.planned_research_queue||[]).filter(function(x){return FOCUS.indexOf(x.candidate)>=0;}).slice(0,2);
   var cr=data.current_research||{};
   lastSnapshotIso=data.generated_at_utc||null;
-  $("meta").innerHTML="Snapshot <code>"+esc(data.generated_at_utc)+"</code> · master <code>"+esc(data.master_sha)+"</code> · Status-Quelle <code>"+esc(data.operational_snapshot_sha||"nicht synchron")+"</code>"+((data.dashboard_policy||{}).runner_status_ui_url?" · <a href=\""+esc(data.dashboard_policy.runner_status_ui_url)+"\" target=\"_blank\" rel=\"noopener\">Self-Hosted-Runner-Status</a>":"");
+
+  $("meta").innerHTML="Snapshot <code>"+esc(data.generated_at_utc)+"</code> · master <code>"+esc(data.master_sha)+"</code> · Status-Quelle <code>"+esc(data.operational_snapshot_sha||"nicht synchron")+"</code>"+
+    ((data.dashboard_policy||{}).runner_status_ui_url?" · <a href='"+esc(data.dashboard_policy.runner_status_ui_url)+"' target='_blank' rel='noopener'>Runner-Status</a>":"");
+
   try{
     var snapDate=data.generated_at_utc?new Date(data.generated_at_utc):null;
     if(snapDate&&!Number.isNaN(snapDate.getTime())){
@@ -76,73 +95,106 @@ function render(data){
   }catch(e){}
   updateSnapshotAge();
 
+  var overallAvg=pipeline.length?Math.round(pipeline.reduce(function(a,x){return a+pct(x.overall_progress_percent);},0)/pipeline.length):0;
+  var activeCount=pipeline.reduce(function(a,x){return a+Number(x.active_jobs||0);},0);
+  $("focusSummary").innerHTML=
+    "<div class='focus-kpi'><span class='eyebrow'>Fokus</span><strong>Q104:I19 + Q218</strong><span>Automatische Kandidatenbeschickung ist auf diese zwei Tracks begrenzt.</span></div>"+
+    "<div class='focus-kpi'><span class='eyebrow'>Gesamtentwicklung</span><strong>"+overallAvg+"%</strong><span>arithmetischer Überblick der zwei Entwicklungsstände</span></div>"+
+    "<div class='focus-kpi'><span class='eyebrow'>Aktive Candidate-Jobs</span><strong>"+activeCount+"</strong><span>sichtbar in der aktuellen Actions-Telemetrie</span></div>";
+
+  $("candidateFocus").innerHTML=pipeline.length?pipeline.map(function(x){
+    var active=Boolean(x.active);
+    var overall=pct(x.overall_progress_percent), next=pct(x.next_milestone_progress_percent);
+    var state=active?"ARBEIT LÄUFT":"WARTET AUF GATE-START";
+    var badge=active?"active-badge":"planned-badge";
+    return "<article class='candidate-card'>"+
+      "<div class='candidate-head'><div><div class='candidate-code'>"+esc(x.code)+"</div><div class='candidate-stage'>"+esc(x.stage)+"</div></div><span class='badge "+badge+"'>"+state+"</span></div>"+
+      "<div class='candidate-main'>"+
+        "<div class='ring-wrap'><div class='progress-ring' style='--pct:"+overall+"'><div><strong>"+overall+"%</strong><span>Gesamt</span></div></div></div>"+
+        "<div class='candidate-detail'>"+
+          "<div class='metric-title'>Nächster Milestone</div><div class='milestone'>"+esc(x.next_gate||"nicht aufgezeichnet")+"</div>"+
+          "<div class='metric-row'><span>Fortschritt zum Milestone</span><strong>"+next+"%</strong></div>"+
+          progressBar(next,true)+
+          "<div class='small muted'>"+esc(x.next_milestone_progress_basis||"keine aktive Workflow-Basis")+"</div>"+
+        "</div>"+
+      "</div>"+
+      "<div class='candidate-foot'><span>"+esc(x.overall_progress_basis||"Entwicklungsindex")+"</span><span>"+(x.performance_authorization_allowed?"AUTORISIERUNG ERLAUBT":"NICHT AUTORISIERT")+"</span></div>"+
+    "</article>";
+  }).join(""):"<div class='empty'>Kein Fokus-Kandidat im Snapshot.</div>";
+
   var order={"Windows self-hosted A":0,"Windows self-hosted B":1,"Windows self-hosted C":2,"GitHub-hosted Ubuntu x64":3,"GitHub-hosted ARM64":4,"Free AI pool":5};
   resources.sort(function(a,b){return order[a.name]-order[b.name];});
   $("capacity").innerHTML="<div class='capacity-grid'>"+resources.map(function(x){
-    var cls=capacityClass(x);
-    var state=cls==="operating"?"ARBEITET":cls==="available"?"VERFÜGBAR":"NICHT SICHTBAR";
-    var plannedCount=(data.planned_capacity||[]).filter(function(p){return p.resource===x.name;}).reduce(function(n,p){return n+Number(p.planned_count||0);},0);
-    return "<div class='capacity "+cls+"'>"+
+    var st=capacityState(x,data);
+    var role=esc(x.role||"");
+    var active=Number(x.current_assignments||0);
+    var free=Number(x.research_slots_free||0);
+    return "<div class='capacity "+st.cls+"'>"+
       "<div class='name'>"+esc(x.name)+"</div>"+
-      "<div class='state'>"+state+"</div>"+
-      "<div class='role'>"+esc(x.role)+"</div>"+
-      "<div class='jobs'>"+esc(x.current_assignments||0)+" aktiver Job"+((x.current_assignments||0)===1?"":"s")+"</div>"+
-      "<div class='small muted'>Slots: "+esc(x.research_slots_in_use||0)+"/"+esc(x.research_capacity_slots||1)+" belegt · "+esc(x.research_slots_free||0)+" frei</div>"+
-      "<div class='small muted'>"+esc(plannedCount)+" geplant</div>"+
+      "<div class='state'>"+st.label+"</div>"+
+      "<div class='role'>"+role+"</div>"+
+      "<div class='capacity-numbers'><strong>"+active+"</strong> aktiv <span>·</span> <strong>"+free+"</strong> frei</div>"+
+      "<div class='small muted'>Slots "+esc(x.research_slots_in_use||0)+"/"+esc(x.research_capacity_slots||1)+" · Runner "+esc(x.runner_status||"nicht sichtbar")+"</div>"+
       "</div>";
   }).join("")+"</div>";
 
-  $("work").innerHTML=work.length ? "<table><thead><tr><th>Kapazität</th><th>Candidate</th><th>Job</th><th>Status</th><th>Startzeit</th><th>Erwartete Dauer</th><th>Vorauss. Ende</th></tr></thead><tbody>"+work.map(function(x){
-    return "<tr><td class='rowtitle'>"+esc(x.resource)+"<div class='small muted'>"+esc(x.worker)+"</div></td>"+
-      "<td>"+esc(candidateFrom((x.task||"")+" "+(x.job||"")))+"<div class='small'>"+esc(x.task||"")+"</div></td>"+
-      "<td>"+esc(x.job||"—")+"<div class='small'>Run "+esc(x.run_id||"—")+"</div></td>"+
-      "<td>"+stateBadge(x.status)+"</td>"+
-      "<td>"+esc(ts(x.started_at))+"</td>"+
-      "<td>"+fmtDuration(x.expected_duration_seconds)+"<div class='small muted'>n="+esc(x.duration_sample_count||0)+"</div></td>"+
-      "<td>"+(x.expected_finish_at?esc(ts(x.expected_finish_at)):"—")+"<div class='small muted'>"+(x.remaining_seconds!=null?esc(relativeRemaining(x.remaining_seconds)):"keine belastbare Dauerbasis")+"</div></td></tr>";
-  }).join("")+"</tbody></table>" : "<div class='empty'>Aktuell ist kein aktiver GitHub-Actions-Job im Snapshot sichtbar.</div>";
+  var s10=data.s10_support||{};
+  var s10Good=String(s10.status||"") === "S10_UTILITY_ACCEPTED" && s10.eligible===true;
+  $("s10").innerHTML=
+    "<div class='support-card "+(s10Good?"support-ok":"support-unknown")+"'>"+
+      "<div><div class='eyebrow'>Technische Support-Kapazität</div><div class='support-title'>S10 · Android / Termux</div><div class='support-role'>"+esc(s10.role||"bounded support")+"</div></div>"+
+      "<div class='support-status'><span class='badge "+(s10Good?"active-badge":"unknown")+"'>"+esc(s10.status||"UNVERIFIED")+"</span><strong>"+(s10Good?"einsatzfähig":"nicht verifiziert")+"</strong></div>"+
+      "<div class='support-grid'><div><span>Runner</span><strong>"+esc(s10.runner_name||"S10-TERMUX")+"</strong></div><div><span>Architektur</span><strong>"+esc(s10.architecture||"ARM64")+"</strong></div><div><span>Mode</span><strong>"+esc(s10.mode||"mechanical QA")+"</strong></div><div><span>Letztes Receipt</span><strong>"+esc(s10.latest_workflow_run_id||"—")+"</strong></div></div>"+
+      "<div class='small muted'>Mechanische/provenance-/capacity-QA nur. Keine wissenschaftliche Evidenz und keine Performance-Autorisierung.</div>"+
+    "</div>";
 
-  var plannedQueue=data.planned_research_queue||[];
-  $("plannedQueue").innerHTML=plannedQueue.length ? "<table><thead><tr><th>Rang</th><th>Candidate</th><th>Nächster Gate</th><th>Workflow</th></tr></thead><tbody>"+plannedQueue.map(function(x){
-    return "<tr><td>"+esc(x.queue_rank)+"</td><td class='rowtitle'>"+esc(x.candidate)+"<div class='small muted'>"+esc(x.lane)+"</div></td><td>"+esc(x.next_gate)+"</td><td>"+esc(x.execution_workflow)+"</td></tr>";
-  }).join("")+"</tbody></table>" : "<div class='empty'>Kein bounded Future-Research-Backlog verfügbar.</div>";
-  var planned=data.planned_capacity||[];
-  $("planned").innerHTML=planned.length ? "<table><thead><tr><th>Kapazität</th><th>Aktuell</th><th>Geplante nächste Arbeit</th><th>Bereitschaft</th><th>Erwartete Dauer</th><th>Planstatus</th></tr></thead><tbody>"+planned.map(function(x){
-    var p=(x.planned_assignments||[])[0];
-    var label=p ? (esc(p.candidate)+" — "+esc(p.task)) : "keine unabhängige Ready-Arbeit";
-    var readiness=p ? esc(p.readiness) : "—";
-    var dur=p ? fmtDuration(p.expected_duration_seconds) : "—";
-    var status=p ? (p.dispatchable ? "<span class='badge planned-badge'>READY / AUTO-DISPATCH</span>" : (p.scheduled ? "<span class='badge planned-badge'>GEPLANT / NICHT GESTARTET</span>" : "<span class='badge blocked-badge'>BLOCKIERT / KEINE DISPOSITION</span>")) : "<span class='badge unknown'>nicht zugewiesen</span>";
-    var basis=p ? "<div class='small muted'>"+esc(p.basis)+"</div>" : "<div class='small muted'>"+esc(x.unallocated_reason||"")+"</div>";
-    return "<tr><td class='rowtitle'>"+esc(x.resource)+"</td><td>"+esc(x.current_assignments||0)+" aktiver Job"+((x.current_assignments||0)===1?"":"s")+"</td><td>"+label+basis+"</td><td>"+readiness+"</td><td>"+dur+(p?"<div class='small muted'>n="+esc(p.duration_sample_count||0)+"</div>":"")+"</td><td>"+status+"</td></tr>";
-  }).join("")+"</tbody></table>" : "<div class='empty'>Kein bounded Plan im Snapshot.</div>";
+  $("work").innerHTML=work.length?
+    "<table><thead><tr><th>Kapazität</th><th>Candidate</th><th>Job</th><th>Status</th><th>Start</th><th>Run</th></tr></thead><tbody>"+
+    work.map(function(x){
+      return "<tr><td class='rowtitle'>"+esc(x.resource)+"<div class='small muted'>"+esc(x.worker||"")+"</div></td>"+
+        "<td class='rowtitle'>"+esc(candidateFrom((x.task||"")+" "+(x.job||"")))+"</td>"+
+        "<td>"+esc(x.job||x.task||"—")+"</td>"+
+        "<td><span class='badge active-badge'>"+esc(x.status||"—")+"</span></td>"+
+        "<td>"+esc(ts(x.started_at))+"</td>"+
+        "<td>"+esc(x.run_id||"—")+"</td></tr>";
+    }).join("")+"</tbody></table>":"<div class='empty'>Keine aktiven Fokus-Jobs im Snapshot sichtbar.</div>";
 
-  $("pipeline").innerHTML=pipeline.length ? "<table><thead><tr><th>Candidate</th><th>Stage</th><th>Nächster Gate</th><th>Aktuell</th><th>Erwartete Jobdauer</th><th>Samples</th></tr></thead><tbody>"+pipeline.map(function(x){
-    var active=x.active;
-    return "<tr><td class='rowtitle'>"+esc(x.code)+"</td>"+
-      "<td>"+esc(x.stage)+"</td>"+
-      "<td>"+esc(x.next_gate||"—")+"</td>"+
-      "<td>"+(active?"<span class='badge active-badge'>ARBEIT LÄUFT ("+esc(x.active_jobs)+")</span>":"<span class='badge unknown'>kein aktiver Job sichtbar</span>")+"</td>"+
-      "<td>"+fmtDuration(x.expected_duration_seconds)+"<div class='small muted'>P90 "+fmtDuration(x.duration_p90_seconds)+"</div></td>"+
-      "<td>"+esc(x.duration_sample_count||0)+"</td></tr>";
-  }).join("")+"</tbody></table>" : "<div class='empty'>Keine Top-4-Pipeline im Snapshot.</div>";
+  $("plannedQueue").innerHTML=queue.length?
+    "<div class='queue-grid'>"+queue.map(function(x){
+      return "<div class='queue-item'><span class='queue-rank'>"+esc(x.queue_rank)+"</span><div><strong>"+esc(x.candidate)+"</strong><div class='small'>"+esc(x.next_gate)+"</div><div class='small muted'>"+esc(x.execution_workflow)+"</div></div></div>";
+    }).join("")+"</div>":"<div class='empty'>Kein bounded Next-Gate für den Fokus bereitgestellt.</div>";
+
+  $("planned").innerHTML=planned.length?
+    "<table><thead><tr><th>Kapazität</th><th>Candidate</th><th>Nächste Arbeit</th><th>Status</th></tr></thead><tbody>"+
+    planned.map(function(x){
+      var items=(x.planned_assignments||[]).filter(function(p){return FOCUS.indexOf(p.candidate)>=0;});
+      return items.map(function(p){
+        var status=p.dispatchable?"READY / AUTO-DISPATCH":(p.scheduled?"GEPLANT / NICHT GESTARTET":"BLOCKIERT / KEINE DISPOSITION");
+        var cls=p.dispatchable?"planned-badge":(p.scheduled?"planned-badge":"blocked-badge");
+        return "<tr><td class='rowtitle'>"+esc(x.resource)+"</td><td>"+esc(p.candidate)+"</td><td>"+esc(p.task)+"<div class='small muted'>"+esc(p.basis||"")+"</div></td><td><span class='badge "+cls+"'>"+status+"</span></td></tr>";
+      }).join("");
+    }).join("")+"</tbody></table>":"<div class='empty'>Kein fokussierter Plan-Slot im Snapshot.</div>";
 
   var milestones=data.milestone_history_12h||[];
-  $("milestones12h").innerHTML=milestones.length ? "<table><thead><tr><th>Zeit</th><th>Typ</th><th>Meilenstein</th><th>Ergebnis</th></tr></thead><tbody>"+milestones.map(function(x){
-    var link=x.url ? "<a href='"+esc(x.url)+"' target='_blank' rel='noopener'>"+esc(x.title||"Meilenstein")+"</a>" : esc(x.title||"Meilenstein");
-    return "<tr><td>"+esc(ts(x.timestamp))+"</td><td>"+esc(x.kind||"—")+"</td><td class='rowtitle'>"+link+"<div class='small muted'>"+esc(x.detail||"")+"</div></td><td>"+esc(x.status||"—")+"</td></tr>";
-  }).join("")+"</tbody></table>" : "<div class='empty'>In den letzten 12 Stunden wurden keine passenden abgeschlossenen Research-/Evidence-Meilensteine aufgezeichnet.</div>";
+  $("milestones12h").innerHTML=milestones.length?
+    "<table><thead><tr><th>Zeit</th><th>Typ</th><th>Meilenstein</th><th>Ergebnis</th></tr></thead><tbody>"+
+    milestones.map(function(x){
+      var title=x.url?"<a href='"+esc(x.url)+"' target='_blank' rel='noopener'>"+esc(x.title||"Meilenstein")+"</a>":esc(x.title||"Meilenstein");
+      return "<tr><td>"+esc(ts(x.timestamp))+"</td><td>"+esc(x.kind||"—")+"</td><td class='rowtitle'>"+title+"<div class='small muted'>"+esc(x.detail||"")+"</div></td><td>"+esc(x.status||"—")+"</td></tr>";
+    }).join("")+"</tbody></table>":"<div class='empty'>Keine passenden abgeschlossenen Meilensteine in den letzten 12 Stunden.</div>";
 
   var highlights=(cr.highlights||[]).slice(-6);
   $("achieved").innerHTML=
-    "<div class='small'><strong>Letztes formales Ergebnis:</strong> "+esc(cr.latest_formal_result||"nicht aufgezeichnet")+"</div>"+
-    "<div style='margin-top:10px'>"+(highlights.length?highlights.map(function(x){return "<div style='margin:7px 0'>"+esc(x)+"</div>";}).join(""):"<div class='empty'>Keine Highlights im Snapshot.</div>")+"</div>"+
-    "<div class='small muted' style='margin-top:10px'>Performance, Holdout, Ranking, Tuning, Promotion und Live-Ausführung bleiben fail-closed.</div>";
+    "<div class='formal-result'><span class='eyebrow'>Letztes formales Ergebnis</span><strong>"+esc(cr.latest_formal_result||"nicht aufgezeichnet")+"</strong></div>"+
+    "<div class='highlight-list'>"+(highlights.length?highlights.map(function(x){return "<div>"+esc(x)+"</div>";}).join(""):"<div class='empty'>Keine Highlights im Snapshot.</div>")+"</div>"+
+    "<div class='scientific-lock'>Performance, Holdout, Ranking, Tuning, Promotion und Live-Ausführung bleiben fail-closed.</div>";
 
-  var pcs=s.planned_capacity_items||0, pbs=s.blocked_planned_items||0, urs=s.unallocated_routable_items||0;
-  var activeLanes=Number(s.active_research_lanes||0), laneTarget=Number(s.active_research_lanes_target||6), plannedTarget=Number(s.planned_research_queue_target||6), plannedQueueCount=Number(s.planned_research_queue_items||0);
-  $("laneTargetSummary").textContent="Aktive Forschungs-Lanes: "+activeLanes+"/"+laneTarget+" · Zukunfts-Backlog: "+plannedQueueCount+"/"+plannedTarget;
-  $("plannedSummary").textContent="Geplant: "+pcs+" · Blockiert auf Prerequisite: "+pbs+" · Nicht zugewiesen: "+urs;
+  $("opsSummary").innerHTML=
+    "<span><strong>"+esc(s.research_capacity_slots_total||0)+"</strong> Research-Slots</span>"+
+    "<span><strong>"+esc(s.research_capacity_slots_free||0)+"</strong> frei</span>"+
+    "<span><strong>"+esc(s.planned_research_queue_items||0)+"/"+esc(s.planned_research_queue_target||2)+"</strong> Fokus-Backlog</span>"+
+    "<span><strong>"+esc((data.dashboard_summary||{}).runner_api_status||"unverified")+"</strong> Runner-Telemetrie</span>";
+
   $("app").hidden=false;
 }
 function renderEmbedded(){
@@ -150,6 +202,7 @@ function renderEmbedded(){
   if(snap&&typeof snap==="object"){render(snap);return true;}
   return false;
 }
+// Forschungsressourcen aktiv = distinct research resources, not raw job count.
 function load(){
   $("error").hidden=true;
   var rendered=renderEmbedded();
@@ -160,7 +213,7 @@ function load(){
   var opts={cache:"no-store"}; if(controller)opts.signal=controller.signal;
   fetch(url.toString(),opts).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(render).catch(function(e){
     if(!rendered){$("error").textContent="Snapshot konnte nicht geladen werden: "+(e&&e.message||String(e));$("error").hidden=false;}
-    else{$("meta").insertAdjacentHTML("beforeend"," · <span class='unknown'>Netzwerk-Refresh nicht verfügbar; eingebetteter Snapshot wird angezeigt.</span>");}
+    else{$("meta").insertAdjacentHTML("beforeend"," · <span class='unknown'>Netzwerk-Refresh nicht verfügbar; eingebetteter Snapshot bleibt sichtbar.</span>");}
   }).then(function(){if(timeoutId!==null)clearTimeout(timeoutId);});
 }
 document.addEventListener("DOMContentLoaded",function(){
@@ -168,10 +221,7 @@ document.addEventListener("DOMContentLoaded",function(){
   setInterval(updateClock,1000);
   setInterval(updateSnapshotAge,1000);
   $("refresh").addEventListener("click",load);
-  $("update").addEventListener("click",function(){});
   load();
-  // GitHub Actions cron is five-minute minimum. Keep the open dashboard live at
-  // a three-minute cadence without committing a snapshot on every refresh.
   setInterval(load,180000);
 });
 })();

@@ -54,7 +54,7 @@ The status synchronizer records the source commit that was synchronized. Because
 
 The canonical dashboard UI is **`docs/dashboard/index.html`** with machine-readable snapshot data in **`docs/dashboard/dashboard_data.json`**.
 
-The snapshot is refreshed automatically once per day at **03:35 UTC** by **`.github/workflows/resource-dashboard-update.yml`**, and it can also be refreshed on request through workflow dispatch. The website's **Update now** button opens that GitHub Actions workflow so an authenticated user can run the update immediately; no credential is embedded in the public HTML.
+The live dashboard snapshot is refreshed automatically every **5 minutes** by **`.github/workflows/resource-dashboard-update.yml`**, and it can also be refreshed on request through workflow dispatch. The published Pages snapshot is ephemeral and is not committed back to `master`. The website's **Update now** button opens that GitHub Actions workflow so an authenticated user can run the update immediately; no credential is embedded in the public HTML.
 
 The dashboard is an operational snapshot, not a live runner-control plane and not scientific evidence. It deliberately distinguishes routing assumptions from timestamped execution receipts.
 
@@ -79,3 +79,14 @@ The word **worker** on the dashboard refers to an actual runner/provider/job ass
 The dashboard remains deliberately non-authorizing. Active/busy runners, provider availability, research stage and work assignment cannot authorize performance, holdout selection, ranking, tuning, promotion or live execution.
 
 The dashboard snapshot is still refreshed deliberately rather than every few minutes to avoid consuming hosted compute merely to produce activity.
+
+
+## Candidate progress semantics — 2026-10-07
+
+The candidate pipeline no longer uses expected job duration as a progress indicator. **Gesamtentwicklung** is a deterministic lifecycle index across six common research milestones: design/robustness, source feasibility, coverage, PIT, independent reproduction, and performance validation. **Fortschritt zum nächsten Milestone** is the percentage of successful completed jobs within the currently active candidate workflow; when that workflow has not started, it is 0%. These percentages describe recorded development execution only, not the probability of success, expected return, or authorization state.
+
+## Capacity-state semantics — 2026-10-07
+
+The resource card distinguishes four operational states. **ARBEITET** requires at least one visible active research job for that resource. A busy self-hosted runner without a mapped research job is shown as **RUNNER BESETZT** and does not masquerade as research work. When there is no active research job but a scheduled executable next-gate exists, the state is **AUTO-DISPATCH BEREIT**. **VERFÜGBAR** is reserved for capacity with neither active research work nor a pending executable plan.
+
+Planned work never increments active-job or research-job counts. Runner `busy` is surfaced separately from `current_assignments`, so incomplete runner/job visibility cannot convert planned or unknown work into false active research.
