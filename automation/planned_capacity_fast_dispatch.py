@@ -26,6 +26,8 @@ PLATFORM_NAMES = {
 }
 
 TOP4_CANDIDATES = {"Q218", "Q219", "Q220", "Q221"}
+FAST_DISPATCH_SUCCESS_COOLDOWN_MINUTES = 30
+FAST_DISPATCH_ATTEMPT_WINDOW_MINUTES = 30
 
 
 def active_research_items(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
@@ -72,6 +74,43 @@ def workflow_is_active(workflow: str, paths: set[str], runs: list[dict[str, Any]
         )
         for r in runs
     )
+
+
+
+
+def workflow_run_matches(workflow: str, run: dict[str, Any]) -> bool:
+    needle = workflow.rsplit("/", 1)[-1]
+    path = str(run.get("path") or run.get("workflow_path") or "")
+    return path == workflow or path.endswith(needle)
+
+
+def recent_workflow_attempts(
+    workflow: str,
+    runs: list[dict[str, Any]],
+    current_sha: str,
+    cooldown_minutes: int,
+) -> list[dict[str, Any]]:
+    from datetime import datetime, timedelta, timezone
+
+    now = datetime.now(timezone.utc)
+    cutoff = now - timedelta(minutes=cooldown_minutes)
+    out = []
+    for run in runs:
+        if not isinstance(run, dict) or not workflow_run_matches(workflow, run):
+            continue
+        created = run.get("created_at")
+        if not created:
+            continue
+        try:
+            ts = datetime.fromisoformat(str(created).replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if ts < cutoff:
+            continue
+        if current_sha and str(run.get("head_sha") or "") != current_sha:
+            continue
+        out.append(run)
+    return out
 
 
 def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], max_dispatches: int = 4) -> dict[str, Any]:
@@ -121,6 +160,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         for c in TOP4_CANDIDATES
     )
 
+    current_sha = str(snapshot.get("master_sha") or "")
     for item in planned:
         workflow = str(item["execution_workflow"])
         candidate = str(item.get("candidate") or "")
@@ -145,6 +185,30 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
 
         if workflow_is_active(workflow, active_paths, runs):
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_WORKFLOW_ACTIVE"})
+            continue
+
+        recent_attempts = recent_workflow_attempts(
+            workflow,
+            runs,
+            current_sha,
+            FAST_DISPATCH_ATTEMPT_WINDOW_MINUTES,
+        )
+        if any(
+            r.get("status") == "completed" and r.get("conclusion") == "success"
+            for r in recent_attempts
+        ):
+            decisions.append({
+                "plan_id": item.get("plan_id"),
+                "decision": "SKIP_RECENT_SUCCESS_SAME_SHA",
+                "cooldown_minutes": FAST_DISPATCH_SUCCESS_COOLDOWN_MINUTES,
+            })
+            continue
+        if len(recent_attempts) >= 2:
+            decisions.append({
+                "plan_id": item.get("plan_id"),
+                "decision": "SKIP_RETRY_CAP_SAME_SHA",
+                "window_minutes": FAST_DISPATCH_ATTEMPT_WINDOW_MINUTES,
+            })
             continue
 
         if len(dispatches) >= max_dispatches:
