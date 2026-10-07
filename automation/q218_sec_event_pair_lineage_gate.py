@@ -71,7 +71,22 @@ def _acceptance_key(row: dict) -> tuple[str, str]:
     )
 
 
-def _nearest_prior(rows: list[dict], target: dict) -> dict | None:
+def _nearest_prior(
+    rows: list[dict],
+    target: dict,
+    parent_filing_date: str | None = None,
+) -> dict | None:
+    if parent_filing_date:
+        explicit = [
+            row
+            for row in rows
+            if row.get("filing_date") == parent_filing_date
+            and row.get("acceptance_datetime")
+            and target.get("acceptance_datetime")
+            and row["acceptance_datetime"] < target["acceptance_datetime"]
+        ]
+        if explicit:
+            return max(explicit, key=_acceptance_key)
     candidates = [
         row
         for row in rows
@@ -81,6 +96,22 @@ def _nearest_prior(rows: list[dict], target: dict) -> dict | None:
         and row["acceptance_datetime"] < target["acceptance_datetime"]
     ]
     return max(candidates, key=_acceptance_key) if candidates else None
+
+
+def _extract_parent_filing_date(text: str) -> str | None:
+    match = re.search(
+        r"Initial Form 8-K.*?filed with the Securities and Exchange Commission "
+        r"on ([A-Z][a-z]+\s+\d{1,2},\s+\d{4})",
+        text,
+        flags=re.I | re.S,
+    )
+    if not match:
+        return None
+    try:
+        return datetime.strptime(match.group(1), "%B %d, %Y").date().isoformat()
+    except ValueError:
+        return None
+
 
 
 def run(output: Path) -> dict:
@@ -172,31 +203,35 @@ def run(output: Path) -> dict:
                     )
                 except Exception as exc:
                     row["index_header_fetch_error"] = type(exc).__name__ + ":" + str(exc)
+
+                try:
+                    primary_page = fetch(
+                        "https://www.sec.gov/Archives/edgar/data/"
+                        f"{int(cik)}/{accession_number.replace('-', '')}/"
+                        f"{row['primary_document']}"
+                    )
+                    primary_text = primary_page.decode("utf-8", errors="replace")
+                    row["primary_publication_terms_marker"] = bool(
+                        re.search(
+                            r"EARNINGS|FINANCIAL\s+RESULTS|QUARTERLY\s+RESULTS|FULL[-\s]?YEAR\s+RESULTS",
+                            primary_text,
+                            flags=re.I,
+                        )
+                    )
+                    if form == "8-K/A":
+                        row["parent_filing_date_hint"] = _extract_parent_filing_date(primary_text)
+                except Exception as exc:
+                    row["primary_fetch_error"] = type(exc).__name__ + ":" + str(exc)
+
+                row["is_eligible_earnings_release_8k"] = bool(
+                    "2.02" in str(item_field).split(",")
+                    or row["exhibit_99_1"]
+                    or row["earnings_release_marker"]
+                    or row["primary_publication_terms_marker"]
+                )
                 if form == "8-K":
                     earnings.append(row)
-                    try:
-                        _, _, primary_page = fetch(
-                            "https://www.sec.gov/Archives/edgar/data/"
-                            f"{int(cik)}/{accession_number.replace('-', '')}/"
-                            f"{row['primary_document']}"
-                        )
-                        primary_text = primary_page.decode("utf-8", errors="replace")
-                        row["primary_publication_terms_marker"] = bool(
-                            re.search(
-                                r"EARNINGS|FINANCIAL\s+RESULTS|QUARTERLY\s+RESULTS|FULL[-\s]?YEAR\s+RESULTS",
-                                primary_text,
-                                flags=re.I,
-                            )
-                        )
-                    except Exception as exc:
-                        row["primary_fetch_error"] = type(exc).__name__ + ":" + str(exc)
-                    row["is_eligible_earnings_release_8k"] = bool(
-                        "2.02" in str(item_field).split(",")
-                        or row["exhibit_99_1"]
-                        or row["earnings_release_marker"]
-                        or row["primary_publication_terms_marker"]
-                    )
-                else:
+                elif row["is_eligible_earnings_release_8k"] or row.get("parent_filing_date_hint"):
                     earnings_amendments.append(row)
 
         # Prefer exact fiscal/report-date alignment. When SEC's 8-K reportDate
@@ -270,7 +305,7 @@ def run(output: Path) -> dict:
             (earnings_amendments, earnings, "8-K/A"),
         ]:
             for row in amendment:
-                parent = _nearest_prior(originals, row)
+                parent = _nearest_prior(originals, row, row.get("parent_filing_date_hint"))
                 item = {
                     "amendment_form": kind,
                     "amendment_accession": row.get("accession"),
