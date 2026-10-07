@@ -106,7 +106,14 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     decisions = []
     dispatches = []
     seen_workflows: set[str] = set()
-    top4_candidate_active = any(\n        any(\n            c.lower() in f"{item.get('task', '')} {item.get('job', '')}".lower()\n            and item.get("resource") != "Free AI pool"\n            for item in work\n        )\n        for c in TOP4_CANDIDATES\n    )
+    top4_candidate_active = any(
+        any(
+            c.lower() in f"{item.get('task', '')} {item.get('job', '')}".lower()
+            and item.get("resource") != "Free AI pool"
+            for item in work
+        )
+        for c in TOP4_CANDIDATES
+    )
 
     for item in planned:
         workflow = str(item["execution_workflow"])
