@@ -7,10 +7,10 @@ def test_q218_pairs_latest_prior_item_202_and_tracks_amendments(tmp_path, monkey
         "filings": {
             "recent": {
                 "form": ["10-K", "8-K", "8-K", "10-K/A"],
-                "filingDate": ["2025-01-02", "2024-12-30", "2025-01-03", "2025-02-01"],
+                "filingDate": ["2025-01-02", "2025-01-01", "2025-01-03", "2025-02-01"],
                 "accessionNumber": [
                     "0000320193-25-000001",
-                    "0000320193-24-000099",
+                    "0000320193-25-000000",
                     "0000320193-25-000002",
                     "0000320193-25-000003",
                 ],
@@ -22,7 +22,7 @@ def test_q218_pairs_latest_prior_item_202_and_tracks_amendments(tmp_path, monkey
     }
     acceptance_map = {
         "0000320193-25-000001": "20250102120000",
-        "0000320193-24-000099": "20241230120000",
+        "0000320193-25-000000": "20250101120000",
         "0000320193-25-000002": "20250103120000",
         "0000320193-25-000003": "20250201120000",
     }
@@ -41,7 +41,7 @@ def test_q218_pairs_latest_prior_item_202_and_tracks_amendments(tmp_path, monkey
     assert result["issuer_count"] == 8
     aapl = result["issuer_results"]["AAPL"]
     assert aapl["event_pair_count"] == 1
-    assert aapl["event_pairs"][0]["item_2_02_8k_accession"] == "0000320193-25-000002"
+    assert aapl["event_pairs"][0]["item_2_02_8k_accession"] == "0000320193-25-000000"
     assert aapl["event_pairs"][0]["acceptance_order_valid"] is True
     assert aapl["amendment_lineage"][0]["parent_candidate_accession"] == "0000320193-25-000001"
     assert aapl["all_pairing_valid"] is True

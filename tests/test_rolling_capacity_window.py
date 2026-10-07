@@ -15,8 +15,10 @@ def test_current_bounded_capacity_window_contract():
 
 def test_wave_order():
     p = json.loads(open("research/run_requests/rolling_capacity_window_2026-10-05.json", encoding="utf-8").read())
-    assert [x["start_after_minutes"] for x in p["phases"]] == [0,30,60,90]
-    assert all(x["workflows"] for x in p["phases"])
+    assert [x["start_after_minutes"] for x in p["phases"]] == [0]
+    assert len(p["phases"]) == 1
+    assert p["phases"][0]["id"] == "W3"
+    assert p["phases"][0]["workflows"] == ["windows-runner-c-long-research.yml"]
 
 
 def test_capacity_dispatcher_ignores_feature_branch_runs_for_master_research():
