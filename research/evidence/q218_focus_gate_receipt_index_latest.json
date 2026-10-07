@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_focus_gate_receipt_index",
+  "candidate_id": "Q218",
+  "status": "Q218_SOURCE_AND_EVENT_PAIR_GATES_COMPLETE",
+  "verified_at_utc": "2026-10-07T20:49:57Z",
+  "source_gate": {
+    "run_id": 37684515294,
+    "artifact_id": 11510955257,
+    "artifact_digest": "sha256:11eb338c9cdf93f2d29e3f9b4b93d9fd36fc0ca595194f2a177bf0d986cdd28f",
+    "receipt_fingerprint": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
+    "verified_positive_complete": true,
+    "gate_code_blob_sha": "166a7710488fc4421fc788cf0b8dd7b94a008b3d"
+  },
+  "event_pair_gate": {
+    "run_id": 37684072003,
+    "artifact_id": 11509614613,
+    "artifact_digest": "sha256:fda94985375a11646a1df11d8f9e43b6abc80903ad03a28ab5f12215c5c0a71e",
+    "receipt_fingerprint": "08783ac61ed04d936e017e2d959319f69fed5cd4ed891d0f4033a3c57dc04491",
+    "verified_positive_complete": true,
+    "gate_code_blob_sha": "cdfc850d0ab5b717d4f58d6f3a5265d5090ec9f5"
+  },
+  "scientific_boundary": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "ranking_allowed": false,
+    "parameter_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "promotion_allowed": false,
+    "live_execution_allowed": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "next_gate": "INDEPENDENT_ARCHITECTURE_PIT_REPRODUCTION"
+}
