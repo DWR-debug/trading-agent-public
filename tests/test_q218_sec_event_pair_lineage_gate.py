@@ -161,3 +161,80 @@ def test_q218_fetch_does_not_retry_non_transient_http_error(monkeypatch):
     with pytest.raises(gate.urllib.error.HTTPError) as exc:
         gate.fetch("https://example.invalid")
     assert exc.value.code == 404
+
+
+def test_q218_8ka_resolves_parent_from_explicit_initial_filing_date(monkeypatch, tmp_path):
+    import json
+
+    payload = {
+        "filings": {
+            "recent": {
+                "form": ["8-K", "8-K/A"],
+                "filingDate": ["2025-11-14", "2026-01-16"],
+                "accessionNumber": ["0000104169-25-000172", "0000104169-26-000024"],
+                "primaryDocument": ["wmt-20251111.htm", "wmt-20251113.htm"],
+                "reportDate": ["2025-11-11", "2025-11-13"],
+                "items": ["5.02,9.01", "5.02"],
+            }
+        }
+    }
+    acceptance_map = {
+        "0000104169-25-000172": "20251114080030",
+        "0000104169-26-000024": "20260116090305",
+    }
+
+    def fake_fetch(url):
+        if "/submissions/CIK" in url:
+            return json.dumps(payload).encode()
+        accession = url.split("/")[-1]
+        if accession.endswith("-index-headers.html"):
+            key = accession.removesuffix("-index-headers.html")
+            return f"<ACCEPTANCE-DATETIME>{acceptance_map[key]}".encode()
+        if url.endswith("wmt-20251111.htm"):
+            return b"Item 5.02 current report"
+        if url.endswith("wmt-20251113.htm"):
+            return (
+                b"As previously reported by Walmart Inc. (the Company) in a "
+                b"Current Report on Form 8-K filed with the Securities and "
+                b"Exchange Commission on November 14, 2025 (the Initial Form 8-K), "
+                b"on November 13, 2025, John Furner was appointed President."
+            )
+        raise AssertionError(url)
+
+    monkeypatch.setattr(gate, "fetch", fake_fetch)
+    result = gate.run(tmp_path / "receipt.json")
+    row = result["issuer_results"]["AAPL"]["amendment_lineage"][0]
+
+    assert row["amendment_accession"] == "0000104169-26-000024"
+    assert row["initial_8k_filing_date"] == "November 14, 2025"
+    assert row["lineage_resolution_method"] == "explicit_initial_8k_filing_date"
+    assert row["parent_candidate_accession"] == "0000104169-25-000172"
+    assert row["acceptance_order_valid"] is True
+
+
+def test_q218_8ka_parent_resolution_remains_unresolved_when_explicit_date_is_ambiguous():
+    originals = [
+        {
+            "form": "8-K",
+            "filing_date": "2025-11-14",
+            "report_date": "2025-11-11",
+            "accession": "A",
+            "acceptance_datetime": "20251114070000",
+        },
+        {
+            "form": "8-K",
+            "filing_date": "2025-11-14",
+            "report_date": "2025-11-12",
+            "accession": "B",
+            "acceptance_datetime": "20251114080000",
+        },
+    ]
+    target = {
+        "report_date": "2025-11-13",
+        "initial_8k_filing_date": "November 14, 2025",
+        "acceptance_datetime": "20260116090305",
+    }
+
+    parent, method = gate._resolve_amendment_parent(originals, target)
+    assert parent is None
+    assert method == "explicit_initial_8k_filing_date_ambiguous"
