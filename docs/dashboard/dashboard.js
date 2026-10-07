@@ -66,7 +66,7 @@ function render(data){
   var pipeline=data.pipeline||[];
   var cr=data.current_research||{};
   lastSnapshotIso=data.generated_at_utc||null;
-  $("meta").innerHTML="Snapshot <code>"+esc(data.generated_at_utc)+"</code> · master <code>"+esc(data.master_sha)+"</code> · Status-Quelle <code>"+esc(data.operational_snapshot_sha||"nicht synchron")+"</code>";
+  $("meta").innerHTML="Snapshot <code>"+esc(data.generated_at_utc)+"</code> · master <code>"+esc(data.master_sha)+"</code> · Status-Quelle <code>"+esc(data.operational_snapshot_sha||"nicht synchron")+"</code>"+((data.dashboard_policy||{}).runner_status_ui_url?" · <a href=\""+esc(data.dashboard_policy.runner_status_ui_url)+"\" target=\"_blank\" rel=\"noopener\">Self-Hosted-Runner-Status</a>":"");
   try{
     var snapDate=data.generated_at_utc?new Date(data.generated_at_utc):null;
     if(snapDate&&!Number.isNaN(snapDate.getTime())){
@@ -108,7 +108,7 @@ function render(data){
     var label=p ? (esc(p.candidate)+" — "+esc(p.task)) : "keine unabhängige Ready-Arbeit";
     var readiness=p ? esc(p.readiness) : "—";
     var dur=p ? fmtDuration(p.expected_duration_seconds) : "—";
-    var status=p ? (p.scheduled ? "<span class='badge planned-badge'>GEPLANT / NICHT GESTARTET</span>" : "<span class='badge blocked-badge'>BLOCKIERT / KEINE DISPOSITION</span>") : "<span class='badge unknown'>nicht zugewiesen</span>";
+    var status=p ? (p.dispatchable ? "<span class='badge planned-badge'>READY / AUTO-DISPATCH</span>" : (p.scheduled ? "<span class='badge planned-badge'>GEPLANT / NICHT GESTARTET</span>" : "<span class='badge blocked-badge'>BLOCKIERT / KEINE DISPOSITION</span>")) : "<span class='badge unknown'>nicht zugewiesen</span>";
     var basis=p ? "<div class='small muted'>"+esc(p.basis)+"</div>" : "<div class='small muted'>"+esc(x.unallocated_reason||"")+"</div>";
     return "<tr><td class='rowtitle'>"+esc(x.resource)+"</td><td>"+esc(x.current_assignments||0)+" aktiver Job"+((x.current_assignments||0)===1?"":"s")+"</td><td>"+label+basis+"</td><td>"+readiness+"</td><td>"+dur+(p?"<div class='small muted'>n="+esc(p.duration_sample_count||0)+"</div>":"")+"</td><td>"+status+"</td></tr>";
   }).join("")+"</tbody></table>" : "<div class='empty'>Kein bounded Plan im Snapshot.</div>";

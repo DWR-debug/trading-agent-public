@@ -1,0 +1,72 @@
+name: Planned Capacity Fast Dispatch
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_run:
+    workflows:
+      - Q104 I19 Historical 13F Identity Census
+      - Top-4 Candidate Research Capacity
+      - Q224 SEC EDGAR Modern Source Gate
+      - Q228 SEC Correspondence Source Gate
+      - Q231 SEC FOIA Source Gate
+      - Free AI Worker Fabric
+      - Windows Runner C Long Research Workpack
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: trading-agent-planned-capacity-fast-dispatch
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (
+        github.event_name != 'workflow_run' ||
+        github.event.workflow_run.head_branch == 'master'
+      )
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Snapshot current bounded plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 automation/generate_resource_dashboard.py
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=200" > "$RUNNER_TEMP/current_runs.json"
+
+      - name: Dispatch executable ready capacity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m automation.planned_capacity_fast_dispatch             --snapshot docs/dashboard/dashboard_data.json             --runs "$RUNNER_TEMP/current_runs.json"             --output "$RUNNER_TEMP/planned_capacity_fast_dispatch.json"             --repo "$GITHUB_REPOSITORY"             --max-dispatches 4
+
+          cat "$RUNNER_TEMP/planned_capacity_fast_dispatch.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload dispatch decision
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: planned-capacity-fast-dispatch-${{ github.run_id }}-${{ github.run_attempt }}
+          path: "$RUNNER_TEMP/planned_capacity_fast_dispatch.json"
+          if-no-files-found: error
+          retention-days: 14

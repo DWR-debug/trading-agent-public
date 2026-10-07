@@ -247,6 +247,7 @@ ACTIVE_WORKFLOWS = {
     "litellm-q187-q192-one-shot.yml",
     "litellm-manual-groq-one-shot.yml",
     "capacity-saturation-rolling-waves.yml",
+    "planned-capacity-fast-dispatch.yml",
     "continuous-useful-capacity-replenisher.yml",
     "literature-frontier-scout.yml",
     "q214-disclosure-risk-feasibility.yml",
