@@ -582,7 +582,8 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
             "planned_status": "READY_NEXT_GATE",
             "non_authorizing": True,
         })
-    return backlog
+    # Keep the visible future queue aligned with its declared six-item target.
+    return backlog[:6]
 
 
 def planned_capacity_plan(
@@ -752,8 +753,9 @@ def planned_capacity_plan(
             return -50
         return 0
 
-    # Each resource receives at most one next action. Existing active work blocks
-    # that candidate globally to prevent dashboard planning from recommending duplicates.
+    # Each resource receives at most one next-action preview when a real
+    # non-duplicate item is available. Current occupancy does not suppress the
+    # preview; dispatch remains gated by actual free capacity.
     assigned_candidates: set[str] = set()
     plans: dict[str, list[dict[str, Any]]] = {str(r["name"]): [] for r in resources}
 
@@ -779,12 +781,9 @@ def planned_capacity_plan(
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
             if resource is None:
                 continue
-            capacity_slots = max(1, int(resource.get("research_capacity_slots", 1) or 1))
-            if len(plans.get(resource_name, [])) >= capacity_slots:
-                continue
-            current_assignments = int(resource.get("current_assignments", 0) or 0)
-            planned_for_resource = len(plans.get(resource_name, []))
-            if current_assignments + planned_for_resource >= capacity_slots:
+            # Keep a one-step lookahead independently of current occupancy. The
+            # dispatcher starts this planned item only after actual free capacity.
+            if len(plans.get(resource_name, [])) >= 1:
                 continue
             benchmark = job_benchmarks.get(candidate)
             plans[resource_name].append({
@@ -1100,10 +1099,11 @@ def main() -> None:
         "scientific_boundary": os_state.get("permanent_safety", {}),
         "dashboard_summary": {
             "active_work_items": len(work),
-            "active_research_lanes": len(work),
+            # A lane is a distinct resource currently occupied by research, not a raw job count.
+            "active_research_lanes": len({str(x.get("resource") or "") for x in work if str(x.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"} and x.get("resource")}),
             "active_research_lanes_target": 6,
-            "active_research_lanes_target_met": len(work) >= 6,
-            "active_research_lanes_shortfall": max(0, 6 - len(work)),
+            "active_research_lanes_target_met": len({str(x.get("resource") or "") for x in work if str(x.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"} and x.get("resource")}) >= 6,
+            "active_research_lanes_shortfall": max(0, 6 - len({str(x.get("resource") or "") for x in work if str(x.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"} and x.get("resource")})),
             "configured_resources": len(configured_resources),
             "runner_api_visible": len(runners) if runners else None,
             "busy_runners": sum(1 for r in runners if r.get("busy") is True) if runners else None,
