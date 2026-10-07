@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-07-Q218-FOCUSED-ADVERSARIAL",
+  "providers": [
+    "openrouter_free",
+    "groq_free",
+    "gemini_cli",
+    "mistral_api"
+  ],
+  "scope": "Q218 focused SEC multi-channel/PIT wave: adversarial source, clock, identity and lineage review only",
+  "prompt": "Attack the focused Q218 implementation as an independent methods reviewer. Concentrate on historical SEC multi-channel coverage, exact acceptance/public-observation clock, 10-K to 8-K event pairing, amendment/as-filed lineage, mandatory-versus-voluntary classification, issuer identity freeze, archive completeness, and deterministic PIT reconstruction. For every failure mode specify the smallest falsifier and exact artifact required. Do not inspect or infer market outcomes; do not rank, tune, select holdouts/assets/parameters/horizons; do not alter scientific gates or authorize performance.",
+  "max_runtime_minutes": 15,
+  "deterministic_compute": false,
+  "holdout_selection": false,
+  "parameter_selection": false,
+  "asset_selection": false,
+  "threshold_selection": false,
+  "horizon_selection": false,
+  "research_gate_changes": false,
+  "promotion_decision": false,
+  "live_execution": false,
+  "paid_usage": false,
+  "research_decision": false,
+  "allow_workspace_writes": false,
+  "context_files": [
+    "docs/CURRENT_STATUS.md",
+    "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+    "automation/q218_sec_multichannel_source_gate.py",
+    "automation/q218_sec_event_pair_lineage_gate.py",
+    "research/evidence/current_operational_state.json",
+    "research/governance/critical_research_quality_control.json"
+  ],
+  "context_fingerprint_files": [
+    "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+    "automation/q218_sec_multichannel_source_gate.py",
+    "automation/q218_sec_event_pair_lineage_gate.py",
+    "research/governance/critical_research_quality_control.json"
+  ],
+  "review_revision": "FOCUSED-2026-10-07-R1",
+  "trigger_reason": "Focused two-candidate wave: independent Q218 methods review after orchestration/dashboard refocus."
+}
