@@ -119,10 +119,22 @@ def run(output: Path) -> dict:
             elif form == "8-K/A" and "2.02" in str(item_field).split(","):
                 earnings_amendments.append(row)
 
+        # Prefer exact fiscal/report-date alignment. When SEC's 8-K reportDate
+        # denotes the earnings-release filing date rather than the 10-K fiscal
+        # period end, fall back to the deterministic reporting-cycle interval:
+        # latest eligible Item 2.02 8-K strictly after the preceding in-window
+        # 10-K acceptance (when one exists) and strictly before the target 10-K.
+        # This remains source/PIT-only and introduces no outcome information.
         pairs = []
         unmatched = []
-        for tenk in sorted(tenks, key=lambda x: (x.get("report_date") or "", _acceptance_key(x))):
-            candidates = [
+        tenks_sorted = sorted(tenks, key=_acceptance_key)
+        pairing_rule = (
+            "exact report_date preferred; otherwise latest eligible Item-2.02 "
+            "8-K by SEC acceptance within the target 10-K reporting cycle, "
+            "bounded below by the preceding in-window 10-K acceptance"
+        )
+        for idx, tenk in enumerate(tenks_sorted):
+            exact_candidates = [
                 event
                 for event in earnings
                 if event.get("report_date") == tenk.get("report_date")
@@ -130,12 +142,29 @@ def run(output: Path) -> dict:
                 and tenk.get("acceptance_datetime")
                 and event["acceptance_datetime"] < tenk["acceptance_datetime"]
             ]
-            event = max(candidates, key=_acceptance_key) if candidates else None
+            event = max(exact_candidates, key=_acceptance_key) if exact_candidates else None
+            pairing_method = "exact_report_date"
+            lower_bound = (
+                tenks_sorted[idx - 1].get("acceptance_datetime")
+                if idx > 0 else None
+            )
+            if event is None:
+                interval_candidates = [
+                    candidate
+                    for candidate in earnings
+                    if candidate.get("acceptance_datetime")
+                    and tenk.get("acceptance_datetime")
+                    and candidate["acceptance_datetime"] < tenk["acceptance_datetime"]
+                    and (lower_bound is None or candidate["acceptance_datetime"] > lower_bound)
+                ]
+                event = max(interval_candidates, key=_acceptance_key) if interval_candidates else None
+                pairing_method = "acceptance_interval_fallback"
             if event is None:
                 unmatched.append(
                     {
                         "ten_k_accession": tenk.get("accession"),
                         "report_date": tenk.get("report_date"),
+                        "pairing_lower_bound_acceptance": lower_bound,
                     }
                 )
                 continue
@@ -146,8 +175,11 @@ def run(output: Path) -> dict:
                     "item_2_02_8k_accession": event["accession"],
                     "item_2_02_8k_acceptance_datetime": event["acceptance_datetime"],
                     "report_date": tenk["report_date"],
+                    "pairing_method": pairing_method,
+                    "pairing_lower_bound_acceptance": lower_bound,
                     "acceptance_order_valid": (
                         event["acceptance_datetime"] <= tenk["acceptance_datetime"]
+                        and (lower_bound is None or event["acceptance_datetime"] > lower_bound)
                     ),
                 }
             )
@@ -194,6 +226,7 @@ def run(output: Path) -> dict:
             "amendment_lineage": lineage,
             "all_pairing_valid": all_pairing_valid,
             "all_lineage_valid": all_lineage_valid,
+            "pairing_rule": pairing_rule,
         }
 
     complete = bool(issuer_results) and all(
@@ -211,6 +244,11 @@ def run(output: Path) -> dict:
         "candidate_id": "Q218",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "fixed_window": {"start": START, "end": END},
+        "pairing_rule": (
+            "exact report_date preferred; otherwise latest eligible Item-2.02 "
+            "8-K by SEC acceptance within the target 10-K reporting cycle, "
+            "bounded below by the preceding in-window 10-K acceptance"
+        ),
         "issuer_results": issuer_results,
         "issuer_count": len(issuer_results),
         "all_pairing_valid": complete,
