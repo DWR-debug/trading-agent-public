@@ -32,9 +32,9 @@
     "reasons": []
   },
   "litellm_transport_enabled": false,
-  "task_fingerprint": "0d93716d6d4b736aa803ad74ce919d8d57856360bc03cfdecc14b0a671220ee1",
-  "context_fingerprint": "ccfd0fe495550ebc55588238398a664eae5a39f554fb2dfc1054fc1a0ae7d860",
-  "observed_at_utc": "2026-10-07T09:48:10.020728Z",
+  "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
+  "context_fingerprint": "aac6322f1f52a1a4d8b2e11da08b565678b3eddf005198fc8a6acbfcb8f657cf",
+  "observed_at_utc": "2026-10-07T12:37:41.572879Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 41.772,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 30.571,
+  "stdout": "# Q218 Adversarial Methods Review — Worker Handoff\n\n## Scope\nAttack Q218 (mandatory-vs-voluntary disclosure semantic wedge) as a methods reviewer. Focus areas: deterministic 10-K→8-K pairing, SEC acceptance timestamps, filing amendments, report-date vs event-date ambiguity, false earnings-release pairing, voluntary-vs-mandatory channel classification, issuer identity drift, and semantic-wedge collapse to length/complexity/global similarity.\n\n## Findings (Failure Modes)\n\n### 1. Acceptance-Timestamp Pairing Ambiguity\n**Failure mode:** The census pairs the latest eligible 8-K by SEC acceptance timestamp within `(preceding 10-K acceptance, target 10-K acceptance]`. If acceptance timestamps are missing or non-monotonic, the pairing becomes non-deterministic or silently drops filings.\n\n**Smallest deterministic falsifier:** Construct a synthetic SEC submission JSON where two 8-Ks have identical or inverted acceptance timestamps within the same interval. The compiler must either deterministically reject or deterministically order them.\n\n**Exact artifact required:** A frozen synthetic `CIKxxxxxxxx.json` fixture with controlled acceptance timestamps, plus a compiler run log asserting deterministic ordering/rejection.\n\n---\n\n### 2. Amendment (10-K/A, 8-K/A) Handling\n**Failure mode:** Amendments may carry new acceptance timestamps but the same primary document. If the compiler treats `/A` filings as independent events, it could double-count or mis-pair earnings releases.\n\n**Smallest deterministic falsifier:** Inject a 10-K/A whose acceptance timestamp falls after a subsequent 8-K. The compiler must deterministically decide whether to treat the amendment as a new anchor or ignore it.\n\n**Exact artifact required:** A frozen fixture with a 10-K, followed by an 8-K, followed by a 10-K/A. Compiler output must assert a single deterministic pairing decision.\n\n---\n\n### 3. Report-Date vs Event-Date Substitution\n**Failure mode:** The candidate spec states inspection date and violation date are retained as metadata but not substituted for dissemination time. If the compiler ever uses `reportDate` instead of `filingDate`/`acceptanceDatetime`, the event clock collapses.\n\n**Smallest deterministic falsifier:** Provide a 10-K with `reportDate` ≠ `filingDate`. The compiler must use `filingDate` (or acceptance timestamp) for pairing, never `reportDate`.\n\n**Exact artifact required:** A frozen SEC submission fixture where `reportDate` and `filingDate` differ by ≥5 trading days. Compiler log must assert `filingDate` was used.\n\n---\n\n### 4. False Earnings-Release Pairing\n**Failure mode:** Not all 8-Ks within the interval are earnings releases. Item 2.02/Exhibit 99.1-style 8-Ks are the intended signal. If the compiler pairs any 8-K (e.g., Item 5.02 executive hiring), the semantic wedge collapses to generic disclosure proximity.\n\n**Smallest deterministic falsifier:** Inject a non-earnings 8-K (e.g., Item 5.02) between two 10-Ks. The compiler must deterministically exclude it from earnings-release pairing.\n\n**Exact artifact required:** A frozen fixture with a 10-K, a 5.02 8-K, and a 2.02 8-K. Compiler log must assert only the 2.02 8-K was paired.\n\n---\n\n### 5. Voluntary-vs-Mandatory Channel Classification\n**Failure mode:** The wedge assumes 8-K Item 2.02 is voluntary disclosure and 10-K is mandatory. If the compiler cannot distinguish mandatory (10-K) from voluntary (8-K) channels, the semantic wedge is meaningless.\n\n**Smallest deterministic falsifier:** Provide a 10-K and an 8-K with identical content (e.g., same XBRL instance). The compiler must classify them into distinct channels based on form type, not content.\n\n**Exact artifact required:** A frozen fixture with a 10-K and an 8-K sharing identical financial-statement XBRL. Compiler log must assert distinct mandatory/voluntary classification.\n\n---\n\n### 6. Issuer Identity Drift\n**Failure mode:** CIK mapping must be immutable for the trial. If the compiler allows CIK reassignment or merges filings across CIKs, issuer exposure drifts.\n\n**Smallest deterministic falsifier:** Inject filings under two distinct CIKs that share a symbol (e.g., due to delisting/relisting). The compiler must deterministically attribute each filing to its original CIK.\n\n**Exact artifact required:** A frozen fixture with two CIKs sharing a symbol. Compiler log must assert no cross-CIK attribution.\n\n---\n\n### 7. Semantic Wedge Collapse to Length/Complexity/Global Similarity\n**Failure mode:** If the wedge is defined only by textual length, complexity, or global similarity between 10-K and 8-K, it collapses to a trivial proxy. The compiler must enforce structural (form-type + item) distinction, not surface similarity.\n\n**Smallest deterministic falsifier:** Provide a 10-K and an 8-K with near-identical text length and complexity but different items (e.g., 10-K = annual report, 8-K = Item 1.01 entry into a material definitive agreement). The compiler must classify them as distinct channels.\n\n**Exact artifact required:** A frozen fixture with matched-length 10-K and 8-K of differing items. Compiler log must assert structural distinction.\n\n---\n\n## Counterarguments (Expected Defenses)\n- **Defense:** \"The compiler only uses form type and item, not content.\"\n  - **Rebuttal:** Must be proven with a fixture where content is identical but form/item differ.\n- **Defense:** \"Acceptance timestamps are always monotonic in production SEC data.\"\n  - **Rebuttal:** The compiler must still be deterministic under non-monotonic inputs; real-world data quality is not a substitute for deterministic logic.\n- **Defense:** \"Amendments are rare and excluded by form filter.\"\n  - **Rebuttal:** The form filter must be shown to deterministically handle `/A` suffixes without silent inclusion.\n\n---\n\n## Concrete Next Actions\n1. **Generate frozen SEC submission fixtures** for each failure mode above (7 fixtures total).\n2. **Run the Q218 compiler** against each fixture and capture deterministic logs.\n3. **Assert compiler output** matches the expected deterministic decision for each case.\n4. **Archive fixtures and logs** under `research/evidence/q218_adversarial_fixtures_2026-10-07/` with SHA-256 hashes.\n5. **Do not** run any market-outcome analysis, ranking, tuning, or holdout selection.\n\n---\n\n## Uncertainty\n- Whether the current compiler handles `/A` amendments deterministically is unverified without a fixture.\n- Whether `reportDate` is ever used in pairing logic is unverified without a divergent-dates fixture.\n- Whether issuer identity is enforced at the CIK level or symbol level is unverified without a shared-symbol fixture.\n\nAll uncertainties are resolvable via deterministic fixtures and compiler logs — no market data required.",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791376662-LpUqARxYiQd7LOCe9qwl",
+  "usage": {
+    "prompt_tokens": 5575,
+    "completion_tokens": 1518,
+    "total_tokens": 7093,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
