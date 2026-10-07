@@ -558,6 +558,7 @@ def planned_capacity_plan(
             "basis": "the dedicated three-shard historical 13F census workflow is present and its next gate is receipt-defined; it internally uses Windows plus hosted x64/ARM64 shards",
             "dispatchable": True,
             "exclusive_dispatch": True,
+            "resource_leases": ["Windows self-hosted A", "GitHub-hosted Ubuntu x64", "GitHub-hosted ARM64"],
             "execution_workflow": ".github/workflows/q104-i19-13f-historical-identity-census.yml",
         },
         {
@@ -740,6 +741,7 @@ def planned_capacity_plan(
                 "execution_status": "planned_not_started",
                 "dispatch_state": "READY_FOR_FAST_DISPATCH" if item.get("dispatchable", False) else "PLANNED_ADVISORY",
                 "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
+                "resource_leases": list(item.get("resource_leases") or []),
                 "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
                 "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
             })
