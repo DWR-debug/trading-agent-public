@@ -168,3 +168,10 @@ jobs:
           path: research/runs/q229_q230_source_feasibility/source_feasibility.json
           if-no-files-found: error
           retention-days: 30
+
+  completion_relay:
+    if: always()
+    needs: [source_probe]
+    uses: ./.github/workflows/research-completion-relay.yml
+    with:
+      source_workflow: "Q229-Q230 Source Feasibility"
