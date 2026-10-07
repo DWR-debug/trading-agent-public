@@ -681,7 +681,7 @@ def planned_capacity_plan(
             "dispatchable": True,
             "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
             "execution_workflow_inputs": {
-                "task_id": "AI-2026-10-07-Q218-FOCUSED-ADVERSARIAL",
+                "task_id": "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
                 "run_secondary_provider": "false",
                 "use_litellm_transport": "false",
             },
