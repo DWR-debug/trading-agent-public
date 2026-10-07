@@ -274,7 +274,7 @@ def main() -> int:
     ap.add_argument("--runs", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--repo", required=True)
-    ap.add_argument("--max-dispatches", type=int, default=4)
+    ap.add_argument("--max-dispatches", type=int, default=6)
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
