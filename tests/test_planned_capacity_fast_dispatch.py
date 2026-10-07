@@ -271,3 +271,80 @@ def test_top4_windows_slot_workflow_avoids_setup_python_action():
     windows = text.split("  windows:", 1)[1].split("  ubuntu_x64:", 1)[0]
     assert "actions/setup-python@v6" not in windows
     assert "python-3.13.15-nuget-top4-slot" in windows
+
+def test_fast_dispatch_treats_startup_failure_as_one_technical_retry():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted B",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-PIT",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+    failed_once = [{
+        "status": "completed",
+        "conclusion": "startup_failure",
+        "name": "Top-4 Candidate Slot Research",
+        "display_title": "Top-4 Slot windows Q218",
+        "run_name": "Top-4 Slot windows Q218",
+    }]
+    retry_plan = dispatch_candidates(snapshot, failed_once, max_dispatches=4)
+    assert [x["candidate"] for x in retry_plan["dispatches"]] == ["Q218"]
+
+    failed_twice = failed_once + [{
+        "status": "completed",
+        "conclusion": "startup_failure",
+        "name": "Top-4 Candidate Slot Research",
+        "display_title": "Top-4 Slot windows Q218",
+        "run_name": "Top-4 Slot windows Q218",
+    }]
+    blocked = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
+    assert blocked["dispatches"] == []
+
+
+def test_fast_dispatch_has_non_slot_technical_failure_circuit_breaker():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow = ".github/workflows/ai-worker-fabric.yml"
+    snapshot = {
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Free AI pool",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q220-ADVERSARIAL",
+                "candidate": "Q220",
+                "scheduled": True,
+                "dispatchable": True,
+                "allow_parallel_with_candidate": True,
+                "execution_workflow": workflow,
+                "execution_workflow_inputs": {"task_id": "AI-2026-10-06-Q220-TOP4-ADVERSARIAL"},
+            }],
+        }],
+    }
+    failed = [{
+        "status": "completed",
+        "conclusion": "startup_failure",
+        "path": workflow,
+        "name": "Free AI Worker Fabric",
+    }]
+    retry = dispatch_candidates(snapshot, failed, max_dispatches=4)
+    assert [x["candidate"] for x in retry["dispatches"]] == ["Q220"]
+
+    failed_twice = failed + [{
+        "status": "completed",
+        "conclusion": "startup_failure",
+        "path": workflow,
+        "name": "Free AI Worker Fabric",
+    }]
+    blocked = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
+    assert blocked["dispatches"] == []
