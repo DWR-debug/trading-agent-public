@@ -98,7 +98,13 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     # Prefer the canonical Top-4 cohort, then direct next-gate workflows,
     # while preserving the dashboard's deterministic order.
     rank = {"Q218": 0, "Q219": 0, "Q220": 0, "Q221": 0, "Q224": 10, "Q228": 20, "Q231": 30}
-    planned.sort(key=lambda x: (rank.get(str(x.get("candidate")), 50), str(x.get("plan_id") or "")))
+    planned.sort(
+        key=lambda x: (
+            100 if str(x.get("execution_workflow") or "").endswith("ai-worker-fabric.yml") else 0,
+            rank.get(str(x.get("candidate")), 50),
+            str(x.get("plan_id") or ""),
+        )
+    )
 
     work = active_research_items(snapshot)
     active_paths = active_workflow_paths(runs)
@@ -129,7 +135,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_TOP4_ACTIVE_OR_DUPLICATE"})
                 continue
 
-        if not item.get("allow_parallel_with_candidate", False) and candidate_is_active(candidate, work):
+        if not item.get("allow_parallel_with_candidate", False) and candidate_is_active(candidate, work, exclude_resources={"Free AI pool"}):
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_CANDIDATE_ACTIVE"})
             continue
 
