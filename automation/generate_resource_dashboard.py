@@ -13,7 +13,11 @@ ROOT = Path(__file__).parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context
+try:
+    from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context
+except ModuleNotFoundError:
+    # Direct script execution puts automation/ on sys.path.
+    from planned_capacity_fast_dispatch import ai_task_completed_with_current_context
 OUT = ROOT / "docs" / "dashboard" / "dashboard_data.json"
 BOOTSTRAP = ROOT / "docs" / "dashboard" / "dashboard_bootstrap.js"
 REPO = os.environ.get("GITHUB_REPOSITORY", "DWR-debug/trading-agent-public")
