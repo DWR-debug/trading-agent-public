@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "4b2b2baf33603908ce1ca2c6598dd49a3003e17a9dfe5dc09ec34cbefc39739c",
-  "observed_at_utc": "2026-10-07T12:37:48.597482Z",
+  "observed_at_utc": "2026-10-07T12:38:38.512132Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 37.79,
-  "stdout": "**Adversarial Methods Review: Q220 Narrative-Structured XBRL Representation Gap**  \n*Focus: Source/PIT structure, representation fidelity, and confounding risks*  \n\n---\n\n### **1. As-filed XBRL Text-Block & Presentation-Role Mapping**  \n**Finding:** The Q220 FSN schema gate (`automation/q220_fsn_schema_gate.py`) only verifies archive member names and headers of derived CSV-like files (`sub`, `tag`, `dim`, `num`, `txt`, `pre`). It does not validate that:  \n- XBRL text-blocks (`<textBlock>` elements) are correctly mapped to presentation roles (e.g., `us-gaap:NoteAccountingPolicyTextBlock`).  \n- The `txt` table in the FSN archive actually contains the *unrendered* XBRL text-block content (vs. stripped or transformed text).  \n**Counterargument:** If the FSN `txt` table omits namespaces, comments, or CDATA sections, or if presentation roles are misaligned (e.g., mapping a policy block to a table block), the narrative representation becomes a proxy for filing length or generic XML verbosity—not meaningful semantic content.  \n**Minimal Falsifier:**  \n- **Artifact:** A single XBRL instance (e.g., `0000320193-23-000107.xml` from AAPL 2022 10-K) and its corresponding FSN `txt.tsv` from the 2009q1_notes.zip archive.  \n- **Test:** Extract all `<textBlock>` elements with `presentationLink` roles from the XBRL instance. Compare raw text (including whitespace/namespaces) to the FSN `txt.tsv` rows for the same concept/context. Fail if any text-block content is truncated, altered, or missing.  \n**Uncertainty:** Low. The FSN extraction process is documented but not verified in the gate; this is a design gap requiring direct artifact comparison.  \n\n---\n\n### **2. Taxonomy-Extension Changes**  \n**Finding:** The gate uses a static 2009q1 FSN archive (`URL = \"https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2009q1_notes.zip\"`). It does not account for:  \n- Evolution of base taxonomies (e.g., US-GAAP 2009 vs. 2023) or extension taxonomy adoption over time.  \n- Whether the FSN archive’s concept labels (`tag` table) reflect the *as-filed* taxonomy or a normalized version.  \n**Counterargument:** If the FSN `tag` table maps extension concepts to base taxonomy labels (or vice versa), the representation gap may conflate true narrative differences with taxonomy mapping artifacts—especially for candidates relying on concept-specific PIT (e.g., Q220’s assumed reliance on note text-blocks).  \n**Minimal Falsifier:**  \n- **Artifact:** Two FSN archives: one from a fixed vintage (e.g., 2009q1) and one from a later period (e.g., 2023q1) for the same CIK/form type.  \n- **Test:** For a set of extension concepts (e.g., `us-gaap:EarningsPerShareBasicAndDilutedAbstract` vs. a company-specific extension), verify that the FSN `tag` table labels match the *as-filed* taxonomy label (from the instance’s `schemaRef`). Fail if labels diverge due to taxonomy versioning.  \n**Uncertainty:** Medium. Requires historical FSN archives beyond 2009q1 (not in current context); but the gate’s fixed URL implies invariance assumption.  \n\n---\n\n### **3. Custom Namespaces**  \n**Finding:** The gate parses FSN CSV headers but does not check for:  \n- Presence of custom namespaces in XBRL instances (e.g., `xmlns:myco=\"http://example.com/myco\"`).  \n- Whether the FSN `sub` or `tag` tables preserve namespace prefixes in element names (e.g., `myco:CustomMetric`).  \n**Counterargument:** If custom namespaces are stripped in FSN generation, the `num`/`tag` tables lose extension concept specificity, forcing reliance on base taxonomy concepts. This could make Q220’s representation gap a proxy for extension usage frequency (a confounding factor unrelated to narrative quality).  \n**Minimal Falsifier:**  \n- **Artifact:** An XBRL instance with a custom namespace declaration and a concept using that prefix (e.g., `<myco:RiskFactor>`).  \n- **Test:** Check the FSN `tag` table for the concept’s local name. Fail if the namespace prefix is omitted (e.g., shows `RiskFactor` instead of `myco:RiskFactor`).  \n**Uncertainty:** Low. FSN extraction tools (e.g., SEC’s) typically expand namespaces; but the gate does not validate this step.  \n\n---\n\n### **4. Section Identity**  \n**Finding:** The gate treats the FSN `txt` table as undifferentiated narrative text. It does not:  \n- Link text-blocks to specific sections (e.g., MD&A vs. Note 1 vs. Note 12) via XBRL presentation roles or `section` dimensions.  \n- Control for section-level heterogeneity (e.g., risk factors vs. accounting policies).  \n**Counterargument:** If Q220’s representation gap correlates with section length (e.g., longer MD&A) rather than narrative substance, it confounds section disclosure practices with the target mechanism. The gate’s agnosticism to section identity invites this confound.  \n**Minimal Falsifier:**  \n- **Artifact:** An XBRL instance with multiple text-blocks tagged to different sections (e.g., using `us-gaap:SectionNarrative` dimension).  \n- **Test:** Group FSN `txt.tsv` rows by context section identifier. Fail if the gate’s analysis (e.g., token counts) does not stratify by section, and section-level variance explains >50% of representation gap variance (via a deterministic ANOVA on frozen sections).  \n**Uncertainty:** High. Requires section-dimension mapping in FSN (not verified in gate); but absence of section controls is a design gap.  \n\n---\n\n### **5. Narrative Tokenization**  \n**Finding:** The gate does not specify how narrative text (from FSN `txt` table) is tokenized for Q220’s representation gap metric (implied but undefined in context). Risks include:  \n- Inconsistent handling of XBRL-specific artifacts (e.g., `&#xA;` for line breaks, HTML entities).  \n- Language-agnostic tokenization (e.g., splitting on whitespace) ignoring financial terminology (e.g., \"ROIC\" as one token).  \n**Counterargument:** If tokenization inflates counts for boilerplate text (e.g., repeated \"The Company\" due to space splitting) or misses domain-specific compounds, the representation gap becomes a proxy for tokenization artifacts—not narrative density or complexity.  \n**Minimal Falsifier:**  \n- **Artifact:** A single FSN `txt.tsv` row containing known XBRL artifacts (e.g., `\"Revenue&#xA;recognized&#xA;when\"`) and financial terms (e.g., `\"EBITDA\"`).  \n- **Test:** Apply the gate’s implied tokenization method (if any) vs. a baseline (e.g., NLTK’s `word_tokenize`). Fail if token counts differ by >10% for the same string, and the difference correlates with XBRL artifact density.  \n**Uncertainty:** Medium. Tokenization method is undefined in Q220 context; this is a specification gap.  \n\n---\n\n### **6. Amended Filings**  \n**Finding:** The gate uses SEC acceptance timestamps but does not:  \n- Distinguish original (`10-K`) vs. amended (`10-K/A`) filings in the FSN archive.  \n- Verify that amended filings’ XBRL reflects *only* changes (not a full restatement) or that the FSN captures amendment metadata.  \n**Counterargument:** If amended filings duplicate narrative text (e.g., unchanged notes copied from original), the representation gap may reflect amendment frequency—not substantive narrative evolution. The gate’s acceptance-window logic (`preceding 10-K acceptance, target 10-K acceptance]`) risks including amended filings as independent events.  \n**Minimal Falsifier:**  \n- **Artifact:** A pair of filings: original `10-K` (accession `A`) and `10-K/A` (accession `B`) for the same report date, with acceptance timestamps within the gate’s window.  \n- **Test:** Compare FSN `txt.tsv` rows for identical concept/context between",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 12.241,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791376668-Si0mkbQYG9kFSe9px8QA",
-  "usage": {
-    "prompt_tokens": 5527,
-    "completion_tokens": 3200,
-    "total_tokens": 8727,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1221,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
