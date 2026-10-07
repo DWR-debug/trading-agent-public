@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T06:06:10.441452+00:00",
+    "generated_at_utc": "2026-10-07T06:07:25.946561+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "bf6feb50afe2708c47b7b90763684a709af41c6a"
+    "source_master_sha": "5a0b53761bf6e8ad2fadb0b73a8fc036ef7d4558"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1811,7 +1811,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T06:06:10.441452+00:00",
+  "generated_at_utc": "2026-10-07T06:07:25.946561+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4535,18 +4535,10 @@
       },
       {
         "baseRefName": "master",
-        "headRefName": "research/q104-i22-cross-arch-reconcile-20261007",
-        "number": 1161,
-        "title": "RESEARCH: enforce Q104 I22 cross-architecture reconciliation",
-        "updatedAt": "2026-10-07T06:03:19Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1161"
-      },
-      {
-        "baseRefName": "master",
         "headRefName": "fix/t052-master-provenance-case-filter-20261007",
         "number": 1160,
         "title": "FIX: make T052 master provenance path check deterministic",
-        "updatedAt": "2026-10-07T05:59:27Z",
+        "updatedAt": "2026-10-07T06:06:38Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/pull/1160"
       },
       {
@@ -4560,6 +4552,36 @@
     ],
     "recent_commits": [
       {
+        "message": "RESEARCH: enforce Q104 I22 cross-architecture reconciliation",
+        "sha": "5a0b53761bf6e8ad2fadb0b73a8fc036ef7d4558",
+        "timestamp": "2026-10-07T08:07:10+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6491868fa500b61d43424c02824bd1a726c74339",
+        "timestamp": "2026-10-07T06:06:25Z"
+      },
+      {
+        "message": "OPS: record Groq free adversarial worker state",
+        "sha": "db6a44bcbc4da203bfcb52f78f35ff7cfd220be4",
+        "timestamp": "2026-10-07T06:06:19Z"
+      },
+      {
+        "message": "OPS: record Groq free adversarial worker state",
+        "sha": "d1bcf6afb2b8cd650beed7d9debf3a27702a6d49",
+        "timestamp": "2026-10-07T06:06:15Z"
+      },
+      {
+        "message": "OPS: record Groq free adversarial worker state",
+        "sha": "a7eedabbf8abb0d5bdc862f75715b704eceff7b3",
+        "timestamp": "2026-10-07T06:06:13Z"
+      },
+      {
+        "message": "OPS: record Groq free adversarial worker state",
+        "sha": "03cd8bf7d019b7cbf0c4fdb2864f123f6e4efeda",
+        "timestamp": "2026-10-07T06:06:10Z"
+      },
+      {
         "message": "FIX: make Groq matrix state publishing race tolerant",
         "sha": "bf6feb50afe2708c47b7b90763684a709af41c6a",
         "timestamp": "2026-10-07T08:05:57+02:00"
@@ -4568,36 +4590,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "ad495875eb24957e7742cb73c8934de1cf7c662c",
         "timestamp": "2026-10-07T06:04:00Z"
-      },
-      {
-        "message": "OPS: persist latest Q171 WARC material receipt",
-        "sha": "5d504e81563c59e8af576adc8cf46d1df33a5157",
-        "timestamp": "2026-10-07T06:03:27Z"
-      },
-      {
-        "message": "OPS: record Groq API key smoke test",
-        "sha": "8e78e42a2526e8a7d3d77218d8209cde9ed6b52b",
-        "timestamp": "2026-10-07T06:03:06Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "bc75cf28932b19fe87a257e7ca2fe2f9dfc09056",
-        "timestamp": "2026-10-07T05:59:44Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "c7abef983aab1e70e98d5dd539e546137ca8e43e",
-        "timestamp": "2026-10-07T05:59:28Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "38c86683769ae43dddc0f9bc28985e8a167a2a8e",
-        "timestamp": "2026-10-07T05:58:50Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "112476de860bd6d29f80a02d5b9b114a71863052",
-        "timestamp": "2026-10-07T05:56:13Z"
       }
     ]
   },
@@ -4695,7 +4687,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bf6feb50afe2708c47b7b90763684a709af41c6a",
+  "source_master_sha": "5a0b53761bf6e8ad2fadb0b73a8fc036ef7d4558",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4809,6 +4801,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37579682080"
+    "run_id": "37579794958"
   }
 }
