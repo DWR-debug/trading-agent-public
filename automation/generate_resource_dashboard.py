@@ -564,7 +564,10 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
     return out
 
 
-def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def planned_research_backlog(
+    state_board: list[dict[str, Any]],
+    workflow_benchmarks: dict[str, dict[str, int | str]],
+) -> list[dict[str, Any]]:
     """Expose a real bounded queue of future next-gate research, independent of live slot occupancy."""
     order = [
         ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "windows"),
@@ -586,6 +589,7 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
         item = by_code.get(code)
         if not item:
             continue
+        benchmark = workflow_benchmarks.get(workflow_display_name(workflow))
         backlog.append({
             "queue_rank": rank,
             "candidate": code,
@@ -593,6 +597,11 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
             "next_gate": str(item.get("next_gate") or "next receipt-defined research gate"),
             "execution_workflow": workflow,
             "resource_hint": resource,
+            "target": resource or "next free qualified resource",
+            "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
+            "duration_p90_seconds": int(benchmark["p90_seconds"]) if benchmark else None,
+            "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
+            "duration_source": str(benchmark["source"]) if benchmark else "no verified duration history",
             "planned_status": "READY_NEXT_GATE",
             "non_authorizing": True,
         })
