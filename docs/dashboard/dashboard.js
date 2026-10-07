@@ -136,14 +136,15 @@ function render(data){
     return "<tr><td class='rowtitle'>"+esc(x.resource)+"</td><td>"+esc(x.current_assignments||0)+" aktiver Job"+((x.current_assignments||0)===1?"":"s")+"</td><td>"+label+basis+"</td><td>"+readiness+"</td><td>"+dur+(p?"<div class='small muted'>n="+esc(p.duration_sample_count||0)+"</div>":"")+"</td><td>"+status+"</td></tr>";
   }).join("")+"</tbody></table>" : "<div class='empty'>Kein bounded Plan im Snapshot.</div>";
 
-  $("pipeline").innerHTML=pipeline.length ? "<table><thead><tr><th>Candidate</th><th>Stage</th><th>Nächster Gate</th><th>Aktuell</th><th>Erwartete Jobdauer</th><th>Samples</th></tr></thead><tbody>"+pipeline.map(function(x){
-    var active=x.active;
+  $("pipeline").innerHTML=pipeline.length ? "<table><thead><tr><th>Candidate</th><th>Gesamtentwicklung</th><th>Nächster Milestone</th><th>Fortschritt zum Milestone</th><th>Status</th></tr></thead><tbody>"+pipeline.map(function(x){
+    var overall=Math.max(0,Math.min(100,Number(x.overall_progress_percent||0)));
+    var next=Math.max(0,Math.min(100,Number(x.next_milestone_progress_percent||0)));
+    var status=x.active?"<span class='badge active-badge'>ARBEIT LÄUFT ("+esc(x.active_jobs)+")</span>":"<span class='badge unknown'>wartet auf nächsten Gate-Start</span>";
     return "<tr><td class='rowtitle'>"+esc(x.code)+"</td>"+
-      "<td>"+esc(x.stage)+"</td>"+
+      "<td><div class='progress-label'><strong>"+overall+"%</strong><span class='small muted'>"+esc(x.overall_progress_basis||"")+"</span></div><div class='progress'><div class='progress-fill' style='width:"+overall+"%'></div></div></td>"+
       "<td>"+esc(x.next_gate||"—")+"</td>"+
-      "<td>"+(active?"<span class='badge active-badge'>ARBEIT LÄUFT ("+esc(x.active_jobs)+")</span>":"<span class='badge unknown'>kein aktiver Job sichtbar</span>")+"</td>"+
-      "<td>"+fmtDuration(x.expected_duration_seconds)+"<div class='small muted'>P90 "+fmtDuration(x.duration_p90_seconds)+"</div></td>"+
-      "<td>"+esc(x.duration_sample_count||0)+"</td></tr>";
+      "<td><div class='progress-label'><strong>"+next+"%</strong><span class='small muted'>"+esc(x.next_milestone_progress_basis||"")+"</span></div><div class='progress'><div class='progress-fill' style='width:"+next+"%'></div></div></td>"+
+      "<td>"+status+"</td></tr>";
   }).join("")+"</tbody></table>" : "<div class='empty'>Keine Top-4-Pipeline im Snapshot.</div>";
 
   var milestones=data.milestone_history_12h||[];
