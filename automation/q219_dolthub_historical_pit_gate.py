@@ -81,7 +81,7 @@ LIMIT {HEAD_LOG_LIMIT}
     commit_count = len(scanned_rows)
 
     prior_query = (
-        "SELECT commit_hash, date, message FROM DOLT_LOG() "
+        "SELECT commit_hash, date, message FROM dolt_log "
         "WHERE date <= " + repr(TARGET_DATE + " 23:59:59") +
         " ORDER BY date DESC LIMIT 1"
     )
@@ -154,12 +154,9 @@ LIMIT {HEAD_LOG_LIMIT}
             "option_chain_update_commits_observed": len(history_rows),
             "commit_log_query": history_query,
             "history_query_surface": "dolt_log_system_table_filtered",
-
             "bounded_scan_limit": HEAD_LOG_LIMIT,
-
             "prior_commit_query": prior_query,
             "prior_commit_query_surface": "dolt_log_system_table_filtered",
-
         },
         "historical_pit": {
             "commit_at_or_before_target_date_observed": pit_before_target,
