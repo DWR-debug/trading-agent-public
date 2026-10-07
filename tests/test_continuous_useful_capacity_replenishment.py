@@ -185,6 +185,7 @@ def test_dashboard_exposes_six_job_future_queue():
     script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
     html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
     assert "planned_research_backlog" in generator
+    assert "return backlog[:6]" in generator
     assert '"planned_research_queue_target": 6' in generator
     assert '"planned_research_queue_items"' in generator
     assert "planned_research_queue" in script
