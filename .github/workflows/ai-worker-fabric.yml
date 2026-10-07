@@ -49,6 +49,7 @@ on:
           - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
           - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
           - AI-2026-10-06-Q218-TOP4-ADVERSARIAL
+          - AI-2026-10-07-Q218-FOCUSED-ADVERSARIAL
           - AI-2026-10-06-Q219-TOP4-ADVERSARIAL
           - AI-2026-10-06-Q220-TOP4-ADVERSARIAL
           - AI-2026-10-06-Q221-TOP4-ADVERSARIAL
@@ -165,6 +166,7 @@ jobs:
               if changed.intersection(top4_paths):
                   tasks.extend([
                       'AI-2026-10-06-Q218-TOP4-ADVERSARIAL',
+              'AI-2026-10-07-Q218-FOCUSED-ADVERSARIAL',
                       'AI-2026-10-06-Q219-TOP4-ADVERSARIAL',
                       'AI-2026-10-06-Q220-TOP4-ADVERSARIAL',
                       'AI-2026-10-06-Q221-TOP4-ADVERSARIAL',
@@ -196,6 +198,7 @@ jobs:
                   'AI-2026-10-04-Q187-Q192-ADVERSARIAL': 'ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json',
                   'AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT': 'ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json',
                   'AI-2026-10-06-Q218-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json',
+                  'AI-2026-10-07-Q218-FOCUSED-ADVERSARIAL': 'ai_requests/AI-2026-10-07-Q218-FOCUSED-ADVERSARIAL.json',
                   'AI-2026-10-06-Q219-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json',
                   'AI-2026-10-06-Q220-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json',
                   'AI-2026-10-06-Q221-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json',
@@ -280,6 +283,7 @@ jobs:
             AI-2026-10-04-Q187-Q192-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT) echo 'path=ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-06-Q218-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-07-Q218-FOCUSED-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-07-Q218-FOCUSED-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-06-Q219-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-06-Q220-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-06-Q221-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
