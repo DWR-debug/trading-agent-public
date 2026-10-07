@@ -102,6 +102,10 @@ function render(data){
       "<td>"+(x.expected_finish_at?esc(ts(x.expected_finish_at)):"—")+"<div class='small muted'>"+(x.remaining_seconds!=null?esc(relativeRemaining(x.remaining_seconds)):"keine belastbare Dauerbasis")+"</div></td></tr>";
   }).join("")+"</tbody></table>" : "<div class='empty'>Aktuell ist kein aktiver GitHub-Actions-Job im Snapshot sichtbar.</div>";
 
+  var plannedQueue=data.planned_research_queue||[];
+  $("plannedQueue").innerHTML=plannedQueue.length ? "<table><thead><tr><th>Rang</th><th>Candidate</th><th>Nächster Gate</th><th>Workflow</th></tr></thead><tbody>"+plannedQueue.map(function(x){
+    return "<tr><td>"+esc(x.queue_rank)+"</td><td class='rowtitle'>"+esc(x.candidate)+"<div class='small muted'>"+esc(x.lane)+"</div></td><td>"+esc(x.next_gate)+"</td><td>"+esc(x.execution_workflow)+"</td></tr>";
+  }).join("")+"</tbody></table>" : "<div class='empty'>Kein bounded Future-Research-Backlog verfügbar.</div>";
   var planned=data.planned_capacity||[];
   $("planned").innerHTML=planned.length ? "<table><thead><tr><th>Kapazität</th><th>Aktuell</th><th>Geplante nächste Arbeit</th><th>Bereitschaft</th><th>Erwartete Dauer</th><th>Planstatus</th></tr></thead><tbody>"+planned.map(function(x){
     var p=(x.planned_assignments||[])[0];
