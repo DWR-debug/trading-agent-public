@@ -22,49 +22,68 @@ jobs:
         github.event_name == 'workflow_dispatch' ||
         (
           github.event.workflow_run.conclusion == 'success' &&
-      - name: Locate current positive Q218 source/event receipts
-        id: locate
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TRIGGER_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
-          TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || '' }}
+          contains(github.event.workflow_run.display_title, 'Q218 event_pair')
+        )
+      )
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - name: Checkout master for receipt-index verification
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Verify positive Q218 source/event receipt index
         shell: bash
         run: |
           set -euo pipefail
-          runs="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?branch=master&per_page=100")"
-          event_run="$TRIGGER_RUN_ID"
-          if [ -z "$event_run" ] || [ "$event_run" = "" ]; then
-            event_run="$(jq -r '.workflow_runs[] | select(.name=="Top-4 Candidate Slot Research" and .conclusion=="success" and (.display_title | contains("Q218 event_pair"))) | .id' <<<"$runs" | head -n1)"
-          fi
-          test -n "$event_run" && test "$event_run" != "null"
-          event_title="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$event_run" --jq '.display_title')"
-          event_conclusion="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$event_run" --jq '.conclusion')"
-          event_head="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$event_run" --jq '.head_sha')"
-          test "$event_conclusion" = "success"
-          [[ "$event_title" == *"Q218 event_pair"* ]]
-          [[ "$event_head" != "" ]]
-          source_run=""
-          while read -r candidate_id; do
-            [ -z "$candidate_id" ] && continue
-            candidate_head="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$candidate_id" --jq '.head_sha')"
-            if git diff --quiet "$candidate_head" "$TRIGGER_SHA" -- automation/q218_sec_multichannel_source_gate.py; then
-              source_run="$candidate_id"
-              break
-            fi
-          done < <(jq -r '.workflow_runs[] | select(.name=="Top-4 Candidate Slot Research" and .conclusion=="success" and (.display_title | contains("Q218 source"))) | .id' <<<"$runs")
-          test -n "$source_run"
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          p = Path('research/evidence/q218_focus_gate_receipt_index_latest.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          assert data['status'] == 'Q218_SOURCE_AND_EVENT_PAIR_GATES_COMPLETE'
+          assert data['source_gate']['verified_positive_complete'] is True
+          assert data['event_pair_gate']['verified_positive_complete'] is True
+          assert data['scientific_boundary']['performance_authorized'] is False
+          assert data['safety']['paper_only'] is True
+          expected = {
+              'automation/q218_sec_multichannel_source_gate.py': data['source_gate']['gate_code_blob_sha'],
+              'automation/q218_sec_event_pair_lineage_gate.py': data['event_pair_gate']['gate_code_blob_sha'],
+          }
+          for path, sha in expected.items():
+              actual = subprocess.check_output(['git', 'hash-object', path], text=True).strip()
+              assert actual == sha, f'Q218 gate context changed: {path}'
+          print('Q218_POSITIVE_SOURCE_EVENT_INDEX=PASS')
+          PY
+
+      - name: Locate indexed artifacts
+        id: locate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_run="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('research/evidence/q218_focus_gate_receipt_index_latest.json').read_text())['source_gate']['run_id'])
+          PY
+          )"
+          event_run="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('research/evidence/q218_focus_gate_receipt_index_latest.json').read_text())['event_pair_gate']['run_id'])
+          PY
+          )"
           source_artifact="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run/artifacts" --jq '.artifacts[] | select(.expired==false) | .name' | head -n1)"
           event_artifact="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$event_run/artifacts" --jq '.artifacts[] | select(.expired==false) | .name' | head -n1)"
           test -n "$source_artifact" && test -n "$event_artifact"
-          {
-            echo "source_run=$source_run"
-            echo "event_run=$event_run"
-            echo "source_artifact=$source_artifact"
-            echo "event_artifact=$event_artifact"
-            echo "event_head=$event_head"
-          } >> "$GITHUB_OUTPUT"
-            echo "event_artifact=$event_artifact"
-          } >> "$GITHUB_OUTPUT"
+          echo "source_run=$source_run" >> "$GITHUB_OUTPUT"
+          echo "event_run=$event_run" >> "$GITHUB_OUTPUT"
+          echo "source_artifact=$source_artifact" >> "$GITHUB_OUTPUT"
+          echo "event_artifact=$event_artifact" >> "$GITHUB_OUTPUT"
 
       - name: Download canonical positive receipts
         env:
@@ -104,19 +123,19 @@ jobs:
           python - <<'PY'
           import json, os
           from pathlib import Path
-          p = Path("research/runs/q218-independent-architecture") / os.environ["GITHUB_RUN_ID"] / "pit_receipt.json"
-          data = json.loads(p.read_text(encoding="utf-8"))
-          assert data["status"] == "Q218_INDEPENDENT_ARCHITECTURE_PIT_REPRODUCED"
-          assert data["independent_method"]["reused_q218_gate_functions"] is False
-          assert data["reproduction"]["all_checks_passed"] is True
-          assert data["reproduction"]["same_day_decision_use_allowed"] is False
-          assert data["scientific_boundary"]["performance"] is False
-          assert data["scientific_boundary"]["candidate_ranking"] is False
-          assert data["safety"]["paper_only"] is True
-          assert data["safety"]["live_trading_enabled"] is False
-          assert data["safety"]["orders_enabled"] is False
-          assert data["safety"]["automatic_promotion"] is False
-          print("Q218_INDEPENDENT_ARCHITECTURE_PIT_BOUNDARY=PASS")
+          p = Path('research/runs/q218-independent-architecture') / os.environ['GITHUB_RUN_ID'] / 'pit_receipt.json'
+          data = json.loads(p.read_text(encoding='utf-8'))
+          assert data['status'] == 'Q218_INDEPENDENT_ARCHITECTURE_PIT_REPRODUCED'
+          assert data['independent_method']['reused_q218_gate_functions'] is False
+          assert data['reproduction']['all_checks_passed'] is True
+          assert data['reproduction']['same_day_decision_use_allowed'] is False
+          assert data['scientific_boundary']['performance'] is False
+          assert data['scientific_boundary']['candidate_ranking'] is False
+          assert data['safety']['paper_only'] is True
+          assert data['safety']['live_trading_enabled'] is False
+          assert data['safety']['orders_enabled'] is False
+          assert data['safety']['automatic_promotion'] is False
+          print('Q218_INDEPENDENT_ARCHITECTURE_PIT_BOUNDARY=PASS')
           PY
 
       - name: Publish positive independent receipt
@@ -126,27 +145,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          target="research/evidence/q218_independent_architecture_pit_reproduction_latest.json"
+          target='research/evidence/q218_independent_architecture_pit_reproduction_latest.json'
           new_receipt="$GITHUB_WORKSPACE/research/runs/q218-independent-architecture/${GITHUB_RUN_ID}/pit_receipt.json"
           if gh api "/repos/$GITHUB_REPOSITORY/contents/$target?ref=master" --jq '.content' 2>/dev/null | base64 -d > "$RUNNER_TEMP/existing.json"; then
             if python - "$RUNNER_TEMP/existing.json" "$new_receipt" <<'PY'
-import json,sys
-from pathlib import Path
-old=json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-new=json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
-raise SystemExit(0 if old.get("status")==new.get("status") and old.get("upstream_receipts")==new.get("upstream_receipts") else 1)
-PY
+          import json,sys
+          from pathlib import Path
+          old=json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+          new=json.loads(Path(sys.argv[2]).read_text(encoding='utf-8'))
+          raise SystemExit(0 if old.get('status')==new.get('status') and old.get('upstream_receipts')==new.get('upstream_receipts') else 1)
+          PY
             then
-              echo "Q218_INDEPENDENT_RECEIPT_ALREADY_CURRENT=TRUE"
+              echo 'Q218_INDEPENDENT_RECEIPT_ALREADY_CURRENT=TRUE'
               exit 0
             fi
           fi
           cp "$new_receipt" "$target"
-          for attempt in 1 2 3; do
-            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
-            if python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file "$target=$target"; then
-              exit 0
-            fi
-            sleep "$attempt"
-          done
-          exit 1
+          current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file "$target=$target"
