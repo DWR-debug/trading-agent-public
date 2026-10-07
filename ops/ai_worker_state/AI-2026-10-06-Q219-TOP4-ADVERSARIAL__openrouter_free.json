@@ -32,9 +32,9 @@
     "reasons": []
   },
   "litellm_transport_enabled": false,
-  "task_fingerprint": "aa5f605227857f50a291d5a5a6a68e95be764b739bb12801652f9d9ca191d266",
-  "context_fingerprint": "01dd4a59705f590844efee7dc6128b53b6d8a9af8dbe391ee32ae657fee40823",
-  "observed_at_utc": "2026-10-07T06:55:08.965383Z",
+  "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
+  "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
+  "observed_at_utc": "2026-10-07T12:37:41.663451Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 18.411,
-  "stdout": "# Q219 Adversarial Methods Review — Worker Handoff\n\n## 1. Core Clock & Timestamp Risks\n\n**SEC Acceptance Clock**\n- Filing-change event time must be anchored to SEC EDGAR acceptance datetime (filed field), not just the date.\n- Risk: Using `filing_date` instead of `accepted_datetime` introduces same-session leakage if options data is timestamped EOD and filing accepted intraday.\n- **Missing artifact**: Explicit mapping of filing acceptance timestamp → options EOD snapshot boundary.\n\n**Option EOD Timestamp Semantics**\n- Q129 contract pins observation to `4:00 PM ET end-of-day snapshot`.\n- Risk: If Q219 uses a different EOD convention (e.g., 5:00 PM ET close), cross-source leakage occurs.\n- **Missing artifact**: Unified EOD timestamp definition across Q129/Q219 sources.\n\n## 2. Same-Session Leakage\n\n- If filing accepted intraday and options snapshot taken same day at 4 PM ET, event could leak into same-session option state.\n- **Falsifier**: Shift filing acceptance time forward by 1–5 trading sessions while holding calendar fixed; candidate signal should invert or vanish.\n\n## 3. Q129 Source Release & Contract Selection\n\n- Q129 release `data-v1` (tag `2026-02-21`) covers only SPY/QQQ/IWM — **not broad individual equity options**.\n- Q219 implies broader equity options coverage.\n- Risk: Q219 assumes Q129 source generalizes to individual equities without validation.\n- **Missing artifact**: Direct HTTP validation of `SaidBahaDev/options-data` R2 files for non-index equities.\n- **Falsifier**: Confirm presence of ≥1 non-index equity options file in R2 store with matching schema.\n\n## 4. Option Contract / Calendar Roll Effects\n\n- Options data includes multiple expirations; roll from front-month to next-month can distort EOD state.\n- Risk: Candidate treats all strikes/expirations as static; ignores roll timing.\n- **Missing artifact**: Expiration-aware roll adjustment logic in event-window definition.\n- **Falsifier**: Exclude next-month contracts from event window; candidate signal should degrade.\n\n## 5. Stale / Absent Implied Volatility Fields\n\n- Q129 schema includes `bid`, `ask`, `volume`, `open_interest` — **no IV field listed**.\n- Risk: Q219 assumes IV is available or inferable; stale IV leads to false wedge signal.\n- **Missing artifact**: Explicit IV field presence/absence check in Q129/Q219 schema.\n- **Falsifier**: Drop all rows with null/missing IV proxy; candidate signal should collapse.\n\n## 6. Event-Window Definitions\n\n- No explicit event-window definition in Q219 spec.\n- Risk: Ambiguous pre/post filing windows lead to inconsistent measurement.\n- **Missing artifact**: Frozen event-window contract (e.g., [-5, +5] trading days around filing acceptance).\n- **Falsifier**: Widen/narrow window by ±2 days; candidate signal should not monotonically improve.\n\n## 7. Cross-Market Wedge Information Content\n\n- Q219 claims wedge between filing change and options response adds information.\n- Risk: Options-only state may already price in filing change; wedge is redundant.\n- **Falsifier**: Run filing-change-only model and options-only model separately; if wedge model does not significantly outperform either alone (pre-defined threshold), reject wedge hypothesis.\n- **Missing artifact**: Baseline filing-only and options-only models for comparison.\n\n## 8. Minimal Deterministic Falsifiers Summary\n\n| # | Falsifier | Expected Outcome if Q219 Invalid |\n|---|-----------|-------------------------------|\n| 1 | Shift filing time forward 1–5 sessions | Signal inverts/vanishes |\n| 2 | Validate non-index equity options in R2 | File absent → wedge unsupported |\n| 3 | Exclude next-month options | Signal degrades |\n| 4 | Drop null IV rows | Signal collapses |\n| 5 | Vary event window ±2 days | No monotonic improvement |\n| 6 | Compare wedge vs. filing-only/options-only | No significant outperformance |\n\n## 9. Uncertainty & Next Actions\n\n- **Uncertainty**: Q219 source breadth unverified; IV field absence unconfirmed; event window undefined.\n- **Next actions**:\n  1. Validate `SaidBahaDev/options-data` R2 for non-index equities.\n  2. Confirm IV field presence in Q129/Q219 schema.\n  3. Define frozen event-window contract.\n  4. Implement baseline filing-only and options-only models.\n  5. Run falsifiers 1–6 above.\n\n**Do not promote or authorize performance based on this review.**",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 6.879,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter returned tool-call syntax instead of a final worker handoff.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791356109-Bz8oxpPEEdV7mLG0UIG1",
-  "usage": {
-    "prompt_tokens": 6097,
-    "completion_tokens": 1062,
-    "total_tokens": 7159,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 0,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
