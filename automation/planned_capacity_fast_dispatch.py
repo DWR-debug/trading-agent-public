@@ -154,6 +154,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     decisions = []
     dispatches = []
     seen_dispatch_keys: set[tuple[str, str, str]] = set()
+    leased_resources: set[str] = set()
     top4_candidate_active = any(
         any(
             c.lower() in f"{item.get('task', '')} {item.get('job', '')}".lower()
@@ -182,6 +183,9 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             continue
 
         resource = str(item.get("resource") or "")
+        if resource in leased_resources:
+            decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_RESOURCE_RESERVED_BY_MULTI_RESOURCE_RUN"})
+            continue
         dispatch_key = (workflow, candidate, resource) if workflow == SLOT_SCOPED_WORKFLOW else (workflow, "", "")
         if workflow == SLOT_SCOPED_WORKFLOW:
             resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
@@ -221,13 +225,15 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
         })
         seen_dispatch_keys.add(dispatch_key)
+        for leased in (item.get("resource_leases") or []):
+            leased_resources.add(str(leased))
         decisions.append({
             "plan_id": item.get("plan_id"),
             "decision": "DISPATCH",
             "mode": "ZERO_ACTIVE_FAST_PATH" if zero_active else "FILL_FREE_READY_CAPACITY",
         })
-        if item.get("exclusive_dispatch", False) or workflow in {".github/workflows/q104-i19-13f-historical-identity-census.yml"}:
-            break
+        # Multi-resource exclusivity is enforced by explicit resource leases above,
+        # not by stopping the entire dispatch pulse. Other free resources may fill now.
 
     return {
         "schema_version": 1,
