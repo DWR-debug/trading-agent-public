@@ -8,6 +8,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
+from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context
+
 ROOT = Path(__file__).parents[1]
 OUT = ROOT / "docs" / "dashboard" / "dashboard_data.json"
 BOOTSTRAP = ROOT / "docs" / "dashboard" / "dashboard_bootstrap.js"
@@ -748,6 +750,10 @@ def planned_capacity_plan(
             continue
         if item["readiness"].startswith("BLOCKED_"):
             continue
+        if item.get("execution_workflow") == ".github/workflows/ai-worker-fabric.yml":
+            task_id = str((item.get("execution_workflow_inputs") or {}).get("task_id") or "")
+            if task_id and ai_task_completed_with_current_context(task_id, root=ROOT):
+                continue
         placed = False
         for resource_name in item["preferred"]:
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
