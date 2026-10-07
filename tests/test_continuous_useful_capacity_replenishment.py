@@ -115,7 +115,12 @@ def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding
         for item in row["planned_assignments"]
         if item.get("scheduled")
     )
-    assert len(planned_candidates) == len(set(planned_candidates))
+    # Candidate duplication is forbidden only within the same execution lane;
+    # a candidate may legitimately appear once for research and once for an
+    # independent Free-AI review.
+    scheduled_keys = [(item["candidate"], item.get("execution_workflow"), item.get("resource"))
+                      for row in plan for item in row["planned_assignments"] if item.get("scheduled")]
+    assert len(scheduled_keys) == len(set(scheduled_keys))
     assert by_resource["Free AI pool"]["planned_count"] == 1 or by_resource["Free AI pool"]["blocked_count"] == 0
     assert by_resource["Windows self-hosted B"]["planned_count"] == 0
     assert by_resource["Windows self-hosted C"]["blocked_count"] in (0, 1)
