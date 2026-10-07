@@ -51,12 +51,16 @@ def active_workflow_paths(runs: list[dict[str, Any]]) -> set[str]:
     return out
 
 
+def _candidate_key(value: str) -> str:
+    return "".join(ch for ch in value.lower() if ch.isalnum())
+
+
 def candidate_is_active(candidate: str, work: list[dict[str, Any]], *, exclude_resources: set[str] | None = None) -> bool:
-    c = candidate.lower()
+    c = _candidate_key(candidate)
     excluded = exclude_resources or set()
     return any(
         x.get("resource") not in excluded
-        and c in f"{x.get('task', '')} {x.get('job', '')}".lower()
+        and c in _candidate_key(f"{x.get('task', '')} {x.get('job', '')}")
         for x in work
     )
 
