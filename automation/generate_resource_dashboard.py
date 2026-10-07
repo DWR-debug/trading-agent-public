@@ -130,6 +130,52 @@ def parse_dt(value: Any) -> datetime | None:
         return None
 
 
+CANDIDATE_CODES = ("Q104:I19", "Q218", "Q219", "Q220", "Q221")
+
+WORKFLOW_DISPLAY_NAMES = {
+    ".github/workflows/top4-candidate-slot-research.yml": "Top-4 Candidate Slot Research",
+    ".github/workflows/top4-candidate-research-capacity.yml": "Top-4 Candidate Research Capacity",
+    ".github/workflows/q104-i19-13f-historical-identity-census.yml": "Q104 I19 Historical 13F Identity Census",
+    ".github/workflows/q185-q186-windows-bounded-reproduction.yml": "Q185-Q186 Windows Bounded Reproduction",
+    ".github/workflows/q224-edgar-modern-source-gate.yml": "Q224 EDGAR Modern Source Gate",
+    ".github/workflows/q228-sec-correspondence-source-gate.yml": "Q228 SEC Correspondence Source Gate",
+    ".github/workflows/q229-historical-release-census.yml": "Q229 Historical Release Census",
+    ".github/workflows/q230-windows-trace-connectivity.yml": "Q230 Windows TRACE Connectivity",
+    ".github/workflows/q231-sec-foia-source-gate.yml": "Q231 SEC FOIA Source Gate",
+    ".github/workflows/q205-nlrb-source-feasibility.yml": "Q205 NLRB Source Feasibility",
+    ".github/workflows/q198-pit-clock-census.yml": "Q198 PIT Clock Census",
+    ".github/workflows/q199-q201-source-feasibility.yml": "Q199-Q201 Source Feasibility",
+    ".github/workflows/q202-q204-information-timing-feasibility.yml": "Q202-Q204 Information Timing Feasibility",
+    ".github/workflows/ai-worker-fabric.yml": "Free AI Worker Fabric",
+}
+
+
+def candidate_from_text(value: Any) -> str:
+    text_value = str(value or "")
+    for candidate in CANDIDATE_CODES:
+        if candidate in text_value:
+            return candidate
+    return "—"
+
+
+def workflow_display_name(workflow_path: str) -> str:
+    return WORKFLOW_DISPLAY_NAMES.get(workflow_path, workflow_path.rsplit("/", 1)[-1] if workflow_path else "")
+
+
+def benchmark_for_planned_item(
+    item: dict[str, Any],
+    workflow_benchmarks: dict[str, dict[str, int | str]],
+    job_benchmarks: dict[str, dict[str, int | str]],
+) -> dict[str, int | str] | None:
+    candidate = str(item.get("candidate") or "")
+    candidate_benchmark = job_benchmarks.get(candidate)
+    if candidate_benchmark:
+        return candidate_benchmark
+    path = str(item.get("execution_workflow") or "")
+    name = workflow_display_name(path)
+    return workflow_benchmarks.get(name) or workflow_benchmarks.get(path)
+
+
 def run_duration_seconds(run: dict[str, Any]) -> int | None:
     started = parse_dt(run.get("run_started_at") or run.get("created_at"))
     finished = parse_dt(run.get("completed_at") or run.get("updated_at"))
@@ -236,6 +282,29 @@ def runner_snapshot() -> list[dict[str, Any]]:
         for r in data.get("runners", [])
         if isinstance(r, dict)
     ]
+
+
+def open_pull_requests() -> list[dict[str, Any]]:
+    data = run_cmd_json([f"/repos/{REPO}/pulls?state=open&per_page=100&sort=updated&direction=desc"])
+    if not isinstance(data, list):
+        return []
+    out = []
+    for pr in data:
+        if not isinstance(pr, dict) or pr.get("number") is None:
+            continue
+        out.append({
+            "number": int(pr["number"]),
+            "title": str(pr.get("title") or ""),
+            "draft": bool(pr.get("draft", False)),
+            "author": str((pr.get("user") or {}).get("login") or "unknown"),
+            "head_branch": str((pr.get("head") or {}).get("ref") or ""),
+            "base_branch": str((pr.get("base") or {}).get("ref") or "master"),
+            "updated_at": pr.get("updated_at"),
+            "created_at": pr.get("created_at"),
+            "mergeable": pr.get("mergeable"),
+            "url": str(pr.get("html_url") or ""),
+        })
+    return out
 
 
 def jobs_for_run(run_id: int) -> list[dict[str, Any]]:
@@ -519,7 +588,10 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
     return out
 
 
-def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def planned_research_backlog(
+    state_board: list[dict[str, Any]],
+    workflow_benchmarks: dict[str, dict[str, int | str]],
+) -> list[dict[str, Any]]:
     """Expose a real bounded queue of future next-gate research, independent of live slot occupancy."""
     order = [
         ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "windows"),
@@ -541,6 +613,7 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
         item = by_code.get(code)
         if not item:
             continue
+        benchmark = workflow_benchmarks.get(workflow_display_name(workflow))
         backlog.append({
             "queue_rank": rank,
             "candidate": code,
@@ -548,6 +621,11 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
             "next_gate": str(item.get("next_gate") or "next receipt-defined research gate"),
             "execution_workflow": workflow,
             "resource_hint": resource,
+            "target": resource or "next free qualified resource",
+            "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
+            "duration_p90_seconds": int(benchmark["p90_seconds"]) if benchmark else None,
+            "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
+            "duration_source": str(benchmark["source"]) if benchmark else "no verified duration history",
             "planned_status": "READY_NEXT_GATE",
             "non_authorizing": True,
         })
@@ -558,6 +636,7 @@ def planned_capacity_plan(
     resources: list[dict[str, Any]],
     work: list[dict[str, Any]],
     top4: list[dict[str, Any]],
+    workflow_benchmarks: dict[str, dict[str, int | str]],
     job_benchmarks: dict[str, dict[str, int | str]],
     os_state: dict[str, Any],
 ) -> list[dict[str, Any]]:
@@ -751,7 +830,7 @@ def planned_capacity_plan(
             planned_for_resource = len(plans.get(resource_name, []))
             if current_assignments + planned_for_resource >= capacity_slots:
                 continue
-            benchmark = job_benchmarks.get(candidate)
+            benchmark = benchmark_for_planned_item(item, workflow_benchmarks, job_benchmarks)
             plans[resource_name].append({
                 "plan_id": item["plan_id"],
                 "candidate": candidate,
@@ -768,7 +847,10 @@ def planned_capacity_plan(
                 "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
                 "resource_leases": list(item.get("resource_leases") or []),
                 "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
+                "expected_duration_p90_seconds": int(benchmark["p90_seconds"]) if benchmark else None,
                 "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
+                "duration_source": str(benchmark["source"]) if benchmark else "no verified duration history",
+                "target_worker": resource_name,
             })
             assigned_candidates.add(candidate)
             placed = True
@@ -794,6 +876,28 @@ def planned_capacity_plan(
             "expected_duration_seconds": None,
             "duration_sample_count": 0,
         })
+
+    eta_now = datetime.now(timezone.utc)
+    active_remaining_by_resource: dict[str, int] = {}
+    for current in work:
+        resource_name = str(current.get("resource") or "")
+        active_remaining = current.get("remaining_seconds")
+        if resource_name and active_remaining is not None:
+            active_remaining_by_resource[resource_name] = max(active_remaining_by_resource.get(resource_name, 0), int(active_remaining))
+    for resource_name, items in plans.items():
+        cursor = eta_now + timedelta(seconds=active_remaining_by_resource.get(resource_name, 0))
+        for item in items:
+            if not item.get("scheduled"):
+                item["expected_start_at"] = None
+                item["expected_finish_at"] = None
+                continue
+            duration = item.get("expected_duration_seconds")
+            item["expected_start_at"] = cursor.isoformat()
+            if duration is not None:
+                cursor = cursor + timedelta(seconds=int(duration))
+                item["expected_finish_at"] = cursor.isoformat()
+            else:
+                item["expected_finish_at"] = None
 
     rows=[]
     for resource in resources:
@@ -1020,6 +1124,7 @@ def main() -> None:
     runners = runner_snapshot()
     ai = ai_provider_state()
     milestones_12h = milestone_history_12h()
+    prs = open_pull_requests()
 
     configured_resources = [
         {"name": "Windows self-hosted A", "type": "physical", "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
@@ -1049,10 +1154,11 @@ def main() -> None:
         enrich_resources(configured_resources, runners, work),
         work,
         top4,
+        workflow_benchmarks,
         job_benchmarks,
         os_state,
     )
-    planned_research_queue = planned_research_backlog(state_board)
+    planned_research_queue = planned_research_backlog(state_board, workflow_benchmarks)
 
     payload = {
         "schema_version": 2,
@@ -1095,6 +1201,7 @@ def main() -> None:
         "planned_capacity": planned_capacity,
         "planned_research_queue": planned_research_queue,
         "milestone_history_12h": milestones_12h,
+        "open_pull_requests": prs,
         "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks),
         "duration_benchmarks": workflow_benchmarks,
         "job_duration_benchmarks": job_benchmarks,
