@@ -607,3 +607,72 @@ def test_dashboard_generator_supports_direct_script_execution_import_mode():
     generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     assert "from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context" in generator
     assert "from planned_capacity_fast_dispatch import ai_task_completed_with_current_context" in generator
+
+
+def test_fast_dispatch_focus_wave_bypasses_completed_generic_q218_slot_scope():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "focus_candidates": ["Q104:I19", "Q218"],
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted B",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "research_slots_free": 1,
+            "planned_assignments": [{
+                "plan_id":"Q218-SOURCE",
+                "candidate":"Q218",
+                "scheduled":True,
+                "dispatchable":True,
+                "allow_parallel_with_candidate":True,
+                "execution_workflow":workflow,
+                "execution_workflow_inputs":{"focus_wave":True,"gate":"source"},
+            }],
+        }],
+    }
+    runs=[{
+        "status":"completed","conclusion":"success",
+        "name":"Top-4 Candidate Slot Research",
+        "display_title":"Top-4 Slot windows Q218 all",
+        "run_name":"Top-4 Slot windows Q218 all",
+    }]
+    plan=dispatch_candidates(snapshot,runs,max_dispatches=4)
+    assert [x["candidate"] for x in plan["dispatches"]] == ["Q218"]
+    assert plan["dispatches"][0]["inputs"]["focus_wave"] is True
+    assert plan["dispatches"][0]["inputs"]["gate"] == "source"
+
+
+def test_fast_dispatch_focus_wave_keeps_q218_source_and_event_pair_independent():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow=".github/workflows/top4-candidate-slot-research.yml"
+    snapshot={
+        "focus_candidates":["Q104:I19","Q218"],
+        "work_assignments":[],
+        "planned_capacity":[
+            {"resource":"Windows self-hosted B","current_assignments":0,"research_capacity_slots":1,"research_slots_free":1,
+             "planned_assignments":[{"plan_id":"Q218-SOURCE","candidate":"Q218","scheduled":True,"dispatchable":True,
+             "allow_parallel_with_candidate":True,"execution_workflow":workflow,"execution_workflow_inputs":{"focus_wave":True,"gate":"source"}}]},
+            {"resource":"Windows self-hosted C","current_assignments":0,"research_capacity_slots":1,"research_slots_free":1,
+             "planned_assignments":[{"plan_id":"Q218-EVENT-PAIR","candidate":"Q218","scheduled":True,"dispatchable":True,
+             "allow_parallel_with_candidate":True,"execution_workflow":workflow,"execution_workflow_inputs":{"focus_wave":True,"gate":"event_pair"}}]},
+        ],
+    }
+    plan=dispatch_candidates(snapshot,[],max_dispatches=4)
+    assert [x["candidate"] for x in plan["dispatches"]]==["Q218","Q218"]
+    assert {x["inputs"]["gate"] for x in plan["dispatches"]}=={"source","event_pair"}
+
+
+def test_fast_dispatch_focus_lock_rejects_q219_plan():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    snapshot={
+        "focus_candidates":["Q104:I19","Q218"],
+        "work_assignments":[],
+        "planned_capacity":[{
+            "resource":"Windows self-hosted B","current_assignments":0,"research_capacity_slots":1,"research_slots_free":1,
+            "planned_assignments":[{"plan_id":"Q219-PIT","candidate":"Q219","scheduled":True,"dispatchable":True,
+            "execution_workflow":".github/workflows/top4-candidate-slot-research.yml"}],
+        }],
+    }
+    plan=dispatch_candidates(snapshot,[],max_dispatches=4)
+    assert plan["dispatches"]==[]
