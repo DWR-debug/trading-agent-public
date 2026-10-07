@@ -131,3 +131,10 @@ jobs:
           path: research/runs/q205_nlrb_source_feasibility_latest.json
           if-no-files-found: error
           retention-days: 30
+
+  completion_relay:
+    if: always()
+    needs: [source_feasibility]
+    uses: ./.github/workflows/research-completion-relay.yml
+    with:
+      source_workflow: "Q205 NLRB Source Feasibility"
