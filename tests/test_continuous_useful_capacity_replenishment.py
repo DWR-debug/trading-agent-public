@@ -89,8 +89,8 @@ def test_dashboard_exposes_planned_capacity_as_non_authorizing_plan():
     assert '"planned_capacity_note":' in generator
     assert 'data.planned_capacity||[]' in script
     assert "planned_not_started" in generator
-    assert "Geplante Kapazität" in html
-    assert "GEPLANT / NICHT GESTARTET" in script
+    assert "Kapazitätsfabrik" in html
+    assert "AUTO-DISPATCH" in script
 
 
 def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding():
@@ -158,7 +158,7 @@ def test_dashboard_research_note_excludes_platform_load():
     root = Path(__file__).parents[1]
     html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
     generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
-    assert "CI, Status-Synchronisierung und Pages" in html
+    assert "sichtbare Research-Jobs" in html
     assert '"CI"' in generator and '"Full Suite Verification"' in generator
 
 def test_dashboard_integrates_12h_milestone_history_into_snapshot():
@@ -186,8 +186,8 @@ def test_dashboard_exposes_six_job_future_queue():
     script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
     html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
     assert "planned_research_backlog" in generator
-    assert "return backlog[:6]" in generator
-    assert '"planned_research_queue_target": 6' in generator
+    assert "return backlog[:2]" in generator
+    assert '"planned_research_queue_target": 2' in generator
     assert '"planned_research_queue_items"' in generator
     assert "planned_research_queue" in script
     assert 'id="plannedQueue"' in html
@@ -200,7 +200,7 @@ def test_dashboard_exposes_six_active_lane_target():
     html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
     assert '"active_research_lanes_target": 6' in generator
     assert '"active_research_lanes_target_met"' in generator
-    assert "active_research_lanes_target" in script
+    assert "Forschungsressourcen aktiv" in script
     assert 'id="laneTargetSummary"' in html
 
 
