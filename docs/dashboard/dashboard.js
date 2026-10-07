@@ -202,6 +202,7 @@ function renderEmbedded(){
   if(snap&&typeof snap==="object"){render(snap);return true;}
   return false;
 }
+// Forschungsressourcen aktiv = distinct research resources, not raw job count.
 function load(){
   $("error").hidden=true;
   var rendered=renderEmbedded();
