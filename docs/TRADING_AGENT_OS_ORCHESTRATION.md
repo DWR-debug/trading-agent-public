@@ -32,6 +32,8 @@ Permanent background capacity remains active outside the window: Windows A/B and
 This capacity rule never creates scientific authority. Performance, holdout selection, ranking, tuning, promotion and live execution remain closed unless the independent existing governance chain authorizes them.
 
 ## 2ab. Top-4 automatic capacity routing — 2026-10-07
+The dispatcher also has a permanent completion-wakeup path: the same workflow listens to workflow_run.completed for research-oriented workflow-name glob classes (Q*, Top-4*, Research, PIT, Source, Census, Frontier, Identity, Capacity, Reproduction, AI Worker and Literature). Only runs on the default branch are eligible. Control-plane workflows are excluded before runner allocation. A completion, failure or cancellation therefore wakes the current bounded planner immediately; the five-minute schedule remains recovery/health-check only. The bounded dispatch ceiling is six, matching the three Windows research slots, two hosted Linux slots and the separate free-AI lane.
+
 
 Automatic Top-4 replenishment is now **slot-scoped**. The sole automatic Top-4 capacity dispatcher is `.github/workflows/planned-capacity-fast-dispatch.yml`, which feeds independent invocations of `.github/workflows/top4-candidate-slot-research.yml` to free Windows, Ubuntu x64 and ARM64 capacity. The bundled `.github/workflows/top4-candidate-research-capacity.yml` remains a manual fallback only.
 
