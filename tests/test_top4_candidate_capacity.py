@@ -33,6 +33,15 @@ def test_top4_workpacks_are_mechanistically_separate():
     assert "q104_i19_xbrl_pit_compiler.py" in q220
     assert "top_candidate_source_preflight" in q221
 
+
+def test_top4_resolves_and_asserts_current_master():
+    text=(ROOT/".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
+    assert "resolve_master:" in text
+    assert 'gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master"' in text
+    assert "needs.resolve_master.outputs.sha" in text
+    assert "Assert frozen master" in text
+    worker=(ROOT/"automation/top4_candidate_capacity.py").read_text(encoding="utf-8")
+    assert 'subprocess.check_output(["git","rev-parse","HEAD"]' in worker
 def test_top4_workflow_uses_three_windows_and_hosted_x64_arm64():
     text=(ROOT/".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
     assert "max-parallel: 3" in text
