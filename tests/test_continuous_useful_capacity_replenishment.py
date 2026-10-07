@@ -203,7 +203,8 @@ def test_dashboard_exposes_six_active_lane_target():
 
 
 def test_dashboard_three_minute_live_refresh_and_five_minute_server_refresh():
-    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
-    workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    root = Path(__file__).parents[1]
+    js = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    workflow = (root / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
     assert "setInterval(load,180000)" in js
     assert 'cron: "*/5 * * * *"' in workflow
