@@ -525,3 +525,48 @@ def test_fast_dispatch_does_not_backfill_when_all_top4_successors_are_exhausted(
     plan = dispatch_candidates(snapshot, runs, max_dispatches=4)
     assert plan["dispatches"] == []
     assert any(d["decision"] == "SKIP_SLOT_RETRY_EXHAUSTED" for d in plan["decisions"])
+
+
+def test_pull_request_validation_runs_are_not_counted_as_research_capacity():
+    from automation import generate_resource_dashboard as dashboard
+
+    assert dashboard.infer_lane("Q133-Q170 PIT Readiness R1", "test", "pull_request") == "VALIDATION / CI"
+    assert dashboard.infer_lane("Q219 PIT", "research", "workflow_dispatch") == "FRONTIER DISCOVERY"
+
+    work = [{
+        "resource": "GitHub-hosted Ubuntu x64",
+        "lane": "VALIDATION / CI",
+        "task": "Q219 PIT Readiness validation",
+        "job": "test",
+    }, {
+        "resource": "GitHub-hosted Ubuntu x64",
+        "lane": "FRONTIER DISCOVERY",
+        "task": "Q104 I19 Historical 13F Identity Census",
+        "job": "hosted census",
+    }]
+    resource = {
+        "name": "GitHub-hosted Ubuntu x64",
+        "type": "cloud",
+        "research_capacity_slots": 2,
+        "configured_runner": "missing-runner",
+        "role": "test",
+    }
+    enriched = dashboard.enrich_resources([resource], [], work)[0]
+    assert enriched["total_active_assignments"] == 2
+    assert enriched["current_assignments"] == 1
+    assert enriched["research_slots_in_use"] == 1
+    assert enriched["research_slots_free"] == 1
+
+
+def test_pull_request_validation_does_not_mark_candidate_active():
+    from automation import generate_resource_dashboard as dashboard
+
+    run = {
+        "id": 1,
+        "name": "Q219 PIT Readiness R1",
+        "event": "pull_request",
+        "status": "in_progress",
+    }
+    monkeypatch = None
+    # The classifier is sufficient to establish that this run belongs to CI.
+    assert dashboard.infer_lane(run["name"], "", run["event"]) == "VALIDATION / CI"
