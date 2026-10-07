@@ -5,6 +5,21 @@ on:
     branches: [master]
   schedule:
     - cron: "*/5 * * * *"
+  workflow_run:
+    workflows:
+      - "Q*"
+      - "Top-4*"
+      - "*Research*"
+      - "*PIT*"
+      - "*Source*"
+      - "*Census*"
+      - "*Frontier*"
+      - "*Identity*"
+      - "*Capacity*"
+      - "*Reproduction*"
+      - "*AI Worker*"
+      - "*Literature*"
+    types: [completed]
   workflow_dispatch: {}
 
 permissions:
@@ -19,7 +34,16 @@ jobs:
   dispatch:
     if: >-
       github.repository == 'DWR-debug/trading-agent-public' &&
-      github.event_name != 'workflow_run'
+      (
+        github.event_name != 'workflow_run' ||
+        (
+          github.event.workflow_run.head_branch == github.event.repository.default_branch &&
+          !contains(
+            fromJSON('["CI","Full Suite Verification","T052 Exact Master CI Gate","Workflow Lint","Current Operational Status Synchronizer","Current Status Drift Guard","Resource Dashboard Update","Spine Next-Gate Autonomous Router","Unified Research Orchestrator","Planned Capacity Fast Dispatch","Research Completion Monitor A","Research Completion Monitor B"]'),
+            github.event.workflow_run.name
+          )
+        )
+      )
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
