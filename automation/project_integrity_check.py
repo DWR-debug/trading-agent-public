@@ -228,6 +228,7 @@ ACTIVE_WORKFLOWS = {
     "windows-local-ai-worker.yml",
     "resource-dashboard-update.yml",
     "top4-candidate-research-capacity.yml",
+    "top4-candidate-slot-research.yml",
     "q220-as-filed-xbrl-population.yml",
     "groq-free-adversarial-worker.yml",
     "groq-api-key-smoke-test.yml",
