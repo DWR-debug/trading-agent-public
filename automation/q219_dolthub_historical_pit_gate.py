@@ -19,6 +19,7 @@ API_BASE = "https://www.dolthub.com/api/v1alpha1/post-no-preference/options/mast
 TARGET_DATE = "2025-08-01"
 TARGET_SYMBOLS = ["AAPL", "AMZN", "DIS", "JPM", "MSFT", "NVDA", "WMT", "XOM"]
 HEAD_LOG_LIMIT = 50
+BOUNDED_HISTORY_SCAN_LIMIT = 200
 UA = "TradingAgent-Public-Q219-DoltHub-PIT-Gate/1.0"
 
 
