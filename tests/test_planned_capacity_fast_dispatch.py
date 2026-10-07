@@ -570,3 +570,26 @@ def test_pull_request_validation_does_not_mark_candidate_active():
     monkeypatch = None
     # The classifier is sufficient to establish that this run belongs to CI.
     assert dashboard.infer_lane(run["name"], "", run["event"]) == "VALIDATION / CI"
+
+
+def test_dashboard_skips_current_context_completed_ai_before_filling_free_pool(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    resources = [
+        {
+            "name": "Free AI pool",
+            "type": "cloud",
+            "capacity_state": "available",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+        }
+    ]
+    monkeypatch.setattr(
+        dashboard,
+        "ai_task_completed_with_current_context",
+        lambda task_id, root=None: task_id == "AI-2026-10-06-Q220-TOP4-ADVERSARIAL",
+    )
+
+    plan = dashboard.planned_capacity_plan(resources, [], [], {}, {})
+    ai = next(row for row in plan if row["resource"] == "Free AI pool")
+    assert [item["plan_id"] for item in ai["planned_assignments"]] == ["Q221-ADVERSARIAL"]
