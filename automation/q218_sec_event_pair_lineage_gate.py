@@ -85,10 +85,10 @@ def _nearest_prior(rows: list[dict], target: dict) -> dict | None:
 
 def _extract_initial_8k_filing_date(primary_text: str) -> str | None:
     """Extract a narrowly scoped explicit Initial Form 8-K filing date from an amendment."""
-    compact = re.sub(r"\\s+", " ", primary_text)
+    compact = re.sub(r"\s+", " ", primary_text)
     match = re.search(
         r"Initial Form 8-K.{0,500}?filed.{0,120}?(January|February|March|April|May|June|July|August|September|October|November|December)\\s+"
-        r"(\\d{1,2}),\\s+(\\d{4})",
+        r"(\d{1,2}),\s+(\d{4})",
         compact,
         flags=re.I,
     )
