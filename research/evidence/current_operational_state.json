@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T18:37:53.890027+00:00",
+    "generated_at_utc": "2026-10-07T18:38:12.065141+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "581b1ba13759ae83e94da1fe5339e9778c1d0a74"
+    "source_master_sha": "3de530de70bf44c533e04eaecedfdbc4416d8443"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T18:37:53.890027+00:00",
+  "generated_at_utc": "2026-10-07T18:38:12.065141+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4524,14 +4524,6 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "fix/dashboard-capacity-state-semantics-20261007",
-        "number": 1208,
-        "title": "FIX: make dashboard capacity states semantically consistent",
-        "updatedAt": "2026-10-07T18:32:34Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1208"
-      },
-      {
-        "baseRefName": "master",
         "headRefName": "fix/q104-i19-one-bounded-retry-current-master-v2-20261007",
         "number": 1207,
         "title": "FIX: one bounded automatic retry for Q104 census on current master",
@@ -4605,6 +4597,11 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3de530de70bf44c533e04eaecedfdbc4416d8443",
+        "timestamp": "2026-10-07T18:37:57Z"
+      },
+      {
         "message": "FIX: serialize boolean dispatch inputs for GitHub Actions",
         "sha": "581b1ba13759ae83e94da1fe5339e9778c1d0a74",
         "timestamp": "2026-10-07T20:37:47+02:00"
@@ -4638,11 +4635,6 @@
         "message": "OPS: synchronize S10 phone runtime status",
         "sha": "2bf923db9eeb0fcd686ec15d74738a62fd22cef2",
         "timestamp": "2026-10-07T16:42:56Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0968df16d1f75067c17a9cec1fac75ffcba8f0cc",
-        "timestamp": "2026-10-07T16:05:44Z"
       }
     ]
   },
@@ -4740,7 +4732,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "581b1ba13759ae83e94da1fe5339e9778c1d0a74",
+  "source_master_sha": "3de530de70bf44c533e04eaecedfdbc4416d8443",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4854,6 +4846,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37668283896"
+    "run_id": "37668297485"
   }
 }
