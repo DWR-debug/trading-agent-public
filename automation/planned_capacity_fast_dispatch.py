@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -159,6 +160,41 @@ def normalize_runs_payload(run_payload: Any) -> list[dict[str, Any]]:
     return []
 
 
+def ai_task_completed_with_current_context(task_id: str, *, root: Path = Path(".")) -> bool:
+    """Return True only when an AI task succeeded under the current task context."""
+    if not task_id:
+        return False
+    task_path = root / "ai_requests" / f"{task_id}.json"
+    state_path = root / "ops" / "ai_worker_state" / f"{task_id}__openrouter_free.json"
+    if not task_path.is_file() or not state_path.is_file():
+        return False
+    try:
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    if state.get("status") != "SUCCESS":
+        return False
+    previous = str(state.get("context_fingerprint") or "")
+    if not previous:
+        return False
+    try:
+        current = subprocess.check_output(
+            [
+                sys.executable,
+                "-m",
+                "automation.ai_worker_fabric",
+                "--context-fingerprint",
+                "--task",
+                str(task_path),
+            ],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except (OSError, subprocess.CalledProcessError, UnicodeError):
+        return False
+    return bool(current) and current == previous
+
+
 def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], max_dispatches: int = 4) -> dict[str, Any]:
     planned = []
     for row in snapshot.get("planned_capacity", []):
@@ -265,6 +301,14 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             continue
 
         inputs = dict(item.get("execution_workflow_inputs") or {})
+        if workflow.endswith("ai-worker-fabric.yml"):
+            task_id = str(inputs.get("task_id") or "")
+            if task_id and ai_task_completed_with_current_context(task_id):
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_AI_TASK_ALREADY_COMPLETED_CURRENT_CONTEXT",
+                })
+                continue
         if workflow == SLOT_SCOPED_WORKFLOW:
             resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
             if resource_input:
