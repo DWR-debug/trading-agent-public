@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "record_type": "rolling_capacity_window",
   "status": "ACTIVE",
-  "window_id": "TA-2H-2026-10-07-RUNNER-C-CANDIDATE",
-  "start_utc": "2026-10-07T06:35:00Z",
-  "end_utc": "2026-10-07T08:35:00Z",
+  "window_id": "TA-2H-2026-10-07-RUNNER-C-CANDIDATE-1600Z",
+  "start_utc": "2026-10-07T16:00:00Z",
+  "end_utc": "2026-10-07T18:00:00Z",
   "cadence_minutes": 10,
   "max_dispatch_per_tick": 1,
   "retry_limit_per_workflow_per_phase": 1,
@@ -42,8 +42,8 @@
     "Scientific authority remains unchanged; this scheduler only allocates execution capacity.",
     "Successful source-feasibility workflows are not re-run as filler; only their explicit next-gate workflows may be scheduled."
   ],
-  "retargeted_at_utc": "2026-10-07T06:35:00Z",
-  "retarget_reason": "User-authorized autonomous parallel candidate development; dedicate exactly one free Runner C slot to useful independent long deterministic research while current Top-4 and Q104:I19 lanes remain occupied.",
+  "retargeted_at_utc": "2026-10-07T16:00:00Z",
+  "retarget_reason": "Refresh the expired Runner-C window at the current operating horizon so one otherwise-idle self-hosted slot can execute the already-defined independent long deterministic candidate-development/readiness workpack; preserve all scientific gates and suppress duplicates.",
   "session_mode": {
     "status": "ACTIVE_2H",
     "duration_minutes": 120,
