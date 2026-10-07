@@ -443,3 +443,94 @@ def test_fast_dispatch_normalizes_candidate_identity_before_duplicate_guard():
 def test_dashboard_planner_preserves_parallel_ai_dispatch_flag():
     generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     assert '"allow_parallel_with_candidate": bool(item.get("allow_parallel_with_candidate", False))' in generator
+
+
+def test_fast_dispatch_backfills_next_top4_after_technical_retry_exhaustion():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted B",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-PIT",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+    failed_twice = [
+        {
+            "status": "completed",
+            "conclusion": "failure",
+            "name": "Top-4 Candidate Slot Research",
+            "display_title": "Top-4 Slot windows Q218",
+            "run_name": "Top-4 Slot windows Q218",
+        },
+        {
+            "status": "completed",
+            "conclusion": "failure",
+            "name": "Top-4 Candidate Slot Research",
+            "display_title": "Top-4 Slot windows Q218",
+            "run_name": "Top-4 Slot windows Q218",
+        },
+    ]
+    plan = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
+    assert [x["candidate"] for x in plan["dispatches"]] == ["Q219"]
+    assert plan["dispatches"][0]["inputs"] == {"candidate": "Q219", "resource": "windows"}
+    assert any(
+        d["decision"] == "DISPATCH_SLOT_BACKFILL"
+        and d["mode"] == "TECHNICAL_RETRY_EXHAUSTION_BACKFILL"
+        for d in plan["decisions"]
+    )
+
+
+def test_fast_dispatch_does_not_backfill_exhausted_top4_with_an_exhausted_successor():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted B",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-PIT",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+    failed_q218 = [
+        {
+            "status": "completed",
+            "conclusion": "failure",
+            "name": "Top-4 Candidate Slot Research",
+            "display_title": "Top-4 Slot windows Q218",
+            "run_name": "Top-4 Slot windows Q218",
+        },
+        {
+            "status": "completed",
+            "conclusion": "failure",
+            "name": "Top-4 Candidate Slot Research",
+            "display_title": "Top-4 Slot windows Q219",
+            "run_name": "Top-4 Slot windows Q219",
+        },
+        {
+            "status": "completed",
+            "conclusion": "failure",
+            "name": "Top-4 Candidate Slot Research",
+            "display_title": "Top-4 Slot windows Q219",
+            "run_name": "Top-4 Slot windows Q219",
+        },
+    ]
+    plan = dispatch_candidates(snapshot, failed_q218, max_dispatches=4)
+    assert plan["dispatches"] == []
