@@ -164,5 +164,8 @@ document.addEventListener("DOMContentLoaded",function(){
   $("refresh").addEventListener("click",load);
   $("update").addEventListener("click",function(){});
   load();
+  // GitHub Actions cron is five-minute minimum. Keep the open dashboard live at
+  // a three-minute cadence without committing a snapshot on every refresh.
+  setInterval(load,180000);
 });
 })();
