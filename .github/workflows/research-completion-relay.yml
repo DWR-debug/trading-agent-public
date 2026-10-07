@@ -29,4 +29,6 @@ jobs:
           echo "RESEARCH_COMPLETION_RELAY_SOURCE=${{ inputs.source_workflow }}"
           echo "RESEARCH_COMPLETION_RELAY_RUN=${{ github.run_id }}"
           gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master
+          gh workflow run resource-dashboard-update.yml --repo "$GITHUB_REPOSITORY" --ref master
           echo "CAPACITY_DISPATCH_RELAY=SUCCESS"
+          echo "DASHBOARD_REFRESH_RELAY=SUCCESS"
