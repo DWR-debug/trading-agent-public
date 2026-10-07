@@ -46,7 +46,8 @@ def test_q219_pit_snapshots_prefer_pre_target_commit():
 
 def test_q219_history_scan_is_bounded_and_filtered_in_memory():
     gate = (ROOT / 'automation/q219_dolthub_historical_pit_gate.py').read_text(encoding='utf-8')
-    assert 'LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}' in gate
+    assert "LIMIT __HISTORY_LIMIT__" in gate
+    assert "HISTORY_SCAN_FALLBACK_LIMITS" in gate
     assert 'WHERE message LIKE' not in gate
     assert 'summary_query = ' not in gate
     assert BOUNDED_HISTORY_SCAN_LIMIT >= HEAD_LOG_LIMIT
