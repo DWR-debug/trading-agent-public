@@ -525,3 +525,9 @@ def test_fast_dispatch_does_not_backfill_when_all_top4_successors_are_exhausted(
     plan = dispatch_candidates(snapshot, runs, max_dispatches=4)
     assert plan["dispatches"] == []
     assert any(d["decision"] == "SKIP_SLOT_RETRY_EXHAUSTED" for d in plan["decisions"])
+
+
+def test_fast_dispatch_loads_paginated_top4_slot_history_for_retry_circuit_breaker():
+    dispatcher = (ROOT / ".github/workflows/planned-capacity-fast-dispatch.yml").read_text(encoding="utf-8")
+    assert 'gh api --paginate "/repos/$GITHUB_REPOSITORY/actions/workflows/top4-candidate-slot-research.yml/runs?per_page=100"' in dispatcher
+    assert 'printf \'%s\\n\' "$slot_history"' in dispatcher
