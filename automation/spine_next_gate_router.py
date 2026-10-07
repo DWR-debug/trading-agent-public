@@ -7,15 +7,7 @@ from __future__ import annotations
 import argparse, json
 from datetime import datetime, timezone
 
-DEFAULTS = [
-    {"workflow": ".github/workflows/q224-edgar-modern-source-gate.yml", "label": "Q224", "min_success_age_minutes": 360},
-    {"workflow": ".github/workflows/q229-historical-release-census.yml", "label": "Q229-HIST", "min_success_age_minutes": 360},
-    {"workflow": ".github/workflows/q229-q230-source-feasibility.yml", "label": "Q229-Q230-SOURCE", "min_success_age_minutes": 360},
-    {"workflow": ".github/workflows/q230-windows-trace-connectivity.yml", "label": "Q230-WINDOWS", "min_success_age_minutes": 360},
-    {"workflow": ".github/workflows/q231-sec-foia-source-gate.yml", "label": "Q231", "min_success_age_minutes": 360},
-    {"workflow": ".github/workflows/q228-sec-correspondence-source-gate.yml", "label": "Q228", "min_success_age_minutes": 360},
-]
-
+DEFAULTS = []
 def iso(s):
     return datetime.fromisoformat(s.replace("Z","+00:00")).astimezone(timezone.utc)
 
