@@ -291,7 +291,7 @@ def test_fast_dispatch_skips_successful_same_slot_but_allows_other_architecture(
     assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in plan2["decisions"])
 
 
-def test_fast_dispatch_allows_one_retry_after_failed_slot_but_blocks_second_failure():
+def test_fast_dispatch_allows_one_retry_then_backfills_next_candidate_after_second_failure():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
@@ -326,8 +326,9 @@ def test_fast_dispatch_allows_one_retry_after_failed_slot_but_blocks_second_fail
         "display_title": "Top-4 Slot windows Q218",
         "run_name": "Top-4 Slot windows Q218",
     }]
-    blocked = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
-    assert blocked["dispatches"] == []
+    backfilled = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
+    assert [x["candidate"] for x in backfilled["dispatches"]] == ["Q219"]
+    assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in backfilled["decisions"])
 
 
 def test_top4_windows_slot_workflow_avoids_setup_python_action():
@@ -336,7 +337,7 @@ def test_top4_windows_slot_workflow_avoids_setup_python_action():
     assert "actions/setup-python@v6" not in windows
     assert "python-3.13.15-nuget-top4-slot" in windows
 
-def test_fast_dispatch_treats_startup_failure_as_one_technical_retry():
+def test_fast_dispatch_treats_startup_failure_as_one_retry_then_backfills():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
@@ -371,8 +372,9 @@ def test_fast_dispatch_treats_startup_failure_as_one_technical_retry():
         "display_title": "Top-4 Slot windows Q218",
         "run_name": "Top-4 Slot windows Q218",
     }]
-    blocked = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
-    assert blocked["dispatches"] == []
+    backfilled = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
+    assert [x["candidate"] for x in backfilled["dispatches"]] == ["Q219"]
+    assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in backfilled["decisions"])
 
 
 def test_fast_dispatch_has_non_slot_technical_failure_circuit_breaker():
@@ -490,7 +492,7 @@ def test_fast_dispatch_backfills_next_top4_after_technical_retry_exhaustion():
     )
 
 
-def test_fast_dispatch_does_not_backfill_exhausted_top4_with_an_exhausted_successor():
+def test_fast_dispatch_does_not_backfill_when_all_top4_successors_are_exhausted():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
@@ -509,28 +511,17 @@ def test_fast_dispatch_does_not_backfill_exhausted_top4_with_an_exhausted_succes
             }],
         }],
     }
-    failed_q218 = [
-        {
+
+    def failures(candidate):
+        return [{
             "status": "completed",
             "conclusion": "failure",
             "name": "Top-4 Candidate Slot Research",
-            "display_title": "Top-4 Slot windows Q218",
-            "run_name": "Top-4 Slot windows Q218",
-        },
-        {
-            "status": "completed",
-            "conclusion": "failure",
-            "name": "Top-4 Candidate Slot Research",
-            "display_title": "Top-4 Slot windows Q219",
-            "run_name": "Top-4 Slot windows Q219",
-        },
-        {
-            "status": "completed",
-            "conclusion": "failure",
-            "name": "Top-4 Candidate Slot Research",
-            "display_title": "Top-4 Slot windows Q219",
-            "run_name": "Top-4 Slot windows Q219",
-        },
-    ]
-    plan = dispatch_candidates(snapshot, failed_q218, max_dispatches=4)
+            "display_title": f"Top-4 Slot windows {candidate}",
+            "run_name": f"Top-4 Slot windows {candidate}",
+        } for _ in range(2)]
+
+    runs = failures("Q218") + failures("Q219") + failures("Q220") + failures("Q221")
+    plan = dispatch_candidates(snapshot, runs, max_dispatches=4)
     assert plan["dispatches"] == []
+    assert any(d["decision"] == "SKIP_SLOT_RETRY_EXHAUSTED" for d in plan["decisions"])
