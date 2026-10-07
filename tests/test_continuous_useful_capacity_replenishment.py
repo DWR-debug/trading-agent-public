@@ -112,7 +112,11 @@ def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding
         for x in plan if x["planned_assignments"] and x["planned_assignments"][0].get("scheduled")
     ]
     assert all(
-        item["candidate"] != "Q218" or item["plan_id"] == "Q218-ADVERSARIAL"
+        item["candidate"] != "Q218" or item["plan_id"] in {
+            "Q218-SOURCE",
+            "Q218-EVENT-PAIR",
+            "Q218-FOCUSED-ADVERSARIAL",
+        }
         for row in plan
         for item in row["planned_assignments"]
         if item.get("scheduled")
