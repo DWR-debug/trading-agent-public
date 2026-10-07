@@ -209,7 +209,7 @@ def job_duration_benchmarks(
                 continue
             duration = max(0, int((finished - started).total_seconds()))
             job_name = str(job.get("name") or "")
-            for candidate in ("Q104:I19", "Q218", "Q219", "Q220", "Q221"):
+            for candidate in FOCUS_CANDIDATES:
                 if candidate in job_name:
                     samples.setdefault(candidate, []).append(duration)
                     break
@@ -400,6 +400,8 @@ CANDIDATE_DEVELOPMENT_MILESTONES = (
     "PERFORMANCE VALIDATION",
 )
 
+FOCUS_CANDIDATES = ("Q104:I19", "Q218")
+
 
 def candidate_overall_progress(stage: str) -> tuple[int, str]:
     """Map the recorded candidate stage to a deterministic lifecycle percentage.
@@ -459,7 +461,7 @@ def candidate_pipeline(
 ) -> list[dict[str, Any]]:
     runs = runs or []
     result = []
-    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in ("Q104:I19", "Q218", "Q219", "Q220", "Q221")}
+    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in FOCUS_CANDIDATES}
     for item in work:
         if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
             continue
@@ -614,37 +616,10 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
 def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Expose a real bounded queue of future next-gate research, independent of live slot occupancy."""
     order = [
-        ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "windows"),
-        ("Q219", ".github/workflows/top4-candidate-slot-research.yml", "ubuntu_x64"),
-        ("Q220", ".github/workflows/top4-candidate-slot-research.yml", "ubuntu_arm64"),
-        ("Q221", ".github/workflows/top4-candidate-slot-research.yml", "windows"),
-        ("Q224", ".github/workflows/q224-edgar-modern-source-gate.yml", None),
-        ("Q229", ".github/workflows/q229-historical-release-census.yml", None),
-        ("Q230", ".github/workflows/q230-windows-trace-connectivity.yml", None),
-        ("Q231", ".github/workflows/q231-sec-foia-source-gate.yml", None),
-        ("Q205", ".github/workflows/q205-nlrb-source-feasibility.yml", None),
-        ("Q198", ".github/workflows/q198-pit-clock-census.yml", None),
-        ("Q199", ".github/workflows/q199-q201-source-feasibility.yml", None),
-        ("Q202", ".github/workflows/q202-q204-information-timing-feasibility.yml", None),
+        ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A"),
+        ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B"),
     ]
-    by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
-    backlog = []
-    for rank, (code, workflow, resource) in enumerate(order, start=1):
-        item = by_code.get(code)
-        if not item:
-            continue
-        backlog.append({
-            "queue_rank": rank,
-            "candidate": code,
-            "lane": str(item.get("lane") or "FRONTIER DISCOVERY"),
-            "next_gate": str(item.get("next_gate") or "next receipt-defined research gate"),
-            "execution_workflow": workflow,
-            "resource_hint": resource,
-            "planned_status": "READY_NEXT_GATE",
-            "non_authorizing": True,
-        })
-    # Keep the visible future queue aligned with its declared six-item target.
-    return backlog[:6]
+    return backlog[:2]
 
 
 def planned_capacity_plan(
@@ -673,11 +648,34 @@ def planned_capacity_plan(
             "task": "historical SEC 13F archive/security identity census and acceptance-time closure",
             "preferred": ["Windows self-hosted A"],
             "readiness": "READY_HISTORICAL_13F_CENSUS",
-            "basis": "the dedicated three-shard historical 13F census workflow is present and its next gate is receipt-defined; it internally uses Windows plus hosted x64/ARM64 shards",
+            "basis": "dedicated receipt-defined historical 13F completeness gate; the census itself fans out over its declared Windows/hosted shards",
             "dispatchable": True,
             "exclusive_dispatch": True,
             "resource_leases": ["Windows self-hosted A", "GitHub-hosted Ubuntu x64", "GitHub-hosted ARM64"],
             "execution_workflow": ".github/workflows/q104-i19-13f-historical-identity-census.yml",
+        },
+        {
+            "plan_id": "Q218-PIT",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "historical SEC multi-channel 10-K → 8-K pairing and PIT lineage",
+            "preferred": ["Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
+            "readiness": "READY_SOURCE_PIT",
+            "basis": "bounded Q218 source/PIT workpack is the sole frontier candidate under the active focus lock",
+            "dispatchable": True,
+            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+        },
+        {
+            "plan_id": "Q218-INDEPENDENT-ARCH",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "independent architecture reproduction of the Q218 source/event-pair contract",
+            "preferred": ["Windows self-hosted C", "GitHub-hosted ARM64"],
+            "readiness": "READY_INDEPENDENT_ARCH_REPRO",
+            "basis": "independent architecture check is useful only when it does not duplicate the primary Q218 execution",
+            "dispatchable": True,
+            "allow_parallel_with_candidate": True,
+            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
         },
         {
             "plan_id": "Q104-I19-COMPILER",
@@ -686,7 +684,7 @@ def planned_capacity_plan(
             "task": "concept-specific PIT compiler after 13F acceptance-time join",
             "preferred": ["Windows self-hosted A", "GitHub-hosted Ubuntu x64"],
             "readiness": "BLOCKED_UNTIL_HISTORICAL_COMPILER_INPUTS",
-            "basis": "historical 13F receipt remains the explicit compiler prerequisite",
+            "basis": "historical 13F receipt is the explicit compiler prerequisite",
             "dispatchable": False,
             "execution_workflow": None,
         },
@@ -697,112 +695,9 @@ def planned_capacity_plan(
             "task": "independent reproduction of compiler/PIT result",
             "preferred": ["Windows self-hosted C", "GitHub-hosted ARM64"],
             "readiness": "BLOCKED_UNTIL_COMPILER_RECEIPT",
-            "basis": "next gate explicitly requires independent reproduction",
+            "basis": "independent reproduction remains downstream of the frozen compiler input",
             "dispatchable": False,
             "execution_workflow": None,
-        },
-        {
-            "plan_id": "Q218-PIT",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-            "candidate": "Q218",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical mandatory/voluntary 10-K → 8-K pairing and PIT lineage",
-            "preferred": ["Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
-            "readiness": "READY_SOURCE_PIT",
-            "basis": "current Q218 source/PIT workpack",
-        },
-        {
-            "plan_id": "Q219-PIT",
-            "candidate": "Q219",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "post-filing options-response information-processing PIT join",
-            "preferred": ["GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Windows self-hosted B"],
-            "readiness": "READY_POST_FILING_PIT",
-            "basis": "Q129 source/PIT fingerprint + fixed post-filing event-time join contract",
-            "dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-        },
-        {
-            "plan_id": "Q220-PIT",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-            "candidate": "Q220",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "deterministic narrative/XBRL presentation mapping and PIT",
-            "preferred": ["Windows self-hosted B", "GitHub-hosted ARM64"],
-            "readiness": "READY_SOURCE_SCHEMA",
-            "basis": "SEC FSN schema gate + XBRL concept-freeze audit",
-        },
-        {
-            "plan_id": "Q221-PIT",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-            "candidate": "Q221",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical USAspending public boundary and issuer/entity mapping",
-            "preferred": ["GitHub-hosted ARM64","GitHub-hosted Ubuntu x64","Windows self-hosted B"],
-            "readiness": "READY_SOURCE_CLOCK",
-            "basis": "USAspending public-clock contract ready; applicability/entity mapping open",
-        },
-        {
-            "plan_id": "Q224-EDGAR-LOG",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/q224-edgar-modern-source-gate.yml",
-            "candidate": "Q224",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "modern EDGAR access-log archive census and request→filing decoding",
-            "preferred": ["GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Windows self-hosted B"],
-            "readiness": "READY_DISCOVERY",
-            "basis": "official EDGAR log channel; archive/schema/identity gate remains",
-        },
-        {
-            "plan_id": "Q228-CORRESPONDENCE",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/q228-sec-correspondence-source-gate.yml",
-            "candidate": "Q228",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical SEC correspondence census, release clock and review identity",
-            "preferred": ["GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Windows self-hosted B"],
-            "readiness": "READY_DISCOVERY",
-            "basis": "SEC correspondence source gate; selection mechanism remains a control",
-        },
-        {
-            "plan_id": "Q231-FOIA",
-"dispatchable": True,
-            "execution_workflow": ".github/workflows/q231-sec-foia-source-gate.yml",
-            "candidate": "Q231",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical SEC FOIA publication clock and requester/issuer mapping",
-            "preferred": ["GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Windows self-hosted B"],
-            "readiness": "READY_DISCOVERY",
-            "basis": "official monthly FOIA logs; exact publication clock still open",
-        },
-        {
-            "plan_id": "Q220-ADVERSARIAL",
-            "candidate": "Q220",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "bounded adversarial contract review of Q220 source/PIT assumptions",
-            "preferred": ["Free AI pool"],
-            "readiness": "READY_AI_FABRIC",
-            "basis": "independent adversarial review; Q218 provider attempt already failed and is not repeated merely for utilization",
-            "allow_parallel_with_candidate": True,
-            "dispatchable": True,
-            "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
-            "execution_workflow_inputs": {"task_id": "AI-2026-10-06-Q220-TOP4-ADVERSARIAL", "run_secondary_provider": "false", "use_litellm_transport": "false"},
-        },
-        {
-            "plan_id": "Q221-ADVERSARIAL",
-            "candidate": "Q221",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "bounded adversarial contract review of Q221 public-clock/entity-map assumptions",
-            "preferred": ["Free AI pool"],
-            "readiness": "READY_AI_FABRIC",
-            "basis": "independent adversarial review; AI output is non-scientific and non-authorizing",
-            "allow_parallel_with_candidate": True,
-            "dispatchable": True,
-            "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
-            "execution_workflow_inputs": {"task_id": "AI-2026-10-06-Q221-TOP4-ADVERSARIAL", "run_secondary_provider": "false", "use_litellm_transport": "false"},
         },
     ]
 
@@ -906,6 +801,39 @@ def planned_capacity_plan(
         })
     return rows
 
+
+
+def s10_support_snapshot(work: list[dict[str, Any]], os_state: dict[str, Any]) -> dict[str, Any]:
+    """Expose S10 as bounded mechanical/support capacity, never candidate authority."""
+    routing = os_state.get("resource_routing", {}).get("s10", {})
+    status_path = ROOT / "ops" / "s10_runtime_status.json"
+    try:
+        status = json.loads(status_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        status = {}
+    assignments = [
+        w for w in work
+        if "S10" in str(w.get("worker") or "") or "S10" in str(w.get("resource") or "")
+    ]
+    return {
+        "resource_id": "S10",
+        "runner_name": str(status.get("runner_name") or routing.get("identity") or "S10-TERMUX"),
+        "architecture": str(status.get("runner_arch") or "ARM64"),
+        "runtime": str(routing.get("runtime") or "Termux"),
+        "status": str(status.get("status") or status.get("receipt_status") or routing.get("status") or "UNVERIFIED"),
+        "eligible": bool(status.get("eligible", False)) and str(status.get("status") or status.get("receipt_status") or "") == "S10_UTILITY_ACCEPTED",
+        "receipt_status": str(status.get("receipt_status") or status.get("status") or ""),
+        "latest_workflow_run_id": status.get("workflow_run_id"),
+        "workflow_updated_at": str(status.get("workflow_run_updated_at") or status.get("generated_at_utc") or ""),
+        "role": str(routing.get("research_role") or "bounded support only"),
+        "mode": str(routing.get("default_mode") or routing.get("runner_mode") or "adaptive_mechanical_research_qa"),
+        "task_rotation": list(routing.get("task_rotation") or []),
+        "current_assignments": len(assignments),
+        "scientific_evidence": False,
+        "performance_authorization": False,
+        "paper_only": True,
+        "note": "S10 liefert ausschließlich mechanische/supportive QA; keine wissenschaftliche Evidenz und keine Autorisierung.",
+    }
 
 
 def android_fleet_snapshot(runners: list[dict[str, Any]], work: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -1116,6 +1044,7 @@ def main() -> None:
     )
     runners = runner_snapshot()
     ai = ai_provider_state()
+    s10_support = s10_support_snapshot(work, os_state)
     milestones_12h = milestone_history_12h()
 
     configured_resources = [
@@ -1126,7 +1055,7 @@ def main() -> None:
         {"name": "GitHub-hosted ARM64", "type": "cloud", "research_capacity_slots": 2, "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
         {"name": "Free AI pool", "type": "cloud", "research_capacity_slots": 1, "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
     ]
-    priority_codes = {"Q104:I19","Q218","Q219","Q220","Q221"}
+    priority_codes = set(FOCUS_CANDIDATES)
     top4 = [x for x in state_board if x.get("code") in priority_codes]
     q104_parent = next((x for x in state_board if str(x.get("code")) == "104"), None)
     if q104_parent:
@@ -1181,7 +1110,8 @@ def main() -> None:
             "available_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "available"),
             "planned_capacity_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if item.get("scheduled")),
             "planned_research_queue_items": len(planned_research_queue),
-            "planned_research_queue_target": 6,
+            "planned_research_queue_target": 2,
+            "candidate_focus_lock": list(FOCUS_CANDIDATES),
             "blocked_planned_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if not item.get("scheduled")),
             "unallocated_routable_items": sum(1 for row in planned_capacity if row.get("capacity_state") == "available" and not row.get("planned_assignments")),
             "planned_capacity_note": "bounded plan; only entries marked dispatchable have an executable workflow route. This plan never creates scientific authorization.",
@@ -1193,12 +1123,13 @@ def main() -> None:
         "planned_capacity": planned_capacity,
         "planned_research_queue": planned_research_queue,
         "milestone_history_12h": milestones_12h,
-        "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks, runs),
+        "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks, recent_runs),
         "duration_benchmarks": workflow_benchmarks,
         "job_duration_benchmarks": job_benchmarks,
         "workload_by_resource": {name: sum(1 for w in work if w.get("resource") == name) for name in sorted({w.get("resource") for w in work if w.get("resource")})},
         "workload_by_lane": {lane: sum(1 for w in work if w.get("lane") == lane) for lane in sorted({w.get("lane") for w in work if w.get("lane")})},
         "ai_fabric": ai,
+        "s10_support": s10_support,
         "current_research": {
             "latest_formal_result": latest_result,
             "highlights": recent_research_highlights(status_text),
