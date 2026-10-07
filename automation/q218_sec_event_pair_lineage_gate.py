@@ -83,6 +83,44 @@ def _nearest_prior(rows: list[dict], target: dict) -> dict | None:
     return max(candidates, key=_acceptance_key) if candidates else None
 
 
+def _extract_initial_8k_filing_date(primary_text: str) -> str | None:
+    """Extract a narrowly scoped explicit Initial Form 8-K filing date from an amendment."""
+    compact = re.sub(r"\\s+", " ", primary_text)
+    match = re.search(
+        r"Initial Form 8-K.{0,500}?filed.{0,120}?(January|February|March|April|May|June|July|August|September|October|November|December)\\s+"
+        r"(\\d{1,2}),\\s+(\\d{4})",
+        compact,
+        flags=re.I,
+    )
+    if not match:
+        return None
+    return f"{match.group(1).title()} {match.group(2)}, {match.group(3)}"
+
+
+def _resolve_amendment_parent(
+    originals: list[dict],
+    target: dict,
+) -> tuple[dict | None, str]:
+    """Resolve an 8-K/A parent using explicit source lineage first, else same report date."""
+    explicit_filing_date = target.get("initial_8k_filing_date")
+    if explicit_filing_date:
+        candidates = [
+            row
+            for row in originals
+            if row.get("filing_date") == explicit_filing_date
+            and row.get("acceptance_datetime")
+            and target.get("acceptance_datetime")
+            and row["acceptance_datetime"] < target["acceptance_datetime"]
+        ]
+        if len(candidates) == 1:
+            return candidates[0], "explicit_initial_8k_filing_date"
+        if len(candidates) > 1:
+            return None, "explicit_initial_8k_filing_date_ambiguous"
+
+    parent = _nearest_prior(originals, target)
+    return (parent, "same_report_date_acceptance") if parent else (None, "unresolved")
+
+
 def run(output: Path) -> dict:
     issuer_results: dict[str, dict] = {}
 
@@ -197,6 +235,16 @@ def run(output: Path) -> dict:
                         or row["primary_publication_terms_marker"]
                     )
                 else:
+                    try:
+                        _, _, primary_page = fetch(
+                            "https://www.sec.gov/Archives/edgar/data/"
+                            f"{int(cik)}/{accession_number.replace('-', '')}/"
+                            f"{row['primary_document']}"
+                        )
+                        primary_text = primary_page.decode("utf-8", errors="replace")
+                        row["initial_8k_filing_date"] = _extract_initial_8k_filing_date(primary_text)
+                    except Exception as exc:
+                        row["primary_fetch_error"] = type(exc).__name__ + ":" + str(exc)
                     earnings_amendments.append(row)
 
         # Prefer exact fiscal/report-date alignment. When SEC's 8-K reportDate
@@ -270,11 +318,17 @@ def run(output: Path) -> dict:
             (earnings_amendments, earnings, "8-K/A"),
         ]:
             for row in amendment:
-                parent = _nearest_prior(originals, row)
+                if kind == "8-K/A":
+                    parent, lineage_resolution_method = _resolve_amendment_parent(originals, row)
+                else:
+                    parent = _nearest_prior(originals, row)
+                    lineage_resolution_method = "same_report_date_acceptance" if parent else "unresolved"
                 item = {
                     "amendment_form": kind,
                     "amendment_accession": row.get("accession"),
                     "report_date": row.get("report_date"),
+                    "initial_8k_filing_date": row.get("initial_8k_filing_date"),
+                    "lineage_resolution_method": lineage_resolution_method,
                     "parent_candidate_accession": parent.get("accession") if parent else None,
                     "parent_candidate_acceptance_datetime": (
                         parent.get("acceptance_datetime") if parent else None
