@@ -548,6 +548,17 @@ def planned_capacity_plan(
             "basis": "current Q218 source/PIT workpack",
         },
         {
+            "plan_id": "Q219-PIT",
+            "candidate": "Q219",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "post-filing options-response information-processing PIT join",
+            "preferred": ["GitHub-hosted Ubuntu x64", "Windows self-hosted B"],
+            "readiness": "READY_POST_FILING_PIT",
+            "basis": "Q129 source/PIT fingerprint + fixed post-filing event-time join contract",
+            "dispatchable": True,
+            "execution_workflow": ".github/workflows/top4-candidate-research-capacity.yml",
+        },
+        {
             "plan_id": "Q220-PIT",
 "dispatchable": True,
             "execution_workflow": ".github/workflows/top4-candidate-research-capacity.yml",
