@@ -63,3 +63,12 @@ def test_scan_archive_counts_unique_target_accessions():
         z.writestr("SUBMISSION.tsv",sub); z.writestr("INFOTABLE.tsv",info)
     r=scan_archive(b.getvalue(),{"url":"synthetic://unique","label":"unique","period_start":"2026-04-01"},{"SPGI":{"78409V104"},"OTHER":{"78409V104"}})
     assert r["target_unique_accession_count"] == 1
+
+
+def test_q104_i19_workflow_has_exactly_one_bounded_retry():
+    workflow = (Path(__file__).parents[1] / ".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
+    assert "permissions:" in workflow
+    assert "actions: write" in workflow
+    assert workflow.count("retry_failed:") == 1
+    assert "github.run_attempt == 1" in workflow
+    assert 'gh run rerun "$GITHUB_RUN_ID" --failed' in workflow
