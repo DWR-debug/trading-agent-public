@@ -89,3 +89,31 @@ def test_dashboard_exposes_runner_status_sources_and_dispatchability():
     assert '"runner_status_api_url"' in generator
     assert '"dispatchable": bool(item.get("dispatchable", False))' in generator
     assert '"execution_workflow": item.get("execution_workflow")' in generator
+
+
+def test_fast_dispatch_allows_top4_with_parallel_ai_review():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    snapshot = {
+        "work_assignments": [{
+            "resource": "Free AI pool",
+            "candidate": "Q218",
+            "task": "Free AI Worker Fabric",
+            "job": "Q218 adversarial review",
+            "lane": "FRONTIER DISCOVERY",
+        }],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted B",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-PIT",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": ".github/workflows/top4-candidate-research-capacity.yml",
+            }],
+        }],
+    }
+    plan = dispatch_candidates(snapshot, [], max_dispatches=4)
+    assert plan["dispatches"][0]["workflow"].endswith("top4-candidate-research-capacity.yml")
