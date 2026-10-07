@@ -1,6 +1,8 @@
 name: Planned Capacity Fast Dispatch
 
 on:
+  push:
+    branches: [master]
   schedule:
     - cron: "*/5 * * * *"
   workflow_run:
@@ -67,6 +69,6 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: planned-capacity-fast-dispatch-${{ github.run_id }}-${{ github.run_attempt }}
-          path: "$RUNNER_TEMP/planned_capacity_fast_dispatch.json"
+          path: "${{ runner.temp }}/planned_capacity_fast_dispatch.json"
           if-no-files-found: error
           retention-days: 14
