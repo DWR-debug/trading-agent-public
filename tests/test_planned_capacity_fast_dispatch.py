@@ -439,3 +439,7 @@ def test_fast_dispatch_normalizes_candidate_identity_before_duplicate_guard():
         }],
     }
     assert dispatch_candidates(snapshot, [], max_dispatches=4)["dispatches"] == []
+
+def test_dashboard_planner_preserves_parallel_ai_dispatch_flag():
+    generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    assert '"allow_parallel_with_candidate": bool(item.get("allow_parallel_with_candidate", False))' in generator
