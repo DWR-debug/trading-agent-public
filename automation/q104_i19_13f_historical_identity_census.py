@@ -12,9 +12,12 @@ START=date(2013,7,1); END=date(2025,10,1); CUTOFF=date(2025,9,24)
 SHARDS={"2013-2017":(date(2013,7,1),date(2018,1,1)),
         "2018-2021":(date(2018,1,1),date(2022,1,1)),
         "2022-2025-09":(date(2022,1,1),END)}
-UA="DWR-debug/trading-agent-public Q104-I19 historical 13F census/2.0"
-HEADER_REQUEST_GAP_SECONDS=0.35
-HEADER_WORKERS=8
+UA="DWR-debug/trading-agent-public Q104-I19 historical 13F census/3.0"
+ARCHIVE_REQUEST_GAP_SECONDS=1.0
+HEADER_REQUEST_GAP_SECONDS=1.0
+HEADER_WORKERS=4
+MAX_FETCH_RETRIES=6
+MAX_RETRY_DELAY_SECONDS=60
 
 class LinkParser(html.parser.HTMLParser):
     def __init__(self): super().__init__(); self.links=[]; self.h=None; self.buf=[]
@@ -52,16 +55,38 @@ def discover_archives(page):
         if start is not None and START<=start<END: out[href]={"url":href,"label":label,"period_start":start.isoformat()}
     return sorted(out.values(),key=lambda x:(x["period_start"],x["url"]))
 
-def fetch(url,retries=4):
+def fetch(url,retries=MAX_FETCH_RETRIES):
     last=None
     for i in range(retries):
+        if i == 0:
+            time.sleep(ARCHIVE_REQUEST_GAP_SECONDS)
         try:
-            req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"application/zip,*/*","Accept-Encoding":"identity"})
+            req=urllib.request.Request(
+                url,
+                headers={
+                    "User-Agent":UA,
+                    "Accept":"application/zip,*/*",
+                    "Accept-Encoding":"identity",
+                    "Connection":"close",
+                },
+            )
             with urllib.request.urlopen(req,timeout=180) as r:return r.read()
-        except Exception as e:
+        except urllib.error.HTTPError as e:
             last=e
-            if i+1<retries:time.sleep(2**i)
-    raise last
+            if e.code not in {408,425,429,500,502,503,504} or i+1>=retries:
+                raise
+            retry_after=None
+            try:
+                retry_after=int(e.headers.get("Retry-After","0"))
+            except (TypeError,ValueError):
+                retry_after=0
+            delay=max(ARCHIVE_REQUEST_GAP_SECONDS, retry_after, min(MAX_RETRY_DELAY_SECONDS, 5*(2**i)))
+            time.sleep(delay)
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            last=e
+            if i+1>=retries: raise
+            time.sleep(min(MAX_RETRY_DELAY_SECONDS, 5*(2**i)))
+    raise last or RuntimeError("SEC_FETCH_FAILED")
 
 def field(row,name):
     wanted=re.sub(r"[^A-Z0-9]","",name.upper())
@@ -131,7 +156,7 @@ def enrich_acceptance_times(eligible, target_hits):
         if not cik: raise RuntimeError("MISSING_FILER_CIK:"+accession)
         url=accession_header_url(cik,accession)
         limiter.wait()
-        req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"text/html,text/plain,*/*","Accept-Encoding":"identity"})
+        req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"text/html,text/plain,*/*","Accept-Encoding":"identity","Connection":"close"})
         try:
             with urllib.request.urlopen(req,timeout=45) as resp:
                 body=resp.read(); status=int(getattr(resp,"status",200))
