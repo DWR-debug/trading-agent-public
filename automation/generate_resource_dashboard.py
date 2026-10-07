@@ -375,7 +375,7 @@ def enrich_work_durations(
     out = []
     for item in work:
         workflow = str(item.get("task") or "")
-        candidate = next((c for c in ("Q218", "Q219", "Q220", "Q221") if c in f"{workflow} {item.get('job', '')}"), None)
+        candidate = next((c for c in FOCUS_CANDIDATES if c in f"{workflow} {item.get('job', '')}"), None)
         benchmark = job_benchmarks.get(candidate) if workflow == "Top-4 Candidate Research Capacity" else workflow_benchmarks.get(workflow)
         entry = dict(item)
         expected = int(benchmark["p50_seconds"]) if benchmark and benchmark.get("p50_seconds") else None
@@ -469,7 +469,7 @@ def candidate_pipeline(
         for candidate in active_by_candidate:
             if candidate in text_value:
                 active_by_candidate[candidate].append(item)
-    for candidate in ("Q104:I19", "Q218", "Q219", "Q220", "Q221"):
+    for candidate in FOCUS_CANDIDATES:
         row = next((x for x in top4 if str(x.get("code")) == candidate), None)
         if not row:
             continue
