@@ -22,31 +22,37 @@ jobs:
         github.event_name == 'workflow_dispatch' ||
         (
           github.event.workflow_run.conclusion == 'success' &&
-          contains(github.event.workflow_run.display_title, 'Q218 event_pair')
-        )
-      )
-    runs-on: ubuntu-24.04-arm
-    timeout-minutes: 30
-    steps:
-      - name: Checkout triggering source
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-          fetch-depth: 1
-
       - name: Locate current positive Q218 source/event receipts
         id: locate
         env:
           GH_TOKEN: ${{ github.token }}
           TRIGGER_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || '' }}
         shell: bash
         run: |
           set -euo pipefail
           runs="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?branch=master&per_page=100")"
-          source_run="$(jq -r --arg sha "$TRIGGER_SHA" '.workflow_runs[] | select(.name=="Top-4 Candidate Slot Research" and .conclusion=="success" and .head_sha==$sha and (.display_title | contains("Q218 source"))) | .id' <<<"$runs" | head -n1)"
-          event_run="$(jq -r --arg sha "$TRIGGER_SHA" '.workflow_runs[] | select(.name=="Top-4 Candidate Slot Research" and .conclusion=="success" and .head_sha==$sha and (.display_title | contains("Q218 event_pair"))) | .id' <<<"$runs" | head -n1)"
-          test -n "$source_run" && test "$source_run" != "null"
+          event_run="$TRIGGER_RUN_ID"
+          if [ -z "$event_run" ] || [ "$event_run" = "" ]; then
+            event_run="$(jq -r '.workflow_runs[] | select(.name=="Top-4 Candidate Slot Research" and .conclusion=="success" and (.display_title | contains("Q218 event_pair"))) | .id' <<<"$runs" | head -n1)"
+          fi
           test -n "$event_run" && test "$event_run" != "null"
+          event_title="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$event_run" --jq '.display_title')"
+          event_conclusion="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$event_run" --jq '.conclusion')"
+          event_head="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$event_run" --jq '.head_sha')"
+          test "$event_conclusion" = "success"
+          [[ "$event_title" == *"Q218 event_pair"* ]]
+          [[ "$event_head" != "" ]]
+          source_run=""
+          while read -r candidate_id; do
+            [ -z "$candidate_id" ] && continue
+            candidate_head="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$candidate_id" --jq '.head_sha')"
+            if git diff --quiet "$candidate_head" "$TRIGGER_SHA" -- automation/q218_sec_multichannel_source_gate.py; then
+              source_run="$candidate_id"
+              break
+            fi
+          done < <(jq -r '.workflow_runs[] | select(.name=="Top-4 Candidate Slot Research" and .conclusion=="success" and (.display_title | contains("Q218 source"))) | .id' <<<"$runs")
+          test -n "$source_run"
           source_artifact="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run/artifacts" --jq '.artifacts[] | select(.expired==false) | .name' | head -n1)"
           event_artifact="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$event_run/artifacts" --jq '.artifacts[] | select(.expired==false) | .name' | head -n1)"
           test -n "$source_artifact" && test -n "$event_artifact"
@@ -54,6 +60,9 @@ jobs:
             echo "source_run=$source_run"
             echo "event_run=$event_run"
             echo "source_artifact=$source_artifact"
+            echo "event_artifact=$event_artifact"
+            echo "event_head=$event_head"
+          } >> "$GITHUB_OUTPUT"
             echo "event_artifact=$event_artifact"
           } >> "$GITHUB_OUTPUT"
 
