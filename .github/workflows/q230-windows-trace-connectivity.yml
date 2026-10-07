@@ -39,3 +39,10 @@ jobs:
           path: research/runs/q230_windows_trace_connectivity/connectivity.json
           if-no-files-found: error
           retention-days: 30
+
+  completion_relay:
+    if: always()
+    needs: [probe]
+    uses: ./.github/workflows/research-completion-relay.yml
+    with:
+      source_workflow: "Q230 Windows TRACE Connectivity"
