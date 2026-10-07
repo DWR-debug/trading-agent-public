@@ -721,7 +721,7 @@ def planned_capacity_plan(
             "readiness": "CONDITIONALLY_READY_AFTER_Q218_SOURCE_EVENT_RECEIPTS",
             "basis": "dispatcher opens this plan only after both positive current-context Q218 source and event-pair receipts are observed",
             "dispatchable": True,
-            "allow_parallel_with_candidate": False,
+            "allow_parallel_with_candidate": True,
             "execution_workflow": ".github/workflows/q218-independent-architecture-pit-reproduction.yml",
         },
         {
