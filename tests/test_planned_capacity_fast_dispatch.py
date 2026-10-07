@@ -139,7 +139,7 @@ def test_fast_dispatch_allows_independent_candidates_on_one_slot_workflow():
     assert [x["candidate"] for x in plan["dispatches"]] == ["Q218", "Q219"]
 
 
-def test_fast_dispatch_stops_after_exclusive_multi_resource_workflow():
+def test_fast_dispatch_reserves_only_explicit_multi_resource_leases():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
     snapshot = {
         "work_assignments": [],
@@ -151,24 +151,43 @@ def test_fast_dispatch_stops_after_exclusive_multi_resource_workflow():
                 "planned_assignments": [{
                     "plan_id":"Q104-I19-CENSUS","candidate":"Q104:I19",
                     "scheduled":True,"dispatchable":True,"exclusive_dispatch":True,
+                    "resource_leases":["Windows self-hosted A","GitHub-hosted Ubuntu x64","GitHub-hosted ARM64"],
                     "execution_workflow":".github/workflows/q104-i19-13f-historical-identity-census.yml",
                 }],
             },
             {
-                "resource": "GitHub-hosted Ubuntu x64",
+                "resource": "Windows self-hosted B",
                 "current_assignments": 0,
-                "research_capacity_slots": 2,
+                "research_capacity_slots": 1,
                 "planned_assignments": [{
                     "plan_id":"Q218-PIT","candidate":"Q218","scheduled":True,"dispatchable":True,
                     "execution_workflow":".github/workflows/top4-candidate-slot-research.yml",
                 }],
             },
+            {
+                "resource": "Windows self-hosted C",
+                "current_assignments": 0,
+                "research_capacity_slots": 1,
+                "planned_assignments": [{
+                    "plan_id":"Q221-PIT","candidate":"Q221","scheduled":True,"dispatchable":True,
+                    "execution_workflow":".github/workflows/top4-candidate-slot-research.yml",
+                }],
+            },
+            {
+                "resource": "GitHub-hosted ARM64",
+                "current_assignments": 0,
+                "research_capacity_slots": 2,
+                "planned_assignments": [{
+                    "plan_id":"Q220-PIT","candidate":"Q220","scheduled":True,"dispatchable":True,
+                    "execution_workflow":".github/workflows/top4-candidate-slot-research.yml",
+                }],
+            },
         ],
     }
-    plan = dispatch_candidates(snapshot, [], max_dispatches=4)
-    assert len(plan["dispatches"]) == 1
-    assert plan["dispatches"][0]["candidate"] == "Q104:I19"
-
+    plan = dispatch_candidates(snapshot, [], max_dispatches=6)
+    candidates=[x["candidate"] for x in plan["dispatches"]]
+    assert candidates == ["Q104:I19", "Q218", "Q221"]
+    assert all(x["candidate"] != "Q220" for x in plan["dispatches"])
 
 def test_fast_dispatch_skips_successful_same_slot_but_allows_other_architecture():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
