@@ -4,14 +4,21 @@ import json
 ROOT = Path(__file__).parents[1]
 
 
-def test_fast_dispatch_workflow_keeps_five_minute_recovery_without_direct_workflow_run_trigger():
-    text = (ROOT / ".github/workflows/planned-capacity-fast-dispatch.yml").read_text(encoding="utf-8")
-    assert 'cron: "*/5 * * * *"' in text
-    assert "workflow_run:" not in text
-    for name in ("research-completion-monitor-a.yml","research-completion-monitor-b.yml"):
-        monitor = (ROOT / ".github/workflows" / name).read_text(encoding="utf-8")
-        assert "workflow_run:" in monitor
-        assert "planned-capacity-fast-dispatch.yml" in monitor
+def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backstop():
+    dispatcher = (ROOT / ".github/workflows/planned-capacity-fast-dispatch.yml").read_text(encoding="utf-8")
+    monitor_a = (ROOT / ".github/workflows/research-completion-monitor-a.yml").read_text(encoding="utf-8")
+    monitor_b = (ROOT / ".github/workflows/research-completion-monitor-b.yml").read_text(encoding="utf-8")
+    assert 'cron: "*/5 * * * *"' in dispatcher
+    assert "workflow_run:" not in dispatcher
+    assert "cancel-in-progress: false" in dispatcher
+    assert "workflow_run:" in monitor_a
+    assert '      - "Q*"' in monitor_a
+    assert '      - "Top-4*"' in monitor_a
+    assert '      - "*PIT*"' in monitor_a
+    assert '      - "*Source*"' in monitor_a
+    assert '      - "Evidence Graph*"' in monitor_a
+    assert "gh workflow run planned-capacity-fast-dispatch.yml" in monitor_a
+    assert "workflow_run:" not in monitor_b
 
 
 def test_fast_dispatch_zero_active_starts_top4_once_and_ai_when_free():
