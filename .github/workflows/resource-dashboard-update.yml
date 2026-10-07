@@ -41,6 +41,7 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          RUNNER_STATUS_TOKEN: ${{ secrets.RUNNER_STATUS_TOKEN }}
         run: |
           set -euo pipefail
           python3 automation/generate_resource_dashboard.py
