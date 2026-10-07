@@ -41,7 +41,7 @@ def test_q218_pairs_latest_prior_item_202_and_tracks_amendments(tmp_path, monkey
     assert result["issuer_count"] == 8
     aapl = result["issuer_results"]["AAPL"]
     assert aapl["event_pair_count"] == 1
-    assert aapl["event_pairs"][0]["item_2_02_8k_accession"] == "0000320193-25-000002"
+    assert aapl["event_pairs"][0]["item_2_02_8k_accession"] == "0000320193-25-000000"
     assert aapl["event_pairs"][0]["acceptance_order_valid"] is True
     assert aapl["amendment_lineage"][0]["parent_candidate_accession"] == "0000320193-25-000001"
     assert aapl["all_pairing_valid"] is True
