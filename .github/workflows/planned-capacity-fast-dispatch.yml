@@ -7,20 +7,18 @@ on:
     - cron: "*/5 * * * *"
   workflow_run:
     workflows:
-      - Q104 I19 Historical 13F Identity Census
-      - Top-4 Candidate Research Capacity
-      - Top-4 Candidate Slot Research
-      - Q224 SEC EDGAR Modern Source Gate
-      - Q228 SEC Correspondence Source Gate
-      - Q231 SEC FOIA Source Gate
-      - Q229 Historical CFPB Release Census
-      - Q229-Q230 Source Feasibility
-      - Q230 Windows TRACE Connectivity
-      - Free AI Worker Fabric
-      - Windows Runner C Long Research Workpack
-      - Orthogonal PIT Next-Gate Compiler
-      - Evidence Graph Stage 4-5 Research Wave
-      - Temporal Identity State Spine Waves
+      - "Q*"
+      - "Top-4*"
+      - "*Research*"
+      - "*PIT*"
+      - "*Source*"
+      - "*Census*"
+      - "*Frontier*"
+      - "*Identity*"
+      - "*Capacity*"
+      - "*Reproduction*"
+      - "*AI Worker*"
+      - "*Literature*"
     types: [completed]
   workflow_dispatch: {}
 
@@ -38,7 +36,7 @@ jobs:
       github.repository == 'DWR-debug/trading-agent-public' &&
       (
         github.event_name != 'workflow_run' ||
-        github.event.workflow_run.head_branch == 'master'
+        github.event.workflow_run.head_branch == github.event.repository.default_branch
       )
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -67,7 +65,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m automation.planned_capacity_fast_dispatch             --snapshot docs/dashboard/dashboard_data.json             --runs "$RUNNER_TEMP/current_runs.json"             --output "$RUNNER_TEMP/planned_capacity_fast_dispatch.json"             --repo "$GITHUB_REPOSITORY"             --max-dispatches 4
+          python3 -m automation.planned_capacity_fast_dispatch             --snapshot docs/dashboard/dashboard_data.json             --runs "$RUNNER_TEMP/current_runs.json"             --output "$RUNNER_TEMP/planned_capacity_fast_dispatch.json"             --repo "$GITHUB_REPOSITORY"             --max-dispatches 6
 
           cat "$RUNNER_TEMP/planned_capacity_fast_dispatch.json" >> "$GITHUB_STEP_SUMMARY"
 
