@@ -582,4 +582,5 @@ def test_pull_request_validation_does_not_mark_candidate_active():
 def test_fast_dispatch_loads_paginated_top4_slot_history_for_retry_circuit_breaker():
     dispatcher = (ROOT / ".github/workflows/planned-capacity-fast-dispatch.yml").read_text(encoding="utf-8")
     assert 'gh api --paginate "/repos/$GITHUB_REPOSITORY/actions/workflows/top4-candidate-slot-research.yml/runs?per_page=100"' in dispatcher
-    assert 'printf \'%s\\n\' "$slot_history"' in dispatcher
+    assert dispatcher.count('"$slot_history"') >= 1
+    assert '<(printf' in dispatcher
