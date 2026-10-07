@@ -5,6 +5,16 @@ on:
     branches: [master]
   schedule:
     - cron: "*/5 * * * *"
+  workflow_run:
+    workflows:
+      - "Top-4 Candidate Slot Research"
+      - "Top-4 Candidate Research Capacity"
+      - "Q104 I19 Historical 13F Identity Census"
+      - "Q089 Contract Audit"
+      - "Q185-Q186 Windows Bounded Reproduction"
+      - "H06 PIT Independent Reproduction (self-hosted)"
+      - "Free AI Worker Fabric"
+    types: [completed]
   workflow_dispatch: {}
 
 permissions:
@@ -18,9 +28,7 @@ concurrency:
 
 jobs:
   dispatch:
-    if: >-
-      github.repository == 'DWR-debug/trading-agent-public' &&
-      github.event_name != 'workflow_run'
+    if: github.repository == 'DWR-debug/trading-agent-public'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -45,6 +53,9 @@ jobs:
           queued="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=queued&per_page=100")"
           waiting="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=waiting&per_page=100")"
           pending="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=pending&per_page=100")"
+          # Keep the general snapshot bounded, but fetch complete Top-4 slot
+          # history so old technical failures cannot age out of the retry budget.
+          slot_history="$(gh api --paginate "/repos/$GITHUB_REPOSITORY/actions/workflows/top4-candidate-slot-research.yml/runs?per_page=100")"
           jq -s '
             [ .[] | .workflow_runs[]? ]
             | map(select(.id != null))
