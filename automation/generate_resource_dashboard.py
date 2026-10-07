@@ -1193,7 +1193,7 @@ def main() -> None:
         "planned_capacity": planned_capacity,
         "planned_research_queue": planned_research_queue,
         "milestone_history_12h": milestones_12h,
-        "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks),
+        "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks, runs),
         "duration_benchmarks": workflow_benchmarks,
         "job_duration_benchmarks": job_benchmarks,
         "workload_by_resource": {name: sum(1 for w in work if w.get("resource") == name) for name in sorted({w.get("resource") for w in work if w.get("resource")})},
