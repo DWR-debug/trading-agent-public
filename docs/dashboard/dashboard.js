@@ -140,6 +140,8 @@ function render(data){
     "<div class='small muted' style='margin-top:10px'>Performance, Holdout, Ranking, Tuning, Promotion und Live-Ausführung bleiben fail-closed.</div>";
 
   var pcs=s.planned_capacity_items||0, pbs=s.blocked_planned_items||0, urs=s.unallocated_routable_items||0;
+  var activeLanes=Number(s.active_research_lanes||0), laneTarget=Number(s.active_research_lanes_target||6), plannedTarget=Number(s.planned_research_queue_target||6), plannedQueueCount=Number(s.planned_research_queue_items||0);
+  $("laneTargetSummary").textContent="Aktive Forschungs-Lanes: "+activeLanes+"/"+laneTarget+" · Zukunfts-Backlog: "+plannedQueueCount+"/"+plannedTarget;
   $("plannedSummary").textContent="Geplant: "+pcs+" · Blockiert auf Prerequisite: "+pbs+" · Nicht zugewiesen: "+urs;
   $("app").hidden=false;
 }
