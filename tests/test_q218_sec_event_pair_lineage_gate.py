@@ -178,7 +178,7 @@ def test_q218_uses_explicit_parent_filing_date_for_amendment(tmp_path, monkeypat
                 ],
                 "primaryDocument": ["wmt-20251111.htm", "wmt-20260131.htm", "wmt-20251113.htm"],
                 "reportDate": ["2025-11-11", "2026-01-31", "2025-11-13"],
-                "items": ["5.02,9.01", "", "5.02"],
+                "items": ["2.02,9.01", "", "5.02"],
             }
         }
     }
