@@ -118,3 +118,34 @@ def test_fast_dispatch_allows_top4_with_parallel_ai_review():
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
     assert plan["dispatches"][0]["workflow"].endswith("top4-candidate-research-capacity.yml")
+
+
+def test_fast_dispatch_skips_recent_success_on_same_master_sha():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    snapshot = {
+        "master_sha": "abc123",
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted B",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-PIT",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": ".github/workflows/top4-candidate-research-capacity.yml",
+            }],
+        }],
+    }
+    runs = [{
+        "path": ".github/workflows/top4-candidate-research-capacity.yml",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "abc123",
+        "created_at": "2099-10-07T08:00:00Z",
+    }]
+    plan = dispatch_candidates(snapshot, runs, max_dispatches=4)
+    assert plan["dispatches"] == []
+    assert any(d["decision"] == "SKIP_RECENT_SUCCESS_SAME_SHA" for d in plan["decisions"])
