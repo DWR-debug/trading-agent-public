@@ -2,7 +2,7 @@ from pathlib import Path
 import json
 from automation.q219_dolthub_historical_pit_gate import (
     TARGET_DATE, TARGET_SYMBOLS, API_BASE, HEAD_LOG_LIMIT,
-    BOUNDED_HISTORY_SCAN_LIMIT, QUERY_TIMEOUT_SECONDS,
+    BOUNDED_HISTORY_SCAN_LIMIT, HISTORY_SCAN_FALLBACK_LIMITS, QUERY_TIMEOUT_SECONDS,
     MAX_TRANSIENT_QUERY_ATTEMPTS,
 )
 
@@ -81,3 +81,28 @@ def test_q219_fetch_sql_retries_transient_deadline_once(monkeypatch):
     result = gate.fetch_sql("SELECT 1")
     assert result["rows"] == [{"ok": 1}]
     assert calls["n"] == 2
+
+
+def test_q219_history_scan_falls_back_to_smaller_bounded_limit_on_transient_deadline(monkeypatch):
+    import automation.q219_dolthub_historical_pit_gate as gate
+    calls = []
+
+    def fake_fetch_sql(query):
+        calls.append(query)
+        if "LIMIT 200" in query or "LIMIT 100" in query:
+            raise RuntimeError("DOLTHUB_QUERY_ERROR:context deadline exceeded")
+        return {"query_execution_status": "Success", "rows": [{"commit_hash": "abc"}]}
+
+    monkeypatch.setattr(gate, "fetch_sql", fake_fetch_sql)
+    payload, used = gate.fetch_history_sql("SELECT * FROM DOLT_LOG() LIMIT __HISTORY_LIMIT__")
+    assert payload["rows"][0]["commit_hash"] == "abc"
+    assert used == 50
+    assert "LIMIT 200" in calls[0]
+    assert "LIMIT 100" in calls[1]
+    assert "LIMIT 50" in calls[2]
+
+
+def test_q219_fallback_limits_remain_bounded_and_end_at_head_log_floor():
+    assert HISTORY_SCAN_FALLBACK_LIMITS[0] == BOUNDED_HISTORY_SCAN_LIMIT
+    assert HISTORY_SCAN_FALLBACK_LIMITS[-1] >= HEAD_LOG_LIMIT
+    assert list(HISTORY_SCAN_FALLBACK_LIMITS) == sorted(HISTORY_SCAN_FALLBACK_LIMITS, reverse=True)
