@@ -361,8 +361,12 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     "resource": infer_resource(workflow, job_name, job.get("runner_name")),
                     "lane": lane,
                     "worker": job.get("runner_name") or "pending runner assignment",
+                    "worker_status": "assigned" if job.get("runner_name") else "pending assignment",
                     "job": job_name,
                     "task": workflow,
+                    "candidate": candidate_from_text(f"{workflow} {job_name}"),
+                    "purpose": job_name or workflow,
+                    "target": "active execution",
                     "status": run.get("status"),
                     "started_at": run.get("run_started_at") or run.get("created_at"),
                     "actor": (run.get("actor") or {}).get("login"),
@@ -378,8 +382,12 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "resource": infer_resource(workflow, "", None),
                 "lane": lane,
                 "worker": "pending runner assignment",
+                "worker_status": "pending assignment",
                 "job": "",
                 "task": workflow,
+                "candidate": candidate_from_text(workflow),
+                "purpose": workflow,
+                "target": "pending runner assignment",
                 "status": run.get("status"),
                 "started_at": run.get("run_started_at") or run.get("created_at"),
                 "actor": (run.get("actor") or {}).get("login"),
@@ -405,6 +413,7 @@ def enrich_work_durations(
         entry = dict(item)
         expected = int(benchmark["p50_seconds"]) if benchmark and benchmark.get("p50_seconds") else None
         entry["expected_duration_seconds"] = expected
+        entry["expected_duration_p90_seconds"] = int(benchmark["p90_seconds"]) if benchmark else None
         entry["duration_sample_count"] = int(benchmark["sample_count"]) if benchmark else 0
         entry["duration_source"] = str(benchmark["source"]) if benchmark else "no benchmark available"
         started = parse_dt(entry.get("started_at"))
