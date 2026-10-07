@@ -494,6 +494,40 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
     return out
 
 
+def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Expose a real bounded queue of future next-gate research, independent of live slot occupancy."""
+    order = [
+        ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "windows"),
+        ("Q219", ".github/workflows/top4-candidate-slot-research.yml", "ubuntu_x64"),
+        ("Q220", ".github/workflows/top4-candidate-slot-research.yml", "ubuntu_arm64"),
+        ("Q221", ".github/workflows/top4-candidate-slot-research.yml", "windows"),
+        ("Q224", ".github/workflows/q224-edgar-modern-source-gate.yml", None),
+        ("Q229", ".github/workflows/q229-historical-release-census.yml", None),
+        ("Q230", ".github/workflows/q230-windows-trace-connectivity.yml", None),
+        ("Q231", ".github/workflows/q231-sec-foia-source-gate.yml", None),
+        ("Q205", ".github/workflows/q205-nlrb-source-feasibility.yml", None),
+        ("Q198", ".github/workflows/q198-pit-clock-census.yml", None),
+        ("Q199", ".github/workflows/q199-q201-source-feasibility.yml", None),
+        ("Q202", ".github/workflows/q202-q204-information-timing-feasibility.yml", None),
+    ]
+    by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
+    backlog = []
+    for rank, (code, workflow, resource) in enumerate(order, start=1):
+        item = by_code.get(code)
+        if not item:
+            continue
+        backlog.append({
+            "queue_rank": rank,
+            "candidate": code,
+            "lane": str(item.get("lane") or "FRONTIER DISCOVERY"),
+            "next_gate": str(item.get("next_gate") or "next receipt-defined research gate"),
+            "execution_workflow": workflow,
+            "resource_hint": resource,
+            "planned_status": "READY_NEXT_GATE",
+            "non_authorizing": True,
+        })
+    return backlog
+
 
 def planned_capacity_plan(
     resources: list[dict[str, Any]],
@@ -992,6 +1026,7 @@ def main() -> None:
         job_benchmarks,
         os_state,
     )
+    planned_research_queue = planned_research_backlog(state_board)
 
     payload = {
         "schema_version": 2,
@@ -1016,6 +1051,8 @@ def main() -> None:
             "research_capacity_slots_free": sum(int(r.get("research_slots_free", 0) or 0) for r in enrich_resources(configured_resources, runners, work)),
             "available_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "available"),
             "planned_capacity_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if item.get("scheduled")),
+            "planned_research_queue_items": len(planned_research_queue),
+            "planned_research_queue_target": 6,
             "blocked_planned_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if not item.get("scheduled")),
             "unallocated_routable_items": sum(1 for row in planned_capacity if row.get("capacity_state") == "available" and not row.get("planned_assignments")),
             "planned_capacity_note": "bounded plan; only entries marked dispatchable have an executable workflow route. This plan never creates scientific authorization.",
@@ -1025,6 +1062,7 @@ def main() -> None:
         "runner_live_snapshot": runners,
         "work_assignments": work,
         "planned_capacity": planned_capacity,
+        "planned_research_queue": planned_research_queue,
         "milestone_history_12h": milestones_12h,
         "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks),
         "duration_benchmarks": workflow_benchmarks,
