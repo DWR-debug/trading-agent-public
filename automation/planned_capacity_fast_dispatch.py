@@ -61,10 +61,12 @@ def candidate_is_active(candidate: str, work: list[dict[str, Any]], *, exclude_r
     )
 
 
-def completed_slot_scopes(runs: list[dict[str, Any]]) -> set[tuple[str, str]]:
+def slot_scopes(runs: list[dict[str, Any]], *, conclusion: str | None = None) -> set[tuple[str, str]]:
     out: set[tuple[str, str]] = set()
     for run in runs:
-        if not isinstance(run, dict) or run.get("status") != "completed" or run.get("conclusion") != "success":
+        if not isinstance(run, dict) or run.get("status") != "completed":
+            continue
+        if conclusion is not None and run.get("conclusion") != conclusion:
             continue
         title = " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
         marker = "Top-4 Slot "
@@ -74,6 +76,26 @@ def completed_slot_scopes(runs: list[dict[str, Any]]) -> set[tuple[str, str]]:
         if len(scope) >= 2 and scope[0] in {"windows", "ubuntu_x64", "ubuntu_arm64"}:
             out.add((scope[0], scope[1]))
     return out
+
+
+def completed_slot_scopes(runs: list[dict[str, Any]]) -> set[tuple[str, str]]:
+    return slot_scopes(runs, conclusion="success")
+
+
+def slot_failure_counts(runs: list[dict[str, Any]]) -> dict[tuple[str, str], int]:
+    counts: dict[tuple[str, str], int] = {}
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") != "completed" or run.get("conclusion") != "failure":
+            continue
+        title = " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
+        marker = "Top-4 Slot "
+        if marker not in title:
+            continue
+        scope = title.split(marker, 1)[1].strip().split()
+        if len(scope) >= 2 and scope[0] in {"windows", "ubuntu_x64", "ubuntu_arm64"}:
+            key = (scope[0], scope[1])
+            counts[key] = counts.get(key, 0) + 1
+    return counts
 
 
 def workflow_is_active(workflow: str, paths: set[str], runs: list[dict[str, Any]]) -> bool:
@@ -127,6 +149,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     work = active_research_items(snapshot)
     active_paths = active_workflow_paths(runs)
     completed_slots = completed_slot_scopes(runs)
+    failure_counts = slot_failure_counts(runs)
     zero_active = len(work) == 0
     decisions = []
     dispatches = []
@@ -162,9 +185,16 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         dispatch_key = (workflow, candidate, resource) if workflow == SLOT_SCOPED_WORKFLOW else (workflow, "", "")
         if workflow == SLOT_SCOPED_WORKFLOW:
             resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
-            if resource_input and (resource_input, candidate) in completed_slots:
+            scope = (resource_input, candidate) if resource_input else None
+            if scope and scope in completed_slots:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ALREADY_COMPLETED"})
                 continue
+            failures = failure_counts.get(scope, 0) if scope else 0
+            if failures >= 2:
+                decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_RETRY_EXHAUSTED"})
+                continue
+            if failures == 1:
+                decisions.append({"plan_id": item.get("plan_id"), "decision": "SLOT_RETRY_PERMITTED"})
         if dispatch_key in seen_dispatch_keys:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_DISPATCH_SCOPE_ALREADY_SELECTED"})
             continue
