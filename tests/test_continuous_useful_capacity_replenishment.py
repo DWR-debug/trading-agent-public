@@ -187,3 +187,14 @@ def test_dashboard_exposes_six_job_future_queue():
     assert '"planned_research_queue_items"' in generator
     assert "planned_research_queue" in script
     assert 'id="plannedQueue"' in html
+
+
+def test_dashboard_exposes_six_active_lane_target():
+    root = Path(__file__).parents[1]
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    assert '"active_research_lanes_target": 6' in generator
+    assert '"active_research_lanes_target_met"' in generator
+    assert "active_research_lanes_target" in script
+    assert 'id="laneTargetSummary"' in html
