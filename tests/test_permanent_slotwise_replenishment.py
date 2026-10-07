@@ -51,8 +51,10 @@ def test_completion_wakeup_covers_research_workflow_globs_and_six_dispatches():
 
 def test_completion_wakeup_excludes_control_plane_loops_before_runner_use():
     workflow = (ROOT / ".github/workflows/planned-capacity-fast-dispatch.yml").read_text(encoding="utf-8")
-    for name in ['CI', 'Full Suite Verification', 'T052 Exact Master CI Gate', 'Workflow Lint', 'Current Operational Status Synchronizer', 'Resource Dashboard Update', 'Planned Capacity Fast Dispatch']:
+    assert "fromJSON" in workflow
+    for name in ['CI', 'Full Suite Verification', 'T052 Exact Master CI Gate', 'Workflow Lint', 'Current Operational Status Synchronizer', 'Current Status Drift Guard', 'Resource Dashboard Update', 'Spine Next-Gate Autonomous Router', 'Unified Research Orchestrator', 'Planned Capacity Fast Dispatch']:
         assert name in workflow
+    assert "github.event.workflow_run.name" in workflow
 
 
 def test_fast_dispatch_default_ceiling_is_six():
