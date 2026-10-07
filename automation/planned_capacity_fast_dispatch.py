@@ -292,7 +292,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                     failure_counts,
                     chosen_slot_scopes,
                 )
-                if fallback:
+                if fallback and len(dispatches) < max_dispatches:
                     fallback_scope = (resource_input, fallback)
                     dispatch_key = (workflow, fallback, resource)
                     if dispatch_key not in seen_dispatch_keys and fallback_scope not in completed_slots and failure_counts.get(fallback_scope, 0) < 2:
