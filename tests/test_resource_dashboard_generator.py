@@ -106,12 +106,12 @@ def test_planned_capacity_keeps_one_step_lookahead_while_resource_is_active():
     assert by_resource["Windows self-hosted A"]["planned_assignments"][0]["scheduled"] is True
 
 
-def test_planned_research_backlog_is_bounded_to_target():
+def test_planned_research_backlog_is_locked_to_focus_candidates():
     from automation.generate_resource_dashboard import planned_research_backlog
-    board = [{"code": code, "lane":"FRONTIER DISCOVERY", "next_gate":"gate"} for code in ("Q218","Q219","Q220","Q221","Q224","Q229","Q230","Q231","Q205","Q198")]
+    board = [{"code": code, "lane":"FRONTIER DISCOVERY", "next_gate":"gate"} for code in ("Q104:I19","Q218","Q219","Q220","Q221","Q224","Q229")]
     queue = planned_research_backlog(board)
-    assert len(queue) == 6
-    assert [x["candidate"] for x in queue] == ["Q218","Q219","Q220","Q221","Q224","Q229"]
+    assert len(queue) == 2
+    assert [x["candidate"] for x in queue] == ["Q104:I19","Q218"]
 
 
 def test_dashboard_filters_platform_work_from_research_capacity():
@@ -171,11 +171,15 @@ def test_candidate_milestone_progress_is_zero_without_active_workflow():
     assert "not started" in basis
 
 
-def test_dashboard_tracks_q219_in_top4_candidate_capacity():
+def test_dashboard_pipeline_is_locked_to_focus_candidates():
     from automation.generate_resource_dashboard import candidate_pipeline
-    top4 = [{"code": "Q219", "state": "DESIGN_ONLY_ACTIVE"}]
+    top4 = [
+        {"code":"Q104:I19","state":"SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED"},
+        {"code":"Q218","state":"DESIGN_ONLY_ACTIVE"},
+        {"code":"Q219","state":"DESIGN_ONLY_ACTIVE"},
+    ]
     rows = candidate_pipeline(top4, [], {}, {})
-    assert [x["code"] for x in rows] == ["Q219"]
+    assert [x["code"] for x in rows] == ["Q104:I19","Q218"]
 
 
 def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
