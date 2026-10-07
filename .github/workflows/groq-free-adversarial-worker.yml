@@ -124,15 +124,12 @@ jobs:
           state_file="$state_dir/${task_id}__groq_free.json"
           output="$RUNNER_TEMP/groq-worker-output/${task_id}-groq_free.json"
           if [ -f "$output" ]; then cp "$output" "$state_file"; else printf '%s\n' '{"schema_version":1,"task_id":"AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT","provider":"groq_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"; fi
-          payload="$(base64 -w 0 "$state_file")"
-          state_url="/repos/$GITHUB_REPOSITORY/contents/${state_file}?ref=master"
-          current_sha="$(gh api "$state_url" --jq '.sha' 2>/dev/null || true)"
-          if [ -n "$current_sha" ]; then
-            gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/${state_file}" -f message='OPS: record Groq free adversarial worker state' -f content="$payload" -f branch='master' -f sha="$current_sha" >/dev/null
-          else
-            gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/${state_file}" -f message='OPS: record Groq free adversarial worker state' -f content="$payload" -f branch='master' >/dev/null
-          fi
-
+          current_master_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          PUBLISH_MESSAGE='OPS: record Groq free adversarial worker state' python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha "$current_master_sha" \
+            --file "$state_file=$state_file"
       - name: Assert fixed Groq free route
         shell: bash
         run: |
