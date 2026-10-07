@@ -20,7 +20,7 @@ def test_q219_top4_routes_historical_pit_gate():
     capacity = (ROOT / "automation/top4_candidate_capacity.py").read_text(encoding="utf-8")
     assert "Q219" in workflow
     assert "automation/q219_dolthub_historical_pit_gate.py" in capacity
-    assert "research/preregistrations/q219_dolthub_historical_pit_gate_2026_10_06.json" in (ROOT / ".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
+    assert "q219_dolthub_historical_pit_gate.json" in workflow
     assert 'automation/q219_dolthub_historical_pit_gate.py' in workflow
     lane = (ROOT / 'automation/top4_candidate_capacity.py').read_text(encoding='utf-8')
     assert 'automation/q219_dolthub_historical_pit_gate.py' in lane
