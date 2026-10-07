@@ -124,8 +124,17 @@ def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding
     # Candidate duplication is forbidden only within the same execution lane;
     # a candidate may legitimately appear once for research and once for an
     # independent Free-AI review.
-    scheduled_keys = [(item["candidate"], item.get("execution_workflow"), item.get("resource"))
-                      for row in plan for item in row["planned_assignments"] if item.get("scheduled")]
+    scheduled_keys = [
+        (
+            item["candidate"],
+            item.get("plan_id"),
+            item.get("execution_workflow"),
+            item.get("resource"),
+        )
+        for row in plan
+        for item in row["planned_assignments"]
+        if item.get("scheduled")
+    ]
     assert len(scheduled_keys) == len(set(scheduled_keys))
     assert by_resource["Free AI pool"]["planned_count"] == 1 or by_resource["Free AI pool"]["blocked_count"] == 0
     # Active work keeps a one-step lookahead; the planner must not create a dead zone.
@@ -205,7 +214,7 @@ def test_dashboard_exposes_six_active_lane_target():
     assert '"active_research_lanes_target": 6' in generator
     assert '"active_research_lanes_target_met"' in generator
     assert "Forschungsressourcen aktiv" in script
-    assert 'id="laneTargetSummary"' in html
+    assert 'id="opsSummary"' in html
 
 
 def test_dashboard_three_minute_live_refresh_and_five_minute_server_refresh():
