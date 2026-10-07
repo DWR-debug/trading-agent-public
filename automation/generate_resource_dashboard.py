@@ -100,6 +100,27 @@ def run_cmd_json(args: list[str]) -> dict[str, Any] | list[Any] | None:
         return None
 
 
+def fresh_action_runs() -> list[dict[str, Any]]:
+    """Merge a recent run window with independently fetched active runs."""
+    endpoints = [
+        f"/repos/{REPO}/actions/runs?per_page=100",
+        f"/repos/{REPO}/actions/runs?status=in_progress&per_page=100",
+        f"/repos/{REPO}/actions/runs?status=queued&per_page=100",
+        f"/repos/{REPO}/actions/runs?status=waiting&per_page=100",
+        f"/repos/{REPO}/actions/runs?status=pending&per_page=100",
+    ]
+    by_id: dict[int, dict[str, Any]] = {}
+    for endpoint in endpoints:
+        payload = run_cmd_json([endpoint])
+        if not isinstance(payload, dict):
+            continue
+        for run in payload.get("workflow_runs", []):
+            if not isinstance(run, dict) or run.get("id") is None:
+                continue
+            by_id[int(run["id"])] = run
+    return list(by_id.values())
+
+
 def parse_dt(value: Any) -> datetime | None:
     if not value:
         return None
@@ -984,8 +1005,7 @@ def main() -> None:
     latest_result = latest_line.split(":", 1)[1].strip() if ":" in latest_line else "not recorded"
 
     state_board = expanded_candidate_board(evidence, os_state, research_board(evidence, os_state))
-    runs_payload = run_cmd_json([f"/repos/{REPO}/actions/runs?per_page=100"])
-    recent_runs = runs_payload.get("workflow_runs", []) if isinstance(runs_payload, dict) else []
+    recent_runs = fresh_action_runs()
     workflow_benchmarks = duration_benchmarks(recent_runs)
     job_benchmarks = job_duration_benchmarks(recent_runs)
     work = enrich_work_durations(
