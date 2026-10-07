@@ -122,7 +122,8 @@
       <div id="capacity"></div>
       <div class="small muted" style="margin-top:10px">
         Grün bei Hosted-Ressourcen bedeutet routierbare Konfiguration; es ist kein Ausführungsreceipt.
-        Physische Runner werden nur dann als aktiv markiert, wenn Runner-/Jobdaten das belegen.
+        Self-Hosted-Runner-Online/Busy wird aus der GitHub-Runner-Telemetrie übernommen, wenn die authentifizierte Runner-API sichtbar ist;
+        bei fehlender Berechtigung bleibt der Zustand unbestätigt statt fälschlich als offline/0 dargestellt. Die Runner-Seite zeigt denselben operativen Bestand.
         Die Jobzahl hier umfasst ausschließlich Research-/Kandidatenarbeit; CI, Status-Synchronisierung und Pages sind getrennte Plattformlast. Hosted-Kapazität wird zusätzlich als begrenzte logische Research-Slots ausgewiesen.
       </div>
     </article>
@@ -137,8 +138,9 @@
       <div id="plannedSummary" class="small muted" style="margin-bottom:10px">Noch kein Plan-Snapshot.</div>
       <div id="planned"></div>
       <div class="small muted" style="margin-top:10px">
-        Planung = deterministischer nächster sinnvoller Bounded-Workpack. Geplant bedeutet nicht gestartet,
-        nicht bestätigt und nicht wissenschaftlich autorisiert. Blockierte Folgearbeit wird nicht als ausführbar disponiert.
+        Planung = deterministischer nächster sinnvoller Bounded-Workpack. READY / AUTO-DISPATCH bedeutet,
+        dass ein bereits definierter Workflow bei freier Kapazität ereignisgetrieben bzw. spätestens im 5-Minuten-Recovery-Pfad disponiert wird.
+        Geplant bedeutet nicht bestätigt und nicht wissenschaftlich autorisiert. Blockierte/non-dispatchable Folgearbeit wird nie automatisch gestartet.
       </div>
     </article>
 
