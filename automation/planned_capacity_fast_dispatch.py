@@ -328,6 +328,14 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
             scope = (resource_input, candidate) if resource_input else None
             focus_wave = bool((item.get("execution_workflow_inputs") or {}).get("focus_wave"))
+            q218_completed_gates = completed_q218_gates_for_current_context(runs) if candidate == "Q218" and focus_wave else set()
+            if candidate == "Q218" and focus_wave and gate in q218_completed_gates:
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_FOCUSED_GATE_ALREADY_COMPLETED_CURRENT_CONTEXT",
+                    "gate": gate,
+                })
+                continue
             if scope and scope in completed_slots and not focus_wave:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ALREADY_COMPLETED"})
                 fallback = top4_slot_fallback(
