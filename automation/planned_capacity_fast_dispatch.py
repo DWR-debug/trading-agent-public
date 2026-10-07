@@ -26,8 +26,9 @@ PLATFORM_NAMES = {
     "Planned Capacity Fast Dispatch",
 }
 
-TOP4_CANDIDATES = {"Q218", "Q219", "Q220", "Q221"}
-TOP4_PRIORITY = ("Q218", "Q219", "Q220", "Q221")
+FOCUS_CANDIDATES = {"Q104:I19", "Q218"}
+TOP4_CANDIDATES = {"Q218"}
+TOP4_PRIORITY = ("Q218",)
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 
 
@@ -202,11 +203,15 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         resource = str(row.get("resource") or "")
         current = int(row.get("current_assignments") or 0)
         slots = max(1, int(row.get("research_capacity_slots") or 1))
-        resource_free = current < slots
+        reported_free = row.get("research_slots_free")
+        resource_free = int(reported_free) > 0 if reported_free is not None else current < slots
         for item in row.get("planned_assignments", []):
             if not isinstance(item, dict) or not item.get("scheduled"):
                 continue
             if not item.get("dispatchable"):
+                continue
+            candidate = str(item.get("candidate") or "")
+            if candidate not in FOCUS_CANDIDATES:
                 continue
             workflow = item.get("execution_workflow")
             if not workflow:
@@ -219,7 +224,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
 
     # Prefer the canonical Top-4 cohort, then direct next-gate workflows,
     # while preserving the dashboard's deterministic order.
-    rank = {"Q104:I19": -100, "Q218": 0, "Q219": 0, "Q220": 0, "Q221": 0, "Q224": 10, "Q228": 20, "Q231": 30}
+    rank = {"Q104:I19": -100, "Q218": 0}
     planned.sort(
         key=lambda x: (
             100 if str(x.get("execution_workflow") or "").endswith("ai-worker-fabric.yml") else 0,
@@ -238,6 +243,17 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     dispatches = []
     seen_dispatch_keys: set[tuple[str, str, str]] = set()
     chosen_slot_scopes: set[tuple[str, str]] = set()
+    active_slot_scopes: set[tuple[str, str]] = set()
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") == "completed":
+            continue
+        title = " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
+        marker = "Top-4 Slot "
+        if marker not in title:
+            continue
+        scope_parts = title.split(marker, 1)[1].strip().split()
+        if len(scope_parts) >= 2 and scope_parts[0] in {"windows", "ubuntu_x64", "ubuntu_arm64"}:
+            active_slot_scopes.add((scope_parts[0], scope_parts[1]))
     leased_resources: set[str] = set()
     top4_candidate_active = any(
         any(
@@ -255,11 +271,22 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_RESOURCE_BUSY"})
             continue
 
-        # Top-4 is one bundled workflow. Never launch the cohort while any of
-        # its candidates is already running; that would create duplicate work.
-        if workflow.endswith("top4-candidate-research-capacity.yml"):
-            if top4_candidate_active or workflow_is_active(workflow, active_paths, runs):
-                decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_TOP4_ACTIVE_OR_DUPLICATE"})
+        # Automatic candidate execution is hard-locked to the focused pair.
+        if candidate not in FOCUS_CANDIDATES:
+            decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_FOCUS_LOCK"})
+            continue
+
+        if workflow == SLOT_SCOPED_WORKFLOW:
+            resource_input = {
+                "Windows self-hosted A": "windows",
+                "Windows self-hosted B": "windows",
+                "Windows self-hosted C": "windows",
+                "GitHub-hosted Ubuntu x64": "ubuntu_x64",
+                "GitHub-hosted ARM64": "ubuntu_arm64",
+            }.get(resource)
+            scope = (resource_input, candidate) if resource_input else None
+            if scope and scope in active_slot_scopes:
+                decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ACTIVE_OR_DUPLICATE"})
                 continue
 
         if not item.get("allow_parallel_with_candidate", False) and candidate_is_active(candidate, work, exclude_resources={"Free AI pool"}):
