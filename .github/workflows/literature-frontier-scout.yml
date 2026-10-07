@@ -23,6 +23,12 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Install bounded test dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest
+
       - name: Validate literature discovery policy
         run: |
           python - <<'PY'
