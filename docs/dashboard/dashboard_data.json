@@ -3,12 +3,12 @@
     {
       "cost": 0,
       "free_only": true,
-      "observed_at_utc": "2026-10-06T21:29:27.105031Z",
+      "observed_at_utc": "2026-10-06T22:48:08.466695Z",
       "provider": "openrouter_free",
       "response_model": "openrouter/free",
       "scientific_evidence": false,
       "status": "SUCCESS",
-      "task": "AI-2026-10-06-Q220-TOP4-ADVERSARIAL"
+      "task": "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT"
     },
     {
       "cost": null,
@@ -57,9 +57,9 @@
       "Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `971b1f456864f24410e7b2c91f5338a2bd69a5562754113c519f046b860b6e81`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.",
       "Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `971b1f456864f24410e7b2c91f5338a2bd69a5562754113c519f046b860b6e81`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.",
       "Q198 historical PIT clock census: **Q198_PIT_CLOCK_CENSUS_COMPLETED**; pages parsed **4** / **4**, with fixed dates **2020/01/10, 2020/04/22, 2020/12/16, 2026/10/02**.",
-      "Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `5745e6e5eb3e4d2fd4e3178737d8011d876f77d0bc864a45d42576764e17a632`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.",
-      "Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `5745e6e5eb3e4d2fd4e3178737d8011d876f77d0bc864a45d42576764e17a632`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.",
-      "Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `5745e6e5eb3e4d2fd4e3178737d8011d876f77d0bc864a45d42576764e17a632`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.",
+      "Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `5a2b1dab0bfff63eaddba2c10bf98fb12a8356ef380a9ef64cf9db5e5ff8e90a`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.",
+      "Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `5a2b1dab0bfff63eaddba2c10bf98fb12a8356ef380a9ef64cf9db5e5ff8e90a`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.",
+      "Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `5a2b1dab0bfff63eaddba2c10bf98fb12a8356ef380a9ef64cf9db5e5ff8e90a`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.",
       "Q202–Q204 remain source/PIT discovery tracks only: performance, holdout selection, ranking, tuning, promotion and live execution remain closed. Source feasibility is not PIT validation."
     ],
     "latest_formal_result": "**performance_completed_no_arm_passed_all_13_gates** for `T-2026-10-01-H06P2R3-PERFORMANCE-01`.",
@@ -460,7 +460,7 @@
     "blocked_planned_items": 1,
     "busy_runners": null,
     "configured_resources": 6,
-    "milestones_12h": 0,
+    "milestones_12h": 24,
     "planned_capacity_items": 6,
     "planned_capacity_note": "bounded advisory plan only; not an execution queue, receipt or scientific authorization.",
     "research_capacity_slots_free": 8,
@@ -471,15 +471,203 @@
     "runner_api_visible": null,
     "unallocated_routable_items": 0
   },
-  "duration_benchmarks": {},
-  "generated_at_utc": "2026-10-06T21:30:00.126067+00:00",
+  "duration_benchmarks": {
+    "Autonomous Agent Request Queue": {
+      "p50_seconds": 4,
+      "p90_seconds": 72,
+      "sample_count": 8,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Autonomous Resource Control Plane": {
+      "p50_seconds": 16,
+      "p90_seconds": 32,
+      "sample_count": 4,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "CI": {
+      "p50_seconds": 61,
+      "p90_seconds": 66,
+      "sample_count": 5,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Current Operational Status Synchronizer": {
+      "p50_seconds": 14,
+      "p90_seconds": 21,
+      "sample_count": 4,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Current Status Drift Guard": {
+      "p50_seconds": 11,
+      "p90_seconds": 11,
+      "sample_count": 1,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Full Suite Verification": {
+      "p50_seconds": 59,
+      "p90_seconds": 69,
+      "sample_count": 5,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Paper Forward Persistent MTM": {
+      "p50_seconds": 2,
+      "p90_seconds": 11,
+      "sample_count": 5,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Paper Forward Persistent MTM 2000 EUR": {
+      "p50_seconds": 4,
+      "p90_seconds": 9,
+      "sample_count": 6,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q017 Coverage First Standalone": {
+      "p50_seconds": 1,
+      "p90_seconds": 2,
+      "sample_count": 5,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q077-R1 One-Shot Authorization": {
+      "p50_seconds": 1,
+      "p90_seconds": 9,
+      "sample_count": 5,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q121-R2 SEC Daily Index Reconciliation": {
+      "p50_seconds": 21,
+      "p90_seconds": 21,
+      "sample_count": 1,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q121-R6 Independent Windows Reproduction (Permanent PC)": {
+      "p50_seconds": 1,
+      "p90_seconds": 2,
+      "sample_count": 5,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q121-R6 SEC Acceptance-Time Compilation": {
+      "p50_seconds": 1,
+      "p90_seconds": 2,
+      "sample_count": 5,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q133-Q170 PIT Readiness R1": {
+      "p50_seconds": 24,
+      "p90_seconds": 24,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q148-R1 Persist WPSR Source Clock Receipt": {
+      "p50_seconds": 1,
+      "p90_seconds": 1,
+      "sample_count": 5,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q179-Q184 PIT Readiness R1": {
+      "p50_seconds": 16,
+      "p90_seconds": 17,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q179-Q184 Source Feasibility": {
+      "p50_seconds": 14,
+      "p90_seconds": 15,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q185-Q186 A-Priority Source and PIT Readiness": {
+      "p50_seconds": 35,
+      "p90_seconds": 39,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q188-Q192 PIT Historical Census R2": {
+      "p50_seconds": 14,
+      "p90_seconds": 16,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "S10 Phone Research Worker": {
+      "p50_seconds": 1630,
+      "p90_seconds": 1630,
+      "sample_count": 1,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "S10 Receipt Sync": {
+      "p50_seconds": 12,
+      "p90_seconds": 12,
+      "sample_count": 1,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Spine Next-Gate Autonomous Router": {
+      "p50_seconds": 5,
+      "p90_seconds": 8,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "T052 Evidence Reconcile Once": {
+      "p50_seconds": 1,
+      "p90_seconds": 1,
+      "sample_count": 3,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "T052 Exact Master CI Gate": {
+      "p50_seconds": 48,
+      "p90_seconds": 66,
+      "sample_count": 8,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Temporal Identity State Spine Waves": {
+      "p50_seconds": 82,
+      "p90_seconds": 82,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Top-4 Candidate Research Capacity": {
+      "p50_seconds": 404,
+      "p90_seconds": 412,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Wide Search Research Lane": {
+      "p50_seconds": 1,
+      "p90_seconds": 1,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    }
+  },
+  "generated_at_utc": "2026-10-07T05:41:10.576143+00:00",
   "governance_notes": [
     "Operational resource availability and active jobs are separate from scientific evidence.",
     "AI worker output is never scientific evidence.",
     "Source feasibility and PIT readiness never imply performance authorization.",
     "Dashboard fields cannot authorize ranking, tuning, promotion or live execution."
   ],
-  "job_duration_benchmarks": {},
+  "job_duration_benchmarks": {
+    "Q218": {
+      "p50_seconds": 318,
+      "p90_seconds": 342,
+      "sample_count": 2,
+      "source": "Top-4 candidate job history; cancelled jobs excluded"
+    },
+    "Q219": {
+      "p50_seconds": 368,
+      "p90_seconds": 392,
+      "sample_count": 2,
+      "source": "Top-4 candidate job history; cancelled jobs excluded"
+    },
+    "Q220": {
+      "p50_seconds": 152,
+      "p90_seconds": 341,
+      "sample_count": 4,
+      "source": "Top-4 candidate job history; cancelled jobs excluded"
+    },
+    "Q221": {
+      "p50_seconds": 24,
+      "p90_seconds": 25,
+      "sample_count": 2,
+      "source": "Top-4 candidate job history; cancelled jobs excluded"
+    }
+  },
   "lane_model": {
     "isolation": {
       "retroactive_cross_lane_mutation": false,
@@ -509,9 +697,226 @@
       "slot": "Windows self-hosted B"
     }
   },
-  "master_sha": "f668299e581ac433c88c848e98dc96a3e602b1ee",
-  "milestone_history_12h": [],
-  "operational_snapshot_sha": "d4e2f9fe544836fb726935bbdca6bf1a91b61ff5",
+  "master_sha": "17d21a6cc7c15f66fbc63a8ac0127d804e78693b",
+  "milestone_history_12h": [
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T21:18:07Z",
+      "title": "RESEARCH: support SEC inline-XBRL presentation source fallback",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/cd1a82283e31b8cde72624446397edd13115320e"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T21:23:15Z",
+      "title": "RESEARCH: fix Q220 prefixed XBRL presentation mapping",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/8c124b5bbd4d2c50a2150c6008237bbf92c3e697"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T21:29:05Z",
+      "title": "RESEARCH: add Q219 DoltHub historical PIT gate",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/75d9b9119b6f1302142721ae0d08400216d6a496"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T21:29:32Z",
+      "title": "OPS: align routing state with Q219 Top-4 capacity",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/739aa27d5ab419ef1ceccf856b664922998bb354"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T21:36:33Z",
+      "title": "RESEARCH: fix Q220 qname mapping regression",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/1a539fc530074b5555625b8ab60ff0ac630883f9"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T21:38:16Z",
+      "title": "RESEARCH: make Q219 Dolt PIT gate historically sound",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/ecc522acff112b4bc547f4c4ec74fa69a5f6806e"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T22:36:17Z",
+      "title": "OPS: record Groq free-tier preflight",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/ca694010d1c908ec9bbbf6c4e9bca7e48e9b51a8"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T22:36:30Z",
+      "title": "OPS: record Groq free adversarial worker state",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/87cb832fb250967394262e6e16d4b4f69ef8cc0a"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T22:41:18Z",
+      "title": "OPS: persist latest Q171 WARC material receipt",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/172a06e9a4a044d31ef24ba9272d15d46ff17280"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T22:46:23Z",
+      "title": "EVIDENCE: persist Q137-Q144 micro PIT receipt",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/1371491ff43e4c477f962b3ad8239371ab57bce7"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T22:46:26Z",
+      "title": "OPS: persist latest Q133-Q170 PIT-readiness material receipt",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/c5ad5adc8fc50f331c2e40e6cb080eeed3837dc8"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-06T23:13:20Z",
+      "title": "OPS: synchronize S10 phone runtime status",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/3cbe94ad88bbedbb6c0003a332287d3a95f6cfee"
+    },
+    {
+      "detail": "Erfolgreich abgeschlossener Research-Run #113 (Run 37562088101).",
+      "kind": "RUN",
+      "source": "GitHub Actions",
+      "status": "success",
+      "timestamp": "2026-10-07T02:54:54Z",
+      "title": "S10 Phone Research Worker",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37562088101"
+    },
+    {
+      "detail": "Erfolgreich abgeschlossener Research-Run #265 (Run 37573315488).",
+      "kind": "RUN",
+      "source": "GitHub Actions",
+      "status": "success",
+      "timestamp": "2026-10-07T04:49:51Z",
+      "title": "Q188-Q192 PIT Historical Census R2",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37573315488"
+    },
+    {
+      "detail": "Erfolgreich abgeschlossener Research-Run #330 (Run 37573315434).",
+      "kind": "RUN",
+      "source": "GitHub Actions",
+      "status": "success",
+      "timestamp": "2026-10-07T04:49:52Z",
+      "title": "Q179-Q184 PIT Readiness R1",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37573315434"
+    },
+    {
+      "detail": "Erfolgreich abgeschlossener Research-Run #350 (Run 37573315551).",
+      "kind": "RUN",
+      "source": "GitHub Actions",
+      "status": "success",
+      "timestamp": "2026-10-07T04:49:53Z",
+      "title": "Q179-Q184 Source Feasibility",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37573315551"
+    },
+    {
+      "detail": "Erfolgreich abgeschlossener Research-Run #470 (Run 37573315494).",
+      "kind": "RUN",
+      "source": "GitHub Actions",
+      "status": "success",
+      "timestamp": "2026-10-07T04:50:02Z",
+      "title": "Q133-Q170 PIT Readiness R1",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37573315494"
+    },
+    {
+      "detail": "Erfolgreich abgeschlossener Research-Run #344 (Run 37573315496).",
+      "kind": "RUN",
+      "source": "GitHub Actions",
+      "status": "success",
+      "timestamp": "2026-10-07T04:50:09Z",
+      "title": "Q185-Q186 A-Priority Source and PIT Readiness",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37573315496"
+    },
+    {
+      "detail": "Erfolgreich abgeschlossener Research-Run #139 (Run 37573315572).",
+      "kind": "RUN",
+      "source": "GitHub Actions",
+      "status": "success",
+      "timestamp": "2026-10-07T04:51:00Z",
+      "title": "Temporal Identity State Spine Waves",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37573315572"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-07T04:53:05Z",
+      "title": "RESEARCH: queue Q237 trademark source PIT gate",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/24fd62e977f25b97a1d471edf3b9d49e16515f33"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-07T04:53:07Z",
+      "title": "RESEARCH: queue Q238 inventor mobility source PIT gate",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/35fd633f99a83232decbfd198e62b7413fa0e62d"
+    },
+    {
+      "detail": "Erfolgreich abgeschlossener Research-Run #597 (Run 37573597258).",
+      "kind": "RUN",
+      "source": "GitHub Actions",
+      "status": "success",
+      "timestamp": "2026-10-07T04:53:24Z",
+      "title": "Autonomous Resource Control Plane",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37573597258"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-07T05:10:42Z",
+      "title": "RESEARCH: bound Q219 DoltHub PIT history scan",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/0d4382fcd5d288d7c548215c261497a46ac78c76"
+    },
+    {
+      "detail": "Materialer Repository-Meilenstein im öffentlichen Verlauf.",
+      "kind": "COMMIT",
+      "source": "GitHub commit history",
+      "status": "recorded",
+      "timestamp": "2026-10-07T05:10:45Z",
+      "title": "OPS: align Q219 Top-4 routing state",
+      "url": "https://github.com/DWR-debug/trading-agent-public/commit/2e88e3204c3fa40cdefacc0bef2b018d783b712f"
+    }
+  ],
+  "operational_snapshot_sha": "2e88e3204c3fa40cdefacc0bef2b018d783b712f",
   "pipeline": [
     {
       "active": false,
@@ -530,10 +935,10 @@
       "active": false,
       "active_jobs": 0,
       "code": "Q219",
-      "duration_p90_seconds": null,
-      "duration_sample_count": 0,
-      "duration_source": "no verified duration history",
-      "expected_duration_seconds": null,
+      "duration_p90_seconds": 392,
+      "duration_sample_count": 2,
+      "duration_source": "Top-4 candidate job history; cancelled jobs excluded",
+      "expected_duration_seconds": 368,
       "issue_number": 1094,
       "next_gate": "not recorded",
       "performance_authorization_allowed": false,
@@ -543,10 +948,10 @@
       "active": false,
       "active_jobs": 0,
       "code": "Q220",
-      "duration_p90_seconds": null,
-      "duration_sample_count": 0,
-      "duration_source": "no verified duration history",
-      "expected_duration_seconds": null,
+      "duration_p90_seconds": 341,
+      "duration_sample_count": 4,
+      "duration_source": "Top-4 candidate job history; cancelled jobs excluded",
+      "expected_duration_seconds": 152,
       "issue_number": 1094,
       "next_gate": "not recorded",
       "performance_authorization_allowed": false,
@@ -556,10 +961,10 @@
       "active": false,
       "active_jobs": 0,
       "code": "Q221",
-      "duration_p90_seconds": null,
-      "duration_sample_count": 0,
-      "duration_source": "no verified duration history",
-      "expected_duration_seconds": null,
+      "duration_p90_seconds": 25,
+      "duration_sample_count": 2,
+      "duration_source": "Top-4 candidate job history; cancelled jobs excluded",
+      "expected_duration_seconds": 24,
       "issue_number": 1094,
       "next_gate": "not recorded",
       "performance_authorization_allowed": false,
@@ -597,9 +1002,9 @@
         {
           "basis": "current Q218 source/PIT workpack",
           "candidate": "Q218",
-          "duration_sample_count": 0,
+          "duration_sample_count": 2,
           "execution_status": "planned_not_started",
-          "expected_duration_seconds": null,
+          "expected_duration_seconds": 318,
           "lane": "FRONTIER DISCOVERY",
           "plan_id": "Q218-PIT",
           "readiness": "READY_SOURCE_PIT",
@@ -641,9 +1046,9 @@
         {
           "basis": "USAspending public-clock contract ready; applicability/entity mapping open",
           "candidate": "Q221",
-          "duration_sample_count": 0,
+          "duration_sample_count": 2,
           "execution_status": "planned_not_started",
-          "expected_duration_seconds": null,
+          "expected_duration_seconds": 24,
           "lane": "FRONTIER DISCOVERY",
           "plan_id": "Q221-PIT",
           "readiness": "READY_SOURCE_CLOCK",
@@ -675,9 +1080,9 @@
         {
           "basis": "SEC FSN schema gate + XBRL concept-freeze audit",
           "candidate": "Q220",
-          "duration_sample_count": 0,
+          "duration_sample_count": 4,
           "execution_status": "planned_not_started",
-          "expected_duration_seconds": null,
+          "expected_duration_seconds": 152,
           "lane": "FRONTIER DISCOVERY",
           "plan_id": "Q220-PIT",
           "readiness": "READY_SOURCE_SCHEMA",
@@ -697,9 +1102,9 @@
         {
           "basis": "independent adversarial review; AI output is non-scientific and non-authorizing",
           "candidate": "Q218",
-          "duration_sample_count": 0,
+          "duration_sample_count": 2,
           "execution_status": "planned_not_started",
-          "expected_duration_seconds": null,
+          "expected_duration_seconds": 318,
           "lane": "FRONTIER DISCOVERY",
           "plan_id": "Q218-ADVERSARIAL",
           "readiness": "READY_AI_FABRIC",
