@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "eb8bea49bb9304d3c9646b4185a34c02b9191f863cfd37a9edf0bc6809835592",
-  "context_fingerprint": "4781fa2cd9d196f39f2e0f6b89ca9ca7743a6a7eb7803b3e953408b773cea283",
-  "observed_at_utc": "2026-10-07T10:39:08.748526Z",
+  "context_fingerprint": "08abe57657cd412b70a96b56425062d8e5c6c772a5bd96c64c5e873e5244c0ed",
+  "observed_at_utc": "2026-10-07T10:52:17.274814Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 117.545,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 26.246,
+  "stdout": "**Adversarial Methods Review: Q220 Narrative-Structured XBRL Representation Gap**  \n*Focus: Source/PIT structure, representation mismatch confounds, falsification pathways*  \n\n### Core Assumption Under Attack  \nThe Q220 gate assumes that the presence of required SEC Financial Statement Notes archive members (`sub`, `tag`, `dim`, `num`, `txt`, `pre`) and their headers suffices to isolate a *narrative-structured XBRL representation gap* as a distinct signal. This ignores whether the gap merely proxies filing length, readability, or structural artifacts unrelated to narrative representation.  \n\n---\n\n### Failure Mode 1: Text-Block Content Agnosticism  \n**Issue**: The gate validates only the existence of the `txt` member (text-block container) but not its *narrative suitability*. The `txt` file may contain non-narrative data (e.g., tables, pure numbers, boilerplate) or be empty, yet still pass the gate. A representation gap calculated from such text would reflect data sparsity, not narrative-XBRL misalignment.  \n**Minimal Deterministic Falsifier**:  \n- Compute the ratio of narrative tokens (e.g., words in sentences >5 chars, excluding numbers/tables) to total tokens in the `txt` file.  \n- If ratio < 0.2 for >80% of filings in the archive, the gap likely proxies non-narrative content.  \n**Exact Artifact Needed**:  \n- The `txt.tsv` (or `txt.txt`) file from the SEC Financial Statement Notes archive (e.g., `2009q1_notes.zip` contents).  \n- *Deterministic check*: Parse the file, tokenize by whitespace, flag tokens containing digits or special characters as non-narrative.  \n\n### Failure Mode 2: Presentation-Role Misalignment  \n**Issue**: The gate checks for the `pre` member (presentation metadata) but does not verify that presentation roles (e.g., `roleref`, `arcrole`) correctly map to text-block sections. Mismatches here could inflate the representation gap due to presentation errors, not narrative deficiencies.  \n**Minimal Deterministic Falsifier**:  \n- For each `pre` entry, verify that the `xlink:href` in `<presentationLink>` resolves to a defined `<definitionLink>` arcrole.  \n- If >30% of presentation links reference undefined arcroles, the gap may reflect presentation bugs.  \n**Exact Artifact Needed**:  \n- The `pre.tsv` (or `pre.txt`) file containing presentation linkbase data.  \n- *Deterministic check*: Extract all `xlink:href` values from `<presentationLink>` elements and confirm existence in `<definitionLink>` `arcrole` attributes.  \n\n### Failure Mode 3: Taxonomy-Extension Contamination  \n**Issue**: The gate assumes standard taxonomy usage. Custom extensions (e.g., `xmlns:ex=\"http://example.com\"`) in the `sub` or `num` files may introduce namespace noise that artificially widens the representation gap when parsing XBRL, independent of narrative content.  \n**Minimal Deterministic Falsifier**:  \n- Count distinct non-standard namespaces (excluding `us-gaap`, `xbrl`, `xbrldi`, `xbrldt`) in the `sub` file’s namespace declarations.  \n- If median distinct custom namespaces > 2 per filing, the gap likely scales with extension complexity.  \n**Exact Artifact Needed**:  \n- The `sub.tsv` (or `sub.txt`) file containing XBRL instance data.  \n- *Deterministic check*: Parse XML namespace declarations (if available) or scan for `xmlns:` prefixes not in the standard set.  \n\n### Failure Mode 4: Amended Filing Confounding  \n**Issue**: The gate does not distinguish between original (`10-K`) and amended (`10-K/A`) filings. Amendments often correct XBRL errors without changing narrative text, creating false representation gaps driven by amendment frequency, not narrative quality.  \n**Minimal Deterministic Falsifier**:  \n- Stratify the archive by form type (`10-K` vs `10-K/A`).  \n- If the mean representation gap for `10-K/A` filings exceeds that of `10-K` by >2σ, the gap is amendment-confounded.  \n**Exact Artifact Needed**:  \n- The `sub` file’s `form` field (from `sub.tsv`/`sub.txt`) to identify amendment status.  \n- *Deterministic check*: Filter rows where `form` ends with `/A` and compare gap metrics.  \n\n### Failure Mode 5: Period/Unit Context Decoupling  \n**Issue**: The gate validates `num` (numeric facts) existence but does not check whether numeric facts in `num` align with the temporal/unit context implied by the text-block (e.g., discussing Q1 revenue but reporting annual figures). This misalignment inflates the gap artificially.  \n**Minimal Deterministic Falsifier**:  \n- For a sample of text-block sentences containing time/unit cues (e.g., “quarterly”, “USD”), extract the implied period/unit.  \n- Check if corresponding numeric facts in `num` match that context.  \n- If <40% match rate, the gap reflects contextual misalignment, not narrative deficiency.  \n**Exact Artifact Needed**:  \n- The `num.tsv` (or `num.txt`) file (numeric facts) and `txt.tsv` (text-block).  \n- *Deterministic check*: Use regex to find temporal/unit phrases in `txt`; join to `num` via `adjustment`, `period`, `unit` fields.  \n\n### Failure Mode 6: Filing Length Proxy  \n**Issue**: Longer filings inherently have more text-block content and XBRL facts, increasing opportunities for representation mismatches due to scale, not narrative quality. The gap may correlate with filing size (e.g., `txt` byte count) rather than structural deficiency.  \n**Min",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791370337-WUVvzGqY9Hi4g4LIyIuV",
+  "usage": {
+    "prompt_tokens": 5529,
+    "completion_tokens": 3200,
+    "total_tokens": 8729,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1854,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
