@@ -41,7 +41,9 @@ def test_top4_workflow_uses_three_windows_and_hosted_x64_arm64():
     assert "runs-on: ubuntu-24.04-arm" in text
     assert "candidate: [Q218,Q219,Q220]" in text
     assert "candidate: [Q104:I19" not in text
-    assert 'cron: "*/15 * * * *"' in text
+    assert "\n  schedule:" not in text
+    assert "\n  push:" not in text
+    assert "workflow_dispatch:" in text
 
 def test_legacy_research_loops_are_manual_only():
     for path in (
@@ -87,3 +89,11 @@ def test_top4_workflow_triggers_on_q219_gate_changes():
     workflow = (ROOT / ".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
     assert '"automation/q219_options_source_breadth_gate.py"' in workflow
     assert '"tests/test_q219_options_source_breadth_gate.py"' in workflow
+
+
+def test_dashboard_routes_top4_candidates_to_slot_scoped_workflow_and_i19_to_census():
+    text=(ROOT/"automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    assert '.github/workflows/top4-candidate-slot-research.yml' in text
+    assert '.github/workflows/q104-i19-13f-historical-identity-census.yml' in text
+    assert '"plan_id": "Q104-I19-CENSUS"' in text
+    assert '"exclusive_dispatch": True' in text
