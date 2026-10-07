@@ -428,5 +428,23 @@
       "duplicate_work_forbidden": true,
       "padding_forbidden": true
     }
+  },
+  "completion_relay": {
+    "status": "ACTIVE",
+    "workflow": ".github/workflows/research-completion-relay.yml",
+    "purpose": "Direct replenishment after workflow_dispatch-started research runs via an explicit workflow_dispatch wake of the bounded capacity planner.",
+    "duplicate_control": "Research Completion Monitor A excludes workflow_dispatch completions; push/schedule/external completions continue through Monitor A.",
+    "covered_workflows": [
+      ".github/workflows/top4-candidate-slot-research.yml",
+      ".github/workflows/ai-worker-fabric.yml",
+      ".github/workflows/q104-i19-13f-historical-identity-census.yml",
+      ".github/workflows/q224-edgar-modern-source-gate.yml",
+      ".github/workflows/q229-historical-release-census.yml",
+      ".github/workflows/q229-q230-source-feasibility.yml",
+      ".github/workflows/q230-windows-trace-connectivity.yml",
+      ".github/workflows/q231-sec-foia-source-gate.yml",
+      ".github/workflows/q205-nlrb-source-feasibility.yml"
+    ],
+    "scientific_boundary_unchanged": true
   }
 }
