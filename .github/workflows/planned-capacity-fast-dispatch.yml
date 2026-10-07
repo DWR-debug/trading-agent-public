@@ -5,6 +5,14 @@ on:
     branches: [master]
   schedule:
     - cron: "*/5 * * * *"
+  workflow_run:
+    workflows:
+      - "Q*"
+      - "Top-4 Slot*"
+      - "Evidence Graph*"
+      - "Temporal Identity*"
+      - "Wide Search Research Lane"
+    types: [completed]
   workflow_dispatch: {}
 
 permissions:
@@ -19,7 +27,10 @@ jobs:
   dispatch:
     if: >-
       github.repository == 'DWR-debug/trading-agent-public' &&
-      github.event_name != 'workflow_run'
+      (
+        github.event_name != 'workflow_run' ||
+        github.event.workflow_run.head_branch == 'master'
+      )
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
