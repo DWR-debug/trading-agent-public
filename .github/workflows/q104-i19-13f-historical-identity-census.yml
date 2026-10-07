@@ -237,3 +237,19 @@ jobs:
     uses: ./.github/workflows/research-completion-relay.yml
     with:
       source_workflow: "Q104 I19 Historical 13F Identity Census"
+
+  retry_failed:
+    # Exactly one bounded automatic retry after a real failure/cancellation.
+    # Run attempt 2 does not recurse. This does not weaken the scientific merge gate.
+    needs: [windows_census, hosted_census, merge]
+    if: always() && github.run_attempt == 1 && (needs.windows_census.result != 'success' || needs.hosted_census.result != 'success' || needs.merge.result != 'success')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Rerun only failed jobs from this census attempt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh run rerun "$GITHUB_RUN_ID" --failed --repo "$GITHUB_REPOSITORY"
