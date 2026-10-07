@@ -1037,6 +1037,10 @@ def main() -> None:
         "scientific_boundary": os_state.get("permanent_safety", {}),
         "dashboard_summary": {
             "active_work_items": len(work),
+            "active_research_lanes": len(work),
+            "active_research_lanes_target": 6,
+            "active_research_lanes_target_met": len(work) >= 6,
+            "active_research_lanes_shortfall": max(0, 6 - len(work)),
             "configured_resources": len(configured_resources),
             "runner_api_visible": len(runners) if runners else None,
             "busy_runners": sum(1 for r in runners if r.get("busy") is True) if runners else None,
