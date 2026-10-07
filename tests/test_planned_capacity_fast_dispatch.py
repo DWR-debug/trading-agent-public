@@ -348,3 +348,30 @@ def test_fast_dispatch_has_non_slot_technical_failure_circuit_breaker():
     }]
     blocked = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
     assert blocked["dispatches"] == []
+
+def test_fast_dispatch_normalizes_candidate_identity_before_duplicate_guard():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow = ".github/workflows/q104-i19-13f-historical-identity-census.yml"
+    snapshot = {
+        "work_assignments": [{
+            "candidate": "Q104:I19",
+            "task": "historical SEC 13F archive/security identity census",
+            "job": "Q104 I19 Windows census",
+            "lane": "FORMAL READINESS",
+            "resource": "Windows self-hosted A",
+        }],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted A",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q104-I19-CENSUS",
+                "candidate": "Q104:I19",
+                "scheduled": True,
+                "dispatchable": True,
+                "exclusive_dispatch": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+    assert dispatch_candidates(snapshot, [], max_dispatches=4)["dispatches"] == []
