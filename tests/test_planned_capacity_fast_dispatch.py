@@ -600,7 +600,7 @@ def test_dashboard_skips_current_context_completed_ai_before_filling_free_pool(m
     )
     plan = dashboard.planned_capacity_plan(resources, [], [], {}, {})
     ai = next(row for row in plan if row["resource"] == "Free AI pool")
-    assert [item["plan_id"] for item in ai["planned_assignments"]] == ["Q221-ADVERSARIAL"]
+    assert [item["plan_id"] for item in ai["planned_assignments"]] == ["Q218-FOCUSED-ADVERSARIAL"]
 
 
 def test_dashboard_generator_supports_direct_script_execution_import_mode():
