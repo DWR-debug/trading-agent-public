@@ -87,8 +87,12 @@ def test_hosted_slots_are_explicitly_leased():
 
 def test_top4_workflow_triggers_on_q219_gate_changes():
     workflow = (ROOT / ".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
-    assert '"automation/q219_options_source_breadth_gate.py"' in workflow
-    assert '"tests/test_q219_options_source_breadth_gate.py"' in workflow
+    slot=(ROOT/".github/workflows/top4-candidate-slot-research.yml").read_text(encoding="utf-8")
+    capacity=(ROOT/"automation/top4_candidate_capacity.py").read_text(encoding="utf-8")
+    assert "workflow_dispatch:" in slot
+    assert "Q219" in slot
+    assert "automation/q219_options_source_breadth_gate.py" in capacity
+    assert "tests/test_q219_options_source_breadth_gate.py" in capacity
 
 
 def test_dashboard_routes_top4_candidates_to_slot_scoped_workflow_and_i19_to_census():
