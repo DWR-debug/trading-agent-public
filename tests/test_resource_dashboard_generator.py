@@ -184,3 +184,22 @@ def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
     assert "import sys" in generator
     assert "if str(ROOT) not in sys.path:" in generator
     assert "sys.path.insert(0, str(ROOT))" in generator
+
+
+def test_dashboard_focused_backlog_is_two_candidates():
+    from automation.generate_resource_dashboard import planned_research_backlog
+    rows = planned_research_backlog([
+        {"code":"Q104:I19","lane":"FORMAL READINESS","next_gate":"13F completeness"},
+        {"code":"Q218","lane":"FRONTIER DISCOVERY","next_gate":"SEC multi-channel/PIT"},
+        {"code":"Q219","lane":"FRONTIER DISCOVERY","next_gate":"options PIT"},
+    ])
+    assert [x["candidate"] for x in rows] == ["Q104:I19","Q218"]
+    assert [x["planned_status"] for x in rows] == ["READY_NEXT_GATE","READY_NEXT_GATE"]
+
+
+def test_dashboard_s10_support_is_non_authorizing():
+    from automation.generate_resource_dashboard import s10_support_snapshot
+    payload = s10_support_snapshot([], {})
+    assert payload["resource_id"] == "S10"
+    assert payload["scientific_evidence"] is False
+    assert payload["performance_authorization"] is False
