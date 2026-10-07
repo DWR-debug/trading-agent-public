@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T06:55:01.021250+00:00",
+    "generated_at_utc": "2026-10-07T07:18:31.390429+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "012ffc5e95dbe22b7209f31ff8321bd4e6b8c903"
+    "source_master_sha": "e3f581218574293ea9eaa4927f1c35c0daa151fe"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T06:55:01.021250+00:00",
+  "generated_at_utc": "2026-10-07T07:18:31.390429+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4524,6 +4524,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "fix/q104-i19-shard-fail-tolerance-20261007",
+        "number": 1166,
+        "title": "FIX: make Q104-I19 historical shards failure-tolerant",
+        "updatedAt": "2026-10-07T07:16:20Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1166"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/t052-master-provenance-case-filter-20261007",
         "number": 1160,
         "title": "FIX: make T052 master provenance path check deterministic",
@@ -4533,44 +4541,44 @@
     ],
     "recent_commits": [
       {
-        "message": "RESEARCH: advance Q218 deterministic event-pair lineage gate",
-        "sha": "012ffc5e95dbe22b7209f31ff8321bd4e6b8c903",
-        "timestamp": "2026-10-07T08:54:49+02:00"
+        "message": "FIX: align Q218 timing and active capacity contracts",
+        "sha": "e3f581218574293ea9eaa4927f1c35c0daa151fe",
+        "timestamp": "2026-10-07T09:18:17+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8fb56b6f429953b05854ac54cb70d9504e14f914",
-        "timestamp": "2026-10-07T06:37:45Z"
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "82853ed0405bbcaf9979564a97f18a74c2fa9d63",
+        "timestamp": "2026-10-07T07:10:04Z"
       },
       {
-        "message": "ORCH: activate one Runner C parallel candidate-development window",
-        "sha": "c7f077a0ae699c83f3a515cb7f9af6f954bd005f",
-        "timestamp": "2026-10-07T08:36:54+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "7fa7668e3ad585e572492b19bd07588bfb8999bd",
-        "timestamp": "2026-10-07T06:32:08Z"
+        "message": "OPS: update AI credit availability plan",
+        "sha": "0b41d01986ba2e8f243c41a9a5fed340a4779cc2",
+        "timestamp": "2026-10-07T07:06:56Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "826b62a280670d64049f62e91a1b1094b5ee27b1",
-        "timestamp": "2026-10-07T06:27:55Z"
+        "sha": "2033bdb6f89bcb6c0c85d390fae2c248cf399cd8",
+        "timestamp": "2026-10-07T07:03:57Z"
       },
       {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "0436deab3bcb19bc93dab7fe643b8b19ddeec1ef",
-        "timestamp": "2026-10-07T06:27:07Z"
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "5eaa548c0608dfbd9ff806efe3c98d474d1b26e2",
+        "timestamp": "2026-10-07T07:00:21Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "427733e5f3066c8c14f1d6229c384fc6ad419033",
-        "timestamp": "2026-10-07T06:25:59Z"
+        "message": "OPS: record AI worker state",
+        "sha": "12356c119a52a51de37f26e6854233002df6cc58",
+        "timestamp": "2026-10-07T06:55:49Z"
       },
       {
-        "message": "FIX: harden Q104 I19 census evidence re-execution",
-        "sha": "d6a7735df47f8e9cbae68319799b345d0d56113e",
-        "timestamp": "2026-10-07T08:25:41+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "f05cbe1270316c981a8c0a7ad842cd2e3817e1fc",
+        "timestamp": "2026-10-07T06:55:45Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "6c43ef9469f591580cfd485ad46c20e423a58438",
+        "timestamp": "2026-10-07T06:55:31Z"
       }
     ]
   },
@@ -4668,7 +4676,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "012ffc5e95dbe22b7209f31ff8321bd4e6b8c903",
+  "source_master_sha": "e3f581218574293ea9eaa4927f1c35c0daa151fe",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4782,6 +4790,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37584169346"
+    "run_id": "37586508063"
   }
 }
