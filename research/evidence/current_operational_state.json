@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T12:17:59.593360+00:00",
+    "generated_at_utc": "2026-10-07T12:18:28.807283+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "5b3d0fa6494a4a9a0e93374953d06f2f69b22389"
+    "source_master_sha": "644e20a026b5fb5fc43b9bcb5eccc8259401366d"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T12:17:59.593360+00:00",
+  "generated_at_utc": "2026-10-07T12:18:28.807283+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4565,6 +4565,26 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "644e20a026b5fb5fc43b9bcb5eccc8259401366d",
+        "timestamp": "2026-10-07T12:18:12Z"
+      },
+      {
+        "message": "TEST: prevent candidate-format duplicate dispatch",
+        "sha": "fe7c05f6d204fcfb55aac59d4470789b92438f44",
+        "timestamp": "2026-10-07T14:18:08+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "4af1ff83e555dbb889b7403f2d6a003acbdfec33",
+        "timestamp": "2026-10-07T12:18:03Z"
+      },
+      {
+        "message": "OPS: normalize candidate identity before dispatch",
+        "sha": "52dfb34b9c2f6eb2473d350846257af6e4d93b1f",
+        "timestamp": "2026-10-07T14:18:01+02:00"
+      },
+      {
         "message": "OPS: document direct completion relay contract",
         "sha": "5b3d0fa6494a4a9a0e93374953d06f2f69b22389",
         "timestamp": "2026-10-07T14:17:49+02:00"
@@ -4583,26 +4603,6 @@
         "message": "OPS: relay Q231 SEC FOIA Source Gate completion to capacity planner",
         "sha": "cbc8b3002530e8819d5421dc238cb2172c5e47d6",
         "timestamp": "2026-10-07T14:17:37+02:00"
-      },
-      {
-        "message": "OPS: relay Q230 Windows TRACE Connectivity completion to capacity planner",
-        "sha": "80dbf69e4aeff42ebaee2102aba9d9d3ce9316f2",
-        "timestamp": "2026-10-07T14:17:34+02:00"
-      },
-      {
-        "message": "OPS: relay Q229-Q230 Source Feasibility completion to capacity planner",
-        "sha": "c725e61c2178e7d32351c5a6fc51215dbbb38de2",
-        "timestamp": "2026-10-07T14:17:31+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "a1be8ef23745424cddb2a45de35f755ad30a60ce",
-        "timestamp": "2026-10-07T12:17:24Z"
-      },
-      {
-        "message": "OPS: relay Q229 completion to capacity planner",
-        "sha": "9291980c8e9f8051abfda3f39d71c07cf73bee21",
-        "timestamp": "2026-10-07T14:17:22+02:00"
       }
     ]
   },
@@ -4700,7 +4700,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5b3d0fa6494a4a9a0e93374953d06f2f69b22389",
+  "source_master_sha": "644e20a026b5fb5fc43b9bcb5eccc8259401366d",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4814,6 +4814,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37619968824"
+    "run_id": "37620021619"
   }
 }
