@@ -81,7 +81,7 @@ def test_fast_dispatch_zero_active_starts_top4_once_and_ai_when_free():
                     "dispatchable": True,
                     "allow_parallel_with_candidate": True,
                     "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
-                    "execution_workflow_inputs": {"task_id": "AI-2026-10-06-Q218-TOP4-ADVERSARIAL"},
+                    "execution_workflow_inputs": {"task_id": "AI-TEST-Q218-TOP4-ADVERSARIAL-UNSEEN"},
                 }],
             },
         ],
@@ -286,7 +286,9 @@ def test_fast_dispatch_skips_successful_same_slot_but_allows_other_architecture(
         "display_title":"Top-4 Slot ubuntu_x64 Q220","run_name":"Top-4 Slot ubuntu_x64 Q220"
     }]
     plan2 = dispatch_candidates(base, completed_x64, max_dispatches=4)
-    assert plan2["dispatches"] == []
+    assert [x["candidate"] for x in plan2["dispatches"]] == ["Q221"]
+    assert plan2["dispatches"][0]["inputs"]["resource"] == "ubuntu_x64"
+    assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in plan2["decisions"])
 
 
 def test_fast_dispatch_allows_one_retry_after_failed_slot_but_blocks_second_failure():
@@ -389,7 +391,7 @@ def test_fast_dispatch_has_non_slot_technical_failure_circuit_breaker():
                 "dispatchable": True,
                 "allow_parallel_with_candidate": True,
                 "execution_workflow": workflow,
-                "execution_workflow_inputs": {"task_id": "AI-2026-10-06-Q220-TOP4-ADVERSARIAL"},
+                "execution_workflow_inputs": {"task_id": "AI-TEST-Q220-TOP4-ADVERSARIAL-RETRY"},
             }],
         }],
     }
