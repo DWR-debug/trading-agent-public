@@ -50,10 +50,12 @@ def active_workflow_paths(runs: list[dict[str, Any]]) -> set[str]:
     return out
 
 
-def candidate_is_active(candidate: str, work: list[dict[str, Any]]) -> bool:
+def candidate_is_active(candidate: str, work: list[dict[str, Any]], *, exclude_resources: set[str] | None = None) -> bool:
     c = candidate.lower()
+    excluded = exclude_resources or set()
     return any(
-        c in f"{x.get('task', '')} {x.get('job', '')}".lower()
+        x.get("resource") not in excluded
+        and c in f"{x.get('task', '')} {x.get('job', '')}".lower()
         for x in work
     )
 
@@ -104,7 +106,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     decisions = []
     dispatches = []
     seen_workflows: set[str] = set()
-    top4_candidate_active = any(candidate_is_active(c, work) for c in TOP4_CANDIDATES)
+    top4_candidate_active = any(\n        any(\n            c.lower() in f"{item.get('task', '')} {item.get('job', '')}".lower()\n            and item.get("resource") != "Free AI pool"\n            for item in work\n        )\n        for c in TOP4_CANDIDATES\n    )
 
     for item in planned:
         workflow = str(item["execution_workflow"])
