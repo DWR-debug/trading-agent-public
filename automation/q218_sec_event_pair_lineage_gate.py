@@ -8,6 +8,8 @@ import argparse
 import hashlib
 import json
 import re
+import time
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -28,12 +30,27 @@ UA = {
     "User-Agent": "TradingAgent-Public-Research/1.0 research@example.invalid",
     "Accept-Encoding": "identity",
 }
+FETCH_TIMEOUT_SECONDS = 30
+MAX_TRANSIENT_FETCH_ATTEMPTS = 3
+FETCH_BACKOFF_SECONDS = 2
 
 
 def fetch(url: str) -> bytes:
     req = urllib.request.Request(url, headers=UA)
-    with urllib.request.urlopen(req, timeout=30) as response:
-        return response.read()
+    last_error: Exception | None = None
+    for attempt in range(1, MAX_TRANSIENT_FETCH_ATTEMPTS + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT_SECONDS) as response:
+                return response.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code not in {408, 425, 429, 500, 502, 503, 504}:
+                raise
+            last_error = exc
+        except (urllib.error.URLError, TimeoutError) as exc:
+            last_error = exc
+        if attempt < MAX_TRANSIENT_FETCH_ATTEMPTS:
+            time.sleep(FETCH_BACKOFF_SECONDS * attempt)
+    raise last_error or RuntimeError("SEC_FETCH_FAILED")
 
 
 def acceptance(cik: str, accession: str) -> str | None:
@@ -307,6 +324,12 @@ def run(output: Path) -> dict:
         "candidate_id": "Q218",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "fixed_window": {"start": START, "end": END},
+        "network_retry_policy": {
+            "timeout_seconds": FETCH_TIMEOUT_SECONDS,
+            "max_transient_attempts": MAX_TRANSIENT_FETCH_ATTEMPTS,
+            "backoff_seconds_per_attempt": FETCH_BACKOFF_SECONDS,
+            "retryable_http_statuses": [408, 425, 429, 500, 502, 503, 504],
+        },
         "pairing_rule": (
             "exact report_date preferred; otherwise latest eligible Item-2.02 "
             "8-K by SEC acceptance within the target 10-K reporting cycle, "
