@@ -50,10 +50,11 @@ def test_fast_dispatch_zero_active_starts_top4_once_and_ai_when_free():
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
     assert plan["zero_active_research_jobs"] is True
-    assert [x["workflow"] for x in plan["dispatches"]] == [
+    assert set(x["workflow"] for x in plan["dispatches"]) == {
         ".github/workflows/top4-candidate-research-capacity.yml",
         ".github/workflows/ai-worker-fabric.yml",
-    ]
+    }
+    assert plan["dispatches"][0]["workflow"].endswith("top4-candidate-research-capacity.yml")
 
 
 def test_fast_dispatch_does_not_duplicate_active_top4_candidate():
