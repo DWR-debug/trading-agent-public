@@ -241,9 +241,9 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     zero_active = len(work) == 0
     decisions = []
     dispatches = []
-    seen_dispatch_keys: set[tuple[str, str, str]] = set()
+    seen_dispatch_keys: set[tuple[str, str, str, str]] = set()
     chosen_slot_scopes: set[tuple[str, str]] = set()
-    active_slot_scopes: set[tuple[str, str]] = set()
+    active_slot_scopes: set[tuple[str, str, str]] = set()
     for run in runs:
         if not isinstance(run, dict) or run.get("status") == "completed":
             continue
@@ -253,7 +253,8 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             continue
         scope_parts = title.split(marker, 1)[1].strip().split()
         if len(scope_parts) >= 2 and scope_parts[0] in {"windows", "ubuntu_x64", "ubuntu_arm64"}:
-            active_slot_scopes.add((scope_parts[0], scope_parts[1]))
+            gate = scope_parts[2] if len(scope_parts) >= 3 else "all"
+            active_slot_scopes.add((scope_parts[0], scope_parts[1], gate))
     leased_resources: set[str] = set()
     top4_candidate_active = any(
         any(
@@ -292,7 +293,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             if focused_active_scope and focused_active_scope in active_slot_scopes:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_FOCUSED_GATE_ACTIVE_OR_DUPLICATE"})
                 continue
-            if scope and scope in active_slot_scopes and not focus_wave:
+            if resource_input and (resource_input, candidate, "all") in active_slot_scopes and gate == "all":
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ACTIVE_OR_DUPLICATE"})
                 continue
 
