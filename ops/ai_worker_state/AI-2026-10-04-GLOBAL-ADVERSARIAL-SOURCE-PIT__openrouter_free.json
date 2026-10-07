@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-06T22:48:08.466695Z",
+  "observed_at_utc": "2026-10-07T06:27:43.080232Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 11.753,
-  "stdout": "\n\n# Adversarial Source/PIT Readiness Review — Worker Material Only\n\n**Task:** AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT\n**Scope:** Q202-Q204 information-timing family + Q205 NLRB labor-representation channel, applied at the Grok Q194-Q201 challenge standard.\n**Status:** DISCOVERY-ONLY RESEARCH. This review is worker material, never scientific evidence. No performance authorization, promotion, or live execution implied.\n\n---\n\n## 1. Attack Vector Findings\n\n### (1) Current-endpoint drift & retrospective source-readiness changes\n- **Finding:** The `source_readiness_snapshot_guard.py` guard carries `RULE_VERSION = \"GROK-PRINCIPLE-2026-10-04-V1\"` while `CURRENT_STATUS.md` is generated `2026-10-06T21:38:29Z`. The guard's `classify()` returns `PROVISIONAL_LIVE_PROBE_ONLY` for any receipt lacking a durable key — but the receipt files themselves (`q202_q204_information_timing_feasibility_latest.json`, etc.) are **not embedded in this context**, so their durability status cannot be verified here. A live probe today proves nothing about the source's state at a 2023–2025 event time.\n- **Attack:** A source that is reachable today may have been rate-limited, paywalled, restructured, or retired at historical event times. Retrospective source-readiness claims based on current reachability are unfalsifiable without a dated artifact.\n- **Counterargument:** The next-gate compiler (`orthogonal_pit_next_gate.py`) already hard-marks Q202/Q203/Q204 as `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`, which is consistent with the guard's provisional classification. The gate logic is sound; the risk is that a receipt file could claim `SOURCE_COMPONENT_READY` while still lacking a bound snapshot.\n\n### (2) Historical observation/publication timestamps\n- **Finding:** Q202-Q204 are an \"information absence\" family. Absence is inherently **retrospective** — you can only observe that information was missing after the fact, and that observation is always after the event, potentially after the 5-trading-day outcome window.\n- **Attack:** If the \"absence detection clock\" is defined by a current API's availability, the historical observation time is unknown. Using a current endpoint's response as the clock injects same-day leakage: the absence may have been detectable intraday, violating the shared contract's `event_public_observation_boundary` → `next_regular_session_5_trading_day_excess_return_vs_frozen_benchmark` rule.\n- **Counterargument:** The shared contract explicitly forbids inferring an intraday clock when only a date is available. This is a correct guard, but it must be enforced at the feature-engineering layer, not just declared.\n\n### (3) Revision/amendment/correction/QC/prosecution lineage\n- **Finding:** Q205 (NLRB labor-representation certification) is **not present** in the next-gate compiler's `RECEIPTS` mapping — confirming discovery-only status. NLRB certification decisions have a",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 11.702,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791326888-hNyENMu0iUZYgiIRO8vT",
-  "usage": {
-    "prompt_tokens": 5652,
-    "completion_tokens": 3200,
-    "total_tokens": 8852,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 2562,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
