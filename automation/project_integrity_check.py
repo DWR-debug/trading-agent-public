@@ -38,6 +38,7 @@ ACTIVE_WORKFLOWS = {
     "q104-i19-13f-historical-identity-census.yml",
     "research-completion-monitor-a.yml",
     "research-completion-monitor-b.yml",
+    "research-completion-relay.yml",
     "deep-frontier-source-feasibility.yml",
     "q171-material-receipt-sync.yml",
     "q133-q170-pit-readiness.yml",
