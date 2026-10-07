@@ -82,8 +82,20 @@ def completed_slot_scopes(runs: list[dict[str, Any]]) -> set[tuple[str, str]]:
     return slot_scopes(runs, conclusion="success")
 
 
-def failed_slot_scopes(runs: list[dict[str, Any]]) -> set[tuple[str, str]]:
-    return slot_scopes(runs, conclusion="failure")
+def slot_failure_counts(runs: list[dict[str, Any]]) -> dict[tuple[str, str], int]:
+    counts: dict[tuple[str, str], int] = {}
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") != "completed" or run.get("conclusion") != "failure":
+            continue
+        title = " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
+        marker = "Top-4 Slot "
+        if marker not in title:
+            continue
+        scope = title.split(marker, 1)[1].strip().split()
+        if len(scope) >= 2 and scope[0] in {"windows", "ubuntu_x64", "ubuntu_arm64"}:
+            key = (scope[0], scope[1])
+            counts[key] = counts.get(key, 0) + 1
+    return counts
 
 
 def workflow_is_active(workflow: str, paths: set[str], runs: list[dict[str, Any]]) -> bool:
@@ -137,7 +149,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     work = active_research_items(snapshot)
     active_paths = active_workflow_paths(runs)
     completed_slots = completed_slot_scopes(runs)
-    failed_slots = failed_slot_scopes(runs)
+    failure_counts = slot_failure_counts(runs)
     zero_active = len(work) == 0
     decisions = []
     dispatches = []
@@ -177,7 +189,11 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             if scope and scope in completed_slots:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ALREADY_COMPLETED"})
                 continue
-            if scope and scope in failed_slots:
+            failures = failure_counts.get(scope, 0) if scope else 0
+            if failures >= 2:
+                decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_RETRY_EXHAUSTED"})
+                continue
+            if failures == 1:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SLOT_RETRY_PERMITTED"})
         if dispatch_key in seen_dispatch_keys:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_DISPATCH_SCOPE_ALREADY_SELECTED"})
