@@ -130,6 +130,42 @@ def parse_dt(value: Any) -> datetime | None:
         return None
 
 
+CANDIDATE_CODES = ("Q104:I19", "Q218", "Q219", "Q220", "Q221")
+
+WORKFLOW_DISPLAY_NAMES = {
+    ".github/workflows/top4-candidate-slot-research.yml": "Top-4 Candidate Slot Research",
+    ".github/workflows/top4-candidate-research-capacity.yml": "Top-4 Candidate Research Capacity",
+    ".github/workflows/q104-i19-13f-historical-identity-census.yml": "Q104 I19 Historical 13F Identity Census",
+    ".github/workflows/q185-q186-windows-bounded-reproduction.yml": "Q185-Q186 Windows Bounded Reproduction",
+    ".github/workflows/q224-edgar-modern-source-gate.yml": "Q224 EDGAR Modern Source Gate",
+    ".github/workflows/q228-sec-correspondence-source-gate.yml": "Q228 SEC Correspondence Source Gate",
+    ".github/workflows/q229-historical-release-census.yml": "Q229 Historical Release Census",
+    ".github/workflows/q230-windows-trace-connectivity.yml": "Q230 Windows TRACE Connectivity",
+    ".github/workflows/q231-sec-foia-source-gate.yml": "Q231 SEC FOIA Source Gate",
+    ".github/workflows/q205-nlrb-source-feasibility.yml": "Q205 NLRB Source Feasibility",
+    ".github/workflows/q198-pit-clock-census.yml": "Q198 PIT Clock Census",
+    ".github/workflows/q199-q201-source-feasibility.yml": "Q199-Q201 Source Feasibility",
+    ".github/workflows/q202-q204-information-timing-feasibility.yml": "Q202-Q204 Information Timing Feasibility",
+    ".github/workflows/ai-worker-fabric.yml": "Free AI Worker Fabric",
+}
+
+def candidate_from_text(value: Any) -> str:
+    text_value = str(value or "")
+    for candidate in CANDIDATE_CODES:
+        if candidate in text_value:
+            return candidate
+    return "—"
+
+def workflow_display_name(workflow_path: str) -> str:
+    return WORKFLOW_DISPLAY_NAMES.get(workflow_path, workflow_path.rsplit("/", 1)[-1] if workflow_path else "")
+
+def benchmark_for_planned_item(item: dict[str, Any], workflow_benchmarks: dict[str, dict[str, int | str]], job_benchmarks: dict[str, dict[str, int | str]]) -> dict[str, int | str] | None:
+    candidate = str(item.get("candidate") or "")
+    if candidate in job_benchmarks:
+        return job_benchmarks[candidate]
+    workflow_name = workflow_display_name(str(item.get("execution_workflow") or ""))
+    return workflow_benchmarks.get(workflow_name)
+
 def run_duration_seconds(run: dict[str, Any]) -> int | None:
     started = parse_dt(run.get("run_started_at") or run.get("created_at"))
     finished = parse_dt(run.get("completed_at") or run.get("updated_at"))
