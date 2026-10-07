@@ -62,9 +62,3 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-  completion_relay:
-    if: \${{ always() && github.repository == 'DWR-debug/trading-agent-public' }}
-    needs: [focused_gate]
-    uses: ./.github/workflows/research-completion-relay.yml
-    with:
-      source_workflow: "Q218 Focused Research Wave"
