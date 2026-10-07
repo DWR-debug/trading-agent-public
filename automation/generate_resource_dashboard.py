@@ -410,7 +410,8 @@ def candidate_overall_progress(stage: str) -> tuple[int, str]:
     financial performance. Unknown/unmapped stages conservatively remain at 0%.
     """
     s = str(stage or "").upper()
-    if "PERFORMANCE" in s and ("COMPLETED" in s or "AUTHORIZED" in s or "VALIDATED" in s):
+    if ("PERFORMANCE" in s and "NO_PERFORMANCE" not in s and "NO_ARM" not in s
+            and ("COMPLETED" in s or "AUTHORIZED" in s or "VALIDATED" in s)):
         return 100, CANDIDATE_DEVELOPMENT_MILESTONES[5]
     if "INDEPENDENT" in s and ("REPRO" in s or "REPRODUCTION" in s):
         return 83, CANDIDATE_DEVELOPMENT_MILESTONES[4]
@@ -696,7 +697,7 @@ def planned_capacity_plan(
             "dispatchable": True,
             "allow_parallel_with_candidate": True,
             "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-            "execution_workflow_inputs": {"focus_wave": true, "gate": "source"},
+            "execution_workflow_inputs": {"focus_wave": True, "gate": "source"},
         },
         {
             "plan_id": "Q218-EVENT-PAIR",
@@ -709,7 +710,7 @@ def planned_capacity_plan(
             "dispatchable": True,
             "allow_parallel_with_candidate": True,
             "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-            "execution_workflow_inputs": {"focus_wave": true, "gate": "event_pair"},
+            "execution_workflow_inputs": {"focus_wave": True, "gate": "event_pair"},
         },
         {
             "plan_id": "Q218-INDEPENDENT-ARCH",
