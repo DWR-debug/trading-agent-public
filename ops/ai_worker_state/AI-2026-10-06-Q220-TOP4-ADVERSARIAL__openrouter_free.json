@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "eb8bea49bb9304d3c9646b4185a34c02b9191f863cfd37a9edf0bc6809835592",
   "context_fingerprint": "97a5cdc425ee9c9c59c6ccfa2cac6e284967f795e64c55c0fdd4d359853fac28",
-  "observed_at_utc": "2026-10-07T11:21:49.181181Z",
+  "observed_at_utc": "2026-10-07T11:24:15.110271Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 5.557,
-  "stdout": "User Safety: safe",
+  "duration_seconds": 33.251,
+  "stdout": "# Adversarial Review: Q220 Narrative-Structured XBRL Representation Gap\n\n## Executive Summary\n\nCritical methodological vulnerabilities identified in Q220's source/PIT structure. The design exhibits temporal inconsistency, semantic mapping gaps, and lacks essential validation gates for amended filings, namespace integrity, and duplicate detection.\n\n---\n\n## Findings & Failure Modes\n\n### 1. Temporal Mismatch (CRITICAL)\n**Failure Mode**: The SEC Financial Statement Notes archive source (`2009q1_notes.zip`) is temporally disjoint from the intended research period (2025-01-01 to 2026-10-05).\n\n**Minimal Falsifier**: Compare archive vintage (2009) with research window (2025-2026).\n\n**Exact Artifact Needed**: \n- `archive_sha256` from q220_fsn_schema_gate.py output\n- Date range specification in q218_q221_historical_source_census.py\n\n**Counterargument**: None viable—this is a fatal temporal inconsistency.\n\n---\n\n### 2. Semantic Mapping Gap (HIGH)\n**Failure Mode**: Schema gate verifies file presence but not semantic alignment between `txt.tsv` (narrative blocks) and `num.tsv` (XBRL facts).\n\n**Minimal Falsifier**: Compare row counts between `txt.tsv` and `num.tsv`; verify one-to-many or many-to-one mapping logic.\n\n**Exact Artifact Needed**: \n- Row counts from `txt.tsv` and `num.tsv` headers\n- Sample rows showing text-to-fact correspondence\n\n**Counterargument**: Implicit mapping may exist in `pre.tsv` (presentation linkbase), but no validation is performed.\n\n---\n\n### 3. Amended Filings Contamination (HIGH)\n**Failure Mode**: No distinction between original and amended filings (10-K/A, 8-K/A). Amended filings introduce duplicate facts and potential data leakage.\n\n**Minimal Falsifier**: Filter `sub.tsv` for forms ending in \"/A\" and check for duplicate accession numbers or overlapping fact contexts.\n\n**Exact Artifact Needed**: \n- `form` field values in `sub.tsv`\n- Accession number uniqueness check\n\n**Counterargument**: SEC's submission structure may handle amendments, but no explicit gate exists.\n\n---\n\n### 4. Namespace Validation Absent (MEDIUM)\n**Failure Mode**: No validation of custom namespace prefixes in `tag.tsv`. Taxonomy extensions could introduce concept collisions or misclassification.\n\n**Minimal Falsifier**: Extract unique namespace prefixes from `tag.tsv` and verify against US-GAAP/IFRS canonical sets.\n\n**Exact Artifact Needed**: \n- Namespace prefix distribution in `tag.tsv`\n- Concept-to-namespace mapping\n\n**Counterargument**: SEC may standardize namespaces, but custom extensions are permitted.\n\n---\n\n### 5. Period/Context Misalignment (MEDIUM)\n**Failure Mode**: No verification that context periods in `num.tsv` align with filing dates in `sub.tsv`. Future/past period contamination possible.\n\n**Minimal Falsifier**: Cross-reference `context` field in `num.tsv` with `filingDate` in `sub.tsv`; flag any period-end before filing acceptance.\n\n**Exact Artifact Needed**: \n- Context period definitions in `num.tsv`\n- Filing acceptance timestamps in `sub.tsv`\n\n**Counterargument**: XBRL context periods are standard, but data entry errors exist.\n\n---\n\n### 6. Duplicate Fact Detection Missing (MEDIUM)\n**Failure Mode**: No deduplication of (concept, context, value) tuples across filings. Signal inflation risk.\n\n**Minimal Falsifier**: Generate hash of (concept, context, value) combinations; identify duplicates across the universe.\n\n**Exact Artifact Needed**: \n- Unique constraint check on `num.tsv` primary keys\n- Duplicate count report\n\n**Counterargument**: SEC may prevent duplicates, but amended filings reintroduce them.\n\n---\n\n### 7. Representation Proxy Risk (LOW-MEDIUM)\n**Failure Mode**: The narrative-to-XBRL mapping may proxy filing length or generic readability rather than semantic structure.\n\n**Minimal Falsifier**: Correlate fact counts with character counts from `txt.tsv`; test for monotonic relationship.\n\n**Exact Artifact Needed**: \n- Character count per filing from `txt.tsv`\n- Fact count per filing from `num.tsv`\n\n**Counterargument**: Structural mapping should be orthogonal to length, but no test validates this.\n\n---\n\n## Concrete Next Actions\n\n1. **Immediate Blocker**: Replace or supplement the 2009 archive with a temporally consistent source matching the 2025-2026 window.\n\n2. **Add Semantic Mapping Gate**: Implement validation that `txt.tsv` narrative blocks map to `num.tsv` facts via `pre.tsv` presentation links.\n\n3. **Implement Amendment Handling**: Add explicit filtering or flagging of amended filings with duplicate detection.\n\n4. **Add Namespace Validation**: Verify namespace prefixes against canonical taxonomy sets.\n\n5. **Add Period Alignment Check**: Cross-reference context periods with filing dates.\n\n6. **Add Deduplication Gate**: Implement uniqueness constraints on fact tuples.\n\n7. **Add Length Orthogonality Test**: Verify that fact counts are not monotonically predictable from text length.\n\n---\n\n## Uncertainty & Open Questions\n\n1. **Archive Vintage**: Is the 2009 archive intentionally frozen for stability, or is it a documentation error? If intentional, the temporal mismatch must be resolved through forward-filling or vintage alignment.\n\n2. **Mapping Logic**: The `pre.tsv` presentation linkbase may contain the semantic mapping, but its structure is not validated.\n\n3. **SEC Data Quality**: Historical SEC XBRL data may contain known quality issues (context errors, duplicate facts) that require explicit handling.\n\n4. **Research Boundary**: The design claims \"no market outcomes\" but relies on SEC data that may have cross-contamination with market events through filing timing.\n\n---\n\n## Scientific Boundary Verification\n\n| Gate | Status |\n|------|--------|\n| Concept Selection | ❌ Not frozen |\n| Parameter Search | ❌ Not applicable |\n| Threshold Search | ❌ Not applicable |\n| Horizon Search | ❌ Not applicable |\n| Asset Search | ❌ Not applicable |\n| Holdout Selection | ❌ Not applicable |\n| Performance | ❌ Not applicable |\n| Promotion | ❌ Not applicable |\n| Live Execution | ❌ Not applicable |\n\n**Note**: The temporal mismatch alone invalidates the source contract's scientific boundary.\n\n---\n\n## Conclusion\n\nQ220's current implementation fails fundamental source validity checks. The temporal mismatch between archive vintage and research window is irreparable without either:\n- Replacing the source with temporally consistent data, or\n- Explicitly documenting and justifying the vintage alignment methodology\n\nNo performance authorization or promotion should proceed until these methodological failures are addressed.",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791372109-KYaxQlBrhpSbbth0SKS4",
+  "response_id": "gen-1791372255-cTxTU3LWt6yob5vvozWK",
   "usage": {
-    "prompt_tokens": 5727,
-    "completion_tokens": 358,
-    "total_tokens": 6085,
+    "prompt_tokens": 5472,
+    "completion_tokens": 2727,
+    "total_tokens": 8199,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 435,
+      "reasoning_tokens": 1270,
       "image_tokens": 0,
       "audio_tokens": 0
     }
