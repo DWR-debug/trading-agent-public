@@ -66,25 +66,22 @@ def sha256_json(value: object) -> str:
 def run(output: Path) -> dict:
     history_query = f"""
 SELECT commit_hash, date, message
-FROM DOLT_LOG('master', '--tables', 'option_chain')
+FROM dolt_log
 WHERE date <= {repr(TARGET_DATE + " 23:59:59")}
+  AND message LIKE 'option_chain % update'
 ORDER BY date DESC
-LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}
+LIMIT {HEAD_LOG_LIMIT}
 """.strip()
     history_payload = fetch_sql(history_query)
     scanned_rows = history_payload.get("rows") or []
-    history_rows = [
-        row for row in scanned_rows
-        if "option_chain " in str(row.get("message") or "")
-        and str(row.get("message") or "").endswith("update")
-    ][:HEAD_LOG_LIMIT]
+    history_rows = [row for row in scanned_rows if row.get("commit_hash")]
     bounded_dates = [str(row.get("date")) for row in scanned_rows if row.get("date")]
     earliest = min(bounded_dates) if bounded_dates else None
     latest = max(bounded_dates) if bounded_dates else None
     commit_count = len(scanned_rows)
 
     prior_query = (
-        "SELECT commit_hash, date, message FROM DOLT_LOG() "
+        "SELECT commit_hash, date, message FROM dolt_log "
         "WHERE date <= " + repr(TARGET_DATE + " 23:59:59") +
         " ORDER BY date DESC LIMIT 1"
     )
@@ -156,8 +153,10 @@ LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}
             "commit_count_bounded_scan": commit_count,
             "option_chain_update_commits_observed": len(history_rows),
             "commit_log_query": history_query,
-            "bounded_scan_limit": BOUNDED_HISTORY_SCAN_LIMIT,
+            "history_query_surface": "dolt_log_system_table_filtered",
+            "bounded_scan_limit": HEAD_LOG_LIMIT,
             "prior_commit_query": prior_query,
+            "prior_commit_query_surface": "dolt_log_system_table_filtered",
         },
         "historical_pit": {
             "commit_at_or_before_target_date_observed": pit_before_target,

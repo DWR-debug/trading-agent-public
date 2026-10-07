@@ -46,10 +46,18 @@ def test_q219_pit_snapshots_prefer_pre_target_commit():
     assert 'str(row.get("commit_hash")) != str(prior_commit.get("commit_hash"))' in gate
 
 
+def test_q219_history_uses_system_table_fastpath():
+    gate = (ROOT / 'automation/q219_dolthub_historical_pit_gate.py').read_text(encoding='utf-8')
+    assert 'FROM dolt_log' in gate
+    assert "message LIKE 'option_chain % update'" in gate
+    assert "FROM DOLT_LOG(" not in gate
+
+
 def test_q219_history_scan_is_bounded_and_filtered_in_memory():
     gate = (ROOT / 'automation/q219_dolthub_historical_pit_gate.py').read_text(encoding='utf-8')
-    assert 'LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}' in gate
-    assert 'WHERE message LIKE' not in gate
+    assert 'FROM dolt_log' in gate
+    assert "message LIKE 'option_chain % update'" in gate
+    assert 'LIMIT {HEAD_LOG_LIMIT}' in gate
     assert 'summary_query = ' not in gate
     assert BOUNDED_HISTORY_SCAN_LIMIT >= HEAD_LOG_LIMIT
 
