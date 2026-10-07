@@ -61,6 +61,21 @@ def candidate_is_active(candidate: str, work: list[dict[str, Any]], *, exclude_r
     )
 
 
+def completed_slot_scopes(runs: list[dict[str, Any]]) -> set[tuple[str, str]]:
+    out: set[tuple[str, str]] = set()
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") != "completed" or run.get("conclusion") != "success":
+            continue
+        title = " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
+        marker = "Top-4 Slot "
+        if marker not in title:
+            continue
+        scope = title.split(marker, 1)[1].strip().split()
+        if len(scope) >= 2 and scope[0] in {"windows", "ubuntu_x64", "ubuntu_arm64"}:
+            out.add((scope[0], scope[1]))
+    return out
+
+
 def workflow_is_active(workflow: str, paths: set[str], runs: list[dict[str, Any]]) -> bool:
     if workflow == SLOT_SCOPED_WORKFLOW:
         return False
@@ -111,6 +126,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
 
     work = active_research_items(snapshot)
     active_paths = active_workflow_paths(runs)
+    completed_slots = completed_slot_scopes(runs)
     zero_active = len(work) == 0
     decisions = []
     dispatches = []
@@ -144,6 +160,11 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
 
         resource = str(item.get("resource") or "")
         dispatch_key = (workflow, candidate, resource) if workflow == SLOT_SCOPED_WORKFLOW else (workflow, "", "")
+        if workflow == SLOT_SCOPED_WORKFLOW:
+            resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
+            if resource_input and (resource_input, candidate) in completed_slots:
+                decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ALREADY_COMPLETED"})
+                continue
         if dispatch_key in seen_dispatch_keys:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_DISPATCH_SCOPE_ALREADY_SELECTED"})
             continue
