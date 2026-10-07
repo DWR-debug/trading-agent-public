@@ -15,6 +15,21 @@ def task(provider="gemini_cli"):
         "paid_usage": False, "research_decision": False, "allow_workspace_writes": False,
     }
 
+def test_top4_ai_fingerprints_exclude_volatile_status_files():
+    root = Path(__file__).parents[1]
+    for task_id in (
+        "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
+        "AI-2026-10-06-Q219-TOP4-ADVERSARIAL",
+        "AI-2026-10-06-Q220-TOP4-ADVERSARIAL",
+        "AI-2026-10-06-Q221-TOP4-ADVERSARIAL",
+    ):
+        payload = json.loads(
+            (root / "ai_requests" / f"{task_id}.json").read_text(encoding="utf-8")
+        )
+        assert "docs/CURRENT_STATUS.md" not in payload["context_fingerprint_files"]
+        assert "research/evidence/current_operational_state.json" not in payload["context_fingerprint_files"]
+
+
 def test_load_task_requires_ai_namespace(tmp_path):
     path = tmp_path / "task.json"; payload = task(); payload["task_id"] = "BAD-001"
     path.write_text(json.dumps(payload), encoding="utf-8")
