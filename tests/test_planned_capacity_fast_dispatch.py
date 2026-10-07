@@ -4,14 +4,14 @@ import json
 ROOT = Path(__file__).parents[1]
 
 
-def test_fast_dispatch_workflow_is_event_driven_with_five_minute_recovery():
+def test_fast_dispatch_workflow_keeps_five_minute_recovery_without_direct_workflow_run_trigger():
     text = (ROOT / ".github/workflows/planned-capacity-fast-dispatch.yml").read_text(encoding="utf-8")
     assert 'cron: "*/5 * * * *"' in text
-    assert "workflow_run:" in text
-    assert "types: [completed]" in text
-    assert "actions: write" in text
-    assert "generate_resource_dashboard.py" in text
-    assert "planned_capacity_fast_dispatch" in text
+    assert "workflow_run:" not in text
+    for name in ("research-completion-monitor-a.yml","research-completion-monitor-b.yml"):
+        monitor = (ROOT / ".github/workflows" / name).read_text(encoding="utf-8")
+        assert "workflow_run:" in monitor
+        assert "planned-capacity-fast-dispatch.yml" in monitor
 
 
 def test_fast_dispatch_zero_active_starts_top4_once_and_ai_when_free():
