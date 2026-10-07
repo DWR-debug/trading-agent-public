@@ -128,7 +128,7 @@ def run(output: Path) -> dict:
                 if event.get("report_date") == tenk.get("report_date")
                 and event.get("acceptance_datetime")
                 and tenk.get("acceptance_datetime")
-                and event["acceptance_datetime"] <= tenk["acceptance_datetime"]
+                and event["acceptance_datetime"] < tenk["acceptance_datetime"]
             ]
             event = max(candidates, key=_acceptance_key) if candidates else None
             if event is None:
