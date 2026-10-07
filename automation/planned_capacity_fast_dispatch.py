@@ -149,6 +149,16 @@ def workflow_is_active(workflow: str, paths: set[str], runs: list[dict[str, Any]
     )
 
 
+def normalize_runs_payload(run_payload: Any) -> list[dict[str, Any]]:
+    """Normalize the dispatcher snapshot payload into a run-record list."""
+    if isinstance(run_payload, list):
+        return [x for x in run_payload if isinstance(x, dict)]
+    if isinstance(run_payload, dict):
+        runs = run_payload.get("workflow_runs", [])
+        return [x for x in runs if isinstance(x, dict)] if isinstance(runs, list) else []
+    return []
+
+
 def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], max_dispatches: int = 4) -> dict[str, Any]:
     planned = []
     for row in snapshot.get("planned_capacity", []):
@@ -329,7 +339,7 @@ def main() -> int:
 
     snapshot = json.loads(args.snapshot.read_text(encoding="utf-8"))
     run_payload = json.loads(args.runs.read_text(encoding="utf-8"))
-    runs = run_payload.get("workflow_runs", run_payload if isinstance(run_payload, list) else [])
+    runs = normalize_runs_payload(run_payload)
     plan = dispatch_candidates(snapshot, runs, max_dispatches=max(1, args.max_dispatches))
     if not args.dry_run:
         plan = run_dispatches(plan, args.repo)
