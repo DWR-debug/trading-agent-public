@@ -181,6 +181,22 @@
   },
   "rolling_capacity_wave_control": {
     "status": "ACTIVE",
+    "six_lane_target": {
+      "status": "PERMANENT",
+      "active_research_capacity_lanes_target": 6,
+      "planned_future_research_jobs_minimum": 6,
+      "definition": "Six independent execution lanes should be occupied whenever six safe independent bounded workpacks can be executed; at least six real next-gate jobs remain planned behind them.",
+      "lease_aware": true,
+      "multi_resource_runs_count_by_consumed_capacity_lanes": true,
+      "exceptions": [
+        "no independent useful bounded work exists",
+        "scientific prerequisite genuinely blocked",
+        "hard resource/quota/platform constraint",
+        "higher-priority multi-resource lease consumes the relevant capacity"
+      ],
+      "padding_forbidden": true,
+      "scientific_authority_unchanged": true
+    },
     "contract_path": "research/run_requests/rolling_capacity_window_2026-10-05.json",
     "workflow": ".github/workflows/capacity-saturation-rolling-waves.yml",
     "scheduler_cadence": "every_10_minutes",
