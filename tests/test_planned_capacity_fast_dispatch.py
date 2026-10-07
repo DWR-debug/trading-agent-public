@@ -21,6 +21,17 @@ def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backsto
     assert "workflow_run:" not in monitor_b
 
 
+def test_fast_dispatch_normalizes_list_run_payload():
+    from automation.planned_capacity_fast_dispatch import normalize_runs_payload
+
+    payload = [
+        {"id": 123, "status": "in_progress", "name": "Q218"},
+        "ignore-non-dict",
+        {"id": 124, "status": "completed", "conclusion": "success", "name": "Q220"},
+    ]
+    assert normalize_runs_payload(payload) == [payload[0], payload[2]]
+
+
 def test_fast_dispatch_zero_active_starts_top4_once_and_ai_when_free():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
 
