@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T03:25:18.446414+00:00",
+    "generated_at_utc": "2026-10-07T04:53:19.460347+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "a1e8dd7e539a0053e5662191db43a3bdc6fc8e49"
+    "source_master_sha": "35fd633f99a83232decbfd198e62b7413fa0e62d"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1517,6 +1517,18 @@
           "lane": "lane0",
           "request_file": "agent_requests/lane0/AGENT-027.request",
           "task_id": "AGENT-027"
+        },
+        {
+          "issue_number": "1155",
+          "lane": "lane1",
+          "request_file": "agent_requests/lane1/AGENT-028.request",
+          "task_id": "AGENT-028"
+        },
+        {
+          "issue_number": "1156",
+          "lane": "lane1",
+          "request_file": "agent_requests/lane1/AGENT-029.request",
+          "task_id": "AGENT-029"
         }
       ],
       "local_ai_smoke_after_research_lanes": true,
@@ -1793,7 +1805,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T03:25:18.446414+00:00",
+  "generated_at_utc": "2026-10-07T04:53:19.460347+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4484,11 +4496,31 @@
         "lane": "lane0",
         "request_file": "agent_requests/lane0/AGENT-027.request",
         "task_id": "AGENT-027"
+      },
+      {
+        "issue_number": "1155",
+        "lane": "lane1",
+        "request_file": "agent_requests/lane1/AGENT-028.request",
+        "task_id": "AGENT-028"
+      },
+      {
+        "issue_number": "1156",
+        "lane": "lane1",
+        "request_file": "agent_requests/lane1/AGENT-029.request",
+        "task_id": "AGENT-029"
       }
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
     "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "research/q219-dolthub-bounded-history-20261007",
+        "number": 1154,
+        "title": "RESEARCH: make Q219 DoltHub PIT gate bounded",
+        "updatedAt": "2026-10-07T04:49:35Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1154"
+      },
       {
         "baseRefName": "master",
         "headRefName": "ops/q220-windows-publish-current-20261006",
@@ -4508,6 +4540,26 @@
     ],
     "recent_commits": [
       {
+        "message": "RESEARCH: queue Q238 inventor mobility source PIT gate",
+        "sha": "35fd633f99a83232decbfd198e62b7413fa0e62d",
+        "timestamp": "2026-10-07T06:53:07+02:00"
+      },
+      {
+        "message": "RESEARCH: queue Q237 trademark source PIT gate",
+        "sha": "24fd62e977f25b97a1d471edf3b9d49e16515f33",
+        "timestamp": "2026-10-07T06:53:05+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "96814b97b9da9344696642aec4eb9828ab8dd85f",
+        "timestamp": "2026-10-07T03:25:30Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c283cc04b5044c97ecdfad34ad9cf8b1d32ad2c0",
+        "timestamp": "2026-10-07T03:25:21Z"
+      },
+      {
         "message": "OPS: synchronize S10 phone runtime status",
         "sha": "a1e8dd7e539a0053e5662191db43a3bdc6fc8e49",
         "timestamp": "2026-10-07T02:55:04Z"
@@ -4526,26 +4578,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "35da2d7e2775fb3fcf45daa8b9616ea9a00476e6",
         "timestamp": "2026-10-07T00:08:13Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "40a0fdf1450346523988b66d7f64f83256057c58",
-        "timestamp": "2026-10-07T00:01:57Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "da5e926d32b83698f3868307458318e5cf07fd24",
-        "timestamp": "2026-10-06T23:58:54Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c4ccf00d341692cc9b57891a360d373d8adb3863",
-        "timestamp": "2026-10-06T23:50:33Z"
-      },
-      {
-        "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "3cbe94ad88bbedbb6c0003a332287d3a95f6cfee",
-        "timestamp": "2026-10-06T23:13:20Z"
       }
     ]
   },
@@ -4643,7 +4675,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a1e8dd7e539a0053e5662191db43a3bdc6fc8e49",
+  "source_master_sha": "35fd633f99a83232decbfd198e62b7413fa0e62d",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4757,6 +4789,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37566645306"
+    "run_id": "37573600619"
   }
 }
