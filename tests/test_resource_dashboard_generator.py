@@ -57,10 +57,33 @@ def test_dashboard_capacity_state_is_explicit():
 
     physical = {"type":"physical"}
     cloud = {"type":"cloud"}
-    assert capacity_state(physical, {"status":"online","busy":True}, []) == "operating"
+    assert capacity_state(physical, {"status":"online","busy":True}, []) == "available"
+    assert capacity_state(physical, {"status":"online","busy":True}, [{"lane":"FRONTIER DISCOVERY"}]) == "operating"
     assert capacity_state(physical, {"status":"online","busy":False}, []) == "available"
     assert capacity_state(physical, None, []) == "unknown"
     assert capacity_state(cloud, None, []) == "available"
+
+
+def test_dashboard_runner_busy_does_not_inflate_research_work():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    enriched = enrich_resources(
+        [resource],
+        [{"name": "runner-a", "status": "online", "busy": True, "labels": []}],
+        [],
+    )[0]
+    assert enriched["capacity_state"] == "available"
+    assert enriched["current_assignments"] == 0
+    assert enriched["runner_busy"] is True
+    assert enriched["research_slots_in_use"] == 1
+    assert enriched["research_slots_free"] == 0
 
 
 def test_dashboard_filters_platform_work_from_research_capacity():
