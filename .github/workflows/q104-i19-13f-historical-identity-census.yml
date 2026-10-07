@@ -228,3 +228,11 @@ jobs:
           done
           exit 1
 
+
+
+  completion_relay:
+    if: ${{ always() && github.repository == 'DWR-debug/trading-agent-public' }}
+    needs: [merge]
+    uses: ./.github/workflows/research-completion-relay.yml
+    with:
+      source_workflow: "Q104 I19 Historical 13F Identity Census"

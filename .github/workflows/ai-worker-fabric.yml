@@ -601,3 +601,11 @@ jobs:
           path: "$RUNNER_TEMP/ai-worker-output/"
           if-no-files-found: warn
           retention-days: 14
+
+
+  completion_relay:
+    if: ${{ always() && github.repository == 'DWR-debug/trading-agent-public' }}
+    needs: [plan_openrouter, worker, gemini_worker, mistral_worker]
+    uses: ./.github/workflows/research-completion-relay.yml
+    with:
+      source_workflow: "Free AI Worker Fabric"

@@ -1,0 +1,32 @@
+name: Research Completion Relay
+
+on:
+  workflow_call:
+    inputs:
+      source_workflow:
+        description: "Parent research workflow that has finished its substantive jobs"
+        required: false
+        type: string
+        default: "research workflow"
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  relay:
+    if: ${{ github.repository == 'DWR-debug/trading-agent-public' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Wake bounded capacity dispatcher
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "RESEARCH_COMPLETION_RELAY_SOURCE=${{ inputs.source_workflow }}"
+          echo "RESEARCH_COMPLETION_RELAY_RUN=${{ github.run_id }}"
+          gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master
+          echo "CAPACITY_DISPATCH_RELAY=SUCCESS"

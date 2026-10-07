@@ -123,3 +123,11 @@ jobs:
           path: research/runs/top4/${{ inputs.candidate }}/${{ github.run_id }}/
           if-no-files-found: warn
           retention-days: 30
+
+
+  completion_relay:
+    if: ${{ always() && github.repository == 'DWR-debug/trading-agent-public' }}
+    needs: [windows, ubuntu_x64, ubuntu_arm64]
+    uses: ./.github/workflows/research-completion-relay.yml
+    with:
+      source_workflow: "Top-4 Candidate Slot Research"
