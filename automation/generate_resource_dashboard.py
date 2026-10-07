@@ -493,7 +493,14 @@ def expanded_candidate_board(
 
 
 def capacity_state(resource: dict[str, Any], runner: dict[str, Any] | None, assignments: list[dict[str, Any]]) -> str:
-    if assignments or (runner and runner.get("busy")):
+    """Report research occupancy only; runner busy-state is exposed separately.
+
+    A busy self-hosted runner can be executing non-research/platform work or a
+    research job that the current work snapshot did not classify. It must never
+    inflate the visible research-job count or turn a zero-job resource into
+    "ARBEITET".
+    """
+    if assignments:
         return "operating"
     if runner and str(runner.get("status")).lower() == "online":
         return "available"
@@ -514,7 +521,11 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             if str(w.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"}
         ]
         runner = runner_by_name.get(resource["configured_runner"])
-        state = capacity_state(resource, runner, assignments)
+        state = capacity_state(resource, runner, research_assignments)
+        runner_busy = bool(runner and runner.get("busy"))
+        capacity_slots = max(1, int(resource.get("research_capacity_slots", 1) or 1))
+        physical_in_use = 1 if resource.get("type") == "physical" and runner_busy else 0
+        research_slots_in_use = min(capacity_slots, max(len(research_assignments), physical_in_use))
         if state == "operating":
             live_status = "operating"
         elif state == "available":
@@ -526,12 +537,14 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "capacity_state": state,
             "live_status": live_status,
             "busy": state == "operating",
+            "runner_busy": runner_busy,
+            "runner_status": runner.get("status") if runner else None,
             "labels": runner.get("labels", []) if runner else [],
             "current_assignments": len(research_assignments),
             "total_active_assignments": len(assignments),
-            "research_capacity_slots": max(1, int(resource.get("research_capacity_slots", 1) or 1)),
-            "research_slots_in_use": min(len(research_assignments), max(1, int(resource.get("research_capacity_slots", 1) or 1))),
-            "research_slots_free": max(0, max(1, int(resource.get("research_capacity_slots", 1) or 1)) - len(research_assignments)),
+            "research_capacity_slots": capacity_slots,
+            "research_slots_in_use": research_slots_in_use,
+            "research_slots_free": max(0, capacity_slots - research_slots_in_use),
             "current_tasks": [w.get("task") for w in assignments[:4]],
         })
     return out
