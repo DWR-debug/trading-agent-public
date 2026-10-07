@@ -120,3 +120,44 @@ def test_q218_uses_acceptance_interval_when_report_dates_differ(tmp_path, monkey
     assert aapl["event_pairs"][0]["pairing_lower_bound_acceptance"] is None
     assert aapl["event_pairs"][0]["acceptance_order_valid"] is True
     assert aapl["all_pairing_valid"] is True
+
+
+def test_q218_fetch_retries_transient_timeout_then_succeeds(monkeypatch):
+    calls = []
+    sleeps = []
+
+    class Response:
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            return False
+        def read(self):
+            return b"ok"
+
+    def fake_urlopen(req, timeout):
+        calls.append(timeout)
+        if len(calls) < 3:
+            raise TimeoutError("temporary SEC timeout")
+        return Response()
+
+    monkeypatch.setattr(gate.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(gate.time, "sleep", sleeps.append)
+
+    assert gate.fetch("https://example.invalid") == b"ok"
+    assert calls == [30, 30, 30]
+    assert sleeps == [2, 4]
+
+
+def test_q218_fetch_does_not_retry_non_transient_http_error(monkeypatch):
+    import pytest
+
+    def fake_urlopen(req, timeout):
+        raise gate.urllib.error.HTTPError(
+            req.full_url, 404, "not found", hdrs=None, fp=None
+        )
+
+    monkeypatch.setattr(gate.urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(gate.urllib.error.HTTPError) as exc:
+        gate.fetch("https://example.invalid")
+    assert exc.value.code == 404
