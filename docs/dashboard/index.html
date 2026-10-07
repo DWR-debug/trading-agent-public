@@ -64,11 +64,16 @@
     .rowtitle{font-weight:650}
     .small{font-size:12px}
     .empty{padding:16px;border:1px dashed var(--border);border-radius:10px;color:var(--muted)}
+    .workboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+    .workboard .metric{border:1px solid var(--border);border-radius:10px;padding:12px;background:color-mix(in srgb,Canvas 98%,CanvasText 2%)}
+    .metric .label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+    .metric .value{font-size:20px;font-weight:750;margin-top:3px;font-variant-numeric:tabular-nums}
+    .workboard-note{margin-top:8px;color:var(--muted);font-size:12px}
     .error{border:1px solid var(--operating);border-radius:10px;padding:12px;margin-top:16px}
     footer{margin-top:18px;font-size:12px}
     code{word-break:break-all}
-    @media(max-width:1100px){.capacity-grid{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:700px){.capacity-grid{grid-template-columns:1fr}.grid{display:block}.card{margin-bottom:14px}}
+    @media(max-width:1100px){.capacity-grid{grid-template-columns:repeat(3,1fr)}.workboard{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:700px){.capacity-grid{grid-template-columns:1fr}.workboard{grid-template-columns:1fr}.grid{display:block}.card{margin-bottom:14px}}
   </style>
 </head>
 <body>
@@ -129,7 +134,9 @@
     </article>
 
     <article class="card">
-      <h2>Aktive Jobs</h2>
+      <h2>Arbeitsübersicht</h2>
+      <div id="workboardSummary" class="workboard"></div>
+      <div class="workboard-note">„Wer“ = tatsächlich zugeordneter Runner. „Für wen“ = Candidate/Pipeline-Ziel. Dauerangaben sind historische Schätzungen; P90 und Stichprobengröße werden separat gezeigt.</div>
       <div id="work"></div>
     </article>
 
@@ -153,6 +160,12 @@
     <article class="card">
       <h2>Forschungspipeline</h2>
       <div id="pipeline"></div>
+    </article>
+
+    <article class="card">
+      <h2>Offene PRs</h2>
+      <div class="small muted">Technische Änderungen und Forschungs-/Orchestrierungsarbeiten, die noch nicht in <code>master</code> enthalten sind.</div>
+      <div id="prs"></div>
     </article>
 
     <article class="card">
