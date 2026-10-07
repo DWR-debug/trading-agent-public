@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-from automation.q219_dolthub_historical_pit_gate import TARGET_DATE, TARGET_SYMBOLS, API_BASE, HEAD_LOG_LIMIT
+from automation.q219_dolthub_historical_pit_gate import TARGET_DATE, TARGET_SYMBOLS, API_BASE, HEAD_LOG_LIMIT, BOUNDED_HISTORY_SCAN_LIMIT
 
 ROOT = Path(__file__).parents[1]
 
@@ -38,3 +38,11 @@ def test_q219_pit_snapshots_prefer_pre_target_commit():
     gate = (ROOT / 'automation/q219_dolthub_historical_pit_gate.py').read_text(encoding='utf-8')
     assert 'chosen.append(prior_commit)' in gate
     assert 'str(row.get("commit_hash")) != str(prior_commit.get("commit_hash"))' in gate
+
+
+def test_q219_history_scan_is_bounded_and_filtered_in_memory():
+    gate = (ROOT / 'automation/q219_dolthub_historical_pit_gate.py').read_text(encoding='utf-8')
+    assert 'LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}' in gate
+    assert 'WHERE message LIKE' not in gate
+    assert 'summary_query = ' not in gate
+    assert BOUNDED_HISTORY_SCAN_LIMIT >= HEAD_LOG_LIMIT

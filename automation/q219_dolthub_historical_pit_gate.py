@@ -19,6 +19,7 @@ API_BASE = "https://www.dolthub.com/api/v1alpha1/post-no-preference/options/mast
 TARGET_DATE = "2025-08-01"
 TARGET_SYMBOLS = ["AAPL", "AMZN", "DIS", "JPM", "MSFT", "NVDA", "WMT", "XOM"]
 HEAD_LOG_LIMIT = 50
+BOUNDED_HISTORY_SCAN_LIMIT = 200
 UA = "TradingAgent-Public-Q219-DoltHub-PIT-Gate/1.0"
 
 
@@ -52,23 +53,20 @@ def run(output: Path) -> dict:
     history_query = f"""
 SELECT commit_hash, date, message
 FROM DOLT_LOG()
-WHERE message LIKE 'option_chain % update'
 ORDER BY date DESC
-LIMIT {HEAD_LOG_LIMIT}
+LIMIT {BOUNDED_HISTORY_SCAN_LIMIT}
 """.strip()
-    summary_query = """
-SELECT MIN(date) AS earliest_commit_date,
-       MAX(date) AS latest_commit_date,
-       COUNT(*) AS commit_count
-FROM DOLT_LOG()
-""".strip()
-    head = fetch_sql(history_query)
-    summary = fetch_sql(summary_query)
-    history_rows = head.get("rows") or []
-    summary_rows = summary.get("rows") or []
-    earliest = summary_rows[0].get("earliest_commit_date") if summary_rows else None
-    latest = summary_rows[0].get("latest_commit_date") if summary_rows else None
-    commit_count = int(summary_rows[0].get("commit_count") or 0) if summary_rows else 0
+    history_payload = fetch_sql(history_query)
+    scanned_rows = history_payload.get("rows") or []
+    history_rows = [
+        row for row in scanned_rows
+        if "option_chain " in str(row.get("message") or "")
+        and str(row.get("message") or "").endswith("update")
+    ][:HEAD_LOG_LIMIT]
+    bounded_dates = [str(row.get("date")) for row in scanned_rows if row.get("date")]
+    earliest = min(bounded_dates) if bounded_dates else None
+    latest = max(bounded_dates) if bounded_dates else None
+    commit_count = len(scanned_rows)
 
     prior_query = (
         "SELECT commit_hash, date, message FROM DOLT_LOG() "
@@ -134,9 +132,10 @@ FROM DOLT_LOG()
         "history": {
             "earliest_commit_date": earliest,
             "latest_commit_date": latest,
-            "commit_count": commit_count,
+            "commit_count_bounded_scan": commit_count,
             "option_chain_update_commits_observed": len(history_rows),
             "commit_log_query": history_query,
+            "bounded_scan_limit": BOUNDED_HISTORY_SCAN_LIMIT,
             "prior_commit_query": prior_query,
         },
         "historical_pit": {
