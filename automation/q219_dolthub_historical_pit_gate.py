@@ -87,6 +87,7 @@ ORDER BY date DESC
 LIMIT __HISTORY_LIMIT__
 """.strip()
     history_payload, history_scan_limit_used = fetch_history_sql(history_query)
+    effective_history_query = history_query.replace("__HISTORY_LIMIT__", str(history_scan_limit_used))
     scanned_rows = history_payload.get("rows") or []
     history_rows = [
         row for row in scanned_rows
@@ -171,7 +172,7 @@ LIMIT __HISTORY_LIMIT__
             "latest_commit_date": latest,
             "commit_count_bounded_scan": commit_count,
             "option_chain_update_commits_observed": len(history_rows),
-            "commit_log_query": history_query,
+            "commit_log_query": effective_history_query,
             "bounded_scan_limit": BOUNDED_HISTORY_SCAN_LIMIT,
             "history_scan_limit_used": history_scan_limit_used,
             "history_scan_fallback_limits": list(HISTORY_SCAN_FALLBACK_LIMITS),
