@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T09:19:39.536341+00:00",
+    "generated_at_utc": "2026-10-07T09:33:44.374450+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "e7fdf1721fff59ce5732fc5d56d313c6130172d4"
+    "source_master_sha": "7d809d8114bf67a8fc6288e22910d71dfde88961"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1754,26 +1754,26 @@
     },
     "s10_phone": {
       "acceptance_receipt_sha256": "2e40b9d37bf0fbd22bd752fffdaceb0f7ad955e7df1070d0793acbe77c77796d",
-      "artifact_id": "11458605921",
+      "artifact_id": "11471513666",
       "availability_policy": "ASSUMED_ALWAYS_AVAILABLE",
       "candidate_ranking": false,
       "candidate_selection": false,
       "current_online": null,
       "current_online_verification": "NOT_PERFORMED",
-      "eligibility_basis": "completed_workflow_acceptance_receipt",
+      "eligibility_basis": "fresh_successful_utility_receipt",
       "eligible": true,
       "orchestration_available": true,
       "performance_authorization": false,
-      "presence_signal": "stale_or_unverified_receipt",
-      "presence_signal_fresh": false,
+      "presence_signal": "fresh_successful_s10_run",
+      "presence_signal_fresh": true,
       "promotion": false,
       "receipt_eligible": false,
       "receipt_status": "S10_UTILITY_ACCEPTED",
       "routing_uses_presence_receipt": false,
       "scientific_evidence": false,
-      "source_commit": "bda05640ff3d3ff9c9d550479be59c4eb6c6ca05",
+      "source_commit": "e67fe351f1a5f363123aa654e29c59126fdc57f7",
       "status": "S10_UTILITY_ACCEPTED",
-      "workflow_run_id": "37562088101"
+      "workflow_run_id": "37599086433"
     },
     "scientific_compute": {
       "canonical_path": "GitHub-hosted deterministic workflows",
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T09:19:39.536341+00:00",
+  "generated_at_utc": "2026-10-07T09:33:44.374450+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4524,14 +4524,6 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "fix/q218-deterministic-cycle-pairing-20261007",
-        "number": 1172,
-        "title": "FIX: align Q218 event pairing with SEC reporting cycles",
-        "updatedAt": "2026-10-07T09:18:11Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1172"
-      },
-      {
-        "baseRefName": "master",
         "headRefName": "fix/dashboard-runner-api-status-token-20261007",
         "number": 1171,
         "title": "FEAT: enable live self-hosted runner telemetry in dashboard",
@@ -4557,6 +4549,36 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: align Q218 event pairing with SEC reporting cycles (#1172)",
+        "sha": "7d809d8114bf67a8fc6288e22910d71dfde88961",
+        "timestamp": "2026-10-07T11:33:30+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "d735dbdb9f42b4b8f0002ad04fc24fc7645fdebf",
+        "timestamp": "2026-10-07T09:32:31Z"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "336c93d2191f4856713abc815e3533df9430626b",
+        "timestamp": "2026-10-07T09:32:14Z"
+      },
+      {
+        "message": "OPS: synchronize S10 phone runtime status",
+        "sha": "507288227cf8fa23f1bd1f2a02c3c441c5ab6509",
+        "timestamp": "2026-10-07T09:20:33Z"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "24b3b95e6871129838b35f35ecd2fc387ae5928a",
+        "timestamp": "2026-10-07T09:19:54Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2dd9e7683585dd4b7ceb541c10dbb1bf1a8230eb",
+        "timestamp": "2026-10-07T09:19:43Z"
+      },
+      {
         "message": "Merge pull request #1173 from DWR-debug/fix/q219-dolthub-timeout-retry-20261007",
         "sha": "e7fdf1721fff59ce5732fc5d56d313c6130172d4",
         "timestamp": "2026-10-07T11:19:26+02:00"
@@ -4565,36 +4587,6 @@
         "message": "TEST: enforce bounded DoltHub transient retry",
         "sha": "713ece66e8dbbe4a3b8c7231cb2ef6936e966615",
         "timestamp": "2026-10-07T11:16:28+02:00"
-      },
-      {
-        "message": "FIX: add bounded retry for transient DoltHub deadlines",
-        "sha": "d3e8915b6932c725ba514d7298c156a5f772615d",
-        "timestamp": "2026-10-07T11:16:20+02:00"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "e67fe351f1a5f363123aa654e29c59126fdc57f7",
-        "timestamp": "2026-10-07T09:10:30Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "f20be9151f89217a52172c53c3852a2eca3f1d82",
-        "timestamp": "2026-10-07T08:32:55Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "03d62b8cdd5572756066bba4615906d27d7824ef",
-        "timestamp": "2026-10-07T08:32:31Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "88e03d8f34a98b4b170d489dd5ba7cbc22f2001c",
-        "timestamp": "2026-10-07T08:32:24Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "a098feadcf07d13bbd8e658160ea80bced964ebe",
-        "timestamp": "2026-10-07T08:30:25Z"
       }
     ]
   },
@@ -4692,7 +4684,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e7fdf1721fff59ce5732fc5d56d313c6130172d4",
+  "source_master_sha": "7d809d8114bf67a8fc6288e22910d71dfde88961",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4806,6 +4798,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37599818881"
+    "run_id": "37601442497"
   }
 }
