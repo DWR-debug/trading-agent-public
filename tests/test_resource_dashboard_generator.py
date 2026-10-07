@@ -156,6 +156,14 @@ def test_dashboard_exposes_bounded_hosted_research_slots():
     assert '"research_capacity_slots_free"' in generator
 
 
+def test_candidate_progress_percentages_are_deterministic():
+    from automation.generate_resource_dashboard import candidate_overall_progress
+    assert candidate_overall_progress("DESIGN_ONLY_ACTIVE")[0] == 17
+    assert candidate_overall_progress("SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED")[0] == 33
+    assert candidate_overall_progress("PIT_COMPLETED_NO_PERFORMANCE")[0] == 67
+    assert candidate_overall_progress("unknown_state")[0] == 0
+
+
 def test_dashboard_tracks_q219_in_top4_candidate_capacity():
     from automation.generate_resource_dashboard import candidate_pipeline
     top4 = [{"code": "Q219", "state": "DESIGN_ONLY_ACTIVE"}]
