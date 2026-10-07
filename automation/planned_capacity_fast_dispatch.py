@@ -279,6 +279,14 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_FOCUS_LOCK"})
             continue
 
+        if (
+            not focus_candidates
+            and workflow.endswith("top4-candidate-research-capacity.yml")
+            and top4_candidate_active
+        ):
+            decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_TOP4_ACTIVE_OR_DUPLICATE"})
+            continue
+
         if workflow == SLOT_SCOPED_WORKFLOW:
             resource_input = {
                 "Windows self-hosted A": "windows",
