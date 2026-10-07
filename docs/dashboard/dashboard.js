@@ -85,6 +85,8 @@ function render(data){
     var dispatchableCount=plannedItems.filter(function(p){return p.scheduled && p.dispatchable;}).length;
     var activeResearch=Number(x.current_assignments||0);
     var runnerBusy=Boolean(x.runner_busy);
+    var runnerOnline=String(x.runner_status||"").toLowerCase()==="online";
+    var runnerVerified=x.type!=="physical" || x.runner_status!=null;
     var cls=capacityClass(x);
     var state;
     if(activeResearch>0){
@@ -92,7 +94,8 @@ function render(data){
     }else if(runnerBusy){
       cls="unknown"; state="RUNNER BESETZT";
     }else if(dispatchableCount>0){
-      cls="planned"; state="AUTO-DISPATCH BEREIT";
+      cls="planned";
+      state=(x.type==="physical" && (!runnerOnline || !runnerVerified)) ? "AUTO-DISPATCH GEPLANT" : "AUTO-DISPATCH BEREIT";
     }else if(cls==="available"){
       state="VERFÜGBAR";
     }else{
