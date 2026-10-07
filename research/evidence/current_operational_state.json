@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-07T10:40:53.064218+00:00",
+    "generated_at_utc": "2026-10-07T10:51:43.300671+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "7735c68c5c05fcd54121935bef07c73197600a9b"
+    "source_master_sha": "436adc5ad21d51810734f7f25207af6a288e0d90"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-07T10:40:53.064218+00:00",
+  "generated_at_utc": "2026-10-07T10:51:43.300671+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4524,6 +4524,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "opt/q219-dolthub-log-fastpath-20261007",
+        "number": 1179,
+        "title": "OPT: accelerate Q219 DoltHub historical PIT query",
+        "updatedAt": "2026-10-07T10:50:31Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1179"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/top4-freeze-latest-master-20261007",
         "number": 1174,
         "title": "FIX: freeze Top-4 research cohorts to latest master",
@@ -4557,6 +4565,26 @@
     ],
     "recent_commits": [
       {
+        "message": "ORCH: prefer hosted capacity before uncertain self-hosted routing",
+        "sha": "436adc5ad21d51810734f7f25207af6a288e0d90",
+        "timestamp": "2026-10-07T12:51:30+02:00"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "d072313504d370591ce2c24c563124ac8b220379",
+        "timestamp": "2026-10-07T10:46:11Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "ab61652c3a270f4befaf1250fb1b25a85ef7565b",
+        "timestamp": "2026-10-07T10:41:07Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3b3c72d2f955210e35e11d35be743a25fd21ffa3",
+        "timestamp": "2026-10-07T10:40:57Z"
+      },
+      {
         "message": "FIX: restore Windows slot execution and continuous capacity replenishment",
         "sha": "7735c68c5c05fcd54121935bef07c73197600a9b",
         "timestamp": "2026-10-07T12:40:37+02:00"
@@ -4575,26 +4603,6 @@
         "message": "FIX: install orchestrator test dependencies",
         "sha": "839f56abc22245cdaac71cc349f4091106c480d9",
         "timestamp": "2026-10-07T12:38:15+02:00"
-      },
-      {
-        "message": "TEST: align Q219 routing assertion with slot workflow",
-        "sha": "dc9490046b3ad24b391f5722158956ca4dd9af68",
-        "timestamp": "2026-10-07T12:38:10+02:00"
-      },
-      {
-        "message": "FIX: avoid setup-python on policy-constrained Windows slots",
-        "sha": "76c0acd6db4926b8772a7cebe69c2f2e199625b4",
-        "timestamp": "2026-10-07T12:38:07+02:00"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "4e546de8d8ec378197dfc25681ae67d0728c354d",
-        "timestamp": "2026-10-07T10:33:17Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "ba4ffe466338eff72cb63e03fc8ac3c767c50739",
-        "timestamp": "2026-10-07T10:30:54Z"
       }
     ]
   },
@@ -4692,7 +4700,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7735c68c5c05fcd54121935bef07c73197600a9b",
+  "source_master_sha": "436adc5ad21d51810734f7f25207af6a288e0d90",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4806,6 +4814,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37608980219"
+    "run_id": "37610162313"
   }
 }
