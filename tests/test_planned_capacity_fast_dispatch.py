@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+from datetime import datetime, timezone
 
 ROOT = Path(__file__).parents[1]
 
@@ -144,7 +145,7 @@ def test_fast_dispatch_skips_recent_success_on_same_master_sha():
         "status": "completed",
         "conclusion": "success",
         "head_sha": "abc123",
-        "created_at": "2099-10-07T08:00:00Z",
+        "created_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     }]
     plan = dispatch_candidates(snapshot, runs, max_dispatches=4)
     assert plan["dispatches"] == []
