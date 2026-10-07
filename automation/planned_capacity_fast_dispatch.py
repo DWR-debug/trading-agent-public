@@ -211,7 +211,8 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             if not item.get("dispatchable"):
                 continue
             candidate = str(item.get("candidate") or "")
-            if candidate not in FOCUS_CANDIDATES:
+            focus_candidates = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
+            if focus_candidates and candidate not in focus_candidates:
                 continue
             workflow = item.get("execution_workflow")
             if not workflow:
@@ -273,7 +274,8 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             continue
 
         # Automatic candidate execution is hard-locked to the focused pair.
-        if candidate not in FOCUS_CANDIDATES:
+        focus_candidates = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
+        if focus_candidates and candidate not in focus_candidates:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_FOCUS_LOCK"})
             continue
 
