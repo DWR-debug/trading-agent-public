@@ -284,8 +284,15 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                 "GitHub-hosted Ubuntu x64": "ubuntu_x64",
                 "GitHub-hosted ARM64": "ubuntu_arm64",
             }.get(resource)
+            slot_inputs = dict(item.get("execution_workflow_inputs") or {})
+            focus_wave = bool(slot_inputs.get("focus_wave"))
+            gate = str(slot_inputs.get("gate") or "all")
             scope = (resource_input, candidate) if resource_input else None
-            if scope and scope in active_slot_scopes:
+            focused_active_scope = (resource_input, candidate, gate) if resource_input else None
+            if focused_active_scope and focused_active_scope in active_slot_scopes:
+                decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_FOCUSED_GATE_ACTIVE_OR_DUPLICATE"})
+                continue
+            if scope and scope in active_slot_scopes and not focus_wave:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ACTIVE_OR_DUPLICATE"})
                 continue
 
@@ -297,7 +304,8 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         if resource in leased_resources:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_RESOURCE_RESERVED_BY_MULTI_RESOURCE_RUN"})
             continue
-        dispatch_key = (workflow, candidate, resource) if workflow == SLOT_SCOPED_WORKFLOW else (workflow, "", "")
+        dispatch_gate = str((item.get("execution_workflow_inputs") or {}).get("gate") or "all")
+        dispatch_key = (workflow, candidate, resource, dispatch_gate) if workflow == SLOT_SCOPED_WORKFLOW else (workflow, "", "", "")
         if workflow != SLOT_SCOPED_WORKFLOW:
             failures = workflow_failure_streak.get(workflow, workflow_failure_streak.get(workflow.rsplit("/", 1)[-1], 0))
             if failures >= 2:
@@ -308,7 +316,8 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         if workflow == SLOT_SCOPED_WORKFLOW:
             resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
             scope = (resource_input, candidate) if resource_input else None
-            if scope and scope in completed_slots:
+            focus_wave = bool((item.get("execution_workflow_inputs") or {}).get("focus_wave"))
+            if scope and scope in completed_slots and not focus_wave:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ALREADY_COMPLETED"})
                 fallback = top4_slot_fallback(
                     resource,
@@ -321,7 +330,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                 )
                 if fallback and len(dispatches) < max_dispatches:
                     fallback_scope = (resource_input, fallback)
-                    dispatch_key = (workflow, fallback, resource)
+                    dispatch_key = (workflow, fallback, resource, str((item.get("execution_workflow_inputs") or {}).get("gate") or "all"))
                     if dispatch_key not in seen_dispatch_keys and fallback_scope not in completed_slots and failure_counts.get(fallback_scope, 0) < 2:
                         inputs = dict(item.get("execution_workflow_inputs") or {})
                         inputs.update({"candidate": fallback, "resource": resource_input})
@@ -342,7 +351,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                             "mode": "FILL_FREE_READY_CAPACITY",
                         })
                 continue
-            failures = failure_counts.get(scope, 0) if scope else 0
+            failures = (failure_counts.get(scope, 0) if scope else 0) if not focus_wave else 0
             if failures >= 2:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_RETRY_EXHAUSTED"})
                 fallback = top4_slot_fallback(
@@ -356,7 +365,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                 )
                 if fallback and len(dispatches) < max_dispatches and scope:
                     fallback_scope = (resource_input, fallback)
-                    dispatch_key = (workflow, fallback, resource)
+                    dispatch_key = (workflow, fallback, resource, str((item.get("execution_workflow_inputs") or {}).get("gate") or "all"))
                     if (
                         dispatch_key not in seen_dispatch_keys
                         and fallback_scope not in completed_slots
