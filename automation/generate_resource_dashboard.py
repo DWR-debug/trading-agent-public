@@ -612,6 +612,7 @@ def planned_capacity_plan(
     resources: list[dict[str, Any]],
     work: list[dict[str, Any]],
     top4: list[dict[str, Any]],
+    workflow_benchmarks: dict[str, dict[str, int | str]],
     job_benchmarks: dict[str, dict[str, int | str]],
     os_state: dict[str, Any],
 ) -> list[dict[str, Any]]:
@@ -805,8 +806,8 @@ def planned_capacity_plan(
             planned_for_resource = len(plans.get(resource_name, []))
             if current_assignments + planned_for_resource >= capacity_slots:
                 continue
-            benchmark = job_benchmarks.get(candidate)
-            plans[resource_name].append({
+            benchmark = benchmark_for_planned_item(item, workflow_benchmarks, job_benchmarks)
+            plans[resource_name].append({}
                 "plan_id": item["plan_id"],
                 "candidate": candidate,
                 "lane": item["lane"],
@@ -822,7 +823,10 @@ def planned_capacity_plan(
                 "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
                 "resource_leases": list(item.get("resource_leases") or []),
                 "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
+                "expected_duration_p90_seconds": int(benchmark["p90_seconds"]) if benchmark else None,
                 "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
+                "duration_source": str(benchmark["source"]) if benchmark else "no verified duration history",
+                "target_worker": resource_name,
             })
             assigned_candidates.add(candidate)
             placed = True
@@ -848,6 +852,28 @@ def planned_capacity_plan(
             "expected_duration_seconds": None,
             "duration_sample_count": 0,
         })
+
+    eta_now = datetime.now(timezone.utc)
+    active_remaining_by_resource: dict[str, int] = {}
+    for current in work:
+        resource_name = str(current.get("resource") or "")
+        active_remaining = current.get("remaining_seconds")
+        if resource_name and active_remaining is not None:
+            active_remaining_by_resource[resource_name] = max(active_remaining_by_resource.get(resource_name, 0), int(active_remaining))
+    for resource_name, items in plans.items():
+        cursor = eta_now + timedelta(seconds=active_remaining_by_resource.get(resource_name, 0))
+        for item in items:
+            if not item.get("scheduled"):
+                item["expected_start_at"] = None
+                item["expected_finish_at"] = None
+                continue
+            duration = item.get("expected_duration_seconds")
+            item["expected_start_at"] = cursor.isoformat()
+            if duration is not None:
+                cursor = cursor + timedelta(seconds=int(duration))
+                item["expected_finish_at"] = cursor.isoformat()
+            else:
+                item["expected_finish_at"] = None
 
     rows=[]
     for resource in resources:
