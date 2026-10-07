@@ -245,7 +245,9 @@ def jobs_for_run(run_id: int) -> list[dict[str, Any]]:
     return [x for x in data.get("jobs", []) if isinstance(x, dict)]
 
 
-def infer_lane(workflow: str, job: str = "") -> str:
+def infer_lane(workflow: str, job: str = "", event: str | None = None) -> str:
+    if str(event or "").lower() == "pull_request":
+        return "VALIDATION / CI"
     text = f"{workflow} {job}".lower()
     if any(k in text for k in ("q104", "q121", "formal readiness", "authorization readiness")):
         return "FORMAL READINESS"
@@ -318,7 +320,7 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
             jobs = [j for j in jobs if j.get("status") in {"queued", "in_progress", "waiting", "pending"}]
             for job in jobs:
                 job_name = str(job.get("name") or "")
-                lane = infer_lane(workflow, job_name)
+                lane = infer_lane(workflow, job_name, run.get("event"))
                 if lane == "PLATFORM / GOVERNANCE":
                     continue
                 out.append({
@@ -335,7 +337,7 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     "authority": "non-authorizing operational work",
                 })
         else:
-            lane = infer_lane(workflow)
+            lane = infer_lane(workflow, "", run.get("event"))
             if lane == "PLATFORM / GOVERNANCE":
                 continue
             out.append({
@@ -389,6 +391,8 @@ def candidate_pipeline(
     result = []
     active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in ("Q104:I19", "Q218", "Q219", "Q220", "Q221")}
     for item in work:
+        if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
+            continue
         text_value = f"{item.get('task', '')} {item.get('job', '')}"
         for candidate in active_by_candidate:
             if candidate in text_value:
@@ -496,6 +500,10 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
     runner_by_name = {str(r.get("name")): r for r in runners}
     for resource in configured:
         assignments = [w for w in work if w.get("resource") == resource["name"]]
+        research_assignments = [
+            w for w in assignments
+            if str(w.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"}
+        ]
         runner = runner_by_name.get(resource["configured_runner"])
         state = capacity_state(resource, runner, assignments)
         if state == "operating":
@@ -510,10 +518,11 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "live_status": live_status,
             "busy": state == "operating",
             "labels": runner.get("labels", []) if runner else [],
-            "current_assignments": len(assignments),
+            "current_assignments": len(research_assignments),
+            "total_active_assignments": len(assignments),
             "research_capacity_slots": max(1, int(resource.get("research_capacity_slots", 1) or 1)),
-            "research_slots_in_use": min(len(assignments), max(1, int(resource.get("research_capacity_slots", 1) or 1))),
-            "research_slots_free": max(0, max(1, int(resource.get("research_capacity_slots", 1) or 1)) - len(assignments)),
+            "research_slots_in_use": min(len(research_assignments), max(1, int(resource.get("research_capacity_slots", 1) or 1))),
+            "research_slots_free": max(0, max(1, int(resource.get("research_capacity_slots", 1) or 1)) - len(research_assignments)),
             "current_tasks": [w.get("task") for w in assignments[:4]],
         })
     return out
