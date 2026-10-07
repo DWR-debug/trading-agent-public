@@ -81,13 +81,13 @@ def research_board(state: dict[str, Any], os_state: dict[str, Any]) -> list[dict
     return out[-40:]
 
 
-def run_cmd_json(args: list[str]) -> dict[str, Any] | list[Any] | None:
+def run_cmd_json(args: list[str], token: str | None = None) -> dict[str, Any] | list[Any] | None:
     try:
         env = os.environ.copy()
-        token = env.get("GITHUB_TOKEN") or env.get("GH_TOKEN") or ""
-        if not token:
+        selected_token = token or env.get("GITHUB_TOKEN") or env.get("GH_TOKEN") or ""
+        if not selected_token:
             return None
-        env["GH_TOKEN"] = token
+        env["GH_TOKEN"] = selected_token
         raw = subprocess.check_output(
             ["gh", "api", *args],
             cwd=ROOT,
@@ -195,7 +195,11 @@ def job_duration_benchmarks(
 
 
 def runner_snapshot() -> list[dict[str, Any]]:
-    data = run_cmd_json([f"/repos/{REPO}/actions/runners?per_page=100"])
+    # Repository runner inventory requires a token with Administration: read.
+    # Prefer an explicitly provisioned read-only token; otherwise retain the
+    # existing GITHUB_TOKEN fallback and fail closed to "unverified".
+    runner_token = os.environ.get("RUNNER_STATUS_TOKEN") or None
+    data = run_cmd_json([f"/repos/{REPO}/actions/runners?per_page=100"], token=runner_token)
     if not isinstance(data, dict):
         return []
     return [
@@ -996,6 +1000,7 @@ def main() -> None:
             "runner_api_note": "Unavailable runner inventory is shown as unverified, not as zero/offline.",
             "runner_status_ui_url": f"https://github.com/{REPO}/settings/actions/runners",
             "runner_status_api_url": f"https://api.github.com/repos/{REPO}/actions/runners",
+            "runner_status_auth_mode": "dedicated_read_only_token" if os.environ.get("RUNNER_STATUS_TOKEN") else "GITHUB_TOKEN_fallback",
             "research_tracks": len(state_board),
             "ai_providers": len(ai),
             "active_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "operating"),
