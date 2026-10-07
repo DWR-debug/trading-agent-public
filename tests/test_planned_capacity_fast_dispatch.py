@@ -584,3 +584,20 @@ def test_fast_dispatch_loads_paginated_top4_slot_history_for_retry_circuit_break
     assert 'gh api --paginate "/repos/$GITHUB_REPOSITORY/actions/workflows/top4-candidate-slot-research.yml/runs?per_page=100"' in dispatcher
     assert dispatcher.count('"$slot_history"') >= 1
     assert '<(printf' in dispatcher
+
+
+def test_dashboard_skips_current_context_completed_ai_before_filling_free_pool(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    resources = [{
+        "name": "Free AI pool", "type": "cloud", "capacity_state": "available",
+        "current_assignments": 0, "research_capacity_slots": 1,
+    }]
+    monkeypatch.setattr(
+        dashboard,
+        "ai_task_completed_with_current_context",
+        lambda task_id, root=None: task_id == "AI-2026-10-06-Q220-TOP4-ADVERSARIAL",
+    )
+    plan = dashboard.planned_capacity_plan(resources, [], [], {}, {})
+    ai = next(row for row in plan if row["resource"] == "Free AI pool")
+    assert [item["plan_id"] for item in ai["planned_assignments"]] == ["Q221-ADVERSARIAL"]
