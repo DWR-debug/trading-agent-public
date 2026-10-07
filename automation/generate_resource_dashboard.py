@@ -617,7 +617,7 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
     """Expose a real bounded queue of future next-gate research, independent of live slot occupancy."""
     order = [
         ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A"),
-        ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B"),
+        ("Q218", ".github/workflows/q218-focused-research-wave.yml", "Windows self-hosted B"),
     ]
     by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
     backlog = []
@@ -694,7 +694,7 @@ def planned_capacity_plan(
             "readiness": "READY_SOURCE_PIT",
             "basis": "bounded Q218 source/PIT workpack is the sole frontier candidate under the active focus lock",
             "dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+            "execution_workflow": ".github/workflows/q218-focused-research-wave.yml",
         },
         {
             "plan_id": "Q218-INDEPENDENT-ARCH",
@@ -702,11 +702,11 @@ def planned_capacity_plan(
             "lane": "FRONTIER DISCOVERY",
             "task": "independent architecture reproduction of the Q218 source/event-pair contract",
             "preferred": ["Windows self-hosted C", "GitHub-hosted ARM64"],
-            "readiness": "READY_INDEPENDENT_ARCH_REPRO",
-            "basis": "independent architecture check is useful only when it does not duplicate the primary Q218 execution",
-            "dispatchable": True,
-            "allow_parallel_with_candidate": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+            "readiness": "BLOCKED_UNTIL_Q218_SOURCE_PIT_RECEIPTS",
+            "basis": "phase ordering: independent reproduction opens only after the focused source/PIT gates produce the required receipts",
+            "dispatchable": False,
+            "allow_parallel_with_candidate": False,
+            "execution_workflow": None,
         },
         {
             "plan_id": "Q104-I19-COMPILER",
