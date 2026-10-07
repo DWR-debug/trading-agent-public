@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "4b2b2baf33603908ce1ca2c6598dd49a3003e17a9dfe5dc09ec34cbefc39739c",
-  "observed_at_utc": "2026-10-07T12:41:20.833150Z",
+  "observed_at_utc": "2026-10-07T13:12:02.422708Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 4.094,
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.54,
   "stdout": "",
-  "stderr": "GroqFreeError: Groq response contains no textual content.",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5336, Requested 5433. Please try again in 20.7675s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
-  "api_model": "openai/gpt-oss-20b"
+  "api_model": "openai/gpt-oss-20b",
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-07T13:12:02.962687Z",
+    "blocked_until_utc": "2026-10-07T14:12:02.962687Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5336, Requested 5433. Please try again in 20.7675s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  }
 }\n
