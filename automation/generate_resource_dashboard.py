@@ -1100,6 +1100,7 @@ def main() -> None:
     runners = runner_snapshot()
     ai = ai_provider_state()
     milestones_12h = milestone_history_12h()
+    prs = open_pull_requests()
 
     configured_resources = [
         {"name": "Windows self-hosted A", "type": "physical", "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
@@ -1129,10 +1130,11 @@ def main() -> None:
         enrich_resources(configured_resources, runners, work),
         work,
         top4,
+        workflow_benchmarks,
         job_benchmarks,
         os_state,
     )
-    planned_research_queue = planned_research_backlog(state_board)
+    planned_research_queue = planned_research_backlog(state_board, workflow_benchmarks)
 
     payload = {
         "schema_version": 2,
@@ -1168,6 +1170,10 @@ def main() -> None:
             "unallocated_routable_items": sum(1 for row in planned_capacity if row.get("capacity_state") == "available" and not row.get("planned_assignments")),
             "planned_capacity_note": "bounded plan; only entries marked dispatchable have an executable workflow route. This plan never creates scientific authorization.",
             "milestones_12h": len(milestones_12h),
+            "open_pull_requests": len(prs),
+            "next_expected_active_finish_at": min((x.get("expected_finish_at") for x in work if x.get("expected_finish_at")), default=None),
+            "next_expected_planned_start_at": min((x.get("expected_start_at") for row in planned_capacity for x in row.get("planned_assignments", []) if x.get("expected_start_at")), default=None),
+            "next_expected_planned_finish_at": min((x.get("expected_finish_at") for row in planned_capacity for x in row.get("planned_assignments", []) if x.get("expected_finish_at")), default=None),
         },
         "resources": enrich_resources(configured_resources, runners, work),
         "runner_live_snapshot": runners,
@@ -1175,6 +1181,7 @@ def main() -> None:
         "planned_capacity": planned_capacity,
         "planned_research_queue": planned_research_queue,
         "milestone_history_12h": milestones_12h,
+        "open_pull_requests": prs,
         "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks),
         "duration_benchmarks": workflow_benchmarks,
         "job_duration_benchmarks": job_benchmarks,
