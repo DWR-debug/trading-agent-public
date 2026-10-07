@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "91ecb8a84c41bc85b6e60b63f52d2f0b9d3e18220b8d78d00eecc9b4f7386ebb",
-  "observed_at_utc": "2026-10-07T12:37:39.802614Z",
+  "observed_at_utc": "2026-10-07T12:37:57.278280Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 3.298,
-  "stdout": "User Safety: safe",
+  "duration_seconds": 53.799,
+  "stdout": "\n\n# Q221 Adversarial Methods Review — USAspending Clock & Source Integrity\n\n## 1. Core Vulnerability: The Clock Is Frozen to Current Documentation, Not Historical Behavior\n\nThe `q221_usaspending_public_clock_gate.py` script reads the **current** About-the-Data PDF and extracts language like \"WITHIN FIVE DAYS,\" \"FOLLOWING MORNING,\" and \"THREE BUSINESS DAYS.\" The script itself sets `\"historical_applicability_proven\": False` — an honest admission that the current publication sequence has **not** been verified to hold across the analysis window.\n\n**Attack:** The PDF is a live endpoint. Its language can be revised, reorganized, or silently updated. A sentence that reads \"within five days\" in the 2026 PDF may have read \"within ten days\" in the 2018 PDF, or the entire publication-sequence paragraph may not have existed at all. The script treats the current document as a **candidate clock** but never checks whether that clock was the same clock in 2020, 2010, or 2005. This is a textbook **source-drift** failure.\n\n**Minimal falsifier:** Fetch the About-the-Data PDF from an immutable dated snapshot for each calendar year in the analysis window (e.g., via Wayback Machine or GPO depository). Diff the publication-timing language. If the language changes across vintages, the clock model is falsified for all years before the change.\n\n---\n\n## 2. Award vs. Modification: The Script Collapses Two Distinct Events\n\nThe script checks for `\"CONTRACT OR MODIFICATION\"` as a single boolean. But an original award and a modification have fundamentally different information semantics:\n\n- **Original award:** New contract, new money, new competitive landscape. A genuine information event.\n- **Modification:** Could be a scope change, a funding extension, a纠正 of a typo, or a sole-source expansion. Many modifications carry **zero** new competitive information.\n\nThe script does not distinguish between these. If the candidate contract treats every modification as an \"event,\" it will be flooded with noise. If it treats only original awards as events, it may miss material scope changes that alter the economic value of the option.\n\n**Minimal falsifier:** For a random sample of 50 modifications in the target period, manually read the modification rationale from the award description. Classify as \"material scope/money change\" vs. \"administrative correction.\" If >30% are administrative, the modification-as-event model is unreliable.\n\n---\n\n## 3. Transaction History Completeness: The API Is Not the Archive\n\nThe script checks that `\"/API/V2/TRANSACTIONS/\"` appears in the API documentation page. That proves the endpoint is **documented**, not that the **historical data** behind it is complete. USAspending's API is known to have:\n\n- Gaps in pre-2017 transaction-level data.\n- Backfilling that is uneven across agencies.\n- Missing transactions from smaller agencies or classified contracts.\n\nThe script never verifies that the actual transaction records for the target universe (R&D contracts, specific PSC codes, specific date ranges) are retrievable via the API.\n\n**Minimal falsifier:** Run a deterministic count: fetch all transactions for PSC 6910 (R&D) in calendar year 2020 via the API and compare against the independent FPDS historical archive count. If the API returns <90% of the known FPDS records, the API is not a reliable historical source.\n\n---\n\n## 4. R&D Classification: PSC Codes Are Not a Stable Ontology\n\nThe script does not verify that Product Service Codes (PSC) are stable over time. The PSC taxonomy has undergone revisions:\n\n- **PSC 6910** (R&D) existed in some form but was reorganized.\n- The shift from **NAICS** to **PSC** mapping has changed.\n- Some contracts classified as \"R&D\" in 2010 might be classified under a different code in 2020.\n\nIf the candidate contract selects R&D contracts by PSC code without verifying that the code meant \"R&D\" throughout the window, it will mix in non-R&D contracts and miss true R&D contracts.\n\n**Minimal falsifier:** For each PSC code used as an R&D filter, fetch the official PSC manual for each year in the window and verify that the code's description contains \"research\" or \"development.\" If any code's description changed, the filter is unstable.\n\n---\n\n## 5. Competition Fields: Systematic Missingness in Older Records\n\nThe script does not check whether competition-type fields (e.g., \"full and open competition,\" \"sole source\") are populated for R&D contracts across the historical period. In older FPDS records, these fields are known to be:\n\n- Missing for a significant fraction of transactions.\n- Coded inconsistently across agencies.\n- Subject to retroactive updates that are not timestamped.\n\nIf the candidate contract intends to control for competition type (e.g., comparing full-and-open vs. sole-source R&D awards), the missingness could bias any comparison.\n\n**Minimal falsifier:** For each year in the window, compute the proportion of R&D contracts (by PSC) where the competition-type field is null or \"not reported.\" If the proportion exceeds 20% in any year, the field is unreliable for that year.\n\n---\n\n## 6. Recipient-to-Issuer Mapping: The Silent Link\n\nThe script does not address how government contractor identifiers (DUNS, UEI, or CIK) map to publicly traded ticker symbols. This is the **critical link** between the government event and the market outcome. The mapping is fragile:\n\n- A contractor may have been **private** during part of the window and later gone public.\n- A contractor may have been **acquired** by another firm, changing the ticker.\n- A contractor may have **changed its name** and DUNS/UEI, breaking the chain.\n- Multiple subsidiaries may share a parent, creating **cross-sectional confounding**.\n\nThe script's `\"fixed_graph_exposure_to_affected_product_or_ingredient\"` language in the candidate spec implies a fixed mapping, but no verification is performed.\n\n**Minimal falsifier:** For each contractor in the target universe, verify the mapping from DUNS/UEI to ticker using a historical corporate-events database (e.g., CRSP/Compustat linked table). Flag any contractor where the mapping changed during the window (merger, acquisition, IPO). If >10% of contractors have a mapping change, the fixed-exposure assumption is violated.\n\n---\n\n## 7. Parent/Subsidiary Changes: The Conglomerate Problem\n\nA government contract awarded to **Subsidiary A** may economically benefit **Parent P**, but the contract record only shows Subsidiary A. If Parent P has multiple subsidiaries receiving R&D contracts, the event study cannot distinguish which subsidiary's contract drives the parent",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791376660-iBFVGo1drcfrpgA9qYCz",
+  "response_id": "gen-1791376677-5ri68kMiHBAv5BLX2yI0",
   "usage": {
-    "prompt_tokens": 5830,
-    "completion_tokens": 149,
-    "total_tokens": 5979,
+    "prompt_tokens": 5260,
+    "completion_tokens": 3200,
+    "total_tokens": 8460,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 168,
+      "reasoning_tokens": 2024,
       "image_tokens": 0,
       "audio_tokens": 0
     }
