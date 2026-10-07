@@ -84,15 +84,30 @@ def run(output: Path) -> dict:
         items = recent.get("items", [])
 
         tenks: list[dict] = []
+        prior_boundary_10ks: list[dict] = []
         earnings: list[dict] = []
         tenk_amendments: list[dict] = []
         earnings_amendments: list[dict] = []
+
+        prior_10k_indices = [
+            i for i, form in enumerate(forms)
+            if form == "10-K"
+            and i < len(dates)
+            and dates[i]
+            and dates[i] < START
+        ]
+        latest_prior_10k_index = (
+            max(prior_10k_indices, key=lambda i: dates[i])
+            if prior_10k_indices else None
+        )
 
         for i, form in enumerate(forms):
             filing_date = dates[i] if i < len(dates) else None
             if form not in {"10-K", "10-K/A", "8-K", "8-K/A"}:
                 continue
-            if not filing_date or not (START <= filing_date <= END):
+            in_window = bool(filing_date and START <= filing_date <= END)
+            prior_boundary = i == latest_prior_10k_index
+            if not (in_window or prior_boundary):
                 continue
 
             accession_number = accessions[i]
@@ -108,34 +123,108 @@ def run(output: Path) -> dict:
                 ),
                 "acceptance_datetime": acceptance(cik, accession_number),
                 "items": item_field if form in {"8-K", "8-K/A"} else None,
+                "in_control_window": in_window,
+                "prior_10k_boundary": prior_boundary,
+                "exhibit_99_1": False,
+                "earnings_release_marker": False,
+                "primary_publication_terms_marker": False,
+                "is_eligible_earnings_release_8k": False,
             }
 
             if form == "10-K":
-                tenks.append(row)
+                (prior_boundary_10ks if prior_boundary else tenks).append(row)
             elif form == "10-K/A":
                 tenk_amendments.append(row)
-            elif form == "8-K" and "2.02" in str(item_field).split(","):
-                earnings.append(row)
-            elif form == "8-K/A" and "2.02" in str(item_field).split(","):
-                earnings_amendments.append(row)
+            elif form in {"8-K", "8-K/A"}:
+                try:
+                    _, _, index_page = (
+                        None,
+                        None,
+                        fetch(
+                            "https://www.sec.gov/Archives/edgar/data/"
+                            f"{int(cik)}/{accession_number.replace('-', '')}/"
+                            f"{accession_number}-index-headers.html"
+                        ),
+                    )
+                    index_text = index_page.decode("utf-8", errors="replace")
+                    row["exhibit_99_1"] = bool(
+                        re.search(r"EXHIBIT\s+99\.1", index_text, flags=re.I)
+                    )
+                    row["earnings_release_marker"] = bool(
+                        re.search(r"EARNINGS\s+RELEASE|PRESS\s+RELEASE", index_text, flags=re.I)
+                    )
+                except Exception as exc:
+                    row["index_header_fetch_error"] = type(exc).__name__ + ":" + str(exc)
+                if form == "8-K":
+                    earnings.append(row)
+                    try:
+                        _, _, primary_page = fetch(
+                            "https://www.sec.gov/Archives/edgar/data/"
+                            f"{int(cik)}/{accession_number.replace('-', '')}/"
+                            f"{row['primary_document']}"
+                        )
+                        primary_text = primary_page.decode("utf-8", errors="replace")
+                        row["primary_publication_terms_marker"] = bool(
+                            re.search(
+                                r"EARNINGS|FINANCIAL\s+RESULTS|QUARTERLY\s+RESULTS|FULL[-\s]?YEAR\s+RESULTS",
+                                primary_text,
+                                flags=re.I,
+                            )
+                        )
+                    except Exception as exc:
+                        row["primary_fetch_error"] = type(exc).__name__ + ":" + str(exc)
+                    row["is_eligible_earnings_release_8k"] = bool(
+                        "2.02" in str(item_field).split(",")
+                        or row["exhibit_99_1"]
+                        or row["earnings_release_marker"]
+                        or row["primary_publication_terms_marker"]
+                    )
+                else:
+                    earnings_amendments.append(row)
 
+        # Prefer exact fiscal/report-date alignment. When SEC's 8-K reportDate
+        # denotes the earnings-release filing date rather than the 10-K fiscal
+        # period end, fall back to the deterministic reporting-cycle interval:
+        # latest eligible Item 2.02 8-K strictly after the preceding in-window
+        # 10-K acceptance (when one exists) and strictly before the target 10-K.
+        # This remains source/PIT-only and introduces no outcome information.
         pairs = []
         unmatched = []
-        for tenk in sorted(tenks, key=lambda x: (x.get("report_date") or "", _acceptance_key(x))):
-            candidates = [
-                event
-                for event in earnings
-                if event.get("report_date") == tenk.get("report_date")
-                and event.get("acceptance_datetime")
+        tenks_sorted = sorted(tenks, key=_acceptance_key)
+        annual_all_sorted = sorted(
+            [*prior_boundary_10ks, *tenks],
+            key=_acceptance_key,
+        )
+        pairing_rule = (
+            "latest eligible Item-2.02/Exhibit-99.1-style 8-K by SEC acceptance "
+            "within the interval (preceding 10-K acceptance, target 10-K acceptance]"
+        )
+        for tenk in tenks_sorted:
+            lower_bounds = [
+                prior.get("acceptance_datetime")
+                for prior in annual_all_sorted
+                if prior.get("acceptance_datetime")
                 and tenk.get("acceptance_datetime")
-                and event["acceptance_datetime"] < tenk["acceptance_datetime"]
+                and prior["acceptance_datetime"] < tenk["acceptance_datetime"]
             ]
-            event = max(candidates, key=_acceptance_key) if candidates else None
+            lower_bound = max(lower_bounds) if lower_bounds else None
+            interval_candidates = [
+                candidate
+                for candidate in earnings
+                if candidate.get("is_eligible_earnings_release_8k") is True
+                and candidate.get("acceptance_datetime")
+                and tenk.get("acceptance_datetime")
+                and candidate["acceptance_datetime"] <= tenk["acceptance_datetime"]
+                and (lower_bound is None or candidate["acceptance_datetime"] > lower_bound)
+            ]
+            event = max(interval_candidates, key=_acceptance_key) if interval_candidates else None
+            pairing_method = "acceptance_interval"
             if event is None:
                 unmatched.append(
                     {
                         "ten_k_accession": tenk.get("accession"),
                         "report_date": tenk.get("report_date"),
+                        "pairing_lower_bound_acceptance": lower_bound,
                     }
                 )
                 continue
@@ -146,8 +235,13 @@ def run(output: Path) -> dict:
                     "item_2_02_8k_accession": event["accession"],
                     "item_2_02_8k_acceptance_datetime": event["acceptance_datetime"],
                     "report_date": tenk["report_date"],
+                    "pairing_method": pairing_method,
+                    "pairing_lower_bound_acceptance": lower_bound,
+                    "event_report_date": event.get("report_date"),
+                    "exact_report_date_match": event.get("report_date") == tenk.get("report_date"),
                     "acceptance_order_valid": (
                         event["acceptance_datetime"] <= tenk["acceptance_datetime"]
+                        and (lower_bound is None or event["acceptance_datetime"] > lower_bound)
                     ),
                 }
             )
@@ -182,6 +276,7 @@ def run(output: Path) -> dict:
         issuer_results[symbol] = {
             "cik": cik,
             "ten_k_count": len(tenks),
+            "prior_boundary_10k_count": len(prior_boundary_10ks),
             "item_2_02_8k_count": len(earnings),
             "ten_k_amendment_count": len(tenk_amendments),
             "item_2_02_8k_amendment_count": len(earnings_amendments),
@@ -194,6 +289,7 @@ def run(output: Path) -> dict:
             "amendment_lineage": lineage,
             "all_pairing_valid": all_pairing_valid,
             "all_lineage_valid": all_lineage_valid,
+            "pairing_rule": pairing_rule,
         }
 
     complete = bool(issuer_results) and all(
@@ -211,6 +307,11 @@ def run(output: Path) -> dict:
         "candidate_id": "Q218",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "fixed_window": {"start": START, "end": END},
+        "pairing_rule": (
+            "exact report_date preferred; otherwise latest eligible Item-2.02 "
+            "8-K by SEC acceptance within the target 10-K reporting cycle, "
+            "bounded below by the preceding in-window 10-K acceptance"
+        ),
         "issuer_results": issuer_results,
         "issuer_count": len(issuer_results),
         "all_pairing_valid": complete,

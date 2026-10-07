@@ -67,13 +67,56 @@ def test_q218_rejects_future_8k_pair(tmp_path, monkeypatch):
             }
         }
     }
+    acceptance_map = {
+        "0000320193-25-000001": "20250102120000",
+        "0000320193-25-000002": "20250104120000",
+    }
 
     def fake_fetch(url):
         if "/submissions/CIK" in url:
             return json.dumps(payload).encode()
-        return b"<ACCEPTANCE-DATETIME>20250103120000"
+        accession = url.split("/")[-1].replace("-index-headers.html", "")
+        return f"<ACCEPTANCE-DATETIME>{acceptance_map[accession]}".encode()
 
     monkeypatch.setattr(gate, "fetch", fake_fetch)
     result = gate.run(tmp_path / "receipt.json")
     assert result["all_pairing_valid"] is False
     assert result["next_gate"] == "REPAIR_10K_8K_EVENT_PAIR_AND_AMENDMENT_LINEAGE"
+
+
+def test_q218_uses_acceptance_interval_when_report_dates_differ(tmp_path, monkeypatch):
+    import json
+
+    payload = {
+        "filings": {
+            "recent": {
+                "form": ["10-K", "8-K"],
+                "filingDate": ["2025-02-20", "2025-02-19"],
+                "accessionNumber": ["0000320193-25-000010", "0000320193-25-000009"],
+                "primaryDocument": ["tenk.htm", "earn.htm"],
+                "reportDate": ["2025-01-31", "2025-02-19"],
+                "items": ["", "2.02,9.01"],
+            }
+        }
+    }
+    acceptance_map = {
+        "0000320193-25-000010": "20250220120000",
+        "0000320193-25-000009": "20250219120000",
+    }
+
+    def fake_fetch(url):
+        if "/submissions/CIK" in url:
+            return json.dumps(payload).encode()
+        accession = url.split("/")[-1].replace("-index-headers.html", "")
+        return f"<ACCEPTANCE-DATETIME>{acceptance_map[accession]}".encode()
+
+    monkeypatch.setattr(gate, "fetch", fake_fetch)
+    result = gate.run(tmp_path / "receipt.json")
+    aapl = result["issuer_results"]["AAPL"]
+
+    assert aapl["event_pair_count"] == 1
+    assert aapl["event_pairs"][0]["item_2_02_8k_accession"] == "0000320193-25-000009"
+    assert aapl["event_pairs"][0]["pairing_method"] == "acceptance_interval"
+    assert aapl["event_pairs"][0]["pairing_lower_bound_acceptance"] is None
+    assert aapl["event_pairs"][0]["acceptance_order_valid"] is True
+    assert aapl["all_pairing_valid"] is True
