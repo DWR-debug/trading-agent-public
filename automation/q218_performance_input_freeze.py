@@ -218,6 +218,7 @@ def freeze(output_root: Path, receipt_path: Path) -> dict:
                 raise RuntimeError(f"Q218 Item 2.02 missing: {symbol} {accession}")
             header, header_url = accession_header(cik, accession)
             actual = acceptance_datetime(header, ten_k_expected if accession == ten_k_acc else eight_k_expected)
+            actual_acceptance[accession] = actual
             header_rel = Path("sec/headers") / f"{accession}.html"
             (output_root / header_rel).parent.mkdir(parents=True, exist_ok=True)
             (output_root / header_rel).write_bytes(header)
