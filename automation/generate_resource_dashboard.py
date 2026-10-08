@@ -405,6 +405,11 @@ FOCUS_CANDIDATES = ("Q104:I19", "Q218")
 ACTIVE_RUN_STATUSES = {"queued", "in_progress", "waiting", "pending"}
 
 
+def _candidate_key(value: str) -> str:
+    """Normalize candidate identifiers for workflow-name matching."""
+    return "".join(ch for ch in str(value).lower() if ch.isalnum())
+
+
 def candidate_overall_progress(stage: str) -> tuple[int, str]:
     """Backward-compatible coarse lifecycle mapper used by legacy dashboard tests."""
     s = str(stage or "").upper()
