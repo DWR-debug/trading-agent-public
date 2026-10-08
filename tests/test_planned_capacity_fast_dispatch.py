@@ -841,6 +841,46 @@ def test_q218_focused_gate_ignores_legacy_failures_from_older_master_context(mon
     assert [x["candidate"] for x in plan["dispatches"]] == ["Q218"]
     assert any(d["decision"] == "FOCUSED_GATE_TECHNICAL_RETRY_PERMITTED" for d in plan["decisions"]) is False
 
+def test_q104_compiler_failure_streak_resets_on_new_master_sha(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
+    snapshot = {
+        "master_sha": "new-master",
+        "focus_candidates": ["Q104:I19"],
+        "resources": [{
+            "resource": "GitHub-hosted Ubuntu x64",
+            "research_capacity_slots": 1,
+            "research_slots_in_use": 0,
+            "research_slots_free": 1,
+            "planned_assignments": [{
+                "plan_id": "Q104-I19-COMPILER",
+                "candidate": "Q104:I19",
+                "scheduled": True,
+                "dispatchable": True,
+                "allow_parallel_with_candidate": True,
+                "execution_workflow": ".github/workflows/q104-i19-historical-pit-compilation.yml",
+            }],
+        }],
+        "work_assignments": [],
+    }
+    runs = [
+        {
+            "status": "completed",
+            "conclusion": "failure",
+            "head_sha": "old-master",
+            "path": ".github/workflows/q104-i19-historical-pit-compilation.yml",
+            "created_at": "2026-10-08T14:18:00Z",
+        },
+        {
+            "status": "completed",
+            "conclusion": "failure",
+            "head_sha": "old-master",
+            "path": ".github/workflows/q104-i19-historical-pit-compilation.yml",
+            "created_at": "2026-10-08T14:19:00Z",
+        },
+    ]
+    plan = dispatcher.plan_dispatch(snapshot, runs, repo="DWR-debug/trading-agent-public", max_dispatches=6)
+    assert any(x["plan_id"] == "Q104-I19-COMPILER" for x in plan["dispatches"])
+
 def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
     from automation import planned_capacity_fast_dispatch as dispatcher
     monkeypatch.setattr(dispatcher, "completed_q218_gates_for_current_context", lambda runs: {"event_pair"})
