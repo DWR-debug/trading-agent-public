@@ -516,16 +516,42 @@ def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def current_blob_sha(path: str) -> str:
+    """Return the blob SHA of a file at the checked-out HEAD; fail closed on error."""
+    try:
+        raw = subprocess.check_output(
+            ["git", "rev-parse", f"HEAD:{path}"],
+            cwd=ROOT,
+            text=True,
+            stderr=subprocess.DEVNULL,
+        )
+        return str(raw).strip()
+    except (OSError, subprocess.CalledProcessError):
+        return ""
+
+
+def receipt_gate_is_current(index: dict[str, Any], gate_key: str, code_path: str) -> bool:
+    """Require a positive receipt and an exact current-master implementation fingerprint."""
+    gate = index.get(gate_key, {}) if isinstance(index.get(gate_key, {}), dict) else {}
+    expected = str(gate.get("gate_code_blob_sha") or "")
+    actual = current_blob_sha(code_path)
+    return bool(gate.get("verified_positive_complete")) and bool(expected) and bool(actual) and expected == actual
+
+
 def q218_receipt_state() -> dict[str, Any]:
-    """Receipt-driven Q218 next-gate state; never infer scientific completion from static queue metadata."""
+    """Receipt-driven Q218 state; stale positive receipts are invalid after gate-code changes."""
     index_path = ROOT / "research" / "evidence" / "q218_focus_gate_receipt_index_latest.json"
     independent_path = ROOT / "research" / "evidence" / "q218_independent_architecture_pit_reproduction_latest.json"
     try:
         index = json.loads(index_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         index = {}
-    source_complete = bool(index.get("source_gate", {}).get("verified_positive_complete"))
-    event_complete = bool(index.get("event_pair_gate", {}).get("verified_positive_complete"))
+    source_complete = receipt_gate_is_current(
+        index, "source_gate", "automation/q218_sec_multichannel_source_gate.py"
+    )
+    event_complete = receipt_gate_is_current(
+        index, "event_pair_gate", "automation/q218_sec_event_pair_lineage_gate.py"
+    )
     independent_complete = False
     try:
         receipt = json.loads(independent_path.read_text(encoding="utf-8"))
