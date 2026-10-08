@@ -15,7 +15,7 @@ permissions:
   contents: write
 concurrency:
   group: trading-agent-q104-i19-13f-historical-identity-census
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   source_snapshot:
     if: github.repository == 'DWR-debug/trading-agent-public'
