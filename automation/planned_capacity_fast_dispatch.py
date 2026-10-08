@@ -501,6 +501,36 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_RESOURCE_BUSY"})
             continue
 
+        leases = [str(x) for x in (item.get("resource_leases") or []) if str(x)]
+        if leases:
+            lease_rows = {
+                str(row.get("resource") or ""): row
+                for row in snapshot.get("planned_capacity", [])
+                if isinstance(row, dict) and str(row.get("resource") or "")
+            }
+            lease_meta = {
+                str(row.get("name") or ""): row
+                for row in snapshot.get("resources", [])
+                if isinstance(row, dict) and str(row.get("name") or "")
+            }
+            lease_failures = []
+            for lease in leases:
+                row = lease_rows.get(lease)
+                resource_meta = lease_meta.get(lease, {})
+                _, _, lease_free = resource_capacity_for_plan(
+                    snapshot,
+                    row or resource_meta,
+                )
+                if not lease_free:
+                    lease_failures.append(lease)
+            if lease_failures:
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_MULTI_RESOURCE_LEASE_NOT_SIMULTANEOUSLY_ROUTABLE",
+                    "blocked_resources": lease_failures,
+                })
+                continue
+
         dispatch_gate = str((item.get("execution_workflow_inputs") or {}).get("gate") or "all")
         if candidate == "Q218" and dispatch_gate in Q218_GATE_NAMES and focused_gate_recently_cancelled(runs, candidate, dispatch_gate):
             decisions.append({
