@@ -80,10 +80,12 @@ jobs:
           source_artifact="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run/artifacts" --jq '.artifacts[] | select(.expired==false) | .name' | head -n1)"
           event_artifact="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$event_run/artifacts" --jq '.artifacts[] | select(.expired==false) | .name' | head -n1)"
           test -n "$source_artifact" && test -n "$event_artifact"
-          echo "source_run=$source_run" >> "$GITHUB_OUTPUT"
-          echo "event_run=$event_run" >> "$GITHUB_OUTPUT"
-          echo "source_artifact=$source_artifact" >> "$GITHUB_OUTPUT"
-          echo "event_artifact=$event_artifact" >> "$GITHUB_OUTPUT"
+          {
+            echo "source_run=$source_run"
+            echo "event_run=$event_run"
+            echo "source_artifact=$source_artifact"
+            echo "event_artifact=$event_artifact"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Download canonical positive receipts
         env:
