@@ -999,3 +999,4 @@ def test_q104_recovery_cannot_cancel_an_active_census():
     assert "for status in in_progress queued pending; do" in workflow
     assert "needs: [recovery_guard]" in workflow
     assert "needs.recovery_guard.outputs.proceed == 'true'" in workflow
+    assert "needs.recovery_guard.outputs.proceed" in workflow
