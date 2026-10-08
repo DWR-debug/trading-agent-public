@@ -51,7 +51,7 @@ def test_focused_operational_state_locks_automatic_candidate_dispatch():
     overlay=state["top_candidate_capacity_overlay"]["windows_B"]
     assert overlay["priority"] == ["Q218"]
     assert "Q104:I19" in overlay["new_overlay"] or "Q104:I19" in state["current_research_focus"]["active_next"]
-    assert overlay.get("discovery_reserve") == ["Q219","Q220","Q221"]
+    assert state["top_candidate_capacity_overlay"].get("discovery_reserve") == ["Q219","Q220","Q221"]
     assert "Q219" not in overlay["priority"]
     assert "Q220" not in overlay["priority"]
     assert "Q221" not in overlay["priority"]
