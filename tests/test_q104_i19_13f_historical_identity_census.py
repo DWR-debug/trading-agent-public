@@ -116,3 +116,17 @@ def test_scan_archive_counts_unique_target_accessions():
         z.writestr("SUBMISSION.tsv",sub); z.writestr("INFOTABLE.tsv",info)
     r=scan_archive(b.getvalue(),{"url":"synthetic://unique","label":"unique","period_start":"2026-04-01"},{"SPGI":{"78409V104"},"OTHER":{"78409V104"}})
     assert r["target_unique_accession_count"] == 1
+
+
+def test_six_shard_request_budget_stays_below_sec_global_limit():
+    from automation.q104_i19_13f_historical_identity_census import (
+        ARCHIVE_REQUEST_GAP_SECONDS,
+        HEADER_REQUEST_GAP_SECONDS,
+        SHARDS,
+    )
+
+    assert len(SHARDS) == 6
+    assert ARCHIVE_REQUEST_GAP_SECONDS >= 0.67
+    assert HEADER_REQUEST_GAP_SECONDS >= 0.67
+    assert len(SHARDS) / ARCHIVE_REQUEST_GAP_SECONDS < 10
+    assert len(SHARDS) / HEADER_REQUEST_GAP_SECONDS < 10
