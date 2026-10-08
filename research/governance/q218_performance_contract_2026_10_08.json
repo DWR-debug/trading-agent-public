@@ -189,7 +189,11 @@
     },
     "universe_rule": "Complete fixed issuer list; all eligible event pairs in the same fixed window are used without outcome-based filtering.",
     "no_post_pass_optimization": true,
-    "no_performance_output_reuse_for_rule_changes": true
+    "no_performance_output_reuse_for_rule_changes": true,
+    "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+    "preregistration_path": "research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json",
+    "trigger_path": "research/run_requests/q218_execute_performance_once.trigger",
+    "execution_workflow": ".github/workflows/q218-performance-once.yml"
   },
   "governance": {
     "selection_used": false,
