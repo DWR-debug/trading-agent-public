@@ -42,6 +42,43 @@ def main() -> int:
         raise RuntimeError("Q218 trial id mismatch")
     if prereg.get("status") != "FROZEN_PREREGISTRATION_RECONCILED":
         raise RuntimeError("Q218 preregistration is not frozen/reconciled")
+
+    robustness = prereg.get("pre_performance_robustness")
+    if not isinstance(robustness, dict):
+        raise RuntimeError("Q218 pre-performance robustness receipt is missing")
+    required_robustness_fields = (
+        "trial_id",
+        "status",
+        "artifact_path",
+        "artifact_sha256",
+        "research_only",
+        "screen_is_descriptive_only",
+        "no_post_hoc_tuning",
+    )
+    missing_robustness = [k for k in required_robustness_fields if k not in robustness]
+    if missing_robustness:
+        raise RuntimeError("Q218 robustness receipt missing:" + ",".join(missing_robustness))
+    if robustness.get("trial_id") != prereg.get("trial_id"):
+        raise RuntimeError("Q218 robustness receipt trial mismatch")
+    if robustness.get("status") != "PRE_PERFORMANCE_ROBUSTNESS_COMPLETED":
+        raise RuntimeError("Q218 robustness screen is not complete")
+    if robustness.get("research_only") is not True or robustness.get("screen_is_descriptive_only") is not True or robustness.get("no_post_hoc_tuning") is not True:
+        raise RuntimeError("Q218 robustness boundary invalid")
+
+    replication = prereg.get("independent_replication")
+    if not isinstance(replication, dict):
+        raise RuntimeError("Q218 performance replication contract is missing")
+    for key in ("trial_id", "preregistration_path", "trigger_path", "fresh_symbol_disjoint", "no_post_pass_optimization"):
+        if key not in replication:
+            raise RuntimeError("Q218 performance replication contract missing:" + key)
+    if replication.get("trial_id") != prereg.get("trial_id"):
+        raise RuntimeError("Q218 performance replication trial mismatch")
+    if replication.get("fresh_symbol_disjoint") is not True or replication.get("no_post_pass_optimization") is not True:
+        raise RuntimeError("Q218 performance replication independence boundary invalid")
+
+    gate = prereg.get("candidate_robustness_gate")
+    if not isinstance(gate, dict):
+        raise RuntimeError("Q218 universal candidate robustness gate metadata is missing")
     if reconcile.get("status") != "Q218_FROZEN_PREREGISTRATION_AND_AUTHORIZATION_RECONCILED":
         raise RuntimeError("Q218 G4 receipt is not positive")
     if reconcile.get("checks", {}).get("candidate_contract_frozen") is not True:
