@@ -227,7 +227,7 @@ def probe_filing(cik: str, row: dict, sample_rank: int) -> dict:
                 for suffix in (f"{acc}-index.html", f"{acc}-index.htm"):
                     try:
                         html = fetch(f"{base}/{suffix}").decode("utf-8", "replace")
-                        names = re.findall(r'href=["\\']([^"\\']+\\.xml)["\\']', html, flags=re.I)
+                        names = re.findall(r"""href=["']([^"']+\\.xml)["']""", html, flags=re.I)
                         idx = {"directory": {"item": [{"name": n.split("/")[-1]} for n in names]}}
                         index_url = f"{base}/{suffix}"
                         break
