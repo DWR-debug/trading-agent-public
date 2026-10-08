@@ -669,12 +669,109 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+
+def candidate_capacity_snapshot(
+    candidate: str,
+    work: list[dict[str, Any]],
+    planned_capacity: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Map a focus candidate to visible active and explicitly planned capacity."""
+    active: list[dict[str, Any]] = []
+    seen_active: set[tuple[str, str, str]] = set()
+    for item in work:
+        if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
+            continue
+        haystack = f"{item.get('task', '')} {item.get('job', '')}".lower()
+        if candidate.lower() not in haystack:
+            continue
+        key = (str(item.get("resource") or ""), str(item.get("job") or ""), str(item.get("run_id") or ""))
+        if key in seen_active:
+            continue
+        seen_active.add(key)
+        active.append({
+            "resource": str(item.get("resource") or "unassigned"),
+            "worker": str(item.get("worker") or "pending runner assignment"),
+            "job": str(item.get("job") or item.get("task") or ""),
+            "status": str(item.get("status") or ""),
+            "started_at": item.get("started_at"),
+            "run_id": item.get("run_id"),
+            "run_url": item.get("run_url"),
+        })
+
+    planned: list[dict[str, Any]] = []
+    seen_planned: set[tuple[str, str]] = set()
+    for row in planned_capacity or []:
+        resource = str(row.get("resource") or "")
+        items = row.get("planned_assignments", [])
+        if not isinstance(items, list):
+            continue
+        for item in items:
+            if str(item.get("candidate") or "") != candidate or not item.get("scheduled"):
+                continue
+            key = (resource, str(item.get("plan_id") or ""))
+            if key in seen_planned:
+                continue
+            seen_planned.add(key)
+            planned.append({
+                "resource": resource,
+                "plan_id": str(item.get("plan_id") or ""),
+                "task": str(item.get("task") or ""),
+                "status": "READY / AUTO-DISPATCH" if item.get("dispatchable") else "PLANNED / BLOCKED",
+                "dispatchable": bool(item.get("dispatchable", False)),
+                "execution_workflow": item.get("execution_workflow"),
+                "expected_duration_seconds": item.get("expected_duration_seconds"),
+                "basis": str(item.get("basis") or ""),
+            })
+
+    active_resources = sorted({x["resource"] for x in active if x.get("resource")})
+    planned_resources = sorted({x["resource"] for x in planned if x.get("resource")})
+    return {
+        "active_capacities": active_resources,
+        "active_capacity_count": len(active_resources),
+        "active_capacity_assignments": active,
+        "planned_capacities": planned_resources,
+        "planned_capacity_count": len(planned_resources),
+        "planned_capacity_assignments": planned,
+        "capacity_summary": (
+            " + ".join(active_resources) if active_resources
+            else ("Nächste Disposition: " + " + ".join(planned_resources) if planned_resources else "Keine fokussierte Kapazität sichtbar")
+        ),
+    }
+
+
+def candidate_development_roadmap(
+    candidate: str,
+    progress: dict[str, Any],
+    q218_receipts: dict[str, bool] | None = None,
+) -> list[dict[str, Any]]:
+    """Show the remaining deterministic gate chain without inventing success or time."""
+    q218_receipts = q218_receipts or {}
+    if candidate == "Q104:I19":
+        census_done = progress["candidates"][candidate]["current_milestone_progress_percent"] == 100
+        return [
+            {"id": "Q104-CENSUS", "label": "Historical 13F census + acceptance-time closure", "status": "completed" if census_done else "running", "next": "3/3 positive shard receipt"},
+            {"id": "Q104-COMPILER", "label": "Historical concept-specific PIT compiler", "status": "ready" if census_done else "blocked", "next": "historical compiler input bundle"},
+            {"id": "Q104-REPRO", "label": "Independent PIT reproduction", "status": "blocked", "next": "positive compiler receipt"},
+            {"id": "Q104-G4", "label": "Frozen preregistration + authorization reconcile", "status": "blocked", "next": "independent reproduction"},
+            {"id": "Q104-G5", "label": "One-shot performance", "status": "closed", "next": "separate explicit authorization"},
+        ]
+    source_event_done = q218_receipts.get("source_complete") and q218_receipts.get("event_pair_complete")
+    return [
+        {"id": "Q218-SOURCE-EVENT", "label": "Fresh SEC Source + strict Item 2.02 Event-Pair revalidation", "status": "completed" if source_event_done else "ready", "next": "fresh current-context receipts after strict eligibility change"},
+        {"id": "Q218-REPRO", "label": "Independent Architecture PIT reproduction", "status": "completed" if q218_receipts.get("independent_complete") else "blocked", "next": "fresh source/event receipts"},
+        {"id": "Q218-BUNDLE", "label": "Freeze performance input bundle + deterministic executor", "status": "blocked", "next": "Issue #1227 engineering closure"},
+        {"id": "Q218-ROBUST", "label": "Pre-performance robustness + independent replication", "status": "blocked", "next": "frozen executor/input bundle"},
+        {"id": "Q218-G4", "label": "Exact current-master re-authorization reconcile", "status": "blocked", "next": "robustness + replication + CI"},
+        {"id": "Q218-G5", "label": "One-shot performance", "status": "closed", "next": "separate explicit authorization"},
+    ]
+
 def candidate_pipeline(
     top4: list[dict[str, Any]],
     work: list[dict[str, Any]],
     workflow_benchmarks: dict[str, dict[str, int | str]],
     job_benchmarks: dict[str, dict[str, int | str]],
     runs: list[dict[str, Any]] | None = None,
+    planned_capacity: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     runs = runs or []
     progress = candidate_progress_snapshot(runs)
@@ -699,6 +796,7 @@ def candidate_pipeline(
     }
     for candidate in FOCUS_CANDIDATES:
         p = progress["candidates"][candidate]
+        capacity = candidate_capacity_snapshot(candidate, work, planned_capacity)
         result.append({
             "code": candidate,
             "stage": state_by_candidate[candidate],
@@ -713,6 +811,14 @@ def candidate_pipeline(
             "current_milestone_status": p["current_milestone_status"],
             "milestones": p["milestones"],
             "performance_authorization_allowed": False,
+            "active_capacities": capacity["active_capacities"],
+            "active_capacity_count": capacity["active_capacity_count"],
+            "active_capacity_assignments": capacity["active_capacity_assignments"],
+            "planned_capacities": capacity["planned_capacities"],
+            "planned_capacity_count": capacity["planned_capacity_count"],
+            "planned_capacity_assignments": capacity["planned_capacity_assignments"],
+            "capacity_summary": capacity["capacity_summary"],
+            "development_roadmap": candidate_development_roadmap(candidate, progress, q218_receipt_state()),
         })
     return result
 
@@ -1420,7 +1526,9 @@ def main() -> None:
         "planned_research_queue": planned_research_queue,
         "milestone_history_12h": milestones_12h,
         "candidate_progress": candidate_progress,
-        "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks, recent_runs),
+        "pipeline": candidate_pipeline(
+            top4, work, workflow_benchmarks, job_benchmarks, recent_runs, planned_capacity
+        ),
         "duration_benchmarks": workflow_benchmarks,
         "job_duration_benchmarks": job_benchmarks,
         "workload_by_resource": {name: sum(1 for w in work if w.get("resource") == name) for name in sorted({w.get("resource") for w in work if w.get("resource")})},
