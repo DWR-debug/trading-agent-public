@@ -3,14 +3,14 @@
   "record_type": "q218_independent_architecture_pit_reproduction",
   "candidate_id": "Q218",
   "status": "Q218_INDEPENDENT_ARCHITECTURE_PIT_REPRODUCED",
-  "generated_at_utc": "2026-10-08T08:07:38.245186+00:00",
+  "generated_at_utc": "2026-10-08T11:12:59.967135+00:00",
   "fixed_window": {
     "start": "2025-01-01",
     "end": "2026-10-05"
   },
   "upstream_receipts": {
     "source_receipt_fingerprint": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
-    "event_pair_receipt_fingerprint": "08783ac61ed04d936e017e2d959319f69fed5cd4ed891d0f4033a3c57dc04491"
+    "event_pair_receipt_fingerprint": "4f83127b8f2c7335f2cb64ef2439d0e364ae47f25599f5d80ac0d56b96be8ebe"
   },
   "independent_method": {
     "implementation": "separate parser and reconciliation path",
@@ -176,8 +176,27 @@
             "pit_interval_valid": true
           }
         ],
-        "lineage_count": 0,
-        "lineage": [],
+        "lineage_count": 2,
+        "lineage": [
+          {
+            "amendment_accession": "0000104169-26-000028",
+            "parent_candidate_accession": "0000104169-26-000023",
+            "amendment_acceptance_datetime": "20260130161002",
+            "parent_acceptance_datetime": "20260116090115",
+            "explicit_parent_filing_date_hint": null,
+            "explicit_parent_date_valid": null,
+            "acceptance_order_valid": true
+          },
+          {
+            "amendment_accession": "0000104169-26-000024",
+            "parent_candidate_accession": "0000104169-25-000172",
+            "amendment_acceptance_datetime": "20260116090305",
+            "parent_acceptance_datetime": "20251114080030",
+            "explicit_parent_filing_date_hint": null,
+            "explicit_parent_date_valid": null,
+            "acceptance_order_valid": true
+          }
+        ],
         "all_pair_checks_passed": true,
         "all_lineage_checks_passed": true
       },
@@ -222,5 +241,5 @@
     "automatic_promotion": false
   },
   "next_gate": "FROZEN_PREREGISTRATION_AND_IMMUTABLE_AUTHORIZATION_RECONCILE",
-  "receipt_fingerprint": "d16d12f29599e6b268c490287157679fd62d6f2264d3edf67dfa3190d99f370e"
+  "receipt_fingerprint": "764b538566fc936d1ff9655b6cb6198ff6f8e80c4e96a50451670774a37fa199"
 }
