@@ -70,6 +70,56 @@ def test_fast_dispatch_uses_resource_capacity_metadata_when_plan_row_omits_capac
     assert plan["dispatches"][0]["resource"] == "GitHub-hosted ARM64"
 
 
+
+def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_detail(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    monkeypatch.setattr(dashboard, "jobs_for_run", lambda run_id: [
+        {"name": "windows_census", "status": "in_progress", "conclusion": None},
+        {"name": "hosted_census (2018-2021)", "status": "in_progress", "conclusion": None},
+        {"name": "hosted_census (2022-2025-09)", "status": "in_progress", "conclusion": None},
+    ])
+    progress = dashboard.candidate_progress_snapshot([{
+        "id": 123,
+        "name": "Q104 I19 Historical 13F Identity Census",
+        "status": "in_progress",
+        "created_at": "2026-10-08T07:42:13Z",
+    }])
+    q104 = progress["candidates"]["Q104:I19"]
+    q218 = progress["candidates"]["Q218"]
+
+    assert progress["method"] == "receipt_and_contract_based_development_index"
+    assert q104["current_milestone"] == "13F security census"
+    assert 0 <= q104["current_milestone_progress_percent"] <= 100
+    assert q104["total_milestones"] == 9
+    assert 0 <= q104["overall_progress_percent"] <= 100
+    assert q218["current_milestone"] == "Preregistration + authorization reconcile"
+    assert any(m["label"] == "Independent Architecture PIT" and m["status"] == "complete" for m in q218["milestones"])
+
+
+def test_dashboard_html_exposes_progress_bar_panels():
+    html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    assert 'id="overallProgressBars"' in html
+    assert 'id="milestoneProgressBars"' in html
+    assert "function renderProgressCharts" in js
+    assert "class='bar-fill milestone'" in js
+
+
+def test_q218_independent_workflow_relays_completion():
+    workflow = (ROOT / ".github/workflows/q218-independent-architecture-pit-reproduction.yml").read_text(encoding="utf-8")
+    assert "actions: write" in workflow
+    assert ".github/workflows/research-completion-relay.yml" in workflow
+    assert 'source_workflow: "Q218 Independent Architecture PIT Reproduction"' in workflow
+
+
+def test_q104_ai_audit_task_is_routable_through_free_worker_fabric():
+    task = (ROOT / "ai_requests/AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL.json").read_text(encoding="utf-8")
+    workflow = (ROOT / ".github/workflows/ai-worker-fabric.yml").read_text(encoding="utf-8")
+    assert "AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL" in task
+    assert "AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL" in workflow
+    assert "openrouter_free" in task
+
 def test_fast_dispatch_normalizes_list_run_payload():
     from automation.planned_capacity_fast_dispatch import normalize_runs_payload
 

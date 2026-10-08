@@ -69,6 +69,30 @@ function capacityState(x,data){
   if(String(x.capacity_state||"") === "available")return {cls:"available",label:"VERFÜGBAR"};
   return {cls:"unknown",label:"NICHT VERIFIZIERT"};
 }
+function renderProgressCharts(data,pipeline){
+  var byCode={};
+  (pipeline||[]).forEach(function(x){byCode[x.code]=x;});
+  var overall=pipeline||[];
+  $("overallProgressBars").innerHTML=overall.length?overall.map(function(x){
+    var v=pct(x.overall_progress_percent);
+    return "<div class='bar-row'>"+
+      "<div class='bar-meta'><span class='bar-label'>"+esc(x.code)+"</span><span class='bar-value'>"+v+"%</span></div>"+
+      "<div class='bar-track'><div class='bar-fill' style='width:"+v+"%'></div></div>"+
+      "<div class='bar-sub'>"+esc(x.overall_progress_basis||"Entwicklungsindex")+"</div>"+
+    "</div>";
+  }).join(""):"<div class='empty'>Keine fokussierten Kandidaten im Snapshot.</div>";
+
+  $("milestoneProgressBars").innerHTML=overall.length?overall.map(function(x){
+    var v=pct(x.next_milestone_progress_percent);
+    var status=String(x.current_milestone_status||"").toUpperCase();
+    return "<div class='bar-row'>"+
+      "<div class='bar-meta'><span class='bar-label'>"+esc(x.code)+" · "+esc(x.current_milestone||"aktueller Milestone")+"</span><span class='bar-value'>"+v+"%</span></div>"+
+      "<div class='bar-track'><div class='bar-fill milestone' style='width:"+v+"%'></div></div>"+
+      "<div class='bar-sub'>"+esc(status)+" · "+esc(x.next_milestone_progress_basis||"Milestone nicht verifiziert")+"</div>"+
+    "</div>";
+  }).join(""):"<div class='empty'>Kein Milestone-Status verfügbar.</div>";
+}
+
 function render(data){
   var s=data.dashboard_summary||{};
   var resources=(data.resources||[]).filter(function(x){
@@ -97,6 +121,8 @@ function render(data){
 
   var overallAvg=pipeline.length?Math.round(pipeline.reduce(function(a,x){return a+pct(x.overall_progress_percent);},0)/pipeline.length):0;
   var activeCount=pipeline.reduce(function(a,x){return a+Number(x.active_jobs||0);},0);
+  renderProgressCharts(data,pipeline);
+
   $("focusSummary").innerHTML=
     "<div class='focus-kpi'><span class='eyebrow'>Fokus</span><strong>Q104:I19 + Q218</strong><span>Automatische Kandidatenbeschickung ist auf diese zwei Tracks begrenzt.</span></div>"+
     "<div class='focus-kpi'><span class='eyebrow'>Gesamtentwicklung</span><strong>"+overallAvg+"%</strong><span>arithmetischer Überblick der zwei Entwicklungsstände</span></div>"+
@@ -112,10 +138,19 @@ function render(data){
       "<div class='candidate-main'>"+
         "<div class='ring-wrap'><div class='progress-ring' style='--pct:"+overall+"'><div><strong>"+overall+"%</strong><span>Gesamt</span></div></div></div>"+
         "<div class='candidate-detail'>"+
-          "<div class='metric-title'>Nächster Milestone</div><div class='milestone'>"+esc(x.next_gate||"nicht aufgezeichnet")+"</div>"+
-          "<div class='metric-row'><span>Fortschritt zum Milestone</span><strong>"+next+"%</strong></div>"+
+          "<div class='metric-title'>Nächster Milestone</div><div class='milestone'>"+esc(x.current_milestone||x.next_gate||"nicht aufgezeichnet")+"</div>"+
+          "<div class='metric-row'><span>Milestone-Fortschritt</span><strong>"+next+"%</strong></div>"+
           progressBar(next,true)+
-          "<div class='small muted'>"+esc(x.next_milestone_progress_basis||"keine aktive Workflow-Basis")+"</div>"+
+          "<div class='small muted'>"+esc(x.next_milestone_progress_basis||"kein aktiver Milestone")+"</div>"+
+          "<div class='milestone-list' style='margin-top:12px'>"+(x.milestones||[]).map(function(m){
+            var mv=pct(m.progress);
+            var ms=String(m.status||"").toUpperCase();
+            return "<div class='milestone-item'>"+
+              "<div class='label'>"+esc(m.label)+"</div>"+
+              "<div><div class='bar-track'><div class='bar-fill "+(ms==="COMPLETE"?"":"milestone")+"' style='width:"+mv+"%'></div></div></div>"+
+              "<div class='state'>"+esc(ms)+" · "+mv+"%</div>"+
+            "</div>";
+          }).join("")+"</div>"+
         "</div>"+
       "</div>"+
       "<div class='candidate-foot'><span>"+esc(x.overall_progress_basis||"Entwicklungsindex")+"</span><span>"+(x.performance_authorization_allowed?"AUTORISIERUNG ERLAUBT":"NICHT AUTORISIERT")+"</span></div>"+

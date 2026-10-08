@@ -19,6 +19,10 @@ on:
       - "automation/source_readiness_snapshot_guard.py"
       - "automation/orthogonal_pit_next_gate.py"
       - "ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json"
+      - "ai_requests/AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL.json"
+      - "docs/research_design/Q104_I19_EXACT_XBRL_CONCEPT_FREEZE_2026-10-03.md"
+      - "automation/q104_i19_13f_historical_identity_census.py"
+      - "automation/q104_i19_xbrl_pit_compiler.py"
       - "automation/ai_worker_fabric.py"
       - "automation/top4_candidate_capacity.py"
       - "automation/q218_q221_historical_source_census.py"
@@ -52,6 +56,7 @@ on:
           - AI-2026-10-06-Q219-TOP4-ADVERSARIAL
           - AI-2026-10-06-Q220-TOP4-ADVERSARIAL
           - AI-2026-10-06-Q221-TOP4-ADVERSARIAL
+          - AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL
       run_secondary_provider:
         description: "Also run the manual Gemini/Mistral secondary review rotation"
         required: true
@@ -149,7 +154,14 @@ jobs:
                   'ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json',
                   'ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json',
               }
-              orch_paths = {
+              q104_paths = {
+                  'ai_requests/AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL.json',
+                  'docs/research_design/Q104_I19_EXACT_XBRL_CONCEPT_FREEZE_2026-10-03.md',
+                  'automation/q104_i19_13f_historical_identity_census.py',
+                  'automation/q104_i19_xbrl_pit_compiler.py',
+                  '.github/workflows/q104-i19-13f-historical-identity-census.yml',
+              }
+                            orch_paths = {
                   'automation/research_os_scheduler.py',
                   'automation/research_hypothesis_compiler.py',
                   'automation/autonomous_control_plane.py',
@@ -168,7 +180,10 @@ jobs:
                       'AI-2026-10-06-Q219-TOP4-ADVERSARIAL',
                       'AI-2026-10-06-Q220-TOP4-ADVERSARIAL',
                       'AI-2026-10-06-Q221-TOP4-ADVERSARIAL',
+              'AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL',
                   ])
+              if changed.intersection(q104_paths):
+                  tasks.append('AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL')
               if changed.intersection(orch_paths):
                   tasks.append('AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT')
               tasks = sorted(set(tasks))
@@ -199,6 +214,7 @@ jobs:
                   'AI-2026-10-06-Q219-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json',
                   'AI-2026-10-06-Q220-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json',
                   'AI-2026-10-06-Q221-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json',
+                  'AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL': 'ai_requests/AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL.json',
               }
               deduped = []
               for task_id in tasks:
@@ -283,6 +299,7 @@ jobs:
             AI-2026-10-06-Q219-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-06-Q220-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-06-Q221-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
           esac
 
