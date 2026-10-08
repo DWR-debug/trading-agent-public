@@ -89,9 +89,13 @@ def build() -> tuple[dict, dict, dict]:
         raise RuntimeError("Q218 independent receipt crosses performance boundary")
     assert_no_forbidden_true(indep.get("scientific_boundary", {}), "Q218 independent scientific boundary")
 
-    entry = next((x for x in registry.get("active_trials", []) if x.get("code") == "Q218"), None)
+    registry_candidates = [
+        x for x in registry.get("active_design_families", [])
+        if isinstance(x, dict) and x.get("code") == "Q218"
+    ]
+    entry = registry_candidates[0] if registry_candidates else None
     if not isinstance(entry, dict):
-        raise RuntimeError("Q218 registry entry missing")
+        raise RuntimeError("Q218 design registry entry missing")
     if entry.get("performance_authorization_allowed") is not False:
         raise RuntimeError("Q218 registry already authorizes performance")
 
