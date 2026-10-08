@@ -38,17 +38,21 @@ def make_effective_contract(work: Path) -> tuple[Path, str]:
                 pair["ten_k_acceptance_datetime"],
                 pair["item_2_02_8k_acceptance_datetime"],
             ])
+    # The shared Q218 input freezer is intentionally strict and expects
+    # the canonical pre-performance contract shape. Build an adapter with
+    # the replication population and clocks, while retaining immutable
+    # provenance to the independent replication contract and event receipt.
     effective = {
         "schema_version": "1.0",
         "record_type": "q218_effective_replication_contract",
         "candidate_id": "Q218",
         "trial_id": TRIAL_ID,
         "revision": 1,
-        "status": "FROZEN_EFFECTIVE_REPLICATION_CONTRACT",
+        "status": "FROZEN_PRE_PERFORMANCE_CONTRACT",
         "upstream": {
             "independent_replication_contract_sha256": sha256_bytes(CONTRACT.read_bytes()),
             "event_gate_receipt_fingerprint": gate["receipt_fingerprint"],
-            "fixed_window": contract["fixed_window"],
+            "independent_pit_window": contract["fixed_window"],
             "future_cutoff_utc": contract["future_cutoff_utc"],
         },
         "universe": {"issuers": contract["universe"]["issuers"]},
