@@ -94,7 +94,7 @@ jobs:
 
   census:
     concurrency:
-      group: trading-agent-research-${{ matrix.runner }}-slot-${{ matrix.slot }}
+      group: ${{ matrix.platform == 'hosted' && format('trading-agent-research-hosted-{0}-slot-{1}', matrix.runner, matrix.slot) || format('trading-agent-research-windows-slot-{0}', matrix.slot) }}
       cancel-in-progress: false
     needs: [source_snapshot]
     if: github.repository == 'DWR-debug/trading-agent-public'
@@ -121,7 +121,7 @@ jobs:
           - shard: "2021-2022"
             runs_on: '["ubuntu-24.04"]'
             platform: "hosted"
-            runner: "hosted-ubuntu-24.04"
+            runner: "ubuntu-24.04"
             slot: "1"
           - shard: "2023"
             runs_on: '["ubuntu-24.04"]'
@@ -131,7 +131,7 @@ jobs:
           - shard: "2024-2025-09"
             runs_on: '["ubuntu-24.04-arm"]'
             platform: "hosted"
-            runner: "hosted-ubuntu-24.04-arm"
+            runner: "ubuntu-24.04-arm"
             slot: "1"
     runs-on: ${{ fromJSON(matrix.runs_on) }}
     timeout-minutes: 360
