@@ -173,6 +173,22 @@ def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_det
     assert any(m["label"] == "Preregistration + authorization reconcile" and m["status"] == "partial" for m in q218["milestones"])
 
 
+def test_q218_receipt_gate_requires_current_code_fingerprint():
+    from automation import generate_resource_dashboard as dashboard
+
+    stale = {
+        "source_gate": {
+            "verified_positive_complete": True,
+            "gate_code_blob_sha": "stale-source-sha",
+        }
+    }
+    assert dashboard.receipt_gate_is_current(
+        stale,
+        "source_gate",
+        "automation/q218_sec_multichannel_source_gate.py",
+    ) is False
+
+
 def test_dashboard_q218_completed_source_event_pair_exposes_independent_arch_queue(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
     resources = [{
