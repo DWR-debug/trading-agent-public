@@ -8,11 +8,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 
-from automation.candidate_robustness_gate import validate_candidate
-
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from automation.candidate_robustness_gate import validate_candidate
 CONTRACT = ROOT / "research/governance/q218_performance_contract_2026_10_08.json"
 OUT_DEFAULT = ROOT / "research/evidence/q218_candidate_robustness_latest.json"
 
