@@ -123,7 +123,7 @@ jobs:
           assert len(matches)==1, "Q218 preparation artifact identity is not unique"
           a=matches[0]
           root=Path(os.environ["PREP_ROOT"])
-          for name in ("q218_performance_input_bundle_receipt.json","q218_pre_performance_robustness.json"):
+          for name in ("q218_performance_input_bundle_receipt.json","q218_pre_performance_robustness.json","q218_candidate_robustness.json"):
               path=root/name
               data=json.loads(path.read_text())
               data["artifact"]={"id":a["id"],"name":a["name"],"digest":a["digest"],"expired":a["expired"],"run_id":int(os.environ.get("GITHUB_RUN_ID","0"))}
@@ -141,7 +141,7 @@ jobs:
           set -euo pipefail
           for attempt in 1 2 3 4 5; do
             base_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
-            if python3 automation/github_contents_publish.py               --repository "$GITHUB_REPOSITORY"               --branch master               --base-sha "$base_sha"               --file "research/evidence/q218_performance_input_bundle_latest.json=$PREP_ROOT/q218_performance_input_bundle_receipt.json"               --file "research/evidence/q218_pre_performance_robustness_latest.json=$PREP_ROOT/q218_pre_performance_robustness.json"; then
+            if python3 automation/github_contents_publish.py               --repository "$GITHUB_REPOSITORY"               --branch master               --base-sha "$base_sha"               --file "research/evidence/q218_performance_input_bundle_latest.json=$PREP_ROOT/q218_performance_input_bundle_receipt.json"               --file "research/evidence/q218_pre_performance_robustness_latest.json=$PREP_ROOT/q218_pre_performance_robustness.json"               --file "research/evidence/q218_candidate_robustness_latest.json=$PREP_ROOT/q218_candidate_robustness.json"; then
               exit 0
             fi
             sleep "$attempt"
