@@ -108,14 +108,25 @@ jobs:
         run: echo SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION
       - name: Publish current Q218 focus-gate receipt index
         if: ${{ success() && inputs.candidate == 'Q218' && inputs.focus_wave && (inputs.gate == 'source' || inputs.gate == 'event_pair') }}
-        shell: pwsh
+        shell: cmd
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $receipt = if ('${{ inputs.gate }}' -eq 'source') { "research/runs/top4/Q218/${{ github.run_id }}/source/receipt.json" } else { "research/runs/top4/Q218/${{ github.run_id }}/event_pair/receipt.json" }
-          python automation/q218_publish_focus_gate_receipt.py --gate '${{ inputs.gate }}' --receipt $receipt --run-id ${{ github.run_id }}
-          $currentSha = gh api "/repos/$env:GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha'
-          python automation/github_contents_publish.py --repository "$env:GITHUB_REPOSITORY" --branch master --base-sha "$currentSha" --file research/evidence/q218_focus_gate_receipt_index_latest.json=research/evidence/q218_focus_gate_receipt_index_latest.json
+          @echo off
+          setlocal
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-top4-slot\tools\python.exe"
+          if /I "${{ inputs.gate }}"=="source" (
+            set "RECEIPT=research\runs\top4\Q218\%GITHUB_RUN_ID%\source\receipt.json"
+          ) else (
+            set "RECEIPT=research\runs\top4\Q218\%GITHUB_RUN_ID%\event_pair\receipt.json"
+          )
+          "%PY_EXE%" automation/q218_publish_focus_gate_receipt.py --gate "${{ inputs.gate }}" --receipt "%RECEIPT%" --run-id ${{ github.run_id }}
+          if errorlevel 1 exit /b 1
+          for /f "delims=" %%S in ('C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "(gh api '/repos/$env:GITHUB_REPOSITORY/git/ref/heads/master' --jq '.object.sha')"') do set "CURRENT_SHA=%%S"
+          if not defined CURRENT_SHA exit /b 1
+          "%PY_EXE%" automation/github_contents_publish.py --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%CURRENT_SHA%" --file "research/evidence/q218_focus_gate_receipt_index_latest.json=research/evidence/q218_focus_gate_receipt_index_latest.json"
+          if errorlevel 1 exit /b 1
+          endlocal
       - uses: actions/upload-artifact@v6
         if: always()
         with:

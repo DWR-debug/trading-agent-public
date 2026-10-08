@@ -802,6 +802,18 @@ def top4_slot_fallback(
     return None
 
 
+def plan_dispatch(
+    snapshot: dict[str, Any],
+    runs: list[dict[str, Any]],
+    *,
+    repo: str | None = None,
+    max_dispatches: int = 4,
+) -> dict[str, Any]:
+    """Compatibility/test entry point that computes a dispatch plan without executing it."""
+    _ = repo
+    return dispatch_candidates(snapshot, runs, max_dispatches=max_dispatches)
+
+
 def run_dispatches(plan: dict[str, Any], repo: str) -> dict[str, Any]:
     results = []
     for item in plan.get("dispatches", []):
