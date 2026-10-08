@@ -142,6 +142,11 @@ function render(data){
           "<div class='metric-row'><span>Milestone-Fortschritt</span><strong>"+next+"%</strong></div>"+
           progressBar(next,true)+
           "<div class='small muted'>"+esc(x.next_milestone_progress_basis||"kein aktiver Milestone")+"</div>"+
+          "<div class='capacity-assignment' style='margin-top:12px'>"+
+            "<div class='metric-title'>Kapazitäten / Runner</div>"+
+            "<div class='small'><strong>Aktiv:</strong> "+esc((x.active_capacity_assignments||[]).map(function(a){return (a.resource||"")+" · "+(a.worker||"");}).join(" | ")||"keine")+"</div>"+
+            "<div class='small muted'><strong>Nächste Disposition:</strong> "+esc((x.planned_capacity_assignments||[]).map(function(a){return (a.resource||"")+" · "+(a.task||"");}).join(" | ")||"keine")+"</div>"+
+          "</div>"+
           "<div class='milestone-list' style='margin-top:12px'>"+(x.milestones||[]).map(function(m){
             var mv=pct(m.progress);
             var ms=String(m.status||"").toUpperCase();
@@ -151,9 +156,18 @@ function render(data){
               "<div class='state'>"+esc(ms)+" · "+mv+"%</div>"+
             "</div>";
           }).join("")+"</div>"+
+          "<div class='metric-title' style='margin-top:14px'>Entwicklungskette bis Abschluss</div>"+
+          "<div class='development-roadmap'>"+(x.development_roadmap||[]).map(function(step){
+            var rs=String(step.status||"").toUpperCase();
+            var cls=rs==="COMPLETED"?"complete":(rs==="READY"?"ready":(rs==="RUNNING"?"running":(rs==="CLOSED"?"closed":"blocked")));
+            return "<div class='roadmap-step'>"+
+              "<div><strong>"+esc(step.label)+"</strong></div>"+
+              "<div class='small "+cls+"'>"+esc(rs)+" · nächstes Kriterium: "+esc(step.next||"")+"</div>"+
+            "</div>";
+          }).join("")+"</div>"+
         "</div>"+
       "</div>"+
-      "<div class='candidate-foot'><span>"+esc(x.overall_progress_basis||"Entwicklungsindex")+"</span><span>"+(x.performance_authorization_allowed?"AUTORISIERUNG ERLAUBT":"NICHT AUTORISIERT")+"</span></div>"+
+      "<div class='candidate-foot'><span>"+esc(x.overall_progress_basis||"Entwicklungsindex")+"</span><span>"+esc(x.capacity_summary||"Kapazität nicht sichtbar")+"</span><span>"+(x.performance_authorization_allowed?"AUTORISIERUNG ERLAUBT":"NICHT AUTORISIERT")+"</span></div>"+
     "</article>";
   }).join(""):"<div class='empty'>Kein Fokus-Kandidat im Snapshot.</div>";
 

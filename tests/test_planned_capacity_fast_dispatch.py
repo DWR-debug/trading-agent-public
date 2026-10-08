@@ -101,6 +101,50 @@ def test_q104_source_only_receipt_does_not_mark_acceptance_time_census_complete(
     assert status["state"] == "running"
 
 
+
+
+def test_dashboard_maps_candidate_capacity_and_planned_runner(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    work = [
+        {
+            "resource": "Windows self-hosted A",
+            "worker": "LHT-N133732",
+            "lane": "FORMAL READINESS",
+            "task": "Q104 I19 Historical 13F Identity Census",
+            "job": "windows_census",
+            "status": "in_progress",
+            "run_id": 123,
+        },
+        {
+            "resource": "Windows self-hosted B",
+            "worker": "LHT-N133732-2",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "Top-4 Candidate Slot Research Q218",
+            "job": "Q218 source",
+            "status": "in_progress",
+            "run_id": 456,
+        },
+    ]
+    planned = [{
+        "resource": "GitHub-hosted ARM64",
+        "planned_assignments": [{
+            "plan_id": "Q218-INDEPENDENT-ARCH",
+            "candidate": "Q218",
+            "scheduled": True,
+            "dispatchable": True,
+            "task": "independent architecture PIT reproduction",
+        }],
+    }]
+    pipeline = dashboard.candidate_pipeline([], work, {}, {}, [], planned)
+    q104 = next(x for x in pipeline if x["code"] == "Q104:I19")
+    q218 = next(x for x in pipeline if x["code"] == "Q218")
+    assert q104["active_capacities"] == ["Windows self-hosted A"]
+    assert q104["active_capacity_assignments"][0]["worker"] == "LHT-N133732"
+    assert q218["active_capacities"] == ["Windows self-hosted B"]
+    assert q218["planned_capacities"] == ["GitHub-hosted ARM64"]
+    assert q218["planned_capacity_assignments"][0]["dispatchable"] is True
+
 def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_detail(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
 
