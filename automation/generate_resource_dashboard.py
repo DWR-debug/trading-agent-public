@@ -723,6 +723,7 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q218_ind_progress = 100 if q218_receipts["independent_complete"] else 0
     q218_ind_detail = "unabhängige Reproduktion erfolgreich" if q218_receipts["independent_complete"] else "noch kein positiver unabhängiger Reproduktions-Receipt"
     q218_performance_done = q218_performance_result_complete()
+    q218_replication = read_json_file("research/evidence/q218_independent_replication_latest.json")
     q218_replication_done = (
         q218_replication.get("status") == "Q218_INDEPENDENT_FRESH_SYMBOL_REPLICATION_COMPLETED"
         and q218_replication.get("fresh_symbol_disjoint") is True
