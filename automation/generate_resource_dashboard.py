@@ -1161,10 +1161,24 @@ def planned_capacity_plan(
             "lane": "FORMAL READINESS",
             "task": "independent reproduction of compiler/PIT result",
             "preferred": ["Windows self-hosted C", "GitHub-hosted ARM64"],
-            "readiness": "BLOCKED_UNTIL_COMPILER_RECEIPT",
-            "basis": "independent reproduction remains downstream of the frozen compiler input",
-            "dispatchable": False,
-            "execution_workflow": None,
+            "readiness": (
+                "COMPLETED"
+                if read_json_file("research/evidence/q104_i19_independent_pit_reproduction_latest.json").get("status")
+                == "Q104_I19_INDEPENDENT_PIT_REPRODUCED"
+                else (
+                    "READY_AFTER_COMPILER_RECEIPT"
+                    if q104_historical_compilation_status()["state"] == "complete"
+                    else "BLOCKED_UNTIL_COMPILER_RECEIPT"
+                )
+            ),
+            "basis": "independent reproduction opens only after a positive compiler receipt and remains non-authorizing",
+            "dispatchable": (
+                q104_historical_compilation_status()["state"] == "complete"
+                and read_json_file("research/evidence/q104_i19_independent_pit_reproduction_latest.json").get("status")
+                != "Q104_I19_INDEPENDENT_PIT_REPRODUCED"
+            ),
+            "allow_parallel_with_candidate": True,
+            "execution_workflow": ".github/workflows/q104-i19-independent-pit-reproduction.yml",
         },
     ]
 
