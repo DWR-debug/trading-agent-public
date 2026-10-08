@@ -2,6 +2,7 @@ from copy import deepcopy
 
 import pytest
 
+from automation.q104_i19_13f_historical_identity_census import SHARDS as CENSUS_SHARDS
 from automation.q104_i19_13f_historical_identity_census_merge import (
     EXPECTED_SHARDS,
     build_receipt,
@@ -93,8 +94,8 @@ def make_shard(shard, year, period_start, filing_date, report_period):
         },
         "shard": shard,
         "shard_boundary": {
-            "start_inclusive": period_start,
-            "end_exclusive": period_start,
+            "start_inclusive": CENSUS_SHARDS[shard][0].isoformat(),
+            "end_exclusive": CENSUS_SHARDS[shard][1].isoformat(),
         },
         "discovered_archive_count_total": 50,
         "selected_archive_count": 1,
