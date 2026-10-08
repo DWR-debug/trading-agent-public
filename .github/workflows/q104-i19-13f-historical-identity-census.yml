@@ -83,7 +83,7 @@ jobs:
       - name: Download frozen SEC source snapshot
         uses: actions/download-artifact@v6
         with:
-          name: q104-i19-sec-source-snapshot-${{ github.run_id }}-${{ github.run_attempt }}
+          name: q104-i19-sec-source-snapshot-${{ github.run_id }}
           path: research/runs/q104_i19_13f_census/source_snapshot
       - name: Run 2013-2017 shard
         shell: cmd
@@ -132,7 +132,7 @@ jobs:
       - name: Download frozen SEC source snapshot
         uses: actions/download-artifact@v6
         with:
-          name: q104-i19-sec-source-snapshot-${{ github.run_id }}-${{ github.run_attempt }}
+          name: q104-i19-sec-source-snapshot-${{ github.run_id }}
           path: research/runs/q104_i19_13f_census/source_snapshot
       - name: Run historical shard
         shell: bash
