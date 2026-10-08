@@ -77,7 +77,6 @@ def fetch(url: str, headers: dict[str, str]) -> bytes:
 def load_contract() -> dict[str, Any]:
     contract = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
     parent = json.loads(PARENT_CONTRACT_PATH.read_text(encoding="utf-8"))
-    assert contract["trial_id"] if "trial_id" in contract else True
     if contract.get("replication_trial_id") != TRIAL_ID or contract.get("status") != "FROZEN_REPLICATION_CONTRACT":
         raise RuntimeError("replication contract not frozen")
     if parent.get("trial_id") != PARENT_TRIAL_ID:
@@ -86,6 +85,15 @@ def load_contract() -> dict[str, Any]:
         raise RuntimeError("parent contract fingerprint mismatch")
     if contract.get("fresh_symbol_disjoint") is not True:
         raise RuntimeError("fresh_symbol_disjoint must be true")
+    parent_features = parent.get("feature_construction", {})
+    inherited_features = contract.get("feature_construction_inheritance", {})
+    if inherited_features.get("topic_hash_buckets") != parent_features.get("fixed_constants", {}).get("topic_hash_buckets"):
+        raise RuntimeError("feature bucket inheritance mismatch")
+    if inherited_features.get("features") != list(parent_features.get("features", {}).keys()):
+        raise RuntimeError("feature identity inheritance mismatch")
+    for key in ("holding_sessions", "entry", "exit", "outcome", "trading_calendar"):
+        if contract.get("outcome_inheritance", {}).get(key) != parent.get("outcome_contract", {}).get(key):
+            raise RuntimeError(f"outcome inheritance mismatch:{key}")
     return contract
 
 
@@ -257,6 +265,7 @@ def event_pairs(data: dict[str, Any], cik: str, out_root: Path) -> tuple[list[di
     latest_prior = max(prior_indices, key=lambda i: dates[i]) if prior_indices else None
 
     tenks = []
+    prior_boundary = []
     eligible_8k = []
     amendments = []
     for i, form in enumerate(forms):
@@ -273,6 +282,8 @@ def event_pairs(data: dict[str, Any], cik: str, out_root: Path) -> tuple[list[di
         if form == "10-K":
             row = {"form": form, "filing_date": fd, "report_date": report, "accession": accession, "primary_document": docs[i] if i < len(docs) else None, **get_header(cik, accession, out_root), "in_control_window": in_window, "prior_boundary_10k": is_prior}
             tenks.append(row)
+            if is_prior:
+                prior_boundary.append(row)
         elif form == "10-K/A":
             amendments.append({"form": form, "filing_date": fd, "accession": accession})
     for i, form in enumerate(forms):
@@ -292,7 +303,7 @@ def event_pairs(data: dict[str, Any], cik: str, out_root: Path) -> tuple[list[di
         })
 
     ordered = sorted(tenks, key=lambda r: (r["acceptance_raw"], r["accession"]))
-    prior_annual = sorted(ordered, key=lambda r: (r["acceptance_raw"], r["accession"]))
+    prior_annual = sorted([*prior_boundary, *ordered], key=lambda r: (r["acceptance_raw"], r["accession"]))
     pairs = []
     unmatched = []
     for tenk in ordered:
