@@ -1075,6 +1075,14 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         capacity_slots = max(1, int(resource.get("research_capacity_slots", 1) or 1))
         physical_in_use = 1 if resource.get("type") == "physical" and runner_busy else 0
         research_slots_in_use = min(capacity_slots, max(len(research_assignments), physical_in_use))
+        runner_visible = runner is not None
+        runner_online = bool(runner_visible and str(runner.get("status") or "").lower() == "online")
+        routable = (
+            (resource.get("type") != "physical" or runner_online)
+            and state in {"operating", "available"}
+        )
+        nominal_free = max(0, capacity_slots - research_slots_in_use)
+        routable_free = nominal_free if routable else 0
         if state == "operating":
             live_status = "operating"
         elif state == "available":
@@ -1089,11 +1097,15 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "runner_busy": runner_busy,
             "runner_status": runner.get("status") if runner else None,
             "labels": runner.get("labels", []) if runner else [],
+            "runner_visible": runner_visible,
+            "routable": routable,
             "current_assignments": len(research_assignments),
             "total_active_assignments": len(assignments),
             "research_capacity_slots": capacity_slots,
             "research_slots_in_use": research_slots_in_use,
-            "research_slots_free": max(0, capacity_slots - research_slots_in_use),
+            "research_slots_free_nominal": nominal_free,
+            "research_slots_free": routable_free,
+            "routable_slots_free": routable_free,
             "current_tasks": [w.get("task") for w in assignments[:4]],
         })
     return out
@@ -1384,6 +1396,8 @@ def planned_capacity_plan(
         for resource_name in item["preferred"]:
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
             if resource is None:
+                continue
+            if resource.get("type") == "physical" and not resource.get("routable", False):
                 continue
             # Keep a one-step lookahead independently of current occupancy. The
             # dispatcher starts this planned item only after actual free capacity.
