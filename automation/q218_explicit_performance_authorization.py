@@ -134,7 +134,7 @@ def main() -> int:
         "promotion_decision": False,
         "execution_trigger_created": False,
         "execution_workflow": None,
-        "execution_readiness_note": "Authorization is valid, but the Q218 public repository currently has no fixed performance executor. No execution trigger is created until an exact executor and input bundle are frozen.",
+        "execution_readiness_note": "Authorization is valid for one fixed Q218 performance run. The deterministic network-free executor, frozen input bundle and pre-performance robustness receipt are prerequisites; no execution trigger is created by authorization itself.",
         "safety": {
             "paper_only": True,
             "live_trading_enabled": False,

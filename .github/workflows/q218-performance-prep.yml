@@ -1,0 +1,166 @@
+name: Q218 Performance Preparation
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/governance/q218_performance_contract_2026_10_08.json"
+      - "automation/q218_performance_input_freeze.py"
+      - "automation/q218_deterministic_performance_executor.py"
+      - "automation/q218_preperformance_robustness.py"
+      - ".github/workflows/q218-performance-prep.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: trading-agent-q218-performance-prep
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install fixed preparation dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check exchange-calendars pandas
+
+      - name: Record canonical Q218 candidate robustness
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q218_candidate_robustness_receipt.py             --output "research/runs/q218_performance_prep/${{ github.run_id }}/q218_candidate_robustness.json"
+
+      - name: Freeze Q218 SEC and market input bundle
+        shell: bash
+        env:
+          PREP_ROOT: research/runs/q218_performance_prep/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$PREP_ROOT"
+          python automation/q218_performance_input_freeze.py             --output-root "$PREP_ROOT"             --receipt "$PREP_ROOT/q218_performance_input_bundle_receipt.json"
+
+      - name: Run Q218 pre-performance robustness
+        shell: bash
+        env:
+          PREP_ROOT: research/runs/q218_performance_prep/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python automation/q218_preperformance_robustness.py             --bundle "$PREP_ROOT/input_bundle_manifest.json"             --output "$PREP_ROOT/q218_pre_performance_robustness.json"
+
+      - name: Validate preparation boundaries
+        shell: bash
+        env:
+          PREP_ROOT: research/runs/q218_performance_prep/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root=Path(os.environ["PREP_ROOT"])
+          bundle=json.loads((root/"input_bundle_manifest.json").read_text())
+          inp=json.loads((root/"q218_performance_input_bundle_receipt.json").read_text())
+          robust=json.loads((root/"q218_pre_performance_robustness.json").read_text())
+          assert bundle["trial_id"]=="T-2026-10-08-Q218-PERFORMANCE-01"
+          assert bundle["executor_network_access"] is False
+          assert bundle["selection_used"] is False
+          assert bundle["parameter_search"] is False
+          candidate=json.loads((root/"q218_candidate_robustness.json").read_text())
+          assert inp["status"]=="INPUT_BUNDLE_FROZEN"
+          assert inp["performance_authorized"] is False
+          assert candidate["status"]=="PRE_FORMAL_ROBUSTNESS_COMPLETED"
+          assert candidate["formalization_allowed"] is False
+          assert candidate["performance_authorization"] is False
+          assert robust["status"]=="PRE_PERFORMANCE_ROBUSTNESS_COMPLETED"
+          assert robust["all_mutations_rejected"] is True
+          assert robust["performance_authorized"] is False
+          assert robust["research_only"] is True
+          assert robust["screen_is_descriptive_only"] is True
+          assert robust["no_post_hoc_tuning"] is True
+          print("Q218_PREPARATION_BOUNDARY_VALIDATED")
+          PY
+
+      - name: Upload immutable Q218 preparation artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: q218-performance-prep-${{ github.run_id }}
+          path: research/runs/q218_performance_prep/${{ github.run_id }}/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Bind artifact identity to receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREP_ROOT: research/runs/q218_performance_prep/${{ github.run_id }}
+          ARTIFACT_NAME: q218-performance-prep-${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/q218-artifacts.json"
+          ARTIFACTS_JSON="$RUNNER_TEMP/q218-artifacts.json" PREP_ROOT="$PREP_ROOT" ARTIFACT_NAME="$ARTIFACT_NAME" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          payload=json.loads(Path(os.environ["ARTIFACTS_JSON"]).read_text())
+          matches=[a for a in payload.get("artifacts",[]) if a.get("name")==os.environ["ARTIFACT_NAME"]]
+          assert len(matches)==1, "Q218 preparation artifact identity is not unique"
+          a=matches[0]
+          root=Path(os.environ["PREP_ROOT"])
+          for name in ("q218_performance_input_bundle_receipt.json","q218_pre_performance_robustness.json","q218_candidate_robustness.json"):
+              path=root/name
+              data=json.loads(path.read_text())
+              data["artifact"]={"id":a["id"],"name":a["name"],"digest":a["digest"],"expired":a["expired"],"run_id":int(os.environ.get("GITHUB_RUN_ID","0"))}
+              data["artifact_path"]=f"actions://artifacts/{a['id']}"
+              data["artifact_sha256"]=a["digest"]
+              previous=data.pop("receipt_fingerprint",None)
+              if previous is not None:
+                  import hashlib
+                  canonical=json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(",",":"),allow_nan=False).encode("utf-8")
+                  data["receipt_fingerprint"]=hashlib.sha256(canonical).hexdigest()
+              path.write_text(json.dumps(data,indent=2,ensure_ascii=False)+"\n")
+          PY
+
+      - name: Publish Q218 preparation receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREP_ROOT: research/runs/q218_performance_prep/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            base_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python3 automation/github_contents_publish.py               --repository "$GITHUB_REPOSITORY"               --branch master               --base-sha "$base_sha"               --file "research/evidence/q218_performance_input_bundle_latest.json=$PREP_ROOT/q218_performance_input_bundle_receipt.json"               --file "research/evidence/q218_pre_performance_robustness_latest.json=$PREP_ROOT/q218_pre_performance_robustness.json"               --file "research/evidence/q218_candidate_robustness_latest.json=$PREP_ROOT/q218_candidate_robustness.json"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+
+      - name: Upload preparation receipts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q218-performance-prep-receipts-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            research/runs/q218_performance_prep/${{ github.run_id }}/q218_performance_input_bundle_receipt.json
+            research/runs/q218_performance_prep/${{ github.run_id }}/q218_pre_performance_robustness.json
+            research/runs/q218_performance_prep/${{ github.run_id }}/q218_candidate_robustness.json
+          if-no-files-found: error
+          retention-days: 30
