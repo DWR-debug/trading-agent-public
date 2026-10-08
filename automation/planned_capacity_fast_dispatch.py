@@ -642,7 +642,9 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                         "decision": "FOCUSED_GATE_TECHNICAL_RETRY_PERMITTED",
                         "gate": gate,
                     })
-            elif failures >= 2:
+            else:
+                failures = failure_counts.get(scope, 0) if scope else 0
+            if not focus_wave and failures >= 2:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_RETRY_EXHAUSTED"})
                 fallback = top4_slot_fallback(
                     resource,
