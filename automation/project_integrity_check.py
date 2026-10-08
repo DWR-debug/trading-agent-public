@@ -279,6 +279,7 @@ ACTIVE_WORKFLOWS = {
     "temporal-identity-state-spine-waves.yml",
     "spine-next-gate-autonomous-router.yml",
     "q228-sec-correspondence-source-gate.yml",
+    "q218-independent-replication-once.yml",
 }
 
 REQUIRED_FILES = (
@@ -499,6 +500,27 @@ def _validate_critical_research_controls() -> None:
         fail("critical research orthogonal scheduler remains vulnerable to forbidden inputs")
 
 
+def _validate_capacity_dispatch_contract() -> None:
+    path = ROOT / "research" / "governance" / "persistent_research_acceleration_contract.json"
+    try:
+        contract = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"capacity dispatch contract is unreadable: {exc}")
+    windows = contract.get("parallelism_policy", {}).get("self_hosted_windows", {})
+    if windows.get("availability_policy") != "LIVE_VERIFIED_ONLINE_REQUIRED_FOR_AUTOMATIC_DISPATCH":
+        fail("self-hosted capacity must require live runner verification")
+    availability_text = " ".join(str(x) for x in contract.get("startup_logic", []))
+    if "always-routable" in availability_text.lower():
+        fail("capacity contract still contains unconditional always-routable self-hosted language")
+    rules = windows.get("rules", [])
+    required_rule = "UNVERIFIED physical slots have zero routable free capacity."
+    if required_rule not in rules:
+        fail("capacity contract lacks fail-closed unverified physical slot rule")
+    leases = contract.get("rolling_capacity_wave_control", {}).get("slotwise_replenishment", {}).get("multi_resource_exclusive_workflows", [])
+    if ".github/workflows/q218-independent-replication-once.yml" not in leases:
+        fail("Q218 independent replication is not registered as an atomic multi-resource workflow")
+
+
 def _validate_i19_concept_freeze() -> None:
     path = ROOT / "research" / "preregistrations" / "q104_i19_xbrl_concept_freeze_2026_10_03.json"
     test_path = ROOT / "tests" / "test_q104_i19_xbrl_concept_freeze.py"
@@ -537,6 +559,7 @@ def main() -> None:
     _validate_q067_evidence_chain()
     _validate_research_os_registry()
     _validate_critical_research_controls()
+    _validate_capacity_dispatch_contract()
     _validate_i19_concept_freeze()
 
     for path in REQUIRED_FILES:

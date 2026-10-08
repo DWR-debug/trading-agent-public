@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_independent_replication_contract",
+  "candidate_id": "Q218",
+  "replication_trial_id": "T-2026-10-08-Q218-REPLICATION-01",
+  "status": "FROZEN_REPLICATION_CONTRACT",
+  "parent_trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+  "parent_contract_path": "research/governance/q218_performance_contract_2026_10_08.json",
+  "parent_contract_sha256": "94e4fa782a6afbf978870a4422a16a7084bd13aab3ed2d7baa2db2e5926cf873",
+  "fixed_window": {
+    "start": "2025-01-01",
+    "end": "2026-10-05",
+    "future_cutoff_utc": "2026-10-05T23:59:59Z"
+  },
+  "fresh_symbol_disjoint": true,
+  "issuers": {
+    "GOOGL": "1652044",
+    "META": "1326801",
+    "ORCL": "1341439",
+    "PFE": "78003"
+  },
+  "selection_rule": "Complete fixed fresh-symbol issuer list; all eligible event pairs in the fixed window are used without outcome-based filtering.",
+  "source_rules": {
+    "mandatory": "unamended Form 10-K",
+    "voluntary": "unamended Form 8-K containing SEC Item 2.02",
+    "acceptance_clock": "SEC ACCEPTANCE-DATETIME parsed as America/New_York wall-clock; raw 14-digit value preserved",
+    "pair_rule": "For each in-window 10-K, choose the latest eligible Item 2.02 8-K with acceptance strictly after the preceding annual 10-K acceptance and less than or equal to the target 10-K acceptance.",
+    "amendments": "10-K/A and 8-K/A are excluded from the event population; lineage/provenance is retained and unresolved lineage fails closed.",
+    "future_data": "No SEC or market observation after 2026-10-05T23:59:59Z is accepted."
+  },
+  "feature_construction_inheritance": {
+    "source_of_truth": "parent frozen Q218 performance contract, inherited unchanged",
+    "tokenization": "UTF-8 lowercase ASCII-alphanumeric tokens matching [a-z0-9]+",
+    "topic_hash_buckets": 64,
+    "bucket_rule": "SHA-256 first 8 hex digits modulo 64",
+    "features": [
+      "topic_coverage_gap_mandatory_vs_voluntary",
+      "omission_asymmetry_by_topic",
+      "secondary_framing_gap"
+    ],
+    "forbidden_adaptations": [
+      "learned vocabulary",
+      "corpus-specific token filtering",
+      "feature weighting",
+      "parameter tuning",
+      "threshold search",
+      "post-pass rule changes"
+    ]
+  },
+  "outcome_inheritance": {
+    "action_session": "first XNYS trading session strictly after pair_closure_clock",
+    "holding_sessions": 1,
+    "entry": "session open",
+    "exit": "same-session close",
+    "outcome": "close / open - 1.0",
+    "price_source": "Yahoo Finance daily chart quote OHLC",
+    "missingness": "missing action-session open/close is DATA_INSUFFICIENT; no imputation",
+    "trading_calendar": "XNYS via exchange_calendars"
+  },
+  "independence_boundary": {
+    "performance_output_reuse_for_rule_changes": false,
+    "post_pass_optimization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "execution": {
+    "script": "automation/q218_independent_replication.py",
+    "workflow": ".github/workflows/q218-independent-replication-once.yml",
+    "trigger": "research/run_requests/q218_independent_replication.trigger",
+    "aggregation": "automation/q218_independent_replication_consolidate.py"
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

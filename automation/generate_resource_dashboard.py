@@ -675,6 +675,29 @@ def q218_prereg_status() -> dict[str, Any]:
         "next_gate": "frozen preregistration + immutable authorization reconcile",
     }
 
+def q218_performance_result_complete() -> bool:
+    path = ROOT / "research" / "evidence" / "q218_deterministic_performance_result_latest.json"
+    try:
+        result = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return (
+        result.get("record_type") == "q218_deterministic_performance_result"
+        and result.get("candidate_id") == "Q218"
+        and result.get("trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+        and result.get("performance_evaluation") is True
+        and result.get("selection_used") is False
+        and result.get("holdout_used_for_selection") is False
+        and result.get("promotion_decision") is False
+        and result.get("safety") == {
+            "paper_only": True,
+            "live_trading_enabled": False,
+            "orders_enabled": False,
+            "automatic_promotion": False,
+        }
+    )
+
+
 def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q104_census = q104_census_status(runs)
     q218_prereg = q218_prereg_status()
@@ -699,13 +722,20 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q218_ind_state = "complete" if q218_receipts["independent_complete"] else "open"
     q218_ind_progress = 100 if q218_receipts["independent_complete"] else 0
     q218_ind_detail = "unabhängige Reproduktion erfolgreich" if q218_receipts["independent_complete"] else "noch kein positiver unabhängiger Reproduktions-Receipt"
+    q218_performance_done = q218_performance_result_complete()
+    q218_replication = read_json_file("research/evidence/q218_independent_replication_latest.json")
+    q218_replication_done = (
+        q218_replication.get("status") == "Q218_INDEPENDENT_FRESH_SYMBOL_REPLICATION_COMPLETED"
+        and q218_replication.get("fresh_symbol_disjoint") is True
+    )
     q218_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Q218 design/gate contract eingefroren"},
         {"label": "Source gate", "status": q218_source_state, "progress": q218_source_progress, "detail": "positiver Source Gate Receipt" if q218_receipts["source_complete"] else "Source Gate Receipt fehlt"},
         {"label": "Event-pair gate", "status": q218_event_state, "progress": q218_event_progress, "detail": "positiver Event-Pair Receipt" if q218_receipts["event_pair_complete"] else "Event-Pair Receipt fehlt"},
         {"label": "Independent Architecture PIT", "status": q218_ind_state, "progress": q218_ind_progress, "detail": q218_ind_detail},
         {"label": "Preregistration + authorization reconcile", "status": q218_prereg["state"], "progress": q218_prereg["progress_percent"], "detail": q218_prereg["detail"]},
-        {"label": "One-shot performance", "status": "ready" if q218_prereg.get("performance_authorized") else "closed", "progress": 0, "detail": "explizit autorisiert; Ausführung ausstehend" if q218_prereg.get("performance_authorized") else "erst nach separater immutable authorization; aktuell geschlossen"},
+        {"label": "One-shot performance", "status": "complete" if q218_performance_done else ("ready" if q218_prereg.get("performance_authorized") else "closed"), "progress": 100 if q218_performance_done else 0, "detail": "immutable deterministic performance receipt published" if q218_performance_done else ("explizit autorisiert; Ausführung ausstehend" if q218_prereg.get("performance_authorized") else "keine Performance-Autorisierung")},
+        {"label": "Independent fresh-symbol replication", "status": "complete" if q218_replication_done else "ready", "progress": 100 if q218_replication_done else 0, "detail": "vier disjunkte Replikationssymbole vollständig" if q218_replication_done else "vier disjunkte Replikationssymbole bereit; keine Regeländerung aus Performance-Ergebnis"},
     ]
 
     def overall(milestones: list[dict[str, Any]]) -> tuple[int, int, int]:
@@ -756,25 +786,26 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "completed_milestones": q218_complete,
                 "total_milestones": q218_total,
                 "current_milestone": (
-                    "Preregistration + authorization reconcile"
-                    if q218_receipts["independent_complete"]
-                    else ("Independent Architecture PIT" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-pair gate" if q218_receipts["source_complete"] else "Source gate"))
+                    "Independent fresh-symbol replication" if q218_performance_done and q218_receipts["independent_complete"] and not q218_replication_done
+                    else ("One-shot performance" if q218_receipts["independent_complete"] and q218_prereg.get("performance_authorized") and not q218_performance_done
+                    else ("Preregistration + authorization reconcile" if q218_receipts["independent_complete"]
+                    else ("Independent Architecture PIT" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-pair gate" if q218_receipts["source_complete"] else "Source gate"))))
                 ),
                 "current_milestone_progress_percent": (
-                    q218_prereg["progress_percent"] if q218_receipts["independent_complete"]
-                    else (100 if q218_receipts["event_pair_complete"] and q218_receipts["source_complete"] else 0)
+                    0 if q218_performance_done and q218_receipts["independent_complete"] and not q218_replication_done
+                    else (100 if q218_performance_done else (q218_prereg["progress_percent"] if q218_receipts["independent_complete"] else (100 if q218_receipts["event_pair_complete"] and q218_receipts["source_complete"] else 0)))
                 ),
                 "current_milestone_status": (
-                    q218_prereg["state"] if q218_receipts["independent_complete"]
-                    else ("open" if (q218_receipts["source_complete"] and q218_receipts["event_pair_complete"]) else "open")
+                    "ready" if q218_performance_done and q218_receipts["independent_complete"] and not q218_replication_done
+                    else ("ready" if q218_prereg.get("performance_authorized") and not q218_performance_done else q218_prereg["state"])
                 ),
                 "current_milestone_detail": (
-                    q218_prereg["detail"] if q218_receipts["independent_complete"]
-                    else (q218_ind_detail if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-Pair receipt fehlt" if q218_receipts["source_complete"] else "Source-Gate Receipt fehlt"))
+                    "Performance abgeschlossen; jetzt folgt die unabhängige Fresh-Symbol-Reproduktion" if q218_performance_done and q218_receipts["independent_complete"] and not q218_replication_done
+                    else (q218_prereg["detail"] if q218_receipts["independent_complete"] else (q218_ind_detail if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-Pair receipt fehlt" if q218_receipts["source_complete"] else "Source-Gate Receipt fehlt")))
                 ),
                 "next_gate": (
-                    q218_prereg["next_gate"] if q218_receipts["independent_complete"]
-                    else ("independent architecture PIT reproduction" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("event-pair gate" if q218_receipts["source_complete"] else "source gate"))
+                    "independent fresh-symbol replication" if q218_performance_done and q218_receipts["independent_complete"] and not q218_replication_done
+                    else ("one-shot performance execution" if q218_prereg.get("performance_authorized") and not q218_performance_done else q218_prereg["next_gate"])
                 ),
                 "milestones": q218_milestones,
                 "performance_authorization_allowed": False,
@@ -871,14 +902,19 @@ def candidate_development_roadmap(
             {"id": "Q104-G5", "label": "One-shot performance", "status": "closed", "next": "separate explicit authorization"},
         ]
     source_event_done = q218_receipts.get("source_complete") and q218_receipts.get("event_pair_complete")
+    performance_done = q218_performance_result_complete()
+    q218_replication = read_json_file("research/evidence/q218_independent_replication_latest.json")
+    replication_done = q218_replication.get("status") == "Q218_INDEPENDENT_FRESH_SYMBOL_REPLICATION_COMPLETED"
     return [
         {"id": "Q218-SOURCE-EVENT", "label": "Fresh SEC Source + strict Item 2.02 Event-Pair revalidation", "status": "completed" if source_event_done else "ready", "next": "fresh current-context receipts after strict eligibility change"},
         {"id": "Q218-REPRO", "label": "Independent Architecture PIT reproduction", "status": "completed" if q218_receipts.get("independent_complete") else "blocked", "next": "fresh source/event receipts"},
-        {"id": "Q218-BUNDLE", "label": "Freeze performance input bundle + deterministic executor", "status": "blocked", "next": "Issue #1227 engineering closure"},
-        {"id": "Q218-ROBUST", "label": "Pre-performance robustness + independent replication", "status": "blocked", "next": "frozen executor/input bundle"},
-        {"id": "Q218-G4", "label": "Exact current-master re-authorization reconcile", "status": "blocked", "next": "robustness + replication + CI"},
-        {"id": "Q218-G5", "label": "One-shot performance", "status": "closed", "next": "separate explicit authorization"},
+        {"id": "Q218-BUNDLE", "label": "Freeze performance input bundle + deterministic executor", "status": "completed", "next": "pre-performance robustness"},
+        {"id": "Q218-ROBUST", "label": "Pre-performance robustness + independent replication contract", "status": "completed", "next": "one-shot performance + dedicated replication"},
+        {"id": "Q218-G4", "label": "Exact current-master re-authorization reconcile", "status": "completed", "next": "one-shot performance execution"},
+        {"id": "Q218-G5", "label": "One-shot performance", "status": "completed" if performance_done else "ready", "next": "independent fresh-symbol replication" if performance_done and not replication_done else "separate explicit authorization"},
+        {"id": "Q218-R1", "label": "Independent fresh-symbol replication", "status": "completed" if replication_done else ("ready" if performance_done else "blocked"), "next": "immutable four-symbol receipt" if not replication_done else "independent statistical consolidation"},
     ]
+
 
 def candidate_pipeline(
     top4: list[dict[str, Any]],
@@ -901,12 +937,15 @@ def candidate_pipeline(
             if _candidate_key(candidate) in text_value:
                 active_by_candidate[candidate].append(item)
 
+    q218_performance_done = q218_performance_result_complete()
     state_by_candidate = {
         "Q104:I19": "FORMAL READINESS · HISTORICAL 13F CENSUS",
         "Q218": (
-            "FRONTIER DISCOVERY · PREREGISTRATION + AUTHORIZATION RECONCILE"
+            "FRONTIER DISCOVERY · INDEPENDENT FRESH-SYMBOL REPLICATION"
+            if q218_performance_done and q218_receipts["independent_complete"]
+            else ("FRONTIER DISCOVERY · PREREGISTRATION + AUTHORIZATION RECONCILE"
             if q218_receipts["independent_complete"]
-            else "FRONTIER DISCOVERY · INDEPENDENT ARCHITECTURE PIT"
+            else "FRONTIER DISCOVERY · INDEPENDENT ARCHITECTURE PIT")
         ),
     }
     for candidate in FOCUS_CANDIDATES:
@@ -1037,6 +1076,14 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         capacity_slots = max(1, int(resource.get("research_capacity_slots", 1) or 1))
         physical_in_use = 1 if resource.get("type") == "physical" and runner_busy else 0
         research_slots_in_use = min(capacity_slots, max(len(research_assignments), physical_in_use))
+        runner_visible = runner is not None
+        runner_online = bool(runner_visible and str(runner.get("status") or "").lower() == "online")
+        routable = (
+            (resource.get("type") != "physical" or runner_online)
+            and state in {"operating", "available"}
+        )
+        nominal_free = max(0, capacity_slots - research_slots_in_use)
+        routable_free = nominal_free if routable else 0
         if state == "operating":
             live_status = "operating"
         elif state == "available":
@@ -1051,11 +1098,15 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "runner_busy": runner_busy,
             "runner_status": runner.get("status") if runner else None,
             "labels": runner.get("labels", []) if runner else [],
+            "runner_visible": runner_visible,
+            "routable": routable,
             "current_assignments": len(research_assignments),
             "total_active_assignments": len(assignments),
             "research_capacity_slots": capacity_slots,
             "research_slots_in_use": research_slots_in_use,
-            "research_slots_free": max(0, capacity_slots - research_slots_in_use),
+            "research_slots_free_nominal": nominal_free,
+            "research_slots_free": routable_free,
+            "routable_slots_free": routable_free,
             "current_tasks": [w.get("task") for w in assignments[:4]],
         })
     return out
@@ -1109,6 +1160,15 @@ def planned_capacity_plan(
         and int(q104_census_receipt.get("acceptance_time_join", {}).get("failures", 0)) == 0
     )
     q218_receipts = q218_receipt_state()
+    q218_replication = read_json_file("research/evidence/q218_independent_replication_latest.json")
+    q218_replication_complete = (
+        q218_replication.get("status") == "Q218_INDEPENDENT_FRESH_SYMBOL_REPLICATION_COMPLETED"
+        and q218_replication.get("fresh_symbol_disjoint") is True
+        and set(q218_replication.get("symbols", [])) == {"GOOGL", "META", "ORCL", "PFE"}
+        and q218_replication.get("selection_used") is False
+        and q218_replication.get("post_pass_optimization") is False
+        and q218_replication.get("performance_output_reuse_for_rule_changes") is False
+    )
 
     overlay = os_state.get("top_candidate_capacity_overlay", {})
     a_priority = [str(x) for x in overlay.get("windows_A", {}).get("priority", [])]
@@ -1181,6 +1241,45 @@ def planned_capacity_plan(
             "dispatchable": True,
             "allow_parallel_with_candidate": True,
             "execution_workflow": ".github/workflows/q218-independent-architecture-pit-reproduction.yml",
+        },
+        {
+            "plan_id": "Q218-INDEPENDENT-REPLICATION",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "fresh-symbol disjoint Q218 replication across four independent issuer/security contexts",
+            "preferred": ["Windows self-hosted B"],
+            "resource_leases": ["Windows self-hosted B", "Windows self-hosted C", "GitHub-hosted Ubuntu x64", "GitHub-hosted ARM64"],
+            "readiness": (
+                "READY_FRESH_SYMBOL_REPLICATION"
+                if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] and q218_receipts["independent_complete"] and not q218_replication_complete
+                else ("COMPLETED" if q218_replication_complete else "BLOCKED_UNTIL_Q218_ARCHITECTURE_RECEIPT")
+            ),
+            "basis": "dedicated four-resource workflow uses fixed fresh symbols GOOGL/META/ORCL/PFE; no reuse of original performance output for rule changes",
+            "dispatchable": bool(
+                q218_receipts["source_complete"]
+                and q218_receipts["event_pair_complete"]
+                and q218_receipts["independent_complete"]
+                and not q218_replication_complete
+            ),
+            "allow_parallel_with_candidate": True,
+            "execution_workflow": ".github/workflows/q218-independent-replication-once.yml",
+        },
+        {
+            "plan_id": "Q104-I19-CENSUS-ADVERSARIAL",
+            "candidate": "Q104:I19",
+            "lane": "FORMAL READINESS",
+            "task": "fresh adversarial contract review of the active 13F census → PIT compiler handoff",
+            "preferred": ["Free AI pool"],
+            "readiness": "READY_AI_FABRIC_RETRY",
+            "basis": "prior free-only provider attempt failed at the provider handoff; same bounded methods question may be retried without scientific scope change",
+            "dispatchable": True,
+            "allow_parallel_with_candidate": True,
+            "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
+            "execution_workflow_inputs": {
+                "task_id": "AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL",
+                "run_secondary_provider": "false",
+                "use_litellm_transport": "false",
+            },
         },
         {
             "plan_id": "Q104-I19-COMPILER",
@@ -1257,6 +1356,15 @@ def planned_capacity_plan(
                     continue
                 if q218_receipts["independent_complete"]:
                     continue
+            if plan_id == "Q218-INDEPENDENT-REPLICATION":
+                if not (
+                    q218_receipts["source_complete"]
+                    and q218_receipts["event_pair_complete"]
+                    and q218_receipts["independent_complete"]
+                ):
+                    continue
+                if q218_replication_complete:
+                    continue
         if item.get("plan_id") == "Q218-ADVERSARIAL" and any("free ai" in value and "q218" in value for value in active_text):
             continue
         if item.get("plan_id") == "Q221-ADVERSARIAL" and any("free ai" in value and "q221" in value for value in active_text):
@@ -1271,6 +1379,14 @@ def planned_capacity_plan(
                 and not q218_receipts["independent_complete"]
             ):
                 continue
+        if item.get("plan_id") == "Q218-INDEPENDENT-REPLICATION":
+            if not (
+                q218_receipts["source_complete"]
+                and q218_receipts["event_pair_complete"]
+                and q218_receipts["independent_complete"]
+                and not q218_replication_complete
+            ):
+                continue
         if item["readiness"].startswith("BLOCKED_"):
             continue
         if item.get("execution_workflow") == ".github/workflows/ai-worker-fabric.yml":
@@ -1281,6 +1397,8 @@ def planned_capacity_plan(
         for resource_name in item["preferred"]:
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
             if resource is None:
+                continue
+            if resource.get("type") == "physical" and not resource.get("routable", False):
                 continue
             # Keep a one-step lookahead independently of current occupancy. The
             # dispatcher starts this planned item only after actual free capacity.

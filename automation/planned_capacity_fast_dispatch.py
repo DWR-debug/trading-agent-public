@@ -418,6 +418,12 @@ def resource_capacity_for_plan(snapshot: dict[str, Any], row: dict[str, Any]) ->
     reported_free = row.get("research_slots_free")
     if reported_free is None:
         reported_free = resource_meta.get("research_slots_free")
+    resource_type = str(row.get("type") or resource_meta.get("type") or "")
+    routable = row.get("routable")
+    if routable is None:
+        routable = resource_meta.get("routable")
+    if resource_type == "physical" and routable is not True:
+        return current, slots, False
     resource_free = int(reported_free) > 0 if reported_free is not None else current < slots
     return current, slots, resource_free
 
@@ -494,6 +500,36 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         if not item["resource_free"]:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_RESOURCE_BUSY"})
             continue
+
+        leases = [str(x) for x in (item.get("resource_leases") or []) if str(x)]
+        if leases:
+            lease_rows = {
+                str(row.get("resource") or ""): row
+                for row in snapshot.get("planned_capacity", [])
+                if isinstance(row, dict) and str(row.get("resource") or "")
+            }
+            lease_meta = {
+                str(row.get("name") or ""): row
+                for row in snapshot.get("resources", [])
+                if isinstance(row, dict) and str(row.get("name") or "")
+            }
+            lease_failures = []
+            for lease in leases:
+                row = lease_rows.get(lease)
+                resource_meta = lease_meta.get(lease, {})
+                _, _, lease_free = resource_capacity_for_plan(
+                    snapshot,
+                    row or resource_meta,
+                )
+                if not lease_free:
+                    lease_failures.append(lease)
+            if lease_failures:
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_MULTI_RESOURCE_LEASE_NOT_SIMULTANEOUSLY_ROUTABLE",
+                    "blocked_resources": lease_failures,
+                })
+                continue
 
         dispatch_gate = str((item.get("execution_workflow_inputs") or {}).get("gate") or "all")
         if candidate == "Q218" and dispatch_gate in Q218_GATE_NAMES and focused_gate_recently_cancelled(runs, candidate, dispatch_gate):

@@ -980,7 +980,10 @@ def test_dashboard_skips_current_context_completed_focused_ai_before_filling_fre
     monkeypatch.setattr(
         dashboard,
         "ai_task_completed_with_current_context",
-        lambda task_id, root=None: task_id == "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
+        lambda task_id, root=None: task_id in {
+            "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
+            "AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL",
+        },
     )
     plan = dashboard.planned_capacity_plan(resources, [], [], {}, {})
     ai = next(row for row in plan if row["resource"] == "Free AI pool")
@@ -1000,3 +1003,172 @@ def test_q104_recovery_cannot_cancel_an_active_census():
     assert "needs: [recovery_guard]" in workflow
     assert "needs.recovery_guard.outputs.proceed == 'true'" in workflow
     assert "needs.recovery_guard.outputs.proceed" in workflow
+
+
+def test_q218_independent_replication_workflow_consumes_four_free_research_slots():
+    from automation import generate_resource_dashboard as dashboard
+    resources = [
+        {"name": "Windows self-hosted B", "capacity_state": "available", "current_assignments": 0, "research_capacity_slots": 1},
+        {"name": "Free AI pool", "capacity_state": "available", "current_assignments": 0, "research_capacity_slots": 1},
+    ]
+    monkeypatch = __import__("pytest").MonkeyPatch()
+    try:
+        monkeypatch.setattr(dashboard, "q218_receipt_state", lambda: {
+            "source_complete": True,
+            "event_pair_complete": True,
+            "independent_complete": True,
+        })
+        monkeypatch.setattr(dashboard, "read_json_file", lambda path: (
+            {"status": "Q218_INDEPENDENT_FRESH_SYMBOL_REPLICATION_COMPLETED"}
+            if "q218_independent_replication_latest.json" in str(path)
+            else {}
+        ))
+        monkeypatch.setattr(dashboard, "ai_task_completed_with_current_context", lambda task_id, root=None: task_id == "AI-2026-10-06-Q218-TOP4-ADVERSARIAL")
+        plan = dashboard.planned_capacity_plan(resources, [], [{"code":"Q104:I19","next_gate":"13F census"},{"code":"Q218","next_gate":"replication"}], {}, {})
+        assignments = [
+            item
+            for row in plan
+            for item in row.get("planned_assignments", [])
+            if item.get("scheduled")
+        ]
+        ids = {item["plan_id"] for item in assignments}
+        assert "Q218-INDEPENDENT-REPLICATION" in ids
+        assert "Q104-I19-CENSUS-ADVERSARIAL" in ids
+        replication = next(x for x in assignments if x["plan_id"] == "Q218-INDEPENDENT-REPLICATION")
+        assert set(replication["resource_leases"]) == {
+            "Windows self-hosted B",
+            "Windows self-hosted C",
+            "GitHub-hosted Ubuntu x64",
+            "GitHub-hosted ARM64",
+        }
+    finally:
+        monkeypatch.undo()
+
+
+def test_q218_independent_replication_workflow_is_registered_as_capacity_trigger():
+    workflow = (ROOT / ".github/workflows/q218-independent-replication-once.yml").read_text(encoding="utf-8")
+    dispatcher = (ROOT / ".github/workflows/planned-capacity-fast-dispatch.yml").read_text(encoding="utf-8")
+    assert 'research/run_requests/q218_independent_replication.trigger' in workflow
+    assert "Q218 Independent Fresh-Symbol Replication" in dispatcher
+    assert "replicate_windows_a:" in workflow
+    assert "replicate_windows_b:" in workflow
+    assert "runs-on: [self-hosted, trading-agent-research]" in workflow
+    assert "ubuntu-24.04-arm" in workflow
+
+
+def test_q218_replication_contract_and_executor_are_fresh_symbol_disjoint():
+    contract = json.loads((ROOT / "research/governance/q218_independent_replication_contract_2026_10_08.json").read_text(encoding="utf-8"))
+    executor = (ROOT / "automation/q218_independent_replication.py").read_text(encoding="utf-8")
+    assert contract["fresh_symbol_disjoint"] is True
+    assert set(contract["issuers"]) == {"GOOGL","META","ORCL","PFE"}
+    assert contract["replication_trial_id"] == "T-2026-10-08-Q218-REPLICATION-01"
+    assert "q218_deterministic_performance_executor" not in executor
+    assert "q218_sec_multichannel_source_gate" not in executor
+    assert "q218_sec_event_pair_lineage_gate" not in executor
+
+
+def test_fast_dispatch_fail_closed_for_unverified_physical_runner():
+    import automation.planned_capacity_fast_dispatch as dispatcher
+    snapshot = {
+        "work_assignments": [],
+        "resources": [{
+            "name": "Windows self-hosted B",
+            "type": "physical",
+            "capacity_state": "unknown",
+            "routable": False,
+            "research_capacity_slots": 1,
+            "research_slots_in_use": 0,
+            "research_slots_free": 0,
+        }],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted B",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-INDEPENDENT-REPLICATION",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "allow_parallel_with_candidate": True,
+                "execution_workflow": ".github/workflows/q218-independent-replication-once.yml",
+                "resource_leases": [
+                    "Windows self-hosted B",
+                    "Windows self-hosted C",
+                    "GitHub-hosted Ubuntu x64",
+                    "GitHub-hosted ARM64",
+                ],
+            }],
+        }],
+    }
+    plan = dispatcher.dispatch_candidates(snapshot, [], max_dispatches=4)
+    assert plan["dispatches"] == []
+
+
+def test_dashboard_physical_unverified_has_zero_routable_free():
+    from automation import generate_resource_dashboard as dashboard
+    configured = [{
+        "name": "Windows self-hosted B",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "LHT-N133732-2",
+    }]
+    result = dashboard.enrich_resources(configured, [], [])
+    row = result[0]
+    assert row["capacity_state"] == "unknown"
+    assert row["routable"] is False
+    assert row["research_slots_free_nominal"] == 1
+    assert row["research_slots_free"] == 0
+    assert row["routable_slots_free"] == 0
+
+
+def test_capacity_contract_requires_live_runner_verification_for_physical_slots():
+    contract = json.loads((ROOT / "research/governance/persistent_research_acceleration_contract.json").read_text(encoding="utf-8"))
+    windows = contract["parallelism_policy"]["self_hosted_windows"]
+    assert windows["availability_policy"] == "LIVE_VERIFIED_ONLINE_REQUIRED_FOR_AUTOMATIC_DISPATCH"
+    rules = contract["rolling_capacity_wave_control"]["slotwise_replenishment"]["rules"]
+    assert "A physical self-hosted slot is automatically routable only when its exact runner is currently verified online; UNVERIFIED physical slots have zero routable free capacity." in rules
+
+
+def test_q218_multi_resource_plan_requires_every_lease_to_be_routable():
+    from automation import generate_resource_dashboard as dashboard
+    resources = [
+        {"name":"Windows self-hosted B","type":"physical","routable":False,"capacity_state":"unknown","research_capacity_slots":1,"current_assignments":0,"research_slots_free":0},
+        {"name":"Windows self-hosted C","type":"physical","routable":True,"capacity_state":"available","research_capacity_slots":1,"current_assignments":0,"research_slots_free":1},
+        {"name":"GitHub-hosted Ubuntu x64","type":"cloud","routable":True,"capacity_state":"available","research_capacity_slots":2,"current_assignments":0,"research_slots_free":1},
+        {"name":"GitHub-hosted ARM64","type":"cloud","routable":True,"capacity_state":"available","research_capacity_slots":2,"current_assignments":0,"research_slots_free":1},
+    ]
+    plan = dashboard.planned_capacity_plan(resources, [], [{"code":"Q218"}], {}, {})
+    rows=[p for r in plan for p in r.get("planned_assignments",[]) if p.get("plan_id")=="Q218-INDEPENDENT-REPLICATION"]
+    assert rows == []
+
+
+def test_fast_dispatch_requires_all_multi_resource_leases_to_be_routable():
+    import automation.planned_capacity_fast_dispatch as dispatcher
+    workflow = ".github/workflows/q218-independent-replication-once.yml"
+    snapshot = {
+        "work_assignments": [],
+        "resources": [
+            {"name":"Windows self-hosted B","type":"physical","routable":True,"capacity_state":"available","research_capacity_slots":1,"research_slots_in_use":0,"research_slots_free":1},
+            {"name":"Windows self-hosted C","type":"physical","routable":False,"capacity_state":"unknown","research_capacity_slots":1,"research_slots_in_use":0,"research_slots_free":0},
+            {"name":"GitHub-hosted Ubuntu x64","type":"cloud","routable":True,"capacity_state":"operating","research_capacity_slots":2,"research_slots_in_use":1,"research_slots_free":1},
+            {"name":"GitHub-hosted ARM64","type":"cloud","routable":True,"capacity_state":"operating","research_capacity_slots":2,"research_slots_in_use":1,"research_slots_free":1},
+        ],
+        "planned_capacity": [{
+            "resource":"Windows self-hosted B",
+            "current_assignments":0,
+            "research_capacity_slots":1,
+            "research_slots_free":1,
+            "planned_assignments":[{
+                "plan_id":"Q218-INDEPENDENT-REPLICATION",
+                "candidate":"Q218",
+                "scheduled":True,
+                "dispatchable":True,
+                "allow_parallel_with_candidate":True,
+                "execution_workflow":workflow,
+                "resource_leases":["Windows self-hosted B","Windows self-hosted C","GitHub-hosted Ubuntu x64","GitHub-hosted ARM64"],
+            }],
+        }],
+    }
+    plan=dispatcher.dispatch_candidates(snapshot,[],max_dispatches=4)
+    assert plan["dispatches"] == []
+    assert any(d["decision"]=="SKIP_MULTI_RESOURCE_LEASE_NOT_SIMULTANEOUSLY_ROUTABLE" for d in plan["decisions"])
