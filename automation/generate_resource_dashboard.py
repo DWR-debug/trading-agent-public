@@ -461,13 +461,18 @@ def read_json_file(relative_path: str) -> dict[str, Any]:
 def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
     receipt = read_json_file("research/evidence/q104_i19_13f_historical_identity_census_latest.json")
     status = str(receipt.get("status") or "")
-    if status.startswith("13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED"):
-        completed = receipt.get("completed_shards")
-        count = len(completed) if isinstance(completed, list) else 3
+    acceptance = receipt.get("acceptance_time_join")
+    acceptance_complete = isinstance(acceptance, dict) and acceptance.get("complete") is True
+    census_complete = (
+        status == "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY"
+        and acceptance_complete
+        and len(receipt.get("completed_shards", [])) == 3
+    )
+    if census_complete:
         return {
             "progress_percent": 100,
             "state": "completed",
-            "detail": f"{count}/3 Shards abgeschlossen · positiver Census-Receipt vorhanden",
+            "detail": "3/3 Shards abgeschlossen · Acceptance-Time-Join positiv und vollständig",
             "next_gate": "concept-specific PIT compiler + independent reproduction",
         }
 
