@@ -473,6 +473,8 @@ def q104_census_clock_complete(receipt: dict[str, Any]) -> bool:
     join = receipt.get("acceptance_time_join", {})
     return (
         receipt.get("candidate_id") == "Q104:I19"
+        and receipt.get("acceptance_timezone") == "America/New_York"
+        and receipt.get("acceptance_clock_basis") == "SEC_EDGAR_SGML_ACCEPTANCE_DATETIME"
         and receipt.get("status") == "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY"
         and set(receipt.get("completed_shards", [])) == Q104_EXPECTED_CENSUS_SHARDS
         and int(receipt.get("archive_count", 0)) == len(receipt.get("archives", []))

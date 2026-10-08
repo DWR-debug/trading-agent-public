@@ -1056,6 +1056,8 @@ def test_q104_census_dashboard_requires_exact_six_shard_clock_receipt():
     base = {
         "candidate_id": "Q104:I19",
         "status": "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY",
+        "acceptance_timezone": "America/New_York",
+        "acceptance_clock_basis": "SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
         "completed_shards": [
             "2013-2016", "2017-2018", "2019-2020",
             "2021-2022", "2023", "2024-2025-09",

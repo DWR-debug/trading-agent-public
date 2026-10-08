@@ -8,7 +8,10 @@ from typing import Any
 
 from automation.q104_i19_xbrl_pit_compiler import (
     EXACT_CONCEPTS,ELIGIBLE_FORMS,compile_issuer_state,compile_filing_state,
-    parse_filing,parse_utc,fingerprint,
+    parse_edgar_eastern_to_utc,parse_filing,parse_utc,fingerprint,
+)
+from automation.q104_i19_13f_historical_identity_census import (
+    accession_header_url,parse_acceptance_header,
 )
 from automation.q114_13f_manager_transitions import compile_transitions
 from automation.q111_security_identity_contract import canonical_security_key
@@ -65,6 +68,11 @@ def validate_census_receipt(r:dict[str,Any])->dict[str,Any]:
         raise RuntimeError("Q104_I19_CENSUS_CANDIDATE_MISMATCH")
     if r.get("status")!="13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY":
         raise RuntimeError("Q104_I19_CENSUS_NOT_CLOCK_COMPLETE")
+    if (
+        r.get("acceptance_timezone")!="America/New_York"
+        or r.get("acceptance_clock_basis")!="SEC_EDGAR_SGML_ACCEPTANCE_DATETIME"
+    ):
+        raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_CLOCK_BASIS_UNVERIFIED")
     if set(r.get("completed_shards",[]))!=EXPECTED_SHARDS:
         raise RuntimeError("Q104_I19_CENSUS_SHARD_CLOSURE_FAILED")
     archives=r.get("archives",[])
@@ -125,6 +133,11 @@ def validate_census_receipt(r:dict[str,Any])->dict[str,Any]:
             for accession,rec in records.items():
                 if rec.get("accession")!=accession:
                     raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_ACCESSION_MISMATCH")
+                if (
+                    rec.get("acceptance_timezone")!="America/New_York"
+                    or rec.get("acceptance_clock_basis")!="SEC_EDGAR_SGML_ACCEPTANCE_DATETIME"
+                ):
+                    raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_CLOCK_BASIS_UNVERIFIED")
                 if not re.fullmatch(r"\d{10}",str(rec.get("filer_cik",""))):
                     raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_FILER_CIK_INVALID")
                 if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}",str(rec.get("acceptance_datetime",""))):
@@ -202,9 +215,17 @@ def materialize_13f(blob:bytes,target:dict[str,str],archive:dict[str,Any],accept
             shares=field(row,"SSHPRNAMT").replace(",",""); value=field(row,"VALUE").replace(",","")
             if not shares or not value: raise RuntimeError("Q104_I19_POSITION_NUMERIC_FIELD_MISSING:"+acc+":"+cusip)
             Decimal(shares); Decimal(value)
+            raw_acceptance=str(rec["acceptance_datetime"])
+            acceptance_utc=parse_edgar_eastern_to_utc(raw_acceptance).isoformat().replace("+00:00","Z")
             out.append({
                 "symbol":sym,"manager_cik":str(rec["filer_cik"]).zfill(10),"accession":acc,
-                "acceptance_datetime":str(rec["acceptance_datetime"]),"period_of_report":str(rec["period"]),
+                "acceptance_datetime":acceptance_utc,
+                "acceptance_datetime_raw_edgar_local":raw_acceptance,
+                "acceptance_timezone":"America/New_York",
+                "acceptance_clock_basis":"SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
+                "acceptance_source_url":str(rec["source_url"]),
+                "acceptance_header_sha256":str(rec["header_sha256"]),
+                "period_of_report":str(rec["period"]),
                 "name_of_issuer":field(row,"NAMEOFISSUER"),"title_of_class":field(row,"TITLEOFCLASS"),
                 "cusip":cusip,
                 "security_key":canonical_security_key({"name_of_issuer":field(row,"NAMEOFISSUER"),"title_of_class":field(row,"TITLEOFCLASS"),"cusip":cusip}),
@@ -222,7 +243,7 @@ def filing_rows(sub:dict[str,Any])->list[dict[str,Any]]:
         n=len(recent.get("accessionNumber",[])); keys=list(recent.keys())
         for i in range(n):
             r={k:recent.get(k,[])[i] for k in keys if i<len(recent.get(k,[]))}
-            if str(r.get("form","")).upper() in ELIGIBLE_FORMS and r.get("acceptanceDateTime"):
+            if str(r.get("form","")).upper() in ELIGIBLE_FORMS and r.get("accessionNumber"):
                 try: d=dt.date.fromisoformat(str(r.get("filingDate"))[:10])
                 except ValueError: continue
                 if START<=d<=CUTOFF: out.append(r)
@@ -233,11 +254,11 @@ def filing_rows(sub:dict[str,Any])->list[dict[str,Any]]:
         recent=h.get("filings",h); n=len(recent.get("accessionNumber",[])); keys=list(recent.keys())
         for i in range(n):
             r={k:recent.get(k,[])[i] for k in keys if i<len(recent.get(k,[]))}
-            if str(r.get("form","")).upper() not in ELIGIBLE_FORMS or not r.get("acceptanceDateTime"): continue
+            if str(r.get("form","")).upper() not in ELIGIBLE_FORMS or not r.get("accessionNumber"): continue
             try: d=dt.date.fromisoformat(str(r.get("filingDate"))[:10])
             except ValueError: continue
             if START<=d<=CUTOFF: out.append(r)
-    return sorted({str(r["accessionNumber"]):r for r in out}.values(),key=lambda r:(str(r["acceptanceDateTime"]),str(r["accessionNumber"])))
+    return sorted({str(r["accessionNumber"]):r for r in out}.values(),key=lambda r:(str(r["filingDate"]),str(r["accessionNumber"])))
 
 def archive_base(cik:str,acc:str)->str:
     return f"https://www.sec.gov/Archives/edgar/data/{int(str(cik).zfill(10))}/{str(acc).replace('-','')}"
@@ -333,7 +354,26 @@ def choose_instances(index:dict[str,Any])->list[str]:
 
 def filing_facts(symbol:str,cik:str,row:dict[str,Any])->dict[str,Any]:
     acc=str(row["accessionNumber"]); base=archive_base(cik,acc)
-    out={"symbol":symbol,"cik":str(cik).zfill(10),"accession":acc,"form":str(row.get("form","")).upper(),"acceptance_datetime":str(row["acceptanceDateTime"]),"filing_date":str(row.get("filingDate")),"report_date":row.get("reportDate"),"fiscal_period":row.get("fp"),"source_base":base}
+    form=str(row.get("form","")).upper(); filing_date=str(row.get("filingDate"))
+    header_url=accession_header_url(cik,acc)
+    header_body=fetch(header_url)
+    raw_acceptance=parse_acceptance_header(
+        header_body.decode("utf-8","replace"),
+        str(cik).zfill(10),acc,form,filing_date,
+    )
+    acceptance_utc=parse_edgar_eastern_to_utc(raw_acceptance).isoformat().replace("+00:00","Z")
+    out={
+        "symbol":symbol,"cik":str(cik).zfill(10),"accession":acc,"form":form,
+        "acceptance_datetime":acceptance_utc,
+        "acceptance_datetime_raw_edgar_local":raw_acceptance,
+        "acceptance_timezone":"America/New_York",
+        "acceptance_clock_basis":"SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
+        "acceptance_source_url":header_url,
+        "acceptance_header_sha256":hashlib.sha256(header_body).hexdigest(),
+        "acceptance_header_bytes":len(header_body),
+        "filing_date":filing_date,"report_date":row.get("reportDate"),
+        "fiscal_period":row.get("fp"),"source_base":base,
+    }
     body=None; url=None; facts=[]; errors=[]
     if row.get("primaryDocument") and bool(row.get("isInlineXBRL")):
         url=f"{base}/{row['primaryDocument']}"
