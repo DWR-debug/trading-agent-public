@@ -1501,7 +1501,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-08T23:22:20.221843+00:00",
+    "generated_at_utc": "2026-10-08T23:26:14.376222+00:00",
     "next_research_focus": "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Q218 one-shot performance has completed deterministically in PAPER_ONLY mode; the immutable result is recorded and the one-shot authorization is consumed. The remaining gate is fresh current-master source/event receipts plus independent PIT revalidation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1509,7 +1509,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "c6c1f2b5997bd037c398dec3359214e5b83ef03d"
+    "source_master_sha": "b5846c0c0be91123dec5ea71331d97ecf7264e66"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-08T23:22:20.221843+00:00",
+  "generated_at_utc": "2026-10-08T23:26:14.376222+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4611,44 +4611,44 @@
     ],
     "recent_commits": [
       {
-        "message": "FIX: record verified SEC acceptance clocks before Q218 pair closure",
-        "sha": "c6c1f2b5997bd037c398dec3359214e5b83ef03d",
-        "timestamp": "2026-10-09T01:22:07+02:00"
+        "message": "GUARD: block Q218 replication performance without exact authorization",
+        "sha": "b5846c0c0be91123dec5ea71331d97ecf7264e66",
+        "timestamp": "2026-10-09T01:26:01+02:00"
+      },
+      {
+        "message": "TEST: use frozen status in Q218 authorization fixture",
+        "sha": "bf5a76d2afff0ff584dfecd229ff14eae85ab4d2",
+        "timestamp": "2026-10-09T01:25:50+02:00"
+      },
+      {
+        "message": "HARDEN: validate frozen Q218 replication contract and authorization ID",
+        "sha": "2ae020da5e01832f127915cb194440b27cddf8b2",
+        "timestamp": "2026-10-09T01:25:40+02:00"
+      },
+      {
+        "message": "GUARD: block Q218 replication without exact authorization",
+        "sha": "bb156230410f96a740391a4bb6b5d9320aedcab4",
+        "timestamp": "2026-10-09T01:25:21+02:00"
+      },
+      {
+        "message": "TEST: fail closed on missing Q218 replication authorization",
+        "sha": "b40f2d2dadc99d09249aac09fc10d23e25e2fe64",
+        "timestamp": "2026-10-09T01:25:19+02:00"
+      },
+      {
+        "message": "SECURITY: require exact one-shot Q218 replication authorization",
+        "sha": "d2ed2a4a3d3bafb26d19e9d00244f6c14aa8646f",
+        "timestamp": "2026-10-09T01:25:16+02:00"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "ab790a47bec54dfcd20d48d8abb4fb5220da2faf",
-        "timestamp": "2026-10-08T23:21:30Z"
+        "sha": "8d5dcb360898a7f54d4df918825dd85431c99855",
+        "timestamp": "2026-10-08T23:23:07Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "6117f03bb873231422275b93812def33eb3d5e54",
-        "timestamp": "2026-10-08T23:21:15Z"
-      },
-      {
-        "message": "TEST: cover Q218 acceptance closure input freeze",
-        "sha": "f8c1777e1ecf95d07f461b6a40d56655ebc49650",
-        "timestamp": "2026-10-09T01:21:13+02:00"
-      },
-      {
-        "message": "FIX: retain verified Q218 acceptance clocks for pair closure",
-        "sha": "e03dd6ea796c6f1763052d4099ef7df9f811b5f8",
-        "timestamp": "2026-10-09T01:21:11+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "3459202598221284f93b57f2d0724018a2e5fbe1",
-        "timestamp": "2026-10-08T23:19:22Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "0319451e9cf79f08d88e5b02e72e8046e11ad66a",
-        "timestamp": "2026-10-08T23:19:04Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "80b6837ab45b180a42d7b9bb3cb285c6a6bd8a3b",
-        "timestamp": "2026-10-08T23:18:08Z"
+        "sha": "113a48174d45d5fc8e14f8f8fe89c86adbf69b7e",
+        "timestamp": "2026-10-08T23:22:49Z"
       }
     ]
   },
@@ -4746,7 +4746,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c6c1f2b5997bd037c398dec3359214e5b83ef03d",
+  "source_master_sha": "b5846c0c0be91123dec5ea71331d97ecf7264e66",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4860,6 +4860,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37859041653"
+    "run_id": "37859411826"
   }
 }
