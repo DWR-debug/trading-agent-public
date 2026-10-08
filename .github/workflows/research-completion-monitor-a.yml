@@ -3,12 +3,11 @@ name: Research Completion Monitor A
 on:
   workflow_run:
     workflows:
-      - "Q104 I19 Historical 13F Identity Census"
-      - "Q104 I19 Historical PIT Compilation"
-      - "Q104 I19 Independent PIT Reproduction"
-      - "Top-4 Candidate Slot Research"
-      - "Q218 Independent Architecture PIT Reproduction"
-      - "Q218 Frozen Preregistration + Authorization Reconcile"
+      - "Q*"
+      - "Top-4*"
+      - "*PIT*"
+      - "*Source*"
+      - "Evidence Graph*"
     types: [completed]
   workflow_dispatch: {}
 
