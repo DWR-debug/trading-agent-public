@@ -980,7 +980,10 @@ def test_dashboard_skips_current_context_completed_focused_ai_before_filling_fre
     monkeypatch.setattr(
         dashboard,
         "ai_task_completed_with_current_context",
-        lambda task_id, root=None: task_id == "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
+        lambda task_id, root=None: task_id in {
+            "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
+            "AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL",
+        },
     )
     plan = dashboard.planned_capacity_plan(resources, [], [], {}, {})
     ai = next(row for row in plan if row["resource"] == "Free AI pool")
@@ -1122,7 +1125,8 @@ def test_capacity_contract_requires_live_runner_verification_for_physical_slots(
     contract = json.loads((ROOT / "research/governance/persistent_research_acceleration_contract.json").read_text(encoding="utf-8"))
     windows = contract["parallelism_policy"]["self_hosted_windows"]
     assert windows["availability_policy"] == "LIVE_VERIFIED_ONLINE_REQUIRED_FOR_AUTOMATIC_DISPATCH"
-    assert "UNVERIFIED physical slots have zero routable free capacity." in windows["rules"][-2]
+    rules = contract["rolling_capacity_wave_control"]["slotwise_replenishment"]["rules"]
+    assert "A physical self-hosted slot is automatically routable only when its exact runner is currently verified online; UNVERIFIED physical slots have zero routable free capacity." in rules
 
 
 def test_q218_multi_resource_plan_requires_every_lease_to_be_routable():
