@@ -224,11 +224,16 @@ def run(output: Path) -> dict:
                 except Exception as exc:
                     row["primary_fetch_error"] = type(exc).__name__ + ":" + str(exc)
 
+                # Q218's voluntary-channel object is the SEC Form 8-K
+                # Item 2.02 filing. Exhibit-99.1/text markers remain diagnostics
+                # only and must not broaden event eligibility.
                 row["is_eligible_earnings_release_8k"] = bool(
-                    "2.02" in str(item_field).split(",")
-                    or row["exhibit_99_1"]
-                    or row["earnings_release_marker"]
-                    or row["primary_publication_terms_marker"]
+                    form == "8-K"
+                    and re.search(
+                        r"(^|[,;\s])2\.02([,;\s]|$)",
+                        str(item_field),
+                        flags=re.I,
+                    )
                 )
                 if form == "8-K":
                     earnings.append(row)
