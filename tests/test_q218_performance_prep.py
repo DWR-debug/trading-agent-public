@@ -105,3 +105,21 @@ def test_q218_candidate_robustness_delegates_to_canonical_gate():
     assert result["formalization_allowed"] is False
     assert result["performance_authorization"] is False
     assert result["research_only"] is True
+
+
+def test_q218_prep_scripts_are_runnable_as_files():
+    import subprocess
+    import sys
+
+    for name in (
+        "automation/q218_candidate_robustness_receipt.py",
+        "automation/q218_preperformance_robustness.py",
+    ):
+        completed = subprocess.run(
+            [sys.executable, name, "--help"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert completed.returncode == 0, completed.stderr
