@@ -362,11 +362,15 @@
       "code": "Q218",
       "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
       "class": "orthogonal_candidate_performance",
-      "state": "PERFORMANCE_AUTHORIZED",
+      "state": "PERFORMANCE_EXECUTED_PENDING_CURRENT_CONTEXT_REVALIDATION",
       "issue_number": 1094,
       "preregistration_path": "research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json",
-      "performance_authorization_allowed": true,
-      "authorization_id": "AUTH-Q218-2026-10-08-ONE-SHOT-01"
+      "performance_authorization_allowed": false,
+      "authorization_id": "AUTH-Q218-2026-10-08-ONE-SHOT-01",
+      "authorization_consumed": true,
+      "performance_result_path": "research/evidence/q218_deterministic_performance_result_latest.json",
+      "performance_result_fingerprint": "78c4a667b01bebe0aa23361e78856155fa3e3fe861cb6fcc1e4b79973cbddc5d5",
+      "next_gate": "fresh current-master Q218 source/event receipts + independent PIT revalidation"
     }
   ],
   "active_design_families": [
