@@ -742,8 +742,10 @@ def test_fast_dispatch_loads_paginated_top4_slot_history_for_retry_circuit_break
 
 
 
-def test_q218_focused_gate_ignores_legacy_failures_from_older_master_context():
-    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+def test_q218_focused_gate_ignores_legacy_failures_from_older_master_context(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
+    monkeypatch.setattr(dispatcher, "q218_positive_gate_index_current", lambda: set())
+    dispatch_candidates = dispatcher.dispatch_candidates
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
@@ -777,8 +779,10 @@ def test_q218_focused_gate_ignores_legacy_failures_from_older_master_context():
     assert [x["candidate"] for x in plan["dispatches"]] == ["Q218"]
     assert any(d["decision"] == "FOCUSED_GATE_TECHNICAL_RETRY_PERMITTED" for d in plan["decisions"]) is False
 
-def test_q218_focused_gate_allows_one_technical_retry_then_stops():
-    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+def test_q218_focused_gate_allows_one_technical_retry_then_stops(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
+    monkeypatch.setattr(dispatcher, "q218_positive_gate_index_current", lambda: set())
+    dispatch_candidates = dispatcher.dispatch_candidates
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
