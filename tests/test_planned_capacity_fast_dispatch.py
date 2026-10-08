@@ -71,6 +71,36 @@ def test_fast_dispatch_uses_resource_capacity_metadata_when_plan_row_omits_capac
 
 
 
+def test_q104_source_only_receipt_does_not_mark_acceptance_time_census_complete(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    monkeypatch.setattr(
+        dashboard,
+        "read_json_file",
+        lambda path: {
+            "status": "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_ONLY",
+            "completed_shards": ["2013-2017", "2018-2021", "2022-2025-09"],
+        },
+    )
+    monkeypatch.setattr(
+        dashboard,
+        "jobs_for_run",
+        lambda run_id: [
+            {"name": "windows_census", "status": "in_progress", "conclusion": None},
+            {"name": "hosted_census (2018-2021)", "status": "in_progress", "conclusion": None},
+            {"name": "hosted_census (2022-2025-09)", "status": "in_progress", "conclusion": None},
+        ],
+    )
+    status = dashboard.q104_census_status([{
+        "id": 123,
+        "name": "Q104 I19 Historical 13F Identity Census",
+        "status": "in_progress",
+        "created_at": "2026-10-08T07:42:13Z",
+    }])
+    assert status["progress_percent"] == 0
+    assert status["state"] == "running"
+
+
 def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_detail(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
 
