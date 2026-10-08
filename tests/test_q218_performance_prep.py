@@ -93,6 +93,70 @@ def test_q218_acceptance_datetime_accepts_sec_compact_clock():
     assert freeze.acceptance_datetime(header, "20250204204140") == "2025-02-04T20:41:40-05:00"
 
 
+
+def test_q218_input_freezer_records_acceptance_clocks_before_pair_closure(tmp_path, monkeypatch):
+    contract = {
+        "trial_id": freeze.TRIAL_ID,
+        "status": "FROZEN_PRE_PERFORMANCE_CONTRACT",
+        "governance": {
+            key: False for key in (
+                "selection_used", "holdout_selection_used", "parameter_search",
+                "threshold_search", "horizon_search", "asset_search",
+                "variant_search", "family_ranking", "promotion_decision",
+                "performance_authorized",
+            )
+        },
+        "safety": {
+            "paper_only": True, "live_trading_enabled": False,
+            "orders_enabled": False, "automatic_promotion": False,
+        },
+        "universe": {"issuers": {"TEST": "1"}},
+        "event_pair_population": [[
+            "TEST", "0000000001-25-000001", "0000000001-25-000002",
+            "2025-02-04T15:00:00", "2025-02-04T16:00:00",
+        ]],
+        "upstream": {
+            "independent_pit_window": {"start": "2025-01-01", "end": "2026-10-05"},
+            "future_cutoff_utc": "2026-10-05T23:59:59Z",
+        },
+    }
+    contract_path = tmp_path / "contract.json"
+    contract_path.write_text(json.dumps(contract), encoding="utf-8")
+    monkeypatch.setattr(freeze, "CONTRACT", contract_path)
+    accessions = ["0000000001-25-000001", "0000000001-25-000002"]
+    monkeypatch.setattr(
+        freeze, "sec_submission_index",
+        lambda cik, root: ({
+            "filings": {"recent": {
+                "accessionNumber": accessions,
+                "form": ["10-K", "8-K"],
+                "primaryDocument": ["tenk.html", "earnings.html"],
+                "items": ["", "2.02"],
+            }}
+        }, {}),
+    )
+    headers = {
+        accessions[0]: b"<SEC-HEADER><ACCEPTANCE-DATETIME>20250204150000</SEC-HEADER>",
+        accessions[1]: b"<SEC-HEADER><ACCEPTANCE-DATETIME>20250204160000</SEC-HEADER>",
+    }
+    monkeypatch.setattr(freeze, "accession_header", lambda cik, acc: (headers[acc], f"https://sec.test/{acc}"))
+    monkeypatch.setattr(freeze, "primary_document", lambda cik, acc, doc: (f"<html>{doc}</html>".encode(), f"https://sec.test/{acc}/{doc}"))
+    monkeypatch.setattr(freeze, "next_xnys_session", lambda closure, start, end: "2025-02-05")
+    monkeypatch.setattr(
+        freeze, "yahoo_chart",
+        lambda symbol, session, root: ({
+            "symbol": symbol, "session": session, "open": 100.0, "close": 101.0,
+            "raw_response_path": "market_raw/TEST_2025-02-05.json",
+            "raw_response_sha256": "0" * 64,
+        }, {}),
+    )
+    receipt_path = tmp_path / "receipt.json"
+    receipt = freeze.freeze(tmp_path / "bundle", receipt_path)
+    bundle = json.loads((tmp_path / "bundle" / "input_bundle_manifest.json").read_text(encoding="utf-8"))
+    assert receipt["status"] == "INPUT_BUNDLE_FROZEN"
+    assert bundle["events"][0]["pair_closure_clock"] == "2025-02-04T16:00:00-05:00"
+    assert bundle["events"][0]["action_session"] == "2025-02-05"
+
 def test_q218_next_session_is_after_closure():
     session = freeze.next_xnys_session(
         __import__("datetime").datetime.fromisoformat("2025-10-31T06:01:26+00:00"),
