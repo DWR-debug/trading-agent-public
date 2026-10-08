@@ -1,0 +1,216 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_frozen_performance_contract",
+  "candidate_id": "Q218",
+  "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+  "revision": 1,
+  "status": "FROZEN_PRE_PERFORMANCE_CONTRACT",
+  "upstream": {
+    "source_gate_receipt_fingerprint": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
+    "event_pair_gate_receipt_fingerprint": "8fe8f303e2a63a5e59100be795ef8adc08f492a52a6ed32f85cfb802a74f35bc",
+    "independent_pit_receipt_fingerprint": "221ca765cbc4a4318b38b95c8311342516222572069e95e0e822800e3035e5a4",
+    "independent_pit_window": {
+      "start": "2025-01-01",
+      "end": "2026-10-05"
+    },
+    "future_cutoff_utc": "2026-10-05T23:59:59Z"
+  },
+  "universe": {
+    "selection_rule": "Complete fixed issuer list from reconciled Q218 independent PIT reproduction; no outcome-based substitution.",
+    "issuers": {
+      "AAPL": "320193",
+      "MSFT": "789019",
+      "AMZN": "1018724",
+      "JPM": "19617",
+      "XOM": "34088",
+      "NVDA": "1045810",
+      "WMT": "104169",
+      "DIS": "1744489"
+    }
+  },
+  "event_pair_population": [
+    [
+      "AAPL",
+      "0000320193-25-000079",
+      "0000320193-25-000077",
+      "2025-10-31T06:01:26Z",
+      "2025-10-30T16:30:35Z"
+    ],
+    [
+      "MSFT",
+      "0000950170-25-100235",
+      "0000950170-25-100226",
+      "2025-07-30T16:11:40Z",
+      "2025-07-30T16:08:53Z"
+    ],
+    [
+      "MSFT",
+      "0001193125-26-323660",
+      "0001193125-26-323632",
+      "2026-07-29T16:08:01Z",
+      "2026-07-29T16:04:53Z"
+    ],
+    [
+      "AMZN",
+      "0001018724-25-000004",
+      "0001018724-25-000002",
+      "2025-02-06T18:40:29Z",
+      "2025-02-06T16:09:12Z"
+    ],
+    [
+      "AMZN",
+      "0001018724-26-000004",
+      "0001018724-26-000002",
+      "2026-02-05T18:44:31Z",
+      "2026-02-05T16:25:12Z"
+    ],
+    [
+      "JPM",
+      "0001628280-26-008131",
+      "0001628280-26-001902",
+      "2026-02-13T16:20:00Z",
+      "2026-01-13T06:41:09Z"
+    ],
+    [
+      "XOM",
+      "0000034088-25-000010",
+      "0000034088-25-000006",
+      "2025-02-19T16:39:37Z",
+      "2025-01-31T06:31:20Z"
+    ],
+    [
+      "XOM",
+      "0000034088-26-000045",
+      "0000034088-26-000033",
+      "2026-02-18T16:06:52Z",
+      "2026-01-30T06:31:24Z"
+    ],
+    [
+      "NVDA",
+      "0001045810-25-000023",
+      "0001045810-25-000021",
+      "2025-02-26T16:48:33Z",
+      "2025-02-26T16:21:32Z"
+    ],
+    [
+      "NVDA",
+      "0001045810-26-000021",
+      "0001045810-26-000019",
+      "2026-02-25T16:42:19Z",
+      "2026-02-25T16:31:25Z"
+    ],
+    [
+      "WMT",
+      "0000104169-25-000021",
+      "0000104169-25-000010",
+      "2025-03-14T16:40:52Z",
+      "2025-02-20T06:57:00Z"
+    ],
+    [
+      "WMT",
+      "0000104169-26-000055",
+      "0000104169-26-000032",
+      "2026-03-13T16:06:24Z",
+      "2026-02-19T06:59:55Z"
+    ],
+    [
+      "DIS",
+      "0001744489-25-000155",
+      "0001744489-25-000154",
+      "2025-11-13T06:44:29Z",
+      "2025-11-13T06:42:45Z"
+    ]
+  ],
+  "event_pair_fields": [
+    "issuer",
+    "ten_k_accession",
+    "item_2_02_8k_accession",
+    "ten_k_acceptance_datetime",
+    "item_2_02_8k_acceptance_datetime"
+  ],
+  "event_pair_rules": {
+    "ten_k": "as-filed non-amended Form 10-K in the fixed independent PIT population",
+    "voluntary": "non-amended Form 8-K with Item 2.02; Exhibit 99.1/generic earnings markers are diagnostics only",
+    "pair_closure_clock": "max(ten_k_acceptance_datetime,item_2_02_8k_acceptance_datetime)",
+    "amendment_rule": "Amended filings are excluded from the voluntary population; parent/amendment lineage is retained only as provenance.",
+    "future_data": "Any SEC document, market observation or metadata timestamp after 2026-10-05T23:59:59Z is rejected."
+  },
+  "feature_construction": {
+    "document_scope": "Primary document text from the exact paired filings only; no later documents.",
+    "html_normalization": "Decode entities; remove script/style nodes; collapse whitespace; preserve textual order.",
+    "tokenization": "UTF-8 lowercase ASCII-alphanumeric tokens matching [a-z0-9]+; no fitted vocabulary and no learned stopword list.",
+    "topic_representation": "Deterministic 64-bucket SHA-256 token hashing; bucket = first 8 hex digits modulo 64.",
+    "unigram_presence": "Binary presence of hashed unigram buckets.",
+    "unigram_frequency": "L1-normalized hashed unigram token frequencies.",
+    "bigram_frequency": "L1-normalized hashed adjacent-token bigram frequencies using SHA-256(pair) modulo 64.",
+    "features": {
+      "topic_coverage_gap_mandatory_vs_voluntary": "1 - Jaccard(mandatory_unigram_presence, voluntary_unigram_presence)",
+      "omission_asymmetry_by_topic": "mean absolute difference of the 64 L1-normalized unigram-frequency buckets",
+      "secondary_framing_gap": "1 - cosine similarity of the 64 L1-normalized bigram-frequency buckets"
+    },
+    "fixed_constants": {
+      "topic_hash_buckets": 64
+    },
+    "forbidden_adaptations": [
+      "learned vocabulary",
+      "corpus-specific token filtering",
+      "feature weighting",
+      "parameter tuning",
+      "threshold search",
+      "post-pass rule changes"
+    ]
+  },
+  "outcome_contract": {
+    "event_clock": "pair_closure_clock",
+    "action_session": "first XNYS trading session strictly after pair_closure_clock",
+    "holding_sessions": 1,
+    "entry": "session open",
+    "exit": "same-session close",
+    "outcome": "close / open - 1.0",
+    "direction": "signed two-sided; no ex-ante sign assumption",
+    "price_source": "frozen daily OHLCV snapshot acquired before performance execution",
+    "missingness": "Any missing action-session open/close is DATA_INSUFFICIENT; no imputation.",
+    "trading_calendar": "XNYS via exchange_calendars"
+  },
+  "input_bundle": {
+    "raw_sec_snapshot_required": true,
+    "raw_market_snapshot_required": true,
+    "source_response_sha256_required": true,
+    "bundle_fingerprint_required": true,
+    "executor_network_access": false
+  },
+  "replication_contract": {
+    "fresh_symbol_disjoint": true,
+    "symbols": {
+      "GOOGL": "1652044",
+      "META": "1326801",
+      "ORCL": "1341439",
+      "PFE": "78003"
+    },
+    "universe_rule": "Complete fixed issuer list; all eligible event pairs in the same fixed window are used without outcome-based filtering.",
+    "no_post_pass_optimization": true,
+    "no_performance_output_reuse_for_rule_changes": true,
+    "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+    "preregistration_path": "research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json",
+    "trigger_path": "research/run_requests/q218_execute_performance_once.trigger",
+    "execution_workflow": ".github/workflows/q218-performance-once.yml"
+  },
+  "governance": {
+    "selection_used": false,
+    "holdout_selection_used": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "family_ranking": false,
+    "promotion_decision": false,
+    "performance_authorized": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
