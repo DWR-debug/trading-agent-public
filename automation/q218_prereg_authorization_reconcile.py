@@ -25,6 +25,9 @@ PREREG_PATH = ROOT / "research/preregistrations/q218_mandatory_voluntary_disclos
 AUTH_PATH = ROOT / "research/authorizations/q218_performance_2026_10_08.json"
 RECEIPT_PATH = ROOT / "research/evidence/q218_prereg_authorization_reconcile_latest.json"
 PERFORMANCE_CONTRACT_PATH = ROOT / "research/governance/q218_performance_contract_2026_10_08.json"
+INPUT_BUNDLE_RECEIPT_PATH = ROOT / "research/evidence/q218_performance_input_bundle_latest.json"
+ROBUSTNESS_RECEIPT_PATH = ROOT / "research/evidence/q218_pre_performance_robustness_latest.json"
+CANDIDATE_ROBUSTNESS_RECEIPT_PATH = ROOT / "research/evidence/q218_candidate_robustness_latest.json"
 
 FORBIDDEN_TRUE = (
     "performance_authorization",
@@ -71,6 +74,9 @@ def build() -> tuple[dict, dict, dict]:
     indep = load(INDEP_PATH)
     registry = load(REGISTRY_PATH)
     performance_contract = load(PERFORMANCE_CONTRACT_PATH)
+    input_bundle = load(INPUT_BUNDLE_RECEIPT_PATH) if INPUT_BUNDLE_RECEIPT_PATH.is_file() else None
+    robustness = load(ROBUSTNESS_RECEIPT_PATH) if ROBUSTNESS_RECEIPT_PATH.is_file() else None
+    candidate_robustness = load(CANDIDATE_ROBUSTNESS_RECEIPT_PATH) if CANDIDATE_ROBUSTNESS_RECEIPT_PATH.is_file() else None
     if performance_contract.get("trial_id") != "T-2026-10-08-Q218-PERFORMANCE-01":
         raise RuntimeError("Q218 performance contract trial identity mismatch")
     if performance_contract.get("status") != "FROZEN_PRE_PERFORMANCE_CONTRACT":
@@ -138,6 +144,33 @@ def build() -> tuple[dict, dict, dict]:
         "outcome_contract": performance_contract["outcome_contract"],
         "input_bundle_contract": performance_contract["input_bundle"],
         "independent_replication": performance_contract["replication_contract"],
+        "input_bundle": (
+            {
+                "status": input_bundle.get("status"),
+                "bundle_fingerprint": input_bundle.get("bundle_fingerprint"),
+                "artifact_path": input_bundle.get("artifact_path"),
+                "artifact_sha256": input_bundle.get("artifact_sha256"),
+                "artifact": input_bundle.get("artifact"),
+            } if isinstance(input_bundle, dict) and input_bundle.get("status") == "INPUT_BUNDLE_FROZEN" else None
+        ),
+        "pre_performance_robustness": (
+            {
+                "trial_id": robustness.get("trial_id"),
+                "status": robustness.get("status"),
+                "artifact_path": robustness.get("artifact_path"),
+                "artifact_sha256": robustness.get("artifact_sha256"),
+                "research_only": robustness.get("research_only"),
+                "screen_is_descriptive_only": robustness.get("screen_is_descriptive_only"),
+                "no_post_hoc_tuning": robustness.get("no_post_hoc_tuning"),
+                "bundle_fingerprint": robustness.get("bundle_fingerprint"),
+                "receipt_fingerprint": robustness.get("receipt_fingerprint"),
+            } if isinstance(robustness, dict) and robustness.get("status") == "PRE_PERFORMANCE_ROBUSTNESS_COMPLETED" else None
+        ),
+        "candidate_robustness_gate": (
+            candidate_robustness
+            if isinstance(candidate_robustness, dict) and candidate_robustness.get("status") == "PRE_FORMAL_ROBUSTNESS_COMPLETED"
+            else None
+        ),
         "fixed_observation_scope": {
             "independent_pit_window_start": indep.get("fixed_window", {}).get("start"),
             "independent_pit_window_end": indep.get("fixed_window", {}).get("end"),
