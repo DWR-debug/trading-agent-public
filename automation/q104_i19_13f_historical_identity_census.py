@@ -15,6 +15,7 @@ SHARDS={"2013-2017":(date(2013,7,1),date(2018,1,1)),
 UA="DWR-debug/trading-agent-public Q104-I19 historical 13F census/3.0"
 ARCHIVE_REQUEST_GAP_SECONDS=1.0
 HEADER_REQUEST_GAP_SECONDS=1.0
+ARCHIVE_WORKERS=2
 HEADER_WORKERS=4
 MAX_FETCH_RETRIES=6
 MAX_RETRY_DELAY_SECONDS=60
@@ -55,10 +56,12 @@ def discover_archives(page):
         if start is not None and START<=start<END: out[href]={"url":href,"label":label,"period_start":start.isoformat()}
     return sorted(out.values(),key=lambda x:(x["period_start"],x["url"]))
 
-def fetch(url,retries=MAX_FETCH_RETRIES):
+def fetch(url,retries=MAX_FETCH_RETRIES,rate_limiter=None):
     last=None
     for i in range(retries):
-        if i == 0:
+        if rate_limiter is not None:
+            rate_limiter.wait()
+        elif i == 0:
             time.sleep(ARCHIVE_REQUEST_GAP_SECONDS)
         try:
             req=urllib.request.Request(
@@ -140,7 +143,7 @@ def parse_acceptance_header(text,expected_cik,expected_accession,expected_form,e
     return f"{raw[:4]}-{raw[4:6]}-{raw[6:8]}T{raw[8:10]}:{raw[10:12]}:{raw[12:14]}"
 
 
-def enrich_acceptance_times(eligible, target_hits):
+def enrich_acceptance_times(eligible, target_hits, rate_limiter=None):
     accession_meta={}
     for symbol,h in target_hits.items():
         for accession in h.get("accessions",[]):
@@ -148,7 +151,7 @@ def enrich_acceptance_times(eligible, target_hits):
             if meta is None:
                 raise RuntimeError("Q104_I19_ACCESSION_NOT_IN_ELIGIBLE:"+accession)
             accession_meta.setdefault(accession,meta)
-    limiter=RateLimiter(HEADER_REQUEST_GAP_SECONDS)
+    limiter=rate_limiter or RateLimiter(HEADER_REQUEST_GAP_SECONDS)
     records={}; failures={}
     def one(item):
         accession,meta=item
@@ -176,7 +179,7 @@ def enrich_acceptance_times(eligible, target_hits):
     return records,failures
 
 
-def scan_archive(blob,archive,targets,enrich_acceptance=False):
+def scan_archive(blob,archive,targets,enrich_acceptance=False,header_rate_limiter=None):
     with zipfile.ZipFile(io.BytesIO(blob)) as zf:
         eligible={}
         for row in tsv(zf,"submission.tsv"):
@@ -200,7 +203,7 @@ def scan_archive(blob,archive,targets,enrich_acceptance=False):
         for k in ("cusips","issuer_names","class_names","accessions","filing_dates","periods"): h[k]=sorted(x for x in h[k] if x)
     acceptance_records={}; acceptance_failures={}
     if enrich_acceptance:
-        acceptance_records,acceptance_failures=enrich_acceptance_times(eligible,hits)
+        acceptance_records,acceptance_failures=enrich_acceptance_times(eligible,hits,rate_limiter=header_rate_limiter)
         for h in hits.values():
             by_accession={}
             for accession in h["accessions"]:
@@ -233,7 +236,20 @@ def main():
       "scientific_boundary":{"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"parameter_search_allowed":False,"threshold_search_allowed":False,"horizon_search_allowed":False,"promotion_allowed":False,"live_execution_allowed":False},
       "safety":{"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False},
       "next_gate":"historical security-identity closure + SEC acceptance-time join + concept-specific PIT compiler + independent reproduction"}
-    for q in selected: receipt["archives"].append(scan_archive(fetch(q["url"]),q,targets,enrich_acceptance=True))
+    archive_limiter=RateLimiter(ARCHIVE_REQUEST_GAP_SECONDS)
+    header_limiter=RateLimiter(HEADER_REQUEST_GAP_SECONDS)
+    scanned={}
+    def scan_one(q):
+        blob=fetch(q["url"],rate_limiter=archive_limiter)
+        return q["url"],scan_archive(blob,q,targets,enrich_acceptance=True,header_rate_limiter=header_limiter)
+    with ThreadPoolExecutor(max_workers=ARCHIVE_WORKERS) as ex:
+        futures=[ex.submit(scan_one,q) for q in selected]
+        for future in as_completed(futures):
+            url,record=future.result()
+            scanned[url]=record
+    # Keep receipt order deterministic; any worker exception aborts the shard fail-closed.
+    for q in selected:
+        receipt["archives"].append(scanned[q["url"]])
     counts={s:0 for s in targets}; misses={s:[] for s in targets}; names={s:set() for s in targets}; conflicts=set()
     for q in receipt["archives"]:
         for s,h in q["target_hits"].items():
