@@ -122,6 +122,7 @@ def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding
             "Q218-SOURCE",
             "Q218-EVENT-PAIR",
             "Q218-FOCUSED-ADVERSARIAL",
+            "Q218-FRESH-SYMBOL-REPLICATION",
         }
         for row in plan
         for item in row["planned_assignments"]
