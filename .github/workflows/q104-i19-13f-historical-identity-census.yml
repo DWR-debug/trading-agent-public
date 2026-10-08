@@ -16,10 +16,44 @@ permissions:
   contents: write
 concurrency:
   group: trading-agent-q104-i19-13f-historical-identity-census
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
-  source_snapshot:
+  recovery_guard:
     if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    outputs:
+      proceed: ${{ steps.guard.outputs.proceed }}
+    steps:
+      - name: Suppress duplicate push-triggered census
+        id: guard
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            echo "Q104_CENSUS_DISPATCH=WORKFLOW_DISPATCH"
+            exit 0
+          fi
+          for status in in_progress queued pending; do
+            if gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=$status&per_page=100" |
+              jq -e --arg workflow "$GITHUB_WORKFLOW" --arg run_id "$GITHUB_RUN_ID" '
+                .workflow_runs[]?
+                | select(.name == $workflow)
+                | select((.id | tostring) != $run_id)
+              ' >/dev/null; then
+              echo "proceed=false" >> "$GITHUB_OUTPUT"
+              echo "Q104_CENSUS_DUPLICATE_RUN_SUPPRESSED=true"
+              exit 0
+            fi
+          done
+          echo "proceed=true" >> "$GITHUB_OUTPUT"
+          echo "Q104_CENSUS_DISPATCH=ELIGIBLE"
+  source_snapshot:
+    needs: [recovery_guard]
+    if: github.repository == 'DWR-debug/trading-agent-public' && needs.recovery_guard.outputs.proceed == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
