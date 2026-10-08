@@ -460,6 +460,15 @@ def test_fast_dispatch_allows_one_retry_then_backfills_next_candidate_after_seco
     assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in backfilled["decisions"])
 
 
+def test_q218_windows_focus_precheck_uses_available_windows_powershell_host():
+    text = (ROOT / ".github/workflows/top4-candidate-slot-research.yml").read_text(encoding="utf-8")
+    windows = text.split("  windows:", 1)[1].split("  ubuntu_x64:", 1)[0]
+    assert "shell: bash" not in windows
+    assert "shell: pwsh" not in windows
+    assert "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" in windows
+    assert "hash-object" not in windows
+
+
 def test_top4_windows_slot_workflow_avoids_setup_python_action():
     text = (ROOT / ".github/workflows/top4-candidate-slot-research.yml").read_text(encoding="utf-8")
     windows = text.split("  windows:", 1)[1].split("  ubuntu_x64:", 1)[0]
