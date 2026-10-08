@@ -464,7 +464,10 @@ def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
     acceptance = receipt.get("acceptance_time_join")
     acceptance_complete = isinstance(acceptance, dict) and acceptance.get("complete") is True
     census_complete = (
-        status == "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY"
+        status in {
+            "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_ONLY",
+            "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY",
+        }
         and acceptance_complete
         and len(receipt.get("completed_shards", [])) == 3
     )
@@ -513,6 +516,35 @@ def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
         "state": "running",
         "detail": f"{completed}/3 Shards mit positivem Abschluss · Census-Run {run['id']}",
         "next_gate": "historical 13F archive/security completeness",
+    }
+
+
+def q104_historical_compilation_status() -> dict[str, Any]:
+    """Receipt-backed Q104:I19 historical compiler status."""
+    census = read_json_file("research/evidence/q104_i19_13f_historical_identity_census_latest.json")
+    receipt = read_json_file("research/evidence/q104_i19_historical_pit_compilation_latest.json")
+    bundle = read_json_file("research/evidence/q104_i19_historical_compiler_input_bundle_latest.json")
+    census_fp = str(census.get("receipt_fingerprint") or "")
+    positive = (
+        receipt.get("candidate_id") == "Q104:I19"
+        and receipt.get("status") == "Q104_I19_HISTORICAL_PIT_COMPILATION_COMPLETED_NO_PERFORMANCE"
+        and bool(census_fp)
+        and receipt.get("census_receipt_fingerprint") == census_fp
+        and bundle.get("candidate_id") == "Q104:I19"
+        and bundle.get("bundle_fingerprint") == receipt.get("bundle_fingerprint")
+    )
+    if positive:
+        return {
+            "progress_percent": 100,
+            "state": "complete",
+            "detail": "Historische 13F/XBRL-PIT-Kompilation positiv; Bundle und Census-Fingerprint reconciled",
+            "next_gate": "independent PIT reproduction",
+        }
+    return {
+        "progress_percent": 0,
+        "state": "blocked",
+        "detail": "noch kein positiver historischer Q104:I19 Compiler-Receipt",
+        "next_gate": "historical PIT compiler",
     }
 
 
@@ -621,14 +653,15 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q218_prereg = q218_prereg_status()
     q218_receipts = q218_receipt_state()
 
+    q104_compiler = q104_historical_compilation_status()
     q104_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Exact-XBRL-Kontrakt eingefroren"},
         {"label": "Source feasibility", "status": "complete", "progress": 100, "detail": "Q104 source feasibility receipt vorhanden"},
         {"label": "Coverage", "status": "complete", "progress": 100, "detail": "Q107 8/8 Symbole; Q113 13F-Abdeckung"},
         {"label": "PIT / lineage", "status": "complete", "progress": 100, "detail": "Q108 PIT-Integration + deterministische Join-Struktur"},
         {"label": "13F security census", "status": q104_census["state"], "progress": q104_census["progress_percent"], "detail": q104_census["detail"]},
-        {"label": "I19 PIT compiler", "status": "blocked", "progress": 0, "detail": "geschlossen bis zum positiven 3-Shard-Census-Receipt"},
-        {"label": "Independent reproduction", "status": "blocked", "progress": 0, "detail": "geschlossen bis zum eingefrorenen I19-Compiler-Receipt"},
+        {"label": "I19 PIT compiler", "status": q104_compiler["state"], "progress": q104_compiler["progress_percent"], "detail": q104_compiler["detail"]},
+        {"label": "Independent reproduction", "status": "blocked", "progress": 0, "detail": "geschlossen bis zum positiven I19-Compiler-Receipt"},
         {"label": "Preregistration + authorization reconcile", "status": "blocked", "progress": 0, "detail": "geschlossen bis zur unabhängigen Reproduktion"},
         {"label": "One-shot performance", "status": "closed", "progress": 0, "detail": "keine Performance-Autorisierung"},
     ]
@@ -671,11 +704,23 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "overall_progress_percent": q104_overall,
                 "completed_milestones": q104_complete,
                 "total_milestones": q104_total,
-                "current_milestone": "13F security census",
-                "current_milestone_progress_percent": q104_census["progress_percent"],
-                "current_milestone_status": q104_census["state"],
-                "current_milestone_detail": q104_census["detail"],
-                "next_gate": q104_census["next_gate"],
+                "current_milestone": (
+                    "13F security census" if q104_census["state"] != "completed"
+                    else ("I19 PIT compiler" if q104_compiler["state"] != "complete" else "Independent reproduction")
+                ),
+                "current_milestone_progress_percent": (
+                    q104_census["progress_percent"] if q104_census["state"] != "completed"
+                    else (q104_compiler["progress_percent"] if q104_compiler["state"] != "complete" else 0)
+                ),
+                "current_milestone_status": (
+                    q104_census["state"] if q104_census["state"] != "completed"
+                    else ("ready" if q104_compiler["state"] != "complete" else "blocked")
+                ),
+                "current_milestone_detail": (
+                    q104_census["detail"] if q104_census["state"] != "completed"
+                    else (q104_compiler["detail"] if q104_compiler["state"] != "complete" else "Compiler positiv; unabhängige Reproduktion folgt")
+                ),
+                "next_gate": q104_census["next_gate"] if q104_census["state"] != "completed" else q104_compiler["next_gate"],
                 "milestones": q104_milestones,
                 "performance_authorization_allowed": False,
             },
@@ -1090,10 +1135,11 @@ def planned_capacity_plan(
             "lane": "FORMAL READINESS",
             "task": "concept-specific PIT compiler after 13F acceptance-time join",
             "preferred": ["Windows self-hosted A", "GitHub-hosted Ubuntu x64"],
-            "readiness": "BLOCKED_UNTIL_HISTORICAL_COMPILER_INPUTS",
-            "basis": "historical 13F receipt is the explicit compiler prerequisite",
-            "dispatchable": False,
-            "execution_workflow": None,
+            "readiness": "READY_AFTER_HISTORICAL_13F_CENSUS",
+            "basis": "positive 3/3 historical 13F census receipt is the explicit compiler prerequisite; workflow itself fails closed until that receipt exists",
+            "dispatchable": True,
+            "allow_parallel_with_candidate": True,
+            "execution_workflow": ".github/workflows/q104-i19-historical-pit-compilation.yml",
         },
         {
             "plan_id": "Q104-I19-INDEPENDENT-REPRO",
