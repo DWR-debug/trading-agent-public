@@ -991,3 +991,11 @@ def test_dashboard_generator_supports_direct_script_execution_import_mode():
     generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     assert "from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context" in generator
     assert "from planned_capacity_fast_dispatch import ai_task_completed_with_current_context" in generator
+
+def test_q104_recovery_cannot_cancel_an_active_census():
+    workflow = (ROOT / ".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
+    assert "cancel-in-progress: false" in workflow
+    assert "recovery_guard:" in workflow
+    assert "for status in in_progress queued pending; do" in workflow
+    assert "needs: [recovery_guard]" in workflow
+    assert "needs.recovery_guard.outputs.proceed == 'true'" in workflow
