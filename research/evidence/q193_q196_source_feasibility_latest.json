@@ -64,7 +64,7 @@
           ]
         }
       ],
-      "content_sha256": "8c137666c0fb584c94c43656bbfe04f69a22d03ff5cc6a29236b7b9065ec65ef",
+      "content_sha256": "81685dfbe5eb46692ceec2a6bbf8d3b91c6d3bd2ef3d702d18e7856c6a1cf665",
       "scientific_boundary": false
     },
     "EPA_ECHO": {
@@ -72,37 +72,24 @@
         "https://echo.epa.gov/tools/data-downloads",
         "https://echo.epa.gov/resources/echo-data/about-the-data"
       ],
-      "probe_classification": "UNREACHABLE",
-      "reachable": false,
-      "missing_markers": [
-        "Data Downloads",
-        "compliance",
-        "enforcement",
-        "weekly"
-      ],
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
       "attempts": [
         {
           "url": "https://echo.epa.gov/tools/data-downloads",
-          "http_status": 599,
-          "missing_markers": [
-            "Data Downloads",
-            "compliance",
-            "enforcement",
-            "weekly"
-          ]
+          "http_status": 200,
+          "missing_markers": []
         },
         {
           "url": "https://echo.epa.gov/resources/echo-data/about-the-data",
-          "http_status": 599,
+          "http_status": 200,
           "missing_markers": [
-            "Data Downloads",
-            "compliance",
-            "enforcement",
-            "weekly"
+            "Data Downloads"
           ]
         }
       ],
-      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_sha256": "22ca3d5134561d318fae927448a9fea03cb21dd7ec141ca1ea37d68a78dfdc0a",
       "scientific_boundary": false
     },
     "USPTO_PATENT": {
@@ -127,7 +114,7 @@
           "missing_markers": []
         }
       ],
-      "content_sha256": "cf304e666be475e7ae6b10e454af2e7b81f4459eec115807aeee3cc50d38faed",
+      "content_sha256": "a076698bab3ac880da497fec7f3e5e9ef0df3aa64cc2a8f93482626fa41dd9de",
       "scientific_boundary": false
     }
   },
@@ -138,7 +125,7 @@
     },
     {
       "candidate_id": "Q195",
-      "status": "BLOCKED_SOURCE_COMPONENT"
+      "status": "SOURCE_COMPONENT_READY"
     },
     {
       "candidate_id": "Q196",
@@ -176,5 +163,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "5958f805a219b72b4aa07984c351ab6dccb72380189e7e347a87d0e788401a8a"
+  "receipt_fingerprint": "8ac66052e65ce53e2e43674ecfaff7da98282e6fdf30a8a55fd155a98f24d6a9"
 }
