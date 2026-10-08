@@ -93,8 +93,14 @@ def test_dashboard_exposes_planned_capacity_as_non_authorizing_plan():
     assert "AUTO-DISPATCH" in script
 
 
-def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding():
-    from automation.generate_resource_dashboard import planned_capacity_plan
+def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+    monkeypatch.setattr(
+        dashboard,
+        "q218_receipt_state",
+        lambda: {"source_complete": False, "event_pair_complete": False, "independent_complete": False},
+    )
+    planned_capacity_plan = dashboard.planned_capacity_plan
     resources = [
         {"name": "Windows self-hosted A", "capacity_state": "available", "current_assignments": 0},
         {"name": "Windows self-hosted B", "capacity_state": "operating", "current_assignments": 1},
