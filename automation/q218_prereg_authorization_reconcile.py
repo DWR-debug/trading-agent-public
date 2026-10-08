@@ -311,6 +311,10 @@ def existing_reconcile_is_current() -> tuple[bool, dict | None]:
         return False, None
     if prereg.get("status") != "FROZEN_PREREGISTRATION_RECONCILED":
         return False, None
+    if prereg.get("performance_contract", {}).get("contract_sha256") != hashlib.sha256(PERFORMANCE_CONTRACT_PATH.read_bytes()).hexdigest():
+        return False, None
+    if prereg.get("time_contract", {}).get("acceptance_datetime_timezone") != "America/New_York":
+        return False, None
     if auth.get("authorized") is not False or auth.get("performance_execution_authorized") is not False:
         return False, None
     if receipt.get("status") != "Q218_FROZEN_PREREGISTRATION_AND_AUTHORIZATION_RECONCILED":
