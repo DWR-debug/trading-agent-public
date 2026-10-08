@@ -10,6 +10,7 @@ import argparse
 import json
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -34,6 +35,39 @@ SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 
 Q218_GATE_INDEX_PATH = Path("research/evidence/q218_focus_gate_receipt_index_latest.json")
 Q218_INDEPENDENT_WORKFLOW = ".github/workflows/q218-independent-architecture-pit-reproduction.yml"
+FOCUSED_GATE_CANCEL_COOLDOWN_SECONDS = 300
+
+
+def focused_gate_recently_cancelled(
+    runs: list[dict[str, Any]], candidate: str, gate: str, *, now: datetime | None = None
+) -> bool:
+    """Prevent a cancelled focused gate from being immediately re-dispatched in a churn loop."""
+    if candidate != "Q218" or gate not in Q218_GATE_NAMES:
+        return False
+    now = now or datetime.now(timezone.utc)
+    marker = "Top-4 Slot "
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") != "completed" or run.get("conclusion") != "cancelled":
+            continue
+        title = " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
+        if marker not in title:
+            continue
+        scope = title.split(marker, 1)[1].strip().split()
+        if len(scope) < 3 or scope[0] != "windows" or scope[1] != candidate or scope[2] != gate:
+            continue
+        stamp = str(run.get("updated_at") or run.get("created_at") or "")
+        if not stamp:
+            continue
+        try:
+            finished = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if finished.tzinfo is None:
+            finished = finished.replace(tzinfo=timezone.utc)
+        age = (now - finished).total_seconds()
+        if 0 <= age < FOCUSED_GATE_CANCEL_COOLDOWN_SECONDS:
+            return True
+    return False
 
 
 def q218_positive_gate_index_current() -> set[str]:
@@ -430,6 +464,16 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         candidate = str(item.get("candidate") or "")
         if not item["resource_free"]:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_RESOURCE_BUSY"})
+            continue
+
+        dispatch_gate = str((item.get("execution_workflow_inputs") or {}).get("gate") or "all")
+        if candidate == "Q218" and dispatch_gate in Q218_GATE_NAMES and focused_gate_recently_cancelled(runs, candidate, dispatch_gate):
+            decisions.append({
+                "plan_id": item.get("plan_id"),
+                "decision": "SKIP_FOCUSED_GATE_RECENTLY_CANCELLED_COOLDOWN",
+                "gate": dispatch_gate,
+                "cooldown_seconds": FOCUSED_GATE_CANCEL_COOLDOWN_SECONDS,
+            })
             continue
 
         if candidate == "Q218" and str(item.get("plan_id") or "") == "Q218-INDEPENDENT-ARCH":
