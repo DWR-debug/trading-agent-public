@@ -751,6 +751,7 @@ def test_q218_focused_gate_allows_one_technical_retry_then_stops():
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
+        "master_sha": "current-master",
         "work_assignments": [],
         "planned_capacity": [{
             "resource": "Windows self-hosted C",
@@ -774,6 +775,7 @@ def test_q218_focused_gate_allows_one_technical_retry_then_stops():
         "name": "Top-4 Candidate Slot Research",
         "display_title": "Top-4 Slot windows Q218 event_pair",
         "run_name": "Top-4 Slot windows Q218 event_pair",
+        "head_sha": "current-master",
     }]
     retry = dispatch_candidates(snapshot, one_failure, max_dispatches=4)
     assert [x["candidate"] for x in retry["dispatches"]] == ["Q218"]
@@ -785,6 +787,7 @@ def test_q218_focused_gate_allows_one_technical_retry_then_stops():
         "name": "Top-4 Candidate Slot Research",
         "display_title": "Top-4 Slot windows Q218 event_pair",
         "run_name": "Top-4 Slot windows Q218 event_pair",
+        "head_sha": "current-master",
     }]
     stopped = dispatch_candidates(snapshot, two_failures, max_dispatches=4)
     assert stopped["dispatches"] == []
