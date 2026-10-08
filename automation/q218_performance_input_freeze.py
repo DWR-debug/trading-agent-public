@@ -236,8 +236,8 @@ def freeze(output_root: Path, receipt_path: Path) -> dict:
             })
 
         closure_values = [
-            datetime.strptime(ten_k_expected.replace("T", " "), "%Y-%m-%d %H:%M:%S").replace(tzinfo=ZoneInfo("America/New_York")),
-            datetime.strptime(eight_k_expected.replace("T", " "), "%Y-%m-%d %H:%M:%S").replace(tzinfo=ZoneInfo("America/New_York")),
+            datetime.fromisoformat(actual_acceptance[ten_k_acc]),
+            datetime.fromisoformat(actual_acceptance[eight_k_acc]),
         ]
         closure = max(closure_values)
         if closure > datetime.fromisoformat(future_cutoff.replace("Z","+00:00")):
