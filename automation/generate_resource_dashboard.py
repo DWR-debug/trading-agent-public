@@ -620,10 +620,10 @@ def q218_prereg_status() -> dict[str, Any]:
         prereg = json.loads(prereg_path.read_text(encoding="utf-8"))
         auth = json.loads(auth_path.read_text(encoding="utf-8"))
         reconcile = json.loads(reconcile_path.read_text(encoding="utf-8"))
-        valid = (
+        reconcile_valid = (
             prereg.get("record_type") == "q218_frozen_preregistration"
             and prereg.get("status") == "FROZEN_PREREGISTRATION_RECONCILED"
-            and auth.get("record_type") == "q218_performance_authorization_reconcile"
+            and auth.get("record_type") in {"q218_performance_authorization_reconcile", "q218_explicit_one_shot_performance_authorization"}
             and auth.get("authorized") is False
             and auth.get("performance_execution_authorized") is False
             and reconcile.get("status") == "Q218_FROZEN_PREREGISTRATION_AND_AUTHORIZATION_RECONCILED"
@@ -631,15 +631,35 @@ def q218_prereg_status() -> dict[str, Any]:
             and reconcile.get("fingerprints", {}).get("preregistration") == prereg.get("preregistration_fingerprint")
             and reconcile.get("fingerprints", {}).get("authorization_reconcile") == auth.get("authorization_reconcile_fingerprint")
         )
+        authorized_valid = (
+            prereg.get("record_type") == "q218_frozen_preregistration"
+            and prereg.get("status") == "FROZEN_PREREGISTRATION_RECONCILED"
+            and auth.get("record_type") == "q218_explicit_one_shot_performance_authorization"
+            and auth.get("authorized") is True
+            and auth.get("performance_execution_authorized") is True
+            and auth.get("one_shot") is True
+            and auth.get("trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+            and reconcile.get("status") == "Q218_FROZEN_PREREGISTRATION_AND_AUTHORIZATION_RECONCILED"
+            and reconcile.get("checks", {}).get("performance_execution_authorized") is False
+            and reconcile.get("fingerprints", {}).get("preregistration") == prereg.get("preregistration_fingerprint")
+        )
+        valid = reconcile_valid or authorized_valid
     except (OSError, json.JSONDecodeError):
         valid = False
+        authorized_valid = False
 
     if valid:
+        authorized = bool(authorized_valid)
         return {
             "progress_percent": 100,
             "state": "completed",
-            "detail": "Frozen Preregistration + Authorization-Reconcile positiv; Performance bleibt separat und nicht autorisiert",
-            "next_gate": "separate explicit one-shot performance authorization",
+            "detail": (
+                "Frozen Preregistration + Authorization-Reconcile positiv; One-Shot-Performance explizit autorisiert, Ausführung noch ausstehend"
+                if authorized
+                else "Frozen Preregistration + Authorization-Reconcile positiv; Performance bleibt separat und nicht autorisiert"
+            ),
+            "next_gate": "one-shot performance execution" if authorized else "separate explicit one-shot performance authorization",
+            "performance_authorized": authorized,
         }
     if prereg_path.is_file():
         return {
@@ -685,7 +705,7 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
         {"label": "Event-pair gate", "status": q218_event_state, "progress": q218_event_progress, "detail": "positiver Event-Pair Receipt" if q218_receipts["event_pair_complete"] else "Event-Pair Receipt fehlt"},
         {"label": "Independent Architecture PIT", "status": q218_ind_state, "progress": q218_ind_progress, "detail": q218_ind_detail},
         {"label": "Preregistration + authorization reconcile", "status": q218_prereg["state"], "progress": q218_prereg["progress_percent"], "detail": q218_prereg["detail"]},
-        {"label": "One-shot performance", "status": "closed", "progress": 0, "detail": "erst nach separater immutable authorization; aktuell geschlossen"},
+        {"label": "One-shot performance", "status": "ready" if q218_prereg.get("performance_authorized") else "closed", "progress": 0, "detail": "explizit autorisiert; Ausführung ausstehend" if q218_prereg.get("performance_authorized") else "erst nach separater immutable authorization; aktuell geschlossen"},
     ]
 
     def overall(milestones: list[dict[str, Any]]) -> tuple[int, int, int]:

@@ -60,7 +60,24 @@ def main():
             except Exception: continue
             for node in walk(obj):
                 for k in FORBIDDEN:
-                    if node.get(k) is True: failures.append(f"forbidden_true:{rel}:{k}")
+                    if node.get(k) is True:
+                        # Q218's explicit one-shot performance authorization is
+                        # pre-existing governance state; S10 itself remains
+                        # non-authorizing and must not create/modify it.
+                        q218_authorized_exception = (
+                            k == "performance_authorization_allowed"
+                            and node.get("code") == "Q218"
+                            and node.get("trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+                            and node.get("state") == "PERFORMANCE_AUTHORIZED"
+                            and node.get("authorization_id") == "AUTH-Q218-2026-10-08-ONE-SHOT-01"
+                            and rel in {
+                                "research/governance/active_research_registry.json",
+                                "research/evidence/current_operational_state.json",
+                            }
+                        )
+                        if q218_authorized_exception:
+                            continue
+                        failures.append(f"forbidden_true:{rel}:{k}")
     elif mode=="PIT_CLOCK_LINEAGE":
         frontier=list((root/"research/frontier").glob("*.json"))
         checked=0
