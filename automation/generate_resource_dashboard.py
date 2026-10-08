@@ -902,6 +902,7 @@ def candidate_development_roadmap(
         ]
     source_event_done = q218_receipts.get("source_complete") and q218_receipts.get("event_pair_complete")
     performance_done = q218_performance_result_complete()
+    q218_replication = read_json_file("research/evidence/q218_independent_replication_latest.json")
     replication_done = q218_replication.get("status") == "Q218_INDEPENDENT_FRESH_SYMBOL_REPLICATION_COMPLETED"
     return [
         {"id": "Q218-SOURCE-EVENT", "label": "Fresh SEC Source + strict Item 2.02 Event-Pair revalidation", "status": "completed" if source_event_done else "ready", "next": "fresh current-context receipts after strict eligibility change"},
@@ -909,10 +910,10 @@ def candidate_development_roadmap(
         {"id": "Q218-BUNDLE", "label": "Freeze performance input bundle + deterministic executor", "status": "completed", "next": "pre-performance robustness"},
         {"id": "Q218-ROBUST", "label": "Pre-performance robustness + independent replication contract", "status": "completed", "next": "one-shot performance + dedicated replication"},
         {"id": "Q218-G4", "label": "Exact current-master re-authorization reconcile", "status": "completed", "next": "one-shot performance execution"},
- "status": "blocked", "next": "robustness + replication + CI"},
         {"id": "Q218-G5", "label": "One-shot performance", "status": "completed" if performance_done else "ready", "next": "independent fresh-symbol replication" if performance_done and not replication_done else "separate explicit authorization"},
         {"id": "Q218-R1", "label": "Independent fresh-symbol replication", "status": "completed" if replication_done else ("ready" if performance_done else "blocked"), "next": "immutable four-symbol receipt" if not replication_done else "independent statistical consolidation"},
     ]
+
 
 def candidate_pipeline(
     top4: list[dict[str, Any]],
@@ -935,12 +936,15 @@ def candidate_pipeline(
             if _candidate_key(candidate) in text_value:
                 active_by_candidate[candidate].append(item)
 
+    q218_performance_done = q218_performance_result_complete()
     state_by_candidate = {
         "Q104:I19": "FORMAL READINESS · HISTORICAL 13F CENSUS",
         "Q218": (
-            "FRONTIER DISCOVERY · PREREGISTRATION + AUTHORIZATION RECONCILE"
+            "FRONTIER DISCOVERY · INDEPENDENT FRESH-SYMBOL REPLICATION"
+            if q218_performance_done and q218_receipts["independent_complete"]
+            else ("FRONTIER DISCOVERY · PREREGISTRATION + AUTHORIZATION RECONCILE"
             if q218_receipts["independent_complete"]
-            else "FRONTIER DISCOVERY · INDEPENDENT ARCHITECTURE PIT"
+            else "FRONTIER DISCOVERY · INDEPENDENT ARCHITECTURE PIT")
         ),
     }
     for candidate in FOCUS_CANDIDATES:
