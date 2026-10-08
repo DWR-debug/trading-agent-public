@@ -51,10 +51,11 @@ jobs:
       - name: Upload frozen SEC source snapshot
         uses: actions/upload-artifact@v6
         with:
-          name: q104-i19-sec-source-snapshot-${{ github.run_id }}-${{ github.run_attempt }}
+          name: q104-i19-sec-source-snapshot-${{ github.run_id }}
           path: research/runs/q104_i19_13f_census/source_snapshot
           if-no-files-found: error
           retention-days: 30
+          overwrite: true
 
   windows_census:
     needs: [source_snapshot]
@@ -92,10 +93,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q104-i19-census-2013-2017-${{ github.run_id }}-${{ github.run_attempt }}
+          name: q104-i19-census-2013-2017-${{ github.run_id }}
           path: research/runs/q104_i19_13f_census/2013-2017/shard_receipt.json
           if-no-files-found: error
           retention-days: 30
+          overwrite: true
 
   hosted_census:
     concurrency:
@@ -143,10 +145,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q104-i19-census-${{ matrix.shard }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: q104-i19-census-${{ matrix.shard }}-${{ github.run_id }}
           path: research/runs/q104_i19_13f_census/${{ matrix.shard }}/shard_receipt.json
           if-no-files-found: error
           retention-days: 30
+          overwrite: true
 
   merge:
     needs: [windows_census, hosted_census]
