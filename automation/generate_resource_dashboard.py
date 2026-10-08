@@ -620,22 +620,36 @@ def q218_prereg_status() -> dict[str, Any]:
         prereg = json.loads(prereg_path.read_text(encoding="utf-8"))
         auth = json.loads(auth_path.read_text(encoding="utf-8"))
         reconcile = json.loads(reconcile_path.read_text(encoding="utf-8"))
-        valid = (
+        reconcile_valid = (
             prereg.get("record_type") == "q218_frozen_preregistration"
             and prereg.get("status") == "FROZEN_PREREGISTRATION_RECONCILED"
             and auth.get("record_type") == "q218_performance_authorization_reconcile"
-            and auth.get("authorized") in {False, True}
-            and auth.get("performance_execution_authorized") is auth.get("authorized")
+            and auth.get("authorized") is False
+            and auth.get("performance_execution_authorized") is False
             and reconcile.get("status") == "Q218_FROZEN_PREREGISTRATION_AND_AUTHORIZATION_RECONCILED"
             and reconcile.get("checks", {}).get("performance_execution_authorized") is False
             and reconcile.get("fingerprints", {}).get("preregistration") == prereg.get("preregistration_fingerprint")
-            and reconcile.get("fingerprints", {}).get("authorization_reconcile") is not None
+            and reconcile.get("fingerprints", {}).get("authorization_reconcile") == auth.get("authorization_reconcile_fingerprint")
         )
+        authorized_valid = (
+            prereg.get("record_type") == "q218_frozen_preregistration"
+            and prereg.get("status") == "FROZEN_PREREGISTRATION_RECONCILED"
+            and auth.get("record_type") == "q218_performance_authorization_reconcile"
+            and auth.get("authorized") is True
+            and auth.get("performance_execution_authorized") is True
+            and auth.get("one_shot") is True
+            and auth.get("trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+            and reconcile.get("status") == "Q218_FROZEN_PREREGISTRATION_AND_AUTHORIZATION_RECONCILED"
+            and reconcile.get("checks", {}).get("performance_execution_authorized") is False
+            and reconcile.get("fingerprints", {}).get("preregistration") == prereg.get("preregistration_fingerprint")
+        )
+        valid = reconcile_valid or authorized_valid
     except (OSError, json.JSONDecodeError):
         valid = False
+        authorized_valid = False
 
     if valid:
-        authorized = auth.get("authorized") is True and auth.get("performance_execution_authorized") is True
+        authorized = bool(authorized_valid)
         return {
             "progress_percent": 100,
             "state": "completed",
