@@ -24,6 +24,7 @@ REGISTRY_PATH = ROOT / "research/governance/active_research_registry.json"
 PREREG_PATH = ROOT / "research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json"
 AUTH_PATH = ROOT / "research/authorizations/q218_performance_2026_10_08.json"
 RECEIPT_PATH = ROOT / "research/evidence/q218_prereg_authorization_reconcile_latest.json"
+PERFORMANCE_CONTRACT_PATH = ROOT / "research/governance/q218_performance_contract_2026_10_08.json"
 
 FORBIDDEN_TRUE = (
     "performance_authorization",
@@ -69,6 +70,11 @@ def build() -> tuple[dict, dict, dict]:
     index = load(INDEX_PATH)
     indep = load(INDEP_PATH)
     registry = load(REGISTRY_PATH)
+    performance_contract = load(PERFORMANCE_CONTRACT_PATH)
+    if performance_contract.get("trial_id") != "T-2026-10-08-Q218-PERFORMANCE-01":
+        raise RuntimeError("Q218 performance contract trial identity mismatch")
+    if performance_contract.get("status") != "FROZEN_PRE_PERFORMANCE_CONTRACT":
+        raise RuntimeError("Q218 performance contract is not frozen")
 
     if index.get("status") != "Q218_SOURCE_AND_EVENT_PAIR_GATES_COMPLETE":
         raise RuntimeError("Q218 source/event receipt index is not positive-complete")
@@ -123,6 +129,15 @@ def build() -> tuple[dict, dict, dict]:
             "event_pair_gate_receipt_fingerprint": event_fp,
             "independent_pit_receipt_fingerprint": indep["receipt_fingerprint"],
         },
+        "performance_contract": {
+            "path": "research/governance/q218_performance_contract_2026_10_08.json",
+            "contract_sha256": hashlib.sha256(PERFORMANCE_CONTRACT_PATH.read_bytes()).hexdigest(),
+            "revision": performance_contract.get("revision"),
+        },
+        "feature_construction": performance_contract["feature_construction"],
+        "outcome_contract": performance_contract["outcome_contract"],
+        "input_bundle_contract": performance_contract["input_bundle"],
+        "independent_replication": performance_contract["replication_contract"],
         "fixed_observation_scope": {
             "independent_pit_window_start": indep.get("fixed_window", {}).get("start"),
             "independent_pit_window_end": indep.get("fixed_window", {}).get("end"),
