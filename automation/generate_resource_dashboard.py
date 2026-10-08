@@ -546,20 +546,41 @@ def q218_receipt_state() -> dict[str, Any]:
 
 
 def q218_prereg_status() -> dict[str, Any]:
-    candidates = list((ROOT / "research" / "preregistrations").glob("*q218*")) if (ROOT / "research" / "preregistrations").is_dir() else []
-    authorizations = list((ROOT / "research" / "authorizations").glob("*q218*")) if (ROOT / "research" / "authorizations").is_dir() else []
-    if candidates and authorizations:
+    """Return receipt-backed Q218 G4 status; file presence alone never proves reconcile."""
+    prereg_path = ROOT / "research" / "preregistrations" / "q218_mandatory_voluntary_disclosure_2026_10_08.json"
+    auth_path = ROOT / "research" / "authorizations" / "q218_performance_2026_10_08.json"
+    reconcile_path = ROOT / "research" / "evidence" / "q218_prereg_authorization_reconcile_latest.json"
+
+    try:
+        prereg = json.loads(prereg_path.read_text(encoding="utf-8"))
+        auth = json.loads(auth_path.read_text(encoding="utf-8"))
+        reconcile = json.loads(reconcile_path.read_text(encoding="utf-8"))
+        valid = (
+            prereg.get("record_type") == "q218_frozen_preregistration"
+            and prereg.get("status") == "FROZEN_PREREGISTRATION_RECONCILED"
+            and auth.get("record_type") == "q218_performance_authorization_reconcile"
+            and auth.get("authorized") is False
+            and auth.get("performance_execution_authorized") is False
+            and reconcile.get("status") == "Q218_FROZEN_PREREGISTRATION_AND_AUTHORIZATION_RECONCILED"
+            and reconcile.get("checks", {}).get("performance_execution_authorized") is False
+            and reconcile.get("fingerprints", {}).get("preregistration") == prereg.get("preregistration_fingerprint")
+            and reconcile.get("fingerprints", {}).get("authorization_reconcile") == auth.get("authorization_reconcile_fingerprint")
+        )
+    except (OSError, json.JSONDecodeError):
+        valid = False
+
+    if valid:
         return {
             "progress_percent": 100,
             "state": "completed",
-            "detail": "Preregistration und separate Authorization-Artefakte vorhanden; Reconcile ist belegbar",
-            "next_gate": "one-shot performance (separat fail-closed)",
+            "detail": "Frozen Preregistration + Authorization-Reconcile positiv; Performance bleibt separat und nicht autorisiert",
+            "next_gate": "separate explicit one-shot performance authorization",
         }
-    if candidates:
+    if prereg_path.is_file():
         return {
             "progress_percent": 50,
             "state": "partial",
-            "detail": "Preregistration vorhanden; immutable Authorization-Reconcile noch offen",
+            "detail": "Q218-Preregistration vorhanden; immutable Reconcile noch nicht positiv",
             "next_gate": "immutable authorization reconcile",
         }
     return {
@@ -568,7 +589,6 @@ def q218_prereg_status() -> dict[str, Any]:
         "detail": "noch kein Q218-Preregistration/Authorization-Reconcile-Receipt",
         "next_gate": "frozen preregistration + immutable authorization reconcile",
     }
-
 
 def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q104_census = q104_census_status(runs)
