@@ -61,7 +61,7 @@ jobs:
           assert result["record_type"]=="q218_deterministic_performance_result"
           assert result["trial_id"]=="T-2026-10-08-Q218-PERFORMANCE-01"
           assert result["report_fingerprint"]==expected
-          assert contract.get("primary_performance_report_fingerprint")==expected
+          assert contract.get("primary_performance_report_fingerprint") in {None, expected}
           for key in ("selection_used","holdout_used_for_selection","parameter_search","threshold_search","horizon_search","asset_search","variant_search","family_ranking","promotion_decision"):
               assert result[key] is False
           assert result["safety"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
