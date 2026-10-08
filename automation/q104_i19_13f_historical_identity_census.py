@@ -329,7 +329,6 @@ def main():
       "next_gate":"historical security-identity closure + SEC acceptance-time join + concept-specific PIT compiler + independent reproduction"}
     archive_limiter=RateLimiter(ARCHIVE_REQUEST_GAP_SECONDS)
     header_limiter=RateLimiter(HEADER_REQUEST_GAP_SECONDS)
-    a_symbol = next(iter(targets), None)
     scanned={}
     completed_archives=0
 
@@ -377,11 +376,6 @@ def main():
     for q in selected:
         record=scanned[q["url"]]
         record.pop("target_accession_meta",None)
-        by_accession={
-            accession:acceptance_records[accession]
-            for accession in record["target_hits"][a_symbol]["accessions"]
-            if accession in acceptance_records
-        } if False else {}
         archive_accessions=sorted({
             accession
             for h in record["target_hits"].values()
