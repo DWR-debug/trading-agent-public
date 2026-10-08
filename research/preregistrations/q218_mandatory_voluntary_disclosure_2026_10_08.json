@@ -4,7 +4,7 @@
   "candidate_id": "Q218",
   "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
   "status": "FROZEN_PREREGISTRATION_RECONCILED",
-  "frozen_at_utc": "2026-10-08T18:26:08.268915+00:00",
+  "frozen_at_utc": "2026-10-08T18:34:29.619949+00:00",
   "contract": {
     "name": "Mandatory-voluntary disclosure semantic wedge",
     "mechanism": "Selective allocation of topics between mandatory and voluntary public disclosures can encode information beyond document size, complexity or generic sentiment.",
@@ -115,24 +115,90 @@
     "execution_workflow": ".github/workflows/q218-performance-once.yml"
   },
   "input_bundle": {
-    "status": null,
-    "bundle_fingerprint": null,
-    "artifact_path": null,
-    "artifact_sha256": null,
-    "artifact": null
+    "status": "INPUT_BUNDLE_FROZEN",
+    "bundle_fingerprint": "0b9f95fc0b471f2a8efde48d4655be6e262eff717a4f17c6161281739adbea1a",
+    "artifact_path": "actions://artifacts/11570633637",
+    "artifact_sha256": "sha256:176cedd1878dd7cece471c46eb4ade1d98f44162291b93e570181ab26c8da221",
+    "artifact": {
+      "id": 11570633637,
+      "name": "q218-performance-prep-37825218019",
+      "digest": "sha256:176cedd1878dd7cece471c46eb4ade1d98f44162291b93e570181ab26c8da221",
+      "expired": false,
+      "run_id": 37825218019
+    }
   },
   "pre_performance_robustness": {
-    "trial_id": null,
-    "status": null,
-    "artifact_path": null,
-    "artifact_sha256": null,
-    "research_only": null,
-    "screen_is_descriptive_only": null,
-    "no_post_hoc_tuning": null,
-    "bundle_fingerprint": null,
-    "receipt_fingerprint": null
+    "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+    "status": "PRE_PERFORMANCE_ROBUSTNESS_COMPLETED",
+    "artifact_path": "actions://artifacts/11570633637",
+    "artifact_sha256": "sha256:176cedd1878dd7cece471c46eb4ade1d98f44162291b93e570181ab26c8da221",
+    "research_only": true,
+    "screen_is_descriptive_only": true,
+    "no_post_hoc_tuning": true,
+    "bundle_fingerprint": "0b9f95fc0b471f2a8efde48d4655be6e262eff717a4f17c6161281739adbea1a",
+    "receipt_fingerprint": "5402d02ce68b731924f11d8fa67b116e8302afccc44d6a072ab2f40eeb2dd24b"
   },
-  "candidate_robustness_gate": null,
+  "candidate_robustness_gate": {
+    "candidate_id": "Q218",
+    "source_path": "research/governance/q218_performance_contract_2026_10_08.json",
+    "artifact_path": "actions://artifacts/11570633637",
+    "candidate_fingerprint": "3be44f951a809e7692647ce72200a98c02055d2157897daf4faca65ab3d5068b",
+    "status": "PRE_FORMAL_ROBUSTNESS_COMPLETED",
+    "formalization_allowed": false,
+    "research_only": true,
+    "screen_is_descriptive_only": true,
+    "no_post_hoc_tuning": true,
+    "dimensions": {
+      "construction_invariance": true,
+      "input_order_invariance": true,
+      "future_data_invariance": true,
+      "missingness_fail_closed": true,
+      "revision_amendment_invariance": true,
+      "identity_mapping_fail_closed": true,
+      "parameter_threshold_horizon_lock": true,
+      "source_reproducibility": true
+    },
+    "synthetic_checks": {
+      "future_data_mutation_rejected": true,
+      "missingness_mutation_rejected": true,
+      "identity_mutation_rejected": true,
+      "parameter_lock_mutation_rejected": true,
+      "revision_mutation_rejected": true
+    },
+    "governance": {
+      "holdout_selection": false,
+      "parameter_search": false,
+      "asset_search": false,
+      "threshold_search": false,
+      "horizon_search": false,
+      "variant_search": false,
+      "family_ranking": false,
+      "candidate_selection": false,
+      "promotion_decision": false,
+      "performance_authorization": false
+    },
+    "violations": [],
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "promotion": false,
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+    "contract_sha256": "94e4fa782a6afbf978870a4422a16a7084bd13aab3ed2d7baa2db2e5926cf873",
+    "performance_evaluation": false,
+    "holdout_evaluation": false,
+    "artifact": {
+      "id": 11570633637,
+      "name": "q218-performance-prep-37825218019",
+      "digest": "sha256:176cedd1878dd7cece471c46eb4ade1d98f44162291b93e570181ab26c8da221",
+      "expired": false,
+      "run_id": 37825218019
+    },
+    "artifact_sha256": "sha256:176cedd1878dd7cece471c46eb4ade1d98f44162291b93e570181ab26c8da221",
+    "receipt_fingerprint": "119153e1fdcc96478ec29fc0cca407f36fb4ad37863cd57ee0b80da03dc03caf"
+  },
   "selection": {
     "candidate_selection_used": false,
     "holdout_selection_used": false,
@@ -154,5 +220,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "preregistration_fingerprint": "2ba0b3520eb4cac56b6f6b63df43e6a32f76189a2e0a84afcc1b235f50249997"
+  "preregistration_fingerprint": "e88ef581ee8cce787db76f280b1ed6cc38be3d51ba3e4abf2003ba4169ceb27a"
 }
