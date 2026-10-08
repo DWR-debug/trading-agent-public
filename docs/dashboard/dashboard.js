@@ -64,7 +64,7 @@ function capacityState(x,data){
   if(runnerBusy)return {cls:"unknown",label:"RUNNER BESETZT"};
   if(dispatchable)return {
     cls:"planned",
-    label:(x.type==="physical"&&!runnerOnline)?"AUTO-DISPATCH GEPLANT":"AUTO-DISPATCH BEREIT"
+    label:(x.type==="physical"&&!runnerOnline)?"NICHT ROUTIERBAR":"AUTO-DISPATCH BEREIT"
   };
   if(String(x.capacity_state||"") === "available")return {cls:"available",label:"VERFÜGBAR"};
   return {cls:"unknown",label:"NICHT VERIFIZIERT"};
@@ -177,13 +177,15 @@ function render(data){
     var st=capacityState(x,data);
     var role=esc(x.role||"");
     var active=Number(x.current_assignments||0);
-    var free=Number(x.research_slots_free||0);
+    var free=Number(x.routable_slots_free!=null?x.routable_slots_free:(x.research_slots_free||0));
+    var nominal=Number(x.research_slots_free_nominal!=null?x.research_slots_free_nominal:free);
+    var routability=String(x.type||"")==="physical" && !x.routable ? " · routierbar 0" : " · routierbar "+free;
     return "<div class='capacity "+st.cls+"'>"+
       "<div class='name'>"+esc(x.name)+"</div>"+
       "<div class='state'>"+st.label+"</div>"+
       "<div class='role'>"+role+"</div>"+
       "<div class='capacity-numbers'><strong>"+active+"</strong> aktiv <span>·</span> <strong>"+free+"</strong> frei</div>"+
-      "<div class='small muted'>Slots "+esc(x.research_slots_in_use||0)+"/"+esc(x.research_capacity_slots||1)+" · Runner "+esc(x.runner_status||"nicht sichtbar")+"</div>"+
+      "<div class='small muted'>Slots "+esc(x.research_slots_in_use||0)+"/"+esc(x.research_capacity_slots||1)+" · nominal frei "+nominal+routability+" · Runner "+esc(x.runner_status||"nicht sichtbar")+"</div>"+
       "</div>";
   }).join("")+"</div>";
 
