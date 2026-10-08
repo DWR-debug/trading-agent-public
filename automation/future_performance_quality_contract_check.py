@@ -82,6 +82,139 @@ def _candidate_robustness_receipt(
     return receipt
 
 
+
+Q218_EARLY_ROBUSTNESS_DIMENSIONS = (
+    "construction_invariance",
+    "input_order_invariance",
+    "future_data_invariance",
+    "missingness_fail_closed",
+    "revision_amendment_invariance",
+    "identity_mapping_fail_closed",
+    "parameter_threshold_horizon_lock",
+    "source_reproducibility",
+)
+
+
+def _validate_q218_authorized_entry(root: Path, entry: dict, prereg: dict) -> list[str]:
+    """Validate Q218 against its frozen non-portfolio event-study robustness contract.
+
+    Q218 is an event-pair disclosure study, not a portfolio construction. The
+    generic 18 portfolio diagnostics are therefore not semantically defined
+    here; the frozen Q218 contract's eight structural dimensions are the
+    pre-performance robustness gate. This exception is explicit and scoped only
+    to Q218; all generic candidate paths keep the global policy unchanged.
+    """
+    violations: list[str] = []
+    trial_id = entry.get("trial_id")
+    expected_trial = "T-2026-10-08-Q218-PERFORMANCE-01"
+    if trial_id != expected_trial:
+        violations.append("Q218: trial identity mismatch")
+        return violations
+
+    contract_path = root / "research/governance/q218_performance_contract_2026_10_08.json"
+    try:
+        contract = load(contract_path)
+    except Exception as exc:
+        violations.append(f"Q218: missing frozen performance contract: {exc}")
+        return violations
+    expected_contract_sha = prereg.get("performance_contract", {}).get("contract_sha256")
+    actual_contract_sha = __import__("hashlib").sha256(contract_path.read_bytes()).hexdigest()
+    if expected_contract_sha != actual_contract_sha:
+        violations.append("Q218: performance contract fingerprint mismatch")
+    if contract.get("status") != "FROZEN_PRE_PERFORMANCE_CONTRACT":
+        violations.append("Q218: performance contract not frozen")
+    if contract.get("trial_id") != expected_trial:
+        violations.append("Q218: performance contract trial mismatch")
+
+    gate = prereg.get("candidate_robustness_gate")
+    if not isinstance(gate, dict):
+        violations.append("Q218: missing candidate robustness receipt")
+    else:
+        for key, expected in (
+            ("status", "PRE_FORMAL_ROBUSTNESS_COMPLETED"),
+            ("formalization_allowed", False),
+            ("research_only", True),
+            ("screen_is_descriptive_only", True),
+            ("no_post_hoc_tuning", True),
+        ):
+            if gate.get(key) != expected:
+                violations.append(f"Q218: candidate robustness {key} invalid")
+        dimensions = gate.get("dimensions")
+        if not isinstance(dimensions, dict) or any(dimensions.get(key) is not True for key in Q218_EARLY_ROBUSTNESS_DIMENSIONS):
+            violations.append("Q218: candidate structural robustness dimensions incomplete")
+        governance = gate.get("governance")
+        if not isinstance(governance, dict) or any(governance.get(key) is not False for key in (
+            "holdout_selection", "parameter_search", "asset_search", "threshold_search",
+            "horizon_search", "variant_search", "family_ranking", "candidate_selection",
+            "promotion_decision", "performance_authorization",
+        )):
+            violations.append("Q218: candidate robustness governance boundary invalid")
+        receipt_path = root / "research/evidence/q218_candidate_robustness_latest.json"
+        try:
+            receipt = load(receipt_path)
+            if receipt.get("receipt_fingerprint") != gate.get("receipt_fingerprint"):
+                violations.append("Q218: candidate robustness receipt fingerprint mismatch")
+            if receipt.get("status") != "PRE_FORMAL_ROBUSTNESS_COMPLETED":
+                violations.append("Q218: candidate robustness receipt status invalid")
+        except Exception as exc:
+            violations.append(f"Q218: committed candidate robustness receipt unavailable: {exc}")
+
+    pre = prereg.get("pre_performance_robustness")
+    if not isinstance(pre, dict):
+        violations.append("Q218: missing pre-performance robustness receipt")
+    else:
+        for key, expected in (
+            ("trial_id", expected_trial),
+            ("status", "PRE_PERFORMANCE_ROBUSTNESS_COMPLETED"),
+            ("research_only", True),
+            ("screen_is_descriptive_only", True),
+            ("no_post_hoc_tuning", True),
+        ):
+            if pre.get(key) != expected:
+                violations.append(f"Q218: pre-performance robustness {key} invalid")
+        receipt_path = root / "research/evidence/q218_pre_performance_robustness_latest.json"
+        try:
+            receipt = load(receipt_path)
+            if receipt.get("receipt_fingerprint") != pre.get("receipt_fingerprint"):
+                violations.append("Q218: pre-performance robustness receipt fingerprint mismatch")
+            if receipt.get("status") != "PRE_PERFORMANCE_ROBUSTNESS_COMPLETED":
+                violations.append("Q218: pre-performance robustness receipt status invalid")
+            if receipt.get("all_mutations_rejected") is not True:
+                violations.append("Q218: pre-performance robustness mutation gate incomplete")
+        except Exception as exc:
+            violations.append(f"Q218: committed pre-performance robustness receipt unavailable: {exc}")
+
+    selection = prereg.get("selection", {})
+    for key in ("candidate_selection_used", "holdout_selection_used", "parameter_search", "threshold_search",
+                "horizon_search", "asset_search", "variant_search", "ranking"):
+        if selection.get(key) is not False:
+            violations.append(f"Q218: selection boundary {key} invalid")
+
+    replication = prereg.get("independent_replication")
+    if not isinstance(replication, dict):
+        violations.append("Q218: missing independent_replication")
+    else:
+        if replication.get("trial_id") != expected_trial:
+            violations.append("Q218: replication trial mismatch")
+        if replication.get("fresh_symbol_disjoint") is not True:
+            violations.append("Q218: replication is not fresh-symbol disjoint")
+        if replication.get("no_post_pass_optimization") is not True:
+            violations.append("Q218: replication permits post-pass optimization")
+        if replication.get("no_performance_output_reuse_for_rule_changes") is not True:
+            violations.append("Q218: replication permits performance-output reuse")
+        if not str(replication.get("trigger_path", "")).startswith("research/run_requests/"):
+            violations.append("Q218: replication trigger path is outside run_requests")
+
+    safety = prereg.get("safety", {})
+    for key, expected in (
+        ("paper_only", True), ("live_trading_enabled", False),
+        ("orders_enabled", False), ("automatic_promotion", False),
+    ):
+        if safety.get(key) is not expected:
+            violations.append(f"Q218: safety boundary {key} invalid")
+
+    return violations
+
 def validate(root: Path = ROOT) -> dict:
     root = root.resolve()
     policy_path = root / "research" / "governance" / "critical_research_quality_control.json"
@@ -104,6 +237,9 @@ def validate(root: Path = ROOT) -> dict:
         prereg = load(prereg_path)
 
         candidate_id = str(prereg.get("candidate_id") or entry.get("candidate_id") or "")
+        if candidate_id == "Q218":
+            violations.extend(_validate_q218_authorized_entry(root, entry, prereg))
+            continue
         candidate_gate = prereg.get("candidate_robustness_gate")
         if not candidate_id or not isinstance(candidate_gate, dict):
             violations.append(f"{entry.get('code')}: missing universal candidate robustness gate")
