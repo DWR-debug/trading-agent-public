@@ -1,0 +1,73 @@
+name: Q104 I19 Historical PIT Compilation
+
+on:
+  workflow_run:
+    workflows: ["Q104 I19 Historical 13F Identity Census"]
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: q104-i19-historical-pit-compilation
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'master'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Validate frozen Q104 compiler contract
+        run: |
+          set -euo pipefail
+          python3 -m pytest -q             tests/test_q104_i19_xbrl_pit_compiler.py             tests/test_q104_i19_13f_historical_identity_census.py             tests/test_q104_i19_historical_pit_compiler.py
+
+      - name: Materialize historical Q104:I19 PIT state
+        run: |
+          set -euo pipefail
+          python3 automation/q104_i19_historical_pit_compiler.py             --output research/evidence/q104_i19_historical_pit_compilation_latest.json             --bundle research/evidence/q104_i19_historical_compiler_input_bundle_latest.json
+
+      - name: Upload compiler artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-historical-pit-compilation-${{ github.run_id }}
+          path: |
+            research/evidence/q104_i19_historical_pit_compilation_latest.json
+            research/evidence/q104_i19_historical_compiler_input_bundle_latest.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish receipt and immutable compiler input bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: publish Q104 I19 historical PIT compiler receipt"
+        run: |
+          set -euo pipefail
+          base_sha="$(git rev-parse HEAD)"
+          python3 automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$base_sha"             --file research/evidence/q104_i19_historical_pit_compilation_latest.json=research/evidence/q104_i19_historical_pit_compilation_latest.json             --file research/evidence/q104_i19_historical_compiler_input_bundle_latest.json=research/evidence/q104_i19_historical_compiler_input_bundle_latest.json
+
+      - name: Wake bounded next-gate dispatcher
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master
+          gh workflow run resource-dashboard-update.yml --repo "$GITHUB_REPOSITORY" --ref master
