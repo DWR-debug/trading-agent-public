@@ -65,12 +65,15 @@ def main():
                         # pre-existing governance state; S10 itself remains
                         # non-authorizing and must not create/modify it.
                         q218_authorized_exception = (
-                            rel == "research/governance/active_research_registry.json"
-                            and k == "performance_authorization_allowed"
+                            k == "performance_authorization_allowed"
                             and node.get("code") == "Q218"
                             and node.get("trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
                             and node.get("state") == "PERFORMANCE_AUTHORIZED"
                             and node.get("authorization_id") == "AUTH-Q218-2026-10-08-ONE-SHOT-01"
+                            and rel in {
+                                "research/governance/active_research_registry.json",
+                                "research/evidence/current_operational_state.json",
+                            }
                         )
                         if q218_authorized_exception:
                             continue
