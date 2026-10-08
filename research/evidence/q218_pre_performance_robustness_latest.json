@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_pre_performance_robustness",
+  "candidate_id": "Q218",
+  "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+  "status": "PRE_PERFORMANCE_ROBUSTNESS_COMPLETED",
+  "bundle_fingerprint": "0b9f95fc0b471f2a8efde48d4655be6e262eff717a4f17c6161281739adbea1a",
+  "contract_sha256": "94e4fa782a6afbf978870a4422a16a7084bd13aab3ed2d7baa2db2e5926cf873",
+  "executor_sha256": "5e5a94c92191a26161e33c8996d7ace63a7cb7caf8021a56553d0f9e28e81f3c",
+  "research_only": true,
+  "screen_is_descriptive_only": true,
+  "no_post_hoc_tuning": true,
+  "mutation_probes": [
+    {
+      "label": "contract_fingerprint_mismatch",
+      "rejected": true,
+      "exception": "RuntimeError"
+    },
+    {
+      "label": "document_bytes_mismatch",
+      "rejected": true,
+      "exception": "RuntimeError"
+    },
+    {
+      "label": "future_market_bar_rejected",
+      "rejected": true,
+      "exception": "RuntimeError"
+    },
+    {
+      "label": "amendment_form_rejected",
+      "rejected": true,
+      "exception": "RuntimeError"
+    },
+    {
+      "label": "duplicate_event_identity_rejected",
+      "rejected": true,
+      "exception": "RuntimeError"
+    },
+    {
+      "label": "path_escape_rejected",
+      "rejected": true,
+      "exception": "RuntimeError"
+    }
+  ],
+  "all_mutations_rejected": true,
+  "performance_evaluation": false,
+  "holdout_evaluation": false,
+  "selection_used": false,
+  "holdout_used_for_selection": false,
+  "parameter_search": false,
+  "threshold_search": false,
+  "horizon_search": false,
+  "asset_search": false,
+  "variant_search": false,
+  "family_ranking": false,
+  "promotion_decision": false,
+  "performance_authorized": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "artifact": {
+    "id": 11570633637,
+    "name": "q218-performance-prep-37825218019",
+    "digest": "sha256:176cedd1878dd7cece471c46eb4ade1d98f44162291b93e570181ab26c8da221",
+    "expired": false,
+    "run_id": 37825218019
+  },
+  "artifact_path": "actions://artifacts/11570633637",
+  "artifact_sha256": "sha256:176cedd1878dd7cece471c46eb4ade1d98f44162291b93e570181ab26c8da221",
+  "receipt_fingerprint": "5402d02ce68b731924f11d8fa67b116e8302afccc44d6a072ab2f40eeb2dd24b"
+}
