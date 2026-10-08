@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-08T14:21:10.780248+00:00",
+    "generated_at_utc": "2026-10-08T14:22:33.424838+00:00",
     "next_research_focus": "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Q218 remains non-authorized for performance. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "e7085e183d0f98b79e96ac0d4bbb40f7aac732cb"
+    "source_master_sha": "2b269918ad5b0c0a9ab4fb5cb05b4ca18ed92df3"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-08T14:21:10.780248+00:00",
+  "generated_at_utc": "2026-10-08T14:22:33.424838+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4589,6 +4589,21 @@
     ],
     "recent_commits": [
       {
+        "message": "TEST: verify Q104 compiler retry reset by master SHA",
+        "sha": "2b269918ad5b0c0a9ab4fb5cb05b4ca18ed92df3",
+        "timestamp": "2026-10-08T16:22:19+02:00"
+      },
+      {
+        "message": "FIX: reset Q104 compiler retry budget after master fix",
+        "sha": "da8f67b2b2d11f0ccd0dcb2f1093e6f995101a72",
+        "timestamp": "2026-10-08T16:22:16+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5ca2971b89c2af453414c369baabf0e8b425f725",
+        "timestamp": "2026-10-08T14:21:14Z"
+      },
+      {
         "message": "FIX: gate Q104 compiler dispatch on positive census",
         "sha": "e7085e183d0f98b79e96ac0d4bbb40f7aac732cb",
         "timestamp": "2026-10-08T16:20:56+02:00"
@@ -4612,21 +4627,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "d66c91c5ac7fe7f050be77aef9f4a0836a56b795",
         "timestamp": "2026-10-08T14:20:12Z"
-      },
-      {
-        "message": "TEST: prevent duplicate completed Q218 focus-gate dispatch",
-        "sha": "c398a49873d2f737edb92a9ad57bc5c8f5307d2f",
-        "timestamp": "2026-10-08T16:19:56+02:00"
-      },
-      {
-        "message": "FIX: suppress duplicate completed Q218 focus-gate dispatch",
-        "sha": "2c4090da56eab15fe5bf51b96e3fc71e4f6024d4",
-        "timestamp": "2026-10-08T16:19:53+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "15a4da2aea7d435ab26535db8221d1196afc5bb2",
-        "timestamp": "2026-10-08T14:18:26Z"
       }
     ]
   },
@@ -4724,7 +4724,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e7085e183d0f98b79e96ac0d4bbb40f7aac732cb",
+  "source_master_sha": "2b269918ad5b0c0a9ab4fb5cb05b4ca18ed92df3",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4838,6 +4838,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37791719476"
+    "run_id": "37791905775"
   }
 }
