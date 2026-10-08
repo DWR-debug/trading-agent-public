@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_independent_replication_addendum",
+  "candidate_id": "Q218",
+  "replication_trial_id": "T-2026-10-08-Q218-REPLICATION-01",
+  "status": "FROZEN_PRE_EXECUTION",
+  "purpose": "Fresh-symbol independent replication of the frozen Q218 mandatory-versus-voluntary disclosure mechanism after the completed one-shot performance run.",
+  "lineage": {
+    "source_performance_trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+    "source_performance_contract_sha256": "94e4fa782a6afbf978870a4422a16a7084bd13aab3ed2d7baa2db2e5926cf873",
+    "source_performance_contract_git_blob_sha": "fd25e236d9c279ca8087ce022dee61a1ebcf7e37",
+    "source_performance_report_fingerprint": "78c4a667b01bebe0aa23361e78856155fa3e3fe861cb6fcc1e4b79973cbddc5d",
+    "reuse_of_performance_output_for_rule_changes": false,
+    "post_pass_optimization": false
+  },
+  "fixed_observation_scope": {
+    "window_start": "2025-01-01",
+    "window_end": "2026-10-05",
+    "future_cutoff_utc": "2026-10-05T23:59:59Z",
+    "same_day_decision_use_allowed": false
+  },
+  "universe": {
+    "fresh_symbol_disjoint": true,
+    "issuer_ciks": {
+      "GOOGL": "1652044",
+      "META": "1326801",
+      "ORCL": "1341439",
+      "PFE": "78003"
+    },
+    "universe_rule": "All eligible event pairs in the fixed observation window for these four fresh issuers; no outcome-based filtering or substitution."
+  },
+  "event_pair_contract": {
+    "mandatory": "unamended Form 10-K",
+    "voluntary": "unamended Form 8-K containing Item 2.02",
+    "pairing_rule": "For each in-window 10-K, select the latest eligible Item 2.02 8-K by SEC acceptance timestamp in the reporting-cycle interval bounded below by the preceding 10-K acceptance and above/equal to the target 10-K acceptance.",
+    "amendment_rule": "10-K/A and 8-K/A are excluded from the eligible event population; parent/amendment lineage is independently checked as provenance.",
+    "acceptance_clock": "SEC ACCEPTANCE-DATETIME raw 14-digit value, interpreted as America/New_York local wall-clock time; no implicit UTC.",
+    "pair_closure_clock": "max(mandatory acceptance, voluntary acceptance)"
+  },
+  "feature_construction": {
+    "document_scope": "Primary document text from each exact paired filing only.",
+    "html_normalization": "Decode entities; remove script/style nodes; collapse whitespace; preserve textual order.",
+    "tokenization": "UTF-8 lowercase ASCII-alphanumeric tokens matching [a-z0-9]+.",
+    "topic_representation": "Deterministic 64-bucket SHA-256 token hashing; bucket = first 8 hex digits modulo 64.",
+    "features": {
+      "topic_coverage_gap_mandatory_vs_voluntary": "1 - Jaccard(mandatory_unigram_presence, voluntary_unigram_presence)",
+      "omission_asymmetry_by_topic": "mean absolute difference of the 64 L1-normalized unigram-frequency buckets",
+      "secondary_framing_gap": "1 - cosine similarity of the 64 L1-normalized adjacent-token bigram-frequency buckets"
+    },
+    "fixed_constants": {
+      "topic_hash_buckets": 64
+    },
+    "forbidden_adaptations": [
+      "learned vocabulary",
+      "corpus-specific token filtering",
+      "feature weighting",
+      "parameter tuning",
+      "threshold search",
+      "horizon search",
+      "asset search",
+      "variant search",
+      "post-pass rule changes"
+    ]
+  },
+  "outcome_contract": {
+    "event_clock": "pair_closure_clock",
+    "action_session": "first XNYS trading session strictly after pair_closure_clock",
+    "holding_sessions": 1,
+    "entry": "session open",
+    "exit": "same-session close",
+    "outcome": "close / open - 1.0",
+    "direction": "signed two-sided; no ex-ante sign assumption",
+    "price_source": "Yahoo Finance daily chart quote OHLC from the repository-established historical source family.",
+    "missingness": "Missing action-session open/close is DATA_INSUFFICIENT; no imputation.",
+    "corporate_actions": "Raw source response is preserved; dividend cash flows are not modeled.",
+    "trading_calendar": "XNYS via exchange_calendars"
+  },
+  "governance": {
+    "selection_used": false,
+    "holdout_selection_used": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "family_ranking": false,
+    "promotion_decision": false,
+    "performance_authorization": false,
+    "paper_only": true
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "execution": {
+    "trigger_path": "research/run_requests/q218_independent_replication.trigger",
+    "workflow_path": ".github/workflows/q218-independent-replication-once.yml",
+    "executor_network_access": false,
+    "preferred_resource": "GitHub-hosted ARM64"
+  }
+}
