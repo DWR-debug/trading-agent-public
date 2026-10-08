@@ -42,6 +42,8 @@ ACTIVE_WORKFLOWS = {
     "q218-independent-architecture-pit-reproduction.yml",
     "q218-prereg-authorization-reconcile.yml",
     "q218-performance-authorization-once.yml",
+    "q218-performance-prep.yml",
+    "q218-performance-once.yml",
     "research-completion-monitor-a.yml",
     "research-completion-monitor-b.yml",
     "research-completion-relay.yml",
