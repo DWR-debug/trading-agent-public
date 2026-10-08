@@ -937,6 +937,13 @@ def planned_capacity_plan(
             continue
         if item.get("plan_id") == "Q221-ADVERSARIAL" and any("free ai" in value and "q221" in value for value in active_text):
             continue
+        # The independent Q218 reproduction is executable only when the
+        # current candidate state explicitly exposes it as the next gate.
+        if item.get("plan_id") == "Q218-INDEPENDENT-ARCH":
+            q218_state = next((x for x in top4 if str(x.get("code")) == "Q218"), {})
+            next_gate = str(q218_state.get("next_gate") or "").lower()
+            if "independent" not in next_gate or "architecture" not in next_gate:
+                continue
         if item["readiness"].startswith("BLOCKED_"):
             continue
         if item.get("execution_workflow") == ".github/workflows/ai-worker-fabric.yml":
