@@ -207,6 +207,7 @@ def freeze(output_root: Path, receipt_path: Path) -> dict:
         docs = [str(x) for x in recent.get("primaryDocument", [])]
         items = [str(x or "") for x in recent.get("items", [])]
         lookup = {acc: i for i, acc in enumerate(accessions)}
+        actual_acceptance: dict[str, str] = {}
         for accession, expected_form, expected_item in ((ten_k_acc, "10-K", None), (eight_k_acc, "8-K", "2.02")):
             if accession not in lookup:
                 raise RuntimeError(f"Q218 accession missing from SEC submissions: {symbol} {accession}")
