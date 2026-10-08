@@ -50,7 +50,7 @@ def test_fetch_uses_shared_rate_limiter_on_each_attempt(monkeypatch):
         calls.append(req.full_url)
         if len(calls) == 1:
             raise urllib.error.HTTPError(
-                req.full_url, 503, "retry", hdrs=None, fp=None
+                req.full_url, 503, "retry", hdrs={"Retry-After":"0"}, fp=None
             )
         return Response()
 
