@@ -199,6 +199,8 @@ def enrich_acceptance_times(accession_meta, rate_limiter=None):
             "period":meta.get("period"),
             "submission_type":meta.get("submission_type"),
             "acceptance_datetime":value,
+            "acceptance_timezone":"America/New_York",
+            "acceptance_clock_basis":"SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
             "source_url":url,
             "header_sha256":hashlib.sha256(body).hexdigest(),
             "header_bytes":len(body),
@@ -335,13 +337,16 @@ def main():
       "scientific_boundary":{"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"parameter_search_allowed":False,"threshold_search_allowed":False,"horizon_search_allowed":False,"promotion_allowed":False,"live_execution_allowed":False},
       "safety":{"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False},
       "next_gate":"historical security-identity closure + SEC acceptance-time join + concept-specific PIT compiler + independent reproduction"}
-    archive_limiter=RateLimiter(ARCHIVE_REQUEST_GAP_SECONDS)
-    header_limiter=RateLimiter(HEADER_REQUEST_GAP_SECONDS)
+    # One limiter covers archive downloads AND header lookups within this shard.
+    # The two phases can never reset the gap and create a request burst at handoff.
+    request_limiter=RateLimiter(max(ARCHIVE_REQUEST_GAP_SECONDS,HEADER_REQUEST_GAP_SECONDS))
+    shard_order=list(SHARDS).index(a.shard)
+    time.sleep(shard_order * 0.10)
     scanned={}
     completed_archives=0
 
     def scan_one(q):
-        blob=fetch(q["url"],rate_limiter=archive_limiter)
+        blob=fetch(q["url"],rate_limiter=request_limiter)
         return q["url"],scan_archive(blob,q,targets)
     with ThreadPoolExecutor(max_workers=ARCHIVE_WORKERS) as ex:
         futures=[ex.submit(scan_one,q) for q in selected]
@@ -371,7 +376,7 @@ def main():
 
     acceptance_records,acceptance_failures=enrich_acceptance_times(
         all_accession_meta,
-        rate_limiter=header_limiter,
+        rate_limiter=request_limiter,
     )
     print(json.dumps({
         "phase":"acceptance_time_join",
