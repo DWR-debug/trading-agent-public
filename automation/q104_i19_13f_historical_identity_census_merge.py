@@ -5,7 +5,7 @@ import argparse
 import hashlib
 import json
 import re
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -100,7 +100,7 @@ def _validate_shard(payload: dict[str, Any]) -> None:
         raise ValueError("Q104_I19_SHARD_ARCHIVE_CLOSURE_FAILED:" + shard)
     for archive in payload["archives"]:
         try:
-            period_start = __import__("datetime").date.fromisoformat(str(archive["archive"]["period_start"]))
+            period_start = date.fromisoformat(str(archive["archive"]["period_start"]))
         except (KeyError, TypeError, ValueError) as exc:
             raise ValueError("Q104_I19_ARCHIVE_PERIOD_INVALID:" + shard) from exc
         if not expected_start <= period_start < expected_end:
