@@ -53,7 +53,6 @@ jobs:
           echo "Q104_CENSUS_DISPATCH=ELIGIBLE"
   source_snapshot:
     needs: [recovery_guard]
-    needs: [recovery_guard]
     if: github.repository == 'DWR-debug/trading-agent-public' && needs.recovery_guard.outputs.proceed == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
