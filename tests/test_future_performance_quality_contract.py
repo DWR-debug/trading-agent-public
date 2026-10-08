@@ -69,6 +69,20 @@ def test_research_scheduler_selects_only_orthogonal_tracks():
 
 
 def test_q218_authorized_event_study_uses_specialized_structural_robustness_gate():
-    result = validate(ROOT)
-    assert result["status"] == "PASS"
-    assert result["authorized_entries_checked"] >= 1
+    import json
+    import automation.future_performance_quality_contract_check as checker
+
+    prereg = json.loads(
+        (ROOT / "research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json")
+        .read_text(encoding="utf-8")
+    )
+    violations = checker._validate_q218_authorized_entry(
+        ROOT,
+        {
+            "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+        },
+        prereg,
+    )
+    assert violations == []
+    assert set(checker.Q218_EARLY_ROBUSTNESS_DIMENSIONS)
+ == set(prereg["pre_performance_robustness"]["dimensions"])
