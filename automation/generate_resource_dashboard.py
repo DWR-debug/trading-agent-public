@@ -463,24 +463,42 @@ def read_json_file(relative_path: str) -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
+Q104_EXPECTED_CENSUS_SHARDS = {
+    "2013-2016", "2017-2018", "2019-2020", "2021-2022", "2023", "2024-2025-09"
+}
+
+
+def q104_census_clock_complete(receipt: dict[str, Any]) -> bool:
+    """Lightweight dashboard gate aligned to the canonical Census/PIT receipt."""
+    join = receipt.get("acceptance_time_join", {})
+    return (
+        receipt.get("candidate_id") == "Q104:I19"
+        and receipt.get("status") == "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY"
+        and set(receipt.get("completed_shards", [])) == Q104_EXPECTED_CENSUS_SHARDS
+        and int(receipt.get("archive_count", 0)) == len(receipt.get("archives", []))
+        and int(receipt.get("archive_count", 0)) > 0
+        and not receipt.get("identity_conflicts")
+        and not receipt.get("acceptance_failures")
+        and join.get("complete") is True
+        and int(join.get("failures", -1)) == 0
+        and int(join.get("target_unique_accessions", 0)) > 0
+        and int(join.get("records_checked", -1)) == int(join.get("target_unique_accessions", 0))
+        and join.get("timezone_inference") is False
+        and bool(receipt.get("receipt_fingerprint"))
+        and receipt.get("safety", {}).get("paper_only") is True
+        and receipt.get("safety", {}).get("live_trading_enabled") is False
+        and receipt.get("safety", {}).get("orders_enabled") is False
+        and receipt.get("safety", {}).get("automatic_promotion") is False
+    )
+
+
 def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
     receipt = read_json_file("research/evidence/q104_i19_13f_historical_identity_census_latest.json")
-    status = str(receipt.get("status") or "")
-    acceptance = receipt.get("acceptance_time_join")
-    acceptance_complete = isinstance(acceptance, dict) and acceptance.get("complete") is True
-    census_complete = (
-        status in {
-            "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_ONLY",
-            "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY",
-        }
-        and acceptance_complete
-        and len(receipt.get("completed_shards", [])) == 3
-    )
-    if census_complete:
+    if q104_census_clock_complete(receipt):
         return {
             "progress_percent": 100,
             "state": "completed",
-            "detail": "3/3 Shards abgeschlossen · Acceptance-Time-Join positiv und vollständig",
+            "detail": "6/6 Shards abgeschlossen · Acceptance-Time-Join vollständig · Receipt-Fingerprint vorhanden",
             "next_gate": "concept-specific PIT compiler + independent reproduction",
         }
 
@@ -496,30 +514,23 @@ def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
         return {
             "progress_percent": 0,
             "state": "not_started",
-            "detail": "0/3 Shards · kein aktiver Census-Run sichtbar",
+            "detail": "0/6 Shards · kein aktiver Census-Run sichtbar",
             "next_gate": "historical 13F archive/security completeness",
         }
 
     jobs = jobs_for_run(int(run["id"]))
     shard_jobs = [
         j for j in jobs
-        if isinstance(j, dict)
-        and (
-            str(j.get("name") or "").startswith("windows_census")
-            or str(j.get("name") or "").startswith("hosted_census")
-        )
+        if isinstance(j, dict) and str(j.get("name") or "").startswith("census (")
     ]
     completed = sum(
         1 for j in shard_jobs
         if j.get("status") == "completed" and j.get("conclusion") == "success"
     )
-    # The workflow has exactly three substantive shard jobs. A completed
-    # successful shard is one third of this milestone; failed/queued work does
-    # not count as scientific completion.
     return {
-        "progress_percent": int(round(100 * completed / 3)),
+        "progress_percent": int(round(100 * min(completed, 6) / 6)),
         "state": "running",
-        "detail": f"{completed}/3 Shards mit positivem Abschluss · Census-Run {run['id']}",
+        "detail": f"{completed}/6 Shards mit positivem Abschluss · Census-Run {run['id']}",
         "next_gate": "historical 13F archive/security completeness",
     }
 
@@ -1156,15 +1167,7 @@ def planned_capacity_plan(
     """
     active_text = [f"{x.get('resource','')} {x.get('task','')} {x.get('job','')}".lower() for x in work]
     q104_census_receipt = read_json_file("research/evidence/q104_i19_13f_historical_identity_census_latest.json")
-    q104_census_ready = (
-        q104_census_receipt.get("status") in {
-            "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_ONLY",
-            "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY",
-        }
-        and set(q104_census_receipt.get("completed_shards", [])) == {"2013-2017", "2018-2021", "2022-2025-09"}
-        and q104_census_receipt.get("acceptance_time_join", {}).get("complete") is True
-        and int(q104_census_receipt.get("acceptance_time_join", {}).get("failures", 0)) == 0
-    )
+    q104_census_ready = q104_census_clock_complete(q104_census_receipt)
     q218_receipts = q218_receipt_state()
     q218_prereg = q218_prereg_status()
     q218_replication_result = read_json_file("research/evidence/q218_independent_replication_performance_latest.json")
