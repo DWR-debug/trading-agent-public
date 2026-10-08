@@ -902,7 +902,7 @@ def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
         }],
         "work_assignments": [],
     }
-    plan = dispatcher.plan_dispatch(snapshot, [], repo="DWR-debug/trading-agent-public", max_dispatches=6)
+    plan = dispatcher.dispatch_candidates(snapshot, [], max_dispatches=6)
     assert plan["dispatches"] == []
     assert any(d["decision"] == "SKIP_FOCUSED_GATE_ALREADY_COMPLETED_CURRENT_CONTEXT" for d in plan["decisions"])
 
