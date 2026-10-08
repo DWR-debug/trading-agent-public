@@ -970,6 +970,17 @@ def planned_capacity_plan(
             continue
         if candidate in assigned_candidates and not item.get("allow_parallel_with_candidate", False):
             continue
+        if candidate == "Q218":
+            plan_id = str(item.get("plan_id") or "")
+            if plan_id == "Q218-SOURCE" and q218_receipts["source_complete"]:
+                continue
+            if plan_id == "Q218-EVENT-PAIR" and q218_receipts["event_pair_complete"]:
+                continue
+            if plan_id == "Q218-INDEPENDENT-ARCH":
+                if not (q218_receipts["source_complete"] and q218_receipts["event_pair_complete"]):
+                    continue
+                if q218_receipts["independent_complete"]:
+                    continue
         if item.get("plan_id") == "Q218-ADVERSARIAL" and any("free ai" in value and "q218" in value for value in active_text):
             continue
         if item.get("plan_id") == "Q221-ADVERSARIAL" and any("free ai" in value and "q221" in value for value in active_text):
