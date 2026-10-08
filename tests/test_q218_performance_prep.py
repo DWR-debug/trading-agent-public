@@ -88,6 +88,11 @@ def test_q218_robustness_receipt_schema():
     assert robustness.CONTRACT.is_file()
 
 
+def test_q218_acceptance_datetime_accepts_sec_compact_clock():
+    header = b"<SEC-HEADER><ACCEPTANCE-DATETIME>20250204204140</SEC-HEADER>"
+    assert freeze.acceptance_datetime(header, "20250204204140") == "2025-02-04T20:41:40-05:00"
+
+
 def test_q218_next_session_is_after_closure():
     session = freeze.next_xnys_session(
         __import__("datetime").datetime.fromisoformat("2025-10-31T06:01:26+00:00"),
