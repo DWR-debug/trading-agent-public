@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_frozen_preregistration",
+  "candidate_id": "Q218",
+  "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+  "status": "FROZEN_PREREGISTRATION_RECONCILED",
+  "frozen_at_utc": "2026-10-08T11:22:31.093315+00:00",
+  "contract": {
+    "name": "Mandatory-voluntary disclosure semantic wedge",
+    "mechanism": "Selective allocation of topics between mandatory and voluntary public disclosures can encode information beyond document size, complexity or generic sentiment.",
+    "event_clock": "SEC acceptance timestamp for the filing/disclosure package; historical prefix frozen at the public boundary.",
+    "features": [
+      "topic_coverage_gap_mandatory_vs_voluntary",
+      "omission_asymmetry_by_topic",
+      "secondary_framing_gap"
+    ],
+    "direction": "two-sided outcome; no sign assumed ex ante",
+    "cheap_falsifiers": [
+      "document-length-only collapse",
+      "global-similarity-only collapse",
+      "channel-label permutation",
+      "same-event alignment shuffle",
+      "amendment injection"
+    ],
+    "non_overlap": [
+      "Q131-R1",
+      "Q217",
+      "Q204",
+      "Q214",
+      "Q215"
+    ]
+  },
+  "upstream_receipts": {
+    "source_gate_receipt_fingerprint": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
+    "event_pair_gate_receipt_fingerprint": "4f83127b8f2c7335f2cb64ef2439d0e364ae47f25599f5d80ac0d56b96be8ebe",
+    "independent_pit_receipt_fingerprint": "764b538566fc936d1ff9655b6cb6198ff6f8e80c4e96a50451670774a37fa199"
+  },
+  "fixed_observation_scope": {
+    "independent_pit_window_start": "2025-01-01",
+    "independent_pit_window_end": "2026-10-05",
+    "same_day_decision_use_allowed": false,
+    "future_cutoff_used": "2026-10-05"
+  },
+  "selection": {
+    "candidate_selection_used": false,
+    "holdout_selection_used": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "ranking": false
+  },
+  "governance": {
+    "performance_trial_authorized": false,
+    "authorization_reconcile_complete": false,
+    "one_shot_performance_requires_separate_explicit_authorization": true
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "preregistration_fingerprint": "e80e0e5660bc43959a037cf09ba767fabd0359a6b2a5ecda41874840385d6c67"
+}

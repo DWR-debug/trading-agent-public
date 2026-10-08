@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_performance_authorization_reconcile",
+  "authorization_id": "AUTH-Q218-2026-10-08-RECONCILE-01",
+  "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+  "authorized": false,
+  "performance_execution_authorized": false,
+  "one_shot": true,
+  "status": "RECONCILED_NOT_AUTHORIZED",
+  "preregistration_fingerprint": "e80e0e5660bc43959a037cf09ba767fabd0359a6b2a5ecda41874840385d6c67",
+  "upstream_receipts": {
+    "source_gate_receipt_fingerprint": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
+    "event_pair_gate_receipt_fingerprint": "4f83127b8f2c7335f2cb64ef2439d0e364ae47f25599f5d80ac0d56b96be8ebe",
+    "independent_pit_receipt_fingerprint": "764b538566fc936d1ff9655b6cb6198ff6f8e80c4e96a50451670774a37fa199"
+  },
+  "authorization_basis": {
+    "source_gate_receipt": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
+    "event_pair_gate_receipt": "4f83127b8f2c7335f2cb64ef2439d0e364ae47f25599f5d80ac0d56b96be8ebe",
+    "independent_pit_receipt": "764b538566fc936d1ff9655b6cb6198ff6f8e80c4e96a50451670774a37fa199"
+  },
+  "selection_used": false,
+  "holdout_used_for_selection": false,
+  "parameter_search": false,
+  "threshold_search": false,
+  "asset_search": false,
+  "horizon_search": false,
+  "variant_search": false,
+  "family_ranking": false,
+  "promotion_decision": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "authorization_reconcile_fingerprint": "7b72ea32dd5798caac17ea5e00524939d6bd129aefbcf16a24d1af7d6f44f8af"
+}
