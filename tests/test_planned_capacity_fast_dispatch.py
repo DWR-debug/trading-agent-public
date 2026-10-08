@@ -883,7 +883,7 @@ def test_q104_compiler_failure_streak_resets_on_new_master_sha(monkeypatch):
 
 def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
     from automation import planned_capacity_fast_dispatch as dispatcher
-    monkeypatch.setattr(dispatcher, "completed_q218_gates_for_current_context", lambda runs: {"event_pair"})
+    monkeypatch.setattr(dispatcher, "q218_positive_gate_index_current", lambda: {"event_pair"})
     snapshot = {
         "focus_candidates": ["Q218"],
         "resources": [{
