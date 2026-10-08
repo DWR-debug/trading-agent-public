@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
-  "context_fingerprint": "4b2b2baf33603908ce1ca2c6598dd49a3003e17a9dfe5dc09ec34cbefc39739c",
-  "observed_at_utc": "2026-10-08T13:19:27.946682Z",
+  "context_fingerprint": "8e8ee0e38d2b8fd2f1c2a2daa58d0470c4f616a11aefac4277f3cec8d1e34626",
+  "observed_at_utc": "2026-10-08T23:16:39.093610Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 3.602,
-  "stdout": "**Worker Handoff – Q220 (SEC FS‑Notes Schema Gate) – Methods Review**\n\n| # | Failure Mode | What it looks like in the archive | Minimal Deterministic Falsifier | Exact Artifact Needed |\n|---|--------------|-----------------------------------|---------------------------------|-----------------------|\n| 1 | **Missing required member** | One of `sub`, `tag`, `dim`, `num`, `txt`, `pre` absent | Create a zip that omits a required file (e.g., delete `num.txt`) | `missing_member.zip` – same contents as the official archive but without `num.txt` |\n| 2 | **Incorrect member name / case** | File present but name differs in case or extension (e.g., `SUB.TXT`) | Zip with `SUB.TXT` instead of `sub.txt` | `wrong_case.zip` – identical to official but with `SUB.TXT` |\n| 3 | **Duplicate facts across files** | Same fact ID appears in two files (e.g., `num.txt` and `txt.txt`) | Add a duplicate row to `num.txt` that also exists in `txt.txt` | `duplicate_facts.zip` – duplicate fact rows |\n| 4 | **Period/Unit/Context mis‑alignment** | `num.txt` contains a value whose context ID does not match any context in `sub.txt` | Edit `num.txt` to reference a non‑existent context ID | `bad_context.zip` – mismatched context |\n| 5 | **Custom namespace / taxonomy extension** | Archive contains a namespace not declared in the standard taxonomy | Insert a `<custom:fact>` element with a new namespace | `custom_ns.zip` – custom namespace in `txt.txt` |\n| 6 | **Missing presentation‑role mapping** | No mapping file or mapping absent for a required role | Remove the presentation‑role mapping section from `tag.txt` | `no_role_map.zip` – missing role mapping |\n| 7 | **Absent XBRL text‑block** | Candidate expects an XBRL text‑block but archive contains only plain text | Provide an archive that contains only plain‑text files, no `<xbrl>` block | `no_xbrl_block.zip` – no XBRL block |\n| 8 | **Section identity mismatch** | Section names in `sub.txt` do not match expected taxonomy sections | Rename a section header in `sub.txt` | `bad_section.zip` – renamed section |\n| 9 | **Narrative tokenization missing** | Narrative content in `txt.txt` is raw, not tokenized | Keep narrative as a single string without token delimiters | `raw_narrative.zip` – un‑tokenized narrative |\n|10 | **Amended filing included** | Archive contains an amended filing that the candidate should ignore | Add an amended filing entry to `sub.txt` | `amended_filing.zip` – includes amended filing |\n|11 | **Future XBRL contamination** | Archive uses a future XBRL version (e.g., 2027‑01) | Replace the XBRL version tag with a future date | `future_xbrl.zip` – future XBRL version |\n|12 | **Representation proxy for filing length** | Candidate mis‑interprets file size as a signal of complexity | Provide a very long but structurally identical archive | `long_file.zip` – large but same structure |\n\n---\n\n### Counterarguments (what the candidate might claim)\n\n| # | Candidate’s Possible Defense | Why it may be insufficient |\n|---|------------------------------|-----------------------------|\n| 1 | “Missing members are acceptable; we only need the ones we use.” | The gate explicitly requires all six members; absence breaks downstream parsing. |\n| 2 | “Case‑insensitive file systems will handle it.” | The gate reads the zip entries verbatim; case mismatch causes a missing‑file error. |\n| 3 | “Duplicate facts are harmless; we dedupe later.” | Duplicate facts can corrupt context‑fact mapping and inflate counts. |\n| 4 | “Context IDs are validated elsewhere.” | The gate does not validate context alignment; downstream logic may fail silently. |\n| 5 | “Custom namespaces are fine; we ignore unknown tags.” | The candidate’s XBRL parser may choke on unknown namespaces if not explicitly ignored. |\n| 6 | “Presentation roles are optional.” | The candidate’s PIT construction relies on role mapping to locate facts. |\n| 7 | “We only need the raw text.” | The candidate’s narrative tokenization step expects an XBRL text‑block to extract tokens. |\n| 8 | “Section names are arbitrary.” | The candidate’s taxonomy mapping expects exact section identifiers. |\n| 9 | “Tokenization can be done later.” | The gate’s purpose is to ensure the source already contains tokenized narrative. |\n|10 | “Amended filings are part of the archive.” | The candidate’s PIT logic may double‑count or mis‑align dates if amended filings are not filtered. |\n|11 | “Future XBRL is backward‑compatible.” | Future versions may introduce new tags or attributes that break the parser. |\n|12 | “File size is irrelevant.” | The candidate’s representation mismatch check may incorrectly flag long files as problematic. |\n\n---\n\n### Concrete Next Actions\n\n1. **Generate Test Archives**  \n   - Use the minimal falsifiers above to create the 12 zip files (`missing_member.zip`, `wrong_case.zip`, …).  \n   - Store them in a dedicated test folder (e.g., `tests/q220_falsifiers/`).\n\n2. **Run `q220_fsn_schema_gate.py` on Each Archive**  \n   - Capture the output JSON for each falsifier.  \n   - Verify that the gate flags the expected failure (e.g., missing member, wrong case).\n\n3. **Extend the Gate to Validate Additional Constraints**  \n   - Add checks for duplicate facts, context alignment, and custom namespaces.  \n   - Document the new checks in the gate’s README.\n\n4. **Document Counterarguments**  \n   - For each failure mode, record the candidate’s potential defense and the gate’s rationale.  \n   - Store this in a `counterarguments.md` file.\n\n5. **Create a Falsification Test Suite**  \n   - Bundle the 12 falsifiers and gate outputs into a reproducible test harness.  \n   - Ensure deterministic results by using fixed timestamps and content hashes.\n\n6. **Report Findings to the Design Team**  \n   - Summarize the failure modes, falsifiers, and counterarguments in a concise report.  \n   - Highlight any gaps in the candidate’s source contract that need to be addressed before PIT construction.\n\n---\n\n### Uncertainty & Open Questions\n\n- **Does the candidate actually require XBRL text‑blocks?**  \n  The gate currently only checks for the presence of the six member files; it does not inspect XBRL content. If the candidate expects XBRL, the gate should be extended to validate XBRL structure.\n\n- **How does the candidate handle custom namespaces?**  \n  The current gate does not detect or reject custom namespaces. If the candidate’s parser is strict, this could be a silent failure.\n\n- **Are amended filings truly problematic?**  \n  The candidate’s design may or may not need to filter amended filings. Clarify the requirement.\n\n- **Future XBRL contamination risk**  \n  The gate does not check the XBRL version. If the candidate’s logic is version‑sensitive, this needs explicit validation.\n\n- **Representation mismatch vs. filing length**  \n  It is unclear whether the candidate’s PIT logic uses file size as a proxy for complexity. Further clarification is needed.\n\n---\n\n**End of Handoff**",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.146,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5464, Requested 5421. Please try again in 21.6375s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-000f914c-6f36-4d48-ad2a-7b8d63ec6c6a",
-  "usage": {
-    "queue_time": 0.0836704,
-    "prompt_tokens": 5050,
-    "prompt_time": 0.256484747,
-    "completion_tokens": 2587,
-    "completion_time": 2.868123183,
-    "total_tokens": 7637,
-    "total_time": 3.12460793,
-    "completion_tokens_details": {
-      "reasoning_tokens": 969
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-08T23:16:39.240148Z",
+    "blocked_until_utc": "2026-10-09T00:16:39.240148Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5464, Requested 5421. Please try again in 21.6375s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
