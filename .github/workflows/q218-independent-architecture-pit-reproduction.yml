@@ -8,7 +8,7 @@ on:
 
 permissions:
   contents: write
-  actions: read
+  actions: write
 
 concurrency:
   group: trading-agent-q218-independent-architecture-pit
@@ -164,3 +164,10 @@ jobs:
           cp "$new_receipt" "$target"
           current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
           python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file "$target=$target"
+
+  completion_relay:
+    if: ${{ always() && github.repository == 'DWR-debug/trading-agent-public' }}
+    needs: [reproduce]
+    uses: ./.github/workflows/research-completion-relay.yml
+    with:
+      source_workflow: "Q218 Independent Architecture PIT Reproduction"
