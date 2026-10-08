@@ -1497,15 +1497,15 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-08T11:37:58.877095+00:00",
-    "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
+    "generated_at_utc": "2026-10-08T11:41:06.967289+00:00",
+    "next_research_focus": "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Q218 has an explicit one-shot performance authorization in the active registry, but execution is not yet ready because the fixed Q218 performance executor/input bundle is not present; no execution trigger exists. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
     "record_type": "trading_agent_chat_handoff",
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "1ba3eca91ed6b7c53e75a681754c95fabcedeb7a"
+    "source_master_sha": "1282f1df00c067bbbb078aa6abbc59ae67c02646"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1818,7 +1818,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-08T11:37:58.877095+00:00",
+  "generated_at_utc": "2026-10-08T11:41:06.967289+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4607,6 +4607,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: distinguish Q218 authorization from execution readiness",
+        "sha": "1282f1df00c067bbbb078aa6abbc59ae67c02646",
+        "timestamp": "2026-10-08T13:40:53+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d2a4ce5297be25af39bdca766a89176ca5d09d90",
+        "timestamp": "2026-10-08T11:38:02Z"
+      },
+      {
         "message": "Merge pull request #1226 from DWR-debug/feat/q104-i19-asfiled-xbrl-source-probe-20261008",
         "sha": "1ba3eca91ed6b7c53e75a681754c95fabcedeb7a",
         "timestamp": "2026-10-08T13:37:46+02:00"
@@ -4635,16 +4645,6 @@
         "message": "FEAT: add Q104 I19 as-filed XBRL source probe",
         "sha": "c3b41e10696df3a9e22d3213dc55736c22f0004b",
         "timestamp": "2026-10-08T13:36:33+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "87bdfa4070c61775a396efd7684ce47e50897ce5",
-        "timestamp": "2026-10-08T11:35:05Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "b5a2c616c37fdc50c0cb88cffebb385082db1622",
-        "timestamp": "2026-10-08T11:34:09Z"
       }
     ]
   },
@@ -4704,7 +4704,7 @@
     },
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-    "next_research_focus_recorded": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
+    "next_research_focus_recorded": "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Q218 has an explicit one-shot performance authorization in the active registry, but execution is not yet ready because the fixed Q218 performance executor/input bundle is not present; no execution trigger exists. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -4742,7 +4742,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1ba3eca91ed6b7c53e75a681754c95fabcedeb7a",
+  "source_master_sha": "1282f1df00c067bbbb078aa6abbc59ae67c02646",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4856,6 +4856,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37771319320"
+    "run_id": "37771661047"
   }
 }
