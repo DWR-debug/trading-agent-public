@@ -1,0 +1,290 @@
+name: Q218 Independent Symbol-Disjoint Replication
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q218_independent_replication_once.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: trading-agent-q218-independent-replication-once
+  cancel-in-progress: false
+
+jobs:
+  replicate:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact replication request
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Verify one-shot replication request
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f research/run_requests/q218_independent_replication_once.trigger
+          grep -Fx "RUN_Q218_INDEPENDENT_REPLICATION=true" research/run_requests/q218_independent_replication_once.trigger
+          grep -Fx "SOURCE_TRIAL_ID=T-2026-10-08-Q218-PERFORMANCE-01" research/run_requests/q218_independent_replication_once.trigger
+          grep -Fx "REPLICATION_TRIAL_ID=T-2026-10-08-Q218-REPLICATION-01" research/run_requests/q218_independent_replication_once.trigger
+          grep -Fx "ONE_SHOT=true" research/run_requests/q218_independent_replication_once.trigger
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install fixed replication dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check exchange-calendars pandas
+
+      - name: Verify primary Q218 result is complete and provenance-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          contract=json.loads(Path("research/governance/q218_performance_contract_2026_10_08.json").read_text(encoding="utf-8"))
+          result=json.loads(Path("research/evidence/q218_deterministic_performance_result_latest.json").read_text(encoding="utf-8"))
+          expected="78c4a667b01bebe0aa23361e78856155fa3e3fe861cb6fcc1e4b79973cbddc5d"
+          assert result["record_type"]=="q218_deterministic_performance_result"
+          assert result["trial_id"]=="T-2026-10-08-Q218-PERFORMANCE-01"
+          assert result["report_fingerprint"]==expected
+          assert contract.get("primary_performance_report_fingerprint")==expected
+          for key in ("selection_used","holdout_used_for_selection","parameter_search","threshold_search","horizon_search","asset_search","variant_search","family_ranking","promotion_decision"):
+              assert result[key] is False
+          assert result["safety"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
+          print("PRIMARY_Q218_PROVENANCE_ONLY=PASS")
+          PY
+
+      - name: Verify no prior replication result
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -e research/evidence/q218_independent_replication_performance_latest.json
+
+      - name: Wait for exact Master CI Gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 90); do
+            line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
+            run_id="$(printf '%s' "$line" | cut -f1)"
+            status="$(printf '%s' "$line" | cut -f2)"
+            conclusion="$(printf '%s' "$line" | cut -f3)"
+            echo "Q218_REPLICATION_T052 run_id=$run_id status=$status conclusion=$conclusion"
+            if [ "$status" = "completed" ]; then
+              test "$conclusion" = "success"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Exact Master CI Gate did not complete successfully within replication window."
+          exit 1
+
+      - name: Run independent SEC event-pair gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/q218_independent_replication/${{ github.run_id }}
+          python automation/q218_independent_replication_event_gate.py --output "research/runs/q218_independent_replication/${{ github.run_id }}/event_gate.json"
+          cp "research/runs/q218_independent_replication/${{ github.run_id }}/event_gate.json" research/evidence/q218_independent_replication_event_pair_latest.json
+
+      - name: Freeze independent SEC and market bundle
+        shell: bash
+        env:
+          REP_ROOT: research/runs/q218_independent_replication/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python automation/q218_independent_replication_input_freeze.py --output-root "$REP_ROOT" --receipt "$REP_ROOT/input_bundle_receipt.json"
+
+      - name: Run independent pre-performance robustness
+        shell: bash
+        env:
+          REP_ROOT: research/runs/q218_independent_replication/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python automation/q218_independent_replication_preperformance.py --bundle "$REP_ROOT/input_bundle_manifest.json" --contract "research/governance/q218_independent_replication_contract_2026_10_08.json" --output "$REP_ROOT/preperformance_robustness.json"
+
+      - name: Validate replication boundaries
+        shell: bash
+        env:
+          REP_ROOT: research/runs/q218_independent_replication/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root=Path(os.environ["REP_ROOT"])
+          contract=json.loads(Path("research/governance/q218_independent_replication_contract_2026_10_08.json").read_text(encoding="utf-8"))
+          event=json.loads((root/"event_gate.json").read_text(encoding="utf-8"))
+          bundle=json.loads((root/"input_bundle_manifest.json").read_text(encoding="utf-8"))
+          inp=json.loads((root/"input_bundle_receipt.json").read_text(encoding="utf-8"))
+          robust=json.loads((root/"preperformance_robustness.json").read_text(encoding="utf-8"))
+          assert contract["universe"]["issuers"]=={"GOOGL":"1652044","META":"1326801","ORCL":"1341439","PFE":"78003"}
+          assert event["all_pairing_valid"] is True
+          assert event["total_event_pairs"] > 0
+          assert event["primary_performance_read"] is False
+          assert bundle["trial_id"]=="T-2026-10-08-Q218-REPLICATION-01"
+          assert bundle["selection_used"] is False
+          assert bundle["parameter_search"] is False
+          assert inp["status"]=="INPUT_BUNDLE_FROZEN"
+          assert inp["performance_authorized"] is False
+          assert robust["status"]=="PRE_PERFORMANCE_REPLICATION_ROBUSTNESS_COMPLETED"
+          assert robust["all_mutations_rejected"] is True
+          assert robust["performance_authorized"] is False
+          assert robust["research_only"] is True
+          print("Q218_REPLICATION_BOUNDARIES=PASS")
+          PY
+
+      - name: Upload exact replication preparation artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: q218-independent-replication-prep-${{ github.run_id }}
+          path: research/runs/q218_independent_replication/${{ github.run_id }}/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Bind artifact identity to replication receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REP_ROOT: research/runs/q218_independent_replication/${{ github.run_id }}
+          ARTIFACT_NAME: q218-independent-replication-prep-${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/artifacts.json"
+          ARTIFACTS_JSON="$RUNNER_TEMP/artifacts.json" REP_ROOT="$REP_ROOT" ARTIFACT_NAME="$ARTIFACT_NAME" python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          payload=json.loads(Path(os.environ["ARTIFACTS_JSON"]).read_text())
+          matches=[a for a in payload.get("artifacts",[]) if a.get("name")==os.environ["ARTIFACT_NAME"]]
+          assert len(matches)==1
+          a=matches[0]
+          path=Path(os.environ["REP_ROOT"])/"input_bundle_receipt.json"
+          data=json.loads(path.read_text(encoding="utf-8"))
+          data["artifact"]={"id":a["id"],"name":a["name"],"digest":a["digest"],"expired":a["expired"],"run_id":int(os.environ["GITHUB_RUN_ID"])}
+          data["artifact_path"]=f"actions://artifacts/{a['id']}"
+          data["artifact_sha256"]=a["digest"]
+          data.pop("receipt_fingerprint",None)
+          canonical=json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(",",":"),allow_nan=False).encode()
+          data["receipt_fingerprint"]=hashlib.sha256(canonical).hexdigest()
+          path.write_text(json.dumps(data,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          PY
+
+      - name: Publish replication preparation receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REP_ROOT: research/runs/q218_independent_replication/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')" --file "research/evidence/q218_independent_replication_event_pair_latest.json=$REP_ROOT/event_gate.json" --file "research/evidence/q218_independent_replication_input_bundle_latest.json=$REP_ROOT/input_bundle_receipt.json" --file "research/evidence/q218_independent_replication_robustness_latest.json=$REP_ROOT/preperformance_robustness.json"
+
+      - name: Read exact replication artifact identity
+        id: bundle
+        env:
+          REP_ROOT: research/runs/q218_independent_replication/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          art=json.loads((Path(os.environ["REP_ROOT"])/"input_bundle_receipt.json").read_text())["artifact"]
+          assert art.get("run_id") and art.get("id")
+          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as out:
+              out.write(f"run_id={art['run_id']}\n")
+              out.write(f"artifact_id={art['id']}\n")
+          PY
+
+      - name: Download exact replication artifact
+        uses: actions/download-artifact@v6
+        with:
+          run-id: ${{ steps.bundle.outputs.run_id }}
+          artifact-ids: ${{ steps.bundle.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: replication_bundle
+
+      - name: Verify downloaded replication bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s replication_bundle/input_bundle_manifest.json
+          test -s replication_bundle/q218_effective_replication_contract.json
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          bundle=json.loads(Path("replication_bundle/input_bundle_manifest.json").read_text())
+          receipt=json.loads(Path("research/evidence/q218_independent_replication_input_bundle_latest.json").read_text())
+          effective=Path("replication_bundle/q218_effective_replication_contract.json")
+          assert bundle["bundle_fingerprint"]==receipt["bundle_fingerprint"]
+          assert hashlib.sha256(effective.read_bytes()).hexdigest()==bundle["contract_sha256"]
+          assert bundle["trial_id"]=="T-2026-10-08-Q218-REPLICATION-01"
+          print("Q218_REPLICATION_EXACT_BUNDLE=PASS")
+          PY
+
+      - name: Execute fixed independent replication
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q218_independent_replication_executor.py --bundle replication_bundle/input_bundle_manifest.json --contract research/governance/q218_independent_replication_contract_2026_10_08.json --output replication_bundle/q218_independent_replication_performance_result.json
+
+      - name: Validate replication performance boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result=json.loads(Path("replication_bundle/q218_independent_replication_performance_result.json").read_text())
+          assert result["replication_trial_id"]=="T-2026-10-08-Q218-REPLICATION-01"
+          assert result["source_trial_id"]=="T-2026-10-08-Q218-PERFORMANCE-01"
+          assert result["performance_evaluation"] is True
+          assert result["holdout_evaluation"] is False
+          assert result["primary_performance_output_used_for_rule_changes"] is False
+          for key in ("selection_used","holdout_used_for_selection","parameter_search","threshold_search","horizon_search","asset_search","variant_search","family_ranking","promotion_decision"):
+              assert result[key] is False
+          assert result["safety"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
+          print("Q218_REPLICATION_PERFORMANCE_BOUNDARY=PASS")
+          PY
+
+      - name: Publish immutable replication result
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')" --file "research/evidence/q218_independent_replication_performance_latest.json=replication_bundle/q218_independent_replication_performance_result.json"
+
+      - name: Refresh dashboard and next-gate dispatcher
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run resource-dashboard-update.yml --repo "$GITHUB_REPOSITORY" --ref master
+          gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master
+
+      - name: Upload immutable replication result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q218-independent-replication-result-${{ github.run_id }}-${{ github.run_attempt }}
+          path: replication_bundle/q218_independent_replication_performance_result.json
+          if-no-files-found: error
+          retention-days: 30
