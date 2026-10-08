@@ -551,6 +551,13 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             if focused_active_scope and focused_active_scope in active_slot_scopes:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_FOCUSED_GATE_ACTIVE_OR_DUPLICATE"})
                 continue
+            if focus_wave and gate in Q218_GATE_NAMES and gate in completed_q218_gates_for_current_context(runs):
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_FOCUSED_GATE_ALREADY_COMPLETED_CURRENT_CONTEXT",
+                    "gate": gate,
+                })
+                continue
             if resource_input and (resource_input, candidate, "all") in active_slot_scopes and gate == "all":
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ACTIVE_OR_DUPLICATE"})
                 continue
