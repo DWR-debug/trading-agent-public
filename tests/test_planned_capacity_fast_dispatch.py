@@ -708,7 +708,7 @@ def test_fast_dispatch_loads_paginated_top4_slot_history_for_retry_circuit_break
     assert '<(printf' in dispatcher
 
 
-def test_dashboard_skips_current_context_completed_ai_before_filling_free_pool(monkeypatch):
+def test_dashboard_skips_current_context_completed_focused_ai_before_filling_free_pool(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
 
     resources = [{
@@ -718,7 +718,7 @@ def test_dashboard_skips_current_context_completed_ai_before_filling_free_pool(m
     monkeypatch.setattr(
         dashboard,
         "ai_task_completed_with_current_context",
-        lambda task_id, root=None: task_id == "AI-2026-10-06-Q220-TOP4-ADVERSARIAL",
+        lambda task_id, root=None: task_id == "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
     )
     plan = dashboard.planned_capacity_plan(resources, [], [], {}, {})
     ai = next(row for row in plan if row["resource"] == "Free AI pool")
