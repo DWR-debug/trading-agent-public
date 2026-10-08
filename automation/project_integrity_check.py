@@ -38,6 +38,7 @@ ACTIVE_WORKFLOWS = {
     "q104-i19-13f-historical-identity-census.yml",
     "q218-independent-architecture-pit-reproduction.yml",
     "q218-prereg-authorization-reconcile.yml",
+    "q218-performance-authorization-once.yml",
     "research-completion-monitor-a.yml",
     "research-completion-monitor-b.yml",
     "research-completion-relay.yml",
