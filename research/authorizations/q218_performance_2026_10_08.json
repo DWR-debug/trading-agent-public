@@ -1,23 +1,22 @@
 {
   "schema_version": "1.0",
-  "record_type": "q218_explicit_one_shot_performance_authorization",
-  "authorization_id": "AUTH-Q218-2026-10-08-ONE-SHOT-01",
-  "candidate_id": "Q218",
+  "record_type": "q218_performance_authorization_reconcile",
+  "authorization_id": "AUTH-Q218-2026-10-08-RECONCILE-01",
   "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
   "authorized": false,
   "performance_execution_authorized": false,
   "one_shot": true,
-  "authorized_at_utc": "2026-10-08T11:34:06.175709+00:00",
-  "authorization_basis": {
-    "requested_by_user": true,
-    "master_exact_ci_run_id": 37770785520,
-    "g4_reconcile_receipt_fingerprint": "8f387cae448e10f15a6194dd471e7161d97d2dba3f5a2c3d1855d09f8771ae73",
-    "preregistration_fingerprint": "e80e0e5660bc43959a037cf09ba767fabd0359a6b2a5ecda41874840385d6c67"
+  "status": "RECONCILED_NOT_AUTHORIZED",
+  "preregistration_fingerprint": "e2c9072448c1bf31a482db69d405c1336ca429be4e002c868bffcbf7a3d63d5b",
+  "upstream_receipts": {
+    "source_gate_receipt_fingerprint": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
+    "event_pair_gate_receipt_fingerprint": "8fe8f303e2a63a5e59100be795ef8adc08f492a52a6ed32f85cfb802a74f35bc",
+    "independent_pit_receipt_fingerprint": "221ca765cbc4a4318b38b95c8311342516222572069e95e0e822800e3035e5a4"
   },
-  "source_receipts": {
-    "source_gate": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
-    "event_pair_gate": "4f83127b8f2c7335f2cb64ef2439d0e364ae47f25599f5d80ac0d56b96be8ebe",
-    "independent_pit": "764b538566fc936d1ff9655b6cb6198ff6f8e80c4e96a50451670774a37fa199"
+  "authorization_basis": {
+    "source_gate_receipt": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
+    "event_pair_gate_receipt": "8fe8f303e2a63a5e59100be795ef8adc08f492a52a6ed32f85cfb802a74f35bc",
+    "independent_pit_receipt": "221ca765cbc4a4318b38b95c8311342516222572069e95e0e822800e3035e5a4"
   },
   "selection_used": false,
   "holdout_used_for_selection": false,
@@ -28,17 +27,11 @@
   "variant_search": false,
   "family_ranking": false,
   "promotion_decision": false,
-  "execution_trigger_created": false,
-  "execution_workflow": null,
-  "execution_readiness_note": "Authorization is valid, but the Q218 public repository currently has no fixed performance executor. No execution trigger is created until an exact executor and input bundle are frozen.",
   "safety": {
     "paper_only": true,
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "authorization_fingerprint": "4a7720674aaa910d590519b28f22fbd4e191d97f03d8aea3b0665263e99ea28e",
-  "status": "REVOKED_PRE_EXECUTION",
-  "revoked_at_utc": "2026-10-08T11:47:25.052Z",
-  "reason": "Authorization issued before required universal robustness and performance-replication governance prerequisites were present. Revoked before any execution; no performance result was produced."
+  "authorization_reconcile_fingerprint": "97c4bdc9c72e73d8444662a86d3027e920c216da36eeb89d6fed9b20ad244804"
 }
