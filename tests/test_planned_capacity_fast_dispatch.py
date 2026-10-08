@@ -126,9 +126,12 @@ def test_q104_source_only_receipt_does_not_mark_acceptance_time_census_complete(
         dashboard,
         "jobs_for_run",
         lambda run_id: [
-            {"name": "windows_census", "status": "in_progress", "conclusion": None},
-            {"name": "hosted_census (2018-2021)", "status": "in_progress", "conclusion": None},
-            {"name": "hosted_census (2022-2025-09)", "status": "in_progress", "conclusion": None},
+            {"name": "census (2013-2016, windows slot A)", "status": "in_progress", "conclusion": None},
+            {"name": "census (2017-2018, windows slot B)", "status": "in_progress", "conclusion": None},
+            {"name": "census (2019-2020, windows slot C)", "status": "in_progress", "conclusion": None},
+            {"name": "census (2021-2022, hosted x64 slot 1)", "status": "in_progress", "conclusion": None},
+            {"name": "census (2023, hosted x64 slot 2)", "status": "in_progress", "conclusion": None},
+            {"name": "census (2024-2025-09, hosted ARM64 slot 1)", "status": "in_progress", "conclusion": None},
         ],
     )
     status = dashboard.q104_census_status([{
@@ -1044,3 +1047,38 @@ def test_q104_recovery_cannot_cancel_an_active_census():
     assert "needs: [recovery_guard]" in workflow
     assert "needs.recovery_guard.outputs.proceed == 'true'" in workflow
     assert "needs.recovery_guard.outputs.proceed" in workflow
+
+
+
+def test_q104_census_dashboard_requires_exact_six_shard_clock_receipt():
+    from automation.generate_resource_dashboard import q104_census_clock_complete
+
+    base = {
+        "candidate_id": "Q104:I19",
+        "status": "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY",
+        "completed_shards": [
+            "2013-2016", "2017-2018", "2019-2020",
+            "2021-2022", "2023", "2024-2025-09",
+        ],
+        "archive_count": 50,
+        "archives": [{} for _ in range(50)],
+        "identity_conflicts": [],
+        "acceptance_failures": {},
+        "acceptance_time_join": {
+            "target_unique_accessions": 136941,
+            "records_checked": 136941,
+            "failures": 0,
+            "complete": True,
+            "timezone_inference": False,
+        },
+        "receipt_fingerprint": "a" * 64,
+        "safety": {
+            "paper_only": True,
+            "live_trading_enabled": False,
+            "orders_enabled": False,
+            "automatic_promotion": False,
+        },
+    }
+    assert q104_census_clock_complete(base) is True
+    base["completed_shards"].pop()
+    assert q104_census_clock_complete(base) is False
