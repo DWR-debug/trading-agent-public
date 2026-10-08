@@ -172,7 +172,8 @@ def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_det
     assert q218["current_milestone_progress_percent"] == 0
     assert any(
         m["label"] == "Post-performance validation / fresh-symbol replication"
-        and m["status"] == "active"
+        and m["status"] == "next"
+        and m["progress"] == 0
         for m in q218["milestones"]
     )
 
