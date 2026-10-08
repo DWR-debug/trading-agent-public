@@ -129,6 +129,11 @@ jobs:
               data["artifact"]={"id":a["id"],"name":a["name"],"digest":a["digest"],"expired":a["expired"],"run_id":int(os.environ.get("GITHUB_RUN_ID","0"))}
               data["artifact_path"]=f"actions://artifacts/{a['id']}"
               data["artifact_sha256"]=a["digest"]
+              previous=data.pop("receipt_fingerprint",None)
+              if previous is not None:
+                  import hashlib
+                  canonical=json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(",",":"),allow_nan=False).encode("utf-8")
+                  data["receipt_fingerprint"]=hashlib.sha256(canonical).hexdigest()
               path.write_text(json.dumps(data,indent=2,ensure_ascii=False)+"\n")
           PY
 
