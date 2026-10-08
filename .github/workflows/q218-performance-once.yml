@@ -1,0 +1,208 @@
+name: Q218 One-Shot Performance Execution
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q218_execute_performance_once.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: trading-agent-q218-performance-execution-once
+  cancel-in-progress: false
+
+jobs:
+  execute:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact execution request
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Verify one-shot execution request
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f research/run_requests/q218_execute_performance_once.trigger
+          grep -Fx "EXECUTE_Q218_PERFORMANCE=true" research/run_requests/q218_execute_performance_once.trigger
+          grep -Fx "TRIAL_ID=T-2026-10-08-Q218-PERFORMANCE-01" research/run_requests/q218_execute_performance_once.trigger
+          grep -Fx "ONE_SHOT=true" research/run_requests/q218_execute_performance_once.trigger
+          grep -Fx "REQUESTED_BY_USER=true" research/run_requests/q218_execute_performance_once.trigger
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Verify explicit authorization and no prior execution
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          auth=json.loads(Path("research/authorizations/q218_performance_2026_10_08.json").read_text(encoding="utf-8"))
+          receipt=Path("research/evidence/q218_deterministic_performance_result_latest.json")
+          if receipt.exists():
+              prior=json.loads(receipt.read_text(encoding="utf-8"))
+              raise SystemExit("Q218_ONE_SHOT_ALREADY_CONSUMED:"+str(prior.get("status")))
+          assert auth["authorized"] is True
+          assert auth["performance_execution_authorized"] is True
+          assert auth["one_shot"] is True
+          assert auth["execution_trigger_created"] in {False, True}
+          assert auth["safety"]["paper_only"] is True
+          assert auth["safety"]["live_trading_enabled"] is False
+          assert auth["safety"]["orders_enabled"] is False
+          assert auth["safety"]["automatic_promotion"] is False
+          print("Q218_AUTHORIZATION_VALIDATED")
+          PY
+
+      - name: Verify exact Master CI Gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
+          run_id="$(printf '%s' "$line" | cut -f1)"
+          status="$(printf '%s' "$line" | cut -f2)"
+          conclusion="$(printf '%s' "$line" | cut -f3)"
+          echo "Q218_EXECUTION_T052 run_id=$run_id status=$status conclusion=$conclusion"
+          test "$status" = "completed"
+          test "$conclusion" = "success"
+
+      - name: Verify current preparation receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          prereg=json.loads(Path("research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json").read_text())
+          bundle=json.loads(Path("research/evidence/q218_performance_input_bundle_latest.json").read_text())
+          robust=json.loads(Path("research/evidence/q218_pre_performance_robustness_latest.json").read_text())
+          candidate=json.loads(Path("research/evidence/q218_candidate_robustness_latest.json").read_text())
+          assert prereg["status"]=="FROZEN_PREREGISTRATION_RECONCILED"
+          assert prereg["pre_performance_robustness"]["status"]=="PRE_PERFORMANCE_ROBUSTNESS_COMPLETED"
+          assert prereg["candidate_robustness_gate"]["status"]=="PRE_FORMAL_ROBUSTNESS_COMPLETED"
+          assert bundle["status"]=="INPUT_BUNDLE_FROZEN"
+          assert robust["status"]=="PRE_PERFORMANCE_ROBUSTNESS_COMPLETED"
+          assert candidate["status"]=="PRE_FORMAL_ROBUSTNESS_COMPLETED"
+          assert bundle["bundle_fingerprint"]==robust["bundle_fingerprint"]
+          assert bundle["artifact"]["digest"]==robust["artifact"]["digest"]
+          print("Q218_PREPARATION_RECEIPTS_CURRENT")
+          PY
+
+      - name: Read exact preparation artifact identity
+        id: bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path("research/evidence/q218_performance_input_bundle_latest.json").read_text())
+          art=data["artifact"]
+          for key in ("run_id","id","name","digest"):
+              assert art.get(key) not in (None,"")
+          print(f"run_id={art['run_id']}")
+          print(f"artifact_id={art['id']}")
+          print(f"artifact_name={art['name']}")
+          print(f"artifact_digest={art['digest']}")
+          with open("$GITHUB_OUTPUT","a",encoding="utf-8") as out:
+              out.write(f"run_id={art['run_id']}\n")
+              out.write(f"artifact_id={art['id']}\n")
+              out.write(f"artifact_name={art['name']}\n")
+              out.write(f"artifact_digest={art['digest']}\n")
+          PY
+
+      - name: Download exact preparation artifact
+        uses: actions/download-artifact@v6
+        with:
+          run-id: ${{ steps.bundle.outputs.run_id }}
+          artifact-ids: ${{ steps.bundle.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: q218_bundle
+
+      - name: Verify downloaded preparation artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s q218_bundle/input_bundle_manifest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          bundle=json.loads(Path("q218_bundle/input_bundle_manifest.json").read_text())
+          receipt=json.loads(Path("research/evidence/q218_performance_input_bundle_latest.json").read_text())
+          assert bundle["bundle_fingerprint"]==receipt["bundle_fingerprint"]
+          assert bundle["contract_sha256"]==receipt["contract_sha256"]
+          print("Q218_EXACT_BUNDLE_VERIFIED")
+          PY
+
+      - name: Execute fixed deterministic Q218 performance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q218_deterministic_performance_executor.py             --bundle q218_bundle/input_bundle_manifest.json             --output q218_bundle/q218_deterministic_performance_result.json
+
+      - name: Validate performance boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result=json.loads(Path("q218_bundle/q218_deterministic_performance_result.json").read_text())
+          assert result["trial_id"]=="T-2026-10-08-Q218-PERFORMANCE-01"
+          assert result["performance_evaluation"] is True
+          assert result["holdout_evaluation"] is False
+          assert result["selection_used"] is False
+          assert result["holdout_used_for_selection"] is False
+          assert result["parameter_search"] is False
+          assert result["threshold_search"] is False
+          assert result["horizon_search"] is False
+          assert result["asset_search"] is False
+          assert result["variant_search"] is False
+          assert result["family_ranking"] is False
+          assert result["promotion_decision"] is False
+          assert result["safety"]["paper_only"] is True
+          assert result["safety"]["live_trading_enabled"] is False
+          assert result["safety"]["orders_enabled"] is False
+          assert result["safety"]["automatic_promotion"] is False
+          print("Q218_PERFORMANCE_BOUNDARY_VALIDATED")
+          PY
+
+      - name: Publish immutable Q218 performance result
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            base_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python3 automation/github_contents_publish.py               --repository "$GITHUB_REPOSITORY"               --branch master               --base-sha "$base_sha"               --file "research/evidence/q218_deterministic_performance_result_latest.json=q218_bundle/q218_deterministic_performance_result.json"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+
+      - name: Upload one-shot performance result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q218-one-shot-performance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q218_bundle/q218_deterministic_performance_result.json
+          if-no-files-found: error
+          retention-days: 30
