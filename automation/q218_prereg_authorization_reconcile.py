@@ -137,6 +137,7 @@ def build() -> tuple[dict, dict, dict]:
             "contract_sha256": hashlib.sha256(PERFORMANCE_CONTRACT_PATH.read_bytes()).hexdigest(),
             "revision": performance_contract.get("revision"),
         },
+        "time_contract": performance_contract["time_contract"],
         "feature_construction": performance_contract["feature_construction"],
         "outcome_contract": performance_contract["outcome_contract"],
         "input_bundle_contract": performance_contract["input_bundle"],
