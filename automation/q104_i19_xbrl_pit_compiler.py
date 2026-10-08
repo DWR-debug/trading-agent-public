@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse, copy, hashlib, json
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
@@ -15,7 +16,39 @@ XNYS = xcals.get_calendar("XNYS")
 
 def canonical(value: Any) -> str: return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 def fingerprint(value: Any) -> str: return hashlib.sha256(canonical(value).encode()).hexdigest()
-def parse_utc(value: str) -> datetime: return datetime.fromisoformat(str(value).replace("Z","+00:00")).astimezone(timezone.utc)
+EDGAR_EASTERN = ZoneInfo("America/New_York")
+
+
+def parse_utc(value: str) -> datetime:
+    """Parse only explicit-offset timestamps; never infer the machine's local zone."""
+    parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError("I19_TIMESTAMP_TIMEZONE_REQUIRED")
+    return parsed.astimezone(timezone.utc)
+
+
+def parse_edgar_eastern_to_utc(value: str) -> datetime:
+    """Normalize raw EDGAR acceptance wall time using Eastern DST rules.
+
+    Ambiguous or nonexistent local clocks fail closed rather than being guessed.
+    """
+    text = str(value)
+    local = datetime.fromisoformat(text)
+    if local.tzinfo is not None or local.isoformat() != text:
+        raise ValueError("I19_EDGAR_HEADER_CLOCK_MUST_BE_NAIVE_LOCAL")
+    candidates = {}
+    for fold in (0, 1):
+        candidate = local.replace(tzinfo=EDGAR_EASTERN, fold=fold)
+        round_trip = (
+            candidate.astimezone(timezone.utc)
+            .astimezone(EDGAR_EASTERN)
+            .replace(tzinfo=None)
+        )
+        if round_trip == local:
+            candidates[candidate.utcoffset()] = candidate
+    if len(candidates) != 1:
+        raise ValueError("I19_EDGAR_EASTERN_CLOCK_AMBIGUOUS_OR_NONEXISTENT")
+    return next(iter(candidates.values())).astimezone(timezone.utc)
 def first_xnys_after(value: datetime) -> str:
     d=value.date(); s=XNYS.sessions_in_range((d+timedelta(days=1)).isoformat(), (d+timedelta(days=14)).isoformat())
     if not len(s): raise ValueError("I19_NO_NEXT_XNYS_SESSION")
