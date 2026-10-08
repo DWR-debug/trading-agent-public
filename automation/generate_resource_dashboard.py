@@ -588,7 +588,9 @@ def q218_receipt_state() -> dict[str, Any]:
     try:
         receipt = json.loads(independent_path.read_text(encoding="utf-8"))
         independent_complete = (
-            receipt.get("status") == "Q218_INDEPENDENT_ARCHITECTURE_PIT_REPRODUCED"
+            source_complete
+            and event_complete
+            and receipt.get("status") == "Q218_INDEPENDENT_ARCHITECTURE_PIT_REPRODUCED"
             and receipt.get("upstream_receipts", {}).get("source_receipt_fingerprint")
             == index.get("source_gate", {}).get("receipt_fingerprint")
             and receipt.get("upstream_receipts", {}).get("event_pair_receipt_fingerprint")
@@ -728,11 +730,27 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "overall_progress_percent": q218_overall,
                 "completed_milestones": q218_complete,
                 "total_milestones": q218_total,
-                "current_milestone": "Preregistration + authorization reconcile" if q218_receipts["independent_complete"] else "Independent Architecture PIT",
-                "current_milestone_progress_percent": q218_prereg["progress_percent"] if q218_receipts["independent_complete"] else 0,
-                "current_milestone_status": q218_prereg["state"] if q218_receipts["independent_complete"] else "open",
-                "current_milestone_detail": q218_prereg["detail"] if q218_receipts["independent_complete"] else q218_ind_detail,
-                "next_gate": q218_prereg["next_gate"] if q218_receipts["independent_complete"] else "independent architecture PIT reproduction",
+                "current_milestone": (
+                    "Preregistration + authorization reconcile"
+                    if q218_receipts["independent_complete"]
+                    else ("Independent Architecture PIT" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-pair gate" if q218_receipts["source_complete"] else "Source gate"))
+                ),
+                "current_milestone_progress_percent": (
+                    q218_prereg["progress_percent"] if q218_receipts["independent_complete"]
+                    else (100 if q218_receipts["event_pair_complete"] and q218_receipts["source_complete"] else 0)
+                ),
+                "current_milestone_status": (
+                    q218_prereg["state"] if q218_receipts["independent_complete"]
+                    else ("open" if (q218_receipts["source_complete"] and q218_receipts["event_pair_complete"]) else "open")
+                ),
+                "current_milestone_detail": (
+                    q218_prereg["detail"] if q218_receipts["independent_complete"]
+                    else (q218_ind_detail if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-Pair receipt fehlt" if q218_receipts["source_complete"] else "Source-Gate Receipt fehlt"))
+                ),
+                "next_gate": (
+                    q218_prereg["next_gate"] if q218_receipts["independent_complete"]
+                    else ("independent architecture PIT reproduction" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("event-pair gate" if q218_receipts["source_complete"] else "source gate"))
+                ),
                 "milestones": q218_milestones,
                 "performance_authorization_allowed": False,
             },
