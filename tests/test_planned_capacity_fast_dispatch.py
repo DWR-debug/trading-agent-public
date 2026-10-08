@@ -123,8 +123,30 @@ def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_det
     assert 0 <= q104["current_milestone_progress_percent"] <= 100
     assert q104["total_milestones"] == 9
     assert 0 <= q104["overall_progress_percent"] <= 100
-    assert q218["current_milestone"] == "Preregistration + authorization reconcile"
-    assert any(m["label"] == "Independent Architecture PIT" and m["status"] == "complete" for m in q218["milestones"])
+    assert q218["current_milestone"] == "Independent Architecture PIT"
+    assert any(m["label"] == "Independent Architecture PIT" and m["status"] == "open" for m in q218["milestones"])
+
+
+def test_dashboard_q218_completed_source_event_pair_exposes_independent_arch_queue(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+    resources = [{
+        "name": "GitHub-hosted ARM64",
+        "capacity_state": "available",
+        "current_assignments": 0,
+    }]
+    dashboard_top4 = [{
+        "code": "Q218",
+        "next_gate": "independent architecture PIT reproduction",
+    }]
+    monkeypatch.setattr(dashboard, "q218_receipt_state", lambda: {
+        "source_complete": True,
+        "event_pair_complete": True,
+        "independent_complete": False,
+    })
+    plan = dashboard.planned_capacity_plan(resources, [], dashboard_top4, {}, {})
+    rows = [item for row in plan for item in row["planned_assignments"] if item.get("scheduled")]
+    assert any(item["plan_id"] == "Q218-INDEPENDENT-ARCH" for item in rows)
+    assert all(item["plan_id"] not in {"Q218-SOURCE", "Q218-EVENT-PAIR"} for item in rows)
 
 
 def test_dashboard_html_exposes_progress_bar_panels():
@@ -720,8 +742,10 @@ def test_fast_dispatch_loads_paginated_top4_slot_history_for_retry_circuit_break
 
 
 
-def test_q218_focused_gate_ignores_legacy_failures_from_older_master_context():
-    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+def test_q218_focused_gate_ignores_legacy_failures_from_older_master_context(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
+    monkeypatch.setattr(dispatcher, "q218_positive_gate_index_current", lambda: set())
+    dispatch_candidates = dispatcher.dispatch_candidates
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
@@ -755,8 +779,10 @@ def test_q218_focused_gate_ignores_legacy_failures_from_older_master_context():
     assert [x["candidate"] for x in plan["dispatches"]] == ["Q218"]
     assert any(d["decision"] == "FOCUSED_GATE_TECHNICAL_RETRY_PERMITTED" for d in plan["decisions"]) is False
 
-def test_q218_focused_gate_allows_one_technical_retry_then_stops():
-    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+def test_q218_focused_gate_allows_one_technical_retry_then_stops(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
+    monkeypatch.setattr(dispatcher, "q218_positive_gate_index_current", lambda: set())
+    dispatch_candidates = dispatcher.dispatch_candidates
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
