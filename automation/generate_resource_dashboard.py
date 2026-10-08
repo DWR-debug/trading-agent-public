@@ -1166,6 +1166,26 @@ def planned_capacity_plan(
         and int(q104_census_receipt.get("acceptance_time_join", {}).get("failures", 0)) == 0
     )
     q218_receipts = q218_receipt_state()
+    q218_prereg = q218_prereg_status()
+    q218_replication_result = read_json_file("research/evidence/q218_independent_replication_performance_latest.json")
+    q218_replication_complete = (
+        q218_replication_result.get("replication_trial_id") == "T-2026-10-08-Q218-REPLICATION-01"
+        and q218_replication_result.get("source_trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+        and q218_replication_result.get("performance_evaluation") is True
+        and q218_replication_result.get("holdout_evaluation") is False
+        and q218_replication_result.get("selection_used") is False
+        and q218_replication_result.get("parameter_search") is False
+        and q218_replication_result.get("threshold_search") is False
+        and q218_replication_result.get("horizon_search") is False
+        and q218_replication_result.get("asset_search") is False
+        and q218_replication_result.get("variant_search") is False
+        and q218_replication_result.get("family_ranking") is False
+        and q218_replication_result.get("promotion_decision") is False
+        and q218_replication_result.get("safety", {}).get("paper_only") is True
+        and q218_replication_result.get("safety", {}).get("live_trading_enabled") is False
+        and q218_replication_result.get("safety", {}).get("orders_enabled") is False
+        and q218_replication_result.get("safety", {}).get("automatic_promotion") is False
+    )
 
     overlay = os_state.get("top_candidate_capacity_overlay", {})
     a_priority = [str(x) for x in overlay.get("windows_A", {}).get("priority", [])]
@@ -1238,6 +1258,23 @@ def planned_capacity_plan(
             "dispatchable": True,
             "allow_parallel_with_candidate": True,
             "execution_workflow": ".github/workflows/q218-independent-architecture-pit-reproduction.yml",
+        },
+        {
+            "plan_id": "Q218-FRESH-SYMBOL-REPLICATION",
+            "candidate": "Q218",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "disjunkte GOOGL/META/ORCL/PFE Fresh-Symbol-Replikation des eingefrorenen Q218 Trials",
+            "preferred": ["GitHub-hosted Ubuntu x64"],
+            "readiness": (
+                "READY_AFTER_ONE_SHOT_PERFORMANCE"
+                if q218_prereg.get("performance_executed") and not q218_replication_complete
+                else ("COMPLETED" if q218_replication_complete else "BLOCKED_UNTIL_ONE_SHOT_PERFORMANCE")
+            ),
+            "basis": "explizit definierter nächster Q218-Gate; primäres Performance-Ergebnis darf nur als Provenienz dienen und keine Regeländerung auslösen",
+            "dispatchable": bool(q218_prereg.get("performance_executed") and not q218_replication_complete),
+            "allow_parallel_with_candidate": True,
+            "execution_workflow": ".github/workflows/q218-independent-replication-once.yml",
+            "execution_workflow_inputs": {},
         },
         {
             "plan_id": "Q104-I19-COMPILER",
@@ -1314,6 +1351,10 @@ def planned_capacity_plan(
                     continue
                 if q218_receipts["independent_complete"]:
                     continue
+            if plan_id == "Q218-FRESH-SYMBOL-REPLICATION" and not q218_prereg.get("performance_executed"):
+                continue
+            if plan_id == "Q218-FRESH-SYMBOL-REPLICATION" and q218_replication_complete:
+                continue
         if item.get("plan_id") == "Q218-ADVERSARIAL" and any("free ai" in value and "q218" in value for value in active_text):
             continue
         if item.get("plan_id") == "Q221-ADVERSARIAL" and any("free ai" in value and "q221" in value for value in active_text):
