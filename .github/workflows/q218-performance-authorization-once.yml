@@ -1,0 +1,139 @@
+name: Q218 One-Shot Performance Authorization
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q218_authorize_performance_once.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: trading-agent-q218-performance-authorization-once
+  cancel-in-progress: false
+
+jobs:
+  authorize:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact authorization request
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Verify explicit user authorization request
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f research/run_requests/q218_authorize_performance_once.trigger
+          grep -Fx "AUTHORIZE_Q218_PERFORMANCE=true" research/run_requests/q218_authorize_performance_once.trigger
+          grep -Fx "TRIAL_ID=T-2026-10-08-Q218-PERFORMANCE-01" research/run_requests/q218_authorize_performance_once.trigger
+          grep -Fx "ONE_SHOT=true" research/run_requests/q218_authorize_performance_once.trigger
+          grep -Fx "REQUESTED_BY_USER=true" research/run_requests/q218_authorize_performance_once.trigger
+
+      - name: Wait for exact Master CI Gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 90); do
+            line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
+            run_id="$(printf '%s' "$line" | cut -f1)"
+            status="$(printf '%s' "$line" | cut -f2)"
+            conclusion="$(printf '%s' "$line" | cut -f3)"
+            echo "Q218 T052 run_id=$run_id status=$status conclusion=$conclusion"
+            if [ "$status" = "completed" ]; then
+              test "$conclusion" = "success"
+              echo "Q218_MASTER_CI_RUN_ID=$run_id" >> "$GITHUB_ENV"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Exact Master CI Gate did not complete successfully within authorization window."
+          exit 1
+
+      - name: Verify G4 and authorization preconditions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          prereg=json.loads(Path("research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json").read_text(encoding="utf-8"))
+          reconcile=json.loads(Path("research/evidence/q218_prereg_authorization_reconcile_latest.json").read_text(encoding="utf-8"))
+          assert prereg["status"]=="FROZEN_PREREGISTRATION_RECONCILED"
+          assert reconcile["status"]=="Q218_FROZEN_PREREGISTRATION_AND_AUTHORIZATION_RECONCILED"
+          assert reconcile["checks"]["candidate_contract_frozen"] is True
+          assert reconcile["checks"]["source_gate_current"] is True
+          assert reconcile["checks"]["event_pair_gate_current"] is True
+          assert reconcile["checks"]["independent_pit_current"] is True
+          assert prereg["governance"]["performance_trial_authorized"] is False
+          assert prereg["selection"]["holdout_selection_used"] is False
+          assert prereg["selection"]["parameter_search"] is False
+          assert prereg["selection"]["threshold_search"] is False
+          assert prereg["selection"]["horizon_search"] is False
+          assert prereg["safety"]["paper_only"] is True
+          assert prereg["safety"]["live_trading_enabled"] is False
+          assert prereg["safety"]["orders_enabled"] is False
+          assert prereg["safety"]["automatic_promotion"] is False
+          print("Q218 G4 PRECONDITIONS VERIFIED")
+          PY
+
+      - name: Issue explicit one-shot performance authorization
+        env:
+          MASTER_CI_RUN_ID: ${{ env.Q218_MASTER_CI_RUN_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q218_explicit_performance_authorization.py --master-ci-run-id "$MASTER_CI_RUN_ID"
+
+      - name: Verify authorization write
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          auth=json.loads(Path("research/authorizations/q218_performance_2026_10_08.json").read_text(encoding="utf-8"))
+          reg=json.loads(Path("research/governance/active_research_registry.json").read_text(encoding="utf-8"))
+          assert auth["authorized"] is True
+          assert auth["performance_execution_authorized"] is True
+          assert auth["one_shot"] is True
+          assert auth["execution_trigger_created"] is False
+          entry=next(x for x in reg["active_trials"] if x.get("trial_id")=="T-2026-10-08-Q218-PERFORMANCE-01")
+          assert entry["performance_authorization_allowed"] is True
+          assert entry["state"]=="PERFORMANCE_AUTHORIZED"
+          print("Q218 EXPLICIT ONE-SHOT AUTHORIZATION VERIFIED")
+          PY
+
+      - name: Publish authorization and updated registry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$base_sha"             --file research/authorizations/q218_performance_2026_10_08.json=research/authorizations/q218_performance_2026_10_08.json             --file research/governance/active_research_registry.json=research/governance/active_research_registry.json
+
+      - name: Upload authorization receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q218-one-shot-performance-authorization-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            research/authorizations/q218_performance_2026_10_08.json
+            research/governance/active_research_registry.json
+          if-no-files-found: error
+          retention-days: 30
