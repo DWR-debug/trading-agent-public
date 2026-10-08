@@ -846,7 +846,7 @@ def test_q104_compiler_failure_streak_resets_on_new_master_sha(monkeypatch):
     snapshot = {
         "master_sha": "new-master",
         "focus_candidates": ["Q104:I19"],
-        "resources": [{
+        "planned_capacity": [{
             "resource": "GitHub-hosted Ubuntu x64",
             "research_capacity_slots": 1,
             "research_slots_in_use": 0,
@@ -886,7 +886,7 @@ def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
     monkeypatch.setattr(dispatcher, "completed_q218_gates_for_current_context", lambda runs: {"event_pair"})
     snapshot = {
         "focus_candidates": ["Q218"],
-        "resources": [{
+        "planned_capacity": [{
             "resource": "Windows self-hosted C",
             "research_capacity_slots": 1,
             "research_slots_in_use": 0,
