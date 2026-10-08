@@ -1207,6 +1207,7 @@ def main() -> None:
     ai = ai_provider_state()
     s10_support = s10_support_snapshot(work, os_state)
     milestones_12h = milestone_history_12h()
+    candidate_progress = candidate_progress_snapshot(recent_runs)
 
     configured_resources = [
         {"name": "Windows self-hosted A", "type": "physical", "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
@@ -1284,6 +1285,7 @@ def main() -> None:
         "planned_capacity": planned_capacity,
         "planned_research_queue": planned_research_queue,
         "milestone_history_12h": milestones_12h,
+        "candidate_progress": candidate_progress,
         "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks, recent_runs),
         "duration_benchmarks": workflow_benchmarks,
         "job_duration_benchmarks": job_benchmarks,
