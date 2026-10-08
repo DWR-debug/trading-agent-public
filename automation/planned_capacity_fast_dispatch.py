@@ -467,7 +467,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             continue
 
         dispatch_gate = str((item.get("execution_workflow_inputs") or {}).get("gate") or "all")
-        if candidate == "Q218" and dispatch_gate in Q218_GATE_NAMES and focused_gate_recently_cancelled(work, candidate, dispatch_gate):
+        if candidate == "Q218" and dispatch_gate in Q218_GATE_NAMES and focused_gate_recently_cancelled(runs, candidate, dispatch_gate):
             decisions.append({
                 "plan_id": item.get("plan_id"),
                 "decision": "SKIP_FOCUSED_GATE_RECENTLY_CANCELLED_COOLDOWN",
