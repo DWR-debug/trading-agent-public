@@ -6,12 +6,36 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0,str(ROOT))
-from automation.q218_deterministic_performance_executor import _verify_bundle,validate_bundle_sources
+from automation.q218_deterministic_performance_executor import file_sha256,validate_bundle_sources
 
 TRIAL_ID="T-2026-10-08-Q218-REPLICATION-01"
 
 
 def fp(v): return hashlib.sha256(json.dumps(v,ensure_ascii=False,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest()
+
+
+def verify_bundle(bundle_path:Path, contract_path:Path)->dict:
+    bundle=json.loads(bundle_path.read_text(encoding="utf-8"))
+    contract=json.loads(contract_path.read_text(encoding="utf-8"))
+    if bundle.get("trial_id")!=TRIAL_ID or contract.get("replication_trial_id")!=TRIAL_ID:
+        raise RuntimeError("Q218 replication trial identity mismatch")
+    expected=bundle.get("bundle_fingerprint")
+    unsigned=dict(bundle); unsigned.pop("bundle_fingerprint",None)
+    if not expected or fp(unsigned)!=expected:
+        raise RuntimeError("Q218 replication bundle self-fingerprint mismatch")
+    effective=bundle_path.parent/"q218_effective_replication_contract.json"
+    if not effective.is_file():
+        raise RuntimeError("Q218 effective replication contract missing")
+    effective_sha=hashlib.sha256(effective.read_bytes()).hexdigest()
+    if bundle.get("contract_sha256")!=effective_sha:
+        raise RuntimeError("Q218 effective replication contract fingerprint mismatch")
+    if bundle.get("executor_network_access") is not False:
+        raise RuntimeError("Q218 replication robustness requires network-free executor boundary")
+    for key in ("selection_used","holdout_selection_used","parameter_search","threshold_search","horizon_search","asset_search","variant_search"):
+        if bundle.get(key) is not False:
+            raise RuntimeError(f"Q218 replication selection boundary invalid: {key}")
+    validate_bundle_sources(bundle,bundle_path.parent)
+    return bundle
 
 
 def expect_failure(label,fn):
@@ -23,8 +47,7 @@ def expect_failure(label,fn):
 
 
 def run(bundle_path:Path,contract_path:Path,output:Path)->dict:
-    bundle=_verify_bundle(bundle_path)
-    validate_bundle_sources(bundle,bundle_path.parent)
+    bundle=verify_bundle(bundle_path,contract_path)
     contract_sha=hashlib.sha256(contract_path.read_bytes()).hexdigest()
     probes=[]
     with tempfile.TemporaryDirectory(prefix="q218-repl-robustness-") as td:
