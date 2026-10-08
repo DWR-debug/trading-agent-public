@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-08T08:06:30.139717+00:00",
+    "generated_at_utc": "2026-10-08T08:23:57.601176+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "05c8d51d2a482a9f58282c31b552f4803e6854ec"
+    "source_master_sha": "ee46a6f588f9073614899aff442685c196c3a0ec"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-08T08:06:30.139717+00:00",
+  "generated_at_utc": "2026-10-08T08:23:57.601176+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4597,44 +4597,44 @@
     ],
     "recent_commits": [
       {
-        "message": "FIX: dispatcher honors multi-slot resource capacity",
-        "sha": "05c8d51d2a482a9f58282c31b552f4803e6854ec",
-        "timestamp": "2026-10-08T10:06:17+02:00"
+        "message": "FEAT: receipt-based candidate progress dashboard and faster focused routing",
+        "sha": "ee46a6f588f9073614899aff442685c196c3a0ec",
+        "timestamp": "2026-10-08T10:23:45+02:00"
       },
       {
-        "message": "TEST: cover dispatcher multi-slot capacity fallback",
-        "sha": "aa6bf102507d1861c39243300f416caef7a170ae",
-        "timestamp": "2026-10-08T10:04:19+02:00"
+        "message": "TEST: accept live census completion in progress snapshot",
+        "sha": "54fc82b833ac76feb5f41618b049f5c3f5e8c284",
+        "timestamp": "2026-10-08T10:23:29+02:00"
       },
       {
-        "message": "FIX: honor multi-slot resource capacity in dispatcher",
-        "sha": "71ad02b4222f1b87a54c7229e20ccbd4ddcdd23e",
-        "timestamp": "2026-10-08T10:04:12+02:00"
+        "message": "FIX: preserve legacy dashboard progress API",
+        "sha": "b29b300587db96b4f74c4fbaea68b2d030735877",
+        "timestamp": "2026-10-08T10:23:22+02:00"
       },
       {
-        "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "80845c16355c4e3c22e42b490e579c93edef5d1c",
-        "timestamp": "2026-10-08T07:38:35Z"
+        "message": "TEST: cover progress dashboard, Q218 relay and Q104 AI route",
+        "sha": "1ab089e9cfc06a6cb11a8129e87790645dcfc815",
+        "timestamp": "2026-10-08T10:21:21+02:00"
       },
       {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "8cd98cb631c4605b1cfe75e4960fc7ca7adc3d65",
-        "timestamp": "2026-10-08T07:33:32Z"
+        "message": "RESEARCH: route Q104 I19 adversarial audit through free AI pool",
+        "sha": "2929bdf6425be07ab9f4417d3b63e9a6e41c1e7d",
+        "timestamp": "2026-10-08T10:21:05+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "57b0a15729e21640a60c03f94eab7239c158a9c7",
-        "timestamp": "2026-10-08T07:18:43Z"
+        "message": "RESEARCH: add Q104 I19 census/compiler adversarial review task",
+        "sha": "fb030a9b771b85d417dbcc4168581fece8369b62",
+        "timestamp": "2026-10-08T10:20:52+02:00"
       },
       {
-        "message": "FIX: restore dispatcher and honor immutable Q218 gates",
-        "sha": "af712c9fed8d616a693fd2c9b5f5cc507f90b329",
-        "timestamp": "2026-10-08T09:18:30+02:00"
+        "message": "OPS: relay Q218 completion immediately to capacity planner",
+        "sha": "ef63f2aad7ddd60fa46c1120321bff6a93356d29",
+        "timestamp": "2026-10-08T10:20:36+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "eb6500de3a0b7cdce5e4af0a6740274a0ae90feb",
-        "timestamp": "2026-10-08T07:18:14Z"
+        "message": "FEAT: render candidate and milestone bar charts",
+        "sha": "2d1c4cd1b6a408b5b67fc4afea7c94f649cd820e",
+        "timestamp": "2026-10-08T10:20:25+02:00"
       }
     ]
   },
@@ -4732,7 +4732,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "05c8d51d2a482a9f58282c31b552f4803e6854ec",
+  "source_master_sha": "ee46a6f588f9073614899aff442685c196c3a0ec",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4846,6 +4846,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37747639331"
+    "run_id": "37749552095"
   }
 }
