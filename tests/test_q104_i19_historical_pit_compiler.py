@@ -77,12 +77,12 @@ def test_filing_facts_uses_raw_header_clock_not_submission_json(monkeypatch):
         "000000012319000001/0000000123-19-000001-index-headers.html"
     )
     header = (
-        "<SEC-HEADER>\\n"
-        "ACCESSION NUMBER: 0000000123-19-000001\\n"
-        "CONFORMED SUBMISSION TYPE: 10-K\\n"
-        "FILED AS OF DATE: 20190311\\n"
-        "CENTRAL INDEX KEY: 0000000123\\n"
-        "<ACCEPTANCE-DATETIME>20190311165759\\n"
+        "<SEC-HEADER>\n"
+        "ACCESSION NUMBER: 0000000123-19-000001\n"
+        "CONFORMED SUBMISSION TYPE: 10-K\n"
+        "FILED AS OF DATE: 20190311\n"
+        "CENTRAL INDEX KEY: 0000000123\n"
+        "<ACCEPTANCE-DATETIME>20190311165759\n"
         "</SEC-HEADER>"
     ).encode("utf-8")
 
