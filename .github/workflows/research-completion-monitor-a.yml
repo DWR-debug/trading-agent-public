@@ -3,21 +3,12 @@ name: Research Completion Monitor A
 on:
   workflow_run:
     workflows:
-      - "Q*"
-      - "Top-4*"
-      - "*PIT*"
-      - "*Source*"
-      - "*Census*"
-      - "*Frontier*"
-      - "*Identity*"
-      - "*Reproduction*"
-      - "*AI Worker*"
-      - "*Literature*"
-      - "Evidence Graph*"
-      - "Temporal Identity*"
-      - "Wide Search*"
-      - "H06-P2*"
-      - "Permanent Windows Local Research Loop"
+      - "Q104 I19 Historical 13F Identity Census"
+      - "Q104 I19 Historical PIT Compilation"
+      - "Q104 I19 Independent PIT Reproduction"
+      - "Top-4 Candidate Slot Research"
+      - "Q218 Independent Architecture PIT Reproduction"
+      - "Q218 Frozen Preregistration + Authorization Reconcile"
     types: [completed]
   workflow_dispatch: {}
 
