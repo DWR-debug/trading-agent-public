@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-06-Q224-EDGAR-MODERN-WINDOW-SOURCE-GATE",
   "status": "SOURCE_ARCHIVE_INTEGRITY_COMPLETED_NO_PERFORMANCE",
-  "generated_at_utc": "2026-10-07T23:03:35.313540+00:00",
+  "generated_at_utc": "2026-10-08T00:18:37.891805+00:00",
   "candidate_id": "Q224",
   "source_contract": {
     "official_dataset": "SEC EDGAR Log File Data Sets",
@@ -131,10 +131,49 @@
       "content_type": "application/zip",
       "accept_ranges": "bytes",
       "etag": "\"12e1ea9915b3b9b2206265d959615af4-139\"",
-      "sha256": null,
-      "zip_valid": false,
-      "schema": null,
-      "error": "HTTPError:HTTP Error 503: Service Unavailable"
+      "sha256": "bb2e68317ec69583f35c144065f80f99c1d31f990dbc214acd7a5db07dc40678",
+      "zip_valid": true,
+      "schema": {
+        "member": "log20250630.csv",
+        "member_count": 1,
+        "header": [
+          "time",
+          "uri_path"
+        ],
+        "request_time_column": "time",
+        "expected_columns_present": true,
+        "traffic_quality_columns_present": [],
+        "traffic_quality_fields_absent_in_modern_schema": true,
+        "sample_rows_read": 250,
+        "sample_uri_regex_matches": 226,
+        "sample_uri_match_rate": 0.904,
+        "first_rows_sha256": "a33150023449b01a2494bdc3c27336d4f281a38475306d4c3e666da2f3bd8590",
+        "request_time_parse_rate": 1.0,
+        "request_time_examples": [
+          {
+            "raw": " \"2025-06-30T23:59:58.997-0400\"",
+            "normalized_iso": "2025-06-30T23:59:58.997000-04:00"
+          },
+          {
+            "raw": "2025-06-30T23:59:58.997-0400",
+            "normalized_iso": "2025-06-30T23:59:58.997000-04:00"
+          },
+          {
+            "raw": "2025-06-30T23:59:58.988-0400",
+            "normalized_iso": "2025-06-30T23:59:58.988000-04:00"
+          },
+          {
+            "raw": "2025-06-30T23:59:58.986-0400",
+            "normalized_iso": "2025-06-30T23:59:58.986000-04:00"
+          },
+          {
+            "raw": "2025-06-30T23:59:58.985-0400",
+            "normalized_iso": "2025-06-30T23:59:58.985000-04:00"
+          }
+        ]
+      },
+      "error": null,
+      "download_bytes": 1159445743
     }
   ],
   "request_quality": {
@@ -171,5 +210,5 @@
     "2017_07_01_to_2020_05_18_available": false,
     "legacy_modern_schema_splice_allowed": false
   },
-  "receipt_fingerprint": "7e4df68683ed02d4feb71bfc85ec7a9a7311297ef137e3dd2d3a80cc69c5b9cf"
+  "receipt_fingerprint": "c73aa5e18753073f1ad5f7f16d315b2fa186c072c0972c87cdd6081bec2508ed"
 }
