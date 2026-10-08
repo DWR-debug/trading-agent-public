@@ -1,6 +1,11 @@
 name: Q218 Frozen Preregistration + Authorization Reconcile
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q218_prereg_authorization_reconcile.py"
+      - ".github/workflows/q218-prereg-authorization-reconcile.yml"
   workflow_run:
     workflows: ["Q218 Independent Architecture PIT Reproduction"]
     types: [completed]
@@ -16,7 +21,7 @@ concurrency:
 
 jobs:
   reconcile:
-    if: github.repository == 'DWR-debug/trading-agent-public' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    if: github.repository == 'DWR-debug/trading-agent-public' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
