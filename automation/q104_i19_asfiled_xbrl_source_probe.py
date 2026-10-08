@@ -206,8 +206,13 @@ def probe_filing(cik: str, row: dict, sample_rank: int) -> dict:
                 "concept_occurrences": counts,
             })
         else:
-            idx_url = f"{base}/{acc}-index.json"
-            idx = json.loads(fetch(idx_url).decode("utf-8"))
+            idx_url = f"{base}/index.json"
+            try:
+                idx = json.loads(fetch(idx_url).decode("utf-8"))
+            except Exception:
+                legacy_idx_url = f"{base}/{acc}-index.json"
+                idx_url = legacy_idx_url
+                idx = json.loads(fetch(idx_url).decode("utf-8"))
             instance = choose_instance(idx)
             if not instance:
                 record["status"] = "NO_XBRL_INSTANCE_DISCOVERED"
@@ -298,7 +303,7 @@ def build(selected_symbols: list[str] | None = None) -> dict:
             symbol = futures[f]
             results[symbol] = f.result()
     results = {k: results[k] for k in sorted(results)}
-    all_source_pass = len(results) == 8 and all(v["status"] == "PASS_SOURCE_ROUTE" for v in results.values())
+    all_source_pass = bool(results) and all(v["status"] == "PASS_SOURCE_ROUTE" for v in results.values())
     receipt = {
         "schema_version": "1.0",
         "record_type": "q104_i19_asfiled_xbrl_source_probe",
@@ -348,7 +353,11 @@ def main() -> int:
         "receipt_fingerprint": receipt["receipt_fingerprint"],
         "symbols": receipt["symbols"],
     }, sort_keys=True))
-    return 0 if receipt["status"] == "HISTORICAL_AS_FILED_XBRL_SOURCE_PROBE_COMPLETED" else 2
+    selected_ok = bool(receipt["issuer_results"]) and all(
+        item.get("status") == "PASS_SOURCE_ROUTE"
+        for item in receipt["issuer_results"].values()
+    )
+    return 0 if selected_ok else 2
 
 
 if __name__ == "__main__":
