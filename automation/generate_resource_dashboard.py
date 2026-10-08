@@ -678,8 +678,8 @@ def q218_prereg_status() -> dict[str, Any]:
             return {
                 "progress_percent": 100,
                 "state": "completed",
-                "detail": "One-Shot-Performance deterministisch ausgeführt; Ergebnis immutable vorhanden · Current-context Revalidation der korrigierten SEC-Gates noch offen",
-                "next_gate": "fresh current-master Q218 source/event receipts + independent PIT revalidation",
+                "detail": "One-Shot-Performance deterministisch ausgeführt; immutable Ergebnis vorhanden; Source/Event/Independent-PIT-Revalidation ist aktuell positiv",
+                "next_gate": "independent fresh-symbol replication / post-performance generalization",
                 "performance_authorized": False,
                 "performance_executed": True,
                 "performance_result_fingerprint": performance_result.get("report_fingerprint"),
@@ -791,25 +791,35 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "completed_milestones": q218_complete,
                 "total_milestones": q218_total,
                 "current_milestone": (
-                    "Preregistration + authorization reconcile"
-                    if q218_receipts["independent_complete"]
-                    else ("Independent Architecture PIT" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-pair gate" if q218_receipts["source_complete"] else "Source gate"))
+                    "Post-performance validation / fresh-symbol replication"
+                    if q218_prereg.get("performance_executed")
+                    else (
+                        "Preregistration + authorization reconcile"
+                        if q218_receipts["independent_complete"]
+                        else ("Independent Architecture PIT" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-pair gate" if q218_receipts["source_complete"] else "Source gate"))
+                    )
                 ),
                 "current_milestone_progress_percent": (
-                    q218_prereg["progress_percent"] if q218_receipts["independent_complete"]
-                    else (100 if q218_receipts["event_pair_complete"] and q218_receipts["source_complete"] else 0)
+                    0 if q218_prereg.get("performance_executed")
+                    else (q218_prereg["progress_percent"] if q218_receipts["independent_complete"]
+                          else (100 if q218_receipts["event_pair_complete"] and q218_receipts["source_complete"] else 0))
                 ),
                 "current_milestone_status": (
-                    q218_prereg["state"] if q218_receipts["independent_complete"]
-                    else ("open" if (q218_receipts["source_complete"] and q218_receipts["event_pair_complete"]) else "open")
+                    "next" if q218_prereg.get("performance_executed")
+                    else (q218_prereg["state"] if q218_receipts["independent_complete"]
+                          else "open")
                 ),
                 "current_milestone_detail": (
-                    q218_prereg["detail"] if q218_receipts["independent_complete"]
-                    else (q218_ind_detail if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-Pair receipt fehlt" if q218_receipts["source_complete"] else "Source-Gate Receipt fehlt"))
+                    "Die 6 definierten Q218-Milestones sind abgeschlossen; nächste Generalisierungsprüfung: disjunkte Fresh-Symbol-Replikation"
+                    if q218_prereg.get("performance_executed")
+                    else (q218_prereg["detail"] if q218_receipts["independent_complete"]
+                          else (q218_ind_detail if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-Pair receipt fehlt" if q218_receipts["source_complete"] else "Source-Gate Receipt fehlt")))
                 ),
                 "next_gate": (
-                    q218_prereg["next_gate"] if q218_receipts["independent_complete"]
-                    else ("independent architecture PIT reproduction" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("event-pair gate" if q218_receipts["source_complete"] else "source gate"))
+                    "independent fresh-symbol replication / post-performance generalization"
+                    if q218_prereg.get("performance_executed")
+                    else (q218_prereg["next_gate"] if q218_receipts["independent_complete"]
+                          else ("independent architecture PIT reproduction" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("event-pair gate" if q218_receipts["source_complete"] else "source gate")))
                 ),
                 "milestones": q218_milestones,
                 "performance_authorization_allowed": False,
