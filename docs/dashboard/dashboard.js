@@ -156,6 +156,15 @@ function render(data){
               "<div class='state'>"+esc(ms)+" · "+mv+"%</div>"+
             "</div>";
           }).join("")+"</div>"+
+          "<div class='metric-title' style='margin-top:14px'>Entwicklungskette bis Abschluss</div>"+
+          "<div class='development-roadmap'>"+(x.development_roadmap||[]).map(function(step){
+            var rs=String(step.status||"").toUpperCase();
+            var cls=rs==="COMPLETED"?"complete":(rs==="READY"?"ready":(rs==="RUNNING"?"running":(rs==="CLOSED"?"closed":"blocked")));
+            return "<div class='roadmap-step'>"+
+              "<div><strong>"+esc(step.label)+"</strong></div>"+
+              "<div class='small "+cls+"'>"+esc(rs)+" · nächstes Kriterium: "+esc(step.next||"")+"</div>"+
+            "</div>";
+          }).join("")+"</div>"+
         "</div>"+
       "</div>"+
       "<div class='candidate-foot'><span>"+esc(x.overall_progress_basis||"Entwicklungsindex")+"</span><span>"+esc(x.capacity_summary||"Kapazität nicht sichtbar")+"</span><span>"+(x.performance_authorization_allowed?"AUTORISIERUNG ERLAUBT":"NICHT AUTORISIERT")+"</span></div>"+
