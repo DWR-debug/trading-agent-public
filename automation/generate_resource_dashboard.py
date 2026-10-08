@@ -392,65 +392,174 @@ def enrich_work_durations(
 
 
 CANDIDATE_DEVELOPMENT_MILESTONES = (
-    "DESIGN / ROBUSTNESS",
+    "DESIGN CONTRACT",
     "SOURCE FEASIBILITY",
     "COVERAGE",
-    "PIT",
+    "PIT / LINEAGE",
     "INDEPENDENT REPRODUCTION",
-    "PERFORMANCE VALIDATION",
+    "PREREGISTRATION + AUTHORIZATION RECONCILE",
+    "ONE-SHOT PERFORMANCE",
 )
 
 FOCUS_CANDIDATES = ("Q104:I19", "Q218")
+ACTIVE_RUN_STATUSES = {"queued", "in_progress", "waiting", "pending"}
 
 
-def candidate_overall_progress(stage: str) -> tuple[int, str]:
-    """Map the recorded candidate stage to a deterministic lifecycle percentage.
-
-    This is a development-completion index, not a probability of success and not
-    financial performance. Unknown/unmapped stages conservatively remain at 0%.
-    """
-    s = str(stage or "").upper()
-    if ("PERFORMANCE" in s and "NO_PERFORMANCE" not in s and "NO_ARM" not in s
-            and ("COMPLETED" in s or "AUTHORIZED" in s or "VALIDATED" in s)):
-        return 100, CANDIDATE_DEVELOPMENT_MILESTONES[5]
-    if "INDEPENDENT" in s and ("REPRO" in s or "REPRODUCTION" in s):
-        return 83, CANDIDATE_DEVELOPMENT_MILESTONES[4]
-    if "PIT" in s and ("COMPLETED" in s or "VALIDATED" in s):
-        return 67, CANDIDATE_DEVELOPMENT_MILESTONES[3]
-    if "COVERAGE" in s and ("COMPLETED" in s or "VALIDATED" in s):
-        return 50, CANDIDATE_DEVELOPMENT_MILESTONES[2]
-    if "SOURCE_FEASIBILITY" in s and ("COMPLETED" in s or "VALIDATED" in s):
-        return 33, CANDIDATE_DEVELOPMENT_MILESTONES[1]
-    if "DESIGN" in s or "ROBUSTNESS" in s:
-        return 17, CANDIDATE_DEVELOPMENT_MILESTONES[0]
-    return 0, CANDIDATE_DEVELOPMENT_MILESTONES[0]
+def read_json_file(relative_path: str) -> dict[str, Any]:
+    try:
+        payload = json.loads((ROOT / relative_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
 
 
-def candidate_milestone_progress(candidate: str, runs: list[dict[str, Any]]) -> tuple[int, str]:
-    """Return execution progress for the candidate's active workflow.
+def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
+    receipt = read_json_file("research/evidence/q104_i19_13f_historical_identity_census_latest.json")
+    status = str(receipt.get("status") or "")
+    if status.startswith("13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED"):
+        completed = receipt.get("completed_shards")
+        count = len(completed) if isinstance(completed, list) else 3
+        return {
+            "progress_percent": 100,
+            "state": "completed",
+            "detail": f"{count}/3 Shards abgeschlossen · positiver Census-Receipt vorhanden",
+            "next_gate": "concept-specific PIT compiler + independent reproduction",
+        }
 
-    The percentage is successful completed workflow jobs divided by the jobs in
-    the active workflow. No active workflow means the next milestone is not running.
-    """
-    matching = []
-    for run in runs:
-        if not isinstance(run, dict) or run.get("status") not in {"queued", "in_progress", "waiting", "pending"}:
-            continue
-        haystack = " ".join(str(run.get(k) or "") for k in ("name", "display_title", "workflow_name"))
-        if candidate.lower() in haystack.lower():
-            matching.append(run)
-    if not matching:
-        return 0, "not started in visible Actions workflow"
+    matching = [
+        r for r in runs
+        if isinstance(r, dict)
+        and r.get("status") in ACTIVE_RUN_STATUSES
+        and str(r.get("name") or "") == "Q104 I19 Historical 13F Identity Census"
+    ]
     matching.sort(key=lambda x: str(x.get("created_at") or ""), reverse=True)
-    run = matching[0]
-    jobs = jobs_for_run(int(run["id"])) if run.get("id") else []
-    if not jobs:
-        return (50 if run.get("status") == "in_progress" else 0), str(run.get("name") or "active workflow")
-    relevant = [j for j in jobs if str(j.get("name") or "").lower() not in {"set up job", "complete job"}]
-    if not relevant:
-        relevant = jobs
-    completed = sum(1 for j in relevant if j.get("status") == "completed" and j.get("conclusion") == "success")
-    return int(round(100 * completed / len(relevant))), str(run.get("name") or "active workflow")
+    run = matching[0] if matching else None
+    if not run or not run.get("id"):
+        return {
+            "progress_percent": 0,
+            "state": "not_started",
+            "detail": "0/3 Shards · kein aktiver Census-Run sichtbar",
+            "next_gate": "historical 13F archive/security completeness",
+        }
+
+    jobs = jobs_for_run(int(run["id"]))
+    shard_jobs = [
+        j for j in jobs
+        if isinstance(j, dict)
+        and (
+            str(j.get("name") or "").startswith("windows_census")
+            or str(j.get("name") or "").startswith("hosted_census")
+        )
+    ]
+    completed = sum(
+        1 for j in shard_jobs
+        if j.get("status") == "completed" and j.get("conclusion") == "success"
+    )
+    # The workflow has exactly three substantive shard jobs. A completed
+    # successful shard is one third of this milestone; failed/queued work does
+    # not count as scientific completion.
+    return {
+        "progress_percent": int(round(100 * completed / 3)),
+        "state": "running",
+        "detail": f"{completed}/3 Shards mit positivem Abschluss · Census-Run {run['id']}",
+        "next_gate": "historical 13F archive/security completeness",
+    }
+
+
+def q218_prereg_status() -> dict[str, Any]:
+    candidates = list((ROOT / "research" / "preregistrations").glob("*q218*")) if (ROOT / "research" / "preregistrations").is_dir() else []
+    authorizations = list((ROOT / "research" / "authorizations").glob("*q218*")) if (ROOT / "research" / "authorizations").is_dir() else []
+    if candidates and authorizations:
+        return {
+            "progress_percent": 100,
+            "state": "completed",
+            "detail": "Preregistration und separate Authorization-Artefakte vorhanden; Reconcile ist belegbar",
+            "next_gate": "one-shot performance (separat fail-closed)",
+        }
+    if candidates:
+        return {
+            "progress_percent": 50,
+            "state": "partial",
+            "detail": "Preregistration vorhanden; immutable Authorization-Reconcile noch offen",
+            "next_gate": "immutable authorization reconcile",
+        }
+    return {
+        "progress_percent": 0,
+        "state": "not_started",
+        "detail": "noch kein Q218-Preregistration/Authorization-Reconcile-Receipt",
+        "next_gate": "frozen preregistration + immutable authorization reconcile",
+    }
+
+
+def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
+    q104_census = q104_census_status(runs)
+    q218_prereg = q218_prereg_status()
+
+    q104_milestones = [
+        {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Exact-XBRL-Kontrakt eingefroren"},
+        {"label": "Source feasibility", "status": "complete", "progress": 100, "detail": "Q104 source feasibility receipt vorhanden"},
+        {"label": "Coverage", "status": "complete", "progress": 100, "detail": "Q107 8/8 Symbole; Q113 13F-Abdeckung"},
+        {"label": "PIT / lineage", "status": "complete", "progress": 100, "detail": "Q108 PIT-Integration + deterministische Join-Struktur"},
+        {"label": "13F security census", "status": q104_census["state"], "progress": q104_census["progress_percent"], "detail": q104_census["detail"]},
+        {"label": "I19 PIT compiler", "status": "blocked", "progress": 0, "detail": "geschlossen bis zum positiven 3-Shard-Census-Receipt"},
+        {"label": "Independent reproduction", "status": "blocked", "progress": 0, "detail": "geschlossen bis zum eingefrorenen I19-Compiler-Receipt"},
+        {"label": "Preregistration + authorization reconcile", "status": "blocked", "progress": 0, "detail": "geschlossen bis zur unabhängigen Reproduktion"},
+        {"label": "One-shot performance", "status": "closed", "progress": 0, "detail": "keine Performance-Autorisierung"},
+    ]
+    q218_milestones = [
+        {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Q218 design/gate contract eingefroren"},
+        {"label": "Source gate", "status": "complete", "progress": 100, "detail": "positiver Source Gate Receipt"},
+        {"label": "Event-pair gate", "status": "complete", "progress": 100, "detail": "positiver Event-Pair Receipt"},
+        {"label": "Independent Architecture PIT", "status": "complete", "progress": 100, "detail": "unabhängige Reproduktion erfolgreich"},
+        {"label": "Preregistration + authorization reconcile", "status": q218_prereg["state"], "progress": q218_prereg["progress_percent"], "detail": q218_prereg["detail"]},
+        {"label": "One-shot performance", "status": "closed", "progress": 0, "detail": "erst nach separater immutable authorization; aktuell geschlossen"},
+    ]
+
+    def overall(milestones: list[dict[str, Any]]) -> tuple[int, int, int]:
+        completed_units = sum(
+            1 for m in milestones if m.get("status") == "complete"
+        )
+        partial_units = sum(
+            float(m.get("progress") or 0) / 100.0
+            for m in milestones if m.get("status") not in {"complete", "closed", "blocked"}
+        )
+        total = len(milestones)
+        score = completed_units + partial_units
+        return int(round(100 * score / total)), completed_units, total
+
+    q104_overall, q104_complete, q104_total = overall(q104_milestones)
+    q218_overall, q218_complete, q218_total = overall(q218_milestones)
+
+    return {
+        "method": "receipt_and_contract_based_development_index",
+        "note": "Entwicklungsfortschritt, keine Erfolgswahrscheinlichkeit, Renditeprognose oder Autorisierung.",
+        "candidates": {
+            "Q104:I19": {
+                "overall_progress_percent": q104_overall,
+                "completed_milestones": q104_complete,
+                "total_milestones": q104_total,
+                "current_milestone": "13F security census",
+                "current_milestone_progress_percent": q104_census["progress_percent"],
+                "current_milestone_status": q104_census["state"],
+                "current_milestone_detail": q104_census["detail"],
+                "next_gate": q104_census["next_gate"],
+                "milestones": q104_milestones,
+                "performance_authorization_allowed": False,
+            },
+            "Q218": {
+                "overall_progress_percent": q218_overall,
+                "completed_milestones": q218_complete,
+                "total_milestones": q218_total,
+                "current_milestone": "Preregistration + authorization reconcile",
+                "current_milestone_progress_percent": q218_prereg["progress_percent"],
+                "current_milestone_status": q218_prereg["state"],
+                "current_milestone_detail": q218_prereg["detail"],
+                "next_gate": q218_prereg["next_gate"],
+                "milestones": q218_milestones,
+                "performance_authorization_allowed": False,
+            },
+        },
+    }
 
 
 def candidate_pipeline(
@@ -461,6 +570,7 @@ def candidate_pipeline(
     runs: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     runs = runs or []
+    progress = candidate_progress_snapshot(runs)
     result = []
     active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in FOCUS_CANDIDATES}
     for item in work:
@@ -470,23 +580,27 @@ def candidate_pipeline(
         for candidate in active_by_candidate:
             if candidate in text_value:
                 active_by_candidate[candidate].append(item)
+
+    state_by_candidate = {
+        "Q104:I19": "FORMAL READINESS · HISTORICAL 13F CENSUS",
+        "Q218": "FRONTIER DISCOVERY · INDEPENDENT PIT REPRODUCED",
+    }
     for candidate in FOCUS_CANDIDATES:
-        row = next((x for x in top4 if str(x.get("code")) == candidate), None)
-        if not row:
-            continue
-        overall, overall_basis = candidate_overall_progress(str(row.get("state") or ""))
-        next_progress, milestone_basis = candidate_milestone_progress(candidate, runs)
+        p = progress["candidates"][candidate]
         result.append({
             "code": candidate,
-            "stage": str(row.get("state") or "not recorded"),
-            "next_gate": str(row.get("next_gate") or "not recorded"),
+            "stage": state_by_candidate[candidate],
+            "next_gate": p["next_gate"],
             "active": bool(active_by_candidate[candidate]),
             "active_jobs": len(active_by_candidate[candidate]),
-            "overall_progress_percent": overall,
-            "overall_progress_basis": overall_basis,
-            "next_milestone_progress_percent": next_progress,
-            "next_milestone_progress_basis": milestone_basis,
-            "performance_authorization_allowed": bool(row.get("performance_authorization_allowed", False)),
+            "overall_progress_percent": p["overall_progress_percent"],
+            "overall_progress_basis": f'{p["completed_milestones"]}/{p["total_milestones"]} Milestones vollständig; Teilfortschritt des aktuellen Milestones separat',
+            "next_milestone_progress_percent": p["current_milestone_progress_percent"],
+            "next_milestone_progress_basis": p["current_milestone_detail"],
+            "current_milestone": p["current_milestone"],
+            "current_milestone_status": p["current_milestone_status"],
+            "milestones": p["milestones"],
+            "performance_authorization_allowed": False,
         })
     return result
 
