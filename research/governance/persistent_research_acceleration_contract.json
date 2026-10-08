@@ -9,8 +9,8 @@
     "Verify current public master and current operational/evidence state before acting.",
     "Snapshot live runner, workflow, agent and bounded mobile capacity; never trust stale availability claims.",
     "Route every meaningful task to the smallest suitable free resource and execute independent work in parallel.",
-    "Treat Windows A and B as always-routable primary research capacity, not fallback. Keep both lanes moving in parallel whenever independent bounded work is available; do not wait for the other lane to finish.",
-    "Do not leave a reachable configured research runner idle while a useful independent bounded backlog exists: after successful completion, replenish the lane immediately through deterministic completion chaining.",
+    "A physical self-hosted runner is routable only when the live runner inventory reports that exact configured runner online; missing runner inventory means UNVERIFIED/NOT ROUTABLE, never FREE.",
+    "Do not leave a verified reachable configured research runner idle while a useful independent bounded backlog exists: after successful completion, replenish the lane immediately through deterministic completion chaining.",
     "When a candidate-specific workpack finishes, immediately route the next ready gate from the active registry. If the scientific frontier is temporarily blocked, route deterministic provenance/PIT/data-contract/negative-evidence QA instead of manufacturing research.",
     "Default S10 routing is deterministic mechanical QA; event-driven semantic utility review remains explicit and non-default.",
     "Do not duplicate already-running work and do not consume quotas merely to create activity."
@@ -39,7 +39,7 @@
           "current_focus": "Q104:I19 remaining historical 13F/security PIT closure, immutable preregistration/authorization readiness and exact independent reproduction",
           "performance_allowed": "only when the active research registry contains an exact true performance_authorization_allowed for that independent frozen trial",
           "selection_or_ranking": false,
-          "availability": "always_routable"
+          "availability": "live_runner_verification_required"
         },
         "lane_b_frontier_discovery": {
           "runner_slot": "Windows self-hosted slot B",
@@ -47,7 +47,7 @@
           "current_focus": "Q220, Q228, Q224 and Q227 source/PIT/clock feasibility with cheap falsification; Q218/Q221/Q219 as next independent frontier",
           "performance_allowed": false,
           "selection_or_ranking": false,
-          "availability": "always_routable"
+          "availability": "live_runner_verification_required"
         },
         "runner_c_independent_reproduction_and_long_research": {
           "runner_slot": "Windows self-hosted slot C",
@@ -55,12 +55,12 @@
           "current_focus": "Q104:I19 independent reproduction when its exact frozen contract is ready; otherwise the highest-priority independent Q220/Q228/Q224/Q227 archive/source workload.",
           "performance_allowed": "false unless an exact independent performance trial has its own current formal authorization; default role remains pre-performance research/reproduction.",
           "selection_or_ranking": false,
-          "availability": "always_routable"
+          "availability": "live_runner_verification_required"
         }
       },
       "windows_pulse_cadence": "10 minutes plus event-driven pushes; each lane remains continuously routable and independently concurrency-protected",
-      "availability_policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
-      "continuity_rule": "When research is needed, use all three Windows slots whenever three mutually independent bounded workpacks exist: A = formal readiness, B = frontier discovery, C = independent reproduction/long deterministic research. Do not reserve C merely as nominal failover capacity. When only two independent workpacks exist, use the third slot for a materially useful downstream-preparation, provenance, PIT, archival or negative-evidence QA task. Idle is valid only when no independent useful bounded workpack exists.",
+      "availability_policy": "LIVE_VERIFIED_ONLINE_REQUIRED_FOR_AUTOMATIC_DISPATCH",
+      "continuity_rule": "When research is needed, use all verified-online Windows slots whenever independent bounded workpacks exist: A = formal readiness, B = frontier discovery, C = independent reproduction/long deterministic research. A configured physical runner without a current online receipt is UNVERIFIED and receives no automatic dispatch. Do not reserve C merely as nominal failover capacity. When only two independent workpacks exist, use a third verified-online slot for materially useful downstream-preparation, provenance, PIT, archival or negative-evidence QA. Idle is valid when no independent useful bounded workpack exists or live runner verification is unavailable.",
       "event_driven_replenishment": {
         "enabled": true,
         "priority": [
@@ -299,9 +299,11 @@
         "A running Q218/Q219/Q220/Q221 slot job blocks only the same candidate, not the entire slot workflow.",
         "The same slot-scoped workflow may be dispatched concurrently for independent candidates and resources.",
         "A multi-resource workflow is dispatched as an exclusive pulse item because it internally leases multiple research pools.",
-        "Free ARM64 and Ubuntu x64 are independently fillable whenever an admissible non-duplicate workpack exists.",
+        "Cloud research slots are fillable when their reported capacity is free and the workflow is admissible.",
+        "A physical self-hosted slot is automatically routable only when its exact runner is currently verified online; UNVERIFIED physical slots have zero routable free capacity.",
         "Free AI remains a separate bounded lane and may run in parallel when its review task is genuinely independent.",
-        "Successful or blocked work is never used as capacity filler."
+        "Successful or blocked work is never used as capacity filler.",
+        "A multi-resource plan may dispatch only when every leased resource is simultaneously routable; otherwise the plan remains planned/non-dispatchable."
       ],
       "implementation": {
         "planner": "automation/planned_capacity_fast_dispatch.py",
