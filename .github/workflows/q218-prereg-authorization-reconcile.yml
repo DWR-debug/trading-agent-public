@@ -1,0 +1,100 @@
+name: Q218 Frozen Preregistration + Authorization Reconcile
+
+on:
+  workflow_run:
+    workflows: ["Q218 Independent Architecture PIT Reproduction"]
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: trading-agent-q218-prereg-authorization-reconcile
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    if: github.repository == 'DWR-debug/trading-agent-public' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Compile reconciliation script
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile automation/q218_prereg_authorization_reconcile.py
+
+      - name: Build frozen preregistration and reconcile receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q218_prereg_authorization_reconcile.py
+
+      - name: Validate immutable outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          prereg=json.loads(Path("research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json").read_text(encoding="utf-8"))
+          auth=json.loads(Path("research/authorizations/q218_performance_2026_10_08.json").read_text(encoding="utf-8"))
+          receipt=json.loads(Path("research/evidence/q218_prereg_authorization_reconcile_latest.json").read_text(encoding="utf-8"))
+          assert receipt["status"]=="Q218_FROZEN_PREREGISTRATION_AND_AUTHORIZATION_RECONCILED"
+          assert receipt["checks"]["performance_execution_authorized"] is False
+          assert prereg["governance"]["performance_trial_authorized"] is False
+          assert auth["authorized"] is False
+          assert auth["performance_execution_authorized"] is False
+          assert auth["preregistration_fingerprint"] == prereg["preregistration_fingerprint"]
+          assert receipt["fingerprints"]["preregistration"] == prereg["preregistration_fingerprint"]
+          print("Q218_PREREG_AUTH_RECONCILE_VALIDATED")
+          PY
+
+      - name: Publish immutable reconciliation outputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            base_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python3 automation/github_contents_publish.py               --repository "$GITHUB_REPOSITORY"               --branch master               --base-sha "$base_sha"               --file "research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json=research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json"               --file "research/authorizations/q218_performance_2026_10_08.json=research/authorizations/q218_performance_2026_10_08.json"               --file "research/evidence/q218_prereg_authorization_reconcile_latest.json=research/evidence/q218_prereg_authorization_reconcile_latest.json"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+
+      - name: Upload reconciliation receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q218-prereg-authorization-reconcile-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json
+            research/authorizations/q218_performance_2026_10_08.json
+            research/evidence/q218_prereg_authorization_reconcile_latest.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Wake capacity dispatcher
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run ".github/workflows/planned-capacity-fast-dispatch.yml" --repo "$GITHUB_REPOSITORY" --ref master
