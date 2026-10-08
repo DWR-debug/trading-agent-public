@@ -623,7 +623,7 @@ def q218_prereg_status() -> dict[str, Any]:
         reconcile_valid = (
             prereg.get("record_type") == "q218_frozen_preregistration"
             and prereg.get("status") == "FROZEN_PREREGISTRATION_RECONCILED"
-            and auth.get("record_type") == "q218_performance_authorization_reconcile"
+            and auth.get("record_type") in {"q218_performance_authorization_reconcile", "q218_explicit_one_shot_performance_authorization"}
             and auth.get("authorized") is False
             and auth.get("performance_execution_authorized") is False
             and reconcile.get("status") == "Q218_FROZEN_PREREGISTRATION_AND_AUTHORIZATION_RECONCILED"
@@ -634,7 +634,7 @@ def q218_prereg_status() -> dict[str, Any]:
         authorized_valid = (
             prereg.get("record_type") == "q218_frozen_preregistration"
             and prereg.get("status") == "FROZEN_PREREGISTRATION_RECONCILED"
-            and auth.get("record_type") == "q218_performance_authorization_reconcile"
+            and auth.get("record_type") == "q218_explicit_one_shot_performance_authorization"
             and auth.get("authorized") is True
             and auth.get("performance_execution_authorized") is True
             and auth.get("one_shot") is True
