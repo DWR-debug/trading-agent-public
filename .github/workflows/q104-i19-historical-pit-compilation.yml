@@ -35,6 +35,9 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install compiler test dependency
+        run: python3 -m pip install pytest exchange-calendars
+
       - name: Validate frozen Q104 compiler contract
         run: |
           set -euo pipefail
