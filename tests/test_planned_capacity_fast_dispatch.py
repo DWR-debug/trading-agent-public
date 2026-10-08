@@ -170,10 +170,9 @@ def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_det
     assert q218["current_milestone"] == "Post-performance validation / fresh-symbol replication"
     assert q218["current_milestone_status"] == "next"
     assert q218["current_milestone_progress_percent"] == 0
-    assert any(
-        m["label"] == "Post-performance validation / fresh-symbol replication"
-        and m["status"] == "next"
-        and m["progress"] == 0
+    assert q218["next_gate"] == "independent fresh-symbol replication / post-performance generalization"
+    assert not any(
+        m["status"] == "active"
         for m in q218["milestones"]
     )
 
