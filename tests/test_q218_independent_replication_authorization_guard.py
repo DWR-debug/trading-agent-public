@@ -17,6 +17,7 @@ def _write_contract(path: Path) -> Path:
     path.write_text(json.dumps({
         "record_type": "q218_independent_replication_contract",
         "replication_trial_id": REPLICATION_TRIAL_ID,
+        "status": "FROZEN_INDEPENDENT_REPLICATION_CONTRACT",
     }), encoding="utf-8")
     return path
 
