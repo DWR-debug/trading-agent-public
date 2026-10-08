@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from automation.q104_i19_13f_historical_identity_census import SHARDS as CENSUS_SHARDS
+
 EXPECTED_SHARDS = {
     "2013-2016",
     "2017-2018",
@@ -85,10 +87,24 @@ def _validate_shard(payload: dict[str, Any]) -> None:
         raise ValueError("Q104_I19_SHARD_STATUS_INVALID:" + shard)
     if not _is_sha256(payload.get("source_page_sha256")):
         raise ValueError("Q104_I19_SOURCE_PAGE_HASH_INVALID:" + shard)
+    expected_start, expected_end = CENSUS_SHARDS[shard]
+    expected_boundary = {
+        "start_inclusive": expected_start.isoformat(),
+        "end_exclusive": expected_end.isoformat(),
+    }
+    if payload.get("shard_boundary") != expected_boundary:
+        raise ValueError("Q104_I19_SHARD_BOUNDARY_MISMATCH:" + shard)
     if not isinstance(payload.get("frozen_cusips"), dict) or set(payload["frozen_cusips"]) != EXPECTED_SYMBOLS:
         raise ValueError("Q104_I19_FROZEN_CUSIP_UNIVERSE_INVALID:" + shard)
     if not payload.get("archives") or int(payload.get("selected_archive_count", -1)) != len(payload["archives"]):
         raise ValueError("Q104_I19_SHARD_ARCHIVE_CLOSURE_FAILED:" + shard)
+    for archive in payload["archives"]:
+        try:
+            period_start = __import__("datetime").date.fromisoformat(str(archive["archive"]["period_start"]))
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("Q104_I19_ARCHIVE_PERIOD_INVALID:" + shard) from exc
+        if not expected_start <= period_start < expected_end:
+            raise ValueError("Q104_I19_ARCHIVE_OUTSIDE_SHARD_BOUNDARY:" + shard)
     if payload.get("archive_completeness_for_shard") is not True:
         raise ValueError("Q104_I19_SHARD_ARCHIVE_COMPLETENESS_FAILED:" + shard)
     if not payload.get("synthetic") or any(value is not True for value in payload["synthetic"].values()):
