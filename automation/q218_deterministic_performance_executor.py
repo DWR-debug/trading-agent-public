@@ -53,6 +53,13 @@ def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _safe_child(root: Path, relative: str) -> Path:
+    candidate = (root / relative).resolve()
+    if root.resolve() not in candidate.parents:
+        raise RuntimeError("Q218 bundle path escapes bundle root")
+    return candidate
+
+
 def normalize_text(raw: bytes) -> str:
     decoded = html.unescape(raw.decode("utf-8", errors="replace"))
     parser = _TextParser()
@@ -125,6 +132,12 @@ def _verify_bundle(bundle_path: Path) -> dict[str, Any]:
         raise RuntimeError("Q218 executor must be network-free")
     if bundle.get("selection_used") is not False or bundle.get("parameter_search") is not False:
         raise RuntimeError("Q218 bundle crosses selection boundary")
+    contract_sha = str(bundle.get("contract_sha256") or "")
+    if not contract_sha:
+        raise RuntimeError("Q218 bundle contract fingerprint missing")
+    contract_path = ROOT / "research/governance/q218_performance_contract_2026_10_08.json"
+    if not contract_path.is_file() or file_sha256(contract_path) != contract_sha:
+        raise RuntimeError("Q218 frozen performance contract fingerprint mismatch")
     events = bundle.get("events")
     if not isinstance(events, list) or not events:
         raise RuntimeError("Q218 bundle event population missing")
@@ -152,8 +165,8 @@ def execute(bundle_path: Path, output_path: Path) -> dict[str, Any]:
         if float(bar["open"]) <= 0.0 or float(bar["close"]) <= 0.0:
             raise RuntimeError("Q218 invalid market price")
         features = construct_features(
-            Path(mandatory["path"]).read_bytes(),
-            Path(voluntary["path"]).read_bytes(),
+            _safe_child(bundle_root, str(mandatory["path"])).read_bytes(),
+            _safe_child(bundle_root, str(voluntary["path"])).read_bytes(),
         )
         outcome = float(bar["close"]) / float(bar["open"]) - 1.0
         rows.append({
