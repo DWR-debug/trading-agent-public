@@ -904,7 +904,7 @@ def candidate_development_roadmap(
     progress: dict[str, Any],
     q218_receipts: dict[str, bool] | None = None,
 ) -> list[dict[str, Any]]:
-    """Show the remaining deterministic gate chain without inventing success or time."""
+    """Show the current deterministic gate chain without inventing success or time."""
     q218_receipts = q218_receipts or {}
     if candidate == "Q104:I19":
         census_done = progress["candidates"][candidate]["current_milestone_progress_percent"] == 100
@@ -915,7 +915,19 @@ def candidate_development_roadmap(
             {"id": "Q104-G4", "label": "Frozen preregistration + authorization reconcile", "status": "blocked", "next": "independent reproduction"},
             {"id": "Q104-G5", "label": "One-shot performance", "status": "closed", "next": "separate explicit authorization"},
         ]
+    prereg = q218_prereg_status()
+    execution_done = bool(prereg.get("performance_executed"))
     source_event_done = q218_receipts.get("source_complete") and q218_receipts.get("event_pair_complete")
+    if execution_done:
+        return [
+            {"id": "Q218-SOURCE-EVENT", "label": "Fresh SEC Source + strict Item 2.02 Event-Pair revalidation", "status": "completed", "next": "fresh current-context receipts remain part of provenance"},
+            {"id": "Q218-REPRO", "label": "Independent Architecture PIT reproduction", "status": "completed", "next": "fresh-symbol generalization check"},
+            {"id": "Q218-BUNDLE", "label": "Freeze performance input bundle + deterministic executor", "status": "completed", "next": "immutable bundle already consumed by completed one-shot"},
+            {"id": "Q218-ROBUST", "label": "Pre-performance robustness", "status": "completed", "next": "post-performance generalization"},
+            {"id": "Q218-G4", "label": "Exact current-master re-authorization reconcile", "status": "completed", "next": "authorization consumed by completed one-shot"},
+            {"id": "Q218-G5", "label": "One-shot performance", "status": "completed", "next": "fresh-symbol disjoint replication"},
+            {"id": "Q218-POST", "label": "Post-performance validation / fresh-symbol replication", "status": "next", "next": "disjoint GOOGL/META/ORCL/PFE replication"},
+        ]
     return [
         {"id": "Q218-SOURCE-EVENT", "label": "Fresh SEC Source + strict Item 2.02 Event-Pair revalidation", "status": "completed" if source_event_done else "ready", "next": "fresh current-context receipts after strict eligibility change"},
         {"id": "Q218-REPRO", "label": "Independent Architecture PIT reproduction", "status": "completed" if q218_receipts.get("independent_complete") else "blocked", "next": "fresh source/event receipts"},
