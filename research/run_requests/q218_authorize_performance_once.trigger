@@ -2,3 +2,4 @@ AUTHORIZE_Q218_PERFORMANCE=true
 TRIAL_ID=T-2026-10-08-Q218-PERFORMANCE-01
 ONE_SHOT=true
 REQUESTED_BY_USER=true
+# Re-dispatch after verified Q218 pre-performance preparation
