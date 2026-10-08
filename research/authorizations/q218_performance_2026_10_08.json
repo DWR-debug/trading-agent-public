@@ -4,8 +4,8 @@
   "authorization_id": "AUTH-Q218-2026-10-08-ONE-SHOT-01",
   "candidate_id": "Q218",
   "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
-  "authorized": true,
-  "performance_execution_authorized": true,
+  "authorized": false,
+  "performance_execution_authorized": false,
   "one_shot": true,
   "authorized_at_utc": "2026-10-08T11:34:06.175709+00:00",
   "authorization_basis": {
@@ -37,5 +37,8 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "authorization_fingerprint": "4a7720674aaa910d590519b28f22fbd4e191d97f03d8aea3b0665263e99ea28e"
+  "authorization_fingerprint": "4a7720674aaa910d590519b28f22fbd4e191d97f03d8aea3b0665263e99ea28e",
+  "status": "REVOKED_PRE_EXECUTION",
+  "revoked_at_utc": "2026-10-08T11:47:25.052Z",
+  "reason": "Authorization issued before required universal robustness and performance-replication governance prerequisites were present. Revoked before any execution; no performance result was produced."
 }
