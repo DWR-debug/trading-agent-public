@@ -22,12 +22,14 @@ def test_future_filing_is_excluded():
     assert r["target_hits"]["SPGI"]["issuer_names"]==["Old Name Corp"]
 
 
-def test_q104_workflow_cancels_stale_runs_on_code_updates():
+def test_q104_workflow_suppresses_duplicate_push_runs_without_cancelling_active_run():
     from pathlib import Path
 
     workflow = Path(".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
     assert "concurrency:" in workflow
-    assert "cancel-in-progress: true" in workflow
+    assert "cancel-in-progress: false" in workflow
+    assert "recovery_guard:" in workflow
+    assert "Q104_CENSUS_DUPLICATE_RUN_SUPPRESSED=true" in workflow
 
 def test_fetch_uses_shared_rate_limiter_on_each_attempt(monkeypatch):
     import urllib.error
