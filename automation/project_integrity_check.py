@@ -559,6 +559,7 @@ def main() -> None:
     _validate_q067_evidence_chain()
     _validate_research_os_registry()
     _validate_critical_research_controls()
+    _validate_capacity_dispatch_contract()
     _validate_i19_concept_freeze()
 
     for path in REQUIRED_FILES:
