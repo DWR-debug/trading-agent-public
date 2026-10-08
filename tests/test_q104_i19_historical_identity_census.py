@@ -21,6 +21,66 @@ def test_future_filing_is_excluded():
     assert r["target_hits"]["SPGI"]["row_count"]==1
     assert r["target_hits"]["SPGI"]["issuer_names"]==["Old Name Corp"]
 
+
+def test_q104_workflow_cancels_stale_runs_on_code_updates():
+    from pathlib import Path
+
+    workflow = Path(".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
+    assert "concurrency:" in workflow
+    assert "cancel-in-progress: true" in workflow
+
+
+
+def test_q104_workflow_artifacts_are_rerun_stable():
+    from pathlib import Path
+
+    workflow = Path(".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
+    assert "q104-i19-sec-source-snapshot-${{ github.run_id }}-${{ github.run_attempt }}" not in workflow
+    assert "q104-i19-census-${{ matrix.shard }}-${{ github.run_id }}-${{ github.run_attempt }}" not in workflow
+    assert workflow.count("overwrite: true") >= 3
+
+def test_fetch_uses_shared_rate_limiter_on_each_attempt(monkeypatch):
+    import urllib.error
+    from automation import q104_i19_13f_historical_identity_census as census
+
+    class Limiter:
+        def __init__(self):
+            self.waits = 0
+
+        def wait(self):
+            self.waits += 1
+
+    class Response:
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self):
+            return b"ok"
+
+    calls = []
+
+    def fake_urlopen(req, timeout):
+        calls.append(req.full_url)
+        if len(calls) == 1:
+            raise urllib.error.HTTPError(
+                req.full_url, 503, "retry", hdrs={"Retry-After":"0"}, fp=None
+            )
+        return Response()
+
+    limiter = Limiter()
+    monkeypatch.setattr(census.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(census.time, "sleep", lambda *_args: None)
+
+    assert census.fetch("https://example.invalid", retries=2, rate_limiter=limiter) == b"ok"
+    assert limiter.waits == 2
+    assert len(calls) == 2
+
+
 def test_synthetic_contract():
     assert all(synthetic_contract().values())
 
@@ -61,5 +121,5 @@ def test_scan_archive_counts_unique_target_accessions():
     b=io.BytesIO()
     with zipfile.ZipFile(b,"w",zipfile.ZIP_DEFLATED) as z:
         z.writestr("SUBMISSION.tsv",sub); z.writestr("INFOTABLE.tsv",info)
-    r=scan_archive(b.getvalue(),{"url":"synthetic://unique","label":"unique","period_start":"2026-04-01"},{"SPGI":{"78409V104"},"OTHER":{"78409V105"}})
+    r=scan_archive(b.getvalue(),{"url":"synthetic://unique","label":"unique","period_start":"2026-04-01"},{"SPGI":{"78409V104"},"OTHER":{"78409V104"}})
     assert r["target_unique_accession_count"] == 1
