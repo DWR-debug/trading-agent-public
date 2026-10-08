@@ -213,6 +213,26 @@ def generate(
     q218_registry = active_trials.get("Q218", {})
     q218_authorized = q218_registry.get("performance_authorization_allowed") is True
     q218_auth_record = _load_json(ROOT / "research/authorizations/q218_performance_2026_10_08.json", {})
+    q218_result = _load_json(ROOT / "research/evidence/q218_deterministic_performance_result_latest.json", {})
+    q218_execution_completed = (
+        q218_result.get("record_type") == "q218_deterministic_performance_result"
+        and q218_result.get("candidate_id") == "Q218"
+        and q218_result.get("trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+        and q218_result.get("performance_evaluation") is True
+        and q218_result.get("holdout_evaluation") is False
+        and q218_result.get("selection_used") is False
+        and q218_result.get("parameter_search") is False
+        and q218_result.get("threshold_search") is False
+        and q218_result.get("horizon_search") is False
+        and q218_result.get("asset_search") is False
+        and q218_result.get("variant_search") is False
+        and q218_result.get("family_ranking") is False
+        and q218_result.get("promotion_decision") is False
+        and q218_result.get("safety", {}).get("paper_only") is True
+        and q218_result.get("safety", {}).get("live_trading_enabled") is False
+        and q218_result.get("safety", {}).get("orders_enabled") is False
+        and q218_result.get("safety", {}).get("automatic_promotion") is False
+    )
     q218_execution_ready = (
         q218_auth_record.get("authorized") is True
         and q218_auth_record.get("performance_execution_authorized") is True
@@ -461,7 +481,13 @@ def generate(
             "Both remain discovery/PIT-only with no performance or promotion authorization."
         )
     if any(str(item.get("code")) in {"Q218", "Q219", "Q220", "Q221"} for item in active_registry.get("active_design_families", [])):
-        if q218_authorized and not q218_execution_ready:
+        if q218_execution_completed:
+            q218_sentence = (
+                " Q218 one-shot performance has completed deterministically in PAPER_ONLY mode; "
+                "the immutable result is recorded and the one-shot authorization is consumed. "
+                "The remaining gate is fresh current-master source/event receipts plus independent PIT revalidation. "
+            )
+        elif q218_authorized and not q218_execution_ready:
             q218_sentence = (
                 " Q218 has an explicit one-shot performance authorization in the active registry, "
                 "but execution is not yet ready because the fixed Q218 performance executor/input bundle "
