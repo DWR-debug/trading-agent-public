@@ -1,0 +1,282 @@
+name: Q218 Independent Fresh-Symbol Replication
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q218_independent_replication.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: trading-agent-q218-independent-replication-once
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Verify fixed replication request and contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f research/run_requests/q218_independent_replication.trigger
+          grep -Fx "EXECUTE_Q218_INDEPENDENT_REPLICATION=true" research/run_requests/q218_independent_replication.trigger
+          grep -Fx "TRIAL_ID=T-2026-10-08-Q218-REPLICATION-01" research/run_requests/q218_independent_replication.trigger
+          grep -Fx "ONE_SHOT=true" research/run_requests/q218_independent_replication.trigger
+          grep -Fx "REQUESTED_BY_USER=true" research/run_requests/q218_independent_replication.trigger
+          grep -Fx "PARENT_TRIAL_ID=T-2026-10-08-Q218-PERFORMANCE-01" research/run_requests/q218_independent_replication.trigger
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          parent_path=Path("research/governance/q218_performance_contract_2026_10_08.json")
+          repl_path=Path("research/governance/q218_independent_replication_contract_2026_10_08.json")
+          parent=json.loads(parent_path.read_text())
+          repl=json.loads(repl_path.read_text())
+          assert parent["trial_id"]=="T-2026-10-08-Q218-PERFORMANCE-01"
+          assert repl["replication_trial_id"]=="T-2026-10-08-Q218-REPLICATION-01"
+          assert hashlib.sha256(parent_path.read_bytes()).hexdigest()==repl["parent_contract_sha256"]
+          assert repl["fresh_symbol_disjoint"] is True
+          assert repl["independence_boundary"]["performance_output_reuse_for_rule_changes"] is False
+          assert repl["independence_boundary"]["post_pass_optimization"] is False
+          assert repl["safety"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
+          result=Path("research/evidence/q218_independent_replication_latest.json")
+          if result.exists() and result.stat().st_size:
+              raise SystemExit("Q218_REPLICATION_ALREADY_CONSUMED")
+          print("Q218_REPLICATION_PREFLIGHT_OK")
+          PY
+      - name: Wait for exact Master CI Gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
+            run_id="$(printf '%s' "$line" | cut -f1)"
+            status="$(printf '%s' "$line" | cut -f2)"
+            conclusion="$(printf '%s' "$line" | cut -f3)"
+            echo "Q218_REPLICATION_T052 run_id=$run_id status=$status conclusion=$conclusion"
+            if [ "$status" = "completed" ] && [ "$conclusion" = "success" ]; then exit 0; fi
+            if [ "$status" = "completed" ] && [ "$conclusion" != "success" ]; then exit 1; fi
+            sleep 10
+          done
+          exit 1
+
+  replicate_googl:
+    needs: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: python -m pip install --disable-pip-version-check pandas exchange-calendars
+      - name: Run fixed GOOGL replication
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p replication/GOOGL
+          python automation/q218_independent_replication.py --symbol GOOGL --output-dir replication/GOOGL
+      - run: echo Q218_REPLICATION_BOUNDARY=FIXED_FRESH_SYMBOL_PAPER_ONLY_NO_SELECTION_NO_TUNING_NO_RANKING_NO_PROMOTION_NO_LIVE_EXECUTION
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: q218-replication-GOOGL
+          path: replication/GOOGL/
+          if-no-files-found: error
+          retention-days: 30
+
+  replicate_meta:
+    needs: preflight
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: python -m pip install --disable-pip-version-check pandas exchange-calendars
+      - name: Run fixed META replication
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p replication/META
+          python automation/q218_independent_replication.py --symbol META --output-dir replication/META
+      - run: echo Q218_REPLICATION_BOUNDARY=FIXED_FRESH_SYMBOL_PAPER_ONLY_NO_SELECTION_NO_TUNING_NO_RANKING_NO_PROMOTION_NO_LIVE_EXECUTION
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: q218-replication-META
+          path: replication/META/
+          if-no-files-found: error
+          retention-days: 30
+
+  replicate_windows_a:
+    needs: preflight
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Prepare portable Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-q218-repl"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q218-repl.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" -m pip install --disable-pip-version-check pandas exchange-calendars || exit /b 1
+          echo Q218_PY_EXE=%PY_EXE%>> "%GITHUB_ENV%"
+          endlocal
+      - name: Run fixed ORCL replication
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          if not defined Q218_PY_EXE exit /b 1
+          if not exist replication\ORCL mkdir replication\ORCL
+          "%Q218_PY_EXE%" automation\q218_independent_replication.py --symbol ORCL --output-dir replication\ORCL
+          if errorlevel 1 exit /b 1
+          echo Q218_REPLICATION_BOUNDARY=FIXED_FRESH_SYMBOL_PAPER_ONLY_NO_SELECTION_NO_TUNING_NO_RANKING_NO_PROMOTION_NO_LIVE_EXECUTION
+          endlocal
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: q218-replication-ORCL
+          path: replication/ORCL/
+          if-no-files-found: error
+          retention-days: 30
+
+  replicate_windows_b:
+    needs: preflight
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Prepare portable Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-q218-repl"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q218-repl.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" -m pip install --disable-pip-version-check pandas exchange-calendars || exit /b 1
+          echo Q218_PY_EXE=%PY_EXE%>> "%GITHUB_ENV%"
+          endlocal
+      - name: Run fixed PFE replication
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          if not defined Q218_PY_EXE exit /b 1
+          if not exist replication\PFE mkdir replication\PFE
+          "%Q218_PY_EXE%" automation\q218_independent_replication.py --symbol PFE --output-dir replication\PFE
+          if errorlevel 1 exit /b 1
+          echo Q218_REPLICATION_BOUNDARY=FIXED_FRESH_SYMBOL_PAPER_ONLY_NO_SELECTION_NO_TUNING_NO_RANKING_NO_PROMOTION_NO_LIVE_EXECUTION
+          endlocal
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: q218-replication-PFE
+          path: replication/PFE/
+          if-no-files-found: error
+          retention-days: 30
+
+  consolidate:
+    needs: [replicate_googl, replicate_meta, replicate_windows_a, replicate_windows_b]
+    if: ${{ always() && needs.replicate_googl.result == 'success' && needs.replicate_meta.result == 'success' && needs.replicate_windows_a.result == 'success' && needs.replicate_windows_b.result == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/download-artifact@v6
+        with:
+          pattern: q218-replication-*
+          path: downloaded
+          merge-multiple: false
+      - name: Arrange receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          for sym in GOOGL META ORCL PFE; do
+            src="downloaded/q218-replication-$sym/q218_replication_$sym.json"
+            test -s "$src"
+            mkdir -p "replication/$sym"
+            cp "$src" "replication/$sym/"
+          done
+      - name: Consolidate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 automation/q218_independent_replication_consolidate.py --input-root replication --output research/evidence/q218_independent_replication_latest.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/evidence/q218_independent_replication_latest.json").read_text())
+          assert d["status"]=="Q218_INDEPENDENT_FRESH_SYMBOL_REPLICATION_COMPLETED"
+          assert d["fresh_symbol_disjoint"] is True
+          assert d["total_event_count"] >= 1
+          assert d["selection_used"] is False
+          assert d["post_pass_optimization"] is False
+          assert d["performance_output_reuse_for_rule_changes"] is False
+          assert d["promotion_decision"] is False
+          assert d["safety"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
+          print("Q218_REPLICATION_AGGREGATE_VALIDATED")
+          PY
+      - name: Publish immutable replication receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            base_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python3 automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$base_sha" --file "research/evidence/q218_independent_replication_latest.json=research/evidence/q218_independent_replication_latest.json"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: q218-independent-replication-aggregate-${{ github.run_id }}
+          path: research/evidence/q218_independent_replication_latest.json
+          if-no-files-found: error
+          retention-days: 30
