@@ -615,11 +615,35 @@ def q218_prereg_status() -> dict[str, Any]:
     prereg_path = ROOT / "research" / "preregistrations" / "q218_mandatory_voluntary_disclosure_2026_10_08.json"
     auth_path = ROOT / "research" / "authorizations" / "q218_performance_2026_10_08.json"
     reconcile_path = ROOT / "research" / "evidence" / "q218_prereg_authorization_reconcile_latest.json"
+    performance_result_path = ROOT / "research" / "evidence" / "q218_deterministic_performance_result_latest.json"
 
     try:
         prereg = json.loads(prereg_path.read_text(encoding="utf-8"))
         auth = json.loads(auth_path.read_text(encoding="utf-8"))
         reconcile = json.loads(reconcile_path.read_text(encoding="utf-8"))
+        try:
+            performance_result = json.loads(performance_result_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            performance_result = {}
+        execution_complete = (
+            performance_result.get("record_type") == "q218_deterministic_performance_result"
+            and performance_result.get("candidate_id") == "Q218"
+            and performance_result.get("trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+            and performance_result.get("performance_evaluation") is True
+            and performance_result.get("holdout_evaluation") is False
+            and performance_result.get("selection_used") is False
+            and performance_result.get("parameter_search") is False
+            and performance_result.get("threshold_search") is False
+            and performance_result.get("horizon_search") is False
+            and performance_result.get("asset_search") is False
+            and performance_result.get("variant_search") is False
+            and performance_result.get("family_ranking") is False
+            and performance_result.get("promotion_decision") is False
+            and performance_result.get("safety", {}).get("paper_only") is True
+            and performance_result.get("safety", {}).get("live_trading_enabled") is False
+            and performance_result.get("safety", {}).get("orders_enabled") is False
+            and performance_result.get("safety", {}).get("automatic_promotion") is False
+        )
         reconcile_valid = (
             prereg.get("record_type") == "q218_frozen_preregistration"
             and prereg.get("status") == "FROZEN_PREREGISTRATION_RECONCILED"
@@ -643,13 +667,23 @@ def q218_prereg_status() -> dict[str, Any]:
             and reconcile.get("checks", {}).get("performance_execution_authorized") is False
             and reconcile.get("fingerprints", {}).get("preregistration") == prereg.get("preregistration_fingerprint")
         )
-        valid = reconcile_valid or authorized_valid
+        valid = reconcile_valid or authorized_valid or execution_complete
     except (OSError, json.JSONDecodeError):
         valid = False
         authorized_valid = False
 
     if valid:
-        authorized = bool(authorized_valid)
+        authorized = bool(authorized_valid) and not execution_complete
+        if execution_complete:
+            return {
+                "progress_percent": 100,
+                "state": "completed",
+                "detail": "One-Shot-Performance deterministisch ausgeführt; Ergebnis immutable vorhanden · Current-context Revalidation der korrigierten SEC-Gates noch offen",
+                "next_gate": "fresh current-master Q218 source/event receipts + independent PIT revalidation",
+                "performance_authorized": False,
+                "performance_executed": True,
+                "performance_result_fingerprint": performance_result.get("report_fingerprint"),
+            }
         return {
             "progress_percent": 100,
             "state": "completed",
@@ -660,6 +694,7 @@ def q218_prereg_status() -> dict[str, Any]:
             ),
             "next_gate": "one-shot performance execution" if authorized else "separate explicit one-shot performance authorization",
             "performance_authorized": authorized,
+            "performance_executed": False,
         }
     if prereg_path.is_file():
         return {
@@ -705,7 +740,7 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
         {"label": "Event-pair gate", "status": q218_event_state, "progress": q218_event_progress, "detail": "positiver Event-Pair Receipt" if q218_receipts["event_pair_complete"] else "Event-Pair Receipt fehlt"},
         {"label": "Independent Architecture PIT", "status": q218_ind_state, "progress": q218_ind_progress, "detail": q218_ind_detail},
         {"label": "Preregistration + authorization reconcile", "status": q218_prereg["state"], "progress": q218_prereg["progress_percent"], "detail": q218_prereg["detail"]},
-        {"label": "One-shot performance", "status": "ready" if q218_prereg.get("performance_authorized") else "closed", "progress": 0, "detail": "explizit autorisiert; Ausführung ausstehend" if q218_prereg.get("performance_authorized") else "erst nach separater immutable authorization; aktuell geschlossen"},
+        {"label": "One-shot performance", "status": "complete" if q218_prereg.get("performance_executed") else ("ready" if q218_prereg.get("performance_authorized") else "closed"), "progress": 100 if q218_prereg.get("performance_executed") else 0, "detail": q218_prereg.get("detail") if q218_prereg.get("performance_executed") else ("explizit autorisiert; Ausführung ausstehend" if q218_prereg.get("performance_authorized") else "erst nach separater immutable authorization; aktuell geschlossen")},
     ]
 
     def overall(milestones: list[dict[str, Any]]) -> tuple[int, int, int]:
