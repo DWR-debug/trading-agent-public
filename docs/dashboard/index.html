@@ -66,6 +66,16 @@
     .progress{height:8px;border:1px solid var(--border);border-radius:999px;overflow:hidden;background:Canvas;margin-top:5px;min-width:120px}
     .progress-fill{height:100%;background:var(--info);transition:width .25s ease}
     .progress-label{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+    .progress-overview{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+    .progress-panel{border:1px solid var(--border);border-radius:12px;padding:14px;background:color-mix(in srgb,Canvas 99%,CanvasText 1%)}
+    .progress-panel h3{font-size:14px;margin:0 0 11px}
+    .bar-row{margin:10px 0 14px}.bar-meta{display:flex;justify-content:space-between;gap:12px;font-size:12px;margin-bottom:5px}.bar-label{font-weight:750}.bar-value{font-variant-numeric:tabular-nums;color:var(--muted)}
+    .bar-track{height:11px;border:1px solid var(--border);border-radius:999px;overflow:hidden;background:color-mix(in srgb,CanvasText 8%,Canvas)}
+    .bar-fill{height:100%;width:0;background:var(--info);transition:width .35s ease}.bar-fill.milestone{background:var(--available)}
+    .bar-sub{margin-top:4px;color:var(--muted);font-size:11px;line-height:1.35}
+    .milestone-list{display:grid;gap:9px}.milestone-item{display:grid;grid-template-columns:minmax(135px,1.2fr) 2fr minmax(90px,.7fr);gap:9px;align-items:center;font-size:11px}.milestone-item .label{font-weight:650}.milestone-item .state{color:var(--muted)}
+    @media(max-width:900px){.progress-overview{grid-template-columns:1fr}}
+    @media(max-width:700px){.milestone-item{grid-template-columns:1fr}.progress-panel{padding:12px}}
     .focus-summary{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:10px;margin-bottom:14px}
     .focus-kpi{border:1px solid var(--border);border-radius:12px;padding:14px;background:color-mix(in srgb,Canvas 99%,CanvasText 1%)}
     .focus-kpi strong{display:block;font-size:22px;margin-top:3px}.focus-kpi span:last-child{font-size:11px;color:var(--muted)}
@@ -140,6 +150,16 @@
   <section id="app" class="grid" hidden>
     <article class="card">
       <div class="focus-summary" id="focusSummary"></div>
+      <div class="progress-overview">
+        <div class="progress-panel">
+          <h3>Gesamtfortschritt der fokussierten Kandidaten</h3>
+          <div id="overallProgressBars"></div>
+        </div>
+        <div class="progress-panel">
+          <h3>Aktueller Milestone-Fortschritt</h3>
+          <div id="milestoneProgressBars"></div>
+        </div>
+      </div>
       <div id="candidateFocus" class="candidate-focus"></div>
       <div id="opsSummary" class="ops-strip"></div>
     </article>
