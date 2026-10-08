@@ -37,6 +37,13 @@ def verify(bundle_path: Path, contract_path: Path)->dict[str,Any]:
         raise RuntimeError("Q218 replication bundle trial mismatch")
     if contract.get("replication_trial_id")!=TRIAL_ID or contract.get("status")!="FROZEN_INDEPENDENT_REPLICATION_CONTRACT":
         raise RuntimeError("Q218 replication contract invalid")
+    primary_contract = ROOT/"research/governance/q218_performance_contract_2026_10_08.json"
+    if contract.get("base_contract_sha256") != file_sha256(primary_contract):
+        raise RuntimeError("Q218 replication base contract fingerprint mismatch")
+    if contract.get("primary_performance_report_fingerprint") != "78c4a667b01bebe0aa23361e78856155fa3e3fe861cb6fcc1e4b79973cbddc5d":
+        raise RuntimeError("Q218 replication primary provenance fingerprint drifted")
+    if contract.get("replication_boundaries", {}).get("no_primary_result_reuse_for_rule_changes") is not True:
+        raise RuntimeError("Q218 replication primary-result reuse boundary invalid")
     expected=bundle.get("bundle_fingerprint")
     unsigned=dict(bundle); unsigned.pop("bundle_fingerprint",None)
     if not expected or fp(unsigned)!=expected:
