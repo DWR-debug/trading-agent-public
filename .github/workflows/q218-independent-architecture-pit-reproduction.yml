@@ -20,7 +20,6 @@ jobs:
       github.repository == 'DWR-debug/trading-agent-public' &&
       (
         github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'push' ||
         (
           github.event.workflow_run.conclusion == 'success' &&
           contains(github.event.workflow_run.display_title, 'Q218 event_pair')
