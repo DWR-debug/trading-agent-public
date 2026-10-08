@@ -9,8 +9,9 @@ def test_archive_discovery_and_partition():
     <a href="/files/data/form-13f-data-sets/01jun2025-31aug2025_form13f.zip">2025 Jun-Aug</a>'''
     a=discover_archives(page)
     assert [x["period_start"] for x in a]==["2013-07-01","2017-10-01","2018-01-01","2025-06-01"]
-    assert len([x for x in a if SHARDS["2013-2017"][0]<=date.fromisoformat(x["period_start"])<SHARDS["2013-2017"][1]])==2
-    assert len([x for x in a if SHARDS["2022-2025-09"][0]<=date.fromisoformat(x["period_start"])<SHARDS["2022-2025-09"][1]])==1
+    assert len([x for x in a if SHARDS["2013-2016"][0]<=date.fromisoformat(x["period_start"])<SHARDS["2013-2016"][1]])==1
+    assert len([x for x in a if SHARDS["2017-2018"][0]<=date.fromisoformat(x["period_start"])<SHARDS["2017-2018"][1]])==2
+    assert len([x for x in a if SHARDS["2024-2025-09"][0]<=date.fromisoformat(x["period_start"])<SHARDS["2024-2025-09"][1]])==1
 
 def test_future_filing_is_excluded():
     sub="ACCESSION_NUMBER\tFILING_DATE\tPERIODOFREPORT\nA1\t01-JUL-2017\t30-JUN-2017\nA2\t01-NOV-2025\t30-SEP-2025\n"
@@ -38,7 +39,7 @@ def test_q104_workflow_artifacts_are_rerun_stable():
     workflow = Path(".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
     assert "q104-i19-sec-source-snapshot-${{ github.run_id }}-${{ github.run_attempt }}" not in workflow
     assert "q104-i19-census-${{ matrix.shard }}-${{ github.run_id }}-${{ github.run_attempt }}" not in workflow
-    assert workflow.count("overwrite: true") >= 3
+    assert workflow.count("overwrite: true") >= 2
 
 def test_fetch_uses_shared_rate_limiter_on_each_attempt(monkeypatch):
     import urllib.error

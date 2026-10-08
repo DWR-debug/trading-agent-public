@@ -45,17 +45,121 @@ def field(row:dict[str,Any],name:str)->str:
     return next((str(v or "") for k,v in row.items() if re.sub(r"[^A-Z0-9]","",str(k).upper())==w),"")
 def local_name(v:str)->str: return str(v).split(":",1)[-1].split("}",1)[-1].lower()
 
-def require_census()->dict[str,Any]:
-    if not CENSUS.exists(): raise RuntimeError("Q104_I19_CENSUS_RECEIPT_MISSING")
-    r=json.loads(CENSUS.read_text(encoding="utf-8"))
-    if r.get("candidate_id")!="Q104:I19": raise RuntimeError("Q104_I19_CENSUS_CANDIDATE_MISMATCH")
-    if r.get("status")!="13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_ONLY": raise RuntimeError("Q104_I19_CENSUS_NOT_POSITIVE")
-    if set(r.get("completed_shards",[]))!={"2013-2017","2018-2021","2022-2025-09"}: raise RuntimeError("Q104_I19_CENSUS_SHARD_CLOSURE_FAILED")
-    if r.get("identity_conflicts"): raise RuntimeError("Q104_I19_CENSUS_IDENTITY_CONFLICTS")
-    j=r.get("acceptance_time_join",{})
-    if j.get("complete") is not True or int(j.get("failures",0))!=0: raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_JOIN_NOT_COMPLETE")
-    if int(r.get("archive_count",0))<=0: raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_COUNT_INVALID")
+def validate_census_receipt(r:dict[str,Any])->dict[str,Any]:
+    """Validate the entire Census/PIT contract before materialization."""
+    from automation.q104_i19_13f_historical_identity_census_merge import (
+        EXPECTED_SHARDS, canonical_fingerprint,
+    )
+    expected_safety={
+        "paper_only":True,
+        "live_trading_enabled":False,
+        "orders_enabled":False,
+        "automatic_promotion":False,
+    }
+    boundary_false=(
+        "performance_authorized","holdout_selection_allowed","ranking_allowed",
+        "parameter_search_allowed","threshold_search_allowed","horizon_search_allowed",
+        "promotion_allowed","live_execution_allowed",
+    )
+    if r.get("candidate_id")!="Q104:I19":
+        raise RuntimeError("Q104_I19_CENSUS_CANDIDATE_MISMATCH")
+    if r.get("status")!="13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY":
+        raise RuntimeError("Q104_I19_CENSUS_NOT_CLOCK_COMPLETE")
+    if set(r.get("completed_shards",[]))!=EXPECTED_SHARDS:
+        raise RuntimeError("Q104_I19_CENSUS_SHARD_CLOSURE_FAILED")
+    archives=r.get("archives",[])
+    if not isinstance(archives,list) or not archives or int(r.get("archive_count",0))!=len(archives):
+        raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_COUNT_INVALID")
+    if r.get("identity_conflicts"):
+        raise RuntimeError("Q104_I19_CENSUS_IDENTITY_CONFLICTS")
+    source_hash=str(r.get("source_page_sha256",""))
+    if not re.fullmatch(r"[0-9a-f]{64}",source_hash):
+        raise RuntimeError("Q104_I19_CENSUS_SOURCE_PAGE_HASH_INVALID")
+    if r.get("official_source")!="https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets":
+        raise RuntimeError("Q104_I19_CENSUS_SOURCE_INVALID")
+    if r.get("receipt_fingerprint")!=canonical_fingerprint(r):
+        raise RuntimeError("Q104_I19_CENSUS_FINGERPRINT_INVALID")
+    join=r.get("acceptance_time_join",{})
+    target_count=int(join.get("target_unique_accessions",-1))
+    record_count=int(join.get("records_checked",-1))
+    if (
+        join.get("complete") is not True
+        or int(join.get("failures",-1))!=0
+        or target_count<=0
+        or record_count!=target_count
+        or join.get("timezone_inference") is not False
+    ):
+        raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_JOIN_NOT_COMPLETE")
+    if r.get("acceptance_failures"):
+        raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_FAILURES")
+    if r.get("safety")!=expected_safety:
+        raise RuntimeError("Q104_I19_CENSUS_SAFETY_BOUNDARY_INVALID")
+    boundary=r.get("scientific_boundary",{})
+    if any(boundary.get(key) is not False for key in boundary_false):
+        raise RuntimeError("Q104_I19_CENSUS_SCIENTIFIC_BOUNDARY_INVALID")
+
+    seen_urls=set()
+    total_targets=0
+    total_records=0
+    for archive in archives:
+        metadata=archive.get("archive",{})
+        url=str(metadata.get("url",""))
+        if not url.startswith("https://www.sec.gov/") or url in seen_urls:
+            raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_URL_INVALID_OR_DUPLICATE")
+        seen_urls.add(url)
+        if not re.fullmatch(r"[0-9a-f]{64}",str(archive.get("archive_sha256",""))):
+            raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_HASH_INVALID")
+        if int(archive.get("archive_bytes",0))<=0:
+            raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_SIZE_INVALID")
+        if archive.get("acceptance_failures"):
+            raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_ACCEPTANCE_FAILURES")
+        hits=archive.get("target_hits",{})
+        if set(hits)!=set(r.get("frozen_cusips",{})):
+            raise RuntimeError("Q104_I19_CENSUS_TARGET_UNIVERSE_INVALID")
+        archive_records={}
+        for symbol,hit in hits.items():
+            accessions=set(str(x) for x in hit.get("accessions",[]))
+            records=hit.get("acceptance_records",{})
+            if hit.get("acceptance_complete") is not True or set(records)!=accessions:
+                raise RuntimeError("Q104_I19_CENSUS_TARGET_ACCEPTANCE_INCOMPLETE:"+str(symbol))
+            for accession,rec in records.items():
+                if rec.get("accession")!=accession:
+                    raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_ACCESSION_MISMATCH")
+                if not re.fullmatch(r"\d{10}",str(rec.get("filer_cik",""))):
+                    raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_FILER_CIK_INVALID")
+                if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}",str(rec.get("acceptance_datetime",""))):
+                    raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_CLOCK_INVALID")
+                for key in ("filing_date","period","submission_type","source_url"):
+                    if not str(rec.get(key,"")).strip():
+                        raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_METADATA_MISSING:"+key)
+                if not str(rec.get("source_url","")).startswith("https://www.sec.gov/Archives/edgar/data/"):
+                    raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_SOURCE_URL_INVALID")
+                if not re.fullmatch(r"[0-9a-f]{64}",str(rec.get("header_sha256",""))):
+                    raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_HEADER_HASH_INVALID")
+                if int(rec.get("header_bytes",0))<=0:
+                    raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_HEADER_SIZE_INVALID")
+                if accession in archive_records and archive_records[accession]!=rec:
+                    raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_RECORD_CONFLICT")
+                archive_records[accession]=rec
+        target_archive=int(archive.get("target_unique_accession_count",-1))
+        records_archive=int(archive.get("acceptance_record_count",-1))
+        if target_archive<=0 or target_archive!=records_archive or len(archive_records)!=target_archive:
+            raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_ACCEPTANCE_COUNT_MISMATCH")
+        total_targets+=target_archive
+        total_records+=records_archive
+    if total_targets!=target_count or total_records!=record_count:
+        raise RuntimeError("Q104_I19_CENSUS_GLOBAL_ACCEPTANCE_COUNT_MISMATCH")
+    accepted=acceptance_map(r)
+    if len(accepted)!=target_count:
+        raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_ACCESSION_CLOSURE_FAILED")
     return r
+
+
+def require_census()->dict[str,Any]:
+    if not CENSUS.exists():
+        raise RuntimeError("Q104_I19_CENSUS_RECEIPT_MISSING")
+    r=json.loads(CENSUS.read_text(encoding="utf-8"))
+    return validate_census_receipt(r)
 
 def load_maps()->tuple[dict[str,str],dict[str,str]]:
     q108=json.loads(Q108.read_text(encoding="utf-8"))

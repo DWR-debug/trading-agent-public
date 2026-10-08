@@ -92,17 +92,61 @@ jobs:
           retention-days: 30
           overwrite: true
 
-  windows_census:
+  census:
+    concurrency:
+      group: ${{ matrix.platform == 'hosted' && format('trading-agent-research-hosted-{0}-slot-{1}', matrix.runner, matrix.slot) || format('trading-agent-research-windows-slot-{0}', matrix.slot) }}
+      cancel-in-progress: false
     needs: [source_snapshot]
     if: github.repository == 'DWR-debug/trading-agent-public'
-    runs-on: [self-hosted, trading-agent-research]
-    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        include:
+          - shard: "2013-2016"
+            runs_on: '["self-hosted","trading-agent-research"]'
+            platform: "windows"
+            runner: "windows"
+            slot: "A"
+          - shard: "2017-2018"
+            runs_on: '["self-hosted","trading-agent-research"]'
+            platform: "windows"
+            runner: "windows"
+            slot: "B"
+          - shard: "2019-2020"
+            runs_on: '["self-hosted","trading-agent-research"]'
+            platform: "windows"
+            runner: "windows"
+            slot: "C"
+          - shard: "2021-2022"
+            runs_on: '["ubuntu-24.04"]'
+            platform: "hosted"
+            runner: "ubuntu-24.04"
+            slot: "1"
+          - shard: "2023"
+            runs_on: '["ubuntu-24.04"]'
+            platform: "hosted"
+            runner: "hosted-ubuntu-24.04"
+            slot: "2"
+          - shard: "2024-2025-09"
+            runs_on: '["ubuntu-24.04-arm"]'
+            platform: "hosted"
+            runner: "ubuntu-24.04-arm"
+            slot: "1"
+    runs-on: ${{ fromJSON(matrix.runs_on) }}
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@v5
         with:
           ref: ${{ github.sha }}
           fetch-depth: 1
-      - name: Bootstrap Python
+      - name: Set up Python 3.13 on hosted runner
+        if: matrix.platform == 'hosted'
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Bootstrap Python on Windows
+        if: matrix.platform == 'windows'
         shell: cmd
         run: |
           setlocal EnableExtensions EnableDelayedExpansion
@@ -119,63 +163,22 @@ jobs:
         with:
           name: q104-i19-sec-source-snapshot-${{ github.run_id }}
           path: research/runs/q104_i19_13f_census/source_snapshot
-      - name: Run 2013-2017 shard
+      - name: Run historical shard on Windows
+        if: matrix.platform == 'windows'
         shell: cmd
         run: |
-          if not exist "research\runs\q104_i19_13f_census\2013-2017" mkdir "research\runs\q104_i19_13f_census\2013-2017"
-          python.exe -m automation.q104_i19_13f_historical_identity_census --shard "2013-2017" --output "research\runs\q104_i19_13f_census\2013-2017\shard_receipt.json" --page-file "research\runs\q104_i19_13f_census\source_snapshot\source_page.html"
-      - name: Upload shard receipt
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: q104-i19-census-2013-2017-${{ github.run_id }}
-          path: research/runs/q104_i19_13f_census/2013-2017/shard_receipt.json
-          if-no-files-found: error
-          retention-days: 30
-          overwrite: true
-
-  hosted_census:
-    concurrency:
-      group: trading-agent-research-hosted-${{ matrix.runner }}-slot-${{ matrix.slot }}
-      cancel-in-progress: false
-    needs: [source_snapshot]
-    if: github.repository == 'DWR-debug/trading-agent-public'
-    # Complete every historical shard even when a sibling shard fails.
-    # The merge job remains fail-closed and requires all three successful shard receipts.
-    strategy:
-      fail-fast: false
-      max-parallel: 2
-      matrix:
-        include:
-          - shard: "2018-2021"
-            runner: "ubuntu-24.04"
-            slot: "1"
-          - shard: "2022-2025-09"
-            runner: "ubuntu-24.04-arm"
-            slot: "1"
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 90
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: ${{ github.sha }}
-          fetch-depth: 1
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
-      - name: Download frozen SEC source snapshot
-        uses: actions/download-artifact@v6
-        with:
-          name: q104-i19-sec-source-snapshot-${{ github.run_id }}
-          path: research/runs/q104_i19_13f_census/source_snapshot
-      - name: Run historical shard
+          if not exist "research\runs\q104_i19_13f_census\${{ matrix.shard }}" mkdir "research\runs\q104_i19_13f_census\${{ matrix.shard }}"
+          python.exe -m automation.q104_i19_13f_historical_identity_census --shard "${{ matrix.shard }}" --output "research/runs/q104_i19_13f_census/${{ matrix.shard }}/shard_receipt.json" --page-file "research/runs/q104_i19_13f_census/source_snapshot/source_page.html"
+      - name: Run historical shard on hosted runner
+        if: matrix.platform == 'hosted'
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "research/runs/q104_i19_13f_census/${{ matrix.shard }}"
           python -m automation.q104_i19_13f_historical_identity_census \
             --shard "${{ matrix.shard }}" \
-            --output "research/runs/q104_i19_13f_census/${{ matrix.shard }}/shard_receipt.json" --page-file "research/runs/q104_i19_13f_census/source_snapshot/source_page.html"
+            --output "research/runs/q104_i19_13f_census/${{ matrix.shard }}/shard_receipt.json" \
+            --page-file "research/runs/q104_i19_13f_census/source_snapshot/source_page.html"
       - name: Upload shard receipt
         if: always()
         uses: actions/upload-artifact@v6
@@ -187,8 +190,8 @@ jobs:
           overwrite: true
 
   merge:
-    needs: [windows_census, hosted_census]
-    if: github.repository == 'DWR-debug/trading-agent-public' && needs.windows_census.result == 'success' && needs.hosted_census.result == 'success'
+    needs: [census]
+    if: github.repository == 'DWR-debug/trading-agent-public' && needs.census.result == 'success'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -210,54 +213,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import hashlib,json
-          from datetime import datetime,timezone
-          from pathlib import Path
-          root=Path("research/runs/q104_i19_13f_census/merged")
-          payloads=[json.loads(p.read_text(encoding="utf-8")) for p in root.rglob("shard_receipt.json")]
-          expected={"2013-2017","2018-2021","2022-2025-09"}
-          shards={p["shard"] for p in payloads}
-          if shards!=expected: raise SystemExit("Q104_I19_MISSING_OR_DUPLICATE_SHARDS")
-          urls=[]; source_hashes=set(); frozen=None; archives=[]; conflicts=set(); acceptance_failures={}; acceptance_records=0; target_accessions=0
-          for p in payloads:
-              source_hashes.add(p["source_page_sha256"])
-              if frozen is None: frozen=p["frozen_cusips"]
-              elif frozen!=p["frozen_cusips"]: raise SystemExit("Q104_I19_FROZEN_CUSIP_MISMATCH")
-              for a in p["archives"]:
-                  acceptance_failures.update(a.get("acceptance_failures",{}))
-                  acceptance_records += int(a.get("acceptance_record_count",0))
-                  target_accessions += int(a.get("target_unique_accession_count",0))
-                  for symbol,h in a.get("target_hits",{}).items():
-                      if h.get("row_count",0) and not h.get("acceptance_complete",False):
-                          raise SystemExit(f"Q104_I19_TARGET_ACCEPTANCE_INCOMPLETE:{symbol}")
-                  u=a["archive"]["url"]
-                  if u in urls: raise SystemExit("Q104_I19_DUPLICATE_ARCHIVE")
-                  urls.append(u); archives.append(a); conflicts.update(a.get("security_identity_conflicts",[]))
-          if len(source_hashes)!=1: raise SystemExit("Q104_I19_SOURCE_PAGE_HASH_MISMATCH")
-          if acceptance_failures: raise SystemExit("Q104_I19_ACCEPTANCE_TIME_JOIN_FAILED:"+json.dumps(acceptance_failures,sort_keys=True,separators=(",",":")))
-          if acceptance_records!=target_accessions: raise SystemExit(f"Q104_I19_ACCEPTANCE_RECORD_COUNT_MISMATCH:{acceptance_records}:{target_accessions}")
-          archives.sort(key=lambda x:(x["archive"]["period_start"],x["archive"]["url"]))
-          summary={}
-          for symbol in sorted(frozen):
-              matched=sum(1 for a in archives if a["target_hits"].get(symbol,{}).get("row_count",0)>0)
-              summary[symbol]={"archives_with_match":matched,"archives_without_match":len(archives)-matched}
-          receipt={"schema_version":"1.0","task_id":"Q-2026-10-06-104-I19-13F-HISTORICAL-ID-CENSUS","candidate_id":"Q104:I19",
-                   "status":"13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY","generated_at_utc":datetime.now(timezone.utc).isoformat(),
-                   "official_source":"https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets","source_page_sha256":next(iter(source_hashes)),
-                   "completed_shards":sorted(shards),"archive_count":len(archives),"frozen_cusips":frozen,"archives":archives,"coverage_summary":summary,"identity_conflicts":sorted(conflicts),
-                   "acceptance_time_join":{"target_unique_accessions":target_accessions,"records_checked":acceptance_records,"failures":len(acceptance_failures),"complete":True,"timezone_inference":False},
-                   "scientific_boundary":{"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"parameter_search_allowed":False,"threshold_search_allowed":False,"horizon_search_allowed":False,"promotion_allowed":False,"live_execution_allowed":False},
-                   "safety":{"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False},
-                   "next_gate":"concept-specific PIT compiler + independent reproduction"}
-          receipt["receipt_fingerprint"]=hashlib.sha256(json.dumps(receipt,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode()).hexdigest()
-          if not receipt.get("archive_count") or receipt.get("acceptance_time_join",{}).get("complete") is not True:
-              raise SystemExit("Q104_I19_RECEIPT_INTEGRITY_GUARD_FAILED")
-          if len(receipt.get("completed_shards",[])) != 3 or receipt.get("identity_conflicts"):
-              raise SystemExit("Q104_I19_RECEIPT_CLOSURE_GUARD_FAILED")
-          Path("research/evidence").mkdir(exist_ok=True)
-          Path("research/evidence/q104_i19_13f_historical_identity_census_latest.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
-          PY
+          python automation/q104_i19_13f_historical_identity_census_merge.py \
+            --input-dir research/runs/q104_i19_13f_census/merged \
+            --output research/evidence/q104_i19_13f_historical_identity_census_latest.json
           for attempt in 1 2 3 4 5; do
             current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
             if python3 automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file "research/evidence/q104_i19_13f_historical_identity_census_latest.json=research/evidence/q104_i19_13f_historical_identity_census_latest.json"; then

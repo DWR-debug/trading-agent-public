@@ -9,12 +9,20 @@ ROOT=Path(__file__).resolve().parents[1]
 PAGE="https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets"
 EVIDENCE=ROOT/"research/evidence/q113_13f_q107_coverage_result.json"
 START=date(2013,7,1); END=date(2025,10,1); CUTOFF=date(2025,9,24)
-SHARDS={"2013-2017":(date(2013,7,1),date(2018,1,1)),
-        "2018-2021":(date(2018,1,1),date(2022,1,1)),
-        "2022-2025-09":(date(2022,1,1),END)}
+SHARDS={
+    "2013-2016":(date(2013,7,1),date(2017,1,1)),
+    "2017-2018":(date(2017,1,1),date(2019,1,1)),
+    "2019-2020":(date(2019,1,1),date(2021,1,1)),
+    "2021-2022":(date(2021,1,1),date(2023,1,1)),
+    "2023":(date(2023,1,1),date(2024,1,1)),
+    "2024-2025-09":(date(2024,1,1),END),
+}
 UA="DWR-debug/trading-agent-public Q104-I19 historical 13F census/3.0"
-ARCHIVE_REQUEST_GAP_SECONDS=1.0
-HEADER_REQUEST_GAP_SECONDS=1.0
+# Six concurrent census shards each reserve at most ~1.5 SEC requests/sec.
+# Aggregate nominal budget is <=9 requests/sec, below SEC's 10 requests/sec
+# cap with headroom for other first-party research jobs.
+ARCHIVE_REQUEST_GAP_SECONDS=0.67
+HEADER_REQUEST_GAP_SECONDS=0.67
 ARCHIVE_WORKERS=3
 HEADER_WORKERS=4
 MAX_FETCH_RETRIES=6

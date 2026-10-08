@@ -26,3 +26,19 @@ def test_missing_census_fails_closed(tmp_path, monkeypatch):
         assert "CENSUS_RECEIPT_MISSING" in str(exc)
     else:
         raise AssertionError("historical compiler must require the positive census receipt")
+
+
+
+def test_rejects_legacy_source_only_census_without_acceptance_time_join():
+    import pytest
+    from automation.q104_i19_historical_pit_compiler import validate_census_receipt
+
+    legacy = {
+        "candidate_id": "Q104:I19",
+        "status": "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_ONLY",
+        "completed_shards": ["2013-2017", "2018-2021", "2022-2025-09"],
+        "archive_count": 50,
+        "identity_conflicts": [],
+    }
+    with pytest.raises(RuntimeError, match="CENSUS_NOT_CLOCK_COMPLETE"):
+        validate_census_receipt(legacy)
