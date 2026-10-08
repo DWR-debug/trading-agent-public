@@ -574,15 +574,16 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         dispatch_key = (workflow, candidate, resource, dispatch_gate) if workflow == SLOT_SCOPED_WORKFLOW else (workflow, "", "", "")
         if workflow != SLOT_SCOPED_WORKFLOW:
             failures = workflow_failure_streak.get(workflow, workflow_failure_streak.get(workflow.rsplit("/", 1)[-1], 0))
-            if workflow.endswith("q104-i19-historical-pit-compilation.yml"):
+            if workflow.endswith(("q104-i19-historical-pit-compilation.yml", "q218-independent-replication-once.yml")):
                 current_sha = str(snapshot.get("master_sha") or "")
+                workflow_name = workflow.rsplit("/", 1)[-1]
                 current_failures = [
                     r for r in runs
                     if isinstance(r, dict)
                     and r.get("status") == "completed"
                     and r.get("conclusion") in TECHNICAL_FAILURE_CONCLUSIONS
                     and str(r.get("head_sha") or "") == current_sha
-                    and str(r.get("path") or r.get("workflow_path") or "").endswith("q104-i19-historical-pit-compilation.yml")
+                    and str(r.get("path") or r.get("workflow_path") or "").endswith(workflow_name)
                 ]
                 failures = len(current_failures)
             if failures >= 2:
