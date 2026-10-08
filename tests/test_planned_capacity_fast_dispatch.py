@@ -123,8 +123,34 @@ def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_det
     assert 0 <= q104["current_milestone_progress_percent"] <= 100
     assert q104["total_milestones"] == 9
     assert 0 <= q104["overall_progress_percent"] <= 100
-    assert q218["current_milestone"] == "Preregistration + authorization reconcile"
-    assert any(m["label"] == "Independent Architecture PIT" and m["status"] == "complete" for m in q218["milestones"])
+    assert q218["current_milestone"] == "Independent Architecture PIT"
+    assert any(m["label"] == "Independent Architecture PIT" and m["status"] == "open" for m in q218["milestones"])
+
+
+def test_dashboard_q218_completed_source_event_pair_exposes_independent_arch_queue():
+    from automation import generate_resource_dashboard as dashboard
+    resources = [{
+        "name": "GitHub-hosted ARM64",
+        "capacity_state": "available",
+        "current_assignments": 0,
+    }]
+    dashboard_top4 = [{
+        "code": "Q218",
+        "next_gate": "independent architecture PIT reproduction",
+    }]
+    monkeypatch = getattr(__import__("pytest"), "MonkeyPatch")()
+    monkeypatch.setattr(dashboard, "q218_receipt_state", lambda: {
+        "source_complete": True,
+        "event_pair_complete": True,
+        "independent_complete": False,
+    })
+    try:
+        plan = dashboard.planned_capacity_plan(resources, [], dashboard_top4, {}, {})
+    finally:
+        monkeypatch.undo()
+    rows = [item for row in plan for item in row["planned_assignments"] if item.get("scheduled")]
+    assert any(item["plan_id"] == "Q218-INDEPENDENT-ARCH" for item in rows)
+    assert all(item["plan_id"] not in {"Q218-SOURCE", "Q218-EVENT-PAIR"} for item in rows)
 
 
 def test_dashboard_html_exposes_progress_bar_panels():
