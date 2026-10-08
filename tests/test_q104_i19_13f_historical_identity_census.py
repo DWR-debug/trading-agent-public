@@ -21,6 +21,48 @@ def test_future_filing_is_excluded():
     assert r["target_hits"]["SPGI"]["row_count"]==1
     assert r["target_hits"]["SPGI"]["issuer_names"]==["Old Name Corp"]
 
+def test_fetch_uses_shared_rate_limiter_on_each_attempt(monkeypatch):
+    import urllib.error
+    from automation import q104_i19_13f_historical_identity_census as census
+
+    class Limiter:
+        def __init__(self):
+            self.waits = 0
+
+        def wait(self):
+            self.waits += 1
+
+    class Response:
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self):
+            return b"ok"
+
+    calls = []
+
+    def fake_urlopen(req, timeout):
+        calls.append(req.full_url)
+        if len(calls) == 1:
+            raise urllib.error.HTTPError(
+                req.full_url, 503, "retry", hdrs=None, fp=None
+            )
+        return Response()
+
+    limiter = Limiter()
+    monkeypatch.setattr(census.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(census.time, "sleep", lambda *_args: None)
+
+    assert census.fetch("https://example.invalid", retries=2, rate_limiter=limiter) == b"ok"
+    assert limiter.waits == 2
+    assert len(calls) == 2
+
+
 def test_synthetic_contract():
     assert all(synthetic_contract().values())
 
