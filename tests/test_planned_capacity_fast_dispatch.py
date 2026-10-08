@@ -168,9 +168,9 @@ def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_det
     assert q104["total_milestones"] == 9
     assert 0 <= q104["overall_progress_percent"] <= 100
     assert q218["current_milestone"] == "Preregistration + authorization reconcile"
-    assert q218["current_milestone_status"] == "partial"
-    assert q218["current_milestone_progress_percent"] == 50
-    assert any(m["label"] == "Preregistration + authorization reconcile" and m["status"] == "partial" for m in q218["milestones"])
+    assert q218["current_milestone_status"] == "completed"
+    assert q218["current_milestone_progress_percent"] == 100
+    assert any(m["label"] == "Preregistration + authorization reconcile" and m["status"] == "completed" for m in q218["milestones"])
 
 
 def test_q218_receipt_gate_requires_current_code_fingerprint():
@@ -846,7 +846,7 @@ def test_q104_compiler_failure_streak_resets_on_new_master_sha(monkeypatch):
     snapshot = {
         "master_sha": "new-master",
         "focus_candidates": ["Q104:I19"],
-        "resources": [{
+        "planned_capacity": [{
             "resource": "GitHub-hosted Ubuntu x64",
             "research_capacity_slots": 1,
             "research_slots_in_use": 0,
@@ -886,7 +886,7 @@ def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
     monkeypatch.setattr(dispatcher, "completed_q218_gates_for_current_context", lambda runs: {"event_pair"})
     snapshot = {
         "focus_candidates": ["Q218"],
-        "resources": [{
+        "planned_capacity": [{
             "resource": "Windows self-hosted C",
             "research_capacity_slots": 1,
             "research_slots_in_use": 0,
@@ -991,3 +991,11 @@ def test_dashboard_generator_supports_direct_script_execution_import_mode():
     generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     assert "from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context" in generator
     assert "from planned_capacity_fast_dispatch import ai_task_completed_with_current_context" in generator
+
+def test_q104_recovery_cannot_cancel_an_active_census():
+    workflow = (ROOT / ".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
+    assert "cancel-in-progress: false" in workflow
+    assert "recovery_guard:" in workflow
+    assert "for status in in_progress queued pending; do" in workflow
+    assert "needs: [recovery_guard]" in workflow
+    assert "needs.recovery_guard.outputs.proceed == 'true'" in workflow
