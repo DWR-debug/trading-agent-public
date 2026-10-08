@@ -871,9 +871,9 @@ def candidate_pipeline(
     for item in work:
         if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
             continue
-        text_value = f"{item.get('task', '')} {item.get('job', '')}"
+        text_value = _candidate_key(f"{item.get('task', '')} {item.get('job', '')}")
         for candidate in active_by_candidate:
-            if candidate in text_value:
+            if _candidate_key(candidate) in text_value:
                 active_by_candidate[candidate].append(item)
 
     state_by_candidate = {
