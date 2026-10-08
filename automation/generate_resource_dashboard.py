@@ -1055,7 +1055,16 @@ def planned_capacity_plan(
     nothing is invented to occupy free capacity.
     """
     active_text = [f"{x.get('resource','')} {x.get('task','')} {x.get('job','')}".lower() for x in work]
-    q104_census = q104_census_status()
+    q104_census_receipt = read_json_file("research/evidence/q104_i19_13f_historical_identity_census_latest.json")
+    q104_census_ready = (
+        q104_census_receipt.get("status") in {
+            "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_ONLY",
+            "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY",
+        }
+        and set(q104_census_receipt.get("completed_shards", [])) == {"2013-2017", "2018-2021", "2022-2025-09"}
+        and q104_census_receipt.get("acceptance_time_join", {}).get("complete") is True
+        and int(q104_census_receipt.get("acceptance_time_join", {}).get("failures", 0)) == 0
+    )
     q218_receipts = q218_receipt_state()
 
     overlay = os_state.get("top_candidate_capacity_overlay", {})
@@ -1138,11 +1147,11 @@ def planned_capacity_plan(
             "preferred": ["Windows self-hosted A", "GitHub-hosted Ubuntu x64"],
             "readiness": (
                 "READY_AFTER_HISTORICAL_13F_CENSUS"
-                if q104_census["state"] == "completed"
+                if q104_census_ready
                 else "BLOCKED_UNTIL_HISTORICAL_13F_CENSUS"
             ),
             "basis": "positive 3/3 historical 13F census receipt is the explicit compiler prerequisite",
-            "dispatchable": q104_census["state"] == "completed",
+            "dispatchable": q104_census_ready,
             "allow_parallel_with_candidate": True,
             "execution_workflow": ".github/workflows/q104-i19-historical-pit-compilation.yml",
         },
