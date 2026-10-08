@@ -991,12 +991,15 @@ def planned_capacity_plan(
             continue
         if item.get("plan_id") == "Q221-ADVERSARIAL" and any("free ai" in value and "q221" in value for value in active_text):
             continue
-        # The independent Q218 reproduction is executable only when the
-        # current candidate state explicitly exposes it as the next gate.
+        # Q218 Independent Architecture is receipt-driven. Static top4
+        # next_gate metadata may legitimately lag the immutable receipt index
+        # and must never block a scientifically ready next step.
         if item.get("plan_id") == "Q218-INDEPENDENT-ARCH":
-            q218_state = next((x for x in top4 if str(x.get("code")) == "Q218"), {})
-            next_gate = str(q218_state.get("next_gate") or "").lower()
-            if "independent" not in next_gate or "architecture" not in next_gate:
+            if not (
+                q218_receipts["source_complete"]
+                and q218_receipts["event_pair_complete"]
+                and not q218_receipts["independent_complete"]
+            ):
                 continue
         if item["readiness"].startswith("BLOCKED_"):
             continue
