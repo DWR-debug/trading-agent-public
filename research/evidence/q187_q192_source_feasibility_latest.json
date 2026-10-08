@@ -69,7 +69,7 @@
         }
       ],
       "clock_contract": "Supplement/date/update fields describe the labeling event and database state separately. Exact first-public observation and later corrections must be reconstructed before same-day use.",
-      "content_sha256": "7aa17b044100e590dd4d0d9820250122c25c34807d462899c742c85646dd8503"
+      "content_sha256": "97231b9649de7787f809603a692ec4be602caa5489ef8a1ef501497038aec9ca"
     },
     "CPSC_RECALLS": {
       "urls": [
@@ -111,30 +111,43 @@
         "https://echo.epa.gov/resources/echo-data/about-the-data"
       ],
       "http_statuses": [
-        200,
-        200
+        599,
+        599
       ],
-      "reachable": true,
-      "all_urls_reachable": true,
-      "required_markers_present": true,
-      "probe_classification": "PASS",
-      "missing_markers": [],
+      "reachable": false,
+      "all_urls_reachable": false,
+      "required_markers_present": false,
+      "probe_classification": "UNREACHABLE",
+      "missing_markers": [
+        "Data Downloads",
+        "monthly",
+        "compliance",
+        "enforcement"
+      ],
       "attempts": [
         {
           "url": "https://echo.epa.gov/tools/data-downloads",
-          "http_status": 200,
-          "missing_markers": []
+          "http_status": 599,
+          "missing_markers": [
+            "Data Downloads",
+            "monthly",
+            "compliance",
+            "enforcement"
+          ]
         },
         {
           "url": "https://echo.epa.gov/resources/echo-data/about-the-data",
-          "http_status": 200,
+          "http_status": 599,
           "missing_markers": [
-            "Data Downloads"
+            "Data Downloads",
+            "monthly",
+            "compliance",
+            "enforcement"
           ]
         }
       ],
       "clock_contract": "Facility/event dates are not interchangeable with the public ECHO refresh/extraction boundary. Historical PIT must use the documented refresh clock and prevent later refreshes from rewriting the prefix.",
-      "content_sha256": "b969cff3fd06800fe9d7e65c2efb71f899ea7e77950d67905d048ec1f92289e5"
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "USPTO_PATENT": {
       "urls": [
@@ -166,7 +179,7 @@
         }
       ],
       "clock_contract": "Patent issue/publication date is distinct from later bulk-data refreshes. For Q191 the science-publication boundary must be separately proven and same-day ambiguous ordering must be excluded.",
-      "content_sha256": "67b6f8355e2dc9d929cdbdec30e2b83617262aedc5de661f880e16de49357290"
+      "content_sha256": "f9cd7ce9be7a1fb1dad9afb31848a996e952ed018d98479134f75303ae9b0a72"
     },
     "CROSSREF": {
       "urls": [
@@ -188,7 +201,7 @@
         }
       ],
       "clock_contract": "Crossref deposit/publication metadata is not automatically an exact public-dissemination timestamp; historical stage ordering must be proven.",
-      "content_sha256": "8b614c94430adeec399edc427e45ee7fb22b3ac0867f8d11e569e27ab4ee5695"
+      "content_sha256": "64f174d0f841f16dc3738cd907a2725cb28ad3eb19980b8be9a37bbeea452e74"
     },
     "FDA_SHORTAGES": {
       "urls": [
@@ -238,7 +251,7 @@
         }
       ],
       "clock_contract": "Shortage start/resolution dates are distinct from first public observation. Historical daily-list state must be reconstructed without allowing current records to overwrite earlier prefixes.",
-      "content_sha256": "b878a329f1e4ce5b76e35b708dd4f2ae14972cae2402cebc419fd458a6293a34"
+      "content_sha256": "ebfe444de3d73cc756683a1d85a15963172aa9b59db78401fcddd085590be2cd"
     }
   },
   "candidate_results": [
@@ -265,7 +278,7 @@
     },
     {
       "candidate_id": "Q190",
-      "status": "SOURCE_PROBES_PASSED",
+      "status": "BLOCKED_SOURCE_PROBE",
       "source_ids": [
         "EPA_ECHO"
       ]
@@ -311,5 +324,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "b7bb5031cf63fc4c2d0102b6cce181dfe60bc6d6d7cc554b66b2e471eee79363"
+  "receipt_fingerprint": "32d3e91f2769ca2e21212a9b81f3e7d5e51e35c436798fb1eebbef1a0774d4bc"
 }
