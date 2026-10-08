@@ -105,6 +105,9 @@ def make_effective_contract(work: Path) -> tuple[Path, str, dict]:
 def freeze(output_root: Path, receipt_path: Path) -> dict:
     with tempfile.TemporaryDirectory(prefix="q218-repl-contract-") as td:
         effective_path, effective_sha, effective=make_effective_contract(Path(td))
+        output_root.mkdir(parents=True, exist_ok=True)
+        committed_effective = output_root / "q218_effective_replication_contract.json"
+        committed_effective.write_bytes(effective_path.read_bytes())
         old_contract, old_trial_id = base_freeze.CONTRACT, base_freeze.TRIAL_ID
         try:
             base_freeze.CONTRACT=effective_path
