@@ -116,10 +116,18 @@ def acceptance_datetime(header: bytes, expected: str) -> str:
 
 def next_xnys_session(closure: datetime, start: str, end: str) -> str:
     cal = xcals.get_calendar("XNYS")
-    left = pd.Timestamp(start).tz_localize("UTC")
-    right = pd.Timestamp(end).tz_localize("UTC") + pd.Timedelta(days=10)
-    schedule = cal.schedule.loc[left:right]
-    eligible = schedule[schedule["market_open"] > pd.Timestamp(closure)]
+    # exchange_calendars exposes a timezone-naive session index while
+    # market_open is UTC-aware. Slice by session-date strings, then compare
+    # the actual UTC market-open timestamp to the SEC acceptance closure.
+    left = pd.Timestamp(start)
+    right = pd.Timestamp(end) + pd.Timedelta(days=10)
+    schedule = cal.schedule.loc[str(left.date()):str(right.date())]
+    closure_ts = pd.Timestamp(closure)
+    if closure_ts.tzinfo is None:
+        closure_ts = closure_ts.tz_localize("UTC")
+    else:
+        closure_ts = closure_ts.tz_convert("UTC")
+    eligible = schedule[schedule["market_open"] > closure_ts]
     if eligible.empty:
         raise RuntimeError(f"No XNYS session after closure {closure.isoformat()}")
     return eligible.index[0].date().isoformat()
