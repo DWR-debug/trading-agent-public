@@ -238,6 +238,12 @@ jobs:
           print("Q218_REPLICATION_EXACT_BUNDLE=PASS")
           PY
 
+      - name: Require explicit authorization for exact replication trial
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q218_independent_replication_authorization_guard.py
+
       - name: Execute fixed independent replication
         shell: bash
         run: |
