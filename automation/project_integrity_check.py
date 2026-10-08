@@ -44,6 +44,7 @@ ACTIVE_WORKFLOWS = {
     "q218-performance-authorization-once.yml",
     "q218-performance-prep.yml",
     "q218-performance-once.yml",
+    "q218-independent-replication-once.yml",
     "research-completion-monitor-a.yml",
     "research-completion-monitor-b.yml",
     "research-completion-relay.yml",
