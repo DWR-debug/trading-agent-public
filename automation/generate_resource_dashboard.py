@@ -658,6 +658,7 @@ def candidate_pipeline(
 ) -> list[dict[str, Any]]:
     runs = runs or []
     progress = candidate_progress_snapshot(runs)
+    q218_receipts = q218_receipt_state()
     result = []
     active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in FOCUS_CANDIDATES}
     for item in work:
