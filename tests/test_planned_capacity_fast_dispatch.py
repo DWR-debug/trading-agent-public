@@ -123,8 +123,8 @@ def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_det
     assert 0 <= q104["current_milestone_progress_percent"] <= 100
     assert q104["total_milestones"] == 9
     assert 0 <= q104["overall_progress_percent"] <= 100
-    assert q218["current_milestone"] == "Independent Architecture PIT"
-    assert any(m["label"] == "Independent Architecture PIT" and m["status"] == "open" for m in q218["milestones"])
+    assert q218["current_milestone"] == "Preregistration + authorization reconcile"
+    assert any(m["label"] == "Preregistration + authorization reconcile" and m["status"] == "completed" for m in q218["milestones"])
 
 
 def test_dashboard_q218_completed_source_event_pair_exposes_independent_arch_queue(monkeypatch):
