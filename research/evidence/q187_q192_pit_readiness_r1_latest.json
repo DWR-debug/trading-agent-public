@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-04-Q187-Q192-PIT-READINESS-R1",
   "status": "PIT_READINESS_COMPILATION_COMPLETED",
-  "source_receipt_fingerprint": "b7bb5031cf63fc4c2d0102b6cce181dfe60bc6d6d7cc554b66b2e471eee79363",
+  "source_receipt_fingerprint": "32d3e91f2769ca2e21212a9b81f3e7d5e51e35c436798fb1eebbef1a0774d4bc",
   "candidate_results": [
     {
       "candidate_id": "Q187",
@@ -63,8 +63,8 @@
     },
     {
       "candidate_id": "Q190",
-      "source_status": "SOURCE_PROBES_PASSED",
-      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_HISTORICAL_PROOF",
+      "source_status": "BLOCKED_SOURCE_PROBE",
+      "pit_status": "PIT_READINESS_BLOCKED_BY_SOURCE",
       "required_proofs": {
         "historical_echo_refresh_archive_reconstructed": false,
         "public_refresh_boundary_proven": false,
@@ -73,7 +73,7 @@
         "revision_history_immutable_prefix_proven": false,
         "same_day_use_proven": false
       },
-      "next_gate": "Run fixed historical archive/clock/mapping/revision census; no performance access",
+      "next_gate": "Repair/source-probe gate before PIT work",
       "performance_authorized": false,
       "selection_allowed": false,
       "ranking_allowed": false,
@@ -138,5 +138,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "c5a37fcb505a26356ed7b3dac43c8434799a8572f405babdf387f6cda89b4020"
+  "receipt_fingerprint": "35b5964c93197c38856bdef22cf6e14ccb6628c00fc5ce14ce2632fe23dc3f2e"
 }
