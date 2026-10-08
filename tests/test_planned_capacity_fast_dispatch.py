@@ -1136,3 +1136,35 @@ def test_q218_multi_resource_plan_requires_every_lease_to_be_routable():
     plan = dashboard.planned_capacity_plan(resources, [], [{"code":"Q218"}], {}, {})
     rows=[p for r in plan for p in r.get("planned_assignments",[]) if p.get("plan_id")=="Q218-INDEPENDENT-REPLICATION"]
     assert rows == []
+
+
+def test_fast_dispatch_requires_all_multi_resource_leases_to_be_routable():
+    import automation.planned_capacity_fast_dispatch as dispatcher
+    workflow = ".github/workflows/q218-independent-replication-once.yml"
+    snapshot = {
+        "work_assignments": [],
+        "resources": [
+            {"name":"Windows self-hosted B","type":"physical","routable":True,"capacity_state":"available","research_capacity_slots":1,"research_slots_in_use":0,"research_slots_free":1},
+            {"name":"Windows self-hosted C","type":"physical","routable":False,"capacity_state":"unknown","research_capacity_slots":1,"research_slots_in_use":0,"research_slots_free":0},
+            {"name":"GitHub-hosted Ubuntu x64","type":"cloud","routable":True,"capacity_state":"operating","research_capacity_slots":2,"research_slots_in_use":1,"research_slots_free":1},
+            {"name":"GitHub-hosted ARM64","type":"cloud","routable":True,"capacity_state":"operating","research_capacity_slots":2,"research_slots_in_use":1,"research_slots_free":1},
+        ],
+        "planned_capacity": [{
+            "resource":"Windows self-hosted B",
+            "current_assignments":0,
+            "research_capacity_slots":1,
+            "research_slots_free":1,
+            "planned_assignments":[{
+                "plan_id":"Q218-INDEPENDENT-REPLICATION",
+                "candidate":"Q218",
+                "scheduled":True,
+                "dispatchable":True,
+                "allow_parallel_with_candidate":True,
+                "execution_workflow":workflow,
+                "resource_leases":["Windows self-hosted B","Windows self-hosted C","GitHub-hosted Ubuntu x64","GitHub-hosted ARM64"],
+            }],
+        }],
+    }
+    plan=dispatcher.dispatch_candidates(snapshot,[],max_dispatches=4)
+    assert plan["dispatches"] == []
+    assert any(d["decision"]=="SKIP_MULTI_RESOURCE_LEASE_NOT_SIMULTANEOUSLY_ROUTABLE" for d in plan["decisions"])
