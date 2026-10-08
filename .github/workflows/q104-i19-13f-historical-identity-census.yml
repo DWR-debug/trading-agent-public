@@ -23,12 +23,12 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 3
     outputs:
-      proceed: \${{ steps.guard.outputs.proceed }}
+      proceed: ${{ steps.guard.outputs.proceed }}
     steps:
       - name: Suppress duplicate push-triggered census
         id: guard
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
@@ -53,7 +53,8 @@ jobs:
           echo "Q104_CENSUS_DISPATCH=ELIGIBLE"
   source_snapshot:
     needs: [recovery_guard]
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [recovery_guard]
+    if: github.repository == 'DWR-debug/trading-agent-public' && needs.recovery_guard.outputs.proceed == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
