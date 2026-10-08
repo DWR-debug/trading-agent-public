@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-08T14:03:02.108807Z",
+  "observed_at_utc": "2026-10-08T23:34:01.243147Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 13.219,
-  "stdout": "\n\n# Adversarial Source/PIT Readiness Review — Q202-Q204 Information-Timing + Q205 NLRB Channel\n\n**Task:** AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT\n**Standard applied:** Grok Q194-Q201 challenge standard, extended to Q202-Q204 information-timing family and the quarantined Q205 NLRB labor-representation channel.\n**Status of this material:** Worker material only. Not scientific evidence. No performance ranking, no gate changes, no authorization.\n\n---\n\n## 1. Framework-level attacks (applies to all candidates)\n\n| Attack vector | Finding | Severity |\n|---|---|---|\n| **Spec-file version drift** | `automation/orthogonal_pit_next_gate.py` imports `research/candidates/orthogonal_candidate_specs_2026-10-05.json`, but the only candidate-spec file present in context is `orthogonal_candidate_specs_2026-10-04.json`. If the 10-05 file exists and diverges, the compiler is running against a spec not reviewed here. | High |\n| **Receipt-file existence vs. durability** | The `source_readiness_snapshot_guard.py` RECEIPTS map lists `q202_q204_information_timing_feasibility_latest.json` and `q229_q230_source_feasibility_latest.json`, but **no Q205 receipt file exists anywhere** in the map. Q205 is therefore not merely \"not durable\" — it has no source-feasibility receipt at all. | High |\n| **Grok review artifact dependency** | `grok_q194_q201_adversarial_review_2026-10-04.json` status is `REVIEW_COMPLETE_ON_EMBEDDED_ARTIFACTS` with core finding \"current endpoint/API reachability and current hashes are not durable historical PIT proof.\" The `required_his...` field is truncated in context. The review's own required-artifact list must be reproduced and checked against actual receipts before its conclusions can be carried forward. | Medium |\n| **Guard classification logic** | `classify()` returns `PROVISIONAL_LIVE_PROBE_ONLY` when no durable key is present. This is correct, but the guard does not currently flag the *absence of a receipt file itself* as a distinct state — a missing receipt is currently reported as `MISSING_RECEIPT`, which is good, but Q205's absence needs to be surfaced as a separate quarantine state, not silently dropped. | Medium |\n\n---\n\n## 2. Q202-Q204 Information-Timing Family — adversarial attack\n\nThe family is described in scope as covering \"information absence, financing transmission, and public-information latency.\" All three are currently gated `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`.\n\n### 2.1 Information absence is a counterfactual, not an event\n- **Attack:** \"Absence of an expected filing/update\" is defined relative to an expectation model, not a public observation. The decision boundary (\"if only a date is available, use next regular trading-session boundary and do not infer an intraday clock\") is a known leakage vector: the *expectation* of when information should arrive is itself information that may be priced before the absence is observable.\n- **Same-day leakage risk:** If the absence is detected on the same calendar day as the missed deadline, and the market reacts intraday, using a next-session boundary may still embed same-day leakage if the deadline itself was publicly known earlier that day.\n- **Minimal deterministic falsifier:** Shift the \"expected arrival\" expectation model forward by 1–5 sessions and re-run; if the signal survives, the clock is not anchored to a public observation boundary.\n- **Exact missing artifact:** A dated, immutable snapshot of the *expectation model* (the rule that defines what should have been filed and when) as of a pre-event vintage, plus the public deadline/announcement record it references.\n\n### 2.2 Financing transmission channel\n- **Attack:** The mechanism claims information absence → financing conditions → price. This is a two-hop transmission. The first hop (absence → financing) is not directly observable in price data; it must be proxied (e.g., credit spreads, funding rates, bond issuance). Each proxy has its own clock and its own revision history.\n- **Confounding:** Financing conditions move for macro reasons unrelated to any single issuer's filing absence. Without a frozen pre-event exposure mapping, the transmission channel cannot be isolated.\n- **Minimal deterministic falsifier:** Shuffle issuer-to-financing-proxy assignments within the frozen universe; if the signal persists, the transmission channel is not issuer-specific.\n- **Exact missing artifact:** Frozen pre-event issuer-to-financing-proxy mapping, with the proxy's own historical snapshot bound by vintage.\n\n### 2.3 Public-information latency\n- **Attack:** Latency is measured as a difference between two timestamps (occurrence vs. observation). Both timestamps must come from immutable historical sources. If either is reconstructed from a current endpoint, the latency estimate is contaminated by current-endpoint drift.\n- **Retrospective source-readiness change:** A source that is reachable today may have been unreachable, rate-limited, or structured differently at historical dates. Current reachability is not evidence of historical reachability.\n- **Minimal deterministic falsifier:** Replace each timestamp source with a different vintage (e.g., an archived copy from 6 months prior) and require the latency distribution to be stable; if it shifts materially, the clock is not durable.\n- **Exact missing artifact:** Immutable dated snapshots of both the occurrence record and the observation record, each with a `snapshot_sha256` or `vintage_sha256` binding.\n\n---\n\n## 3. Q205 NLRB Labor-Representation Certification — adversarial attack\n\nQ205 is **discovery-only, not source/PIT validated**, and has no receipt in the readiness map. This is the highest-risk item on the frontier.\n\n### 3.1 No source-feasibility receipt exists\n- **Attack:** The next-gate compiler has no entry for Q205 in its RECEIPTS map, and the snapshot guard has no path for it. There is no mechanism to even classify Q205 as provisional. A candidate with no receipt cannot be gated, which is a structural gap.\n- **Minimal deterministic falsifier:** Add Q205 to both the compiler's RECEIPTS map and the guard's RECEIPTS map; if either tool errors or silently skips, the pipeline is not fail-closed for new channels.\n- **Exact missing artifact:** A Q205 source-feasibility receipt (`q205_nlrb_source_feasibility_*.json`) with a declared information source class and mechanism lineage per the anti-convergence rule.\n\n### 3.2 NLRB clock ambiguity\n- **Attack:** NLRB labor-representation activity has at least three distinct dates per case: election date, certification/decision date, and public announcement/publishing date. The \"public observation boundary\" is not a single well-defined timestamp. Using the election date as the event clock would be a classic same-day/occurrence-time leakage.\n- **Revision lineage:** NLRB decisions can be appealed, remanded, or set aside. A certification that later gets vacated creates a correction lineage that must be frozen pre-event; otherwise a post-hoc \"clean\" view is constructed.\n- **Minimal deterministic falsifier:** Replace the public-observation timestamp with the election date and require the candidate to show the inference changes; otherwise reject the clock. Additionally, re-run excluding cases with any later appeal/remand.\n- **Exact missing artifact:** Immutable dated snapshot of the NLRB case record at a pre-event vintage, with all three dates (election, decision, announcement) recorded and the public-observation boundary explicitly justified.\n\n### 3.3 Entity/exposure mapping\n- **Attack:** Labor-representation exposure is at the *employer* level, but the trading universe is at the *issuer/symbol* level. Multi-location employers, subsidiaries, and holding-company structures create mapping ambiguity. A mapping built today may not hold for historical entities (name changes, mergers, ticker changes).\n- **Frozen pre-event mapping requirement:** The mapping must be constructed from pre-event entity data and",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 12.562,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791468182-rYlTyaty8RN1zBmYrVUR",
-  "usage": {
-    "prompt_tokens": 5657,
-    "completion_tokens": 3200,
-    "total_tokens": 8857,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1463,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
