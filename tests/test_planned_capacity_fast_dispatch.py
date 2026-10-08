@@ -1062,3 +1062,77 @@ def test_q218_replication_contract_and_executor_are_fresh_symbol_disjoint():
     assert "q218_deterministic_performance_executor" not in executor
     assert "q218_sec_multichannel_source_gate" not in executor
     assert "q218_sec_event_pair_lineage_gate" not in executor
+
+
+def test_fast_dispatch_fail_closed_for_unverified_physical_runner():
+    import automation.planned_capacity_fast_dispatch as dispatcher
+    snapshot = {
+        "work_assignments": [],
+        "resources": [{
+            "name": "Windows self-hosted B",
+            "type": "physical",
+            "capacity_state": "unknown",
+            "routable": False,
+            "research_capacity_slots": 1,
+            "research_slots_in_use": 0,
+            "research_slots_free": 0,
+        }],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted B",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-INDEPENDENT-REPLICATION",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "allow_parallel_with_candidate": True,
+                "execution_workflow": ".github/workflows/q218-independent-replication-once.yml",
+                "resource_leases": [
+                    "Windows self-hosted B",
+                    "Windows self-hosted C",
+                    "GitHub-hosted Ubuntu x64",
+                    "GitHub-hosted ARM64",
+                ],
+            }],
+        }],
+    }
+    plan = dispatcher.dispatch_candidates(snapshot, [], max_dispatches=4)
+    assert plan["dispatches"] == []
+
+
+def test_dashboard_physical_unverified_has_zero_routable_free():
+    from automation import generate_resource_dashboard as dashboard
+    configured = [{
+        "name": "Windows self-hosted B",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "LHT-N133732-2",
+    }]
+    result = dashboard.enrich_resources(configured, [], [])
+    row = result[0]
+    assert row["capacity_state"] == "unknown"
+    assert row["routable"] is False
+    assert row["research_slots_free_nominal"] == 1
+    assert row["research_slots_free"] == 0
+    assert row["routable_slots_free"] == 0
+
+
+def test_capacity_contract_requires_live_runner_verification_for_physical_slots():
+    contract = json.loads((ROOT / "research/governance/persistent_research_acceleration_contract.json").read_text(encoding="utf-8"))
+    windows = contract["parallelism_policy"]["self_hosted_windows"]
+    assert windows["availability_policy"] == "LIVE_VERIFIED_ONLINE_REQUIRED_FOR_AUTOMATIC_DISPATCH"
+    assert "UNVERIFIED physical slots have zero routable free capacity." in windows["rules"][-2]
+
+
+def test_q218_multi_resource_plan_requires_every_lease_to_be_routable():
+    from automation import generate_resource_dashboard as dashboard
+    resources = [
+        {"name":"Windows self-hosted B","type":"physical","routable":False,"capacity_state":"unknown","research_capacity_slots":1,"current_assignments":0,"research_slots_free":0},
+        {"name":"Windows self-hosted C","type":"physical","routable":True,"capacity_state":"available","research_capacity_slots":1,"current_assignments":0,"research_slots_free":1},
+        {"name":"GitHub-hosted Ubuntu x64","type":"cloud","routable":True,"capacity_state":"available","research_capacity_slots":2,"current_assignments":0,"research_slots_free":1},
+        {"name":"GitHub-hosted ARM64","type":"cloud","routable":True,"capacity_state":"available","research_capacity_slots":2,"current_assignments":0,"research_slots_free":1},
+    ]
+    plan = dashboard.planned_capacity_plan(resources, [], [{"code":"Q218"}], {}, {})
+    rows=[p for r in plan for p in r.get("planned_assignments",[]) if p.get("plan_id")=="Q218-INDEPENDENT-REPLICATION"]
+    assert rows == []
