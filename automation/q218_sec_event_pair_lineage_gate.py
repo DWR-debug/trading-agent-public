@@ -100,7 +100,8 @@ def _nearest_prior(
 
 def _extract_parent_filing_date(text: str) -> str | None:
     match = re.search(
-        r"Initial Form 8-K.*?filed with the Securities and Exchange Commission "
+        r"(?:Initial Form 8-K|Current Report on Form 8-K).*?"
+        r"filed with the Securities and Exchange Commission "
         r"on ([A-Z][a-z]+\s+\d{1,2},\s+\d{4})",
         text,
         flags=re.I | re.S,
