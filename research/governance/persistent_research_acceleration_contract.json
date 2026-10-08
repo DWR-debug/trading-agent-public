@@ -293,7 +293,8 @@
         "ubuntu_arm64"
       ],
       "multi_resource_exclusive_workflows": [
-        ".github/workflows/q104-i19-13f-historical-identity-census.yml"
+        ".github/workflows/q104-i19-13f-historical-identity-census.yml",
+        ".github/workflows/q218-independent-replication-once.yml"
       ],
       "rules": [
         "A running Q218/Q219/Q220/Q221 slot job blocks only the same candidate, not the entire slot workflow.",
