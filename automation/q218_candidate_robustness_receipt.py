@@ -36,9 +36,9 @@ def build() -> dict:
             "event_pair_rules": contract["event_pair_rules"],
         }, sort_keys=True),
         "sources": [
-            "https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets",
             "https://data.sec.gov/submissions/",
             "https://www.sec.gov/Archives/edgar/data/",
+            "https://query1.finance.yahoo.com/v8/finance/chart/",
         ],
         "next_gate": "Q218 frozen performance preparation",
     }
