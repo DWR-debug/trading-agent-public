@@ -1,22 +1,23 @@
 {
   "schema_version": "1.0",
-  "record_type": "q218_performance_authorization_reconcile",
-  "authorization_id": "AUTH-Q218-2026-10-08-RECONCILE-01",
+  "record_type": "q218_explicit_one_shot_performance_authorization",
+  "authorization_id": "AUTH-Q218-2026-10-08-ONE-SHOT-01",
+  "candidate_id": "Q218",
   "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
-  "authorized": false,
-  "performance_execution_authorized": false,
+  "authorized": true,
+  "performance_execution_authorized": true,
   "one_shot": true,
-  "status": "RECONCILED_NOT_AUTHORIZED",
-  "preregistration_fingerprint": "e88ef581ee8cce787db76f280b1ed6cc38be3d51ba3e4abf2003ba4169ceb27a",
-  "upstream_receipts": {
-    "source_gate_receipt_fingerprint": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
-    "event_pair_gate_receipt_fingerprint": "8fe8f303e2a63a5e59100be795ef8adc08f492a52a6ed32f85cfb802a74f35bc",
-    "independent_pit_receipt_fingerprint": "221ca765cbc4a4318b38b95c8311342516222572069e95e0e822800e3035e5a4"
-  },
+  "authorized_at_utc": "2026-10-08T18:36:58.130845+00:00",
   "authorization_basis": {
-    "source_gate_receipt": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
-    "event_pair_gate_receipt": "8fe8f303e2a63a5e59100be795ef8adc08f492a52a6ed32f85cfb802a74f35bc",
-    "independent_pit_receipt": "221ca765cbc4a4318b38b95c8311342516222572069e95e0e822800e3035e5a4"
+    "requested_by_user": true,
+    "master_exact_ci_run_id": 37825523770,
+    "g4_reconcile_receipt_fingerprint": "e74b28d3743eb643fccb38c0629b62d374fcbaf9a82a6c09c56bebfa81e6c976",
+    "preregistration_fingerprint": "e88ef581ee8cce787db76f280b1ed6cc38be3d51ba3e4abf2003ba4169ceb27a"
+  },
+  "source_receipts": {
+    "source_gate": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
+    "event_pair_gate": "8fe8f303e2a63a5e59100be795ef8adc08f492a52a6ed32f85cfb802a74f35bc",
+    "independent_pit": "221ca765cbc4a4318b38b95c8311342516222572069e95e0e822800e3035e5a4"
   },
   "selection_used": false,
   "holdout_used_for_selection": false,
@@ -27,11 +28,14 @@
   "variant_search": false,
   "family_ranking": false,
   "promotion_decision": false,
+  "execution_trigger_created": false,
+  "execution_workflow": null,
+  "execution_readiness_note": "Authorization is valid for one fixed Q218 performance run. The deterministic network-free executor, frozen input bundle and pre-performance robustness receipt are prerequisites; no execution trigger is created by authorization itself.",
   "safety": {
     "paper_only": true,
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "authorization_reconcile_fingerprint": "a96cb2264a699fa2887a8690fabfa1914688da99c141e3fb1aa0da2248116cc9"
+  "authorization_fingerprint": "616f498abe8743dfcbe8a0373a2788962ca13df08051d953906d2fe6f99231e4"
 }
