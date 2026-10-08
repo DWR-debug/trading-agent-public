@@ -1,0 +1,61 @@
+name: Q104 I19 Independent PIT Reproduction
+
+on:
+  workflow_run:
+    workflows: ["Q104 I19 Historical PIT Compilation"]
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: q104-i19-independent-pit-reproduction
+  cancel-in-progress: true
+
+jobs:
+  reproduce:
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'master'))
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install reproduction dependency
+        run: python3 -m pip install pytest exchange-calendars
+      - name: Run independent reproduction
+        run: |
+          set -euo pipefail
+          python3 automation/q104_i19_independent_pit_reproduction.py             --output research/evidence/q104_i19_independent_pit_reproduction_latest.json
+      - name: Upload receipt
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-independent-pit-reproduction-${{ github.run_id }}
+          path: research/evidence/q104_i19_independent_pit_reproduction_latest.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: publish Q104 I19 independent PIT reproduction receipt"
+        run: |
+          set -euo pipefail
+          base_sha="$(git rev-parse HEAD)"
+          python3 automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$base_sha"             --file research/evidence/q104_i19_independent_pit_reproduction_latest.json=research/evidence/q104_i19_independent_pit_reproduction_latest.json
+      - name: Wake next gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master
+          gh workflow run resource-dashboard-update.yml --repo "$GITHUB_REPOSITORY" --ref master
