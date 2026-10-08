@@ -418,6 +418,12 @@ def resource_capacity_for_plan(snapshot: dict[str, Any], row: dict[str, Any]) ->
     reported_free = row.get("research_slots_free")
     if reported_free is None:
         reported_free = resource_meta.get("research_slots_free")
+    resource_type = str(row.get("type") or resource_meta.get("type") or "")
+    routable = row.get("routable")
+    if routable is None:
+        routable = resource_meta.get("routable")
+    if resource_type == "physical" and routable is not True:
+        return current, slots, False
     resource_free = int(reported_free) > 0 if reported_free is not None else current < slots
     return current, slots, resource_free
 
