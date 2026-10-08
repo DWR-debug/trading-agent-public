@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `42444e29b1d0c9c65bcfa1e91560ce822b7265c5`
+**Current operational snapshot:** `d8fe324c3eb068bb89811c2297530f47da7fac10`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-08T13:44:59.010149+00:00`
+**Generated (UTC):** `2026-10-08T13:59:19.317320+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -130,8 +130,8 @@
 - Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
 ### Q197–Q201 Orthogonal Information Frontier
 
-- Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `57b1e647ce7d3e6cad44e5a095383f846fa17bb84854f9ca06a69af4431adeb2`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.
-- Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `57b1e647ce7d3e6cad44e5a095383f846fa17bb84854f9ca06a69af4431adeb2`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.
+- Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `50870db4e0753146e0e3cec914e59e8a523bf98e293f2a8eb7c0f7190562bc5f`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.
+- Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `50870db4e0753146e0e3cec914e59e8a523bf98e293f2a8eb7c0f7190562bc5f`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.
 - Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `b0629baa8b9a9d6fc55f26131a200c919d80cad634fbf99a75856b05dc5c0682`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.
 - Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `b0629baa8b9a9d6fc55f26131a200c919d80cad634fbf99a75856b05dc5c0682`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.
 - Q198 historical PIT clock census: **Q198_PIT_CLOCK_CENSUS_COMPLETED**; pages parsed **4** / **4**, with fixed dates **2020/01/10, 2020/04/22, 2020/12/16, 2026/10/02**.
