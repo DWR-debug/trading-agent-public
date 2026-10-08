@@ -78,7 +78,18 @@ def build():
         cutoff=utc(cut); accepted=[f for f in reversed(filings) if str(f.get("symbol") or "").upper()==sym and str(f.get("form") or "").upper() in {"10-K","10-Q"} and utc(str(f["acceptance_datetime"]))<=cutoff]; accepted.sort(key=lambda f:(utc(str(f["acceptance_datetime"])),str(f["accession"])))
         shuffled.append({"symbol":sym,"status":"COMPLETE","filing_state":filing_state(accepted[-1]),"institutional_state":institutional(list(reversed(ts)),sym,cutoff),"decision_cutoff":cut})
     if fp(out)!=fp(shuffled): raise RuntimeError("Q104_I19_REPRO_ORDER_INVARIANCE_FAILED")
-    return {"schema_version":"1.0","record_type":"q104_i19_independent_pit_reproduction","candidate_id":"Q104:I19","status":"Q104_I19_INDEPENDENT_PIT_REPRODUCED","generated_at_utc":dt.datetime.now(dt.timezone.utc).isoformat(),"upstream_receipts":{"compiler_receipt_fingerprint":r.get("receipt_fingerprint"),"bundle_fingerprint":b.get("bundle_fingerprint"),"census_receipt_fingerprint":r.get("census_receipt_fingerprint")},"joined_state_count":len(out),"reproduced_state_digest":fp(out),"invariance_checks":{"input_order":True,"future_observation_exclusion":False},"next_gate":"frozen preregistration + authorization reconcile","performance_authorized":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False,"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
+    # Explicit PIT boundary test: for each decision cutoff, observations accepted
+    # after that cutoff must be irrelevant to the reproduced state.
+    for sym,cut in targets:
+        cutoff=utc(cut)
+        bounded_f=[f for f in filings if utc(str(f["acceptance_datetime"]))<=cutoff]
+        bounded_t=[t for t in ts if t.get("acceptance_datetime") and utc(str(t["acceptance_datetime"]))<=cutoff]
+        accepted=[f for f in bounded_f if str(f.get("symbol") or "").upper()==sym and str(f.get("form") or "").upper() in {"10-K","10-Q"}]
+        accepted.sort(key=lambda f:(utc(str(f["acceptance_datetime"])),str(f["accession"])))
+        bounded_state={"symbol":sym,"status":"COMPLETE","filing_state":filing_state(accepted[-1]),"institutional_state":institutional(bounded_t,sym,cut),"decision_cutoff":cut}
+        original=next(x for x in out if x["symbol"]==sym and x["decision_cutoff"]==cut)
+        if canon(original)!=canon(bounded_state): raise RuntimeError("Q104_I19_REPRO_FUTURE_OBSERVATION_INVARIANCE_FAILED")
+    return {"schema_version":"1.0","record_type":"q104_i19_independent_pit_reproduction","candidate_id":"Q104:I19","status":"Q104_I19_INDEPENDENT_PIT_REPRODUCED","generated_at_utc":dt.datetime.now(dt.timezone.utc).isoformat(),"upstream_receipts":{"compiler_receipt_fingerprint":r.get("receipt_fingerprint"),"bundle_fingerprint":b.get("bundle_fingerprint"),"census_receipt_fingerprint":r.get("census_receipt_fingerprint")},"joined_state_count":len(out),"reproduced_state_digest":fp(out),"invariance_checks":{"input_order":True,"future_observation_exclusion":True},"next_gate":"frozen preregistration + authorization reconcile","performance_authorized":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False,"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
 def main()->int:
     ap=argparse.ArgumentParser(); ap.add_argument("--output",type=Path,default=OUTPUT); a=ap.parse_args(); result=build(); a.output.parent.mkdir(parents=True,exist_ok=True); result["receipt_fingerprint"]=fp(result); a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8"); print(json.dumps(result,sort_keys=True)); return 0
 if __name__=="__main__": raise SystemExit(main())
