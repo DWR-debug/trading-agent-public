@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-08T09:20:27.555585+00:00",
+    "generated_at_utc": "2026-10-08T09:21:48.403542+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "9a54478c0f6f66f80c32c5e1eea709221fc43fc9"
+    "source_master_sha": "4ab74bf2329a4bf71b05929832b81084a60b40dd"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-08T09:20:27.555585+00:00",
+  "generated_at_utc": "2026-10-08T09:21:48.403542+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4524,14 +4524,6 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "fix/focused-gate-cancel-cooldown-20261008",
-        "number": 1217,
-        "title": "FIX: prevent focused-gate cancel rerun churn",
-        "updatedAt": "2026-10-08T09:19:55Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1217"
-      },
-      {
-        "baseRefName": "master",
         "headRefName": "fix/q104-i19-one-bounded-retry-current-master-v2-20261007",
         "number": 1207,
         "title": "FIX: one bounded automatic retry for Q104 census on current master",
@@ -4605,6 +4597,21 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: prevent focused-gate cancel rerun churn",
+        "sha": "4ab74bf2329a4bf71b05929832b81084a60b40dd",
+        "timestamp": "2026-10-08T11:21:36+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "5d7533ebdad85d8e2d3b6a601d34744371aa0f23",
+        "timestamp": "2026-10-08T09:21:22Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f64497531c459df1c9f82528507a75350dca97b4",
+        "timestamp": "2026-10-08T09:20:30Z"
+      },
+      {
         "message": "PERF: parallelize Q104 historical SEC archive processing",
         "sha": "9a54478c0f6f66f80c32c5e1eea709221fc43fc9",
         "timestamp": "2026-10-08T11:20:12+02:00"
@@ -4628,21 +4635,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "436a4a584a74c075137eceda9aa07ab5d064398e",
         "timestamp": "2026-10-08T09:14:57Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "24e9d344ac21bdba25d56c21b8dd7d1a541c46aa",
-        "timestamp": "2026-10-08T09:12:40Z"
-      },
-      {
-        "message": "FIX: focused-wave CI and Q218 lineage robustness",
-        "sha": "ea94e742ddab5edaf0d7a9e94e70f402ac34cbfc",
-        "timestamp": "2026-10-08T11:12:23+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "13101ec7479d46167e4fcfe1b936762f9688a774",
-        "timestamp": "2026-10-08T08:31:23Z"
       }
     ]
   },
@@ -4740,7 +4732,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9a54478c0f6f66f80c32c5e1eea709221fc43fc9",
+  "source_master_sha": "4ab74bf2329a4bf71b05929832b81084a60b40dd",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4854,6 +4846,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37755937412"
+    "run_id": "37756098130"
   }
 }
