@@ -670,7 +670,11 @@ def candidate_pipeline(
 
     state_by_candidate = {
         "Q104:I19": "FORMAL READINESS · HISTORICAL 13F CENSUS",
-        "Q218": "FRONTIER DISCOVERY · INDEPENDENT PIT REPRODUCED",
+        "Q218": (
+            "FRONTIER DISCOVERY · PREREGISTRATION + AUTHORIZATION RECONCILE"
+            if q218_receipts["independent_complete"]
+            else "FRONTIER DISCOVERY · INDEPENDENT ARCHITECTURE PIT"
+        ),
     }
     for candidate in FOCUS_CANDIDATES:
         p = progress["candidates"][candidate]
