@@ -589,8 +589,26 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                             "mode": "FILL_FREE_READY_CAPACITY",
                         })
                 continue
-            failures = (failure_counts.get(scope, 0) if scope else 0) if not focus_wave else 0
-            if failures >= 2:
+            failures = failure_counts.get(scope, 0) if scope else 0
+            if focus_wave:
+                # Focused Q218 gates are scientific blockers, not ordinary
+                # Top-4 slot work. Permit exactly one technical retry, then
+                # stop dispatching until the implementation is repaired.
+                if failures >= 2:
+                    decisions.append({
+                        "plan_id": item.get("plan_id"),
+                        "decision": "SKIP_FOCUSED_GATE_RETRY_EXHAUSTED",
+                        "gate": gate,
+                        "technical_failures": failures,
+                    })
+                    continue
+                if failures == 1:
+                    decisions.append({
+                        "plan_id": item.get("plan_id"),
+                        "decision": "FOCUSED_GATE_TECHNICAL_RETRY_PERMITTED",
+                        "gate": gate,
+                    })
+            elif failures >= 2:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_RETRY_EXHAUSTED"})
                 fallback = top4_slot_fallback(
                     resource,

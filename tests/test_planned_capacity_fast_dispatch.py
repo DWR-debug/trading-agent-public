@@ -709,6 +709,51 @@ def test_fast_dispatch_loads_paginated_top4_slot_history_for_retry_circuit_break
 
 
 
+
+def test_q218_focused_gate_allows_one_technical_retry_then_stops():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted C",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-EVENT-PAIR",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "allow_parallel_with_candidate": True,
+                "execution_workflow": workflow,
+                "execution_workflow_inputs": {"focus_wave": True, "gate": "event_pair"},
+            }],
+        }],
+    }
+
+    one_failure = [{
+        "status": "completed",
+        "conclusion": "failure",
+        "name": "Top-4 Candidate Slot Research",
+        "display_title": "Top-4 Slot windows Q218 event_pair",
+        "run_name": "Top-4 Slot windows Q218 event_pair",
+    }]
+    retry = dispatch_candidates(snapshot, one_failure, max_dispatches=4)
+    assert [x["candidate"] for x in retry["dispatches"]] == ["Q218"]
+    assert any(d["decision"] == "FOCUSED_GATE_TECHNICAL_RETRY_PERMITTED" for d in retry["decisions"])
+
+    two_failures = one_failure + [{
+        "status": "completed",
+        "conclusion": "failure",
+        "name": "Top-4 Candidate Slot Research",
+        "display_title": "Top-4 Slot windows Q218 event_pair",
+        "run_name": "Top-4 Slot windows Q218 event_pair",
+    }]
+    stopped = dispatch_candidates(snapshot, two_failures, max_dispatches=4)
+    assert stopped["dispatches"] == []
+    assert any(d["decision"] == "SKIP_FOCUSED_GATE_RETRY_EXHAUSTED" for d in stopped["decisions"])
+
 def test_cancelled_q218_focus_gate_has_short_dispatch_cooldown():
     from datetime import datetime, timezone
     from automation import planned_capacity_fast_dispatch as dispatcher
