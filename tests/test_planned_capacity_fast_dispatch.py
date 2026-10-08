@@ -29,6 +29,46 @@ def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backsto
 
 
 
+def test_q218_replication_retry_budget_resets_on_new_master(monkeypatch):
+    import automation.planned_capacity_fast_dispatch as dispatcher
+
+    snapshot = {
+        "master_sha": "NEWMASTER",
+        "work_assignments": [],
+        "resources": [{
+            "name": "GitHub-hosted Ubuntu x64",
+            "research_capacity_slots": 1,
+            "research_slots_in_use": 0,
+            "research_slots_free": 1,
+        }],
+        "planned_capacity": [{
+            "resource": "GitHub-hosted Ubuntu x64",
+            "current_assignments": 0,
+            "planned_assignments": [{
+                "plan_id": "Q218-FRESH-SYMBOL-REPLICATION",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "allow_parallel_with_candidate": True,
+                "execution_workflow": ".github/workflows/q218-independent-replication-once.yml",
+            }],
+        }],
+    }
+    runs = [
+        {"status": "completed", "conclusion": "failure", "head_sha": "OLD1",
+         "path": ".github/workflows/q218-independent-replication-once.yml"},
+        {"status": "completed", "conclusion": "failure", "head_sha": "OLD2",
+         "path": ".github/workflows/q218-independent-replication-once.yml"},
+    ]
+
+    plan = dispatcher.dispatch_candidates(snapshot, runs, max_dispatches=2)
+    assert [x["plan_id"] for x in plan["dispatches"]] == ["Q218-FRESH-SYMBOL-REPLICATION"]
+    assert not any(
+        x["decision"] == "SKIP_WORKFLOW_TECHNICAL_RETRY_EXHAUSTED"
+        for x in plan["decisions"]
+    )
+
+
 def test_fast_dispatch_uses_resource_capacity_metadata_when_plan_row_omits_capacity(monkeypatch):
     import automation.planned_capacity_fast_dispatch as dispatcher
 
