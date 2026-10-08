@@ -36,6 +36,7 @@ ACTIVE_WORKFLOWS = {
     "current-status-sync.yml",
     "evidence-graph-stage4-stage5-wave.yml",
     "q104-i19-13f-historical-identity-census.yml",
+    "q104-i19-historical-pit-compilation.yml",
     "q104-i19-asfiled-xbrl-source-probe.yml",
     "q218-independent-architecture-pit-reproduction.yml",
     "q218-prereg-authorization-reconcile.yml",
