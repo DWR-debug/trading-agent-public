@@ -127,7 +127,8 @@ def next_xnys_session(closure: datetime, start: str, end: str) -> str:
         closure_ts = closure_ts.tz_localize("UTC")
     else:
         closure_ts = closure_ts.tz_convert("UTC")
-    eligible = schedule[schedule["market_open"] > closure_ts]
+    open_column = "market_open" if "market_open" in schedule.columns else "open"
+    eligible = schedule[schedule[open_column] > closure_ts]
     if eligible.empty:
         raise RuntimeError(f"No XNYS session after closure {closure.isoformat()}")
     return eligible.index[0].date().isoformat()
