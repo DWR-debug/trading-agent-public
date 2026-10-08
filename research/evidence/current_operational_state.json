@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-08T14:16:25.061436+00:00",
+    "generated_at_utc": "2026-10-08T14:20:08.610994+00:00",
     "next_research_focus": "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Q218 remains non-authorized for performance. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "e6f936ab9c83b0d78b4c3bfaca0f3b77ec180120"
+    "source_master_sha": "c398a49873d2f737edb92a9ad57bc5c8f5307d2f"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1808,7 +1808,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-08T14:16:25.061436+00:00",
+  "generated_at_utc": "2026-10-08T14:20:08.610994+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4524,6 +4524,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "feat/q104-i19-independent-reproduction-20261008",
+        "number": 1231,
+        "title": "FEAT: add independent Q104 I19 PIT reproduction gate",
+        "updatedAt": "2026-10-08T14:18:44Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1231"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/q104-i19-one-bounded-retry-current-master-v2-20261007",
         "number": 1207,
         "title": "FIX: one bounded automatic retry for Q104 census on current master",
@@ -4581,44 +4589,44 @@
     ],
     "recent_commits": [
       {
-        "message": "FIX: expose Q104 compiler receipt and queue next gate",
-        "sha": "e6f936ab9c83b0d78b4c3bfaca0f3b77ec180120",
-        "timestamp": "2026-10-08T16:16:12+02:00"
+        "message": "TEST: prevent duplicate completed Q218 focus-gate dispatch",
+        "sha": "c398a49873d2f737edb92a9ad57bc5c8f5307d2f",
+        "timestamp": "2026-10-08T16:19:56+02:00"
+      },
+      {
+        "message": "FIX: suppress duplicate completed Q218 focus-gate dispatch",
+        "sha": "2c4090da56eab15fe5bf51b96e3fc71e4f6024d4",
+        "timestamp": "2026-10-08T16:19:53+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "15a4da2aea7d435ab26535db8221d1196afc5bb2",
+        "timestamp": "2026-10-08T14:18:26Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "2b0c5b206c338c323919b35937fd9ea837fb7179",
+        "timestamp": "2026-10-08T14:18:14Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "9be180b41fbbff05f5f9e9019c136385b5c115d4",
+        "timestamp": "2026-10-08T14:18:03Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "d029f1a1f19ff4223b96e9dc29778435062d7377",
+        "timestamp": "2026-10-08T14:17:56Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "fa9c323822035f041d8bf4026cf3fdfcc1d72d24",
-        "timestamp": "2026-10-08T14:15:33Z"
+        "sha": "7dfd3a9610818e3f1a390f6ae5b006fca157f94f",
+        "timestamp": "2026-10-08T14:16:27Z"
       },
       {
-        "message": "FEAT: add receipt-gated Q104 I19 historical PIT compiler",
-        "sha": "1892432d789759f023d4f141da156e2e10c07354",
-        "timestamp": "2026-10-08T16:15:15+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "6a8af6ba450f0cb1f54bb47e6bc7e9c4342463e7",
-        "timestamp": "2026-10-08T14:03:51Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "6fb78238a766a4e793be8a7caf32ad332c5b8940",
-        "timestamp": "2026-10-08T14:03:16Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "58c150392fcd56a2e65eb1e9aca9d71af38acb5f",
-        "timestamp": "2026-10-08T14:02:38Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "2515df80779572bdff99c875f38ca533ff3b8676",
-        "timestamp": "2026-10-08T14:02:35Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "d03cb1c0544677ff4e2bedda520fd0b8c97b7357",
-        "timestamp": "2026-10-08T14:02:18Z"
+        "message": "FIX: expose Q104 compiler receipt and queue next gate",
+        "sha": "e6f936ab9c83b0d78b4c3bfaca0f3b77ec180120",
+        "timestamp": "2026-10-08T16:16:12+02:00"
       }
     ]
   },
@@ -4716,7 +4724,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e6f936ab9c83b0d78b4c3bfaca0f3b77ec180120",
+  "source_master_sha": "c398a49873d2f737edb92a9ad57bc5c8f5307d2f",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4830,6 +4838,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37791079208"
+    "run_id": "37791575201"
   }
 }
