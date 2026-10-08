@@ -405,6 +405,51 @@ FOCUS_CANDIDATES = ("Q104:I19", "Q218")
 ACTIVE_RUN_STATUSES = {"queued", "in_progress", "waiting", "pending"}
 
 
+def candidate_overall_progress(stage: str) -> tuple[int, str]:
+    """Backward-compatible coarse lifecycle mapper used by legacy dashboard tests."""
+    s = str(stage or "").upper()
+    if ("PERFORMANCE" in s and "NO_PERFORMANCE" not in s and "NO_ARM" not in s
+            and ("COMPLETED" in s or "AUTHORIZED" in s or "VALIDATED" in s)):
+        return 100, "ONE-SHOT PERFORMANCE"
+    if "INDEPENDENT" in s and ("REPRO" in s or "REPRODUCTION" in s):
+        return 83, "INDEPENDENT REPRODUCTION"
+    if "PIT" in s and ("COMPLETED" in s or "VALIDATED" in s):
+        return 67, "PIT / LINEAGE"
+    if "COVERAGE" in s and ("COMPLETED" in s or "VALIDATED" in s):
+        return 50, "COVERAGE"
+    if "SOURCE_FEASIBILITY" in s and ("COMPLETED" in s or "VALIDATED" in s):
+        return 33, "SOURCE FEASIBILITY"
+    if "DESIGN" in s or "ROBUSTNESS" in s:
+        return 17, "DESIGN CONTRACT"
+    return 0, "DESIGN CONTRACT"
+
+
+def candidate_milestone_progress(candidate: str, runs: list[dict[str, Any]]) -> tuple[int, str]:
+    """Backward-compatible active-workflow progress helper."""
+    matching = []
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") not in ACTIVE_RUN_STATUSES:
+            continue
+        haystack = " ".join(str(run.get(k) or "") for k in ("name", "display_title", "workflow_name"))
+        if candidate.lower() in haystack.lower():
+            matching.append(run)
+    if not matching:
+        return 0, "not started in visible Actions workflow"
+    matching.sort(key=lambda x: str(x.get("created_at") or ""), reverse=True)
+    run = matching[0]
+    jobs = jobs_for_run(int(run["id"])) if run.get("id") else []
+    if not jobs:
+        return (50 if run.get("status") == "in_progress" else 0), str(run.get("name") or "active workflow")
+    relevant = [j for j in jobs if str(j.get("name") or "").lower() not in {"set up job", "complete job"}]
+    if not relevant:
+        relevant = jobs
+    completed = sum(
+        1 for j in relevant
+        if j.get("status") == "completed" and j.get("conclusion") == "success"
+    )
+    return int(round(100 * completed / len(relevant))), str(run.get("name") or "active workflow")
+
+
 def read_json_file(relative_path: str) -> dict[str, Any]:
     try:
         payload = json.loads((ROOT / relative_path).read_text(encoding="utf-8"))
