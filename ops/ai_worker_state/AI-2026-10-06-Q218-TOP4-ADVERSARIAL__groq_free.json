@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
-  "context_fingerprint": "aac6322f1f52a1a4d8b2e11da08b565678b3eddf005198fc8a6acbfcb8f657cf",
-  "observed_at_utc": "2026-10-08T13:19:27.958076Z",
+  "context_fingerprint": "af33b9bd08de8c944f12d3a4cdc141f7abbbe4c1b589cdd91f1ff50ecf3ee0ec",
+  "observed_at_utc": "2026-10-08T23:16:38.806694Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.452,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5456, Requested 5745. Please try again in 24.0075s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 4.101,
+  "stdout": "**Worker Handoff – Q218 Orthogonal Candidate Review**  \n*(Deterministic, no market‑outcome inference, no performance claims)*  \n\n| # | Failure Mode | Description | Smallest Deterministic Falsifier | Exact Artifact Needed | Counter‑argument / Mitigation | Next Action | Uncertainty |\n|---|--------------|-------------|----------------------------------|-----------------------|------------------------------|-------------|-------------|\n| 1 | **Incorrect 10‑K → 8‑K Pairing** | The compiler pairs the *latest* 8‑K whose SEC‑acceptance timestamp falls in `(prev10K_accept, target10K_accept]`. If an 8‑K is for a different event (e.g., a material‑adverse‑change filing) or for a different issuer, the pair is invalid. | A minimal dataset containing: <br>• a 10‑K with acceptance at 2026‑01‑15 10:00 UTC <br>• an 8‑K for the same issuer with acceptance at 2026‑01‑14 12:00 UTC (valid) <br>• an 8‑K for the same issuer with acceptance at 2026‑01‑14 12:00 UTC but event type “Material‑Adverse‑Change” (invalid) <br>• an 8‑K for a *different* issuer with acceptance at 2026‑01‑14 12:00 UTC | `sample_pairing.json` – a JSON array of 10‑K and 8‑K records with fields: `cik`, `form`, `acceptance_datetime`, `event_type`. | The compiler currently ignores `event_type`; adding a filter for “8‑K” with `item‑2.02/Exhibit‑99.1` (earnings release) would prevent false pairs. | 1. Create `sample_pairing.json`. 2. Run the `sec_submission_census` routine on it. 3. Verify that only the earnings‑release 8‑K is paired. | Medium – depends on the completeness of the `event_type` field in SEC JSON. |\n| 2 | **SEC Acceptance Timestamp Ambiguity** | Some filings (especially 10‑K/A or 8‑K/A) may have multiple acceptance events or missing timestamps. The compiler treats `acceptance_datetime_found` as a boolean; if `None`, the filing is silently dropped. | A 10‑K/A with `acceptance_datetime` missing but `filingDate` present. | `missing_acceptance.json` – a 10‑K/A record with `acceptance_datetime` omitted. | The compiler should fall back to `filingDate` or flag the record as “unpairable”. | 1. Generate `missing_acceptance.json`. 2. Run census; confirm that the record is excluded. 3. Propose a fallback rule. | High – SEC API may change; fallback logic must be documented. |\n| 3 | **Filing Amendments Misinterpretation** | A 10‑K/A filed after the original 10‑K may be paired with an 8‑K that references the original 10‑K, leading to a stale pair. | A 10‑K at 2025‑12‑01, 10‑K/A at 2026‑01‑10, and an 8‑K at 2026‑01‑05 referencing the 10‑K. | `amendment_test.json` – includes `form` values `10-K`, `10-K/A`, and an 8‑K with `item‑2.02` referencing the 10‑K. | The compiler should treat the 10‑K/A as the *current* 10‑K for pairing; the 8‑K should be paired with the 10‑K/A if its acceptance falls in the correct window. | 1. Build `amendment_test.json`. 2. Verify pairing logic. 3. Adjust rule to prefer the most recent 10‑K/10‑K/A. | Medium – requires understanding of SEC amendment semantics. |\n| 4 | **Report‑Date vs Event‑Date Ambiguity** | The algorithm uses `acceptance_datetime` but the 10‑K’s `reportDate` may be earlier than the acceptance, causing a 10‑K to appear “new” when it is not. | A 10‑K with `reportDate` 2025‑12‑31 but `acceptance_datetime` 2026‑01‑05. | `report_vs_accept.json` – 10‑K record with both dates. | The compiler should use `acceptance_datetime` exclusively for the pairing window; `reportDate` is only for documentation. | 1. Confirm that the 10‑K is considered “target” based on acceptance. 2. Document the rule. | Low – straightforward once clarified. |\n| 5 | **False Pairing of Earnings Releases** | The compiler pairs any 8‑K within the window, regardless of whether it contains an earnings release (`item‑2.02/Exhibit‑99.1`). | An 8‑K with `item‑2.02/Exhibit‑99.1` missing, but acceptance within window. | `earnings_mismatch.json` – 8‑K record lacking the earnings‑release item. | Add a mandatory check for the presence of the earnings‑release item before pairing. | 1. Create `earnings_mismatch.json`. 2. Run census; confirm exclusion. 3. Update spec to require the item. | Medium – depends on consistency of SEC JSON. |\n| 6 | **Voluntary vs Mandatory Channel Classification** | The spec assumes all 8‑K pairings are “mandatory” but some 8‑Ks are voluntary (e.g., “Other Events”). The algorithm does not distinguish, potentially inflating the signal. | A voluntary 8‑K (e.g., “Other Events”) with acceptance within window. | `voluntary_8k.json` – 8‑K with `event_type` “Other Events”. | The compiler should flag voluntary 8‑Ks and optionally exclude them from the pair set. | 1. Add `event_type` field to census. 2. Verify that voluntary 8‑Ks are excluded. | High – classification rules may evolve. |\n| 7 | **Issuer Identity Drift** | A company may change its CIK or name between filings. The compiler uses the CIK from the 10‑K and 8‑K; if the 8‑K uses an old CIK, the pair will be missed. | A 10‑K with CIK 0000123456, and an 8‑K with the same name but CIK 0000654321. | `identity_drift.json` – two filings with same issuer name but different CIKs. | Maintain a mapping table of historical CIKs to current CIKs; use it to reconcile pairings. | 1. Build mapping table from SEC’s `cik_history.json`. 2. Run census with mapping. 3. Verify that the pair is recovered. | Medium – mapping may be incomplete. |\n| 8 | **Semantic Wedge Collapse** | The candidate’s “semantic wedge” (difference between 10‑K/8‑K pair and price‑only signals) may be trivial if the 8‑K merely repeats price data or if the 10‑K contains only price‑related disclosures. | A 10‑K that contains only a “Market‑Data” section and an 8‑K that repeats the same data. | `semantic_wedge_test.json` – 10‑K and 8‑K with identical content except for a timestamp. | Compute a simple similarity metric (e.g., Levenshtein distance) between the two documents; if below a threshold, flag as collapsed wedge. | 1. Implement similarity check in the compiler. 2. Run on `semantic_wedge_test.json`. 3. Adjust threshold or reject candidate if similarity > 90%. | High – requires definition of “semantic wedge” and acceptable similarity. |\n\n### Counter‑arguments & Mitigations\n\n- **Event‑type filtering**: The SEC JSON may not always include a clear `event_type`. Mitigation: use the `item‑2.02/Exhibit‑99.1` presence as a proxy for earnings releases.\n- **Acceptance timestamp reliability**: Some filings may have delayed acceptance. Mitigation: fallback to `filingDate` only if `acceptance_datetime` is missing, but flag such pairs for manual review.\n- **Amendment handling**: 10‑K/A may be treated as a new 10‑K only if its acceptance is after the original 10‑K. Mitigation: maintain a chronological list of 10‑K/10‑K/A per issuer and always pair with the most recent one.\n- **CIK drift**: Use SEC’s `cik_history.json` to map old CIKs to current ones; if mapping is incomplete, flag the pair as “unknown issuer”.\n\n### Concrete Next Actions\n\n1. **Artifact Creation**  \n   - Generate the eight JSON test files listed above (`sample_pairing.json`, `missing_acceptance.json`, etc.) in a dedicated `tests/` directory.  \n   - Ensure each file contains only the minimal fields required for the compiler to process.\n\n2. **Compiler Extension**  \n   - Add optional parameters to `sec_submission_census` to accept a `event_type` filter and a `ciq_mapping` file.",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-08T13:19:28.410406Z",
-    "blocked_until_utc": "2026-10-08T14:19:28.410406Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5456, Requested 5745. Please try again in 24.0075s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-021473e2-be89-479f-a3fc-91953a6bc576",
+  "usage": {
+    "queue_time": 0.003654993,
+    "prompt_tokens": 4987,
+    "prompt_time": 0.333846288,
+    "completion_tokens": 3200,
+    "completion_time": 3.421293457,
+    "total_tokens": 8187,
+    "total_time": 3.755139745,
+    "completion_tokens_details": {
+      "reasoning_tokens": 1171
+    }
   }
 }\n
