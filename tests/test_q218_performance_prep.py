@@ -25,6 +25,9 @@ def test_q218_contract_is_frozen_and_non_authorizing():
     assert data["outcome_contract"]["holding_sessions"] == 1
     assert data["outcome_contract"]["entry"] == "session open"
     assert data["outcome_contract"]["exit"] == "same-session close"
+    assert data["time_contract"]["acceptance_datetime_timezone"] == "America/New_York"
+    assert data["time_contract"]["no_implicit_utc"] is True
+    assert data["input_bundle"]["source_loader_path"] == "data/yahoo_loader.py"
 
 
 def test_q218_feature_construction_is_deterministic():
