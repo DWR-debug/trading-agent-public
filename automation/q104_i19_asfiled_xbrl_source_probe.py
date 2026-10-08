@@ -149,12 +149,18 @@ def archive_base(cik: str, accession: str) -> str:
 
 def extract_from_inline(html: bytes) -> dict:
     text = html.decode("utf-8", "replace")
-    return {concept: len(re.findall(rf"(?:[:_\\/]){re.escape(concept)}\\b", text)) for concept in CONCEPTS}
+    return {
+        concept: len(re.findall(rf"(?:[:_\/]){re.escape(concept)}\b", text))
+        for concept in CONCEPTS
+    }
 
 
 def extract_from_xml(xml: bytes) -> dict:
     text = xml.decode("utf-8", "replace")
-    return {concept: len(re.findall(rf":{re.escape(concept)}\\b", text)) for concept in CONCEPTS}
+    return {
+        concept: len(re.findall(rf":{re.escape(concept)}\b", text))
+        for concept in CONCEPTS
+    }
 
 
 def choose_instances(index_json: dict) -> list[str]:
@@ -250,6 +256,7 @@ def probe_filing(cik: str, row: dict, sample_rank: int) -> dict:
                 except Exception as exc:
                     last_error = f"{type(exc).__name__}:{exc}"
             else:
+                counts = last_counts
                 record.update({
                     "source_type": "xbrl_instance_xml",
                     "index_url": idx_url,
@@ -257,6 +264,8 @@ def probe_filing(cik: str, row: dict, sample_rank: int) -> dict:
                 })
                 if last_error:
                     record["last_error"] = last_error
+        if "counts" not in locals():
+            counts = last_counts if "last_counts" in locals() else {}
         record["all_exact_concepts_observed"] = all(v > 0 for v in counts.values())
         record["status"] = "PASS_EXACT_CONCEPTS_REACHABLE" if record["all_exact_concepts_observed"] else "FAIL_EXACT_CONCEPT_SOURCE"
         return record
