@@ -330,14 +330,40 @@ def ai_task_completed_with_current_context(task_id: str, *, root: Path = Path(".
     return bool(current) and current == previous
 
 
+
+
+def resource_capacity_for_plan(snapshot: dict[str, Any], row: dict[str, Any]) -> tuple[int, int, bool]:
+    """Resolve occupancy/capacity from the plan row, falling back to resource metadata."""
+    resource_name = str(row.get("resource") or "")
+    resource_meta = next(
+        (
+            item for item in snapshot.get("resources", [])
+            if isinstance(item, dict) and str(item.get("name") or "") == resource_name
+        ),
+        {},
+    )
+    current_raw = row.get("current_assignments")
+    if current_raw is None:
+        current_raw = resource_meta.get("research_slots_in_use")
+    current = int(current_raw or 0)
+
+    slots_raw = row.get("research_capacity_slots")
+    if slots_raw is None:
+        slots_raw = resource_meta.get("research_capacity_slots")
+    slots = max(1, int(slots_raw or 1))
+
+    reported_free = row.get("research_slots_free")
+    if reported_free is None:
+        reported_free = resource_meta.get("research_slots_free")
+    resource_free = int(reported_free) > 0 if reported_free is not None else current < slots
+    return current, slots, resource_free
+
+
 def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], max_dispatches: int = 4) -> dict[str, Any]:
     planned = []
     for row in snapshot.get("planned_capacity", []):
         resource = str(row.get("resource") or "")
-        current = int(row.get("current_assignments") or 0)
-        slots = max(1, int(row.get("research_capacity_slots") or 1))
-        reported_free = row.get("research_slots_free")
-        resource_free = int(reported_free) > 0 if reported_free is not None else current < slots
+        _current, _slots, resource_free = resource_capacity_for_plan(snapshot, row)
         for item in row.get("planned_assignments", []):
             if not isinstance(item, dict) or not item.get("scheduled"):
                 continue
