@@ -1055,6 +1055,7 @@ def planned_capacity_plan(
     nothing is invented to occupy free capacity.
     """
     active_text = [f"{x.get('resource','')} {x.get('task','')} {x.get('job','')}".lower() for x in work]
+    q104_census = q104_census_status()
     q218_receipts = q218_receipt_state()
 
     overlay = os_state.get("top_candidate_capacity_overlay", {})
