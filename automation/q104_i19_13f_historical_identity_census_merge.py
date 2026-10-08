@@ -62,6 +62,11 @@ def _is_sha256(value: Any) -> bool:
 def _acceptance_record(accession: str, record: dict[str, Any]) -> None:
     if record.get("accession") != accession:
         raise ValueError("Q104_I19_ACCEPTANCE_ACCESSION_MISMATCH:" + accession)
+    if (
+        record.get("acceptance_timezone") != "America/New_York"
+        or record.get("acceptance_clock_basis") != "SEC_EDGAR_SGML_ACCEPTANCE_DATETIME"
+    ):
+        raise ValueError("Q104_I19_ACCEPTANCE_CLOCK_BASIS_UNVERIFIED:" + accession)
     if not re.fullmatch(r"\d{10}", str(record.get("filer_cik", ""))):
         raise ValueError("Q104_I19_ACCEPTANCE_FILER_CIK_INVALID:" + accession)
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", str(record.get("acceptance_datetime", ""))):
@@ -236,6 +241,8 @@ def build_receipt(payloads: list[dict[str, Any]], generated_at_utc: str | None =
         "status": "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY",
         "generated_at_utc": generated_at_utc or datetime.now(timezone.utc).isoformat(),
         "official_source": OFFICIAL_SOURCE,
+        "acceptance_timezone": "America/New_York",
+        "acceptance_clock_basis": "SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
         "source_page_sha256": next(iter(source_hashes)),
         "completed_shards": sorted(seen_shards),
         "archive_count": len(archives),
