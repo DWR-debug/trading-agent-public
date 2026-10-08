@@ -114,8 +114,8 @@ jobs:
             if errorlevel 1 exit /b 1
           )
           endlocal
-        if: ${{ steps.q218_focus_gate.outputs.skip != 'true' }}
       - name: Enforce scientific boundary
+        if: ${{ steps.q218_focus_gate.outputs.skip != 'true' }}
         shell: cmd
         run: echo SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION
       - uses: actions/upload-artifact@v6
