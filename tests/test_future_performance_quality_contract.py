@@ -84,4 +84,4 @@ def test_q218_authorized_event_study_uses_specialized_structural_robustness_gate
         prereg,
     )
     assert violations == []
-    assert set(checker.Q218_EARLY_ROBUSTNESS_DIMENSIONS) == set(prereg["pre_performance_robustness"]["dimensions"])
+    assert set(checker.Q218_EARLY_ROBUSTNESS_DIMENSIONS) == set(prereg["candidate_robustness_gate"]["dimensions"])
