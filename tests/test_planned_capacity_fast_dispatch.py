@@ -127,7 +127,7 @@ def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_det
     assert any(m["label"] == "Independent Architecture PIT" and m["status"] == "open" for m in q218["milestones"])
 
 
-def test_dashboard_q218_completed_source_event_pair_exposes_independent_arch_queue():
+def test_dashboard_q218_completed_source_event_pair_exposes_independent_arch_queue(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
     resources = [{
         "name": "GitHub-hosted ARM64",
@@ -138,16 +138,12 @@ def test_dashboard_q218_completed_source_event_pair_exposes_independent_arch_que
         "code": "Q218",
         "next_gate": "independent architecture PIT reproduction",
     }]
-    monkeypatch = getattr(__import__("pytest"), "MonkeyPatch")()
     monkeypatch.setattr(dashboard, "q218_receipt_state", lambda: {
         "source_complete": True,
         "event_pair_complete": True,
         "independent_complete": False,
     })
-    try:
-        plan = dashboard.planned_capacity_plan(resources, [], dashboard_top4, {}, {})
-    finally:
-        monkeypatch.undo()
+    plan = dashboard.planned_capacity_plan(resources, [], dashboard_top4, {}, {})
     rows = [item for row in plan for item in row["planned_assignments"] if item.get("scheduled")]
     assert any(item["plan_id"] == "Q218-INDEPENDENT-ARCH" for item in rows)
     assert all(item["plan_id"] not in {"Q218-SOURCE", "Q218-EVENT-PAIR"} for item in rows)
