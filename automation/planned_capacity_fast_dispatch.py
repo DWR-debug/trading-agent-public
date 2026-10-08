@@ -259,6 +259,35 @@ def completed_slot_scopes(runs: list[dict[str, Any]]) -> set[tuple[str, str]]:
 TECHNICAL_FAILURE_CONCLUSIONS = {"failure", "startup_failure", "timed_out"}
 
 
+
+def focused_q218_failure_count(
+    runs: list[dict[str, Any]],
+    resource_input: str,
+    gate: str,
+    current_master_sha: str,
+) -> int:
+    """Count Q218 focused-gate technical failures under the current master context only."""
+    if not current_master_sha or gate not in Q218_GATE_NAMES:
+        return 2
+    count = 0
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") != "completed":
+            continue
+        if run.get("conclusion") not in TECHNICAL_FAILURE_CONCLUSIONS:
+            continue
+        if str(run.get("head_sha") or "") != current_master_sha:
+            continue
+        title = " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
+        marker = "Top-4 Slot "
+        if marker not in title:
+            continue
+        scope = title.split(marker, 1)[1].strip().split()
+        if len(scope) < 3 or scope[0] != resource_input or scope[1] != "Q218" or scope[2] != gate:
+            continue
+        count += 1
+    return count
+
+
 def slot_failure_counts(runs: list[dict[str, Any]]) -> dict[tuple[str, str], int]:
     counts: dict[tuple[str, str], int] = {}
     for run in runs:
@@ -589,8 +618,13 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                             "mode": "FILL_FREE_READY_CAPACITY",
                         })
                 continue
-            failures = failure_counts.get(scope, 0) if scope else 0
             if focus_wave:
+                failures = focused_q218_failure_count(
+                    runs,
+                    resource_input or "",
+                    gate,
+                    str(snapshot.get("master_sha") or ""),
+                )
                 # Focused Q218 gates are scientific blockers, not ordinary
                 # Top-4 slot work. Permit exactly one technical retry, then
                 # stop dispatching until the implementation is repaired.
@@ -608,7 +642,9 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                         "decision": "FOCUSED_GATE_TECHNICAL_RETRY_PERMITTED",
                         "gate": gate,
                     })
-            elif failures >= 2:
+            else:
+                failures = failure_counts.get(scope, 0) if scope else 0
+            if not focus_wave and failures >= 2:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_RETRY_EXHAUSTED"})
                 fallback = top4_slot_fallback(
                     resource,
