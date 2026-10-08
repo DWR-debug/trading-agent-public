@@ -1,0 +1,226 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_independent_architecture_pit_reproduction",
+  "candidate_id": "Q218",
+  "status": "Q218_INDEPENDENT_ARCHITECTURE_PIT_REPRODUCED",
+  "generated_at_utc": "2026-10-08T08:07:38.245186+00:00",
+  "fixed_window": {
+    "start": "2025-01-01",
+    "end": "2026-10-05"
+  },
+  "upstream_receipts": {
+    "source_receipt_fingerprint": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
+    "event_pair_receipt_fingerprint": "08783ac61ed04d936e017e2d959319f69fed5cd4ed891d0f4033a3c57dc04491"
+  },
+  "independent_method": {
+    "implementation": "separate parser and reconciliation path",
+    "source_route": "SEC submissions JSON plus direct EDGAR archive header and primary-document retrieval",
+    "reused_q218_gate_functions": false,
+    "market_outcomes_read": false
+  },
+  "reproduction": {
+    "issuer_count": 8,
+    "total_event_pairs_reproduced": 13,
+    "issuer_results": {
+      "AAPL": {
+        "pair_count": 1,
+        "pairs": [
+          {
+            "ten_k_accession": "0000320193-25-000079",
+            "item_2_02_8k_accession": "0000320193-25-000077",
+            "ten_k_acceptance_datetime": "20251031060126",
+            "item_2_02_8k_acceptance_datetime": "20251030163035",
+            "lower_bound_acceptance": "20241101060136",
+            "pit_interval_valid": true
+          }
+        ],
+        "lineage_count": 0,
+        "lineage": [],
+        "all_pair_checks_passed": true,
+        "all_lineage_checks_passed": true
+      },
+      "MSFT": {
+        "pair_count": 2,
+        "pairs": [
+          {
+            "ten_k_accession": "0000950170-25-100235",
+            "item_2_02_8k_accession": "0000950170-25-100226",
+            "ten_k_acceptance_datetime": "20250730161140",
+            "item_2_02_8k_acceptance_datetime": "20250730160853",
+            "lower_bound_acceptance": "20240730160622",
+            "pit_interval_valid": true
+          },
+          {
+            "ten_k_accession": "0001193125-26-323660",
+            "item_2_02_8k_accession": "0001193125-26-323632",
+            "ten_k_acceptance_datetime": "20260729160801",
+            "item_2_02_8k_acceptance_datetime": "20260729160453",
+            "lower_bound_acceptance": "20250730161140",
+            "pit_interval_valid": true
+          }
+        ],
+        "lineage_count": 0,
+        "lineage": [],
+        "all_pair_checks_passed": true,
+        "all_lineage_checks_passed": true
+      },
+      "AMZN": {
+        "pair_count": 2,
+        "pairs": [
+          {
+            "ten_k_accession": "0001018724-25-000004",
+            "item_2_02_8k_accession": "0001018724-25-000002",
+            "ten_k_acceptance_datetime": "20250206184029",
+            "item_2_02_8k_acceptance_datetime": "20250206160912",
+            "lower_bound_acceptance": "20240201184830",
+            "pit_interval_valid": true
+          },
+          {
+            "ten_k_accession": "0001018724-26-000004",
+            "item_2_02_8k_accession": "0001018724-26-000002",
+            "ten_k_acceptance_datetime": "20260205184431",
+            "item_2_02_8k_acceptance_datetime": "20260205162512",
+            "lower_bound_acceptance": "20250206184029",
+            "pit_interval_valid": true
+          }
+        ],
+        "lineage_count": 0,
+        "lineage": [],
+        "all_pair_checks_passed": true,
+        "all_lineage_checks_passed": true
+      },
+      "JPM": {
+        "pair_count": 1,
+        "pairs": [
+          {
+            "ten_k_accession": "0001628280-26-008131",
+            "item_2_02_8k_accession": "0000019617-26-000052",
+            "ten_k_acceptance_datetime": "20260213162000",
+            "item_2_02_8k_acceptance_datetime": "20260122163018",
+            "lower_bound_acceptance": null,
+            "pit_interval_valid": true
+          }
+        ],
+        "lineage_count": 0,
+        "lineage": [],
+        "all_pair_checks_passed": true,
+        "all_lineage_checks_passed": true
+      },
+      "XOM": {
+        "pair_count": 2,
+        "pairs": [
+          {
+            "ten_k_accession": "0000034088-25-000010",
+            "item_2_02_8k_accession": "0000034088-25-000006",
+            "ten_k_acceptance_datetime": "20250219163937",
+            "item_2_02_8k_acceptance_datetime": "20250131063120",
+            "lower_bound_acceptance": "20240228163718",
+            "pit_interval_valid": true
+          },
+          {
+            "ten_k_accession": "0000034088-26-000045",
+            "item_2_02_8k_accession": "0000034088-26-000033",
+            "ten_k_acceptance_datetime": "20260218160652",
+            "item_2_02_8k_acceptance_datetime": "20260130063124",
+            "lower_bound_acceptance": "20250219163937",
+            "pit_interval_valid": true
+          }
+        ],
+        "lineage_count": 0,
+        "lineage": [],
+        "all_pair_checks_passed": true,
+        "all_lineage_checks_passed": true
+      },
+      "NVDA": {
+        "pair_count": 2,
+        "pairs": [
+          {
+            "ten_k_accession": "0001045810-25-000023",
+            "item_2_02_8k_accession": "0001045810-25-000021",
+            "ten_k_acceptance_datetime": "20250226164833",
+            "item_2_02_8k_acceptance_datetime": "20250226162132",
+            "lower_bound_acceptance": "20240221163657",
+            "pit_interval_valid": true
+          },
+          {
+            "ten_k_accession": "0001045810-26-000021",
+            "item_2_02_8k_accession": "0001045810-26-000019",
+            "ten_k_acceptance_datetime": "20260225164219",
+            "item_2_02_8k_acceptance_datetime": "20260225163125",
+            "lower_bound_acceptance": "20250226164833",
+            "pit_interval_valid": true
+          }
+        ],
+        "lineage_count": 0,
+        "lineage": [],
+        "all_pair_checks_passed": true,
+        "all_lineage_checks_passed": true
+      },
+      "WMT": {
+        "pair_count": 2,
+        "pairs": [
+          {
+            "ten_k_accession": "0000104169-25-000021",
+            "item_2_02_8k_accession": "0000104169-25-000010",
+            "ten_k_acceptance_datetime": "20250314164052",
+            "item_2_02_8k_acceptance_datetime": "20250220065700",
+            "lower_bound_acceptance": "20240315165448",
+            "pit_interval_valid": true
+          },
+          {
+            "ten_k_accession": "0000104169-26-000055",
+            "item_2_02_8k_accession": "0000104169-26-000032",
+            "ten_k_acceptance_datetime": "20260313160624",
+            "item_2_02_8k_acceptance_datetime": "20260219065955",
+            "lower_bound_acceptance": "20250314164052",
+            "pit_interval_valid": true
+          }
+        ],
+        "lineage_count": 0,
+        "lineage": [],
+        "all_pair_checks_passed": true,
+        "all_lineage_checks_passed": true
+      },
+      "DIS": {
+        "pair_count": 1,
+        "pairs": [
+          {
+            "ten_k_accession": "0001744489-25-000155",
+            "item_2_02_8k_accession": "0001744489-25-000154",
+            "ten_k_acceptance_datetime": "20251113064429",
+            "item_2_02_8k_acceptance_datetime": "20251113064245",
+            "lower_bound_acceptance": "20241114064646",
+            "pit_interval_valid": true
+          }
+        ],
+        "lineage_count": 0,
+        "lineage": [],
+        "all_pair_checks_passed": true,
+        "all_lineage_checks_passed": true
+      }
+    },
+    "all_checks_passed": true,
+    "future_cutoff_used": "2026-10-05",
+    "same_day_decision_use_allowed": false
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "asset_selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "candidate_ranking": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "next_gate": "FROZEN_PREREGISTRATION_AND_IMMUTABLE_AUTHORIZATION_RECONCILE",
+  "receipt_fingerprint": "d16d12f29599e6b268c490287157679fd62d6f2264d3edf67dfa3190d99f370e"
+}
