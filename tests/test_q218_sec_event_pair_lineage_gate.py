@@ -52,6 +52,46 @@ def test_q218_pairs_latest_prior_item_202_and_tracks_amendments(tmp_path, monkey
     assert result["live_execution"] is False
 
 
+def test_q218_does_not_promote_exhibit_99_1_without_item_202(tmp_path, monkeypatch):
+    import json
+
+    payload = {
+        "filings": {
+            "recent": {
+                "form": ["10-K", "8-K", "8-K"],
+                "filingDate": ["2025-01-02", "2025-01-01", "2025-01-01"],
+                "accessionNumber": [
+                    "0000320193-25-000001",
+                    "0000320193-25-000000",
+                    "0000320193-25-000009",
+                ],
+                "primaryDocument": ["tenk.htm", "earn.htm", "other.htm"],
+                "reportDate": ["2024-09-28", "2024-09-28", "2024-09-28"],
+                "items": ["", "2.02,9.01", "8.01,9.01"],
+            }
+        }
+    }
+    acceptance_map = {
+        "0000320193-25-000001": "20250102120000",
+        "0000320193-25-000000": "20250101120000",
+        "0000320193-25-000009": "20250101130000",
+    }
+
+    def fake_fetch(url):
+        if "/submissions/CIK" in url:
+            return json.dumps(payload).encode()
+        accession = url.split("/")[-1].replace("-index-headers.html", "")
+        if accession == "0000320193-25-000009":
+            return f"<ACCEPTANCE-DATETIME>{acceptance_map[accession]} EXHIBIT 99.1 EARNINGS RELEASE".encode()
+        return f"<ACCEPTANCE-DATETIME>{acceptance_map[accession]}".encode()
+
+    monkeypatch.setattr(gate, "fetch", fake_fetch)
+    result = gate.run(tmp_path / "receipt.json")
+    aapl = result["issuer_results"]["AAPL"]
+    assert aapl["event_pair_count"] == 1
+    assert aapl["event_pairs"][0]["item_2_02_8k_accession"] == "0000320193-25-000000"
+
+
 def test_q218_rejects_future_8k_pair(tmp_path, monkeypatch):
     import json
 
