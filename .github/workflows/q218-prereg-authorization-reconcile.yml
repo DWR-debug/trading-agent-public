@@ -8,7 +8,9 @@ on:
       - "research/governance/q218_performance_contract_2026_10_08.json"
       - ".github/workflows/q218-prereg-authorization-reconcile.yml"
   workflow_run:
-    workflows: ["Q218 Independent Architecture PIT Reproduction"]
+    workflows:
+      - "Q218 Independent Architecture PIT Reproduction"
+      - "Q218 Performance Preparation"
     types: [completed]
   workflow_dispatch: {}
 
