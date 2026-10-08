@@ -44,6 +44,8 @@ def make_shard(shard, year, period_start, filing_date, report_period):
         "period": report_period,
         "submission_type": "13F-HR",
         "acceptance_datetime": f"{filing_date}T16:15:42",
+        "acceptance_timezone": "America/New_York",
+        "acceptance_clock_basis": "SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
         "source_url": header_url,
         "header_sha256": "b" * 64,
         "header_bytes": 128,
