@@ -36,6 +36,8 @@
     "automation/q104_i19_xbrl_pit_compiler.py",
     "research/governance/critical_research_quality_control.json"
   ],
-  "review_revision": "Q104-2026-10-08-R1",
-  "trigger_reason": "Q104 historical three-shard census is the current formal bottleneck; adversarial review is intended to expose compiler blockers before the positive census receipt can unlock downstream work."
+  "review_revision": "Q104-2026-10-08-R2",
+  "trigger_reason": "Legitimate execution retry after plan_openrouter failed before worker execution because of a corrected workflow-routing syntax defect; scientific scope unchanged.",
+  "retry_of": "Q104-2026-10-08-R1",
+  "execution_attempt": 2
 }
