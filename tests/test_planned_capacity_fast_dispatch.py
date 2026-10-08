@@ -878,7 +878,7 @@ def test_q104_compiler_failure_streak_resets_on_new_master_sha(monkeypatch):
             "created_at": "2026-10-08T14:19:00Z",
         },
     ]
-    plan = dispatcher.plan_dispatch(snapshot, runs, repo="DWR-debug/trading-agent-public", max_dispatches=6)
+    plan = dispatcher.dispatch_candidates(snapshot, runs, max_dispatches=6)
     assert any(x["plan_id"] == "Q104-I19-COMPILER" for x in plan["dispatches"])
 
 def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
