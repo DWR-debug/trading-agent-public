@@ -66,13 +66,13 @@ def validate_census_receipt(r:dict[str,Any])->dict[str,Any]:
     )
     if r.get("candidate_id")!="Q104:I19":
         raise RuntimeError("Q104_I19_CENSUS_CANDIDATE_MISMATCH")
+    if r.get("status")!="13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY":
+        raise RuntimeError("Q104_I19_CENSUS_NOT_CLOCK_COMPLETE")
     if (
         r.get("acceptance_timezone")!="America/New_York"
         or r.get("acceptance_clock_basis")!="SEC_EDGAR_SGML_ACCEPTANCE_DATETIME"
     ):
         raise RuntimeError("Q104_I19_CENSUS_ACCEPTANCE_CLOCK_BASIS_UNVERIFIED")
-    if r.get("status")!="13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY":
-        raise RuntimeError("Q104_I19_CENSUS_NOT_CLOCK_COMPLETE")
     if set(r.get("completed_shards",[]))!=EXPECTED_SHARDS:
         raise RuntimeError("Q104_I19_CENSUS_SHARD_CLOSURE_FAILED")
     archives=r.get("archives",[])
