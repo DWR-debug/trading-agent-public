@@ -681,8 +681,9 @@ def candidate_capacity_snapshot(
     for item in work:
         if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
             continue
-        haystack = f"{item.get('task', '')} {item.get('job', '')}".lower()
-        if candidate.lower() not in haystack:
+        haystack = re.sub(r"[^a-z0-9]", "", f"{item.get('task', '')} {item.get('job', '')}".lower())
+        candidate_key = re.sub(r"[^a-z0-9]", "", candidate.lower())
+        if candidate_key not in haystack:
             continue
         key = (str(item.get("resource") or ""), str(item.get("job") or ""), str(item.get("run_id") or ""))
         if key in seen_active:
