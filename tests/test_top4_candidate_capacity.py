@@ -81,7 +81,10 @@ def test_hosted_slots_are_explicitly_leased():
     q104=(ROOT/".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
     assert "trading-agent-research-hosted-ubuntu-24.04-slot-2" in text
     assert "trading-agent-research-hosted-ubuntu-24.04-arm-slot-2" in text
-    assert "trading-agent-research-hosted-${{ matrix.runner }}-slot-${{ matrix.slot }}" in q104
+    assert "format('trading-agent-research-hosted-{0}-slot-{1}', matrix.runner, matrix.slot)" in q104
+    assert "format('trading-agent-research-windows-slot-{0}', matrix.slot)" in q104
+    assert 'runner: "ubuntu-24.04"' in q104
+    assert 'runner: "ubuntu-24.04-arm"' in q104
     assert 'slot: "1"' in q104
 
 
