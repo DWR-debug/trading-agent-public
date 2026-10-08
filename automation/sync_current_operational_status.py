@@ -210,6 +210,15 @@ def generate(
     q091_registry = active_trials.get("091", {})
     q091_state = str(q091_registry.get("state", "UNKNOWN"))
     q091_authorized = q091_registry.get("performance_authorization_allowed") is True
+    q218_registry = active_trials.get("Q218", {})
+    q218_authorized = q218_registry.get("performance_authorization_allowed") is True
+    q218_auth_record = _load_json(ROOT / "research/authorizations/q218_performance_2026_10_08.json", {})
+    q218_execution_ready = (
+        q218_auth_record.get("authorized") is True
+        and q218_auth_record.get("performance_execution_authorized") is True
+        and q218_auth_record.get("execution_trigger_created") is True
+        and bool(q218_auth_record.get("execution_workflow"))
+    )
 
     q070_pipeline = {
         "family": "Q070",
@@ -452,12 +461,22 @@ def generate(
             "Both remain discovery/PIT-only with no performance or promotion authorization."
         )
     if any(str(item.get("code")) in {"Q218", "Q219", "Q220", "Q221"} for item in active_registry.get("active_design_families", [])):
+        if q218_authorized and not q218_execution_ready:
+            q218_sentence = (
+                " Q218 has an explicit one-shot performance authorization in the active registry, "
+                "but execution is not yet ready because the fixed Q218 performance executor/input bundle "
+                "is not present; no execution trigger exists. "
+            )
+        elif q218_authorized and q218_execution_ready:
+            q218_sentence = " Q218 is explicitly performance-authorized and has a fixed execution route. "
+        else:
+            q218_sentence = " Q218 remains non-authorized for performance. "
         recorded_next_research_focus = (
-            "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, "
+            "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, "
             "Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, "
-            "and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; "
-            "Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, "
-            "holdout selection, ranking, tuning, promotion or live execution is authorized."
+            "and Q219 filing-change/options-response processing wedge." + q218_sentence +
+            "Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. "
+            "No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs."
         )
     current = {
         "schema_version": "1.0",
