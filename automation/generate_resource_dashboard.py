@@ -1587,6 +1587,8 @@ def main() -> None:
         "schema_version": 2,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "master_sha": git_head(),
+        "dashboard_observed_master_sha": git_head(),
+        "dashboard_data_is_current_at_publish": True,
         "operational_snapshot_sha": snapshot_sha,
         "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json + ops/trading_agent_os_state.json",
         "scientific_boundary": os_state.get("permanent_safety", {}),
@@ -1627,6 +1629,23 @@ def main() -> None:
         "planned_research_queue": planned_research_queue,
         "milestone_history_12h": milestones_12h,
         "candidate_progress": candidate_progress,
+        "focus_live_telemetry": {
+            candidate: [
+                {
+                    "run_id": item.get("run_id"),
+                    "run_url": item.get("run_url"),
+                    "workflow": item.get("task"),
+                    "job": item.get("job"),
+                    "resource": item.get("resource"),
+                    "worker": item.get("worker"),
+                    "status": item.get("status"),
+                    "started_at": item.get("started_at"),
+                }
+                for item in work
+                if candidate.lower().replace(":", "") in f"{item.get('task','')} {item.get('job','')}".lower().replace(":", "")
+            ]
+            for candidate in FOCUS_CANDIDATES
+        },
         "pipeline": candidate_pipeline(
             top4, work, workflow_benchmarks, job_benchmarks, recent_runs, planned_capacity
         ),
