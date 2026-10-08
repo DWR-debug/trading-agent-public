@@ -157,18 +157,21 @@ def extract_from_xml(xml: bytes) -> dict:
     return {concept: len(re.findall(rf":{re.escape(concept)}\\b", text)) for concept in CONCEPTS}
 
 
-def choose_instance(index_json: dict) -> str | None:
+def choose_instances(index_json: dict) -> list[str]:
+    candidates = []
     for item in index_json.get("directory", {}).get("item", []) or []:
         name = str(item.get("name") or "")
         low = name.lower()
-        if not low.endswith(".xml"):
+        if not low.endswith(".xml") or low.endswith(".xsd"):
             continue
-        if any(token in low for token in ("-cal.xml", "-def.xml", "-lab.xml", "-pre.xml", "_cal.xml", "_def.xml", "_lab.xml", "_pre.xml")):
+        if any(token in low for token in (
+            "-cal.xml", "-def.xml", "-lab.xml", "-pre.xml", "-ref.xml",
+            "_cal.xml", "_def.xml", "_lab.xml", "_pre.xml", "_ref.xml",
+            "filingsummary.xml",
+        )):
             continue
-        if low.endswith(".xsd"):
-            continue
-        return name
-    return None
+        candidates.append(name)
+    return candidates
 
 
 def probe_filing(cik: str, row: dict, sample_rank: int) -> dict:
@@ -207,29 +210,53 @@ def probe_filing(cik: str, row: dict, sample_rank: int) -> dict:
             })
         else:
             idx_url = f"{base}/index.json"
+            idx = None
             try:
                 idx = json.loads(fetch(idx_url).decode("utf-8"))
             except Exception:
-                legacy_idx_url = f"{base}/{acc}-index.json"
-                idx_url = legacy_idx_url
-                idx = json.loads(fetch(idx_url).decode("utf-8"))
-            instance = choose_instance(idx)
-            if not instance:
-                record["status"] = "NO_XBRL_INSTANCE_DISCOVERED"
+                for suffix in (f"{acc}-index.html", f"{acc}-index.htm"):
+                    try:
+                        html = fetch(f"{base}/{suffix}").decode("utf-8", "replace")
+                        names = re.findall(r'href=["\\\']([^"\\\']+\\.xml)["\\\']', html, flags=re.I)
+                        idx = {"directory": {"item": [{"name": n.split("/")[-1]} for n in names]}}
+                        idx_url = f"{base}/{suffix}"
+                        break
+                    except Exception:
+                        continue
+            if idx is None:
+                record["status"] = "NO_XBRL_INDEX_DISCOVERED"
                 record["index_url"] = idx_url
                 return record
-            url = f"{base}/{instance}"
-            body = fetch(url)
-            counts = extract_from_xml(body)
-            record.update({
-                "source_type": "xbrl_instance_xml",
-                "source_url": url,
-                "source_sha256": sha256_bytes(body),
-                "source_bytes": len(body),
-                "xbrl_instance": instance,
-                "index_url": idx_url,
-                "concept_occurrences": counts,
-            })
+            instances = choose_instances(idx)
+            last_counts = {}
+            last_error = None
+            for instance in instances[:10]:
+                try:
+                    url = f"{base}/{instance}"
+                    body = fetch(url)
+                    counts = extract_from_xml(body)
+                    last_counts = counts
+                    if all(v > 0 for v in counts.values()):
+                        record.update({
+                            "source_type": "xbrl_instance_xml",
+                            "source_url": url,
+                            "source_sha256": sha256_bytes(body),
+                            "source_bytes": len(body),
+                            "xbrl_instance": instance,
+                            "index_url": idx_url,
+                            "concept_occurrences": counts,
+                        })
+                        break
+                except Exception as exc:
+                    last_error = f"{type(exc).__name__}:{exc}"
+            else:
+                record.update({
+                    "source_type": "xbrl_instance_xml",
+                    "index_url": idx_url,
+                    "concept_occurrences": last_counts,
+                })
+                if last_error:
+                    record["last_error"] = last_error
         record["all_exact_concepts_observed"] = all(v > 0 for v in counts.values())
         record["status"] = "PASS_EXACT_CONCEPTS_REACHABLE" if record["all_exact_concepts_observed"] else "FAIL_EXACT_CONCEPT_SOURCE"
         return record
