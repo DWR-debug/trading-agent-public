@@ -708,6 +708,21 @@ def test_fast_dispatch_loads_paginated_top4_slot_history_for_retry_circuit_break
     assert '<(printf' in dispatcher
 
 
+
+def test_cancelled_q218_focus_gate_has_short_dispatch_cooldown():
+    from datetime import datetime, timezone
+    from automation import planned_capacity_fast_dispatch as dispatcher
+
+    now = datetime(2026, 10, 8, 9, 20, tzinfo=timezone.utc)
+    runs = [{
+        "name": "Top-4 Slot windows Q218 event_pair",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "updated_at": "2026-10-08T09:19:00Z",
+    }]
+    assert dispatcher.focused_gate_recently_cancelled(runs, "Q218", "event_pair", now=now) is True
+    assert dispatcher.focused_gate_recently_cancelled(runs, "Q218", "event_pair", now=datetime(2026, 10, 8, 9, 26, tzinfo=timezone.utc)) is False
+
 def test_dashboard_skips_current_context_completed_focused_ai_before_filling_free_pool(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
 
