@@ -42,6 +42,12 @@ jobs:
           set -euo pipefail
           python -m pip install --disable-pip-version-check exchange-calendars pandas
 
+      - name: Record canonical Q218 candidate robustness
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q218_candidate_robustness_receipt.py             --output "research/runs/q218_performance_prep/${{ github.run_id }}/q218_candidate_robustness.json"
+
       - name: Freeze Q218 SEC and market input bundle
         shell: bash
         env:
@@ -76,8 +82,12 @@ jobs:
           assert bundle["executor_network_access"] is False
           assert bundle["selection_used"] is False
           assert bundle["parameter_search"] is False
+          candidate=json.loads((root/"q218_candidate_robustness.json").read_text())
           assert inp["status"]=="INPUT_BUNDLE_FROZEN"
           assert inp["performance_authorized"] is False
+          assert candidate["status"]=="PRE_FORMAL_ROBUSTNESS_COMPLETED"
+          assert candidate["formalization_allowed"] is False
+          assert candidate["performance_authorization"] is False
           assert robust["status"]=="PRE_PERFORMANCE_ROBUSTNESS_COMPLETED"
           assert robust["all_mutations_rejected"] is True
           assert robust["performance_authorized"] is False
@@ -116,7 +126,9 @@ jobs:
           for name in ("q218_performance_input_bundle_receipt.json","q218_pre_performance_robustness.json"):
               path=root/name
               data=json.loads(path.read_text())
-              data["artifact"]={"id":a["id"],"name":a["name"],"digest":a["digest"],"expired":a["expired"]}
+              data["artifact"]={"id":a["id"],"name":a["name"],"digest":a["digest"],"expired":a["expired"],"run_id":int(os.environ.get("GITHUB_RUN_ID","0"))}
+              data["artifact_path"]=f"actions://artifacts/{a['id']}"
+              data["artifact_sha256"]=a["digest"]
               path.write_text(json.dumps(data,indent=2,ensure_ascii=False)+"\n")
           PY
 
@@ -144,5 +156,6 @@ jobs:
           path: |
             research/runs/q218_performance_prep/${{ github.run_id }}/q218_performance_input_bundle_receipt.json
             research/runs/q218_performance_prep/${{ github.run_id }}/q218_pre_performance_robustness.json
+            research/runs/q218_performance_prep/${{ github.run_id }}/q218_candidate_robustness.json
           if-no-files-found: error
           retention-days: 30
