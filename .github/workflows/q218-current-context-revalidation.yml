@@ -1,0 +1,242 @@
+name: Q218 Current-Context Revalidation
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q218_current_context_revalidation.trigger"
+      - ".github/workflows/q218-current-context-revalidation.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: trading-agent-q218-current-context-revalidation
+  cancel-in-progress: false
+
+jobs:
+  revalidate:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install bounded research dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest
+
+      - name: Run exact current-master CI gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 60); do
+            line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
+            run_id="$(printf '%s' "$line" | cut -f1)"
+            status="$(printf '%s' "$line" | cut -f2)"
+            conclusion="$(printf '%s' "$line" | cut -f3)"
+            echo "T052 run_id=$run_id status=$status conclusion=$conclusion"
+            if [ "$status" = "completed" ]; then
+              test "$conclusion" = "success"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Exact Master CI Gate did not complete successfully."
+          exit 1
+
+      - name: Run strict current Q218 source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="research/runs/q218-current-context/${GITHUB_RUN_ID}"
+          mkdir -p "$root/source"
+          python -m automation.q218_sec_multichannel_source_gate --output "$root/source/receipt.json"
+          python -m pytest -q tests/test_q218_sec_multichannel_source_gate.py
+
+      - name: Run strict current Q218 event-pair gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="research/runs/q218-current-context/${GITHUB_RUN_ID}"
+          mkdir -p "$root/event_pair"
+          python -m automation.q218_sec_event_pair_lineage_gate --output "$root/event_pair/receipt.json"
+          python -m pytest -q tests/test_q218_sec_event_pair_lineage_gate.py tests/test_q218_q221_candidate_gate_compiler.py
+
+      - name: Run independent architecture PIT
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="research/runs/q218-current-context/${GITHUB_RUN_ID}"
+          mkdir -p "$root/independent"
+          python -m automation.q218_independent_architecture_pit_reproduction \
+            --source "$root/source/receipt.json" \
+            --event "$root/event_pair/receipt.json" \
+            --output "$root/independent/pit_receipt.json"
+
+      - name: Validate exact match to consumed one-shot result
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          root = Path("research/runs/q218-current-context") / os.environ["GITHUB_RUN_ID"]
+          source = json.loads((root / "source/receipt.json").read_text())
+          event = json.loads((root / "event_pair/receipt.json").read_text())
+          indep = json.loads((root / "independent/pit_receipt.json").read_text())
+          bundle = json.loads(Path("research/evidence/q218_performance_input_bundle_latest.json").read_text())
+          result = json.loads(Path("research/evidence/q218_deterministic_performance_result_latest.json").read_text())
+          auth = json.loads(Path("research/authorizations/q218_performance_2026_10_08.json").read_text())
+
+          assert source["record_type"] == "q218_sec_multichannel_source_gate"
+          assert source["all_required_issuer_channels_observed"] is True
+          assert source["scientific_evidence"] is False
+          assert source["performance_authorization"] is False
+
+          assert event["record_type"] == "q218_sec_event_pair_lineage_gate"
+          assert event["all_pairing_valid"] is True
+          assert event["scientific_evidence"] is False
+          assert event["performance_authorization"] is False
+
+          assert indep["status"] == "Q218_INDEPENDENT_ARCHITECTURE_PIT_REPRODUCED"
+          assert indep["reproduction"]["all_checks_passed"] is True
+          assert indep["reproduction"]["same_day_decision_use_allowed"] is False
+          assert indep["upstream_receipts"]["source_receipt_fingerprint"] == source["receipt_fingerprint"]
+          assert indep["upstream_receipts"]["event_pair_receipt_fingerprint"] == event["receipt_fingerprint"]
+
+          assert result["trial_id"] == "T-2026-10-08-Q218-PERFORMANCE-01"
+          assert result["bundle_fingerprint"] == bundle["bundle_fingerprint"]
+          assert result["performance_evaluation"] is True
+          assert result["holdout_evaluation"] is False
+          assert all(result[k] is False for k in [
+              "selection_used","holdout_used_for_selection","parameter_search",
+              "threshold_search","horizon_search","asset_search","variant_search",
+              "family_ranking","promotion_decision"
+          ])
+          assert result["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+          }
+
+          event_keys = sorted(
+              (issuer, pair["ten_k_accession"], pair["item_2_02_8k_accession"])
+              for issuer, issuer_result in event["issuer_results"].items()
+              for pair in issuer_result.get("event_pairs", [])
+          )
+          result_keys = sorted(
+              (row["issuer"], row["ten_k_accession"], row["item_2_02_8k_accession"])
+              for row in result["events"]
+          )
+          assert event_keys == result_keys
+
+          assert auth["authorized"] is True
+          assert auth["one_shot"] is True
+
+          receipt = {
+              "schema_version": "1.0",
+              "record_type": "q218_current_context_revalidation",
+              "candidate_id": "Q218",
+              "trial_id": result["trial_id"],
+              "status": "Q218_CURRENT_CONTEXT_REVALIDATED",
+              "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+              "current_master_sha": os.environ["GITHUB_SHA"],
+              "fresh_gate_receipts": {
+                  "source": source["receipt_fingerprint"],
+                  "event_pair": event["receipt_fingerprint"],
+                  "independent_pit": indep["receipt_fingerprint"],
+              },
+              "performance_context": {
+                  "existing_one_shot_result_present": True,
+                  "result_report_fingerprint": result["report_fingerprint"],
+                  "input_bundle_fingerprint": bundle["bundle_fingerprint"],
+                  "event_population_exact_match": True,
+                  "result_bundle_match": True,
+                  "reexecution_required": False,
+                  "reexecution_performed": False,
+              },
+              "methodology": {
+                  "strict_current_item_2_02_gate": True,
+                  "independent_pit_reproduced": True,
+                  "no_rule_change": True,
+                  "no_post_hoc_tuning": True,
+                  "no_performance_output_reuse_for_rule_changes": True,
+              },
+              "scientific_boundary": {
+                  "new_performance_execution": False,
+                  "holdout_selection": False,
+                  "ranking": False,
+                  "parameter_search": False,
+                  "threshold_search": False,
+                  "horizon_search": False,
+                  "asset_search": False,
+                  "variant_search": False,
+                  "promotion": False,
+                  "live_execution": False,
+              },
+              "safety": {
+                  "paper_only": True,
+                  "live_trading_enabled": False,
+                  "orders_enabled": False,
+                  "automatic_promotion": False,
+              },
+              "next_gate": "CURRENT_OPERATIONAL_STATUS_AND_DASHBOARD_SYNCHRONIZATION",
+          }
+          receipt["receipt_fingerprint"] = hashlib.sha256(
+              json.dumps(receipt, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+          ).hexdigest()
+          (root / "q218_current_context_revalidation.json").write_text(
+              json.dumps(receipt, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8"
+          )
+          print("Q218_CURRENT_CONTEXT_REVALIDATION=PASS")
+          print("Q218_PERFORMANCE_RESULT_EVENT_POPULATION_MATCH=PASS")
+          print("Q218_ONE_SHOT_REEXECUTION=NOT_REQUIRED")
+          PY
+
+      - name: Upload complete revalidation evidence
+        uses: actions/upload-artifact@v6
+        with:
+          name: q218-current-context-revalidation-${GITHUB_RUN_ID}
+          path: research/runs/q218-current-context/${GITHUB_RUN_ID}/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish immutable revalidation receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha "$base_sha" \
+            --file "research/evidence/q218_current_context_revalidation_latest.json=research/runs/q218-current-context/${GITHUB_RUN_ID}/q218_current_context_revalidation.json"
+          base_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha "$base_sha" \
+            --file "research/evidence/q218_current_context_source_gate_latest.json=research/runs/q218-current-context/${GITHUB_RUN_ID}/source/receipt.json" \
+            --file "research/evidence/q218_current_context_event_pair_latest.json=research/runs/q218-current-context/${GITHUB_RUN_ID}/event_pair/receipt.json" \
+            --file "research/evidence/q218_independent_architecture_pit_reproduction_current_context_latest.json=research/runs/q218-current-context/${GITHUB_RUN_ID}/independent/pit_receipt.json"
