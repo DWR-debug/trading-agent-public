@@ -55,27 +55,32 @@ jobs:
         with:
           ref: master
           fetch-depth: 1
-      - name: Skip completed Q218 focus gate without consuming research work
+      - name: Check completed Q218 focus gate
+        id: q218_focus_gate
         if: ${{ inputs.candidate == 'Q218' && inputs.focus_wave && (inputs.gate == 'source' || inputs.gate == 'event_pair') }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ ! -f research/evidence/q218_focus_gate_receipt_index_latest.json ]; then exit 0; fi
-          python - <<'PY'
+          skip=false
+          if [ -f research/evidence/q218_focus_gate_receipt_index_latest.json ]; then
+            python - <<'PY' > "$RUNNER_TEMP/q218_skip"
           import json, subprocess
           from pathlib import Path
           d=json.loads(Path('research/evidence/q218_focus_gate_receipt_index_latest.json').read_text(encoding='utf-8'))
           gate='${{ inputs.gate }}'
           rec=d['source_gate'] if gate=='source' else d['event_pair_gate']
           expected=rec.get('gate_code_blob_sha')
-          actual=subprocess.check_output(['git','hash-object', 'automation/q218_sec_multichannel_source_gate.py' if gate=='source' else 'automation/q218_sec_event_pair_lineage_gate.py'], text=True).strip()
-          if rec.get('verified_positive_complete') is True and expected==actual:
-              print('Q218_COMPLETED_FOCUS_GATE_NOOP=TRUE')
-              raise SystemExit(0)
-          raise SystemExit(0)
+          path='automation/q218_sec_multichannel_source_gate.py' if gate=='source' else 'automation/q218_sec_event_pair_lineage_gate.py'
+          actual=subprocess.check_output(['git','hash-object', path], text=True).strip()
+          print('true' if rec.get('verified_positive_complete') is True and expected==actual else 'false')
           PY
+            skip="$(cat "$RUNNER_TEMP/q218_skip")"
+          fi
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+          echo "Q218_COMPLETED_FOCUS_GATE_NOOP=$skip"
 
       - name: Run bounded candidate workpack
+        if: ${{ steps.q218_focus_gate.outputs.skip != 'true' }}
         shell: cmd
         run: |
           @echo off
@@ -109,6 +114,7 @@ jobs:
             if errorlevel 1 exit /b 1
           )
           endlocal
+        if: ${{ steps.q218_focus_gate.outputs.skip != 'true' }}
       - name: Enforce scientific boundary
         shell: cmd
         run: echo SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION
