@@ -283,8 +283,14 @@ def probe_issuer(symbol: str, cik: str) -> dict:
     return record
 
 
-def build() -> dict:
+def build(selected_symbols: list[str] | None = None) -> dict:
     ciks = load_frozen_ciks()
+    if selected_symbols:
+        wanted = {str(x).upper() for x in selected_symbols}
+        unknown = sorted(wanted - set(ciks))
+        if unknown:
+            raise RuntimeError("Q104_I19_UNKNOWN_SYMBOLS:" + ",".join(unknown))
+        ciks = {k: v for k, v in ciks.items() if k in wanted}
     results = {}
     with ThreadPoolExecutor(max_workers=2) as ex:
         futures = {ex.submit(probe_issuer, symbol, cik): symbol for symbol, cik in ciks.items()}
@@ -332,8 +338,9 @@ def build() -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--output", type=Path, default=OUTPUT)
+    ap.add_argument("--symbols", nargs="+")
     args = ap.parse_args()
-    receipt = build()
+    receipt = build(args.symbols)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({
