@@ -76,6 +76,45 @@ def test_q218_q221_census_is_deterministic_and_non_authorizing(tmp_path, monkeyp
     assert result["q221_usa_rdtne_census"]["transactions_endpoint_documented"] is True
     assert Path(tmp_path / "census.json").is_file()
 
+
+def test_q218_sec_submission_census_requires_item_202_even_with_exhibit_marker(monkeypatch):
+    sample_json = json.dumps(
+        {
+            "filings": {
+                "recent": {
+                    "form": ["10-K", "8-K", "8-K"],
+                    "filingDate": ["2025-02-01", "2025-02-15", "2025-02-15"],
+                    "reportDate": ["2024-09-30", "2024-09-30", "2024-09-30"],
+                    "accessionNumber": [
+                        "0000320193-25-000001",
+                        "0000320193-25-000002",
+                        "0000320193-25-000003",
+                    ],
+                    "primaryDocument": ["a10k.htm", "a8k.htm", "other.htm"],
+                    "items": ["", "2.02,9.01", "8.01,9.01"],
+                }
+            }
+        }
+    ).encode()
+
+    def fake_fetch(url: str, limit=1000000):
+        if "submissions/CIK" in url:
+            return 200, "application/json", sample_json
+        if url.endswith("-index-headers.html"):
+            if "000003" in url:
+                return 200, "text/html", b"<ACCEPTANCE-DATETIME>20250201140000 EXHIBIT 99.1 EARNINGS RELEASE"
+            if "000002" in url:
+                return 200, "text/html", b"<ACCEPTANCE-DATETIME>20250201130000"
+            return 200, "text/html", b"<ACCEPTANCE-DATETIME>20250201150000"
+        if url.endswith("a8k.htm") or url.endswith("other.htm"):
+            return 200, "text/html", b"EARNINGS RELEASE RESULTS"
+        raise AssertionError(f"unexpected SEC URL: {url}")
+
+    monkeypatch.setattr(census, "fetch", fake_fetch)
+    result = census.sec_submission_census()
+    event = result["issuer_results"]["AAPL"]["paired_10k_events"][0]
+    assert event["paired_8k_accession"] == "0000320193-25-000002"
+
 def test_q218_sec_submission_census_excludes_8k_amendments_from_event_pairing(monkeypatch):
     sample_json = json.dumps(
         {
