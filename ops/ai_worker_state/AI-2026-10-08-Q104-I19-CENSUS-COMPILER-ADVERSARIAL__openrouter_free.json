@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL",
+  "provider": "openrouter_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "openrouter_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "litellm_transport_enabled": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_mode_attestation": {
+      "eligible": true,
+      "provider": "openrouter_free",
+      "fixed_model": "openrouter/free",
+      "free_mode_attested": true,
+      "attestation_required": false,
+      "attestation_type": "provider_fixed_zero_price_route",
+      "attestation_env": null,
+      "paid_usage_allowed": false,
+      "paid_fallback_allowed": false,
+      "personal_credit_fallback_allowed": false,
+      "reasons": []
+    },
+    "free_enforcement": "fixed_model_openrouter_free",
+    "reasons": []
+  },
+  "litellm_transport_enabled": false,
+  "task_fingerprint": "9f990cefaa66384a331903764af949124f403f3545c65cb612cdb0381e710ffc",
+  "context_fingerprint": "16a2550316fd1c83e391ca8792fa6587c00bb32d218e30a9485393ad3d5c2f87",
+  "observed_at_utc": "2026-10-08T08:30:30.747975Z",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 52.145,
+  "stdout": "\n\n# Q104:I19 Adversarial Methods Review — 13F Census & PIT Compiler Readiness Chain\n\n**Reviewer role:** Independent adversarial second opinion. No consensus-seeking. No performance authorization. Paper-only.\n\n---\n\n## 1. Historical 13F Archive Completeness\n\n### Finding 1.1 — SEC Page-Structure Drift as a Silent Archive Gap\n\nThe census discovers archives by parsing `https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets` with a custom `LinkParser` that only captures `<a>` tags whose `href` ends in `.zip` and contains `form13f`. The SEC page is operational telemetry, not an immutable snapshot. If the page layout changes (e.g., JavaScript-rendered links, pagination, CDN migration, or a move to a different domain path), the parser will silently produce an empty `out` dict — and the workflow will proceed with zero archives, producing a \"successful\" census with zero records.\n\n**Smallest deterministic falsifier:**\nFreeze the page HTML at workflow start (already done via `source_snapshot` job), then compare the set of `.zip` URLs discovered from the *frozen* snapshot against the set discovered from the *live* page at download time. Any symmetric difference is a structure-drift signal. The exact artifact required: `research/runs/q104_i19_13f_census/source_snapshot/source_page_receipt.json` paired with a `live_page_diff_receipt.json` computed at the start of the `windows_census` job.\n\n**Counterargument:** The `source_snapshot` job already freezes the page. However, the `windows_census` job does not re-parse the frozen snapshot — it re-fetches the live page (the script's `discover_archives` is called with a fresh `urllib.request` call, not the frozen HTML). The frozen snapshot is only used for the `source_page_receipt.json` hash; the actual archive discovery is decoupled from it.\n\n### Finding 1.2 — Archive Download Failures Are Not Fail-Closed\n\nThe `fetch` function has retry logic (`MAX_FETCH_RETRIES=6`, `MAX_RETRY_DELAY_SECONDS=60`), but the census script (truncated in context) does not show how download failures are handled. If a `.zip` URL returns a 404, a redirect to a different domain, or a truncated file, the script may either skip the archive silently or crash the entire census. Neither outcome is acceptable for a completeness-critical census.\n\n**Smallest deterministic falsifier:**\nAttempt to download one known archive per shard and verify: (a) HTTP 200, (b) content-length matches expected, (c) SHA-256 of the downloaded bytes matches a pre-computed expectation. The exact artifact required: a `download_receipt.json` per archive containing `{url, http_status, bytes_downloaded, sha256, download_utc}`. Any archive missing this receipt is a failure.\n\n**Counterargument:** The `q113_13f_q107_coverage_result.json` shows a successful download of a 2026 archive with SHA-256 `4db97d5652e262de51617971104e06313211de4d092e6bcb5d7bf34ee7efe054`. But this is a *different* archive (June–Aug 2026) and a *different* task (Q113/Q107). It does not demonstrate that the Q104:I19 census has the same discipline for its 2013–2025 archives.\n\n---\n\n## 2. Frozen Target CUSIP Identity\n\n### Finding 2.1 — CUSIP Identity Is Not Frozen; It Is Inferred from a Single Quarter's Coverage File\n\nThe `q113_13f_q107_coverage_result.json` lists four CUSIPs for SPGI: `78409V104`, `78409V112`, `78409V904`, `78409V954`. These are derived from a *single* 13F archive (June–Aug 2026). But CUSIPs can change due to corporate actions (e.g., spinoffs, mergers, reorganizations). A 2013 13F filing might reference a different CUSIP for the same economic issuer, or the same CUSIP might refer to a different issuer in 2025.\n\n**Smallest deterministic falsifier:**\nCross-reference the four SPGI CUSIPs from `q113_13f_q107_coverage_result.json` against a CUSIP-to-issuer mapping with effective-date ranges (e.g., from the SEC's own CIK/CUSIP mapping or a commercial provider). The exact artifact required: a `cusip_issuer_timeline.json` with `{cusip, issuer_name, effective_start, effective_end, source}` for each of the four CUSIPs. If any CUSIP has a different issuer name at any point in 2013–2025, the census is using a stale identity.\n\n**Counterargument:** The census may not need issuer-name stability — it may only need CUSIP-to-CUSIP continuity. But the task is \"frozen target CUSIP identity,\" which implies the CUSIPs themselves are the frozen targets. If a CUSIP was retired or reassigned, the census will miss the successor CUSIP.\n\n### Finding 2.2 — CUSIP Normalization May Drop Valid Matches\n\nThe `norm_cusip` function strips all non-alphanumeric characters and uppercases. This is correct for standard CUSIPs, but the coverage evidence shows both `78409V104` and `78409v104` (lowercase). Normalization handles this. However, some 13F filings may use FIGIs (Financial Instrument Global Identifiers) or other identifiers instead of CUSIPs. The census script's `norm_cusip` would not match a FIGI to a CUSIP, even if they refer to the same security.\n\n**Smallest deterministic falsifier:**\nFor each target CUSIP, search the 13F data for any row where the security identifier (regardless of field name) matches the CUSIP after normalization, and separately search for rows where the FIGI or other identifier matches. The exact artifact required: a `identifier_coverage.json` showing, per target CUSIP, `{cusip_matches, figi_matches, other_matches, unmatched_rows}`. If `other_matches > 0` and the census only matches on CUSIP, target-hit completeness is violated.\n\n**Counterargument:** The project's 13F data standard may mandate CUSIP as the primary identifier. But the coverage evidence itself lists FIGIs (e.g., `BBG000BP1Q11`), suggesting the data contains multiple identifier types.\n\n---\n\n## 3. Shard Boundary Reconciliation\n\n### Finding 3.1 — Shard Boundaries Are Arbitrary and May Split Related Archives\n\nThe shards are:\n- `2013-2017`: `[2013-07-01, 2018-01-01)`\n- `2018-2021`: `[2018-01-01, 2022-01-01)`\n- `2022-2025-09`: `[202",
+  "stderr": "",
+  "command_binary": "https-openrouter",
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791448230-nU2u5cf2nDaKALlvAKVn",
+  "usage": {
+    "prompt_tokens": 6586,
+    "completion_tokens": 3200,
+    "total_tokens": 9786,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1573,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
+}
