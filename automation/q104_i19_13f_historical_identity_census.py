@@ -80,8 +80,8 @@ def fetch(url,retries=MAX_FETCH_RETRIES,rate_limiter=None):
                 raise
             retry_after=None
             try:
-                retry_after=int(e.headers.get("Retry-After","0"))
-            except (TypeError,ValueError):
+                retry_after=int((getattr(e, "headers", None) or {}).get("Retry-After", "0"))
+            except (AttributeError,TypeError,ValueError):
                 retry_after=0
             delay=max(ARCHIVE_REQUEST_GAP_SECONDS, retry_after, min(MAX_RETRY_DELAY_SECONDS, 5*(2**i)))
             time.sleep(delay)
