@@ -841,6 +841,32 @@ def test_q218_focused_gate_ignores_legacy_failures_from_older_master_context(mon
     assert [x["candidate"] for x in plan["dispatches"]] == ["Q218"]
     assert any(d["decision"] == "FOCUSED_GATE_TECHNICAL_RETRY_PERMITTED" for d in plan["decisions"]) is False
 
+def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
+    monkeypatch.setattr(dispatcher, "completed_q218_gates_for_current_context", lambda runs: {"event_pair"})
+    snapshot = {
+        "focus_candidates": ["Q218"],
+        "resources": [{
+            "resource": "Windows self-hosted C",
+            "research_capacity_slots": 1,
+            "research_slots_in_use": 0,
+            "research_slots_free": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-EVENT-PAIR",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+                "execution_workflow_inputs": {"focus_wave": True, "gate": "event_pair"},
+            }],
+        }],
+        "work_assignments": [],
+    }
+    plan = dispatcher.plan_dispatch(snapshot, [], repo="DWR-debug/trading-agent-public", max_dispatches=6)
+    assert plan["dispatches"] == []
+    assert any(d["decision"] == "SKIP_FOCUSED_GATE_ALREADY_COMPLETED_CURRENT_CONTEXT" for d in plan["decisions"])
+
+
 def test_q218_focused_gate_allows_one_technical_retry_then_stops(monkeypatch):
     from automation import planned_capacity_fast_dispatch as dispatcher
     monkeypatch.setattr(dispatcher, "q218_positive_gate_index_current", lambda: set())
