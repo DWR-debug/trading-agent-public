@@ -66,3 +66,9 @@ def test_research_scheduler_selects_only_orthogonal_tracks():
     assert "holdout_return" in plan["forbidden_inputs"]
     assert "performance_rank" in plan["forbidden_inputs"]
     assert plan["resource_policy"]["performance_authorization"] is False
+
+
+def test_q218_authorized_event_study_uses_specialized_structural_robustness_gate():
+    result = validate(ROOT)
+    assert result["status"] == "PASS"
+    assert result["authorized_entries_checked"] >= 1
