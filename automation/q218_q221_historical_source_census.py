@@ -144,11 +144,7 @@ def sec_submission_census() -> dict:
                 if r.get("acceptance_datetime_found") is True
                 and r["acceptance_datetime"] <= target_accept
                 and (lower_bound is None or r["acceptance_datetime"] > lower_bound)
-                and (
-                    r.get("item_2_02_marker") is True
-                    or r.get("exhibit_99_1") is True
-                    or r.get("earnings_release_marker") is True
-                )
+                and r.get("item_2_02_marker") is True
             ]
             for candidate in cycle_candidates:
                 try:
@@ -162,11 +158,11 @@ def sec_submission_census() -> dict:
                     )
                 except Exception as exc:
                     candidate["primary_fetch_error"] = type(exc).__name__ + ":" + str(exc)
+                # Keep eligibility identical to the formal Q218 gate:
+                # only a non-amended Form 8-K carrying Item 2.02 is eligible.
                 candidate["is_eligible_earnings_release_8k"] = bool(
-                    candidate.get("item_2_02_marker")
-                    or candidate.get("exhibit_99_1")
-                    or candidate.get("earnings_release_marker")
-                    or candidate.get("primary_publication_terms_marker")
+                    candidate.get("form") == "8-K"
+                    and candidate.get("item_2_02_marker") is True
                 )
             eligible = [
                 r for r in cycle_candidates
