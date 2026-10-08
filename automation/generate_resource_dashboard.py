@@ -516,6 +516,35 @@ def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def q218_receipt_state() -> dict[str, Any]:
+    """Receipt-driven Q218 next-gate state; never infer scientific completion from static queue metadata."""
+    index_path = ROOT / "research" / "evidence" / "q218_focus_gate_receipt_index_latest.json"
+    independent_path = ROOT / "research" / "evidence" / "q218_independent_architecture_pit_reproduction_latest.json"
+    try:
+        index = json.loads(index_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        index = {}
+    source_complete = bool(index.get("source_gate", {}).get("verified_positive_complete"))
+    event_complete = bool(index.get("event_pair_gate", {}).get("verified_positive_complete"))
+    independent_complete = False
+    try:
+        receipt = json.loads(independent_path.read_text(encoding="utf-8"))
+        independent_complete = (
+            receipt.get("status") == "Q218_INDEPENDENT_ARCHITECTURE_PIT_REPRODUCED"
+            and receipt.get("upstream_receipts", {}).get("source_receipt_fingerprint")
+            == index.get("source_gate", {}).get("receipt_fingerprint")
+            and receipt.get("upstream_receipts", {}).get("event_pair_receipt_fingerprint")
+            == index.get("event_pair_gate", {}).get("receipt_fingerprint")
+        )
+    except (OSError, json.JSONDecodeError):
+        independent_complete = False
+    return {
+        "source_complete": source_complete,
+        "event_pair_complete": event_complete,
+        "independent_complete": independent_complete,
+    }
+
+
 def q218_prereg_status() -> dict[str, Any]:
     candidates = list((ROOT / "research" / "preregistrations").glob("*q218*")) if (ROOT / "research" / "preregistrations").is_dir() else []
     authorizations = list((ROOT / "research" / "authorizations").glob("*q218*")) if (ROOT / "research" / "authorizations").is_dir() else []
@@ -544,6 +573,7 @@ def q218_prereg_status() -> dict[str, Any]:
 def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q104_census = q104_census_status(runs)
     q218_prereg = q218_prereg_status()
+    q218_receipts = q218_receipt_state()
 
     q104_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Exact-XBRL-Kontrakt eingefroren"},
@@ -556,11 +586,18 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
         {"label": "Preregistration + authorization reconcile", "status": "blocked", "progress": 0, "detail": "geschlossen bis zur unabhängigen Reproduktion"},
         {"label": "One-shot performance", "status": "closed", "progress": 0, "detail": "keine Performance-Autorisierung"},
     ]
+    q218_source_state = "complete" if q218_receipts["source_complete"] else "open"
+    q218_source_progress = 100 if q218_receipts["source_complete"] else 0
+    q218_event_state = "complete" if q218_receipts["event_pair_complete"] else "open"
+    q218_event_progress = 100 if q218_receipts["event_pair_complete"] else 0
+    q218_ind_state = "complete" if q218_receipts["independent_complete"] else "open"
+    q218_ind_progress = 100 if q218_receipts["independent_complete"] else 0
+    q218_ind_detail = "unabhängige Reproduktion erfolgreich" if q218_receipts["independent_complete"] else "noch kein positiver unabhängiger Reproduktions-Receipt"
     q218_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Q218 design/gate contract eingefroren"},
-        {"label": "Source gate", "status": "complete", "progress": 100, "detail": "positiver Source Gate Receipt"},
-        {"label": "Event-pair gate", "status": "complete", "progress": 100, "detail": "positiver Event-Pair Receipt"},
-        {"label": "Independent Architecture PIT", "status": "complete", "progress": 100, "detail": "unabhängige Reproduktion erfolgreich"},
+        {"label": "Source gate", "status": q218_source_state, "progress": q218_source_progress, "detail": "positiver Source Gate Receipt" if q218_receipts["source_complete"] else "Source Gate Receipt fehlt"},
+        {"label": "Event-pair gate", "status": q218_event_state, "progress": q218_event_progress, "detail": "positiver Event-Pair Receipt" if q218_receipts["event_pair_complete"] else "Event-Pair Receipt fehlt"},
+        {"label": "Independent Architecture PIT", "status": q218_ind_state, "progress": q218_ind_progress, "detail": q218_ind_detail},
         {"label": "Preregistration + authorization reconcile", "status": q218_prereg["state"], "progress": q218_prereg["progress_percent"], "detail": q218_prereg["detail"]},
         {"label": "One-shot performance", "status": "closed", "progress": 0, "detail": "erst nach separater immutable authorization; aktuell geschlossen"},
     ]
@@ -600,11 +637,11 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "overall_progress_percent": q218_overall,
                 "completed_milestones": q218_complete,
                 "total_milestones": q218_total,
-                "current_milestone": "Preregistration + authorization reconcile",
-                "current_milestone_progress_percent": q218_prereg["progress_percent"],
-                "current_milestone_status": q218_prereg["state"],
-                "current_milestone_detail": q218_prereg["detail"],
-                "next_gate": q218_prereg["next_gate"],
+                "current_milestone": "Preregistration + authorization reconcile" if q218_receipts["independent_complete"] else "Independent Architecture PIT",
+                "current_milestone_progress_percent": q218_prereg["progress_percent"] if q218_receipts["independent_complete"] else 0,
+                "current_milestone_status": q218_prereg["state"] if q218_receipts["independent_complete"] else "open",
+                "current_milestone_detail": q218_prereg["detail"] if q218_receipts["independent_complete"] else q218_ind_detail,
+                "next_gate": q218_prereg["next_gate"] if q218_receipts["independent_complete"] else "independent architecture PIT reproduction",
                 "milestones": q218_milestones,
                 "performance_authorization_allowed": False,
             },
