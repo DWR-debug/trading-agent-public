@@ -108,10 +108,12 @@ def acceptance_datetime(header: bytes, expected: str) -> str:
     m = re.search(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})", text, re.I)
     if not m:
         raise RuntimeError("Q218 acceptance datetime missing")
-    actual = datetime.strptime(m.group(1), "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc).isoformat().replace("+00:00", "Z")
-    if actual != expected:
-        raise RuntimeError(f"Q218 acceptance mismatch: expected {expected}, got {actual}")
-    return actual
+    raw = m.group(1)
+    expected_raw = expected.replace("-", "").replace(":", "").replace("T", "").replace("Z", "")
+    if raw != expected_raw:
+        raise RuntimeError(f"Q218 acceptance mismatch: expected {expected}, got {raw}")
+    local = datetime.strptime(raw, "%Y%m%d%H%M%S").replace(tzinfo=ZoneInfo("America/New_York"))
+    return local.isoformat()
 
 
 def next_xnys_session(closure: datetime, start: str, end: str) -> str:
@@ -233,7 +235,11 @@ def freeze(output_root: Path, receipt_path: Path) -> dict:
                 "header_url": header_url, "acceptance_datetime": actual,
             })
 
-        closure = max(datetime.fromisoformat(ten_k_expected.replace("Z","+00:00")), datetime.fromisoformat(eight_k_expected.replace("Z","+00:00")))
+        closure_values = [
+            datetime.strptime(ten_k_expected.replace("T", " "), "%Y-%m-%d %H:%M:%S").replace(tzinfo=ZoneInfo("America/New_York")),
+            datetime.strptime(eight_k_expected.replace("T", " "), "%Y-%m-%d %H:%M:%S").replace(tzinfo=ZoneInfo("America/New_York")),
+        ]
+        closure = max(closure_values)
         if closure > datetime.fromisoformat(future_cutoff.replace("Z","+00:00")):
             raise RuntimeError("Q218 closure exceeds frozen cutoff")
         action_session = next_xnys_session(closure, fixed_start, fixed_end)
