@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_explicit_one_shot_performance_authorization",
+  "authorization_id": "AUTH-Q218-2026-10-08-ONE-SHOT-01",
+  "candidate_id": "Q218",
+  "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+  "authorized": true,
+  "performance_execution_authorized": true,
+  "one_shot": true,
+  "authorized_at_utc": "2026-10-08T11:34:06.175709+00:00",
+  "authorization_basis": {
+    "requested_by_user": true,
+    "master_exact_ci_run_id": 37770785520,
+    "g4_reconcile_receipt_fingerprint": "8f387cae448e10f15a6194dd471e7161d97d2dba3f5a2c3d1855d09f8771ae73",
+    "preregistration_fingerprint": "e80e0e5660bc43959a037cf09ba767fabd0359a6b2a5ecda41874840385d6c67"
+  },
+  "source_receipts": {
+    "source_gate": "f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4",
+    "event_pair_gate": "4f83127b8f2c7335f2cb64ef2439d0e364ae47f25599f5d80ac0d56b96be8ebe",
+    "independent_pit": "764b538566fc936d1ff9655b6cb6198ff6f8e80c4e96a50451670774a37fa199"
+  },
+  "selection_used": false,
+  "holdout_used_for_selection": false,
+  "parameter_search": false,
+  "threshold_search": false,
+  "asset_search": false,
+  "horizon_search": false,
+  "variant_search": false,
+  "family_ranking": false,
+  "promotion_decision": false,
+  "execution_trigger_created": false,
+  "execution_workflow": null,
+  "execution_readiness_note": "Authorization is valid, but the Q218 public repository currently has no fixed performance executor. No execution trigger is created until an exact executor and input bundle are frozen.",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "authorization_fingerprint": "4a7720674aaa910d590519b28f22fbd4e191d97f03d8aea3b0665263e99ea28e"
+}
