@@ -1,5 +1,6 @@
+# Re-dispatch 2026-10-08 after positive G4 and current exact preparation receipts
 EXECUTE_Q218_PERFORMANCE=true
 TRIAL_ID=T-2026-10-08-Q218-PERFORMANCE-01
 ONE_SHOT=true
 REQUESTED_BY_USER=true
-# Re-dispatch on green exact-master T052 after governance fix
+TRIGGER_NONCE=CHAT-2026-10-08-Q218-PERFORMANCE-EXEC-REARM
