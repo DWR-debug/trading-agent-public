@@ -148,8 +148,74 @@ def _verify_bundle(bundle_path: Path) -> dict[str, Any]:
     return bundle
 
 
+def validate_bundle_sources(bundle: dict[str, Any], bundle_root: Path) -> None:
+    """Validate all frozen source/identity boundaries before evaluation."""
+    cutoff = str(bundle.get("future_cutoff_session") or "")
+    seen_accessions: set[str] = set()
+    for document in bundle.get("documents", []):
+        accession = str(document.get("accession") or "")
+        form = str(document.get("form") or "")
+        if not accession or accession in seen_accessions:
+            raise RuntimeError("Q218 duplicate or missing document accession")
+        seen_accessions.add(accession)
+        if form not in {"10-K", "8-K"}:
+            raise RuntimeError(f"Q218 amended or unsupported SEC form in bundle: {accession}")
+        if not document.get("sha256") or not document.get("header_sha256"):
+            raise RuntimeError(f"Q218 source fingerprints incomplete: {accession}")
+        doc_path = _safe_child(bundle_root, str(document.get("path") or ""))
+        header_path = _safe_child(bundle_root, str(document.get("header_path") or ""))
+        if not doc_path.is_file() or file_sha256(doc_path) != str(document["sha256"]):
+            raise RuntimeError(f"Q218 SEC source fingerprint mismatch: {accession}")
+        if not header_path.is_file() or file_sha256(header_path) != str(document["header_sha256"]):
+            raise RuntimeError(f"Q218 SEC header fingerprint mismatch: {accession}")
+
+    seen_events: set[tuple[str, str, str]] = set()
+    for event in bundle.get("events", []):
+        issuer = str(event.get("issuer") or "")
+        ten_k = str(event.get("ten_k_accession") or "")
+        eight_k = str(event.get("item_2_02_8k_accession") or "")
+        key = (issuer, ten_k, eight_k)
+        if not all(key) or key in seen_events:
+            raise RuntimeError("Q218 duplicate or incomplete event identity")
+        seen_events.add(key)
+        closure = str(event.get("pair_closure_clock") or "")
+        action = str(event.get("action_session") or "")
+        if not closure or not action:
+            raise RuntimeError("Q218 event timing incomplete")
+        if cutoff and action > cutoff:
+            raise RuntimeError(f"Q218 action session exceeds cutoff: {action}")
+        docs_for_event = {
+            str(d.get("accession") or ""): d
+            for d in bundle.get("documents", [])
+            if str(d.get("accession") or "") in {ten_k, eight_k}
+        }
+        if ten_k not in docs_for_event or eight_k not in docs_for_event:
+            raise RuntimeError("Q218 event references unknown SEC accession")
+        if docs_for_event[ten_k].get("form") != "10-K":
+            raise RuntimeError("Q218 mandatory document is not an unamended 10-K")
+        if docs_for_event[eight_k].get("form") != "8-K":
+            raise RuntimeError("Q218 voluntary document is amended or unsupported")
+
+    seen_market: set[tuple[str, str]] = set()
+    for bar in bundle.get("market_bars", []):
+        key = (str(bar.get("symbol") or ""), str(bar.get("session") or ""))
+        if not all(key) or key in seen_market:
+            raise RuntimeError("Q218 duplicate or incomplete market bar identity")
+        seen_market.add(key)
+        raw_path = _safe_child(bundle_root, str(bar.get("raw_response_path") or ""))
+        if not raw_path.is_file() or file_sha256(raw_path) != str(bar.get("raw_response_sha256") or ""):
+            raise RuntimeError(f"Q218 market source fingerprint mismatch: {key[0]} {key[1]}")
+        if cutoff and key[1] > cutoff:
+            raise RuntimeError(f"Q218 market bar exceeds cutoff: {key[1]}")
+        for field in ("open", "close"):
+            value = bar.get(field)
+            if value is None or not math.isfinite(float(value)) or float(value) <= 0:
+                raise RuntimeError(f"Q218 invalid market bar: {key[0]} {key[1]}")
+
 def execute(bundle_path: Path, output_path: Path) -> dict[str, Any]:
     bundle = _verify_bundle(bundle_path)
+    bundle_root = bundle_path.parent
+    validate_bundle_sources(bundle, bundle_root)
     doc_by_accession = {str(d["accession"]): d for d in bundle["documents"]}
     bar_by_symbol_date = {(str(b["symbol"]), str(b["session"])): b for b in bundle["market_bars"]}
     rows: list[dict[str, Any]] = []
