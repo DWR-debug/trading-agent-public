@@ -161,7 +161,7 @@ jobs:
                   'automation/q104_i19_xbrl_pit_compiler.py',
                   '.github/workflows/q104-i19-13f-historical-identity-census.yml',
               }
-                            orch_paths = {
+              orch_paths = {
                   'automation/research_os_scheduler.py',
                   'automation/research_hypothesis_compiler.py',
                   'automation/autonomous_control_plane.py',
@@ -202,6 +202,7 @@ jobs:
               'AI-2026-10-06-Q219-TOP4-ADVERSARIAL',
               'AI-2026-10-06-Q220-TOP4-ADVERSARIAL',
               'AI-2026-10-06-Q221-TOP4-ADVERSARIAL',
+              'AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL',
           }
           if any(task not in allowed_manual for task in tasks):
               raise SystemExit(f'unexpected AI task: {tasks}')
