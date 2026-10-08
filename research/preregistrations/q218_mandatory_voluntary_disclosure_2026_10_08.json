@@ -4,7 +4,7 @@
   "candidate_id": "Q218",
   "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
   "status": "FROZEN_PREREGISTRATION_RECONCILED",
-  "frozen_at_utc": "2026-10-08T14:42:10.645703+00:00",
+  "frozen_at_utc": "2026-10-08T18:26:08.268915+00:00",
   "contract": {
     "name": "Mandatory-voluntary disclosure semantic wedge",
     "mechanism": "Selective allocation of topics between mandatory and voluntary public disclosures can encode information beyond document size, complexity or generic sentiment.",
@@ -41,6 +41,98 @@
     "same_day_decision_use_allowed": false,
     "future_cutoff_used": "2026-10-05"
   },
+  "performance_contract": {
+    "path": "research/governance/q218_performance_contract_2026_10_08.json",
+    "contract_sha256": "94e4fa782a6afbf978870a4422a16a7084bd13aab3ed2d7baa2db2e5926cf873",
+    "revision": 1
+  },
+  "time_contract": {
+    "acceptance_datetime_representation": "SEC ACCEPTANCE-DATETIME is a local wall-clock timestamp in America/New_York; the raw 14-digit value is preserved before timezone-aware conversion.",
+    "acceptance_datetime_timezone": "America/New_York",
+    "conversion_rule": "Convert the raw SEC header acceptance timestamp to an aware America/New_York datetime, then compare XNYS market-open instants in UTC.",
+    "no_implicit_utc": true
+  },
+  "feature_construction": {
+    "document_scope": "Primary document text from the exact paired filings only; no later documents.",
+    "html_normalization": "Decode entities; remove script/style nodes; collapse whitespace; preserve textual order.",
+    "tokenization": "UTF-8 lowercase ASCII-alphanumeric tokens matching [a-z0-9]+; no fitted vocabulary and no learned stopword list.",
+    "topic_representation": "Deterministic 64-bucket SHA-256 token hashing; bucket = first 8 hex digits modulo 64.",
+    "unigram_presence": "Binary presence of hashed unigram buckets.",
+    "unigram_frequency": "L1-normalized hashed unigram token frequencies.",
+    "bigram_frequency": "L1-normalized hashed adjacent-token bigram frequencies using SHA-256(pair) modulo 64.",
+    "features": {
+      "topic_coverage_gap_mandatory_vs_voluntary": "1 - Jaccard(mandatory_unigram_presence, voluntary_unigram_presence)",
+      "omission_asymmetry_by_topic": "mean absolute difference of the 64 L1-normalized unigram-frequency buckets",
+      "secondary_framing_gap": "1 - cosine similarity of the 64 L1-normalized bigram-frequency buckets"
+    },
+    "fixed_constants": {
+      "topic_hash_buckets": 64
+    },
+    "forbidden_adaptations": [
+      "learned vocabulary",
+      "corpus-specific token filtering",
+      "feature weighting",
+      "parameter tuning",
+      "threshold search",
+      "post-pass rule changes"
+    ]
+  },
+  "outcome_contract": {
+    "event_clock": "pair_closure_clock",
+    "action_session": "first XNYS trading session strictly after pair_closure_clock",
+    "holding_sessions": 1,
+    "entry": "session open",
+    "exit": "same-session close",
+    "outcome": "close / open - 1.0",
+    "direction": "signed two-sided; no ex-ante sign assumption",
+    "price_source": "Yahoo Finance daily chart quote OHLC from the repository's established Yahoo historical market-data source family; corporate-action events remain in the frozen raw response, while dividend cash flows are not modeled.",
+    "missingness": "Any missing action-session open/close is DATA_INSUFFICIENT; no imputation.",
+    "trading_calendar": "XNYS via exchange_calendars"
+  },
+  "input_bundle_contract": {
+    "raw_sec_snapshot_required": true,
+    "raw_market_snapshot_required": true,
+    "source_response_sha256_required": true,
+    "bundle_fingerprint_required": true,
+    "executor_network_access": false,
+    "source_loader_path": "data/yahoo_loader.py",
+    "market_source_endpoint": "https://query1.finance.yahoo.com/v8/finance/chart/"
+  },
+  "independent_replication": {
+    "fresh_symbol_disjoint": true,
+    "symbols": {
+      "GOOGL": "1652044",
+      "META": "1326801",
+      "ORCL": "1341439",
+      "PFE": "78003"
+    },
+    "universe_rule": "Complete fixed issuer list; all eligible event pairs in the same fixed window are used without outcome-based filtering.",
+    "no_post_pass_optimization": true,
+    "no_performance_output_reuse_for_rule_changes": true,
+    "trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+    "preregistration_path": "research/preregistrations/q218_mandatory_voluntary_disclosure_2026_10_08.json",
+    "trigger_path": "research/run_requests/q218_execute_performance_once.trigger",
+    "execution_workflow": ".github/workflows/q218-performance-once.yml"
+  },
+  "input_bundle": {
+    "status": null,
+    "bundle_fingerprint": null,
+    "artifact_path": null,
+    "artifact_sha256": null,
+    "artifact": null
+  },
+  "pre_performance_robustness": {
+    "trial_id": null,
+    "status": null,
+    "artifact_path": null,
+    "artifact_sha256": null,
+    "research_only": null,
+    "screen_is_descriptive_only": null,
+    "no_post_hoc_tuning": null,
+    "bundle_fingerprint": null,
+    "receipt_fingerprint": null
+  },
+  "candidate_robustness_gate": null,
   "selection": {
     "candidate_selection_used": false,
     "holdout_selection_used": false,
@@ -62,5 +154,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "preregistration_fingerprint": "e2c9072448c1bf31a482db69d405c1336ca429be4e002c868bffcbf7a3d63d5b"
+  "preregistration_fingerprint": "2ba0b3520eb4cac56b6f6b63df43e6a32f76189a2e0a84afcc1b235f50249997"
 }
