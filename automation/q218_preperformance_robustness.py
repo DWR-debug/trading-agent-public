@@ -10,9 +10,14 @@ import copy
 import hashlib
 import json
 import shutil
+import sys
 import tempfile
 from pathlib import Path
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from automation.q218_deterministic_performance_executor import (
     ROOT,
