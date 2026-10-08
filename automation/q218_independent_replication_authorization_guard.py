@@ -63,8 +63,13 @@ def validate_authorization(
         if auth.get(key) != value:
             raise RuntimeError(f"Q218 replication authorization mismatch: {key}")
 
-    if contract.get("replication_trial_id") != REPLICATION_TRIAL_ID:
-        raise RuntimeError("Q218 frozen replication contract trial mismatch")
+    if (
+        contract.get("replication_trial_id") != REPLICATION_TRIAL_ID
+        or contract.get("status") != "FROZEN_INDEPENDENT_REPLICATION_CONTRACT"
+    ):
+        raise RuntimeError("Q218 frozen replication contract trial/status mismatch")
+    if not str(auth.get("authorization_id") or "").strip():
+        raise RuntimeError("Q218 replication authorization ID missing")
     expected_contract_sha = sha256_file(contract_path)
     if auth.get("replication_contract_sha256") != expected_contract_sha:
         raise RuntimeError("Q218 replication authorization contract fingerprint mismatch")
