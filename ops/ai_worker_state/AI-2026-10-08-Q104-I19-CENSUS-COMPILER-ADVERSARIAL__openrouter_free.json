@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "9f990cefaa66384a331903764af949124f403f3545c65cb612cdb0381e710ffc",
-  "context_fingerprint": "bbf473b4bf145abd8139cda71dd81edb2dd3825dabbb955ea52756aca8935041",
-  "observed_at_utc": "2026-10-08T09:21:09.867561Z",
+  "context_fingerprint": "eb3d545f87f67e0c14b79f337147a114a94766553078ef055d2718fdeafb93db",
+  "observed_at_utc": "2026-10-08T11:56:32.107420Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 11.823,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 43.137,
+  "stdout": "\n\n# Q104:I19 — Adversarial Contract Review (Methods Reviewer)\n\n## 1. Compiler source is truncated mid-expression — hard syntax/semantic failure\n\n**File:** `automation/q104_i19_xbrl_pit_compiler.py`, function `compile_filing_state`\n\n```python\nni=[x for x in filing.facts if valid_fact(x,EXACT_CONCEPTS[\"net_income_loss\"]) and x.get(\"start\")\n```\n\nThe expression terminates without a predicate on `x.get(\"start\")`. This is either a syntax error or a semantic incompleteness. The design contract mandates:\n\n> \"The fixed accrual amount is: `NetIncomeLoss - NetCashProvidedByUsedInOperatingActivities`\"\n\n…which requires `NetIncomeLoss` to be a **duration** concept (carries a `start` instant), while `Assets` must be an **instant** concept (no `start`). The truncated filter is the only visible gate for period/instant alignment, and it is non-functional as supplied.\n\n**Smallest deterministic falsifier:** Feed a synthetic `Filing` where `NetIncomeLoss` appears with `start=None` (instant-typed) and `Assets` appears with `start=\"2024-01-01\"` (duration-typed). If the compiler accepts it, period/instant mismatch is unguarded.\n\n**Required artifact:** A unit test `tests/test_q104_i19_xbrl_pit_compiler.py::test_period_instant_mismatch_fail_closed` with a frozen JSON fixture and an expected `I19_PERIOD_INSTANT_MISMATCH` exception.\n\n---\n\n## 2. Census shard boundaries overlap — double-count or miss risk\n\n**File:** `automation/q104_i19_13f_historical_identity_census.py`\n\n```python\nSHARDS={\"2013-2017\":(date(2013,7,1),date(2018,1,1)),\n        \"2018-2021\":(date(2018,1,1),date(2022,1,1)),\n        \"2022-2025-09\":(date(2022,1,1),END)}\n```\n\nThe global `START=2013-07-01` and `END=2025-10-01` are used inside `discover_archives()` via `START<=start<END`. The shard tuples are defined but **their boundaries are not visibly applied** in the discovery path. Two failure modes:\n\n- **Over-count:** If shard-specific filtering is applied later using the shard tuples, archives with `period_start` exactly equal to `2018-01-01` or `2022-01-01` fall into two shards (half-open intervals `[start, end)` would exclude the boundary, but the code uses `<=` and `<` inconsistently with the shard tuples).\n- **Under-count:** If shard filtering is never applied and only global `START/END` govern, the shard labels are cosmetic, and any per-shard reconciliation (counts, hashes) is meaningless because all archives are in one implicit pool.\n\n**Smallest deterministic falsifier:** Inspect the census output JSON for duplicate `url` entries across shard keys. If any URL appears in two shards, the boundary is leaky.\n\n**Required artifact:** `research/runs/q104_i19_13f_census/shard_reconciliation.json` with per-shard URL sets, cross-shard intersection cardinality, and a `PASS`/`FAIL` flag for zero-overlap.\n\n---\n\n## 3. CUTOFF vs END mismatch — future-information injection path\n\n**Constants:**\n```python\nEND=date(2025,10,1)\nCUTOFF=date(2025,9,24)\n```\n\nThe census collects archives with `period_start < END` (i.e., through 2025-10-01). But the",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791460592-yMgM2cBlNY4K7viQJIgv",
+  "usage": {
+    "prompt_tokens": 6591,
+    "completion_tokens": 3200,
+    "total_tokens": 9791,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2204,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
