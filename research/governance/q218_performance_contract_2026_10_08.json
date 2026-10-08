@@ -168,7 +168,7 @@
     "exit": "same-session close",
     "outcome": "close / open - 1.0",
     "direction": "signed two-sided; no ex-ante sign assumption",
-    "price_source": "frozen daily OHLCV snapshot acquired before performance execution",
+    "price_source": "Yahoo Finance daily chart quote OHLC from the repository's established Yahoo historical market-data source family; corporate-action events remain in the frozen raw response, while dividend cash flows are not modeled.",
     "missingness": "Any missing action-session open/close is DATA_INSUFFICIENT; no imputation.",
     "trading_calendar": "XNYS via exchange_calendars"
   },
@@ -177,7 +177,9 @@
     "raw_market_snapshot_required": true,
     "source_response_sha256_required": true,
     "bundle_fingerprint_required": true,
-    "executor_network_access": false
+    "executor_network_access": false,
+    "source_loader_path": "data/yahoo_loader.py",
+    "market_source_endpoint": "https://query1.finance.yahoo.com/v8/finance/chart/"
   },
   "replication_contract": {
     "fresh_symbol_disjoint": true,
