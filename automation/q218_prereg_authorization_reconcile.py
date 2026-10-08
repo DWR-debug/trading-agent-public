@@ -1,5 +1,7 @@
 """Q218 frozen preregistration + immutable authorization reconciliation.
 
+This routine is idempotently re-run whenever upstream source/event/PIT fingerprints change; it never grants performance authority.
+
 This gate freezes the candidate contract after the current independent PIT
 reproduction. It reconciles the exact upstream receipt fingerprints and creates
 an explicit *not-authorized* performance authorization record. It never grants
