@@ -199,75 +199,99 @@ def probe_filing(cik: str, row: dict, sample_rank: int) -> dict:
         "source_base": base,
     }
     if not primary:
-        record["status"] = "MISSING_PRIMARY_DOCUMENT_METADATA"
+        record["status"] = "ROUTE_METADATA_INCOMPLETE"
         return record
 
     try:
+        counts: dict[str, int] = {}
+        source_url = None
+        source_sha = None
+        source_bytes = 0
+        source_type = None
+        instance_name = None
+        index_url = None
+
         if inline:
-            url = f"{base}/{primary}"
-            body = fetch(url)
+            source_url = f"{base}/{primary}"
+            body = fetch(source_url)
             counts = extract_from_inline(body)
-            record.update({
-                "source_type": "inline_html",
-                "source_url": url,
-                "source_sha256": sha256_bytes(body),
-                "source_bytes": len(body),
-                "concept_occurrences": counts,
-            })
+            source_type = "inline_html"
+            source_sha = sha256_bytes(body)
+            source_bytes = len(body)
         else:
-            idx_url = f"{base}/index.json"
+            index_url = f"{base}/index.json"
             idx = None
             try:
-                idx = json.loads(fetch(idx_url).decode("utf-8"))
+                idx = json.loads(fetch(index_url).decode("utf-8"))
             except Exception:
                 for suffix in (f"{acc}-index.html", f"{acc}-index.htm"):
                     try:
                         html = fetch(f"{base}/{suffix}").decode("utf-8", "replace")
-                        names = re.findall(r'href=["\\\']([^"\\\']+\\.xml)["\\\']', html, flags=re.I)
+                        names = re.findall(r'href=["\\']([^"\\']+\\.xml)["\\']', html, flags=re.I)
                         idx = {"directory": {"item": [{"name": n.split("/")[-1]} for n in names]}}
-                        idx_url = f"{base}/{suffix}"
+                        index_url = f"{base}/{suffix}"
                         break
                     except Exception:
                         continue
             if idx is None:
-                record["status"] = "NO_XBRL_INDEX_DISCOVERED"
-                record["index_url"] = idx_url
+                record["status"] = "ROUTE_INDEX_UNAVAILABLE"
+                record["index_url"] = index_url
                 return record
+
             instances = choose_instances(idx)
-            last_counts = {}
-            last_error = None
-            for instance in instances[:10]:
+            fetched_candidates = []
+            best_counts = {}
+            for instance in instances:
                 try:
                     url = f"{base}/{instance}"
                     body = fetch(url)
-                    counts = extract_from_xml(body)
-                    last_counts = counts
-                    if all(v > 0 for v in counts.values()):
-                        record.update({
-                            "source_type": "xbrl_instance_xml",
-                            "source_url": url,
-                            "source_sha256": sha256_bytes(body),
-                            "source_bytes": len(body),
-                            "xbrl_instance": instance,
-                            "index_url": idx_url,
-                            "concept_occurrences": counts,
-                        })
+                    candidate_counts = extract_from_xml(body)
+                    fetched_candidates.append(instance)
+                    if sum(candidate_counts.values()) > sum(best_counts.values()):
+                        best_counts = candidate_counts
+                    if all(v > 0 for v in candidate_counts.values()):
+                        source_url = url
+                        source_sha = sha256_bytes(body)
+                        source_bytes = len(body)
+                        source_type = "xbrl_instance_xml"
+                        instance_name = instance
+                        counts = candidate_counts
                         break
-                except Exception as exc:
-                    last_error = f"{type(exc).__name__}:{exc}"
-            else:
-                counts = last_counts
-                record.update({
-                    "source_type": "xbrl_instance_xml",
-                    "index_url": idx_url,
-                    "concept_occurrences": last_counts,
-                })
-                if last_error:
-                    record["last_error"] = last_error
-        if "counts" not in locals():
-            counts = last_counts if "last_counts" in locals() else {}
-        record["all_exact_concepts_observed"] = all(v > 0 for v in counts.values())
-        record["status"] = "PASS_EXACT_CONCEPTS_REACHABLE" if record["all_exact_concepts_observed"] else "FAIL_EXACT_CONCEPT_SOURCE"
+                except Exception:
+                    continue
+
+            if source_url is None and fetched_candidates:
+                chosen = fetched_candidates[0]
+                body = fetch(f"{base}/{chosen}")
+                counts = best_counts
+                source_url = f"{base}/{chosen}"
+                source_sha = sha256_bytes(body)
+                source_bytes = len(body)
+                source_type = "xbrl_instance_xml"
+                instance_name = chosen
+
+            if source_url is None:
+                record["status"] = "NO_XBRL_INSTANCE_REACHED"
+                record["index_url"] = index_url
+                record["candidate_xml_count"] = len(instances)
+                return record
+
+        record.update({
+            "status": "ROUTE_REACHED",
+            "source_type": source_type,
+            "source_url": source_url,
+            "source_sha256": source_sha,
+            "source_bytes": source_bytes,
+            "xbrl_instance": instance_name,
+            "index_url": index_url,
+            "concept_occurrences": counts,
+            "all_exact_concepts_observed": all(v > 0 for v in counts.values()),
+        })
+        record["exact_concept_status"] = (
+            "ALL_THREE_OBSERVED"
+            if record["all_exact_concepts_observed"]
+            else "ONE_OR_MORE_EXACT_CONCEPTS_MISSING_AT_THIS_FILING"
+        )
         return record
     except Exception as exc:
         record["status"] = "FETCH_OR_PARSE_ERROR"
@@ -281,7 +305,6 @@ def probe_issuer(symbol: str, cik: str) -> dict:
     submissions = json.loads(raw.decode("utf-8"))
     rows = eligible_rows(rows_from_submissions(submissions))
     rows += get_history_files(cik, submissions)
-    # Deterministically deduplicate by accession and sort by accepted time.
     by_acc = {str(r["accessionNumber"]): r for r in rows}
     eligible = sorted(by_acc.values(), key=lambda r: (str(r.get("acceptanceDateTime")), str(r.get("accessionNumber"))))
 
@@ -306,12 +329,13 @@ def probe_issuer(symbol: str, cik: str) -> dict:
         seen.add(acc)
         controls.append(probe_filing(cik, row, rank))
 
+    route_reached = sum(c.get("status") == "ROUTE_REACHED" for c in controls)
+    exact_passes = sum(c.get("all_exact_concepts_observed") is True for c in controls)
+    acceptance_complete = all(bool(r.get("acceptanceDateTime")) for r in eligible)
     record = {
         "symbol": symbol,
         "cik": cik,
-        "status": "PASS_SOURCE_ROUTE" if all(
-            c.get("status") == "PASS_EXACT_CONCEPTS_REACHABLE" for c in controls
-        ) else "PARTIAL_OR_FAILED_CONTROL",
+        "status": "PASS_SOURCE_ROUTE" if route_reached == len(controls) and exact_passes >= 1 else "PARTIAL_OR_FAILED_CONTROL",
         "eligible_filing_count": len(eligible),
         "eligible_form_counts": {
             "10-K": sum(str(r.get("form")).upper() == "10-K" for r in eligible),
@@ -319,7 +343,10 @@ def probe_issuer(symbol: str, cik: str) -> dict:
         },
         "source_submission_sha256": sha256_bytes(raw),
         "controls": controls,
-        "acceptance_clock_complete": all(bool(r.get("acceptanceDateTime")) for r in eligible),
+        "acceptance_clock_complete": acceptance_complete,
+        "route_reached_controls": route_reached,
+        "exact_concept_complete_controls": exact_passes,
+        "pit_compiler_rule": "Only filing observations with all three exact concepts and valid prior Assets may enter the downstream frozen I19 PIT compiler; missing concepts are retained as MISSING, never imputed.",
     }
     return record
 
