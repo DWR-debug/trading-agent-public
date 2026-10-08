@@ -92,3 +92,13 @@ def test_q218_next_session_is_after_closure():
         "2026-10-05",
     )
     assert session == "2025-10-31"
+
+
+def test_q218_candidate_robustness_delegates_to_canonical_gate():
+    from automation import q218_candidate_robustness_receipt as candidate_gate
+    result = candidate_gate.build()
+    assert result["candidate_id"] == "Q218"
+    assert result["status"] == "PRE_FORMAL_ROBUSTNESS_COMPLETED"
+    assert result["formalization_allowed"] is False
+    assert result["performance_authorization"] is False
+    assert result["research_only"] is True
