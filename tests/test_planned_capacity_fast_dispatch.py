@@ -28,6 +28,48 @@ def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backsto
     assert "workflow_run:" not in monitor_b
 
 
+
+def test_fast_dispatch_uses_resource_capacity_metadata_when_plan_row_omits_capacity(monkeypatch):
+    import automation.planned_capacity_fast_dispatch as dispatcher
+
+    workflow = ".github/workflows/q218-independent-architecture-pit-reproduction.yml"
+    snapshot = {
+        "work_assignments": [],
+        "resources": [{
+            "name": "GitHub-hosted ARM64",
+            "research_capacity_slots": 2,
+            "research_slots_in_use": 1,
+            "research_slots_free": 1,
+        }],
+        "planned_capacity": [{
+            "resource": "GitHub-hosted ARM64",
+            "current_assignments": 1,
+            "planned_assignments": [{
+                "plan_id": "Q218-INDEPENDENT-ARCH",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "allow_parallel_with_candidate": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+    monkeypatch.setattr(
+        dispatcher,
+        "completed_q218_gates_for_current_context",
+        lambda runs: {"source", "event_pair"},
+    )
+    monkeypatch.setattr(
+        dispatcher,
+        "q218_independent_reproduction_current",
+        lambda runs: False,
+    )
+
+    plan = dispatcher.dispatch_candidates(snapshot, [], max_dispatches=4)
+    assert [item["plan_id"] for item in plan["dispatches"]] == ["Q218-INDEPENDENT-ARCH"]
+    assert plan["dispatches"][0]["resource"] == "GitHub-hosted ARM64"
+
+
 def test_fast_dispatch_normalizes_list_run_payload():
     from automation.planned_capacity_fast_dispatch import normalize_runs_payload
 
