@@ -1135,9 +1135,13 @@ def planned_capacity_plan(
             "lane": "FORMAL READINESS",
             "task": "concept-specific PIT compiler after 13F acceptance-time join",
             "preferred": ["Windows self-hosted A", "GitHub-hosted Ubuntu x64"],
-            "readiness": "READY_AFTER_HISTORICAL_13F_CENSUS",
-            "basis": "positive 3/3 historical 13F census receipt is the explicit compiler prerequisite; workflow itself fails closed until that receipt exists",
-            "dispatchable": True,
+            "readiness": (
+                "READY_AFTER_HISTORICAL_13F_CENSUS"
+                if q104_census["state"] == "completed"
+                else "BLOCKED_UNTIL_HISTORICAL_13F_CENSUS"
+            ),
+            "basis": "positive 3/3 historical 13F census receipt is the explicit compiler prerequisite",
+            "dispatchable": q104_census["state"] == "completed",
             "allow_parallel_with_candidate": True,
             "execution_workflow": ".github/workflows/q104-i19-historical-pit-compilation.yml",
         },
