@@ -45,10 +45,12 @@ def test_current_bounded_session_directive_is_bounded():
     assert d["session_mode"]["scientific_boundary_unchanged"] is True
 
 
-def test_top4_operational_state_includes_q219_capacity():
+def test_focused_operational_state_locks_automatic_candidate_dispatch():
     import json
     state=json.loads((ROOT/"ops/trading_agent_os_state.json").read_text(encoding="utf-8"))
     overlay=state["top_candidate_capacity_overlay"]["windows_B"]
-    assert overlay["priority"] == ["Q218","Q219","Q220","Q221"]
-    assert "Q219" in overlay["new_overlay"]
-    assert "no Q219 top-4 capacity" not in overlay["new_overlay"]
+    assert overlay["priority"] == ["Q218"]
+    assert "Q104:I19" in overlay["new_overlay"] or "Q104:I19" in state["current_research_focus"]["active_next"]
+    assert "Q219" in overlay.get("paused_candidates", ["Q219","Q220","Q221"])
+    assert "Q220" in overlay.get("paused_candidates", ["Q219","Q220","Q221"])
+    assert "Q221" in overlay.get("paused_candidates", ["Q219","Q220","Q221"])
