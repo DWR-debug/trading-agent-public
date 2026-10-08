@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_independent_replication_contract",
+  "candidate_id": "Q218",
+  "source_trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+  "replication_trial_id": "T-2026-10-08-Q218-REPLICATION-01",
+  "revision": 1,
+  "status": "FROZEN_INDEPENDENT_REPLICATION_CONTRACT",
+  "base_contract_sha256": "fd25e236d9c279ca8087ce022dee61a1ebcf7e37",
+  "primary_performance_report_fingerprint": "78c4a667b01bebe0aa23361e78856155fa3e3fe861cb6fcc1e4b79973cbddc5d",
+  "purpose": "Fresh-symbol disjoint replication of the frozen Q218 event-study rules; primary performance output is provenance only and cannot alter this contract or the derived event population.",
+  "fixed_window": {
+    "start": "2025-01-01",
+    "end": "2026-10-05"
+  },
+  "future_cutoff_utc": "2026-10-05T23:59:59Z",
+  "universe": {
+    "selection_rule": "Complete fixed replication issuer list declared before execution; no outcome-based substitution.",
+    "issuers": {
+      "GOOGL": "1652044",
+      "META": "1326801",
+      "ORCL": "1341439",
+      "PFE": "78003"
+    }
+  },
+  "event_pair_rule": {
+    "implementation": "automation/q218_sec_event_pair_lineage_gate.py",
+    "rule": "same fixed Q218 acceptance-interval pairing rule; latest eligible non-amended Form 8-K Item 2.02 within the reporting-cycle interval bounded by the preceding 10-K acceptance and target 10-K acceptance",
+    "amended_forms_excluded": true,
+    "exhibit_99_1_diagnostic_only": true,
+    "market_outcomes_read": false
+  },
+  "feature_construction": {
+    "copied_from_primary_contract": true,
+    "topic_hash_buckets": 64,
+    "features": [
+      "topic_coverage_gap_mandatory_vs_voluntary",
+      "omission_asymmetry_by_topic",
+      "secondary_framing_gap"
+    ],
+    "learned_vocabulary": false,
+    "corpus_specific_filtering": false,
+    "feature_weighting": false,
+    "parameter_tuning": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "variant_search": false
+  },
+  "outcome_contract": {
+    "copied_from_primary_contract": true,
+    "event_clock": "pair_closure_clock",
+    "action_session": "first XNYS trading session strictly after pair_closure_clock",
+    "holding_sessions": 1,
+    "entry": "session open",
+    "exit": "same-session close",
+    "outcome": "close / open - 1.0",
+    "direction": "signed two-sided",
+    "missingness": "Any missing action-session open/close is DATA_INSUFFICIENT; no imputation.",
+    "trading_calendar": "XNYS via exchange_calendars"
+  },
+  "input_bundle": {
+    "raw_sec_snapshot_required": true,
+    "raw_market_snapshot_required": true,
+    "source_response_sha256_required": true,
+    "bundle_fingerprint_required": true,
+    "executor_network_access": false
+  },
+  "replication_boundaries": {
+    "fresh_symbol_disjoint": true,
+    "no_outcome_filtering": true,
+    "no_primary_result_reuse_for_rule_changes": true,
+    "no_post_pass_optimization": true,
+    "no_holdout_selection": true,
+    "no_candidate_ranking": true,
+    "no_promotion": true
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
