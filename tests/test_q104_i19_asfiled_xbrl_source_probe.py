@@ -26,4 +26,4 @@ def test_i19_source_probe_accepts_sharded_issuer_subsets():
     # must evaluate the selected subset rather than requiring all eight issuers.
     source = __import__("pathlib").Path("automation/q104_i19_asfiled_xbrl_source_probe.py").read_text(encoding="utf-8")
     assert "selected_symbols" in source
-    assert "bool(results) and all(v[\\"status\\"] == \\"PASS_SOURCE_ROUTE\\" for v in results.values())" in source
+    assert 'bool(results) and all(v["status"] == "PASS_SOURCE_ROUTE" for v in results.values())' in source
