@@ -77,3 +77,9 @@ def test_dashboard_generator_exposes_portfolio_and_uses_dynamic_refresh():
     assert '"candidate_portfolio": candidate_portfolio' in generator
     assert 'id="candidatePortfolio"' in html
     assert "renderCandidatePortfolio(data)" in dashboard_js
+
+
+def test_dashboard_generator_has_direct_script_import_fallback():
+    generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    assert "from automation.candidate_portfolio_assessment import build_candidate_portfolio, PORTFOLIO_METHODOLOGY" in generator
+    assert "from candidate_portfolio_assessment import build_candidate_portfolio, PORTFOLIO_METHODOLOGY" in generator
