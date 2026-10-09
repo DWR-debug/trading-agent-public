@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "record_type": "persistent_literature_research_policy",
   "status": "ACTIVE",
-  "effective_date_utc": "2026-10-06",
+  "effective_date_utc": "2026-10-10",
   "purpose": "Continuously discover high-value scientific mechanisms and public information channels without allowing discovery to bypass PIT, robustness, performance or safety gates.",
   "source_scope": {
     "free_access_only": true,
@@ -54,7 +54,7 @@
       "independent_reproducibility",
       "expected_information_gain_per_compute"
     ],
-    "shortlist_maximum": 4,
+    "shortlist_maximum": 3,
     "priority_order": [
       "orthogonal_information_advantage",
       "cheap_falsification",
@@ -62,7 +62,13 @@
       "reproducibility",
       "economic_plausibility"
     ],
-    "anti_convergence": "Do not add another price-only momentum/trend variant when an eligible orthogonal information mechanism is available."
+    "anti_convergence": "Only develop or dispatch the active allow-list during the focus lock. Do not create or dispatch new candidate families; within these three, prioritize orthogonal information advantages and cheap falsification.",
+    "candidate_creation_during_focus_lock": false,
+    "active_candidate_allowlist": [
+      "Q104:I19",
+      "Q220",
+      "Q218"
+    ]
   },
   "discovery_boundary": {
     "source_claims_are_not_project_evidence": true,
@@ -79,15 +85,12 @@
   "pit_rule": "For every actionable mechanism preserve the earliest defensible public-information boundary separately from later process, revision and observation timestamps.",
   "negative_evidence_rule": "Persist PRUNED, UNVERIFIED and DATA_INSUFFICIENT outcomes with reasons so automated search does not repeatedly reopen failed or weakly tractable paths.",
   "candidate_flow": [
-    "discover",
-    "verify_primary_source",
-    "normalize_mechanism_card",
-    "declare_non_overlap",
-    "cheap_falsify",
-    "source_feasibility",
-    "candidate_specific_pit",
-    "independent_reproduction",
-    "only then consider formal authorization under the existing governance"
+    "verify_current_receipts_for_active_candidates",
+    "recover_or_close_Q104_I19_historical_13F_census",
+    "cheap_falsify_Q220_as_filed_XBRL_representation_gap",
+    "avoid_duplicate_Q218_work_when_exact_receipt_fingerprints_match",
+    "persist_negative_evidence",
+    "independent_PIT_reproduction_only_after_positive_prerequisites"
   ],
   "safety": {
     "PAPER_ONLY": true,
@@ -95,5 +98,10 @@
     "ORDERS_ENABLED": false,
     "AUTOMATIC_PROMOTION": false,
     "paid_resources_allowed": false
-  }
+  },
+  "active_candidate_allowlist": [
+    "Q104:I19",
+    "Q220",
+    "Q218"
+  ]
 }
