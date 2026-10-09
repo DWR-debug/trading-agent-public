@@ -187,6 +187,14 @@ def repair_shard_payload(
     if original_fingerprint != canonical_fingerprint(payload):
         raise ValueError("Q104_I19_REPAIR_INPUT_FINGERPRINT_INVALID:" + str(payload.get("shard")))
     receipt = json.loads(json.dumps(payload))
+    expected_failures = set(str(x) for x in receipt.get("acceptance_failures", {}))
+    archive_failure_keys = {
+        str(accession)
+        for archive_record in receipt.get("archives", [])
+        for accession in archive_record.get("acceptance_failures", {})
+    }
+    if expected_failures != archive_failure_keys:
+        raise ValueError("Q104_I19_REPAIR_TOP_LEVEL_FAILURE_SET_MISMATCH:" + str(receipt.get("shard")))
     limiter = rate_limiter or census.RateLimiter(census.HEADER_REQUEST_GAP_SECONDS)
     fetcher = archive_fetcher or (lambda url, limiter: census.fetch(url, rate_limiter=limiter))
     resolver = header_resolver or (
@@ -371,7 +379,7 @@ def main() -> int:
         recovery = {
             "schema_version": "1.0",
             "record_type": "q104_i19_targeted_acceptance_header_recovery",
-            "status": "RECOVERY_COMPLETE" if not any(x.get("status") == "UNRESOLVED" for x in all_entries) else "RECOVERY_INCOMPLETE",
+            "status": "RECOVERY_COMPLETE" if all(x.get("status") == "REPAIRED" for x in all_entries) else ("RECOVERY_COMPLETE" if not all_entries else "RECOVERY_INCOMPLETE"),
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
             "source_run_id": str(args.source_run_id),
             "official_source": census.PAGE,
