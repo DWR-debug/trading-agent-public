@@ -831,6 +831,20 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "milestones": q104_milestones,
                 "performance_authorization_allowed": False,
             },
+            "Q220": {
+                "overall_progress_percent": 0,
+                "completed_milestones": 0,
+                "total_milestones": 1,
+                "current_milestone": "As-filed XBRL population / TextBlock-presentation mapping",
+                "current_milestone_progress_percent": 0,
+                "current_milestone_status": "ready",
+                "current_milestone_detail": "No positive Q220 population/mapping receipt is recorded. The next bounded gate freezes the as-filed SEC population and tests TextBlock/presentation linkage, taxonomy drift and period/context integrity.",
+                "next_gate": "Freeze fixed as-filed SEC population; validate TextBlock/presentation mapping, taxonomy drift and period/context integrity; stop on future-prefix contamination or a length/readability-only explanation.",
+                "milestones": [
+                    {"label": "Fixed as-filed population + TextBlock/presentation mapping", "status": "open", "progress": 0, "detail": "First cheap falsifier; no positive population/mapping receipt recorded"},
+                ],
+                "performance_authorization_allowed": False,
+            },
             "Q218": {
                 "overall_progress_percent": q218_overall,
                 "completed_milestones": q218_complete,
