@@ -1324,6 +1324,27 @@ def planned_capacity_plan(
         },
     ]
 
+    # Q219 is a single reserve pack, not a primary pipeline candidate. It is
+    # added only when the operational state explicitly opts it into capacity fill.
+    capacity_fill_reserve = {
+        str(x) for x in overlay.get("capacity_fill_reserve", [])
+    }
+    if "Q219" in capacity_fill_reserve:
+        queue.append({
+            "plan_id": "Q219-OPTIONS-SOURCE-PIT",
+            "candidate": "Q219",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "options-source breadth, quote-field and historical point-in-time diagnostics",
+            "preferred": ["Windows self-hosted B", "Windows self-hosted A", "Windows self-hosted C"],
+            "readiness": "READY_SOURCE_PIT_CAPACITY_FILL",
+            "basis": "one bounded reserve pack only if an independent Windows slot is actually free; primary Q104:I19/Q218 work remains higher priority",
+            "dispatchable": True,
+            "capacity_fill_reserve": True,
+            "allow_parallel_with_candidate": False,
+            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+            "execution_workflow_inputs": {"gate": "all"},
+        })
+
     def priority_bonus(item: dict[str, Any]) -> int:
         candidate = str(item.get("candidate"))
         if candidate == "Q104:I19" and any("Q104 I19" in x for x in a_priority):
@@ -1385,8 +1406,18 @@ def planned_capacity_plan(
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
             if resource is None:
                 continue
-            # Keep a one-step lookahead independently of current occupancy. The
-            # dispatcher starts this planned item only after actual free capacity.
+            # Unlike ordinary next-gate previews, a reserve pack is planned only
+            # onto a resource with a currently observed free research slot.
+            if item.get("capacity_fill_reserve") is True:
+                free_raw = resource.get("research_slots_free")
+                if free_raw is None:
+                    current = int(resource.get("current_assignments") or 0)
+                    slots = max(1, int(resource.get("research_capacity_slots") or 1))
+                    free_raw = max(0, slots - current)
+                if int(free_raw or 0) <= 0:
+                    continue
+            # Keep a one-step lookahead independently of current occupancy for
+            # ordinary items; the reserve path above is explicitly free-slot-only.
             if len(plans.get(resource_name, [])) >= 1:
                 continue
             benchmark = job_benchmarks.get(candidate)
@@ -1773,6 +1804,11 @@ def main() -> None:
         "work_assignments": work,
         "planned_capacity": planned_capacity,
         "planned_research_queue": planned_research_queue,
+        "capacity_fill_reserve": [
+            str(x)
+            for x in os_state.get("top_candidate_capacity_overlay", {}).get("capacity_fill_reserve", [])
+            if str(x) == "Q219"
+        ],
         "milestone_history_12h": milestones_12h,
         "candidate_progress": candidate_progress,
         "focus_live_telemetry": {
