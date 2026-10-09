@@ -1,34 +1,35 @@
 # Candidate portfolio assessment and development forecast — 2026-10-10
 
-## Decision purpose
-This register expands the visible dashboard from the focused pair to all 24 prospect contracts frozen in `research/candidates/orthogonal_candidate_specs_2026-10-05.json`, plus the separately contracted Q104:I19 lane. It ranks **research-resource priority** by distinctiveness, historical public-clock/PIT feasibility, source completeness, cheap falsifiability, expected information gain per compute, and distance to the next receipt-defined gate.
+## Active scope
 
-It is not a ranking of expected returns, a probability that a candidate will earn money, or a promotion decision. Q104:I19 remains its own formal-readiness lane; the existing bounded Top-4 research wave remains Q218–Q221. A dashboard ranking does not silently change the dispatch allow-list.
+The automated candidate-development wave is locked to exactly three candidates:
 
-## Current allocation order
-1. **Q104:I19** — closest to a hard, receipt-defined gate; finish the current historic 13F population/acceptance-time closure, then the frozen compiler and independent PIT reproduction.
-2. **Q220** — strong distinct source and as-filed representation mechanism; map XBRL TextBlock/presentation deterministically and fail closed on taxonomy drift.
-3. **Q218** — initial source/event/PIT and separately authorized one-shot/repetition steps exist, but exact current-master context revalidation remains a hard gate. No generalization claim follows from the one-shot alone.
-4. **Q221** — distinct R&D-to-procurement option-value mechanism; historical publication clock, agency exceptions, transaction state, and recipient/entity mapping are blockers.
-5. **Q219** — keep visible within Top-4; make the free historical single-equity options-breadth test an early go/no-go rather than building around index-only coverage.
-6. **Q224** — high novelty/information potential; start with log-schema/archive completeness, known historic gap, URI-to-filing mapping and traffic-quality falsification.
-7. **Q228** — regulatory scrutiny and response are distinct, but first prove historical review-cycle linkage and exact public correspondence boundary.
-8–11. **Q201/Q204/Q203/Q202** — source components exist, yet posting clocks, revision lineage, historical transaction versions and frozen entity mappings still block formal PIT claims.
-12. **Q227 and Q231** — consolidate into one SEC FOIA acquisition contract before compute. The candidate descriptions are near-duplicates; separate parallel execution is not justified absent a tested orthogonal feature family.
-13–23. **Q229/Q199/Q197/Q222/Q215/Q216/Q217/Q196/Q205/Q194/Q195** — retain visible, run only narrow next-gate checks when a relevant resource is free and the work has positive information gain. Q217 must show separation from Q220/Q224; Q216 is risk-state-only.
-24. **Q230** — first do a brief free-data source go/no-go. Do not rely on paid TRACE history or paid services; if free historical fields/identity cannot be validated, park the candidate.
+1. **Q104:I19 — Institutional demand × accrual state.** Critical path: reach a terminal, receipt-complete historical 13F/security-identity census; close any missing shard/acceptance-header defects with targeted recovery; then run the frozen concept-specific PIT compiler and independent PIT reproduction. No duplicate full census while the existing run is nonterminal.
+2. **Q220 — Narrative/structured XBRL representation gap.** Run a bounded fixed-population as-filed SEC XBRL/TextBlock/presentation mapping gate, audit taxonomy/schema drift and period/context integrity, and falsify early against future-prefix contamination, filing length/readability, boilerplate and generic complexity. Use the free AI pool only for an independent adversarial checklist; its output is advisory.
+3. **Q218 — Mandatory/voluntary disclosure semantic wedge.** Source/event implementation hashes match their positive receipts; the independent PIT receipt points to those exact source/event fingerprints; the frozen fresh-symbol replication receipt is present for eight event pairs across GOOGL/META/ORCL/PFE. This context check is already positive. Do not spend capacity rerunning identical gates. Reopen the lane only if one of the relevant code hashes, upstream fingerprints or frozen contract inputs changes, or when a new separately frozen non-performance gate has positive information value.
 
-## Development-duration estimates
-The dashboard provides two separate intervals: **next hard gate** and **to independent PIT reproduction**. Ranges are low-confidence *planning windows* conditioned on a free slot starting promptly and the existing source being reachable. They include engineering, data completeness and one bounded QA/reproduction cycle. They are not runner runtime guarantees and not a timeline to deploy or trade.
+Other candidates, including Q219 and Q221, remain in the historical evidence registry but are excluded from the current candidate portfolio and every automatic dispatch route. No new candidate families are created or dispatched during this focus lock.
 
-The current dashboard has no verified candidate-specific duration sample distribution (`duration_sample_count=0`). Thus these ranges are explicitly **not calibrated against completed run-history**. They should be revised when each gate produces a receipt and calibrated only after at least three comparable non-cancelled runs. For source-blocked Q219/Q230, the estimate first resolves a go/no-go; further duration applies only if that gate passes.
+## Research-resource order
 
-## Success probability
-A strategy-success probability is not estimable from source readiness, a completed source gate, a pilot performance run, or a single disjoint replication. All candidate probability fields therefore remain null and the UI says **“Nicht schätzbar”**. A future probability estimate would require a frozen preregistered contract, demonstrably valid historical PIT, clean independent out-of-sample evidence, explicit realistic costs, regime/concentration/instability robustness, and independent reproduction under current code/data provenance. No such inference grants authorization.
+The current resource order is not a performance ranking:
 
-## Governing execution boundary
-- No artificial work is queued to fill capacity.
-- Free Windows A/B/C, hosted x64/ARM64 and free AI are allocated only to independent, ready, bounded source/PIT/structure or adversarial QA tasks. AI is not scientific evidence.
-- Candidate family duplicates are consolidated; completed gates are not rerun merely for utilization.
-- Research priority is not return-based ranking. No holdout selection, parameter/threshold/horizon/asset search, promotion, orders or live execution is authorized by this assessment.
-- `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, `AUTOMATIC_PROMOTION=False`.
+| Order | Candidate | Why this gets the next useful work | Current hard blocker / stop condition |
+|---|---|---|---|
+| 1 | Q104:I19 | Closest to a formal, receipt-defined PIT contract; most progress depends on one specific historical completeness boundary. | The census receipt is empty/nonterminal and shards have failed/cancelled. Do not rerun the entire population; use receipt-defined targeted recovery after the source run is terminal. |
+| 2 | Q220 | Distinct, cheap-falsifiable as-filed mapping mechanism; can produce valuable negative evidence without reading returns. | Fail closed if TextBlock/presentation-role linkage or historical taxonomies drift, if the prefix includes future/current facts, or if length/readability explains the representation gap. |
+| 3 | Q218 | Highest value is preserving the verified frozen evidence chain, not repeating a complete gate. | Any mismatch among current code hashes, source/event receipt fingerprints, independent PIT lineage or the frozen replication contract invalidates the current-context check. |
+
+## Development horizons
+
+- **Q104:I19:** next hard gate 1–3 working days; independent PIT reproduction 3–7 working days, conditional on source reachability and successful targeted recovery.
+- **Q220:** next hard gate 2–5 working days; independent PIT reproduction 5–10 working days if the fixed-population mapping gate passes.
+- **Q218:** current source/event/PIT/replication receipt consistency is already verified. No additional runtime is budgeted for a duplicate run; if a material input fingerprint changes, estimate and dispatch the new bounded validation from that changed receipt.
+
+These are low-confidence planning windows, not empirical job-duration forecasts or guarantees. The current verified candidate-specific duration sample is zero; only comparable completed, non-cancelled receipts can calibrate estimates.
+
+## Success probability and safety boundary
+
+Strategy-success probability is **not estimable** for any of the three candidates. Source readiness, structural gates, the authorized one-shot and one disjoint replication do not establish a calibrated success probability or dependable returns. Such an estimate would require a frozen preregistered design, valid point-in-time data, independent cost-aware out-of-sample evidence and robustness checks covering regime, concentration, costs and instability.
+
+`PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, and `AUTOMATIC_PROMOTION=False` remain fail-closed. The portfolio ranks research-resource allocation only. It does not authorize performance, holdout selection, tuning, return-based ranking, promotion, orders or live execution. No artificial work is queued to fill a slot.

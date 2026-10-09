@@ -406,7 +406,7 @@ CANDIDATE_DEVELOPMENT_MILESTONES = (
     "ONE-SHOT PERFORMANCE",
 )
 
-FOCUS_CANDIDATES = ("Q104:I19", "Q218")
+FOCUS_CANDIDATES = ("Q104:I19", "Q220", "Q218")
 ACTIVE_RUN_STATUSES = {"queued", "in_progress", "waiting", "pending"}
 
 
@@ -752,6 +752,31 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q218_ind_state = "complete" if q218_receipts["independent_complete"] else "open"
     q218_ind_progress = 100 if q218_receipts["independent_complete"] else 0
     q218_ind_detail = "unabhängige Reproduktion erfolgreich" if q218_receipts["independent_complete"] else "noch kein positiver unabhängiger Reproduktions-Receipt"
+    q218_replication_result = read_json_file("research/evidence/q218_independent_replication_performance_latest.json")
+    q218_replication_complete = (
+        q218_replication_result.get("replication_trial_id") == "T-2026-10-08-Q218-REPLICATION-01"
+        and q218_replication_result.get("source_trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+        and q218_replication_result.get("performance_evaluation") is True
+        and q218_replication_result.get("holdout_evaluation") is False
+        and q218_replication_result.get("selection_used") is False
+        and q218_replication_result.get("parameter_search") is False
+        and q218_replication_result.get("threshold_search") is False
+        and q218_replication_result.get("horizon_search") is False
+        and q218_replication_result.get("asset_search") is False
+        and q218_replication_result.get("variant_search") is False
+        and q218_replication_result.get("family_ranking") is False
+        and q218_replication_result.get("promotion_decision") is False
+        and q218_replication_result.get("safety", {}).get("paper_only") is True
+        and q218_replication_result.get("safety", {}).get("live_trading_enabled") is False
+        and q218_replication_result.get("safety", {}).get("orders_enabled") is False
+        and q218_replication_result.get("safety", {}).get("automatic_promotion") is False
+    )
+    q218_current_context_complete = (
+        q218_receipts["source_complete"]
+        and q218_receipts["event_pair_complete"]
+        and q218_receipts["independent_complete"]
+        and q218_replication_complete
+    )
     q218_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Q218 design/gate contract eingefroren"},
         {"label": "Source gate", "status": q218_source_state, "progress": q218_source_progress, "detail": "positiver Source Gate Receipt" if q218_receipts["source_complete"] else "Source Gate Receipt fehlt"},
@@ -759,6 +784,8 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
         {"label": "Independent Architecture PIT", "status": q218_ind_state, "progress": q218_ind_progress, "detail": q218_ind_detail},
         {"label": "Preregistration + authorization reconcile", "status": q218_prereg["state"], "progress": q218_prereg["progress_percent"], "detail": q218_prereg["detail"]},
         {"label": "One-shot performance", "status": "complete" if q218_prereg.get("performance_executed") else ("ready" if q218_prereg.get("performance_authorized") else "closed"), "progress": 100 if q218_prereg.get("performance_executed") else 0, "detail": q218_prereg.get("detail") if q218_prereg.get("performance_executed") else ("explizit autorisiert; Ausführung ausstehend" if q218_prereg.get("performance_authorized") else "erst nach separater immutable authorization; aktuell geschlossen")},
+        {"label": "Disjoint fresh-symbol replication", "status": "complete" if q218_replication_complete else ("next" if q218_prereg.get("performance_executed") else "blocked"), "progress": 100 if q218_replication_complete else 0, "detail": "Frozen one-shot successor: 8 event pairs across GOOGL/META/ORCL/PFE; selection/tuning/promotion flags remain false" if q218_replication_complete else "Next only after the exact frozen one-shot and prerequisites"},
+        {"label": "Current-master receipt/provenance cross-check", "status": "complete" if q218_current_context_complete else "open", "progress": 100 if q218_current_context_complete else 0, "detail": "Current source/event implementation hashes match receipts; independent PIT receipt references those exact fingerprints; the fixed fresh-symbol receipt is complete" if q218_current_context_complete else "Reconcile current source/event code hashes, upstream PIT receipt fingerprints and the frozen replication receipt; do not duplicate work when already current"},
     ]
 
     def overall(milestones: list[dict[str, Any]]) -> tuple[int, int, int]:
@@ -804,40 +831,59 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "milestones": q104_milestones,
                 "performance_authorization_allowed": False,
             },
+            "Q220": {
+                "overall_progress_percent": 0,
+                "completed_milestones": 0,
+                "total_milestones": 1,
+                "current_milestone": "As-filed XBRL population / TextBlock-presentation mapping",
+                "current_milestone_progress_percent": 0,
+                "current_milestone_status": "ready",
+                "current_milestone_detail": "No positive Q220 population/mapping receipt is recorded. The next bounded gate freezes the as-filed SEC population and tests TextBlock/presentation linkage, taxonomy drift and period/context integrity.",
+                "next_gate": "Freeze fixed as-filed SEC population; validate TextBlock/presentation mapping, taxonomy drift and period/context integrity; stop on future-prefix contamination or a length/readability-only explanation.",
+                "milestones": [
+                    {"label": "Fixed as-filed population + TextBlock/presentation mapping", "status": "open", "progress": 0, "detail": "First cheap falsifier; no positive population/mapping receipt recorded"},
+                ],
+                "performance_authorization_allowed": False,
+            },
             "Q218": {
                 "overall_progress_percent": q218_overall,
                 "completed_milestones": q218_complete,
                 "total_milestones": q218_total,
                 "current_milestone": (
-                    "Post-performance validation / fresh-symbol replication"
-                    if q218_prereg.get("performance_executed")
-                    else (
-                        "Preregistration + authorization reconcile"
-                        if q218_receipts["independent_complete"]
-                        else ("Independent Architecture PIT" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-pair gate" if q218_receipts["source_complete"] else "Source gate"))
-                    )
+                    "Current-master receipt/provenance cross-check"
+                    if q218_current_context_complete
+                    else ("Post-performance validation / fresh-symbol replication"
+                          if q218_prereg.get("performance_executed")
+                          else ("Preregistration + authorization reconcile"
+                                if q218_receipts["independent_complete"]
+                                else ("Independent Architecture PIT" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-pair gate" if q218_receipts["source_complete"] else "Source gate"))))
                 ),
                 "current_milestone_progress_percent": (
-                    0 if q218_prereg.get("performance_executed")
-                    else (q218_prereg["progress_percent"] if q218_receipts["independent_complete"]
-                          else (100 if q218_receipts["event_pair_complete"] and q218_receipts["source_complete"] else 0))
+                    100 if q218_current_context_complete
+                    else (100 if q218_replication_complete else
+                          (q218_prereg["progress_percent"] if q218_receipts["independent_complete"]
+                           else (100 if q218_receipts["event_pair_complete"] and q218_receipts["source_complete"] else 0)))
                 ),
                 "current_milestone_status": (
-                    "next" if q218_prereg.get("performance_executed")
-                    else (q218_prereg["state"] if q218_receipts["independent_complete"]
-                          else "open")
+                    "complete" if q218_current_context_complete
+                    else ("next" if q218_prereg.get("performance_executed")
+                          else (q218_prereg["state"] if q218_receipts["independent_complete"] else "open"))
                 ),
                 "current_milestone_detail": (
-                    "Die 6 definierten Q218-Milestones sind abgeschlossen; nächste Generalisierungsprüfung: disjunkte Fresh-Symbol-Replikation"
-                    if q218_prereg.get("performance_executed")
-                    else (q218_prereg["detail"] if q218_receipts["independent_complete"]
-                          else (q218_ind_detail if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-Pair receipt fehlt" if q218_receipts["source_complete"] else "Source-Gate Receipt fehlt")))
+                    "Alle aktuellen Source/Event-Code-Fingerprints, die unabhängige PIT-Upstream-Provenienz und der eingefrorene Fresh-Symbol-Receipt stimmen überein; kein Q218-Duplikatlauf nötig."
+                    if q218_current_context_complete
+                    else ("Disjunkte Fresh-Symbol-Replikation noch nicht receipt-validiert"
+                          if q218_prereg.get("performance_executed")
+                          else (q218_prereg["detail"] if q218_receipts["independent_complete"]
+                                else (q218_ind_detail if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-Pair receipt fehlt" if q218_receipts["source_complete"] else "Source-Gate Receipt fehlt"))))
                 ),
                 "next_gate": (
-                    "independent fresh-symbol replication / post-performance generalization"
-                    if q218_prereg.get("performance_executed")
-                    else (q218_prereg["next_gate"] if q218_receipts["independent_complete"]
-                          else ("independent architecture PIT reproduction" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("event-pair gate" if q218_receipts["source_complete"] else "source gate")))
+                    "Receipt-current; keine neue Q218-Arbeit starten, bis ein Source/Event-Code-Fingerprint oder eingefrorener Contract sich ändert"
+                    if q218_current_context_complete
+                    else ("independent fresh-symbol replication / post-performance generalization"
+                          if q218_prereg.get("performance_executed")
+                          else (q218_prereg["next_gate"] if q218_receipts["independent_complete"]
+                                else ("independent architecture PIT reproduction" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("event-pair gate" if q218_receipts["source_complete"] else "source gate"))))
                 ),
                 "milestones": q218_milestones,
                 "performance_authorization_allowed": False,
@@ -1140,7 +1186,7 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
     """Expose a real bounded queue of future next-gate research, independent of live slot occupancy."""
     order = [
         ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A"),
-        ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B"),
+        ("Q220", ".github/workflows/q220-as-filed-xbrl-population.yml", "Windows self-hosted B"),
     ]
     by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
     backlog = []
@@ -1219,7 +1265,7 @@ def planned_capacity_plan(
             parts = title.split("Top-4 Slot ", 1)[1].strip().split()
             if len(parts) >= 2 and parts[0] in {"windows", "ubuntu_x64", "ubuntu_arm64"}:
                 active_slot_scopes.add((parts[0], parts[1]))
-        for code in ("Q218", "Q219", "Q220", "Q221"):
+        for code in ("Q218", "Q220"):
             if code.lower() in title.lower():
                 active_candidate_names.add(code)
 
@@ -1393,13 +1439,32 @@ def planned_capacity_plan(
             "plan_id": "Q220-AS-FILED-REPRESENTATION",
             "candidate": "Q220",
             "lane": "FRONTIER DISCOVERY",
-            "task": "as-filed XBRL narrative/structured mapping and taxonomy drift diagnostics",
-            "preferred": ["Windows self-hosted B", "GitHub-hosted ARM64", "GitHub-hosted Ubuntu x64", "Windows self-hosted C", "Windows self-hosted A"],
-            "readiness": "READY_FIXED_POOL_SCHEMA_MAPPING",
-            "basis": "deterministic fixed-population source/schema checks; fail closed on TextBlock, taxonomy, or presentation-linkage instability",
+            "task": "fixed-population as-filed SEC XBRL TextBlock/presentation mapping and historical taxonomy/PIT falsification",
+            "preferred": ["Windows self-hosted B"],
+            "readiness": "READY_FIXED_POOL_ASFILED_POPULATION_GATE",
+            "basis": "use the candidate-specific workflow that retrieves the frozen issuer population and publishes an immutable Q220 population receipt; this is real source/PIT work, not only contract tests",
             "dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-            "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+            "exclusive_dispatch": True,
+            "resource_leases": ["Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
+            "execution_workflow": ".github/workflows/q220-as-filed-xbrl-population.yml",
+            "execution_workflow_inputs": {},
+        },
+        {
+            "plan_id": "Q220-CURRENT-ADVERSARIAL",
+            "candidate": "Q220",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "independent adversarial review of the frozen Q220 as-filed XBRL mapping and first falsifier",
+            "preferred": ["Free AI pool"],
+            "readiness": "READY_AI_FABRIC",
+            "basis": "fresh task context attacks only current Q220 source/PIT assumptions; AI output is advisory and never scientific evidence",
+            "allow_parallel_with_candidate": True,
+            "dispatchable": True,
+            "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
+            "execution_workflow_inputs": {
+                "task_id": "AI-2026-10-10-Q220-ASFILED-MAPPING-ADVERSARIAL",
+                "run_secondary_provider": "false",
+                "use_litellm_transport": "false",
+            },
         },
         {
             "plan_id": "Q221-USASPENDING-PUBLIC-CLOCK",
@@ -1431,6 +1496,9 @@ def planned_capacity_plan(
 
     for item in sorted(queue, key=lambda x: (priority_bonus(x), queue.index(x))):
         candidate = str(item["candidate"])
+        # Historical candidates may remain in the evidence board, but they are not in the executable focus wave.
+        if candidate not in set(FOCUS_CANDIDATES):
+            continue
         plan_id = str(item.get("plan_id") or "")
         if candidate == "Q104:I19" and plan_id == "Q104-I19-CENSUS":
             # Never advertise a duplicate full census while the existing six-shard
@@ -1438,7 +1506,7 @@ def planned_capacity_plan(
             # terminal workflow routes to targeted receipt recovery instead.
             if q104_census_active or q104_census_terminal_failure:
                 continue
-        if candidate in {"Q218", "Q219", "Q220", "Q221"} and candidate in active_candidate_names and not item.get("allow_parallel_with_candidate", False):
+        if candidate in {"Q218", "Q220"} and candidate in active_candidate_names and not item.get("allow_parallel_with_candidate", False):
             continue
         candidate_active = any(candidate.lower() in value and "free ai" not in value for value in active_text)
         if candidate_active and not item.get("allow_parallel_with_candidate", False):

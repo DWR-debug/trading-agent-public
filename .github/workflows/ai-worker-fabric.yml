@@ -1,62 +1,18 @@
 name: Free AI Worker Fabric
 
+# AI reviews are routed only from the active three-candidate pipeline or explicit manual dispatch.
+# No broad workflow_run/push fan-out is allowed while the focus lock is active.
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/evidence/q187_q192_source_feasibility_latest.json"
-      - "automation/research_os_scheduler.py"
-      - "automation/research_hypothesis_compiler.py"
-      - "automation/autonomous_control_plane.py"
-      - ".github/workflows/permanent-pc-research-loop.yml"
-      - ".github/workflows/q121r6-windows-independent-reproduction.yml"
-      - ".github/workflows/q185-q186-windows-reproduction.yml"
-      - ".github/workflows/self-hosted-continuous-qa.yml"
-      - "research/evidence/q185_q186_source_feasibility_latest.json"
-      - "research/evidence/q193_q196_source_feasibility_latest.json"
-      - "research/evidence/q197_q198_source_feasibility_latest.json"
-      - "research/evidence/q199_q201_source_feasibility_latest.json"
-      - "automation/source_readiness_snapshot_guard.py"
-      - "automation/orthogonal_pit_next_gate.py"
-      - "ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json"
-      - "ai_requests/AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL.json"
-      - "docs/research_design/Q104_I19_EXACT_XBRL_CONCEPT_FREEZE_2026-10-03.md"
-      - "automation/q104_i19_13f_historical_identity_census.py"
-      - "automation/q104_i19_xbrl_pit_compiler.py"
-      - "automation/ai_worker_fabric.py"
-      - "automation/top4_candidate_capacity.py"
-      - "automation/q218_q221_historical_source_census.py"
-      - "automation/q218_q221_candidate_gate_compiler.py"
-      - "automation/q219_options_source_breadth_gate.py"
-      - "automation/q220_fsn_schema_gate.py"
-      - "automation/q221_usaspending_public_clock_gate.py"
-  # OpenRouter free is deliberately event-driven. Repeating unchanged research
-  # prompts on a timer wastes scarce free capacity without increasing information.
-  workflow_run:
-    workflows:
-      - Q187-Q192 Source Feasibility
-    types: [completed]
   workflow_dispatch:
     inputs:
       task_id:
-        description: "Explicit bounded OpenRouter review task for manual dispatch"
+        description: "Bounded review for one of the three active candidates"
         required: true
         type: choice
         options:
-          - AI-2026-10-04-Q187-Q192-ADVERSARIAL
-          - AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT
-          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
-          - AI-2026-09-29-Q091-ADVERSARIAL
-          - AI-2026-09-28-Q089-ADVERSARIAL
-          - AI-2026-09-28-UNUSUAL-FRONTIER
-          - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
-          - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
-          - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
-          - AI-2026-10-06-Q218-TOP4-ADVERSARIAL
-          - AI-2026-10-06-Q219-TOP4-ADVERSARIAL
-          - AI-2026-10-06-Q220-TOP4-ADVERSARIAL
-          - AI-2026-10-06-Q221-TOP4-ADVERSARIAL
           - AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL
+          - AI-2026-10-10-Q220-ASFILED-MAPPING-ADVERSARIAL
+          - AI-2026-10-06-Q218-TOP4-ADVERSARIAL
       run_secondary_provider:
         description: "Also run the manual Gemini/Mistral secondary review rotation"
         required: true
@@ -67,7 +23,6 @@ on:
         required: true
         default: false
         type: boolean
-
 permissions:
   actions: write
   contents: write
@@ -85,167 +40,39 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 2
 
-      - name: Plan affected review tasks
+      - name: Validate focused review task
         id: plan
         shell: bash
         env:
-          EVENT_NAME: ${{ github.event_name }}
-          EVENT_BEFORE: ${{ github.event.before }}
-          GITHUB_SHA: ${{ github.sha }}
           TASK_ID: ${{ github.event.inputs.task_id }}
-          WORKFLOW_RUN_NAME: ${{ github.event.workflow_run.name }}
-          WORKFLOW_RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
         run: |
           set -euo pipefail
           python - <<'PY'
           import json
           import os
-          import subprocess
           from pathlib import Path
 
-          if os.environ['EVENT_NAME'] == 'workflow_dispatch':
-              task = os.environ.get('TASK_ID', '').strip()
-              if not task:
-                  raise SystemExit('workflow_dispatch requires task_id')
-              tasks = [task]
-          elif os.environ['EVENT_NAME'] == 'workflow_run':
-              name = os.environ.get('WORKFLOW_RUN_NAME', '').strip()
-              conclusion = os.environ.get('WORKFLOW_RUN_CONCLUSION', '').strip()
-              if conclusion == 'success' and name in {
-                  'Q185-Q186 Source Feasibility',
-                  'Q187-Q192 Source Feasibility',
-                  'Q193-Q196 Source Feasibility',
-                  'Q197-Q198 Source Feasibility',
-                  'Q199-Q201 Source Feasibility',
-                  'Q202-Q204 Information Timing Feasibility',
-                  'Orthogonal PIT Next Gate',
-              }:
-                  tasks = ['AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT']
-              else:
-                  tasks = []
-          else:
-              before = os.environ.get('EVENT_BEFORE', '')
-              after = os.environ['GITHUB_SHA']
-              if not before or before == '0000000000000000000000000000000000000000':
-                  command = ['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', after]
-              else:
-                  command = ['git', 'diff', '--name-only', before, after]
-              changed = set(subprocess.check_output(command, text=True).splitlines())
-              tasks = []
-              q187_paths = {'research/evidence/q187_q192_source_feasibility_latest.json'}
-              global_paths = {
-                  'research/evidence/q185_q186_source_feasibility_latest.json',
-                  'research/evidence/q193_q196_source_feasibility_latest.json',
-                  'research/evidence/q197_q198_source_feasibility_latest.json',
-                  'research/evidence/q199_q201_source_feasibility_latest.json',
-                  'research/evidence/q202_q204_information_timing_feasibility_latest.json',
-                  'automation/source_readiness_snapshot_guard.py',
-                  'automation/orthogonal_pit_next_gate.py',
-                  'ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json',
-              }
-              top4_paths = {
-                  'automation/top4_candidate_capacity.py',
-                  'automation/q218_q221_historical_source_census.py',
-                  'automation/q218_q221_candidate_gate_compiler.py',
-                  'research/candidates/orthogonal_candidate_specs_2026-10-05.json',
-                  'research/evidence/orthogonal_next_gate_latest.json',
-                  'ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json',
-                  'ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json',
-                  'ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json',
-                  'ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json',
-              }
-              q104_paths = {
-                  'ai_requests/AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL.json',
-                  'docs/research_design/Q104_I19_EXACT_XBRL_CONCEPT_FREEZE_2026-10-03.md',
-                  'automation/q104_i19_13f_historical_identity_census.py',
-                  'automation/q104_i19_xbrl_pit_compiler.py',
-                  '.github/workflows/q104-i19-13f-historical-identity-census.yml',
-              }
-              orch_paths = {
-                  'automation/research_os_scheduler.py',
-                  'automation/research_hypothesis_compiler.py',
-                  'automation/autonomous_control_plane.py',
-                  '.github/workflows/permanent-pc-research-loop.yml',
-                  '.github/workflows/q121r6-windows-independent-reproduction.yml',
-                  '.github/workflows/q185-q186-windows-reproduction.yml',
-                  '.github/workflows/self-hosted-continuous-qa.yml',
-              }
-              if changed.intersection(q187_paths):
-                  tasks.append('AI-2026-10-04-Q187-Q192-ADVERSARIAL')
-              if changed.intersection(global_paths):
-                  tasks.append('AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT')
-              if changed.intersection(top4_paths):
-                  tasks.extend([
-                      'AI-2026-10-06-Q218-TOP4-ADVERSARIAL',
-                      'AI-2026-10-06-Q219-TOP4-ADVERSARIAL',
-                      'AI-2026-10-06-Q220-TOP4-ADVERSARIAL',
-                      'AI-2026-10-06-Q221-TOP4-ADVERSARIAL',
-                  ])
-              if changed.intersection(q104_paths):
-                  tasks.append('AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL')
-              if changed.intersection(orch_paths):
-                  tasks.append('AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT')
-              tasks = sorted(set(tasks))
-
-          allowed_manual = {
-              'AI-2026-10-04-Q187-Q192-ADVERSARIAL',
-              'AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT',
-              'AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT',
-              'AI-2026-09-29-Q091-ADVERSARIAL',
-              'AI-2026-09-28-Q089-ADVERSARIAL',
-              'AI-2026-09-28-UNUSUAL-FRONTIER',
-              'AI-2026-09-30-Q100-FRONTIER-FEASIBILITY',
-              'AI-2026-09-30-Q101-NEGATIVE-EVIDENCE',
-              'AI-2026-09-30-Q102-REGIME-STATE-DESIGN',
-              'AI-2026-10-06-Q218-TOP4-ADVERSARIAL',
-              'AI-2026-10-06-Q219-TOP4-ADVERSARIAL',
-              'AI-2026-10-06-Q220-TOP4-ADVERSARIAL',
-              'AI-2026-10-06-Q221-TOP4-ADVERSARIAL',
-              'AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL',
+          allowed = {
+              "AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL",
+              "AI-2026-10-10-Q220-ASFILED-MAPPING-ADVERSARIAL",
+              "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
           }
-          if any(task not in allowed_manual for task in tasks):
-              raise SystemExit(f'unexpected AI task: {tasks}')
-
-          if os.environ['EVENT_NAME'] != 'workflow_dispatch' and tasks:
-              task_files = {
-                  'AI-2026-10-04-Q187-Q192-ADVERSARIAL': 'ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json',
-                  'AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT': 'ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json',
-                  'AI-2026-10-06-Q218-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json',
-                  'AI-2026-10-06-Q219-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json',
-                  'AI-2026-10-06-Q220-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json',
-                  'AI-2026-10-06-Q221-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json',
-                  'AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL': 'ai_requests/AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL.json',
-              }
-              deduped = []
-              for task_id in tasks:
-                  task_path = task_files.get(task_id)
-                  if not task_path:
-                      deduped.append(task_id)
-                      continue
-                  current_fp = subprocess.check_output(
-                      ['python', '-m', 'automation.ai_worker_fabric',
-                       '--context-fingerprint', '--task', task_path],
-                      text=True,
-                  ).strip()
-                  state_path = Path('ops/ai_worker_state') / f'{task_id}__openrouter_free.json'
-                  previous_fp = ''
-                  if state_path.is_file():
-                      try:
-                          previous = json.loads(state_path.read_text(encoding='utf-8'))
-                          previous_fp = str(previous.get('context_fingerprint', ''))
-                      except (OSError, json.JSONDecodeError):
-                          previous_fp = ''
-                  if current_fp != previous_fp:
-                      deduped.append(task_id)
-                  else:
-                      print(f'AI_TASK_DEDUPED task={task_id} context={current_fp}')
-              tasks = deduped
-
-          if not tasks:
-              tasks = ['__none__']
-          Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8').write(
-              'tasks=' + json.dumps(tasks) + '\\n'
+          task = os.environ.get("TASK_ID", "").strip()
+          if task not in allowed:
+              raise SystemExit(f"AI_TASK_OUTSIDE_ACTIVE_FOCUS:{task}")
+          path = Path("ai_requests") / f"{task}.json"
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          if payload.get("task_id") != task:
+              raise SystemExit("AI_TASK_ID_FILE_MISMATCH")
+          for flag in ("holdout_selection", "parameter_selection", "asset_selection", "threshold_selection",
+                       "horizon_selection", "research_gate_changes", "promotion_decision", "live_execution",
+                       "paid_usage", "research_decision", "allow_workspace_writes"):
+              if payload.get(flag, False) is not False:
+                  raise SystemExit(f"AI_TASK_UNSAFE_FLAG:{flag}")
+          Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8").write(
+              "tasks=" + json.dumps([task]) + "\n"
           )
+          print(f"FOCUSED_AI_TASK_ACCEPTED={task}")
           PY
 
   worker:
@@ -286,20 +113,9 @@ jobs:
         run: |
           set -euo pipefail
           case '${{ matrix.task }}' in
-            AI-2026-09-29-Q091-ADVERSARIAL) echo 'path=ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-28-Q089-ADVERSARIAL) echo 'path=ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-28-UNUSUAL-FRONTIER) echo 'path=ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-30-Q100-FRONTIER-FEASIBILITY) echo 'path=ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) echo 'path=ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-30-Q102-REGIME-STATE-DESIGN) echo 'path=ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT) echo 'path=ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-04-Q187-Q192-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT) echo 'path=ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-06-Q218-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-06-Q219-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-06-Q220-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-06-Q221-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-10-Q220-ASFILED-MAPPING-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-10-Q220-ASFILED-MAPPING-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-06-Q218-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
           esac
 

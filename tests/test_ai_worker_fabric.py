@@ -418,3 +418,26 @@ def test_global_adversarial_task_is_provider_neutral_and_source_durable():
     assert task["allow_workspace_writes"] is False
     assert task["research_gate_changes"] is False
     assert task["performance_authorized"] is False if "performance_authorized" in task else True
+
+
+def test_ai_worker_manual_routing_is_limited_to_the_active_three_candidates():
+    root = Path(__file__).parents[1]
+    workflow = (root / ".github/workflows/ai-worker-fabric.yml").read_text(encoding="utf-8")
+    header = workflow.split("permissions:", 1)[0]
+    for task_id in (
+        "AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL",
+        "AI-2026-10-10-Q220-ASFILED-MAPPING-ADVERSARIAL",
+        "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
+    ):
+        assert task_id in header
+    assert "AI-2026-10-06-Q219-TOP4-ADVERSARIAL" not in header
+    assert "AI-2026-10-06-Q221-TOP4-ADVERSARIAL" not in header
+    assert "workflow_run:" not in header
+    assert "push:" not in header
+    task_path = root / "ai_requests" / "AI-2026-10-10-Q220-ASFILED-MAPPING-ADVERSARIAL.json"
+    payload = json.loads(task_path.read_text(encoding="utf-8"))
+    assert payload["task_id"] == "AI-2026-10-10-Q220-ASFILED-MAPPING-ADVERSARIAL"
+    assert payload["paid_usage"] is False
+    assert payload["research_gate_changes"] is False
+    assert payload["live_execution"] is False
+    assert payload["allow_workspace_writes"] is False
