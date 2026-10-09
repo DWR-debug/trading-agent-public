@@ -1186,7 +1186,7 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
     """Expose a real bounded queue of future next-gate research, independent of live slot occupancy."""
     order = [
         ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A"),
-        ("Q220", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B"),
+        ("Q220", ".github/workflows/q220-as-filed-xbrl-population.yml", "Windows self-hosted B"),
     ]
     by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
     backlog = []
@@ -1439,13 +1439,15 @@ def planned_capacity_plan(
             "plan_id": "Q220-AS-FILED-REPRESENTATION",
             "candidate": "Q220",
             "lane": "FRONTIER DISCOVERY",
-            "task": "as-filed XBRL narrative/structured mapping and taxonomy drift diagnostics",
-            "preferred": ["Windows self-hosted B", "GitHub-hosted ARM64", "GitHub-hosted Ubuntu x64", "Windows self-hosted C", "Windows self-hosted A"],
-            "readiness": "READY_FIXED_POOL_SCHEMA_MAPPING",
-            "basis": "deterministic fixed-population source/schema checks; fail closed on TextBlock, taxonomy, or presentation-linkage instability",
+            "task": "fixed-population as-filed SEC XBRL TextBlock/presentation mapping and historical taxonomy/PIT falsification",
+            "preferred": ["Windows self-hosted B"],
+            "readiness": "READY_FIXED_POOL_ASFILED_POPULATION_GATE",
+            "basis": "use the candidate-specific workflow that retrieves the frozen issuer population and publishes an immutable Q220 population receipt; this is real source/PIT work, not only contract tests",
             "dispatchable": True,
-            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
-            "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+            "exclusive_dispatch": True,
+            "resource_leases": ["Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
+            "execution_workflow": ".github/workflows/q220-as-filed-xbrl-population.yml",
+            "execution_workflow_inputs": {},
         },
         {
             "plan_id": "Q220-CURRENT-ADVERSARIAL",
