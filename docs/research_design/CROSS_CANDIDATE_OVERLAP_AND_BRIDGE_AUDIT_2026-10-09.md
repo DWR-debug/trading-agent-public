@@ -140,3 +140,38 @@ The current scout searches OpenAlex metadata plus public GitHub repositories and
 `AUTOMATIC_PROMOTION=False`
 
 This document is a design audit only. It creates no scientific evidence, changes no frozen trial, dispatches no research workflow and grants no authorization.
+
+
+## 3. Secondary bridge to test only if the source contract is cheap: FOIA demand → public regulatory disclosure
+
+This is a **sub-hypothesis across the existing Q157/Q227/Q231 FOIA family and Q228 SEC correspondence / filing-review state**, not a new candidate ID.
+
+### Question
+
+For an issuer-specific SEC FOIA request that is observable in a public FOIA-log release, does the request's predeclared topic/requester class have a reproducible relationship to a later-published SEC comment-letter/response or exhibit-availability state concerning the same subject? The object is the chronology and topic-level corroboration between a costly regulatory-record request and a subsequently public regulator/issuer disclosure—not another generic FOIA count or comment-letter sentiment score.
+
+This deserves a small audit because official sources establish two different publication mechanics: SEC FOIA logs are posted monthly and include request description, receipt/request fields, status and disposition; SEC comment-letter correspondence is made public at least 20 business days after review completion or registration effectiveness. Recent peer-reviewed work also reports heterogeneous information content across FOIA requester categories. Those findings motivate investigation, but do not establish that this cross-channel relation is new or useful for trading.
+
+### Primary-source anchors
+
+- SEC, **Chief FOIA Officer Report 2026**: https://www.sec.gov/foia/sec-foia-reports/chief-foia-officer-report-2026
+- SEC, **How to Search for EDGAR Correspondence**, 18 May 2026: https://www.sec.gov/search-filings/edgar-search-assistance/how-search-edgar-correspondence
+- Bao, Brendel, Drake & Su (2026), **The information content of private information acquisition: evidence from FOIA requests to the SEC**, *Review of Accounting Studies*, version of record 21 August 2026: https://doi.org/10.1007/s11142-026-09988-7
+- Existing project contracts: `Q228` SEC filing-review dialogue, `Q227/Q231` SEC FOIA acquisition, `Q218` mandatory/voluntary disclosure pairing, and `Q224/Q226` EDGAR document acquisition.
+
+### Cheap falsification
+
+1. Use only exact issuer names/CIKs, request IDs, accession/subject identifiers, and explicitly admissible filing identifiers. A text resemblance by itself cannot create event identity.
+2. Reconstruct when the **FOIA log itself became public**, not merely the requested/received date. Treat the latent request timestamp as not publicly tradable before release.
+3. Reconstruct correspondence publication at the first admissible EDGAR public boundary; do not backdate to the private letter date or review start.
+4. Predeclare a small request-topic ontology and source-independence rule before inspecting any outcomes.
+5. Test whether the linkage survives after collapsing duplicate IDs and excluding requests whose target or content is ambiguous. Compare against within-issuer chronology permutations and an exact-issuer-map shuffle.
+
+### Merge/kill
+
+- **Kill** if the issuer/topic linkage depends on manual interpretation, if the FOIA-log public release clock cannot be recovered historically, or if the relationship exists only because comment letters were already public before the FOIA log made the request visible.
+- **Merge into Q227/Q231** if the only result is ordinary FOIA requester/topic composition.
+- **Merge into Q228** if the only result is the pre-existing comment-letter review/response state.
+- **Do not call it novel** merely because the two sources are joined. It survives as a separate bridge only if the event identity, temporal ordering, and a predeclared cross-channel observable are independently reproducible.
+
+No new run is requested by this sub-hypothesis. It is lower priority than completing I19 and the existing Q218 gates, and remains discovery-only.
