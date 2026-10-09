@@ -1,0 +1,205 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_independent_replication_event_pair_gate",
+  "candidate_id": "Q218",
+  "source_trial_id": "T-2026-10-08-Q218-PERFORMANCE-01",
+  "replication_trial_id": "T-2026-10-08-Q218-REPLICATION-01",
+  "contract_path": "research/governance/q218_independent_replication_contract_2026_10_08.json",
+  "contract_sha256": "b9e36e93ca86fef57c9fbd2c16489f2fc5a58a663ce5e8751d39d4b2ca9a50c3",
+  "fixed_window": {
+    "start": "2025-01-01",
+    "end": "2026-10-05"
+  },
+  "issuer_set": {
+    "GOOGL": "1652044",
+    "META": "1326801",
+    "ORCL": "1341439",
+    "PFE": "78003"
+  },
+  "pairing_rule": "exact report_date preferred; otherwise latest eligible Item-2.02 8-K by SEC acceptance within the target 10-K reporting cycle, bounded below by the preceding in-window 10-K acceptance",
+  "issuer_results": {
+    "GOOGL": {
+      "cik": "1652044",
+      "ten_k_count": 2,
+      "prior_boundary_10k_count": 1,
+      "item_2_02_8k_count": 27,
+      "ten_k_amendment_count": 0,
+      "item_2_02_8k_amendment_count": 0,
+      "event_pair_count": 2,
+      "event_pair_coverage": 1.0,
+      "event_pairs": [
+        {
+          "ten_k_accession": "0001652044-25-000014",
+          "ten_k_acceptance_datetime": "20250204204140",
+          "item_2_02_8k_accession": "0001652044-25-000010",
+          "item_2_02_8k_acceptance_datetime": "20250204160127",
+          "report_date": "2024-12-31",
+          "pairing_method": "acceptance_interval",
+          "pairing_lower_bound_acceptance": "20240130214343",
+          "event_report_date": "2025-02-04",
+          "exact_report_date_match": false,
+          "acceptance_order_valid": true
+        },
+        {
+          "ten_k_accession": "0001652044-26-000018",
+          "ten_k_acceptance_datetime": "20260204215603",
+          "item_2_02_8k_accession": "0001652044-26-000012",
+          "item_2_02_8k_acceptance_datetime": "20260204160137",
+          "report_date": "2025-12-31",
+          "pairing_method": "acceptance_interval",
+          "pairing_lower_bound_acceptance": "20250204204140",
+          "event_report_date": "2026-02-04",
+          "exact_report_date_match": false,
+          "acceptance_order_valid": true
+        }
+      ],
+      "unmatched_ten_k": [],
+      "amendment_lineage": [],
+      "all_pairing_valid": true,
+      "all_lineage_valid": true,
+      "pairing_rule": "latest eligible Item-2.02/Exhibit-99.1-style 8-K by SEC acceptance within the interval (preceding 10-K acceptance, target 10-K acceptance]"
+    },
+    "META": {
+      "cik": "1326801",
+      "ten_k_count": 2,
+      "prior_boundary_10k_count": 0,
+      "item_2_02_8k_count": 18,
+      "ten_k_amendment_count": 0,
+      "item_2_02_8k_amendment_count": 0,
+      "event_pair_count": 2,
+      "event_pair_coverage": 1.0,
+      "event_pairs": [
+        {
+          "ten_k_accession": "0001326801-25-000017",
+          "ten_k_acceptance_datetime": "20250129200050",
+          "item_2_02_8k_accession": "0001326801-25-000014",
+          "item_2_02_8k_acceptance_datetime": "20250129164714",
+          "report_date": "2024-12-31",
+          "pairing_method": "acceptance_interval",
+          "pairing_lower_bound_acceptance": null,
+          "event_report_date": "2025-01-29",
+          "exact_report_date_match": false,
+          "acceptance_order_valid": true
+        },
+        {
+          "ten_k_accession": "0001628280-26-003942",
+          "ten_k_acceptance_datetime": "20260128191346",
+          "item_2_02_8k_accession": "0001628280-26-003832",
+          "item_2_02_8k_acceptance_datetime": "20260128160420",
+          "report_date": "2025-12-31",
+          "pairing_method": "acceptance_interval",
+          "pairing_lower_bound_acceptance": "20250129200050",
+          "event_report_date": "2026-01-28",
+          "exact_report_date_match": false,
+          "acceptance_order_valid": true
+        }
+      ],
+      "unmatched_ten_k": [],
+      "amendment_lineage": [],
+      "all_pairing_valid": true,
+      "all_lineage_valid": true,
+      "pairing_rule": "latest eligible Item-2.02/Exhibit-99.1-style 8-K by SEC acceptance within the interval (preceding 10-K acceptance, target 10-K acceptance]"
+    },
+    "ORCL": {
+      "cik": "1341439",
+      "ten_k_count": 2,
+      "prior_boundary_10k_count": 1,
+      "item_2_02_8k_count": 20,
+      "ten_k_amendment_count": 0,
+      "item_2_02_8k_amendment_count": 0,
+      "event_pair_count": 2,
+      "event_pair_coverage": 1.0,
+      "event_pairs": [
+        {
+          "ten_k_accession": "0000950170-25-087926",
+          "ten_k_acceptance_datetime": "20250618163122",
+          "item_2_02_8k_accession": "0000950170-25-084831",
+          "item_2_02_8k_acceptance_datetime": "20250611161202",
+          "report_date": "2025-05-31",
+          "pairing_method": "acceptance_interval",
+          "pairing_lower_bound_acceptance": "20240620162135",
+          "event_report_date": "2025-06-11",
+          "exact_report_date_match": false,
+          "acceptance_order_valid": true
+        },
+        {
+          "ten_k_accession": "0001193125-26-277521",
+          "ten_k_acceptance_datetime": "20260622161240",
+          "item_2_02_8k_accession": "0001193125-26-265848",
+          "item_2_02_8k_acceptance_datetime": "20260610161346",
+          "report_date": "2026-05-31",
+          "pairing_method": "acceptance_interval",
+          "pairing_lower_bound_acceptance": "20250618163122",
+          "event_report_date": "2026-06-10",
+          "exact_report_date_match": false,
+          "acceptance_order_valid": true
+        }
+      ],
+      "unmatched_ten_k": [],
+      "amendment_lineage": [],
+      "all_pairing_valid": true,
+      "all_lineage_valid": true,
+      "pairing_rule": "latest eligible Item-2.02/Exhibit-99.1-style 8-K by SEC acceptance within the interval (preceding 10-K acceptance, target 10-K acceptance]"
+    },
+    "PFE": {
+      "cik": "78003",
+      "ten_k_count": 2,
+      "prior_boundary_10k_count": 1,
+      "item_2_02_8k_count": 15,
+      "ten_k_amendment_count": 0,
+      "item_2_02_8k_amendment_count": 0,
+      "event_pair_count": 2,
+      "event_pair_coverage": 1.0,
+      "event_pairs": [
+        {
+          "ten_k_accession": "0000078003-25-000054",
+          "ten_k_acceptance_datetime": "20250227162718",
+          "item_2_02_8k_accession": "0000078003-25-000017",
+          "item_2_02_8k_acceptance_datetime": "20250204081120",
+          "report_date": "2024-12-31",
+          "pairing_method": "acceptance_interval",
+          "pairing_lower_bound_acceptance": "20240222131737",
+          "event_report_date": "2025-02-04",
+          "exact_report_date_match": false,
+          "acceptance_order_valid": true
+        },
+        {
+          "ten_k_accession": "0000078003-26-000026",
+          "ten_k_acceptance_datetime": "20260226124401",
+          "item_2_02_8k_accession": "0000078003-26-000005",
+          "item_2_02_8k_acceptance_datetime": "20260203070137",
+          "report_date": "2025-12-31",
+          "pairing_method": "acceptance_interval",
+          "pairing_lower_bound_acceptance": "20250227162718",
+          "event_report_date": "2026-02-03",
+          "exact_report_date_match": false,
+          "acceptance_order_valid": true
+        }
+      ],
+      "unmatched_ten_k": [],
+      "amendment_lineage": [],
+      "all_pairing_valid": true,
+      "all_lineage_valid": true,
+      "pairing_rule": "latest eligible Item-2.02/Exhibit-99.1-style 8-K by SEC acceptance within the interval (preceding 10-K acceptance, target 10-K acceptance]"
+    }
+  },
+  "issuer_count": 4,
+  "total_event_pairs": 8,
+  "all_pairing_valid": true,
+  "primary_performance_read": false,
+  "scientific_evidence": false,
+  "performance_authorization": false,
+  "holdout_selection": false,
+  "ranking": false,
+  "tuning": false,
+  "promotion": false,
+  "live_execution": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "next_gate": "INDEPENDENT_REPLICATION_INPUT_FREEZE",
+  "receipt_fingerprint": "5e97d61d99b17667e2e3053b450d542a92aa2a9cd79a827eb320f2e3d8008d0a"
+}

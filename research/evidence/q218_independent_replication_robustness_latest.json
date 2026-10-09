@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q218_independent_replication_robustness",
+  "candidate_id": "Q218",
+  "trial_id": "T-2026-10-08-Q218-REPLICATION-01",
+  "status": "PRE_PERFORMANCE_REPLICATION_ROBUSTNESS_COMPLETED",
+  "bundle_fingerprint": "33bfb8c0caf548b0def3355491cfb7562c68f16297ec30a9a67f0a101f8421bf",
+  "contract_sha256": "b9e36e93ca86fef57c9fbd2c16489f2fc5a58a663ce5e8751d39d4b2ca9a50c3",
+  "research_only": true,
+  "screen_is_descriptive_only": true,
+  "no_post_hoc_tuning": true,
+  "mutation_probes": [
+    {
+      "label": "contract_fingerprint_mismatch",
+      "rejected": true,
+      "exception": "RuntimeError"
+    },
+    {
+      "label": "document_bytes_mismatch",
+      "rejected": true,
+      "exception": "RuntimeError"
+    },
+    {
+      "label": "future_market_bar_rejected",
+      "rejected": true,
+      "exception": "RuntimeError"
+    },
+    {
+      "label": "amendment_form_rejected",
+      "rejected": true,
+      "exception": "RuntimeError"
+    },
+    {
+      "label": "duplicate_event_identity_rejected",
+      "rejected": true,
+      "exception": "RuntimeError"
+    },
+    {
+      "label": "path_escape_rejected",
+      "rejected": true,
+      "exception": "RuntimeError"
+    }
+  ],
+  "all_mutations_rejected": true,
+  "performance_evaluation": false,
+  "holdout_evaluation": false,
+  "selection_used": false,
+  "holdout_used_for_selection": false,
+  "parameter_search": false,
+  "threshold_search": false,
+  "horizon_search": false,
+  "asset_search": false,
+  "variant_search": false,
+  "family_ranking": false,
+  "promotion_decision": false,
+  "performance_authorized": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "f6ac77abc04c44e6bfa0f296d086c347fb0d02207a7fc5d304a46ddc68a4db34"
+}
