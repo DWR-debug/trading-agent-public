@@ -99,8 +99,56 @@
     .error{border:1px solid var(--operating);border-radius:10px;padding:12px;margin-top:16px}
     footer{margin-top:18px;font-size:12px}
     code{word-break:break-all}
-    @media(max-width:1100px){.capacity-grid{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:700px){.capacity-grid{grid-template-columns:1fr}.grid{display:block}.card{margin-bottom:14px}}
+    @media(max-width:1100px){.capacity-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:700px){.capacity-grid{grid-template-columns:minmax(0,1fr)}.grid{display:block}.card{margin-bottom:14px}}
+    .action-panel{flex:0 1 520px;min-width:0;max-width:520px}
+    .refresh-meta{margin-top:8px;font-size:12px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
+    .actions button,.actions a.button{min-height:44px;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+    #work,#planned,#milestones12h{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    @media(max-width:760px){
+      main{padding:12px}
+      header{display:block}
+      h1{font-size:23px;line-height:1.2}
+      #meta{margin-top:8px;font-size:12px;overflow-wrap:anywhere}
+      .action-panel{width:100%;max-width:none;margin-top:12px}
+      .actions{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;width:100%}
+      .actions button,.actions a.button{width:100%;min-height:46px;padding:12px}
+      .clock-grid{grid-template-columns:minmax(0,1fr);gap:8px}
+      .clock-panel{display:grid;grid-template-columns:minmax(0,1fr);gap:5px;padding:12px}
+      .clock-date,.snapshot-age{text-align:left;margin-top:4px}
+      .clock-time{font-size:27px}
+      .notice{padding:10px;margin-top:12px}
+      .grid{display:block;margin-top:12px}
+      .card{padding:12px;margin-bottom:12px}
+      .focus-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .focus-kpi:first-child{grid-column:1/-1}
+      .candidate-focus{grid-template-columns:minmax(0,1fr);gap:12px}
+      .candidate-card{padding:13px}
+      .candidate-head{display:block}
+      .candidate-code{font-size:23px}
+      .candidate-main{grid-template-columns:minmax(0,1fr);gap:12px}
+      .ring-wrap{justify-content:flex-start}
+      .progress-ring{width:112px;height:112px}
+      .progress-ring>div{width:84px;height:84px}
+      .progress-ring strong{font-size:24px}
+      .candidate-foot{display:grid;grid-template-columns:minmax(0,1fr);gap:5px}
+      .support-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .queue-grid{grid-template-columns:minmax(0,1fr)}
+      .capacity-grid{grid-template-columns:minmax(0,1fr);gap:8px}
+      .capacity{min-height:0;padding:10px}
+      .progress-overview{grid-template-columns:minmax(0,1fr)}
+      .milestone-item{grid-template-columns:minmax(0,1fr);gap:5px}
+      #work table,#planned table,#milestones12h table{min-width:640px}
+      .ops-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .refresh-meta{font-size:12px}
+      footer{font-size:11px}
+    }
+    @media(min-width:761px) and (max-width:900px){
+      .candidate-focus{grid-template-columns:minmax(0,1fr)}
+      .candidate-main{grid-template-columns:120px minmax(0,1fr);gap:12px}
+      .capacity-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .support-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
   </style>
 </head>
 <body>
@@ -110,12 +158,16 @@
       <h1>Trading Agent — Research Control Board</h1>
       <div id="meta" class="muted">Lade operativen Snapshot…</div>
     </div>
-    <div class="actions">
-      <button id="refresh">Snapshot aktualisieren</button>
-      <a class="button" id="update" target="_blank" rel="noopener"
-         href="https://github.com/DWR-debug/trading-agent-public/actions/workflows/resource-dashboard-update.yml">Update &amp; deploy</a>
-      <a class="button" target="_blank" rel="noopener"
-         href="https://github.com/DWR-debug/trading-agent-public/actions">Actions</a>
+    <div class="action-panel">
+      <div class="actions">
+        <button id="refresh" type="button">Snapshot aktualisieren</button>
+        <a class="button" id="update" target="_blank" rel="noopener"
+           title="Öffnet GitHub Actions. Der manuelle Workflow-Start erfolgt dort separat."
+           href="https://github.com/DWR-debug/trading-agent-public/actions/workflows/resource-dashboard-update.yml">Workflow zum Neuerzeugen öffnen</a>
+        <a class="button" target="_blank" rel="noopener"
+           href="https://github.com/DWR-debug/trading-agent-public/actions">Actions / Runnerstatus</a>
+      </div>
+      <div id="refreshStatus" class="refresh-meta muted" aria-live="polite">Die Seite lädt den neuesten veröffentlichten Snapshot automatisch alle 3 Minuten. Neue Server-Snapshots werden ungefähr alle 5 Minuten erzeugt. Dieser Knopf lädt nur die zuletzt veröffentlichte Datei; er startet keinen Workflow.</div>
     </div>
   </header>
 
