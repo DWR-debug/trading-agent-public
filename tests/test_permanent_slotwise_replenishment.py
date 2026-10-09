@@ -51,5 +51,6 @@ def test_fast_dispatch_default_ceiling_is_six():
 def test_dashboard_three_minute_live_refresh_and_five_minute_server_refresh():
     js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
     workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
-    assert "setInterval(load,180000)" in js
+    assert "var refreshIntervalMs=180000" in js
+    assert "setInterval(function(){load(false);},refreshIntervalMs)" in js
     assert 'cron: "*/5 * * * *"' in workflow
