@@ -148,3 +148,81 @@ def test_dashboard_capacity_plan_includes_q219_q220_q221_receipt_defined_source_
         assert scheduled[code]["execution_workflow_inputs"]["gate"] == "all"
     assert scheduled["Q219"]["plan_id"] == "Q219-OPTIONS-SOURCE-BREADTH"
     assert scheduled["Q221"]["plan_id"] == "Q221-USASPENDING-PUBLIC-CLOCK"
+
+
+
+def test_dashboard_capacity_plan_hides_active_or_failed_full_i19_census():
+    from automation import generate_resource_dashboard as dashboard
+
+    resources = [
+        {"name": "Windows self-hosted A", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "Windows self-hosted B", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "Windows self-hosted C", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "GitHub-hosted Ubuntu x64", "current_assignments": 0, "research_capacity_slots": 2, "research_slots_free": 2},
+        {"name": "GitHub-hosted ARM64", "current_assignments": 0, "research_capacity_slots": 2, "research_slots_free": 2},
+        {"name": "Free AI pool", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+    ]
+    active_census = [{
+        "name": "Q104 I19 Historical 13F Identity Census",
+        "status": "in_progress",
+        "head_sha": "old-census-sha",
+        "id": 37976018426,
+    }]
+    plan = dashboard.planned_capacity_plan(resources, [], [], {}, {}, recent_runs=active_census)
+    scheduled_ids = {
+        item["plan_id"]
+        for row in plan for item in row["planned_assignments"]
+        if item.get("scheduled")
+    }
+    assert "Q104-I19-CENSUS" not in scheduled_ids
+    assert not any(
+        item.get("plan_id") == "Q104-I19-INDEPENDENT-REPRO" and item.get("scheduled")
+        for row in plan for item in row["planned_assignments"]
+    )
+
+    failed_census = [{
+        "name": "Q104 I19 Historical 13F Identity Census",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "old-census-sha",
+        "id": 123,
+    }]
+    plan_after_failure = dashboard.planned_capacity_plan(resources, [], [], {}, {}, recent_runs=failed_census)
+    after_failure_ids = {
+        item["plan_id"]
+        for row in plan_after_failure for item in row["planned_assignments"]
+        if item.get("scheduled")
+    }
+    assert "Q104-I19-CENSUS" not in after_failure_ids
+
+
+def test_dashboard_adapts_q219_q221_to_free_uncompleted_resources():
+    from automation import generate_resource_dashboard as dashboard
+
+    resources = [
+        {"name": "Windows self-hosted A", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "Windows self-hosted B", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "Windows self-hosted C", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "GitHub-hosted Ubuntu x64", "current_assignments": 2, "research_capacity_slots": 2, "research_slots_free": 0},
+        {"name": "GitHub-hosted ARM64", "current_assignments": 1, "research_capacity_slots": 2, "research_slots_free": 1},
+        {"name": "Free AI pool", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+    ]
+    board = [
+        {"code": "Q219", "next_gate": "options source breadth"},
+        {"code": "Q220", "next_gate": "as-filed mapping"},
+        {"code": "Q221", "next_gate": "historical public clock"},
+    ]
+    runs = [
+        {"name": "Top-4 Slot ubuntu_arm64 Q221 all", "status": "completed", "conclusion": "success"},
+        {"name": "Q220 As-Filed SEC-XBRL Population Repair", "status": "in_progress"},
+    ]
+    plan = dashboard.planned_capacity_plan(resources, [], board, {}, {}, recent_runs=runs)
+    scheduled = {
+        item["candidate"]: (row["resource"], item)
+        for row in plan for item in row["planned_assignments"]
+        if item.get("scheduled")
+    }
+    assert scheduled["Q219"][0] == "Windows self-hosted B"
+    assert scheduled["Q220"][0] != "Windows self-hosted B"
+    assert scheduled["Q221"][0] == "Windows self-hosted C"
+    assert scheduled["Q221"][1]["execution_workflow_inputs"]["gate"] == "all"
