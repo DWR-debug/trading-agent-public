@@ -307,14 +307,23 @@ def build_candidate_portfolio(
     }
     status_index = _current_state_index(evidence)
     progress_index: dict[str, dict[str, Any]] = {}
-    progress_rows = candidate_progress.values() if isinstance(candidate_progress, dict) else candidate_progress
-    if isinstance(progress_rows, list) or hasattr(progress_rows, "__iter__"):
-        try:
-            for row in progress_rows or []:
-                if isinstance(row, dict) and row.get("code"):
-                    progress_index[str(row["code"])] = row
-        except TypeError:
-            pass
+    progress_rows: Any = candidate_progress
+    if isinstance(candidate_progress, dict):
+        nested = candidate_progress.get("candidates")
+        if isinstance(nested, dict):
+            progress_rows = [
+                {"code": str(code), **row}
+                for code, row in nested.items()
+                if isinstance(row, dict)
+            ]
+        elif isinstance(candidate_progress.get("items"), list):
+            progress_rows = candidate_progress["items"]
+        else:
+            progress_rows = list(candidate_progress.values())
+    if isinstance(progress_rows, (list, tuple)):
+        for row in progress_rows:
+            if isinstance(row, dict) and row.get("code"):
+                progress_index[str(row["code"])] = row
 
     portfolio = []
     for code, assessment in A.items():
