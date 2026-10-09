@@ -19,10 +19,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 try:
-    from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context, TOP4_CANDIDATES
+    from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context, TOP4_CANDIDATES, completed_slot_scopes
 except ModuleNotFoundError:
     # Direct script execution puts automation/ on sys.path.
-    from planned_capacity_fast_dispatch import ai_task_completed_with_current_context, TOP4_CANDIDATES
+    from planned_capacity_fast_dispatch import ai_task_completed_with_current_context, TOP4_CANDIDATES, completed_slot_scopes
 OUT = ROOT / "docs" / "dashboard" / "dashboard_data.json"
 BOOTSTRAP = ROOT / "docs" / "dashboard" / "dashboard_bootstrap.js"
 REPO = os.environ.get("GITHUB_REPOSITORY", "DWR-debug/trading-agent-public")
@@ -1165,6 +1165,7 @@ def planned_capacity_plan(
     top4: list[dict[str, Any]],
     job_benchmarks: dict[str, dict[str, int | str]],
     os_state: dict[str, Any],
+    recent_runs: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Compile a non-authorizing next-work plan from the real bounded backlog.
 
@@ -1173,6 +1174,55 @@ def planned_capacity_plan(
     nothing is invented to occupy free capacity.
     """
     active_text = [f"{x.get('resource','')} {x.get('task','')} {x.get('job','')}".lower() for x in work]
+    run_rows = [x for x in (recent_runs or []) if isinstance(x, dict)]
+    active_statuses = {"queued", "in_progress", "waiting", "pending", "requested"}
+    completed_slots = completed_slot_scopes(run_rows)
+
+    def run_title(run: dict[str, Any]) -> str:
+        return " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name", "path", "workflow_path"))
+
+    def is_q104_census(run: dict[str, Any]) -> bool:
+        title = run_title(run)
+        return (
+            "Q104 I19 Historical 13F Identity Census" in title
+            or "q104-i19-13f-historical-identity-census.yml" in title
+        )
+
+    q104_census_active = any(
+        str(run.get("status") or "") in active_statuses and is_q104_census(run)
+        for run in run_rows
+    )
+    q104_census_terminal_failure = any(
+        str(run.get("status") or "") == "completed"
+        and str(run.get("conclusion") or "") in {"failure", "startup_failure", "timed_out", "cancelled"}
+        and is_q104_census(run)
+        for run in run_rows
+    )
+
+    def resource_slot(resource_name: str) -> str | None:
+        return {
+            "Windows self-hosted A": "windows",
+            "Windows self-hosted B": "windows",
+            "Windows self-hosted C": "windows",
+            "GitHub-hosted Ubuntu x64": "ubuntu_x64",
+            "GitHub-hosted ARM64": "ubuntu_arm64",
+        }.get(resource_name)
+
+    active_slot_scopes: set[tuple[str, str]] = set()
+    active_candidate_names: set[str] = set()
+    for run in run_rows:
+        title = run_title(run)
+        status_value = str(run.get("status") or "")
+        if status_value not in active_statuses:
+            continue
+        if "Top-4 Slot " in title:
+            parts = title.split("Top-4 Slot ", 1)[1].strip().split()
+            if len(parts) >= 2 and parts[0] in {"windows", "ubuntu_x64", "ubuntu_arm64"}:
+                active_slot_scopes.add((parts[0], parts[1]))
+        for code in ("Q218", "Q219", "Q220", "Q221"):
+            if code.lower() in title.lower():
+                active_candidate_names.add(code)
+
     q104_census_receipt = read_json_file("research/evidence/q104_i19_13f_historical_identity_census_latest.json")
     q104_census_ready = q104_census_clock_complete(q104_census_receipt)
     q218_receipts = q218_receipt_state()
@@ -1332,7 +1382,7 @@ def planned_capacity_plan(
             "candidate": "Q219",
             "lane": "FRONTIER DISCOVERY",
             "task": "free historical single-equity options source breadth Go/No-Go",
-            "preferred": ["GitHub-hosted Ubuntu x64", "Windows self-hosted B", "GitHub-hosted ARM64"],
+            "preferred": ["GitHub-hosted Ubuntu x64", "Windows self-hosted B", "Windows self-hosted C", "GitHub-hosted ARM64", "Windows self-hosted A"],
             "readiness": "READY_FREE_OPTIONS_SOURCE_BREADTH_GO_NO_GO",
             "basis": "bounded no-paid-data source/PIT falsification; prove multi-year single-equity options coverage or stop before full development",
             "dispatchable": True,
@@ -1344,7 +1394,7 @@ def planned_capacity_plan(
             "candidate": "Q220",
             "lane": "FRONTIER DISCOVERY",
             "task": "as-filed XBRL narrative/structured mapping and taxonomy drift diagnostics",
-            "preferred": ["Windows self-hosted B", "GitHub-hosted ARM64", "GitHub-hosted Ubuntu x64"],
+            "preferred": ["Windows self-hosted B", "GitHub-hosted ARM64", "GitHub-hosted Ubuntu x64", "Windows self-hosted C", "Windows self-hosted A"],
             "readiness": "READY_FIXED_POOL_SCHEMA_MAPPING",
             "basis": "deterministic fixed-population source/schema checks; fail closed on TextBlock, taxonomy, or presentation-linkage instability",
             "dispatchable": True,
@@ -1356,7 +1406,7 @@ def planned_capacity_plan(
             "candidate": "Q221",
             "lane": "FRONTIER DISCOVERY",
             "task": "historical USAspending RDT&E transaction/public-observation clock falsification",
-            "preferred": ["GitHub-hosted ARM64", "Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
+            "preferred": ["GitHub-hosted ARM64", "Windows self-hosted C", "Windows self-hosted B", "GitHub-hosted Ubuntu x64", "Windows self-hosted A"],
             "readiness": "READY_HISTORICAL_PUBLIC_CLOCK_FALSIFICATION",
             "basis": "bounded source/PIT gate for historical applicability, modification-vs-award semantics, agency exceptions, and recipient-to-issuer mapping",
             "dispatchable": True,
@@ -1381,6 +1431,15 @@ def planned_capacity_plan(
 
     for item in sorted(queue, key=lambda x: (priority_bonus(x), queue.index(x))):
         candidate = str(item["candidate"])
+        plan_id = str(item.get("plan_id") or "")
+        if candidate == "Q104:I19" and plan_id == "Q104-I19-CENSUS":
+            # Never advertise a duplicate full census while the existing six-shard
+            # run is active, and never blindly retry a failed full census. Its
+            # terminal workflow routes to targeted receipt recovery instead.
+            if q104_census_active or q104_census_terminal_failure:
+                continue
+        if candidate in {"Q218", "Q219", "Q220", "Q221"} and candidate in active_candidate_names and not item.get("allow_parallel_with_candidate", False):
+            continue
         candidate_active = any(candidate.lower() in value and "free ai" not in value for value in active_text)
         if candidate_active and not item.get("allow_parallel_with_candidate", False):
             continue
@@ -1422,14 +1481,30 @@ def planned_capacity_plan(
             if task_id and ai_task_completed_with_current_context(task_id, root=ROOT):
                 continue
         placed = False
+        eligible_resources: list[tuple[dict[str, Any], bool]] = []
         for resource_name in item["preferred"]:
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
-            if resource is None:
+            if resource is None or len(plans.get(resource_name, [])) >= 1:
                 continue
-            # Keep a one-step lookahead independently of current occupancy. The
-            # dispatcher starts this planned item only after actual free capacity.
-            if len(plans.get(resource_name, [])) >= 1:
+            slot = resource_slot(resource_name)
+            if slot is not None and (slot, candidate) in completed_slots:
                 continue
+            if slot is not None and (slot, candidate) in active_slot_scopes:
+                continue
+            reported_free = resource.get("research_slots_free")
+            if reported_free is not None:
+                has_free_capacity = int(reported_free) > 0
+            else:
+                in_use = int(resource.get("current_assignments", resource.get("research_slots_in_use", 0)) or 0)
+                capacity = max(1, int(resource.get("research_capacity_slots", 1) or 1))
+                has_free_capacity = in_use < capacity
+            eligible_resources.append((resource, has_free_capacity))
+
+        # Choose a genuinely free, not-yet-successful candidate/resource pair
+        # before falling back to an advisory preview for a busy resource.
+        eligible_resources.sort(key=lambda pair: (not pair[1], item["preferred"].index(str(pair[0]["name"]))))
+        for resource, has_free_capacity in eligible_resources:
+            resource_name = str(resource["name"])
             benchmark = job_benchmarks.get(candidate)
             plans[resource_name].append({
                 "plan_id": item["plan_id"],
@@ -1444,7 +1519,7 @@ def planned_capacity_plan(
                 "execution_workflow_inputs": item.get("execution_workflow_inputs", {}),
                 "execution_status": "planned_not_started",
                 "dispatch_state": "READY_FOR_FAST_DISPATCH" if item.get("dispatchable", False) else "PLANNED_ADVISORY",
-                "dispatch_condition": "FREE_SLOT" if item.get("dispatchable", False) else "ADVISORY_ONLY",
+                "dispatch_condition": "FREE_SLOT" if item.get("dispatchable", False) and has_free_capacity else ("ADVISORY_ONLY" if not item.get("dispatchable", False) else "WAITING_FOR_FREE_SLOT"),
                 "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
                 "resource_leases": list(item.get("resource_leases") or []),
                 "allow_parallel_with_candidate": bool(item.get("allow_parallel_with_candidate", False)),
@@ -1459,7 +1534,7 @@ def planned_capacity_plan(
 
     # Surface genuinely useful blocked follow-on capacity without presenting it as queued work.
     c_resource = "Windows self-hosted C"
-    if c_resource in plans and not plans[c_resource] and not any("q104:i19" in value for value in active_text):
+    if c_resource in plans and not q104_census_active and not plans[c_resource] and not any("q104:i19" in value for value in active_text):
         plans[c_resource].append({
             "plan_id": "Q104-I19-INDEPENDENT-REPRO",
             "candidate": "Q104:I19",
@@ -1768,6 +1843,7 @@ def main() -> None:
         top4,
         job_benchmarks,
         os_state,
+        recent_runs=recent_runs,
     )
     planned_research_queue = planned_research_backlog(state_board)
 
