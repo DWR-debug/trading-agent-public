@@ -223,6 +223,7 @@ def test_dashboard_adapts_q219_q221_to_free_uncompleted_resources():
         if item.get("scheduled")
     }
     assert scheduled["Q219"][0] == "Windows self-hosted B"
-    assert scheduled["Q220"][0] != "Windows self-hosted B"
+    # Q220 already has a live repair run, so the planner must not duplicate it.
+    assert "Q220" not in scheduled
     assert scheduled["Q221"][0] == "Windows self-hosted C"
     assert scheduled["Q221"][1]["execution_workflow_inputs"]["gate"] == "all"
