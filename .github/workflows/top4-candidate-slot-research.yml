@@ -5,14 +5,12 @@ on:
   workflow_dispatch:
     inputs:
       candidate:
-        description: "One independent bounded Top-4 candidate workpack"
+        description: "One independent bounded candidate workpack in the active focus wave"
         required: true
         type: choice
         options:
           - Q218
-          - Q219
           - Q220
-          - Q221
       resource:
         description: "Exact capacity class to fill"
         required: true
@@ -27,7 +25,7 @@ on:
         default: false
         type: boolean
       gate:
-        description: "Focused Q218 gate"
+        description: "Q218 gate (or all bounded Q220 structural checks)"
         required: true
         default: all
         type: choice
