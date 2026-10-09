@@ -264,18 +264,59 @@ def build_receipt(payloads: list[dict[str, Any]], generated_at_utc: str | None =
     return seal(receipt)
 
 
+def _load_shard_map(input_dir: Path) -> dict[str, dict[str, Any]]:
+    payloads: dict[str, dict[str, Any]] = {}
+    for path in sorted(input_dir.rglob("shard_receipt.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        shard = str(payload.get("shard", ""))
+        if shard not in EXPECTED_SHARDS:
+            raise ValueError("Q104_I19_UNKNOWN_SHARD:" + shard)
+        if shard in payloads:
+            raise ValueError("Q104_I19_DUPLICATE_SHARD_ARTIFACT:" + shard)
+        payloads[shard] = payload
+    return payloads
+
+
+def recovery_payloads(
+    current_input_dir: Path,
+    reuse_input_dir: Path,
+    replace_shards: set[str],
+) -> list[dict[str, Any]]:
+    """Reuse successful immutable receipts and replace only explicitly retried shards."""
+    if not replace_shards or not replace_shards.issubset(EXPECTED_SHARDS):
+        raise ValueError("Q104_I19_RECOVERY_REPLACEMENT_SET_INVALID")
+    current = _load_shard_map(current_input_dir)
+    if set(current) != replace_shards:
+        raise ValueError("Q104_I19_RECOVERY_OUTPUT_SET_MISMATCH")
+    reused = _load_shard_map(reuse_input_dir)
+    merged = {shard: payload for shard, payload in reused.items() if shard not in replace_shards}
+    merged.update(current)
+    if set(merged) != EXPECTED_SHARDS:
+        missing = sorted(EXPECTED_SHARDS - set(merged))
+        raise ValueError("Q104_I19_RECOVERY_MISSING_SHARDS:" + ",".join(missing))
+    return [merged[shard] for shard in sorted(EXPECTED_SHARDS)]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--reuse-input-dir", type=Path)
+    parser.add_argument("--replace-shards", default="")
     args = parser.parse_args()
     try:
-        payloads = [json.loads(path.read_text(encoding="utf-8")) for path in args.input_dir.rglob("shard_receipt.json")]
+        if args.reuse_input_dir is not None:
+            replace_shards = {x.strip() for x in args.replace_shards.split(",") if x.strip()}
+            payloads = recovery_payloads(args.input_dir, args.reuse_input_dir, replace_shards)
+        else:
+            if args.replace_shards:
+                raise ValueError("Q104_I19_REPLACE_SHARDS_REQUIRES_REUSE_INPUT_DIR")
+            payloads = list(_load_shard_map(args.input_dir).values())
         receipt = build_receipt(payloads)
     except (OSError, json.JSONDecodeError, ValueError, KeyError, TypeError) as exc:
         raise SystemExit(str(exc)) from exc
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    args.output.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
     print(json.dumps({
         "status": receipt["status"],
         "archive_count": receipt["archive_count"],
