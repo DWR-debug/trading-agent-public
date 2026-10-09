@@ -1,0 +1,126 @@
+name: Q104 I19 Targeted Acceptance Header Repair
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q104_i19_acceptance_repair.trigger"
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "Completed Q104:I19 census run whose six shard receipts are to be repaired"
+        required: true
+        type: string
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: trading-agent-q104-i19-targeted-acceptance-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Select source census run
+        id: select
+        env:
+          DISPATCH_RUN_ID: ${{ github.event.inputs.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_id="${DISPATCH_RUN_ID:-}"
+          if [ -z "$run_id" ]; then
+            run_id="$(sed -n 's/^RUN_ID=//p' research/run_requests/q104_i19_acceptance_repair.trigger | head -n 1)"
+          fi
+          [[ "$run_id" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SOURCE_RUN_ID"; exit 2; }
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          echo "I19_TARGETED_REPAIR_SOURCE_RUN=$run_id"
+
+      - name: Download the six frozen shard receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_id="${{ steps.select.outputs.run_id }}"
+          root="research/runs/q104_i19_acceptance_repair/$run_id"
+          mkdir -p "$root/input" "$root/source_snapshot" "$root/repaired"
+          gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --pattern "q104-i19-census-*-$run_id" --dir "$root/input"
+          gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --name "q104-i19-sec-source-snapshot-$run_id" --dir "$root/source_snapshot"
+          echo "I19_RECEIPT_ARTIFACTS_DOWNLOADED=true"
+
+      - name: Repair only frozen failed acceptance accessions
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_id="${{ steps.select.outputs.run_id }}"
+          root="research/runs/q104_i19_acceptance_repair/$run_id"
+          python -m automation.q104_i19_acceptance_repair \
+            --input-dir "$root/input" \
+            --source-snapshot-dir "$root/source_snapshot" \
+            --output-dir "$root/repaired" \
+            --receipt-output "$root/targeted_recovery_receipt.json" \
+            --source-run-id "$run_id"
+
+      - name: Strict six-shard merge
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_id="${{ steps.select.outputs.run_id }}"
+          root="research/runs/q104_i19_acceptance_repair/$run_id"
+          python automation/q104_i19_13f_historical_identity_census_merge.py \
+            --input-dir "$root/repaired" \
+            --output "$root/q104_i19_13f_historical_identity_census_latest.json"
+          cp "$root/q104_i19_13f_historical_identity_census_latest.json" \
+            research/evidence/q104_i19_13f_historical_identity_census_latest.json
+
+      - name: Publish the validated source/PIT receipt
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python3 automation/github_contents_publish.py \
+              --repository "$GITHUB_REPOSITORY" \
+              --branch master \
+              --base-sha "$current_sha" \
+              --file "research/evidence/q104_i19_13f_historical_identity_census_latest.json=research/evidence/q104_i19_13f_historical_identity_census_latest.json"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+
+      - name: Upload immutable targeted recovery evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-targeted-acceptance-repair-${{ steps.select.outputs.run_id }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q104_i19_acceptance_repair/
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+
+  completion_relay:
+    if: ${{ always() && github.repository == 'DWR-debug/trading-agent-public' }}
+    needs: [repair]
+    uses: ./.github/workflows/research-completion-relay.yml
+    with:
+      source_workflow: "Q104 I19 Targeted Acceptance Header Repair"
