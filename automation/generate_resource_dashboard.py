@@ -1804,6 +1804,7 @@ def main() -> None:
         "work_assignments": work,
         "planned_capacity": planned_capacity,
         "planned_research_queue": planned_research_queue,
+        "focus_candidates": list(FOCUS_CANDIDATES),
         "capacity_fill_reserve": [
             str(x)
             for x in os_state.get("top_candidate_capacity_overlay", {}).get("capacity_fill_reserve", [])
