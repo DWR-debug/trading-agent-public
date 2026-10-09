@@ -22,6 +22,21 @@ def performance_boundary_is_closed(receipt: dict) -> bool:
     return bool(declared) and all(value is False for value in declared)
 
 
+def paper_only_boundary_is_closed(receipt: dict) -> bool:
+    """Fail closed across canonical Q218 paper-only receipt schema variants."""
+    declared = []
+    if "paper_only" in receipt:
+        declared.append(receipt["paper_only"])
+    safety = receipt.get("safety")
+    if isinstance(safety, dict):
+        for key in ("paper_only", "PAPER_ONLY"):
+            if key in safety:
+                declared.append(safety[key])
+    # If multiple schema variants declare this boundary, every declaration
+    # must be the literal boolean True; absence and string values fail closed.
+    return bool(declared) and all(value is True for value in declared)
+
+
 def main()->int:
     p=argparse.ArgumentParser()
     p.add_argument("--gate",choices=("source","event_pair"),required=True)
@@ -32,7 +47,7 @@ def main()->int:
     receipt=json.loads(args.receipt.read_text(encoding="utf-8"))
     if receipt.get("candidate_id")!="Q218": raise SystemExit("Q218_GATE_RECEIPT_CANDIDATE_MISMATCH")
     if not performance_boundary_is_closed(receipt): raise SystemExit("Q218_GATE_PERFORMANCE_BOUNDARY_FAILED")
-    if receipt.get("safety",{}).get("paper_only") is not True: raise SystemExit("Q218_GATE_SAFETY_BOUNDARY_FAILED")
+    if not paper_only_boundary_is_closed(receipt): raise SystemExit("Q218_GATE_SAFETY_BOUNDARY_FAILED")
     data=json.loads(INDEX.read_text(encoding="utf-8")) if INDEX.exists() else {"schema_version":"1.0","record_type":"q218_focus_gate_receipt_index","candidate_id":"Q218"}
     code_path="automation/q218_sec_multichannel_source_gate.py" if args.gate=="source" else "automation/q218_sec_event_pair_lineage_gate.py"
     other_path="automation/q218_sec_event_pair_lineage_gate.py" if args.gate=="source" else "automation/q218_sec_multichannel_source_gate.py"
