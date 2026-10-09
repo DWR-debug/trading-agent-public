@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
-  "context_fingerprint": "8e8ee0e38d2b8fd2f1c2a2daa58d0470c4f616a11aefac4277f3cec8d1e34626",
-  "observed_at_utc": "2026-10-08T23:16:39.093610Z",
+  "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
+  "observed_at_utc": "2026-10-09T05:58:28.501426Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.146,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5464, Requested 5421. Please try again in 21.6375s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.284,
+  "stdout": "**Worker Handoff – Q220 Schema Gate (SEC Financial Statement Notes Archive)**  \n*Scope: Methods‑reviewer attack on representation assumptions. No performance or ranking.*\n\n| # | Failure Mode | Description | Minimal Deterministic Falsifier | Exact Artifact Needed | Counter‑Argument (why it might be benign) |\n|---|--------------|-------------|---------------------------------|-----------------------|-------------------------------------------|\n| 1 | **As‑filed XBRL text‑block mapping** | Archive may alter whitespace, namespace prefixes, or comment blocks relative to the original EDGAR submission. | Compare a raw XBRL file from the archive with the corresponding EDGAR “as‑filed” XML (downloaded via SEC’s EDGAR API). | `2009q1_notes.zip` → `sub.txt` (or `.xml` if present) and the original EDGAR XML for the same filing. | Minor formatting changes that do not affect semantic content. |\n| 2 | **Presentation‑role mapping** | Role URIs in the archive may not match the official taxonomy’s presentation‑role definitions. | Parse `roleMap.xml` (if present) and cross‑check each role URI against the official US‑GAAP taxonomy. | `roleMap.xml` from the archive and the latest US‑GAAP taxonomy XML. | Role mapping may be intentionally simplified for the archive; mapping errors may be tolerated if role usage is not critical. |\n| 3 | **Taxonomy‑extension changes** | Custom taxonomy extensions may be present that are not in the official taxonomy, potentially altering fact semantics. | List all `<extension>` elements in the taxonomy files and compare to the official taxonomy. | All `.xsd` files in the archive and the official US‑GAAP taxonomy. | Extensions might be harmless “namespace‑shims” added for archival convenience. |\n| 4 | **Custom namespaces** | Duplicate or conflicting namespace prefixes could cause parsing ambiguity. | Extract all namespace declarations from each XBRL file and check for duplicates or collisions. | All XBRL files (`*.xml` or `*.txt` containing XML). | Namespace collisions may be resolved by the parser’s namespace‑resolution logic. |\n| 5 | **Section identity** | The archive’s `sub`, `tag`, `num`, `txt`, `pre` files may not correspond to the intended content type (e.g., `sub` containing narrative). | Verify that each file’s header rows match the expected schema (e.g., `sub` should contain `id`, `label`, `parent`). | The five member files listed in the archive (`sub.txt`, `tag.txt`, etc.). | The archive may use a different naming convention but still be internally consistent. |\n| 6 | **Narrative tokenization** | Tokenization of narrative text may differ from the original (e.g., splitting on punctuation vs. whitespace). | Tokenize a known narrative snippet from the archive and compare to the original EDGAR narrative tokenization. | A narrative snippet from `txt.txt` and the same snippet from the original filing. | Tokenization differences may be irrelevant if downstream consumers only need raw text. |\n| 7 | **Amended filings** | Amended filings may be included without an amendment flag, leading to duplicate or conflicting data. | Check the `amendment` attribute in the filing header for each record. | Filing header metadata (e.g., `amendment` flag in `sub.txt` or `tag.txt`). | Some filings may be “amended” but still considered primary; the flag may be optional. |\n| 8 | **Future/current XBRL contamination** | The archive may contain XBRL files dated after the `FIXED_END` (`2026-10-05`). | Extract the `periodEnd` or `periodStart` dates from each context and compare to the fixed window. | All context definitions in the archive. | The archive may include “future” filings for archival completeness. |\n| 9 | **Duplicate facts** | Duplicate fact IDs or duplicate context‑unit combinations may exist, inflating the dataset. | Detect duplicate `id` attributes across all fact tables. | All fact tables (`sub`, `tag`, `num`, `txt`, `pre`). | Duplicate facts may be intentional (e.g., for cross‑section references). |\n| 10 | **Period/unit/context alignment** | Context elements may reference units that are not defined, or periods that do not align with the filing period. | Validate that every `<context>` references a `<unit>` that exists and that the period dates are within the filing’s reporting period. | All `<context>` and `<unit>` definitions in the archive. | Some contexts may use generic units (e.g., `USD`) that are implicitly defined. |\n| 11 | **Representation mismatch proxies filing length** | The archive’s representation (e.g., compressed size, number of rows) may correlate with filing length rather than semantic correctness. | Correlate file size or row count with filing length metrics (e.g., number of narrative paragraphs). | File size/row count metrics and filing length statistics from the original filings. | Size differences may be due to compression or formatting, not semantic errors. |\n\n---\n\n### Counter‑Arguments Summary\n- **Formatting vs. semantics**: Minor whitespace or namespace changes do not alter fact values.\n- **Simplified mapping**: Role or taxonomy extensions may be acceptable if downstream consumers only need a subset of roles.\n- **Internal consistency**: Even if section names are mismatched, the internal consistency of the archive may still allow correct reconstruction.\n- **Optional flags**: Amendment flags may be omitted if the filing is treated as a single entity.\n\n---\n\n### Concrete Next Actions\n1. **Download the archive** (`2009q1_notes.zip`) and extract all member files.  \n2. **Identify a representative filing** (e.g., the first record in `sub.txt`) and fetch the original EDGAR XML for that filing.  \n3. **Run the following deterministic checks** (each producing a pass/fail flag):\n   - **XBRL text‑block mapping**: `diff` between archive XBRL and original EDGAR XML.  \n   - **Presentation‑role mapping**: Validate role URIs against the official taxonomy.  \n   - **Taxonomy‑extension detection**: List `<extension>` elements and compare to official taxonomy.  \n   - **Namespace collision detection**: Parse all namespace declarations.  \n   - **Section identity validation**: Check header columns against expected schema.  \n   - **Narrative tokenization**: Tokenize a known snippet and compare.  \n   - **Amendment flag presence**: Verify `amendment` attribute.  \n   - **Date contamination**: Extract `periodEnd` dates and compare to `FIXED_END`.  \n   - **Duplicate fact detection**: Scan for duplicate `id` attributes.  \n   - **Context‑unit alignment**: Cross‑reference `<context>` and `<unit>` definitions.  \n   - **Representation vs. length correlation**: Compute correlation coefficient between file size/row count and filing length.  \n4. **Document each pass/fail** in a structured report (JSON or Markdown).  \n5. **If any failure is detected**, produce a minimal deterministic falsifier (e.g., a diff snippet, a list of offending IDs) and the exact artifact (file path, line numbers).\n\n---\n\n### Uncertainty & Risks\n- **Archive completeness**: The archive may not contain all original files (e.g., missing `roleMap.xml`), limiting some checks.  \n- **EDGAR API access**: Retrieving the original as‑filed XML may be rate‑limited or unavailable for older filings.  \n- **Parsing assumptions**: Some checks rely on assumptions about XML structure that may not hold for all files.  \n- **Semantic tolerance**: Even if a failure is detected, it may be acceptable for the intended use (e.g., research vs. regulatory reporting).  \n- **Future updates**: The taxonomy or role definitions may evolve; the checks must be repeatable against a fixed snapshot.\n\n---\n\n**End of handoff.**",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-08T23:16:39.240148Z",
-    "blocked_until_utc": "2026-10-09T00:16:39.240148Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5464, Requested 5421. Please try again in 21.6375s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-ba0b871a-bbbb-4fa4-ae79-7b5cea6c5beb",
+  "usage": {
+    "queue_time": 0.095564582,
+    "prompt_tokens": 5014,
+    "prompt_time": 0.277568757,
+    "completion_tokens": 2470,
+    "completion_time": 2.665256378,
+    "total_tokens": 7484,
+    "total_time": 2.942825135,
+    "completion_tokens_details": {
+      "reasoning_tokens": 775
+    }
   }
 }\n
