@@ -344,6 +344,7 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--receipt-output", type=Path, required=True)
     parser.add_argument("--source-run-id", required=True)
+    parser.add_argument("--shard-recovery-run-id", required=True)
     args = parser.parse_args()
 
     try:
@@ -382,6 +383,7 @@ def main() -> int:
             "status": "RECOVERY_COMPLETE" if all(x.get("status") == "REPAIRED" for x in all_entries) else ("RECOVERY_COMPLETE" if not all_entries else "RECOVERY_INCOMPLETE"),
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
             "source_run_id": str(args.source_run_id),
+            "shard_recovery_run_id": str(args.shard_recovery_run_id),
             "official_source": census.PAGE,
             "source_page_sha256": source_page_hash,
             "original_shard_receipt_fingerprints": original_fingerprints,
