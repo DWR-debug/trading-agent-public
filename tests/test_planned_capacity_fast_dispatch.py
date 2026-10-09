@@ -472,12 +472,12 @@ def test_fast_dispatch_allows_independent_candidates_on_one_slot_workflow():
             "research_capacity_slots": 2,
             "planned_assignments": [
                 {"plan_id":"Q218-PIT","candidate":"Q218","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
-                {"plan_id":"Q219-PIT","candidate":"Q219","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
+                {"plan_id":"Q220-PIT","candidate":"Q220","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
             ],
         }],
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
-    assert [x["candidate"] for x in plan["dispatches"]] == ["Q218", "Q219"]
+    assert [x["candidate"] for x in plan["dispatches"]] == ["Q218", "Q220"]
 
 
 def test_fast_dispatch_reserves_only_explicit_multi_resource_leases():
@@ -527,8 +527,9 @@ def test_fast_dispatch_reserves_only_explicit_multi_resource_leases():
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=6)
     candidates=[x["candidate"] for x in plan["dispatches"]]
-    assert candidates == ["Q104:I19", "Q218", "Q221"]
+    assert candidates == ["Q104:I19", "Q218"]
     assert all(x["candidate"] != "Q220" for x in plan["dispatches"])
+    assert any(d["decision"] == "SKIP_FOCUS_LOCK" for d in plan["decisions"])
 
 def test_fast_dispatch_backfills_free_slot_after_completed_top4_candidate():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
@@ -557,7 +558,7 @@ def test_fast_dispatch_backfills_free_slot_after_completed_top4_candidate():
         "run_name": "Top-4 Slot windows Q218",
     }]
     plan = dispatch_candidates(snapshot, runs, max_dispatches=4)
-    assert any(x["candidate"] == "Q219" for x in plan["dispatches"])
+    assert any(x["candidate"] == "Q220" for x in plan["dispatches"])
     assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in plan["decisions"])
 
 
@@ -589,7 +590,7 @@ def test_fast_dispatch_skips_successful_same_slot_but_allows_other_architecture(
         "display_title":"Top-4 Slot ubuntu_x64 Q220","run_name":"Top-4 Slot ubuntu_x64 Q220"
     }]
     plan2 = dispatch_candidates(base, completed_x64, max_dispatches=4)
-    assert [x["candidate"] for x in plan2["dispatches"]] == ["Q221"]
+    assert [x["candidate"] for x in plan2["dispatches"]] == ["Q218"]
     assert plan2["dispatches"][0]["inputs"]["resource"] == "ubuntu_x64"
     assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in plan2["decisions"])
 
@@ -630,7 +631,7 @@ def test_fast_dispatch_allows_one_retry_then_backfills_next_candidate_after_seco
         "run_name": "Top-4 Slot windows Q218",
     }]
     backfilled = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
-    assert [x["candidate"] for x in backfilled["dispatches"]] == ["Q219"]
+    assert [x["candidate"] for x in backfilled["dispatches"]] == ["Q220"]
     assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in backfilled["decisions"])
 
 
@@ -795,8 +796,8 @@ def test_fast_dispatch_backfills_next_top4_after_technical_retry_exhaustion():
         },
     ]
     plan = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
-    assert [x["candidate"] for x in plan["dispatches"]] == ["Q219"]
-    assert plan["dispatches"][0]["inputs"] == {"candidate": "Q219", "resource": "windows"}
+    assert [x["candidate"] for x in plan["dispatches"]] == ["Q220"]
+    assert plan["dispatches"][0]["inputs"] == {"candidate": "Q220", "resource": "windows"}
     assert any(
         d["decision"] == "DISPATCH_SLOT_BACKFILL"
         and d["mode"] == "TECHNICAL_RETRY_EXHAUSTION_BACKFILL"
@@ -1188,7 +1189,7 @@ def test_i19_census_dispatch_is_allowed_when_no_prior_census_failure_exists():
     assert [item["candidate"] for item in plan["dispatches"]] == ["Q104:I19"]
 
 
-def test_fast_dispatch_allows_receipt_defined_q219_and_q221_source_workpacks():
+def test_fast_dispatch_rejects_retired_candidate_workpacks_even_without_focus_snapshot():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
@@ -1210,10 +1211,44 @@ def test_fast_dispatch_allows_receipt_defined_q219_and_q221_source_workpacks():
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
     dispatched = {(x["candidate"], x["resource"]) for x in plan["dispatches"]}
-    assert ("Q219", "GitHub-hosted Ubuntu x64") in dispatched
-    assert ("Q221", "GitHub-hosted ARM64") in dispatched
-    assert all(x["workflow"] == workflow for x in plan["dispatches"] if x["candidate"] in {"Q219","Q221"})
+    assert dispatched == set()
+    assert all(item["candidate"] not in {"Q219", "Q221"} for item in plan["dispatches"])
+    assert {d.get("plan_id") for d in plan["decisions"] if d.get("decision") == "SKIP_FOCUS_LOCK"} == {
+        "Q219-OPTIONS-SOURCE-BREADTH", "Q221-USASPENDING-PUBLIC-CLOCK"
+    }
     assert plan["performance_authorization"] is False
     assert plan["paper_only"] is True
     assert plan["live_execution"] is False
     assert plan["promotion"] is False
+
+def test_dispatch_defaults_to_exact_three_candidate_allowlist():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "work_assignments": [],
+        "resources": [{"name":"GitHub-hosted Ubuntu x64","research_capacity_slots":2,"research_slots_in_use":0,"research_slots_free":2}],
+        "planned_capacity": [{
+            "resource": "GitHub-hosted Ubuntu x64",
+            "current_assignments": 0,
+            "research_capacity_slots": 2,
+            "planned_assignments": [
+                {"plan_id":"Q219-RETIRED","candidate":"Q219","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
+                {"plan_id":"Q220-ACTIVE","candidate":"Q220","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
+                {"plan_id":"Q221-RETIRED","candidate":"Q221","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
+            ],
+        }],
+    }
+    plan = dispatch_candidates(snapshot, [], max_dispatches=4)
+    assert [item["candidate"] for item in plan["dispatches"]] == ["Q220"]
+    skipped = {d.get("plan_id") for d in plan["decisions"] if d.get("decision") == "SKIP_FOCUS_LOCK"}
+    assert skipped == {"Q219-RETIRED", "Q221-RETIRED"}
+
+
+def test_candidate_portfolio_contains_only_the_three_active_candidates():
+    from pathlib import Path
+    from automation.candidate_portfolio_assessment import ACTIVE_PORTFOLIO_CODES, build_candidate_portfolio
+    root = Path(__file__).parents[1]
+    rows = build_candidate_portfolio(root, evidence={}, candidate_progress=[])
+    assert tuple(row["code"] for row in rows) == ACTIVE_PORTFOLIO_CODES
+    assert set(ACTIVE_PORTFOLIO_CODES) == {"Q104:I19", "Q220", "Q218"}
+    assert all(row["strategy_success_probability"] is None for row in rows)
