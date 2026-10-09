@@ -723,6 +723,9 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                     failure_counts,
                     chosen_slot_scopes,
                 )
+                focus_lock = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
+                if focus_lock and fallback not in focus_lock:
+                    fallback = None
                 if fallback and len(dispatches) < max_dispatches:
                     fallback_scope = (resource_input, fallback)
                     dispatch_key = (workflow, fallback, resource, str((item.get("execution_workflow_inputs") or {}).get("gate") or "all"))
@@ -783,6 +786,9 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                     failure_counts,
                     chosen_slot_scopes,
                 )
+                focus_lock = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
+                if focus_lock and fallback not in focus_lock:
+                    fallback = None
                 if fallback and len(dispatches) < max_dispatches and scope:
                     fallback_scope = (resource_input, fallback)
                     dispatch_key = (workflow, fallback, resource, str((item.get("execution_workflow_inputs") or {}).get("gate") or "all"))
