@@ -8,7 +8,7 @@
 ## Executive decision
 
 1. Keep the active execution lock unchanged: **Q104:I19** (historical 13F/source-PIT closure) and **Q218** (mandatory/voluntary SEC disclosure source/PIT work). This note authorizes no run.
-2. Treat **Q227 and Q231** as a likely duplicate pair: both are defined as SEC FOIA information-acquisition state. Consolidate to one canonical mechanism and preserve the non-canonical ID as a historical alias after a provenance check.
+2. Treat **Q157 / Q227 / Q231** as one SEC-FOIA source family: Q227 and Q231 are near-duplicates, while Q157 is the older request-intensity/topic-heat formulation. Consolidate the mechanism/source pipeline; only keep separately named observables if the contracts and receipts prove they are distinct. Preserve old IDs as aliases after a provenance check.
 3. Keep Q204, Q215 and Q223 separate only if the observation they measure remains demonstrably distinct: generic stage latency; an external state preceding issuer disclosure; and independent corroboration/contradiction, respectively. A scalar “time between two sources” alone is not enough to justify a separate candidate.
 4. Record one dormant bridge hypothesis: **public R&D award → public technical output → independently documented follow-on procurement/deployment**. It links existing Q221, Q191 and Q197 work but must initially be tested as a sub-hypothesis, not promoted to a new top-level candidate.
 5. Fix the research OS’s overlap registry and status freshness before increasing candidate count. The objective is more information per unit of compute, not more candidate IDs.
@@ -19,11 +19,17 @@ The current project files define Q104:I19 and Q218 as the focused execution wave
 
 Current live status must continue to be checked against Actions receipts. At the time of this audit, I19 run [37931811984](https://github.com/DWR-debug/trading-agent-public/actions/runs/37931811984) was still in progress: completed shards reported acceptance-join failures, while two shards remained active. Do not cancel/restart the run or start a retry until all six shards terminate and their receipts/artifacts are reconciled. See the operational follow-up in [issue #1256](https://github.com/DWR-debug/trading-agent-public/issues/1256).
 
-## 1. Overlap map
+## 1. Coverage defect in the current overlap engine
+
+Code inspection of `automation/evidence_graph_stage4_stage5.py` shows that its pairwise candidate-signature/novelty calculation loads the candidate set from `research/candidates/orthogonal_candidate_specs_2026-10-05.json`. Older wave definitions (for example Q157 in `research/frontier/q152_q165_candidate_wave_2026_10_03.json`) and discovery seeds (Q233–Q235 in `research/frontier/orthogonal_discovery_seed_pack_2026_10_06.json`) are not added to that pairwise signature set by the shown loading path. The graph may index their documents or references, but that is not equivalent to including them in candidate-pair novelty comparison.
+
+**Consequence:** do not treat the Stage 5 pairwise novelty score as an exhaustive audit of every candidate/seed. Normalize the full legacy/current/seed inventory into a canonical candidate manifest before computing pairwise mechanism overlap. Add a regression test proving that the Q157 / Q227 / Q231 family is compared even though its definitions reside in separate files, and that shared-source edges are not automatically treated as same-mechanism edges.
+
+## 2. Overlap map
 
 | Candidate family | Relationship | Decision |
 |---|---|---|
-| **Q227 / Q231 — SEC FOIA information acquisition** | **Likely same mechanism and same primary source.** Both concern explicit requests for otherwise non-public SEC records and requester/topic composition. Their detailed features can be combined into one contract. | Consolidate to one canonical ID after checking whether either ID has separate frozen trials or receipts. Preserve the other as an alias; do not independently dispatch both. |
+| **Q157 / Q227 / Q231 — SEC FOIA acquisition / topic heat** | **Same source family; Q227 and Q231 are direct near-duplicates.** Q157 measures request intensity/topic-to-issuer mapping; Q227/Q231 both measure costly SEC FOIA acquisition with requester/description/status features and a latent-request/public-log two-clock problem. | One canonical FOIA event/source compiler. Keep topic heat, requester composition and request intensity as distinguishable observables within that family only where specified ex ante. Check all IDs, source gates, trials and receipts before aliasing. Do not independently dispatch duplicate work. |
 | **Q204 / Q215 / Q223 — source timing and corroboration** | Adjacent, not automatically identical. Q204 measures release/process-stage latency; Q215 asks whether an external public state pre-existed issuer disclosure; Q223 asks whether an independent source later corroborates or contradicts an already public event. | Define the distinguishing observable in each contract. Merge Q223 into Q204 if it reduces to a second-source timestamp; merge it into Q215 if it reduces to “external state first.” Keep it distinct only if source independence and confirmation content are mechanically observable and historically reproducible. |
 | **Q217 / Q220 / Q222 — information processing, representation and verification** | Related, but the object differs: complexity/friction adjusted for size and boilerplate; mismatch between narrative and structured XBRL within a filing; divergence between a corporate implementation claim and independently observable implementation evidence. | Share common filing, text-block and provenance compilers; preserve separate event objects. Require Q222’s external implementation evidence to have a defensible historical public clock. |
 | **Q197 / Q203 / Q221 — federal awards** | Shared USAspending/award lineage, but different claims: demand propagation through a frozen network; award conditional on a pre-event financing constraint; R&D award option value and competition/capability state. | Share award identity, amendment lineage and public-observation-boundary code. Keep candidate-specific features and falsifiers separate. Award/action date is not silently substituted for first public observation. |
@@ -95,7 +101,7 @@ For every candidate, persist these fields alongside the existing scientific cont
 - `canonical_id / alias_of` where needed
 - `active_execution_allowed` derived from the existing policy, never authored by a discovery note
 
-The evidence graph should distinguish “shared source” from “shared mechanism.” Overlap suggestions remain non-authoritative until reviewed; a graph edge must never change candidate status, trial inputs or authorization.
+The evidence graph should distinguish “shared source” from “shared mechanism,” and its candidate-pair universe must include legacy waves and unpromoted seeds—not just the newest contract bundle. Overlap suggestions remain non-authoritative until reviewed; a graph edge must never change candidate status, trial inputs or authorization.
 
 ### B. Put duplicate control before capacity dispatch
 
