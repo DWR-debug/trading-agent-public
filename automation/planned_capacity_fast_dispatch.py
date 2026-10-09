@@ -31,6 +31,7 @@ FOCUS_CANDIDATES = {"Q104:I19", "Q218"}
 TOP4_CANDIDATES = {"Q218", "Q219", "Q220", "Q221"}
 TOP4_PRIORITY = ("Q218", "Q219", "Q220", "Q221")
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
+I19_CENSUS_WORKFLOW = ".github/workflows/q104-i19-13f-historical-identity-census.yml"
 
 
 Q218_GATE_INDEX_PATH = Path("research/evidence/q218_focus_gate_receipt_index_latest.json")
@@ -587,6 +588,30 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         if not item.get("allow_parallel_with_candidate", False) and candidate_is_active(candidate, work, exclude_resources={"Free AI pool"}):
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_CANDIDATE_ACTIVE"})
             continue
+
+        # I19 archive/acceptance failures require artifact-level recovery. A blind
+        # retry would re-download every historical shard and can repeat the exact
+        # failure while consuming Windows and hosted slots. Never auto-dispatch a
+        # second full census after a failed/cancelled census; recovery is a separate
+        # receipt-gated workflow that retries only unresolved acceptance headers.
+        if candidate == "Q104:I19" and workflow.endswith(I19_CENSUS_WORKFLOW):
+            prior_i19_census_failures = []
+            for prior in runs:
+                if not isinstance(prior, dict) or prior.get("status") != "completed":
+                    continue
+                if prior.get("conclusion") not in {"failure", "startup_failure", "timed_out", "cancelled"}:
+                    continue
+                title = " ".join(str(prior.get(key) or "") for key in ("name", "display_title", "run_name"))
+                path = str(prior.get("path") or prior.get("workflow_path") or "")
+                if "Q104 I19 Historical 13F Identity Census" in title or path.endswith(I19_CENSUS_WORKFLOW):
+                    prior_i19_census_failures.append(prior)
+            if prior_i19_census_failures:
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_I19_CENSUS_AUTOMATIC_FULL_RETRY_REQUIRES_TARGETED_RECOVERY",
+                    "failed_run_ids": sorted(int(x.get("id")) for x in prior_i19_census_failures if str(x.get("id", "")).isdigit()),
+                })
+                continue
 
         resource = str(item.get("resource") or "")
         if resource in leased_resources:

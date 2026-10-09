@@ -1,0 +1,215 @@
+name: Q104 I19 Missing Shard Receipt Recovery
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q104_i19_shard_recovery.trigger"
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: "Completed Q104:I19 census run whose frozen source snapshot should be reused"
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q104-i19-missing-shard-recovery
+  cancel-in-progress: false
+
+jobs:
+  source:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    outputs:
+      source_run_id: ${{ steps.source.outputs.source_run_id }}
+      source_sha: ${{ steps.source.outputs.source_sha }}
+      missing_count: ${{ steps.missing.outputs.missing_count }}
+      missing_matrix: ${{ steps.missing.outputs.missing_matrix }}
+      missing_shards_csv: ${{ steps.missing.outputs.missing_shards_csv }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Resolve and validate terminal source run
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DISPATCH_SOURCE_RUN_ID: ${{ github.event.inputs.source_run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_run_id="$DISPATCH_SOURCE_RUN_ID"
+          if [ -z "$source_run_id" ]; then
+            source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' research/run_requests/q104_i19_shard_recovery.trigger | head -n 1)"
+          fi
+          [[ "$source_run_id" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SOURCE_RUN_ID"; exit 2; }
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id" > "$RUNNER_TEMP/i19-source-run.json"
+          jq -e '
+            .name == "Q104 I19 Historical 13F Identity Census"
+            and .status == "completed"
+            and .head_branch == "master"
+          ' "$RUNNER_TEMP/i19-source-run.json" >/dev/null || {
+            echo "I19_SOURCE_RUN_NOT_TERMINAL_MASTER_CENSUS"; exit 2;
+          }
+          gh api --paginate "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/i19-artifacts.json"
+          source_sha="$(jq -r '.head_sha' "$RUNNER_TEMP/i19-source-run.json")"
+          echo "source_run_id=$source_run_id" >> "$GITHUB_OUTPUT"
+          echo "source_sha=$source_sha" >> "$GITHUB_OUTPUT"
+          echo "I19_MISSING_SHARD_SOURCE_RUN=$source_run_id"
+          echo "I19_FROZEN_CODE_SHA=$source_sha"
+
+      - name: Identify only shards without an uploaded receipt
+        id: missing
+        env:
+          SOURCE_RUN_ID: ${{ steps.source.outputs.source_run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          run_id = os.environ["SOURCE_RUN_ID"]
+          artifacts = json.loads(Path(os.environ["RUNNER_TEMP"], "i19-artifacts.json").read_text(encoding="utf-8"))
+          names = {str(x.get("name") or "") for x in artifacts.get("artifacts", [])}
+          expected = [
+              {"shard":"2013-2016","runs_on":"[\"self-hosted\",\"trading-agent-research\"]","platform":"windows","slot":"A"},
+              {"shard":"2017-2018","runs_on":"[\"self-hosted\",\"trading-agent-research\"]","platform":"windows","slot":"B"},
+              {"shard":"2019-2020","runs_on":"[\"self-hosted\",\"trading-agent-research\"]","platform":"windows","slot":"C"},
+              {"shard":"2021-2022","runs_on":"[\"ubuntu-24.04\"]","platform":"hosted","slot":"1"},
+              {"shard":"2023","runs_on":"[\"ubuntu-24.04\"]","platform":"hosted","slot":"2"},
+              {"shard":"2024-2025-09","runs_on":"[\"ubuntu-24.04-arm\"]","platform":"hosted","slot":"1"},
+          ]
+          missing = [x for x in expected if f"q104-i19-census-{x['shard']}-{run_id}" not in names]
+          if f"q104-i19-sec-source-snapshot-{run_id}" not in names:
+              raise SystemExit("Q104_I19_FROZEN_SOURCE_SNAPSHOT_ARTIFACT_MISSING")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"missing_count={len(missing)}\n")
+              f.write("missing_matrix=" + json.dumps({"include": missing}, separators=(",", ":")) + "\n")
+              f.write("missing_shards_csv=" + ",".join(x["shard"] for x in missing) + "\n")
+          print(json.dumps({
+              "source_run_id": run_id,
+              "existing_receipt_count": len(expected) - len(missing),
+              "missing_shards": [x["shard"] for x in missing],
+              "source_snapshot_present": True
+          }, sort_keys=True))
+          PY
+
+  census:
+    needs: [source]
+    if: github.repository == 'DWR-debug/trading-agent-public' && needs.source.outputs.missing_count != '0'
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix: ${{ fromJSON(needs.source.outputs.missing_matrix) }}
+    runs-on: ${{ fromJSON(matrix.runs_on) }}
+    concurrency:
+      group: ${{ format('trading-agent-i19-shard-recovery-{0}-{1}', needs.source.outputs.source_run_id, matrix.slot) }}
+      cancel-in-progress: false
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.source.outputs.source_sha }}
+          fetch-depth: 1
+
+      - name: Set up Python on hosted runner
+        if: matrix.platform == 'hosted'
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Bootstrap Python on Windows
+        if: matrix.platform == 'windows'
+        shell: cmd
+        run: |
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "PY_ROOT=%RUNNER_TEMP%\q104-python-recovery-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-recovery-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.nupkg"
+          mkdir "!PY_ROOT!"
+          curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "!PY_PKG!" https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg
+          tar.exe -xf "!PY_PKG!" -C "!PY_ROOT!"
+          echo !PY_ROOT!>>"%GITHUB_PATH%"
+          echo !PY_ROOT!\tools>>"%GITHUB_PATH%"
+          endlocal
+
+      - name: Download the original frozen SEC page
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-i19-sec-source-snapshot-${{ needs.source.outputs.source_run_id }}
+          path: research/runs/q104_i19_13f_census/source_snapshot
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.source.outputs.source_run_id }}
+
+      - name: Rebuild the missing shard receipt from the frozen source snapshot
+        if: matrix.platform == 'windows'
+        shell: cmd
+        run: |
+          if not exist "research\runs\q104_i19_13f_census\${{ matrix.shard }}" mkdir "research\runs\q104_i19_13f_census\${{ matrix.shard }}"
+          python.exe -m automation.q104_i19_13f_historical_identity_census --shard "${{ matrix.shard }}" --output "research\runs\q104_i19_13f_census\${{ matrix.shard }}\shard_receipt.json" --page-file "research\runs\q104_i19_13f_census\source_snapshot\source_page.html"
+          if not exist "research\runs\q104_i19_13f_census\${{ matrix.shard }}\shard_receipt.json" exit /b 1
+          echo I19_SHARD_RECEIPT_CREATED=1
+
+      - name: Rebuild the missing shard receipt from the frozen source snapshot
+        if: matrix.platform == 'hosted'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "research/runs/q104_i19_13f_census/${{ matrix.shard }}"
+          set +e
+          python -m automation.q104_i19_13f_historical_identity_census \
+            --shard "${{ matrix.shard }}" \
+            --output "research/runs/q104_i19_13f_census/${{ matrix.shard }}/shard_receipt.json" \
+            --page-file "research/runs/q104_i19_13f_census/source_snapshot/source_page.html"
+          rc=$?
+          set -e
+          test -s "research/runs/q104_i19_13f_census/${{ matrix.shard }}/shard_receipt.json" || exit "$rc"
+          echo "I19_SHARD_RECEIPT_CREATED=1"
+          echo "SHARD_PROGRAM_EXIT_CODE=$rc (receipt persisted; targeted acceptance repair follows)"
+
+      - name: Upload recovered shard receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-census-${{ matrix.shard }}-${{ needs.source.outputs.source_run_id }}
+          path: research/runs/q104_i19_13f_census/${{ matrix.shard }}/shard_receipt.json
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+  trigger_targeted_header_repair:
+    needs: [source, census]
+    if: ${{ always() && github.repository == 'DWR-debug/trading-agent-public' && needs.source.result == 'success' && (needs.source.outputs.missing_count == '0' || needs.census.result == 'success') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Dispatch targeted acceptance recovery for this frozen census
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ needs.source.outputs.source_run_id }}
+          SOURCE_MISSING_COUNT: ${{ needs.source.outputs.missing_count }}
+          RECOVERED_SHARDS: ${{ needs.source.outputs.missing_shards_csv }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$SOURCE_MISSING_COUNT" = "0" ]; then
+            recovery_run_id="$SOURCE_RUN_ID"
+            recovered_shards=""
+          else
+            recovery_run_id="$GITHUB_RUN_ID"
+            recovered_shards="$RECOVERED_SHARDS"
+          fi
+          gh workflow run q104-i19-targeted-acceptance-repair.yml \
+            --repo "$GITHUB_REPOSITORY" --ref master \
+            -f "source_run_id=$SOURCE_RUN_ID" \
+            -f "shard_recovery_run_id=$recovery_run_id" \
+            -f "recovered_shards=$recovered_shards"
+          echo "I19_TARGETED_REPAIR_DISPATCHED=true"
