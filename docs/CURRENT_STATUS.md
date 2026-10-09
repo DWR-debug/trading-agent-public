@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `46ce92da8de61010dc38834ba0204e62b989f92a`
+**Current operational snapshot:** `429cc870d9ae372a3a767784e4eb6d34bcebf348`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-09T20:43:24.515470+00:00`
+**Generated (UTC):** `2026-10-09T20:46:08.745977+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -34,7 +34,7 @@
 ### Permanent Capacity Saturation & Rolling Research Waves
 
 - **STATUS: ACTIVE_AND_PERSISTENT.** Useful free compute is continuously routed whenever a real bounded backlog exists.
-- **Current two-hour activation:** `TA-2H-2026-10-07-RUNNER-C-CANDIDATE-1600Z`, `2026-10-07T16:00:00Z–2026-10-07T18:00:00Z`.
+- **Current two-hour activation:** `TA-2H-2026-10-09-RUNNER-C-INDEPENDENT-PIT-2044Z`, `2026-10-09T20:44:00Z–2026-10-09T22:44:00Z`.
 - **Scheduler:** every 10 minutes; active duplicates are skipped, phase-successful work is not rerun, and only one bounded retry is permitted after failure/cancellation.
 - **Wave order:** W1 source/PIT/clock closure -> W2 candidate/contracts and information timing -> W3 next-gate compilation and independent reproduction -> W4 literature discovery/consolidation.
 - **Utilization rule:** maximize useful occupancy across Windows A/B/C, hosted Linux, bounded free-AI lanes and S10/mobile support when those resources are reachable and the work is independent and useful. Never manufacture work to consume quota.
