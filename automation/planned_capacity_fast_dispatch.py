@@ -28,6 +28,10 @@ PLATFORM_NAMES = {
 }
 
 FOCUS_CANDIDATES = {"Q104:I19", "Q218"}
+# A reserve candidate can leave the primary focus lock only through one exact,
+# explicitly configured plan; reserve status never changes candidate ranking.
+CAPACITY_FILL_CANDIDATES = {"Q219"}
+CAPACITY_FILL_PLAN_IDS = {"Q219-OPTIONS-SOURCE-PIT"}
 TOP4_CANDIDATES = {"Q218", "Q219", "Q220", "Q221"}
 TOP4_PRIORITY = ("Q218", "Q219", "Q220", "Q221")
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
@@ -244,7 +248,7 @@ def candidate_is_active(candidate: str, work: list[dict[str, Any]], *, exclude_r
     excluded = exclude_resources or set()
     return any(
         x.get("resource") not in excluded
-        and c in _candidate_key(f"{x.get('task', '')} {x.get('job', '')}")
+        and c in _candidate_key(f"{x.get('candidate', '')} {x.get('task', '')} {x.get('job', '')}")
         for x in work
     )
 
@@ -447,8 +451,18 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             if not item.get("dispatchable"):
                 continue
             candidate = str(item.get("candidate") or "")
+            plan_id = str(item.get("plan_id") or "")
             focus_candidates = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
-            if focus_candidates and candidate not in focus_candidates:
+            configured_capacity_fill = set(
+                str(x) for x in snapshot.get("capacity_fill_reserve", []) if x
+            )
+            is_capacity_fill = (
+                candidate in CAPACITY_FILL_CANDIDATES
+                and candidate in configured_capacity_fill
+                and plan_id in CAPACITY_FILL_PLAN_IDS
+                and item.get("capacity_fill_reserve") is True
+            )
+            if focus_candidates and candidate not in focus_candidates and not is_capacity_fill:
                 continue
             workflow = item.get("execution_workflow")
             if not workflow:
@@ -457,6 +471,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                 "resource": resource,
                 "resource_free": resource_free,
                 **item,
+                "_capacity_fill_reserve_validated": is_capacity_fill,
             })
 
     # Prefer the canonical Top-4 cohort, then direct next-gate workflows,
@@ -471,6 +486,11 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     )
 
     work = active_research_items(snapshot)
+    # Reserve deduplication scans every active work assignment, including rows
+    # whose lane metadata is missing, and independently inspects live run titles.
+    all_work_assignments = [
+        x for x in snapshot.get("work_assignments", []) if isinstance(x, dict)
+    ]
     active_paths = active_workflow_paths(runs)
     completed_slots = completed_slot_scopes(runs)
     failure_counts = slot_failure_counts(runs)
@@ -481,6 +501,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     seen_dispatch_keys: set[tuple[str, str, str, str]] = set()
     chosen_slot_scopes: set[tuple[str, str]] = set()
     active_slot_scopes: set[tuple[str, str, str]] = set()
+    selected_capacity_fill_candidates: set[str] = set()
     for run in runs:
         if not isinstance(run, dict) or run.get("status") == "completed":
             continue
@@ -505,6 +526,46 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     for item in planned:
         workflow = str(item["execution_workflow"])
         candidate = str(item.get("candidate") or "")
+        is_capacity_fill = item.get("_capacity_fill_reserve_validated") is True
+        if is_capacity_fill:
+            if candidate in selected_capacity_fill_candidates:
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_CAPACITY_FILL_DUPLICATE_IN_DISPATCH_TICK",
+                })
+                continue
+            active_run_for_candidate = any(
+                isinstance(run, dict)
+                and run.get("status") != "completed"
+                and candidate.lower() in _candidate_key(
+                    " ".join(str(run.get(key) or "") for key in ("name", "display_title", "run_name"))
+                )
+                and str(run.get("name") or run.get("workflow_name") or "") not in PLATFORM_NAMES
+                for run in runs
+            )
+            if candidate_is_active(candidate, all_work_assignments) or active_run_for_candidate:
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_CAPACITY_FILL_CANDIDATE_ACTIVE",
+                })
+                continue
+            if any(scope_candidate == candidate for _resource, scope_candidate in completed_slots):
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_CAPACITY_FILL_ALREADY_COMPLETED",
+                })
+                continue
+            reserve_failures = sum(
+                failure_counts.get((resource_key, candidate), 0)
+                for resource_key in ("windows", "ubuntu_x64", "ubuntu_arm64")
+            )
+            if reserve_failures >= 2:
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_CAPACITY_FILL_RETRY_EXHAUSTED",
+                    "technical_failures": reserve_failures,
+                })
+                continue
         if candidate == "Q218" and workflow.endswith("q218-independent-replication-once.yml"):
             auth_block = q218_replication_authorization_block_reason()
             if auth_block:
@@ -544,9 +605,10 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                 })
                 continue
 
-        # Automatic candidate execution is hard-locked to the focused pair.
+        # Automatic candidate execution is hard-locked to the focused pair,
+        # except for the one exact reserve plan validated above.
         focus_candidates = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
-        if focus_candidates and candidate not in focus_candidates:
+        if focus_candidates and candidate not in focus_candidates and not is_capacity_fill:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_FOCUS_LOCK"})
             continue
 
@@ -783,6 +845,8 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             "inputs": inputs,
             "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
         })
+        if is_capacity_fill:
+            selected_capacity_fill_candidates.add(candidate)
         seen_dispatch_keys.add(dispatch_key)
         if workflow == SLOT_SCOPED_WORKFLOW:
             resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
