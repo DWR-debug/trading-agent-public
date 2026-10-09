@@ -1252,3 +1252,6 @@ def test_candidate_portfolio_contains_only_the_three_active_candidates():
     assert tuple(row["code"] for row in rows) == ACTIVE_PORTFOLIO_CODES
     assert set(ACTIVE_PORTFOLIO_CODES) == {"Q104:I19", "Q220", "Q218"}
     assert all(row["strategy_success_probability"] is None for row in rows)
+    q218 = next(row for row in rows if row["code"] == "Q218")
+    assert q218["portfolio_action"] == "FOCUS_MONITOR"
+    assert q218["separate_workpack_allowed"] is False
