@@ -65,7 +65,7 @@ def test_q218_publisher_rejects_missing_non_boolean_or_conflicting_safety_flags(
 def test_q218_blob_sha_matches_git_blob_object_format(tmp_path):
     path = tmp_path / "fixture.txt"
     path.write_bytes(b"test")
-    expected = hashlib.sha1(b"blob 4\\0test").hexdigest()
+    expected = hashlib.sha1(b"blob 4\0test").hexdigest()
     assert blob_sha(path) == expected
 
 
