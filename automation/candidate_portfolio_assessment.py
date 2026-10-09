@@ -370,7 +370,7 @@ def build_candidate_portfolio(
             "first_falsifier": str(assessment["first_falsifier"]),
             "portfolio_action": str(assessment["portfolio_action"]),
             "family": str(assessment.get("family") or code),
-            "separate_workpack_allowed": assessment.get("portfolio_action") != "DO_NOT_DISPATCH_SEPARATELY",
+            "separate_workpack_allowed": assessment.get("portfolio_action") not in {"DO_NOT_DISPATCH_SEPARATELY", "FOCUS_MONITOR"},
             "duration_estimate_confidence": "LOW_PLANNING_RANGE",
             "strategy_success_probability": None,
             "strategy_success_probability_status": "NOT_ESTIMABLE",
