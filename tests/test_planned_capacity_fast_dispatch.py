@@ -1212,7 +1212,7 @@ def test_fast_dispatch_allows_receipt_defined_q219_and_q221_source_workpacks():
     dispatched = {(x["candidate"], x["resource"]) for x in plan["dispatches"]}
     assert ("Q219", "GitHub-hosted Ubuntu x64") in dispatched
     assert ("Q221", "GitHub-hosted ARM64") in dispatched
-    assert all(x["execution_workflow"] == workflow for x in plan["dispatches"] if x["candidate"] in {"Q219","Q221"})
+    assert all(x["workflow"] == workflow for x in plan["dispatches"] if x["candidate"] in {"Q219","Q221"})
     assert plan["performance_authorization"] is False
     assert plan["paper_only"] is True
     assert plan["live_execution"] is False
