@@ -125,3 +125,19 @@ def test_scan_archive_counts_unique_target_accessions():
         z.writestr("SUBMISSION.tsv",sub); z.writestr("INFOTABLE.tsv",info)
     r=scan_archive(b.getvalue(),{"url":"synthetic://unique","label":"unique","period_start":"2026-04-01"},{"SPGI":{"78409V104"},"OTHER":{"78409V104"}})
     assert r["target_unique_accession_count"] == 1
+
+
+def test_missing_shard_recovery_wakes_on_terminal_census_without_dispatch_api():
+    from pathlib import Path
+
+    recovery = Path(".github/workflows/q104-i19-missing-shard-recovery.yml").read_text(encoding="utf-8")
+    repair = Path(".github/workflows/q104-i19-targeted-acceptance-repair.yml").read_text(encoding="utf-8")
+
+    assert 'workflows: ["Q104 I19 Historical 13F Identity Census"]' in recovery
+    assert "types: [completed]" in recovery
+    assert "github.event.workflow_run.conclusion != 'success'" in recovery
+    assert "jq -r '.workflow_run.id // empty' \"$GITHUB_EVENT_PATH\"" in recovery
+    assert "uses: ./.github/workflows/q104-i19-targeted-acceptance-repair.yml" in recovery
+    assert "gh workflow run q104-i19-targeted-acceptance-repair.yml" not in recovery
+    assert "workflow_call:" in repair
+    assert "${{ inputs.source_run_id }}" in repair
