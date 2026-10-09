@@ -51,9 +51,11 @@ jobs:
           set -euo pipefail
           [[ "$SOURCE_RUN_ID" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SOURCE_RUN_ID"; exit 2; }
           [[ "$SHARD_RECOVERY_RUN_ID" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SHARD_RECOVERY_RUN_ID"; exit 2; }
-          echo "source_run_id=$SOURCE_RUN_ID" >> "$GITHUB_OUTPUT"
-          echo "shard_recovery_run_id=$SHARD_RECOVERY_RUN_ID" >> "$GITHUB_OUTPUT"
-          echo "recovered_shards=$RECOVERED_SHARDS" >> "$GITHUB_OUTPUT"
+          {
+            echo "source_run_id=$SOURCE_RUN_ID"
+            echo "shard_recovery_run_id=$SHARD_RECOVERY_RUN_ID"
+            echo "recovered_shards=$RECOVERED_SHARDS"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Download the frozen source snapshot and six receipts
         env:
