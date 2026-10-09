@@ -1127,3 +1127,62 @@ def test_q104_census_dashboard_requires_exact_six_shard_clock_receipt():
     assert q104_census_clock_complete(base) is True
     base["completed_shards"].pop()
     assert q104_census_clock_complete(base) is False
+
+
+def test_i19_census_failure_blocks_automatic_full_census_retry():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow = ".github/workflows/q104-i19-13f-historical-identity-census.yml"
+    snapshot = {
+        "focus_candidates": ["Q104:I19", "Q218"],
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted A",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q104-I19-CENSUS",
+                "candidate": "Q104:I19",
+                "scheduled": True,
+                "dispatchable": True,
+                "exclusive_dispatch": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+    failed_run = {
+        "id": 37931811984,
+        "status": "completed",
+        "conclusion": "failure",
+        "name": "Q104 I19 Historical 13F Identity Census",
+        "head_sha": "old-master-sha",
+    }
+    plan = dispatch_candidates(snapshot, [failed_run], max_dispatches=4)
+    assert plan["dispatches"] == []
+    assert any(
+        item["decision"] == "SKIP_I19_CENSUS_AUTOMATIC_FULL_RETRY_REQUIRES_TARGETED_RECOVERY"
+        for item in plan["decisions"]
+    )
+
+
+def test_i19_census_dispatch_is_allowed_when_no_prior_census_failure_exists():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    workflow = ".github/workflows/q104-i19-13f-historical-identity-census.yml"
+    snapshot = {
+        "focus_candidates": ["Q104:I19", "Q218"],
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted A",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q104-I19-CENSUS",
+                "candidate": "Q104:I19",
+                "scheduled": True,
+                "dispatchable": True,
+                "exclusive_dispatch": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+    plan = dispatch_candidates(snapshot, [], max_dispatches=1)
+    assert [item["candidate"] for item in plan["dispatches"]] == ["Q104:I19"]
