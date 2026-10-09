@@ -536,7 +536,7 @@
       "status": "explicitly_reactivated",
       "scientific_authority": false
     },
-    "rule": "Automatic candidate dispatch is limited to Q104:I19 and Q218 during the focused wave. Other candidates remain paused for automatic execution; no artificial filler.",
+    "rule": "Q104:I19 and Q218 remain the two primary candidates. When a real independent slot remains after active/ready primary work is accounted for, permit exactly one bounded Q219 options-source/PIT feasibility workpack as capacity fill. No duplicate Q219 run, no performance/holdout/ranking/tuning/promotion/live execution; Q220/Q221 remain paused for automatic execution.",
     "safety": {
       "performance": false,
       "holdout_selection": false,
@@ -554,6 +554,9 @@
       "Q219",
       "Q220",
       "Q221"
+    ],
+    "capacity_fill_reserve": [
+      "Q219"
     ]
   },
   "knowledge_relation_plane": {
@@ -612,5 +615,6 @@
     "deploy_workflow": ".github/workflows/resource-dashboard-update.yml",
     "update_button_mode": "authenticated workflow dispatch page; no public write token",
     "android_fleet": "reserve-only"
-  }
+  },
+  "last_refreshed_utc": "2026-10-09T20:03:50.960Z"
 }
