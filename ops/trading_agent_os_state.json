@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
-  "effective_date_utc": "2026-10-04T19:00:00+02:00",
+  "effective_date_utc": "2026-10-10",
   "source_master_sha": "ca84cc7beef77750bf7c7ddbf3f38be70cea6ce4",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
@@ -163,19 +163,15 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Q104:I19 formal historical 13F closure and Q218 SEC multi-channel/PIT development only; no other candidate is automatically dispatched during the focused wave.",
-    "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
-    "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
-    "discovery_frontier": "Q218 mandatory-voluntary disclosure semantic wedge; source/PIT/structure-first cheap falsification only.",
-    "literature_discovery": "PERMANENT: daily/weekly assistant research plus 6-hour free public-metadata scout; prioritize genuinely orthogonal mechanisms and preserve negative evidence. Current top-candidate wave Q218-Q221 is active design-only.",
+    "active_next": "Only Q104:I19, Q220 and Q218 are in the active candidate-development wave. Q104:I19 proceeds through terminal 13F census recovery -> frozen PIT compiler -> independent reproduction; Q220 through fixed-population as-filed XBRL mapping and cheap falsification; Q218 is monitored through exact source/event/independent-PIT and frozen replication receipt consistency. No other candidate is auto-dispatched.",
+    "meta_research": "Only infrastructure work that unblocks Q104:I19, Q220 or Q218; no separate candidate-discovery workstream during this focus lock.",
+    "governance_engineering": "Only engineering required for the three-candidate pipeline and fail-closed governance; other candidate engineering paused.",
+    "discovery_frontier": "Q220 narrative/structured XBRL representation-gap falsification; Q218 remains receipt-current and gets no duplicate run; Q104:I19 historical 13F closure remains the critical path.",
+    "literature_discovery": "Daily/weekly/every-6-hour literature scouting is limited to evidence, falsifiers and source/PIT feasibility for Q104:I19, Q220 and Q218; new-candidate generation is paused during this focused wave.",
     "current_research_frontier": [
-      "Q211",
-      "Q212",
-      "Q213",
-      "Q214",
-      "Q215",
-      "Q216",
-      "Q217"
+      "Q104:I19",
+      "Q220",
+      "Q218"
     ],
     "knowledge_relation_plane": "Active: shared clocks, identity maps, filing/event substrates, XBRL structure, options PIT, USAspending clock, 13F and Treasury state compilers are reused structurally; T/I/S/R state-transition motifs remain discovery-only."
   },
@@ -188,7 +184,7 @@
     "self_hosted_label": "trading-agent-research",
     "long_run_label": "trading-agent-long",
     "long_run_capacity_slot": "LHT-N133732-3",
-    "last_verified_snapshot_note": "runner online/busy state is volatile and must be checked live on every new chat",
+    "last_verified_snapshot_note": "Physical runner online/busy state is volatile; only a fresh exact-runner online receipt makes a Windows slot auto-routable.",
     "copilot_free_protection": "max 4 protected sessions/month, max 30 credits/session, no overages",
     "codespaces": "interactive fallback only; no unattended default",
     "paid_services": "disabled by project policy",
@@ -339,15 +335,13 @@
   ],
   "two_lane_research_mode": {
     "status": "ACTIVE",
-    "effective_date_utc": "2026-10-03",
+    "effective_date_utc": "2026-10-10",
     "lane_a": {
       "name": "FORMAL_READINESS",
       "slot": "Windows self-hosted A",
       "focus": [
-        "Q104 I19/I20",
-        "I22",
-        "Q119/Q120/Q122",
-        "Q125-F1"
+        "Q104:I19 historical 13F closure",
+        "Q104:I19 frozen compiler/independent reproduction after prerequisites"
       ],
       "performance_authorization_from_lane": false
     },
@@ -355,7 +349,7 @@
       "name": "FRONTIER_DISCOVERY",
       "slot": "Windows self-hosted B",
       "focus": [
-        "Q218"
+        "Q220 as-filed XBRL representation-gap source/PIT and cheap falsification"
       ],
       "performance_authorization_from_lane": false
     },
@@ -365,7 +359,16 @@
       "shared_mutable_research_state": false,
       "retroactive_cross_lane_mutation": false
     },
-    "performance_capacity_rule": "Physical two-slot capacity never creates authorization; each performance execution needs its own current formal authorization."
+    "performance_capacity_rule": "Physical capacity never creates authorization; no duplicate gate runs, and each performance execution needs its own current formal authorization.",
+    "lane_c": {
+      "name": "INDEPENDENT_QA / LONG_DETERMINISTIC",
+      "slot": "Windows self-hosted C",
+      "focus": [
+        "Q220 independent reproduction after positive first gate",
+        "Q104:I19 independent PIT reproduction after positive compiler receipt"
+      ],
+      "performance_authorization_from_lane": false
+    }
   },
   "dashboard": {
     "website_path": "docs/dashboard/index.html",
@@ -432,15 +435,11 @@
       "weekly",
       "every_6_hours_repository_scout"
     ],
-    "maximum_active_shortlist": 4,
+    "maximum_active_shortlist": 3,
     "active_frontier": [
-      "Q211",
-      "Q212",
-      "Q213",
-      "Q214",
-      "Q215",
-      "Q216",
-      "Q217"
+      "Q104:I19",
+      "Q220",
+      "Q218"
     ],
     "selection_axes": [
       "mechanism_novelty",
@@ -466,7 +465,7 @@
       "promotion": false,
       "live_execution": false
     },
-    "principle": "Continuously search for unusual, economically coherent and genuinely orthogonal information advantages; verify first, cheap-falsify early, preserve dead ends, and never convert literature claims directly into project evidence."
+    "principle": "Search literature and public sources only to validate or falsify the three active mechanisms (Q104:I19, Q220, Q218). Preserve negative evidence and do not generate or dispatch new candidate families during this focus lock."
   },
   "rolling_capacity_control": {
     "status": "ACTIVE",
@@ -511,32 +510,37 @@
     }
   },
   "top_candidate_capacity_overlay": {
-    "effective_date_utc": "2026-10-06",
+    "effective_date_utc": "2026-10-10",
     "status": "ACTIVE",
-    "purpose": "Focused two-candidate wave: Q104:I19 formal readiness plus Q218 frontier source/PIT development.",
+    "purpose": "Focused three-candidate wave: Q104:I19 formal readiness, Q220 as-filed XBRL representation-gap falsification, and Q218 current receipt/provenance integrity.",
     "windows_A": {
-      "role": "FORMAL_READINESS / local_reproduction",
+      "role": "FORMAL_READINESS / local reproduction",
       "priority": [
         "Q104 I19"
       ],
-      "new_overlay": "Q104:I19 historical 13F completeness -> PIT compiler -> independent reproduction",
+      "new_overlay": "Q104:I19 terminal historical 13F shard closure -> concept-specific PIT compiler -> independent PIT reproduction only after positive upstream receipts.",
       "scientific_authority": false
     },
     "windows_B": {
-      "role": "FRONTIER_DISCOVERY / data_qa",
+      "role": "FRONTIER_DISCOVERY / data QA",
       "priority": [
-        "Q218"
+        "Q220"
       ],
-      "new_overlay": "Q218 SEC multi-channel source/PIT and deterministic event-pair lineage",
+      "new_overlay": "Q220 fixed-population as-filed XBRL TextBlock/presentation linkage, taxonomy drift and length/readability falsifiers; use one bounded gate at a time.",
       "scientific_authority": false,
       "candidate_gate_compiler": "automation/q218_q221_candidate_gate_compiler.py"
     },
     "runner_C": {
       "role": "LONG_DETERMINISTIC_RESEARCH / INDEPENDENT_QA",
-      "status": "explicitly_reactivated",
+      "status": "explicitly reactivated",
+      "priority": [
+        "Q220 independent architecture/receipt reproduction after a positive first gate",
+        "Q104:I19 independent PIT reproduction after positive compiler receipt"
+      ],
+      "new_overlay": "Use only for an independent, prerequisite-ready Q220/Q104 receipt-defined check. Q218 source/event/PIT/repl receipts currently match exact gate fingerprints; do not spend a slot on a duplicate run unless a fingerprint changes.",
       "scientific_authority": false
     },
-    "rule": "Automatic candidate dispatch is limited to Q104:I19 and Q218 during the focused wave. Other candidates remain paused for automatic execution; no artificial filler.",
+    "rule": "Automatic candidate dispatch is hard-locked to Q104:I19, Q220 and Q218. All other candidates are paused for automatic execution; completed current-context Q218 work is not repeated; no artificial filler.",
     "safety": {
       "performance": false,
       "holdout_selection": false,
@@ -545,16 +549,13 @@
       "promotion": false,
       "live_execution": false
     },
-    "last_refreshed_utc": "2026-10-05T19:22:11.737Z",
+    "last_refreshed_utc": "2026-10-10T00:00:00Z",
     "active_shortlist": [
       "Q104:I19",
+      "Q220",
       "Q218"
     ],
-    "discovery_reserve": [
-      "Q219",
-      "Q220",
-      "Q221"
-    ]
+    "discovery_reserve": []
   },
   "knowledge_relation_plane": {
     "status": "ACTIVE_METADATA_ONLY",
@@ -612,5 +613,6 @@
     "deploy_workflow": ".github/workflows/resource-dashboard-update.yml",
     "update_button_mode": "authenticated workflow dispatch page; no public write token",
     "android_fleet": "reserve-only"
-  }
+  },
+  "self_hosted_windows_availability": "LIVE_VERIFICATION_REQUIRED"
 }
