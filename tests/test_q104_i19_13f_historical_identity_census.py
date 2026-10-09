@@ -74,6 +74,70 @@ def test_fetch_uses_shared_rate_limiter_on_each_attempt(monkeypatch):
     assert len(calls) == 2
 
 
+def test_acceptance_header_join_retries_transient_sec_503(monkeypatch):
+    import urllib.error
+    from automation import q104_i19_13f_historical_identity_census as census
+
+    class Limiter:
+        def __init__(self):
+            self.waits = 0
+
+        def wait(self):
+            self.waits += 1
+
+    class Response:
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self):
+            return (
+                b"<SEC-HEADER>\\n"
+                b"ACCESSION NUMBER: 0001045810-26-000065\\n"
+                b"CONFORMED SUBMISSION TYPE: 13F-HR\\n"
+                b"FILED AS OF DATE: 20260515\\n"
+                b"CENTRAL INDEX KEY: 0001045810\\n"
+                b"<ACCEPTANCE-DATETIME>20260515161542\\n"
+                b"</SEC-HEADER>"
+            )
+
+    calls = []
+
+    def fake_urlopen(req, timeout):
+        calls.append((req.full_url, req.get_header("Accept"), timeout))
+        if len(calls) == 1:
+            raise urllib.error.HTTPError(
+                req.full_url, 503, "temporary SEC response", hdrs={"Retry-After": "0"}, fp=None
+            )
+        return Response()
+
+    limiter = Limiter()
+    monkeypatch.setattr(census.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(census.time, "sleep", lambda *_args: None)
+    records, failures = census.enrich_acceptance_times(
+        {
+            "0001045810-26-000065": {
+                "filer_cik": "0001045810",
+                "filing_date": "2026-05-15",
+                "period": "2026-03-31",
+                "submission_type": "13F-HR",
+            }
+        },
+        rate_limiter=limiter,
+    )
+
+    assert not failures
+    assert records["0001045810-26-000065"]["acceptance_datetime"] == "2026-05-15T16:15:42"
+    assert limiter.waits == 2
+    assert len(calls) == 2
+    assert calls[0][1] == "text/html,text/plain,*/*"
+    assert calls[0][2] == 45
+
+
 def test_synthetic_contract():
     assert all(synthetic_contract().values())
 
