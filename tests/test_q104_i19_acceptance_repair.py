@@ -15,7 +15,7 @@ from automation.q104_i19_acceptance_repair import (
     repair_shard_payload,
     resolve_accession_header,
 )
-from automation.q104_i19_historical_identity_census_merge import canonical_fingerprint
+from automation.q104_i19_13f_historical_identity_census_merge import canonical_fingerprint
 
 
 ACCESSION = "0001045810-25-000001"
