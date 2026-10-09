@@ -1501,7 +1501,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-09T22:40:59.269182+00:00",
+    "generated_at_utc": "2026-10-09T22:49:12.779498+00:00",
     "next_research_focus": "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1509,7 +1509,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "73ea28fa13d1585728fc69630fdfd99c5907b0f6"
+    "source_master_sha": "e4027b7b47b92eb59ca417cd768eddbe81c3ff4f"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-09T22:40:59.269182+00:00",
+  "generated_at_utc": "2026-10-09T22:49:12.779498+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3120,7 +3120,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "f8c554b745fb57ac37cde4dfa0d83de0bf80c72651113aeb4a2118da952fc70f",
+    "receipt_fingerprint": "93c9c8edd3ff44bc4099fc5a0ca748ca5734b8cd1ebdbfe2924c4500adaabd8b",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -3193,7 +3193,7 @@
             "url": "https://www.archives.gov/federal-register/faqs"
           }
         ],
-        "content_sha256": "8720c3b0ac1b2cf7c6eaeac10f7f4d2077681716db2d4d1638677e04b20232e9",
+        "content_sha256": "cc97a7ed900b7b3d68c3175eea463f079c9456c6ddcfe548e74bc7db6a33e4a6",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3212,7 +3212,7 @@
             "url": "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json"
           }
         ],
-        "content_sha256": "6eac345c397adc8c2f6cbfade385c8b4e93a180a08d982ea1a5904ce4f6c8a5b",
+        "content_sha256": "f127e3d5380f9c8a3a050035f20984cc70aaa1864e9dd9e6a7d12e4056ba1c70",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4213,7 +4213,7 @@
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "dc04413effd0f904ee46e2bbef1c4985040a23383bdba2adabc54faaefefa9c2",
+    "receipt_fingerprint": "df124773b38457d47730781aae407fff86761e4871ef33c5438f2c0f55f3af08",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4287,7 +4287,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "d0a28e48d8863400f02bc74edd653ab509d0c6e82b74c247d2eb4f262d264cac",
+        "content_sha256": "3101f3f8b2e404e5ef695383312b367597c30eefd865fe6ca02793f6fb1b3c06",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4659,44 +4659,44 @@
     ],
     "recent_commits": [
       {
-        "message": "FIX: restore dashboard and dispatcher script imports",
-        "sha": "73ea28fa13d1585728fc69630fdfd99c5907b0f6",
-        "timestamp": "2026-10-10T00:40:48+02:00"
-      },
-      {
-        "message": "OPS: record Groq API key smoke test",
-        "sha": "78840744c947669f572c717fb545591a79b205a3",
-        "timestamp": "2026-10-09T22:40:28Z"
+        "message": "ORCH: dispatch independent Top-4 source/PIT gates when capacity is free",
+        "sha": "e4027b7b47b92eb59ca417cd768eddbe81c3ff4f",
+        "timestamp": "2026-10-10T00:49:00+02:00"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "2e20f6749f7d88d191ebdb66ffab7f9b0408943c",
-        "timestamp": "2026-10-09T22:38:45Z"
+        "sha": "f36f38bc1e61ee54468ebfb8e05b82cdcc4a4d6b",
+        "timestamp": "2026-10-09T22:47:20Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "7cffffc8c2c95739bdd73c7225a383c2d46c38c2",
+        "timestamp": "2026-10-09T22:47:01Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "cd4bee78e9c1109d0f15ea102745de4c8b3fe598",
+        "timestamp": "2026-10-09T22:45:33Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "1a34f0edcd1810c54448cfb3ab884fbaf1b80626",
+        "timestamp": "2026-10-09T22:45:05Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "f18e2500a9cfa86af70b10257b6f90ec88c8461c",
+        "timestamp": "2026-10-09T22:44:54Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "d690264e811ac2aed0967a75ec34ad87e14fc601",
-        "timestamp": "2026-10-09T22:38:33Z"
+        "sha": "e8cb6b40c028912e1670ada6f1702a14e32b12ef",
+        "timestamp": "2026-10-09T22:41:02Z"
       },
       {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "7ed25f9f4788e839b3524aca2d2598967ccee914",
-        "timestamp": "2026-10-09T22:38:29Z"
-      },
-      {
-        "message": "UI: broaden research dashboard with evidence-aware candidate portfolio",
-        "sha": "fa7d2f7128252f59df56939e7cbf8fad3e6e45b4",
-        "timestamp": "2026-10-10T00:38:17+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "4f1c44ea3c967a60cf1483ba05ea3d448554f534",
-        "timestamp": "2026-10-09T22:36:15Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "a8f4926ccc4e9d7ef618cdddffa5059e8e9a8305",
-        "timestamp": "2026-10-09T22:35:59Z"
+        "message": "FIX: restore dashboard and dispatcher script imports",
+        "sha": "73ea28fa13d1585728fc69630fdfd99c5907b0f6",
+        "timestamp": "2026-10-10T00:40:48+02:00"
       }
     ]
   },
@@ -4794,7 +4794,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "73ea28fa13d1585728fc69630fdfd99c5907b0f6",
+  "source_master_sha": "e4027b7b47b92eb59ca417cd768eddbe81c3ff4f",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4908,6 +4908,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "38000512705"
+    "run_id": "38001232583"
   }
 }
