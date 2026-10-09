@@ -401,7 +401,7 @@ CANDIDATE_DEVELOPMENT_MILESTONES = (
     "ONE-SHOT PERFORMANCE",
 )
 
-FOCUS_CANDIDATES = ("Q104:I19", "Q218")
+FOCUS_CANDIDATES = ("Q104:I19", "Q218", "Q219")
 ACTIVE_RUN_STATUSES = {"queued", "in_progress", "waiting", "pending"}
 
 
@@ -1136,6 +1136,7 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
     order = [
         ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A"),
         ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B"),
+        ("Q219", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted A"),
     ]
     by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
     backlog = []
@@ -1151,7 +1152,7 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
             "planned_status": "READY_NEXT_GATE",
             "non_authorizing": True,
         })
-    return backlog[:2]
+    return backlog[:3]
 
 
 def planned_capacity_plan(
@@ -1251,6 +1252,18 @@ def planned_capacity_plan(
             "allow_parallel_with_candidate": True,
             "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
             "execution_workflow_inputs": {"focus_wave": True, "gate": "event_pair"},
+        },
+        {
+            "plan_id": "Q219-OPTIONS-SOURCE-PIT",
+            "candidate": "Q219",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "options-source breadth, quote-field and historical point-in-time diagnostics",
+            "preferred": ["Windows self-hosted A"],
+            "readiness": "READY_SOURCE_PIT",
+            "basis": "one bounded reserve workpack only when higher-priority Q104:I19/Q218 work leaves a real free slot; source/PIT diagnostics only",
+            "dispatchable": True,
+            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+            "execution_workflow_inputs": {"gate": "all"},
         },
         {
             "plan_id": "Q218-INDEPENDENT-ARCH",
