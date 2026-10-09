@@ -30,6 +30,12 @@ PRIMARY_RESULT_FINGERPRINT = "78c4a667b01bebe0aa23361e78856155fa3e3fe861cb6fcc1e
 def load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
+def git_blob_sha(path: Path) -> str:
+    """Return Git SHA-1 blob object ID for a file, matching git hash-object."""
+    data = path.read_bytes()
+    header = b"blob " + str(len(data)).encode("ascii") + b"\0"
+    return hashlib.sha1(header + data).hexdigest()
+
 
 def verify(bundle_path: Path, contract_path: Path) -> dict[str, Any]:
     bundle = load(bundle_path)
@@ -39,8 +45,11 @@ def verify(bundle_path: Path, contract_path: Path) -> dict[str, Any]:
     if contract.get("replication_trial_id") != TRIAL_ID or contract.get("status") != "FROZEN_INDEPENDENT_REPLICATION_CONTRACT":
         raise RuntimeError("Q218 replication contract invalid")
     primary_contract = ROOT / "research/governance/q218_performance_contract_2026_10_08.json"
-    if contract.get("base_contract_sha256") != file_sha256(primary_contract):
-        raise RuntimeError("Q218 replication base contract fingerprint mismatch")
+    # The frozen replication contract legacy field stores the Git blob ID
+    # of the primary contract, not SHA-256(file_bytes). Preserve that frozen
+    # contract and verify the exact Git content identity here.
+    if contract.get("base_contract_sha256") != git_blob_sha(primary_contract):
+        raise RuntimeError("Q218 replication base contract Git blob fingerprint mismatch")
     if contract.get("primary_performance_report_fingerprint") != PRIMARY_RESULT_FINGERPRINT:
         raise RuntimeError("Q218 replication primary provenance fingerprint drifted")
     if contract.get("replication_boundaries", {}).get("no_primary_result_reuse_for_rule_changes") is not True:
