@@ -31,3 +31,16 @@ def test_refresh_button_does_not_claim_to_start_a_workflow():
     html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
     assert "startet aber keinen neuen GitHub-Workflow" in js
     assert 'id="refresh" type="button"' in html
+
+def test_dashboard_deploys_after_focus_gate_completion_and_state_receipts_change():
+    workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    assert "workflow_run:" in workflow
+    assert '"Q104 I19 Historical 13F Identity Census"' in workflow
+    assert '"Q104 I19 Historical PIT Compilation"' in workflow
+    assert '"Q104 I19 Independent PIT Reproduction"' in workflow
+    assert '"Top-4 Candidate Slot Research"' in workflow
+    assert '"Q218 Independent Architecture PIT Reproduction"' in workflow
+    assert '"research/evidence/current_operational_state.json"' in workflow
+    assert '"docs/CURRENT_STATUS.md"' in workflow
+    assert "github.event.workflow_run.head_branch == 'master'" in workflow
+    assert "github.event.workflow_run.display_title" in workflow
