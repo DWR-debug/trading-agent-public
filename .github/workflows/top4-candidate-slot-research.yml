@@ -106,6 +106,13 @@ jobs:
         if: ${{ steps.q218_focus_gate.outputs.skip != 'true' }}
         shell: cmd
         run: echo SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: top4-slot-windows-${{ inputs.candidate }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/top4/${{ inputs.candidate }}/${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 30
       - name: Publish current Q218 focus-gate receipt index
         if: ${{ success() && inputs.candidate == 'Q218' && inputs.focus_wave && (inputs.gate == 'source' || inputs.gate == 'event_pair') }}
         shell: cmd
@@ -127,13 +134,7 @@ jobs:
           "%PY_EXE%" automation/github_contents_publish.py --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%CURRENT_SHA%" --file "research/evidence/q218_focus_gate_receipt_index_latest.json=research/evidence/q218_focus_gate_receipt_index_latest.json"
           if errorlevel 1 exit /b 1
           endlocal
-      - uses: actions/upload-artifact@v6
-        if: always()
-        with:
-          name: top4-slot-windows-${{ inputs.candidate }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: research/runs/top4/${{ inputs.candidate }}/${{ github.run_id }}/
-          if-no-files-found: warn
-          retention-days: 30
+
 
   ubuntu_x64:
     if: ${{ inputs.resource == 'ubuntu_x64' }}
@@ -146,12 +147,72 @@ jobs:
           ref: master
           fetch-depth: 1
       - run: python -m pip install --disable-pip-version-check pytest pandas exchange-calendars pypdf
+      - name: Validate focused-gate inputs
+        env:
+          Q218_CANDIDATE: ${{ inputs.candidate }}
+          Q218_FOCUS_WAVE: ${{ inputs.focus_wave }}
+          Q218_GATE: ${{ inputs.gate }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$Q218_GATE" != "all" ]] && { [[ "$Q218_CANDIDATE" != "Q218" ]] || [[ "$Q218_FOCUS_WAVE" != "true" ]]; }; then
+            echo "Focused source/event_pair gates require candidate=Q218 and focus_wave=true" >&2
+            exit 2
+          fi
+      - name: Check completed Q218 focus gate
+        id: q218_focus_gate
+        if: ${{ inputs.candidate == 'Q218' && inputs.focus_wave && (inputs.gate == 'source' || inputs.gate == 'event_pair') }}
+        env:
+          Q218_GATE: ${{ inputs.gate }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$Q218_GATE" == "source" ]]; then
+            code_path="automation/q218_sec_multichannel_source_gate.py"
+            receipt_key="source_gate"
+          else
+            code_path="automation/q218_sec_event_pair_lineage_gate.py"
+            receipt_key="event_pair_gate"
+          fi
+          skip=false
+          index_path="research/evidence/q218_focus_gate_receipt_index_latest.json"
+          if [[ -s "$index_path" ]]; then
+            verified="$(jq -r --arg key "$receipt_key" '.[$key].verified_positive_complete // false' "$index_path")"
+            expected="$(jq -r --arg key "$receipt_key" '.[$key].gate_code_blob_sha // ""' "$index_path")"
+            actual="$(git rev-parse "HEAD:$code_path")"
+            if [[ "$verified" == "true" && -n "$expected" && "$expected" == "$actual" ]]; then
+              skip=true
+            fi
+          fi
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+          echo "Q218_COMPLETED_FOCUS_GATE_NOOP=$skip"
       - name: Run bounded candidate workpack
+        if: ${{ steps.q218_focus_gate.outputs.skip != 'true' && inputs.gate == 'all' }}
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "research/runs/top4/${{ inputs.candidate }}/${GITHUB_RUN_ID}"
           python -m automation.top4_candidate_capacity --candidate "${{ inputs.candidate }}" --output-dir "research/runs/top4/${{ inputs.candidate }}/${GITHUB_RUN_ID}"
+      - name: Run focused Q218 source or event-pair gate
+        if: ${{ steps.q218_focus_gate.outputs.skip != 'true' && inputs.candidate == 'Q218' && inputs.focus_wave && (inputs.gate == 'source' || inputs.gate == 'event_pair') }}
+        env:
+          Q218_GATE: ${{ inputs.gate }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_root="research/runs/top4/Q218/${GITHUB_RUN_ID}"
+          if [[ "$Q218_GATE" == "source" ]]; then
+            mkdir -p "$run_root/source"
+            python -m automation.q218_sec_multichannel_source_gate --output "$run_root/source/receipt.json"
+            python -m pytest -q tests/test_q218_sec_multichannel_source_gate.py tests/test_q218_q221_candidate_gate_compiler.py
+          elif [[ "$Q218_GATE" == "event_pair" ]]; then
+            mkdir -p "$run_root/event_pair"
+            python -m automation.q218_sec_event_pair_lineage_gate --output "$run_root/event_pair/receipt.json"
+            python -m pytest -q tests/test_q218_sec_event_pair_lineage_gate.py tests/test_q218_q221_candidate_gate_compiler.py
+          else
+            echo "Unsupported focused Q218 gate: $Q218_GATE" >&2
+            exit 2
+          fi
       - name: Enforce scientific boundary
         run: echo SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION
       - uses: actions/upload-artifact@v6
@@ -161,6 +222,24 @@ jobs:
           path: research/runs/top4/${{ inputs.candidate }}/${{ github.run_id }}/
           if-no-files-found: warn
           retention-days: 30
+      - name: Publish current Q218 focus-gate receipt index
+        if: ${{ success() && inputs.candidate == 'Q218' && inputs.focus_wave && (inputs.gate == 'source' || inputs.gate == 'event_pair') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          Q218_GATE: ${{ inputs.gate }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$Q218_GATE" == "source" ]]; then
+            receipt="research/runs/top4/Q218/${GITHUB_RUN_ID}/source/receipt.json"
+          else
+            receipt="research/runs/top4/Q218/${GITHUB_RUN_ID}/event_pair/receipt.json"
+          fi
+          python automation/q218_publish_focus_gate_receipt.py --gate "$Q218_GATE" --receipt "$receipt" --run-id "$GITHUB_RUN_ID"
+          current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          test -n "$current_sha"
+          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file research/evidence/q218_focus_gate_receipt_index_latest.json=research/evidence/q218_focus_gate_receipt_index_latest.json
+
 
   ubuntu_arm64:
     if: ${{ inputs.resource == 'ubuntu_arm64' }}
@@ -176,12 +255,72 @@ jobs:
         with:
           python-version: "3.13"
       - run: python -m pip install --disable-pip-version-check pytest pandas exchange-calendars pypdf
+      - name: Validate focused-gate inputs
+        env:
+          Q218_CANDIDATE: ${{ inputs.candidate }}
+          Q218_FOCUS_WAVE: ${{ inputs.focus_wave }}
+          Q218_GATE: ${{ inputs.gate }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$Q218_GATE" != "all" ]] && { [[ "$Q218_CANDIDATE" != "Q218" ]] || [[ "$Q218_FOCUS_WAVE" != "true" ]]; }; then
+            echo "Focused source/event_pair gates require candidate=Q218 and focus_wave=true" >&2
+            exit 2
+          fi
+      - name: Check completed Q218 focus gate
+        id: q218_focus_gate
+        if: ${{ inputs.candidate == 'Q218' && inputs.focus_wave && (inputs.gate == 'source' || inputs.gate == 'event_pair') }}
+        env:
+          Q218_GATE: ${{ inputs.gate }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$Q218_GATE" == "source" ]]; then
+            code_path="automation/q218_sec_multichannel_source_gate.py"
+            receipt_key="source_gate"
+          else
+            code_path="automation/q218_sec_event_pair_lineage_gate.py"
+            receipt_key="event_pair_gate"
+          fi
+          skip=false
+          index_path="research/evidence/q218_focus_gate_receipt_index_latest.json"
+          if [[ -s "$index_path" ]]; then
+            verified="$(jq -r --arg key "$receipt_key" '.[$key].verified_positive_complete // false' "$index_path")"
+            expected="$(jq -r --arg key "$receipt_key" '.[$key].gate_code_blob_sha // ""' "$index_path")"
+            actual="$(git rev-parse "HEAD:$code_path")"
+            if [[ "$verified" == "true" && -n "$expected" && "$expected" == "$actual" ]]; then
+              skip=true
+            fi
+          fi
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+          echo "Q218_COMPLETED_FOCUS_GATE_NOOP=$skip"
       - name: Run bounded candidate workpack
+        if: ${{ steps.q218_focus_gate.outputs.skip != 'true' && inputs.gate == 'all' }}
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "research/runs/top4/${{ inputs.candidate }}/${GITHUB_RUN_ID}"
           python -m automation.top4_candidate_capacity --candidate "${{ inputs.candidate }}" --output-dir "research/runs/top4/${{ inputs.candidate }}/${GITHUB_RUN_ID}"
+      - name: Run focused Q218 source or event-pair gate
+        if: ${{ steps.q218_focus_gate.outputs.skip != 'true' && inputs.candidate == 'Q218' && inputs.focus_wave && (inputs.gate == 'source' || inputs.gate == 'event_pair') }}
+        env:
+          Q218_GATE: ${{ inputs.gate }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_root="research/runs/top4/Q218/${GITHUB_RUN_ID}"
+          if [[ "$Q218_GATE" == "source" ]]; then
+            mkdir -p "$run_root/source"
+            python -m automation.q218_sec_multichannel_source_gate --output "$run_root/source/receipt.json"
+            python -m pytest -q tests/test_q218_sec_multichannel_source_gate.py tests/test_q218_q221_candidate_gate_compiler.py
+          elif [[ "$Q218_GATE" == "event_pair" ]]; then
+            mkdir -p "$run_root/event_pair"
+            python -m automation.q218_sec_event_pair_lineage_gate --output "$run_root/event_pair/receipt.json"
+            python -m pytest -q tests/test_q218_sec_event_pair_lineage_gate.py tests/test_q218_q221_candidate_gate_compiler.py
+          else
+            echo "Unsupported focused Q218 gate: $Q218_GATE" >&2
+            exit 2
+          fi
       - name: Enforce scientific boundary
         run: echo SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION
       - uses: actions/upload-artifact@v6
@@ -191,6 +330,24 @@ jobs:
           path: research/runs/top4/${{ inputs.candidate }}/${{ github.run_id }}/
           if-no-files-found: warn
           retention-days: 30
+      - name: Publish current Q218 focus-gate receipt index
+        if: ${{ success() && inputs.candidate == 'Q218' && inputs.focus_wave && (inputs.gate == 'source' || inputs.gate == 'event_pair') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          Q218_GATE: ${{ inputs.gate }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$Q218_GATE" == "source" ]]; then
+            receipt="research/runs/top4/Q218/${GITHUB_RUN_ID}/source/receipt.json"
+          else
+            receipt="research/runs/top4/Q218/${GITHUB_RUN_ID}/event_pair/receipt.json"
+          fi
+          python automation/q218_publish_focus_gate_receipt.py --gate "$Q218_GATE" --receipt "$receipt" --run-id "$GITHUB_RUN_ID"
+          current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          test -n "$current_sha"
+          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file research/evidence/q218_focus_gate_receipt_index_latest.json=research/evidence/q218_focus_gate_receipt_index_latest.json
+
 
 
   completion_relay:
