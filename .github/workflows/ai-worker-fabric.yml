@@ -70,7 +70,7 @@ jobs:
               if payload.get(flag, False) is not False:
                   raise SystemExit(f"AI_TASK_UNSAFE_FLAG:{flag}")
           Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8").write(
-              "tasks=" + json.dumps([task]) + "\\n"
+              "tasks=" + json.dumps([task]) + "\n"
           )
           print(f"FOCUSED_AI_TASK_ACCEPTED={task}")
           PY
@@ -113,20 +113,9 @@ jobs:
         run: |
           set -euo pipefail
           case '${{ matrix.task }}' in
-            AI-2026-09-29-Q091-ADVERSARIAL) echo 'path=ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-28-Q089-ADVERSARIAL) echo 'path=ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-28-UNUSUAL-FRONTIER) echo 'path=ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-30-Q100-FRONTIER-FEASIBILITY) echo 'path=ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) echo 'path=ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-30-Q102-REGIME-STATE-DESIGN) echo 'path=ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT) echo 'path=ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-04-Q187-Q192-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT) echo 'path=ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-06-Q218-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-06-Q219-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-06-Q220-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-10-06-Q221-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-08-Q104-I19-CENSUS-COMPILER-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-10-Q220-ASFILED-MAPPING-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-10-Q220-ASFILED-MAPPING-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-06-Q218-TOP4-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
           esac
 
