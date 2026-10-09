@@ -19,10 +19,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 try:
-    from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context
+    from automation.planned_capacity_fast_dispatch import ai_task_completed_with_current_context, TOP4_CANDIDATES
 except ModuleNotFoundError:
     # Direct script execution puts automation/ on sys.path.
-    from planned_capacity_fast_dispatch import ai_task_completed_with_current_context
+    from planned_capacity_fast_dispatch import ai_task_completed_with_current_context, TOP4_CANDIDATES
 OUT = ROOT / "docs" / "dashboard" / "dashboard_data.json"
 BOOTSTRAP = ROOT / "docs" / "dashboard" / "dashboard_bootstrap.js"
 REPO = os.environ.get("GITHUB_REPOSITORY", "DWR-debug/trading-agent-public")
@@ -1327,6 +1327,42 @@ def planned_capacity_plan(
             "allow_parallel_with_candidate": True,
             "execution_workflow": ".github/workflows/q104-i19-independent-pit-reproduction.yml",
         },
+        {
+            "plan_id": "Q219-OPTIONS-SOURCE-BREADTH",
+            "candidate": "Q219",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "free historical single-equity options source breadth Go/No-Go",
+            "preferred": ["GitHub-hosted Ubuntu x64", "Windows self-hosted B", "GitHub-hosted ARM64"],
+            "readiness": "READY_FREE_OPTIONS_SOURCE_BREADTH_GO_NO_GO",
+            "basis": "bounded no-paid-data source/PIT falsification; prove multi-year single-equity options coverage or stop before full development",
+            "dispatchable": True,
+            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+            "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+        },
+        {
+            "plan_id": "Q220-AS-FILED-REPRESENTATION",
+            "candidate": "Q220",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "as-filed XBRL narrative/structured mapping and taxonomy drift diagnostics",
+            "preferred": ["Windows self-hosted B", "GitHub-hosted ARM64", "GitHub-hosted Ubuntu x64"],
+            "readiness": "READY_FIXED_POOL_SCHEMA_MAPPING",
+            "basis": "deterministic fixed-population source/schema checks; fail closed on TextBlock, taxonomy, or presentation-linkage instability",
+            "dispatchable": True,
+            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+            "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+        },
+        {
+            "plan_id": "Q221-USASPENDING-PUBLIC-CLOCK",
+            "candidate": "Q221",
+            "lane": "FRONTIER DISCOVERY",
+            "task": "historical USAspending RDT&E transaction/public-observation clock falsification",
+            "preferred": ["GitHub-hosted ARM64", "Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
+            "readiness": "READY_HISTORICAL_PUBLIC_CLOCK_FALSIFICATION",
+            "basis": "bounded source/PIT gate for historical applicability, modification-vs-award semantics, agency exceptions, and recipient-to-issuer mapping",
+            "dispatchable": True,
+            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+            "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+        },
     ]
 
     def priority_bonus(item: dict[str, Any]) -> int:
@@ -1710,7 +1746,7 @@ def main() -> None:
         {"name": "GitHub-hosted ARM64", "type": "cloud", "research_capacity_slots": 2, "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
         {"name": "Free AI pool", "type": "cloud", "research_capacity_slots": 1, "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
     ]
-    priority_codes = set(FOCUS_CANDIDATES)
+    priority_codes = set(FOCUS_CANDIDATES) | set(TOP4_CANDIDATES)
     top4 = [x for x in state_board if x.get("code") in priority_codes]
     q104_parent = next((x for x in state_board if str(x.get("code")) == "104"), None)
     if q104_parent:
