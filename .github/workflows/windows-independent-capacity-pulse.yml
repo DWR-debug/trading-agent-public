@@ -81,6 +81,13 @@ jobs:
           set "PULSE_PACK=!PACK!"
           set "PULSE_RC=!RC!"
           "%PY_EXE%" -c "import json,os,platform; from pathlib import Path; p=Path('research/runs/self_hosted/capacity_pulse/receipt.json'); p.parent.mkdir(parents=True,exist_ok=True); p.write_text(json.dumps({'schema_version':'1.0','receipt_type':'windows_independent_capacity_pulse','status':'COMPLETED' if int(os.environ.get('PULSE_RC','1'))==0 else 'FAILED','runner_name':os.environ.get('RUNNER_NAME'),'source_sha':os.environ.get('GITHUB_SHA'),'run_id':int(os.environ['GITHUB_RUN_ID']),'pack':int(os.environ['PULSE_PACK']),'formal_evidence_allowed':False,'independent_reproduction_only':True,'paper_only':True,'live_trading_enabled':False,'orders_enabled':False,'automatic_promotion':False,'python_version':platform.python_version()},ensure_ascii=False,sort_keys=True,indent=2)+'\\n',encoding='utf-8')"
+          set "PULSE_SOURCE_DIR=research\\runs\\self_hosted\\capacity_pulse"
+          set "PULSE_WORKSPACE_DIR=%GITHUB_WORKSPACE%\\research\\runs\\self_hosted\\capacity_pulse"
+          if not exist "%PULSE_SOURCE_DIR%\\receipt.json" exit /b 1
+          if not exist "%PULSE_WORKSPACE_DIR%" mkdir "%PULSE_WORKSPACE_DIR%" || exit /b 1
+          xcopy /E /I /Y "%PULSE_SOURCE_DIR%\\*" "%PULSE_WORKSPACE_DIR%\\" >nul
+          if errorlevel 1 exit /b 1
+          if not exist "%PULSE_WORKSPACE_DIR%\\receipt.json" exit /b 1
           endlocal & exit /b %RC%
 
       - name: Upload capacity pulse receipt
