@@ -64,7 +64,8 @@ def discover_archives(page):
         if start is not None and START<=start<END: out[href]={"url":href,"label":label,"period_start":start.isoformat()}
     return sorted(out.values(),key=lambda x:(x["period_start"],x["url"]))
 
-def fetch(url,retries=MAX_FETCH_RETRIES,rate_limiter=None):
+def fetch(url,retries=MAX_FETCH_RETRIES,rate_limiter=None,accept="application/zip,*/*",timeout=180):
+    """Bounded retrying SEC fetch; every retry consumes the shared rate limiter."""
     last=None
     for i in range(retries):
         if rate_limiter is not None:
@@ -76,12 +77,12 @@ def fetch(url,retries=MAX_FETCH_RETRIES,rate_limiter=None):
                 url,
                 headers={
                     "User-Agent":UA,
-                    "Accept":"application/zip,*/*",
+                    "Accept":accept,
                     "Accept-Encoding":"identity",
                     "Connection":"close",
                 },
             )
-            with urllib.request.urlopen(req,timeout=180) as r:return r.read()
+            with urllib.request.urlopen(req,timeout=timeout) as r:return r.read()
         except urllib.error.HTTPError as e:
             last=e
             if e.code not in {408,425,429,500,502,503,504} or i+1>=retries:
@@ -167,24 +168,16 @@ def enrich_acceptance_times(accession_meta, rate_limiter=None):
         if not cik:
             raise RuntimeError("MISSING_FILER_CIK:"+accession)
         url=accession_header_url(cik,accession)
-        limiter.wait()
-        req=urllib.request.Request(
+        # Header lookups use the same bounded retry path as archives. Transient
+        # SEC 503s/timeouts must not turn an otherwise complete shard into a
+        # permanent failure after a single request; retries remain rate-limited.
+        body=fetch(
             url,
-            headers={
-                "User-Agent":UA,
-                "Accept":"text/html,text/plain,*/*",
-                "Accept-Encoding":"identity",
-                "Connection":"close",
-            },
+            retries=MAX_FETCH_RETRIES,
+            rate_limiter=limiter,
+            accept="text/html,text/plain,*/*",
+            timeout=45,
         )
-        try:
-            with urllib.request.urlopen(req,timeout=45) as resp:
-                body=resp.read()
-                status=int(getattr(resp,"status",200))
-        except urllib.error.HTTPError as exc:
-            raise RuntimeError(f"SEC_HEADER_HTTP_{exc.code}") from exc
-        if status!=200:
-            raise RuntimeError(f"SEC_HEADER_HTTP_{status}")
         value=parse_acceptance_header(
             body.decode("utf-8","replace"),
             cik,
