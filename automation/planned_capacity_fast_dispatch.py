@@ -27,9 +27,11 @@ PLATFORM_NAMES = {
     "Planned Capacity Fast Dispatch",
 }
 
-FOCUS_CANDIDATES = {"Q104:I19", "Q218"}
-TOP4_CANDIDATES = {"Q218", "Q219", "Q220", "Q221"}
-TOP4_PRIORITY = ("Q218", "Q219", "Q220", "Q221")
+FOCUS_CANDIDATES = {"Q104:I19", "Q220", "Q218"}
+# Slot-scoped workflow candidates are narrower than the overall focus because
+# Q104:I19 has its own exclusive census/compiler workflow.
+TOP4_CANDIDATES = {"Q220", "Q218"}
+TOP4_PRIORITY = ("Q220", "Q218")
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 I19_CENSUS_WORKFLOW = ".github/workflows/q104-i19-13f-historical-identity-census.yml"
 
@@ -447,8 +449,9 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             if not item.get("dispatchable"):
                 continue
             candidate = str(item.get("candidate") or "")
-            focus_candidates = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
-            if focus_candidates and candidate not in focus_candidates:
+            requested_focus = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
+            focus_candidates = (requested_focus & FOCUS_CANDIDATES) if requested_focus else set(FOCUS_CANDIDATES)
+            if candidate not in focus_candidates:
                 continue
             workflow = item.get("execution_workflow")
             if not workflow:
@@ -545,8 +548,9 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                 continue
 
         # Automatic candidate execution is hard-locked to the focused pair.
-        focus_candidates = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
-        if focus_candidates and candidate not in focus_candidates:
+        requested_focus = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
+        focus_candidates = (requested_focus & FOCUS_CANDIDATES) if requested_focus else set(FOCUS_CANDIDATES)
+        if candidate not in focus_candidates:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_FOCUS_LOCK"})
             continue
 
@@ -838,7 +842,8 @@ def top4_slot_fallback(
     if not resource_input or skipped_candidate not in TOP4_CANDIDATES:
         return None
     start = TOP4_PRIORITY.index(skipped_candidate) + 1 if skipped_candidate in TOP4_PRIORITY else 0
-    for candidate in TOP4_PRIORITY[start:]:
+    ordered_candidates = TOP4_PRIORITY[start:] + TOP4_PRIORITY[:max(0, start - 1)]
+    for candidate in ordered_candidates:
         scope = (resource_input, candidate)
         if scope in completed_slots or scope in chosen_scopes:
             continue
