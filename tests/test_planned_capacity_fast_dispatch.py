@@ -1186,3 +1186,31 @@ def test_i19_census_dispatch_is_allowed_when_no_prior_census_failure_exists():
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=1)
     assert [item["candidate"] for item in plan["dispatches"]] == ["Q104:I19"]
+
+
+def test_fast_dispatch_allows_receipt_defined_q219_and_q221_source_workpacks():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "master_sha": "current-master",
+        "work_assignments": [],
+        "resources": [
+            {"name": "GitHub-hosted Ubuntu x64", "research_capacity_slots": 2, "research_slots_in_use": 0, "research_slots_free": 2},
+            {"name": "GitHub-hosted ARM64", "research_capacity_slots": 2, "research_slots_in_use": 0, "research_slots_free": 2},
+        ],
+        "planned_capacity": [
+            {"resource": "GitHub-hosted Ubuntu x64", "current_assignments": 0, "research_capacity_slots": 2,
+             "planned_assignments": [{"plan_id":"Q219-OPTIONS-SOURCE-BREADTH","candidate":"Q219","scheduled":True,"dispatchable":True,
+               "execution_workflow":workflow,"execution_workflow_inputs":{"focus_wave":False,"gate":"all"}}]},
+            {"resource": "GitHub-hosted ARM64", "current_assignments": 0, "research_capacity_slots": 2,
+             "planned_assignments": [{"plan_id":"Q221-USASPENDING-PUBLIC-CLOCK","candidate":"Q221","scheduled":True,"dispatchable":True,
+               "execution_workflow":workflow,"execution_workflow_inputs":{"focus_wave":False,"gate":"all"}}]},
+        ],
+    }
+    plan = dispatch_candidates(snapshot, [], max_dispatches=4)
+    dispatched = {(x["candidate"], x["resource"]) for x in plan["dispatches"]}
+    assert ("Q219", "GitHub-hosted Ubuntu x64") in dispatched
+    assert ("Q221", "GitHub-hosted ARM64") in dispatched
+    assert all(x["execution_workflow"] == workflow for x in plan["dispatches"] if x["candidate"] in {"Q219","Q221"})
+    assert all(x["performance_authorization"] is False for x in plan["dispatches"])
