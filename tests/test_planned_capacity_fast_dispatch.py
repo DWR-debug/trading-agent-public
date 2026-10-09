@@ -31,6 +31,7 @@ def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backsto
 
 def test_q218_replication_retry_budget_resets_on_new_master(monkeypatch):
     import automation.planned_capacity_fast_dispatch as dispatcher
+    monkeypatch.setattr(dispatcher, "q218_replication_authorization_block_reason", lambda: None)
 
     snapshot = {
         "master_sha": "NEWMASTER",
@@ -66,6 +67,48 @@ def test_q218_replication_retry_budget_resets_on_new_master(monkeypatch):
     assert not any(
         x["decision"] == "SKIP_WORKFLOW_TECHNICAL_RETRY_EXHAUSTED"
         for x in plan["decisions"]
+    )
+
+
+
+
+def test_fast_dispatch_blocks_q218_replication_without_exact_explicit_authorization(monkeypatch):
+    import automation.planned_capacity_fast_dispatch as dispatcher
+
+    monkeypatch.setattr(
+        dispatcher,
+        "q218_replication_authorization_block_reason",
+        lambda: "Q218_REPLICATION_EXPLICIT_AUTHORIZATION_REQUIRED:RuntimeError:authorization is missing",
+    )
+    workflow = ".github/workflows/q218-independent-replication-once.yml"
+    snapshot = {
+        "master_sha": "current-master",
+        "work_assignments": [],
+        "resources": [{
+            "name": "GitHub-hosted Ubuntu x64",
+            "research_capacity_slots": 1,
+            "research_slots_in_use": 0,
+            "research_slots_free": 1,
+        }],
+        "planned_capacity": [{
+            "resource": "GitHub-hosted Ubuntu x64",
+            "current_assignments": 0,
+            "planned_assignments": [{
+                "plan_id": "Q218-FRESH-SYMBOL-REPLICATION",
+                "candidate": "Q218",
+                "scheduled": True,
+                "dispatchable": True,
+                "allow_parallel_with_candidate": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+
+    plan = dispatcher.dispatch_candidates(snapshot, [], max_dispatches=2)
+    assert plan["dispatches"] == []
+    assert any(
+        decision["decision"] == "SKIP_Q218_REPLICATION_EXPLICIT_AUTHORIZATION_REQUIRED"
+        for decision in plan["decisions"]
     )
 
 
