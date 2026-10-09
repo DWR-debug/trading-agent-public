@@ -536,7 +536,7 @@
       "status": "explicitly_reactivated",
       "scientific_authority": false
     },
-    "rule": "Automatic candidate dispatch is limited to Q104:I19 and Q218 during the focused wave. Other candidates remain paused for automatic execution; no artificial filler.",
+    "rule": "Q104:I19 and Q218 remain the two primary candidates. Permit exactly one bounded Q219 options-source/PIT feasibility pack only when the scheduler observes a genuinely free independent slot after primary work is accounted for and no Q219 pack is active or already completed. Q220/Q221 remain paused; no performance, holdout selection, ranking, tuning, promotion, or live execution.",
     "safety": {
       "performance": false,
       "holdout_selection": false,
@@ -545,7 +545,7 @@
       "promotion": false,
       "live_execution": false
     },
-    "last_refreshed_utc": "2026-10-05T19:22:11.737Z",
+    "last_refreshed_utc": "2026-10-09T20:52:00Z",
     "active_shortlist": [
       "Q104:I19",
       "Q218"
@@ -554,6 +554,9 @@
       "Q219",
       "Q220",
       "Q221"
+    ],
+    "capacity_fill_reserve": [
+      "Q219"
     ]
   },
   "knowledge_relation_plane": {
