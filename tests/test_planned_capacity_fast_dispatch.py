@@ -1127,3 +1127,17 @@ def test_q104_census_dashboard_requires_exact_six_shard_clock_receipt():
     assert q104_census_clock_complete(base) is True
     base["completed_shards"].pop()
     assert q104_census_clock_complete(base) is False
+
+def test_dashboard_mobile_refresh_is_responsive_and_explains_snapshot_cadence():
+    html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+
+    assert "@media(max-width:760px)" in html
+    assert ".candidate-focus{grid-template-columns:minmax(0,1fr)" in html
+    assert 'id="refreshStatus"' in html
+    assert "automatisch alle 3 Minuten" in html
+    assert "ungefähr alle 5 Minuten" in html
+    assert "var refreshIntervalMs=180000" in js
+    assert "setInterval(function(){load(false);},refreshIntervalMs)" in js
+    assert "visibilitychange" in js
+
