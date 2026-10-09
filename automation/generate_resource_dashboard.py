@@ -8,7 +8,11 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
-from automation.candidate_portfolio_assessment import build_candidate_portfolio, PORTFOLIO_METHODOLOGY
+try:
+    from automation.candidate_portfolio_assessment import build_candidate_portfolio, PORTFOLIO_METHODOLOGY
+except ModuleNotFoundError:
+    # Direct script execution places automation/ on sys.path.
+    from candidate_portfolio_assessment import build_candidate_portfolio, PORTFOLIO_METHODOLOGY
 
 ROOT = Path(__file__).parents[1]
 if str(ROOT) not in sys.path:
