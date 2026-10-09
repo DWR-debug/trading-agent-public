@@ -9,6 +9,19 @@ INDEX=ROOT/"research/evidence/q218_focus_gate_receipt_index_latest.json"
 def blob_sha(path:str)->str:
     return subprocess.check_output(["git","rev-parse",f"HEAD:{path}"],text=True).strip()
 
+
+def performance_boundary_is_closed(receipt: dict) -> bool:
+    """Fail closed while supporting both canonical Q218 receipt schema versions."""
+    declared = []
+    scientific_boundary = receipt.get("scientific_boundary")
+    if isinstance(scientific_boundary, dict) and "performance_authorized" in scientific_boundary:
+        declared.append(scientific_boundary["performance_authorized"])
+    for key in ("performance_authorization", "performance_authorized"):
+        if key in receipt:
+            declared.append(receipt[key])
+    return bool(declared) and all(value is False for value in declared)
+
+
 def main()->int:
     p=argparse.ArgumentParser()
     p.add_argument("--gate",choices=("source","event_pair"),required=True)
@@ -18,7 +31,7 @@ def main()->int:
     if not args.receipt.exists(): raise SystemExit("Q218_GATE_RECEIPT_MISSING")
     receipt=json.loads(args.receipt.read_text(encoding="utf-8"))
     if receipt.get("candidate_id")!="Q218": raise SystemExit("Q218_GATE_RECEIPT_CANDIDATE_MISMATCH")
-    if receipt.get("scientific_boundary",{}).get("performance_authorized") is not False: raise SystemExit("Q218_GATE_PERFORMANCE_BOUNDARY_FAILED")
+    if not performance_boundary_is_closed(receipt): raise SystemExit("Q218_GATE_PERFORMANCE_BOUNDARY_FAILED")
     if receipt.get("safety",{}).get("paper_only") is not True: raise SystemExit("Q218_GATE_SAFETY_BOUNDARY_FAILED")
     data=json.loads(INDEX.read_text(encoding="utf-8")) if INDEX.exists() else {"schema_version":"1.0","record_type":"q218_focus_gate_receipt_index","candidate_id":"Q218"}
     code_path="automation/q218_sec_multichannel_source_gate.py" if args.gate=="source" else "automation/q218_sec_event_pair_lineage_gate.py"
