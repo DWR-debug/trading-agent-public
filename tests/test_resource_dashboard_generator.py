@@ -110,8 +110,9 @@ def test_planned_research_backlog_is_locked_to_focus_candidates():
     from automation.generate_resource_dashboard import planned_research_backlog
     board = [{"code": code, "lane":"FRONTIER DISCOVERY", "next_gate":"gate"} for code in ("Q104:I19","Q218","Q219","Q220","Q221","Q224","Q229")]
     queue = planned_research_backlog(board)
-    assert len(queue) == 2
-    assert [x["candidate"] for x in queue] == ["Q104:I19","Q218"]
+    assert len(queue) == 3
+    assert [x["candidate"] for x in queue] == ["Q104:I19","Q218","Q219"]
+    assert all(x["non_authorizing"] is True for x in queue)
 
 
 def test_dashboard_filters_platform_work_from_research_capacity():
@@ -179,7 +180,7 @@ def test_dashboard_pipeline_is_locked_to_focus_candidates():
         {"code":"Q219","state":"DESIGN_ONLY_ACTIVE"},
     ]
     rows = candidate_pipeline(top4, [], {}, {})
-    assert [x["code"] for x in rows] == ["Q104:I19","Q218"]
+    assert [x["code"] for x in rows] == ["Q104:I19","Q218","Q219"]
 
 
 def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
@@ -190,15 +191,16 @@ def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
     assert "sys.path.insert(0, str(ROOT))" in generator
 
 
-def test_dashboard_focused_backlog_is_two_candidates():
+def test_dashboard_backlog_has_two_primary_candidates_plus_one_capacity_fill_reserve():
     from automation.generate_resource_dashboard import planned_research_backlog
     rows = planned_research_backlog([
         {"code":"Q104:I19","lane":"FORMAL READINESS","next_gate":"13F completeness"},
         {"code":"Q218","lane":"FRONTIER DISCOVERY","next_gate":"SEC multi-channel/PIT"},
-        {"code":"Q219","lane":"FRONTIER DISCOVERY","next_gate":"options PIT"},
+        {"code":"Q219","lane":"FRONTIER DISCOVERY","next_gate":"options source/PIT"},
     ])
-    assert [x["candidate"] for x in rows] == ["Q104:I19","Q218"]
-    assert [x["planned_status"] for x in rows] == ["READY_NEXT_GATE","READY_NEXT_GATE"]
+    assert [x["candidate"] for x in rows] == ["Q104:I19","Q218","Q219"]
+    assert [x["planned_status"] for x in rows] == ["READY_NEXT_GATE","READY_NEXT_GATE","READY_NEXT_GATE"]
+    assert rows[2]["non_authorizing"] is True
 
 
 def test_dashboard_s10_support_is_non_authorizing():
