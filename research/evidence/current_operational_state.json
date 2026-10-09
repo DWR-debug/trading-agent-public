@@ -1501,7 +1501,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-09T00:47:31.328987+00:00",
+    "generated_at_utc": "2026-10-09T00:47:50.282357+00:00",
     "next_research_focus": "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Q218 one-shot performance has completed deterministically in PAPER_ONLY mode; the immutable result is recorded and the one-shot authorization is consumed. The remaining gate is fresh current-master source/event receipts plus independent PIT revalidation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1509,7 +1509,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "49e5f1d03146c799026cb5c0a3794bfaa09d03f4"
+    "source_master_sha": "71464c6ae92c9d34f97d6d4890cec8e04b9ab1da"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-09T00:47:31.328987+00:00",
+  "generated_at_utc": "2026-10-09T00:47:50.282357+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4611,6 +4611,16 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: re-arm Q218 replication after verified artifact fix",
+        "sha": "71464c6ae92c9d34f97d6d4890cec8e04b9ab1da",
+        "timestamp": "2026-10-09T02:47:37+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2818e94a5ae097690c0d6258d9caa29ce178a6b8",
+        "timestamp": "2026-10-09T00:47:33Z"
+      },
+      {
         "message": "FIX: verify Q218 replication bundle locally and align SEC pairing receipt",
         "sha": "49e5f1d03146c799026cb5c0a3794bfaa09d03f4",
         "timestamp": "2026-10-09T02:47:19+02:00"
@@ -4639,16 +4649,6 @@
         "message": "FIX: label Q218 event pairing as acceptance-interval only",
         "sha": "6597cf4480cbe6cf57ba8945cdb9163609c8e769",
         "timestamp": "2026-10-09T02:45:24+02:00"
-      },
-      {
-        "message": "FIX: verify Q218 replication bundle against local hashed artifact inputs",
-        "sha": "d763e389f413b08224b2aac918937da1e1ed7e81",
-        "timestamp": "2026-10-09T02:45:21+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "890f45165c7470045ea2d8aa6fd7bce6951f7ad0",
-        "timestamp": "2026-10-09T00:43:14Z"
       }
     ]
   },
@@ -4746,7 +4746,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "49e5f1d03146c799026cb5c0a3794bfaa09d03f4",
+  "source_master_sha": "71464c6ae92c9d34f97d6d4890cec8e04b9ab1da",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4860,6 +4860,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37866544093"
+    "run_id": "37866569582"
   }
 }
