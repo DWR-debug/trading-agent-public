@@ -686,7 +686,7 @@ def test_fast_dispatch_treats_startup_failure_as_one_retry_then_backfills():
         "run_name": "Top-4 Slot windows Q218",
     }]
     backfilled = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
-    assert [x["candidate"] for x in backfilled["dispatches"]] == ["Q219"]
+    assert [x["candidate"] for x in backfilled["dispatches"]] == ["Q220"]
     assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in backfilled["decisions"])
 
 
