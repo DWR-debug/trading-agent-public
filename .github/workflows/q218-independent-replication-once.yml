@@ -221,20 +221,31 @@ jobs:
           path: replication_bundle
 
       - name: Verify downloaded replication bundle
+        env:
+          REP_ROOT: research/runs/q218_independent_replication/${{ github.run_id }}
+          EXPECTED_ARTIFACT_ID: ${{ steps.bundle.outputs.artifact_id }}
         shell: bash
         run: |
           set -euo pipefail
           test -s replication_bundle/input_bundle_manifest.json
           test -s replication_bundle/q218_effective_replication_contract.json
           python - <<'PY'
-          import hashlib, json
+          import hashlib, json, os
           from pathlib import Path
-          bundle=json.loads(Path("replication_bundle/input_bundle_manifest.json").read_text())
-          receipt=json.loads(Path("research/evidence/q218_independent_replication_input_bundle_latest.json").read_text())
+          root=Path(os.environ["REP_ROOT"])
+          bundle=json.loads(Path("replication_bundle/input_bundle_manifest.json").read_text(encoding="utf-8"))
+          expected_bundle=json.loads((root/"input_bundle_manifest.json").read_text(encoding="utf-8"))
+          receipt=json.loads((root/"input_bundle_receipt.json").read_text(encoding="utf-8"))
           effective=Path("replication_bundle/q218_effective_replication_contract.json")
-          assert bundle["bundle_fingerprint"]==receipt["bundle_fingerprint"]
-          assert hashlib.sha256(effective.read_bytes()).hexdigest()==bundle["contract_sha256"]
+          contract=Path("research/governance/q218_independent_replication_contract_2026_10_08.json")
+          assert bundle["bundle_fingerprint"]==expected_bundle["bundle_fingerprint"]==receipt["bundle_fingerprint"]
           assert bundle["trial_id"]=="T-2026-10-08-Q218-REPLICATION-01"
+          assert receipt["replication_trial_id"]==bundle["trial_id"]
+          assert int(receipt["artifact"]["id"])==int(os.environ["EXPECTED_ARTIFACT_ID"])
+          assert int(receipt["artifact"]["run_id"])==int(os.environ["GITHUB_RUN_ID"])
+          assert receipt["artifact"]["digest"]==receipt["artifact_sha256"]
+          assert hashlib.sha256(effective.read_bytes()).hexdigest()==bundle["contract_sha256"]
+          assert hashlib.sha256(contract.read_bytes()).hexdigest()==receipt["replication_contract_sha256"]
           print("Q218_REPLICATION_EXACT_BUNDLE=PASS")
           PY
 
@@ -287,7 +298,7 @@ jobs:
           gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master
 
       - name: Upload immutable replication result
-        if: always()
+        if: always() && hashFiles('replication_bundle/q218_independent_replication_performance_result.json') != ''
         uses: actions/upload-artifact@v6
         with:
           name: q218-independent-replication-result-${{ github.run_id }}-${{ github.run_attempt }}
