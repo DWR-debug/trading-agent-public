@@ -27,11 +27,27 @@ PLATFORM_NAMES = {
     "Planned Capacity Fast Dispatch",
 }
 
-FOCUS_CANDIDATES = {"Q104:I19", "Q218"}
-TOP4_CANDIDATES = {"Q218", "Q219", "Q220", "Q221"}
-TOP4_PRIORITY = ("Q218", "Q219", "Q220", "Q221")
+FOCUS_CANDIDATES = {"Q104:I19", "Q218", "Q220"}
+TOP4_CANDIDATES = {"Q218", "Q220"}
+TOP4_PRIORITY = ("Q218", "Q220")
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 I19_CENSUS_WORKFLOW = ".github/workflows/q104-i19-13f-historical-identity-census.yml"
+
+
+def effective_focus_candidates(snapshot: dict[str, Any]) -> set[str]:
+    """Intersect dashboard intent with the fixed operator-approved candidate allowlist.
+
+    A missing focus field falls back to the code-level allowlist; a present but
+    empty/stale field cannot widen execution beyond the allowlist.
+    """
+    declared = snapshot.get("focus_candidates")
+    if declared is None:
+        summary = snapshot.get("dashboard_summary")
+        if isinstance(summary, dict):
+            declared = summary.get("candidate_focus_lock")
+    if declared is None:
+        return set(FOCUS_CANDIDATES)
+    return FOCUS_CANDIDATES.intersection(str(value) for value in declared if value)
 
 
 Q218_GATE_INDEX_PATH = Path("research/evidence/q218_focus_gate_receipt_index_latest.json")
@@ -437,6 +453,8 @@ def resource_capacity_for_plan(snapshot: dict[str, Any], row: dict[str, Any]) ->
 
 
 def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], max_dispatches: int = 4) -> dict[str, Any]:
+    focus_candidates = effective_focus_candidates(snapshot)
+    focus_skips: list[dict[str, Any]] = []
     planned = []
     for row in snapshot.get("planned_capacity", []):
         resource = str(row.get("resource") or "")
@@ -447,8 +465,13 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             if not item.get("dispatchable"):
                 continue
             candidate = str(item.get("candidate") or "")
-            focus_candidates = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
-            if focus_candidates and candidate not in focus_candidates:
+            if candidate not in focus_candidates:
+                focus_skips.append({
+                    "plan_id": item.get("plan_id"),
+                    "candidate": candidate,
+                    "decision": "SKIP_FOCUS_LOCK",
+                    "allowed_candidates": sorted(focus_candidates),
+                })
                 continue
             workflow = item.get("execution_workflow")
             if not workflow:
@@ -461,7 +484,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
 
     # Prefer the canonical Top-4 cohort, then direct next-gate workflows,
     # while preserving the dashboard's deterministic order.
-    rank = {"Q104:I19": -100, "Q218": 0}
+    rank = {"Q104:I19": -100, "Q218": 0, "Q220": 1}
     planned.sort(
         key=lambda x: (
             100 if str(x.get("execution_workflow") or "").endswith("ai-worker-fabric.yml") else 0,
@@ -476,7 +499,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     failure_counts = slot_failure_counts(runs)
     workflow_failure_streak = workflow_failure_streaks(runs)
     zero_active = len(work) == 0
-    decisions = []
+    decisions = list(focus_skips)
     dispatches = []
     seen_dispatch_keys: set[tuple[str, str, str, str]] = set()
     chosen_slot_scopes: set[tuple[str, str]] = set()
@@ -505,6 +528,22 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     for item in planned:
         workflow = str(item["execution_workflow"])
         candidate = str(item.get("candidate") or "")
+        if candidate not in focus_candidates:
+            decisions.append({
+                "plan_id": item.get("plan_id"),
+                "candidate": candidate,
+                "decision": "SKIP_FOCUS_LOCK",
+                "allowed_candidates": sorted(focus_candidates),
+            })
+            continue
+        # This matrix workpack launches multiple candidates irrespective of the
+        # plan row. Automatic routing uses the single-candidate slot workflow.
+        if workflow.endswith("top4-candidate-research-capacity.yml"):
+            decisions.append({
+                "plan_id": item.get("plan_id"),
+                "decision": "SKIP_LEGACY_BROAD_TOP4_WORKFLOW_NOT_CANDIDATE_SCOPED",
+            })
+            continue
         if candidate == "Q218" and workflow.endswith("q218-independent-replication-once.yml"):
             auth_block = q218_replication_authorization_block_reason()
             if auth_block:
@@ -544,11 +583,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                 })
                 continue
 
-        # Automatic candidate execution is hard-locked to the focused pair.
-        focus_candidates = set(str(x) for x in snapshot.get("focus_candidates", []) if x)
-        if focus_candidates and candidate not in focus_candidates:
-            decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_FOCUS_LOCK"})
-            continue
+        # Candidate scope was checked against the fixed allowlist above.
 
         if (
             not focus_candidates
