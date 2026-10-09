@@ -1,17 +1,16 @@
 name: Q104 I19 Missing Shard Receipt Recovery
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Q104 I19 Historical 13F Identity Census"]
+    types: [completed]
     branches: [master]
-    paths:
-      - "research/run_requests/q104_i19_shard_recovery.trigger"
   workflow_dispatch:
     inputs:
       source_run_id:
         description: "Completed Q104:I19 census run whose frozen source snapshot should be reused"
         required: true
         type: string
-
 permissions:
   actions: read
   contents: read
@@ -22,7 +21,12 @@ concurrency:
 
 jobs:
   source:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (
+        github.event_name != 'workflow_run' ||
+        github.event.workflow_run.conclusion != 'success'
+      )
     runs-on: ubuntu-24.04
     outputs:
       source_run_id: ${{ steps.source.outputs.source_run_id }}
@@ -45,8 +49,8 @@ jobs:
         run: |
           set -euo pipefail
           source_run_id="$DISPATCH_SOURCE_RUN_ID"
-          if [ -z "$source_run_id" ]; then
-            source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' research/run_requests/q104_i19_shard_recovery.trigger | head -n 1)"
+          if [ -z "$source_run_id" ] && [ "$GITHUB_EVENT_NAME" = "workflow_run" ]; then
+            source_run_id="$(jq -r '.workflow_run.id // empty' "$GITHUB_EVENT_PATH")"
           fi
           [[ "$source_run_id" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SOURCE_RUN_ID"; exit 2; }
           gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id" > "$RUNNER_TEMP/i19-source-run.json"
@@ -183,33 +187,14 @@ jobs:
           retention-days: 30
           overwrite: true
 
-  trigger_targeted_header_repair:
+  targeted_header_repair:
     needs: [source, census]
     if: ${{ always() && github.repository == 'DWR-debug/trading-agent-public' && needs.source.result == 'success' && (needs.source.outputs.missing_count == '0' || needs.census.result == 'success') }}
-    runs-on: ubuntu-24.04
     permissions:
-      actions: write
-      contents: read
-    steps:
-      - name: Dispatch targeted acceptance recovery for this frozen census
-        env:
-          GH_TOKEN: ${{ github.token }}
-          SOURCE_RUN_ID: ${{ needs.source.outputs.source_run_id }}
-          SOURCE_MISSING_COUNT: ${{ needs.source.outputs.missing_count }}
-          RECOVERED_SHARDS: ${{ needs.source.outputs.missing_shards_csv }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ "$SOURCE_MISSING_COUNT" = "0" ]; then
-            recovery_run_id="$SOURCE_RUN_ID"
-            recovered_shards=""
-          else
-            recovery_run_id="$GITHUB_RUN_ID"
-            recovered_shards="$RECOVERED_SHARDS"
-          fi
-          gh workflow run q104-i19-targeted-acceptance-repair.yml \
-            --repo "$GITHUB_REPOSITORY" --ref master \
-            -f "source_run_id=$SOURCE_RUN_ID" \
-            -f "shard_recovery_run_id=$recovery_run_id" \
-            -f "recovered_shards=$recovered_shards"
-          echo "I19_TARGETED_REPAIR_DISPATCHED=true"
+      actions: read
+      contents: write
+    uses: ./.github/workflows/q104-i19-targeted-acceptance-repair.yml
+    with:
+      source_run_id: ${{ needs.source.outputs.source_run_id }}
+      shard_recovery_run_id: ${{ needs.source.outputs.missing_count == '0' && needs.source.outputs.source_run_id || github.run_id }}
+      recovered_shards: ${{ needs.source.outputs.missing_shards_csv }}

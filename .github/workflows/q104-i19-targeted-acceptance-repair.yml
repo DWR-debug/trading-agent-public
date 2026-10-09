@@ -17,6 +17,21 @@ on:
         default: ""
         type: string
 
+  workflow_call:
+    inputs:
+      source_run_id:
+        description: "Completed source census run holding the frozen page and hosted shard receipts"
+        required: true
+        type: string
+      shard_recovery_run_id:
+        description: "Run holding missing shard receipts; use source_run_id when none were missing"
+        required: true
+        type: string
+      recovered_shards:
+        description: "Comma-separated shard IDs whose receipts must be downloaded from shard_recovery_run_id"
+        required: false
+        default: ""
+        type: string
 permissions:
   actions: read
   contents: write
@@ -43,9 +58,9 @@ jobs:
       - name: Validate source/recovery run identities
         id: select
         env:
-          SOURCE_RUN_ID: ${{ github.event.inputs.source_run_id }}
-          SHARD_RECOVERY_RUN_ID: ${{ github.event.inputs.shard_recovery_run_id }}
-          RECOVERED_SHARDS: ${{ github.event.inputs.recovered_shards }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          SHARD_RECOVERY_RUN_ID: ${{ inputs.shard_recovery_run_id }}
+          RECOVERED_SHARDS: ${{ inputs.recovered_shards }}
         shell: bash
         run: |
           set -euo pipefail
