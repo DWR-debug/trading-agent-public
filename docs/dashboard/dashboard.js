@@ -1,6 +1,9 @@
 (function(){
 "use strict";
 var lastSnapshotIso=null;
+var lastFetchIso=null;
+var refreshing=false;
+var hasRenderedSnapshot=false;
 var FOCUS=["Q104:I19","Q218"];
 
 function $(id){return document.getElementById(id);}
@@ -28,6 +31,22 @@ function updateSnapshotAge(){
   var t=Date.parse(lastSnapshotIso);
   if(!Number.isFinite(t))return;
   $("snapshotAge").textContent=fmtSnapshotAge(Math.max(0,(Date.now()-t)/1000));
+}
+function setRefreshStatus(mode,message){
+  var el=$("refreshStatus");
+  if(!el)return;
+  el.className="refresh-status notice "+mode;
+  el.textContent=message;
+}
+function refreshStatusText(mode,error){
+  var stamp=lastSnapshotIso?ts(lastSnapshotIso):"Zeitstempel nicht verfügbar";
+  if(mode==="success"){
+    return "Snapshot geladen · Datenstand "+stamp+" · Browser-Abruf "+ts(lastFetchIso)+". Automatischer Browser-Abruf alle 3 Minuten. Der Server-Snapshot wird planmäßig alle 5 Minuten neu erzeugt und ist erst nach erfolgreichem Update/Deployment neuer.";
+  }
+  if(mode==="loading"){
+    return "Lade den zuletzt veröffentlichten Snapshot. Der Klick aktualisiert die Ansicht, startet aber keinen neuen GitHub-Workflow.";
+  }
+  return "Live-Abruf fehlgeschlagen · letzter sichtbarer Snapshot: "+stamp+". "+(error||"Netzwerkfehler")+". Die Ansicht zeigt weiterhin den letzten erfolgreich geladenen Stand.";
 }
 function updateClock(){
   var now=new Date();
@@ -251,26 +270,59 @@ function renderEmbedded(){
   if(snap&&typeof snap==="object"){render(snap);return true;}
   return false;
 }
-// Forschungsressourcen aktiv = distinct research resources, not raw job count.
-function load(){
+// Forschungsressourcen aktiv = distinct research resources, not raw job count. Browser refresh reads the latest published static snapshot; it never starts or authorizes a workflow.
+function load(manual){
+  if(refreshing){
+    if(manual)setRefreshStatus("loading","Eine Snapshot-Abfrage läuft bereits. Bitte kurz warten.");
+    return;
+  }
+  refreshing=true;
   $("error").hidden=true;
-  var rendered=renderEmbedded();
+  var button=$("refresh");
+  if(manual){button.disabled=true;button.textContent="Lädt Snapshot…";}
+  setRefreshStatus("loading",refreshStatusText("loading"));
+  if(!hasRenderedSnapshot)hasRenderedSnapshot=renderEmbedded();
+
   var url=new URL("dashboard_data.json",document.baseURI);
   url.searchParams.set("ts",String(Date.now()));
   var controller=typeof AbortController==="function"?new AbortController():null;
   var timeoutId=controller?setTimeout(function(){controller.abort();},6000):null;
   var opts={cache:"no-store"}; if(controller)opts.signal=controller.signal;
-  fetch(url.toString(),opts).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(render).catch(function(e){
-    if(!rendered){$("error").textContent="Snapshot konnte nicht geladen werden: "+(e&&e.message||String(e));$("error").hidden=false;}
-    else{$("meta").insertAdjacentHTML("beforeend"," · <span class='unknown'>Netzwerk-Refresh nicht verfügbar; eingebetteter Snapshot bleibt sichtbar.</span>");}
-  }).then(function(){if(timeoutId!==null)clearTimeout(timeoutId);});
+  fetch(url.toString(),opts)
+    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();})
+    .then(function(data){
+      render(data);
+      hasRenderedSnapshot=true;
+      lastFetchIso=new Date().toISOString();
+      setRefreshStatus("success",refreshStatusText("success"));
+    })
+    .catch(function(e){
+      var msg=e&&e.message||String(e);
+      if(!hasRenderedSnapshot){
+        hasRenderedSnapshot=renderEmbedded();
+        if(!hasRenderedSnapshot){
+          $("error").textContent="Snapshot konnte nicht geladen werden: "+msg;
+          $("error").hidden=false;
+        }
+      }
+      setRefreshStatus("warning",refreshStatusText("warning",msg));
+    })
+    .then(function(){
+      if(timeoutId!==null)clearTimeout(timeoutId);
+      refreshing=false;
+      if(manual){button.disabled=false;button.textContent="Snapshot aktualisieren";}
+    });
 }
 document.addEventListener("DOMContentLoaded",function(){
   updateClock();
   setInterval(updateClock,1000);
   setInterval(updateSnapshotAge,1000);
-  $("refresh").addEventListener("click",load);
-  load();
+  $("refresh").addEventListener("click",function(){load(true);});
+  load(false);
+  // Refresh the latest published snapshot every three minutes; source workflow runs on a five-minute schedule.
   setInterval(load,180000);
+  document.addEventListener("visibilitychange",function(){
+    if(document.visibilityState==="visible"&&lastFetchIso&&Date.now()-Date.parse(lastFetchIso)>=180000)load(false);
+  });
 });
 })();
