@@ -233,6 +233,40 @@ def generate(
         and q218_result.get("safety", {}).get("orders_enabled") is False
         and q218_result.get("safety", {}).get("automatic_promotion") is False
     )
+    q218_replication_result = _load_json(
+        ROOT / "research/evidence/q218_independent_replication_performance_latest.json", {}
+    )
+    q218_replication_events = q218_replication_result.get("events")
+    q218_replication_issuers = sorted({
+        str(event.get("issuer"))
+        for event in q218_replication_events if isinstance(event, dict) and event.get("issuer")
+    }) if isinstance(q218_replication_events, list) else []
+    q218_replication_completed = (
+        q218_replication_result.get("record_type") == "q218_independent_replication_performance_result"
+        and q218_replication_result.get("candidate_id") == "Q218"
+        and q218_replication_result.get("source_trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+        and q218_replication_result.get("replication_trial_id") == "T-2026-10-08-Q218-REPLICATION-01"
+        and isinstance(q218_replication_events, list)
+        and len(q218_replication_events) > 0
+        and q218_replication_result.get("event_count") == len(q218_replication_events)
+        and bool(q218_replication_issuers)
+        and bool(q218_replication_result.get("report_fingerprint"))
+        and q218_replication_result.get("performance_evaluation") is True
+        and q218_replication_result.get("holdout_evaluation") is False
+        and q218_replication_result.get("selection_used") is False
+        and q218_replication_result.get("holdout_used_for_selection") is False
+        and q218_replication_result.get("parameter_search") is False
+        and q218_replication_result.get("threshold_search") is False
+        and q218_replication_result.get("horizon_search") is False
+        and q218_replication_result.get("asset_search") is False
+        and q218_replication_result.get("variant_search") is False
+        and q218_replication_result.get("family_ranking") is False
+        and q218_replication_result.get("promotion_decision") is False
+        and q218_replication_result.get("safety", {}).get("paper_only") is True
+        and q218_replication_result.get("safety", {}).get("live_trading_enabled") is False
+        and q218_replication_result.get("safety", {}).get("orders_enabled") is False
+        and q218_replication_result.get("safety", {}).get("automatic_promotion") is False
+    )
     q218_execution_ready = (
         q218_auth_record.get("authorized") is True
         and q218_auth_record.get("performance_execution_authorized") is True
@@ -481,7 +515,17 @@ def generate(
             "Both remain discovery/PIT-only with no performance or promotion authorization."
         )
     if any(str(item.get("code")) in {"Q218", "Q219", "Q220", "Q221"} for item in active_registry.get("active_design_families", [])):
-        if q218_execution_completed:
+        if q218_execution_completed and q218_replication_completed:
+            q218_issuer_text = "/".join(q218_replication_issuers)
+            q218_replication_fingerprint = str(q218_replication_result.get("report_fingerprint"))
+            q218_sentence = (
+                " Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; "
+                f"the immutable replication result covers {len(q218_replication_events)} event pairs across {q218_issuer_text} "
+                f"(fingerprint {q218_replication_fingerprint}). "
+                "The primary trial current-context revalidation remains a separate open gate. "
+                "Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred. "
+            )
+        elif q218_execution_completed:
             q218_sentence = (
                 " Q218 one-shot performance has completed deterministically in PAPER_ONLY mode; "
                 "the immutable result is recorded and the one-shot authorization is consumed. "
