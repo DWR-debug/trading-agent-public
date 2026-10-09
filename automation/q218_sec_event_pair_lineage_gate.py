@@ -240,12 +240,10 @@ def run(output: Path) -> dict:
                 elif row["is_eligible_earnings_release_8k"] or row.get("parent_filing_date_hint"):
                     earnings_amendments.append(row)
 
-        # Prefer exact fiscal/report-date alignment. When SEC's 8-K reportDate
-        # denotes the earnings-release filing date rather than the 10-K fiscal
-        # period end, fall back to the deterministic reporting-cycle interval:
-        # latest eligible Item 2.02 8-K strictly after the preceding in-window
-        # 10-K acceptance (when one exists) and strictly before the target 10-K.
-        # This remains source/PIT-only and introduces no outcome information.
+        # Use the frozen acceptance-interval rule only. report_date is retained
+        # as diagnostic metadata and never selects or excludes an event pair.
+        # Choose the latest eligible non-amended Item 2.02 8-K accepted within
+        # (preceding 10-K acceptance, target 10-K acceptance].
         pairs = []
         unmatched = []
         tenks_sorted = sorted(tenks, key=_acceptance_key)
@@ -254,8 +252,9 @@ def run(output: Path) -> dict:
             key=_acceptance_key,
         )
         pairing_rule = (
-            "latest eligible Item-2.02/Exhibit-99.1-style 8-K by SEC acceptance "
-            "within the interval (preceding 10-K acceptance, target 10-K acceptance]"
+            "latest eligible non-amended Form 8-K Item 2.02 by SEC acceptance "
+            "within the reporting-cycle interval (preceding 10-K acceptance, "
+            "target 10-K acceptance]; report_date is diagnostic only"
         )
         for tenk in tenks_sorted:
             lower_bounds = [
@@ -372,9 +371,9 @@ def run(output: Path) -> dict:
             "retryable_http_statuses": [408, 425, 429, 500, 502, 503, 504],
         },
         "pairing_rule": (
-            "exact report_date preferred; otherwise latest eligible Item-2.02 "
-            "8-K by SEC acceptance within the target 10-K reporting cycle, "
-            "bounded below by the preceding in-window 10-K acceptance"
+            "latest eligible non-amended Form 8-K Item 2.02 by SEC acceptance "
+            "within the reporting-cycle interval (preceding 10-K acceptance, "
+            "target 10-K acceptance]; report_date is diagnostic only"
         ),
         "issuer_results": issuer_results,
         "issuer_count": len(issuer_results),
