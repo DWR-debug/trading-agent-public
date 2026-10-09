@@ -85,7 +85,7 @@ jobs:
             run_id="$(printf '%s' "$line" | cut -f1)"
             status="$(printf '%s' "$line" | cut -f2)"
             conclusion="$(printf '%s' "$line" | cut -f3)"
-            echo "Q218_REPLICATION_T052 run_id=$run_id status=$status conclusion=$conclusion"
+            echo "Q218_REPLICATION_T052 run_id=$run_id status=$status conclusion=$conclusion attempt=$attempt/90"
             if [ "$status" = "completed" ]; then
               test "$conclusion" = "success"
               exit 0
