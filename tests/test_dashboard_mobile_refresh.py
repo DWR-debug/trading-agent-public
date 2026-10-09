@@ -23,7 +23,7 @@ def test_dashboard_polls_the_latest_published_snapshot_every_three_minutes():
     assert "Browser-Abruf alle 3 Minuten" in js
     assert "planmäßig alle 5 Minuten" in js
     assert 'cron: "*/5 * * * *"' in workflow
-    assert "document.visibilityState==="visible"" in js
+    assert 'document.visibilityState==="visible"' in js
 
 
 def test_refresh_button_does_not_claim_to_start_a_workflow():
