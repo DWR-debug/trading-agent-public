@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Trading Agent — Research Control Board</title>
-  <meta name="description" content="Operatives Research-Dashboard für den fokussierten Q104:I19- und Q218-Entwicklungsstand.">
+  <meta name="description" content="Research-Dashboard mit priorisiertem Kandidatenportfolio, Entwicklungszeit-Spannen und evidenzbasierten Gate-Status.">
   <style>
     :root{
       color-scheme:light dark;
@@ -99,6 +99,35 @@
     .error{border:1px solid var(--operating);border-radius:10px;padding:12px;margin-top:16px}
     footer{margin-top:18px;font-size:12px}
     code{word-break:break-all}
+    .portfolio-intro{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:10px 0 14px}
+    .portfolio-note{border:1px solid var(--border);border-radius:12px;padding:12px;background:color-mix(in srgb,var(--info) 4%,Canvas)}
+    .portfolio-note strong{display:block;margin-bottom:4px}
+    .portfolio-note p{margin:0;font-size:12px;color:var(--muted)}
+    .portfolio-toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0;align-items:center}
+    .portfolio-toolbar input,.portfolio-toolbar select{font:inherit;color:CanvasText;background:Canvas;border:1px solid var(--border);border-radius:9px;padding:9px 10px;min-height:38px}
+    .portfolio-toolbar input{flex:1;min-width:220px}
+    .portfolio-meta{font-size:12px;color:var(--muted)}
+    .portfolio-scroll{overflow:auto;border:1px solid var(--border);border-radius:10px;max-width:100%}
+    table.portfolio-table{min-width:1120px;font-size:12px}
+    .portfolio-table th{position:sticky;top:0;background:Canvas;z-index:1;padding:10px 9px}
+    .portfolio-table td{padding:10px 9px}
+    .portfolio-rank{font-size:15px;font-weight:850;font-variant-numeric:tabular-nums}
+    .portfolio-code{font-size:13px;font-weight:850;white-space:nowrap}
+    .portfolio-name{font-weight:700;margin-top:2px}
+    .portfolio-mechanism{max-width:360px;line-height:1.4}
+    .portfolio-tier{white-space:nowrap}
+    .portfolio-eta{font-variant-numeric:tabular-nums;white-space:normal;min-width:140px}
+    .portfolio-eta strong{display:block;margin-bottom:3px}
+    .potential-high{color:var(--available);font-weight:750}
+    .potential-mid{color:var(--info);font-weight:750}
+    .potential-blocked{color:var(--operating);font-weight:750}
+    .portfolio-odds{font-weight:700;min-width:128px}
+    .portfolio-details{margin-top:6px}
+    .portfolio-details summary{cursor:pointer;color:var(--info);font-size:11px}
+    .portfolio-details div{margin-top:5px;max-width:440px;font-size:11px;line-height:1.45;color:var(--muted);white-space:normal}
+    .portfolio-action{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 7px;font-size:10px;color:var(--muted);margin-top:4px}
+    .portfolio-footer{font-size:11px;color:var(--muted);margin-top:10px}
+    @media(max-width:900px){.portfolio-intro{grid-template-columns:1fr}}
     @media(max-width:1100px){.capacity-grid{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:700px){.capacity-grid{grid-template-columns:1fr}.grid{display:block}.card{margin-bottom:14px}}
   </style>
@@ -162,6 +191,35 @@
       </div>
       <div id="candidateFocus" class="candidate-focus"></div>
       <div id="opsSummary" class="ops-strip"></div>
+    </article>
+
+    <article class="card portfolio-card">
+      <h2>Kandidaten-Portfolio · Forschungspriorität und Entwicklungshorizont</h2>
+      <div class="portfolio-intro">
+        <div>
+          <p>Breite Sicht auf alle Prospect-Kandidaten plus Q104:I19. Die Reihenfolge priorisiert den nächsten nützlichen Evidenzgewinn je Rechenaufwand, nicht erwartete Renditen.</p>
+          <div class="portfolio-toolbar">
+            <input id="portfolioSearch" type="search" placeholder="Kandidat, Mechanismus, Blocker oder Gate suchen…" aria-label="Kandidaten durchsuchen">
+            <select id="portfolioTier" aria-label="Nach Forschungspotenzial filtern">
+              <option value="ALL">Alle Potenzialstufen</option>
+              <option value="VERY_HIGH">Sehr hoch</option>
+              <option value="HIGH_CONDITIONAL">Hoch, bedingt</option>
+              <option value="MEDIUM_HIGH">Mittel bis hoch</option>
+              <option value="MEDIUM">Mittel</option>
+              <option value="MEDIUM_RISK_STATE">Risikozustand</option>
+              <option value="CONDITIONAL">Quelle zuerst prüfen</option>
+              <option value="BLOCKED_SOURCE">Datenblocker</option>
+            </select>
+            <span id="portfolioCount" class="portfolio-meta">Lade Kandidaten…</span>
+          </div>
+        </div>
+        <div class="portfolio-note">
+          <strong>Erfolgschance: derzeit nicht seriös quantifizierbar</strong>
+          <p>Kein Kandidat hat ein hinreichendes unabhängiges, kostenbereinigtes Out-of-Sample- und Robustheitspaket für eine belastbare Erfolgswahrscheinlichkeit. Quellenreife und einzelne Performance-Läufe sind kein Ersatz dafür.</p>
+        </div>
+      </div>
+      <div id="candidatePortfolio" class="portfolio-scroll"></div>
+      <div class="portfolio-footer">Entwicklungszeiten sind niedrige Vertrauensstufen für die Planung – keine gemessenen Laufzeiten. „Bis unabhängiger PIT-Reproduktion“ ist kein Termin für autorisierte Performance-Tests, Promotion oder Live-Handel. Q227/Q231 sind als ein gemeinsames Workpack ausgewiesen; Q217 bleibt bis zur Orthogonalitätsprüfung gebündelt.</div>
     </article>
 
     <article class="card">
