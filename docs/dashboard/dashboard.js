@@ -1,6 +1,11 @@
 (function(){
 "use strict";
 var lastSnapshotIso=null;
+var lastSuccessAt=null;
+var nextRefreshAt=null;
+var lastFetchError=false;
+var refreshInFlight=false;
+var refreshIntervalMs=180000;
 var FOCUS=["Q104:I19","Q218"];
 
 function $(id){return document.getElementById(id);}
@@ -23,11 +28,33 @@ function fmtSnapshotAge(sec){
   var h=Math.floor(min/60), m=min%60;
   return "Alter: "+h+" h "+m+" min";
 }
+function fmtLocalClock(d){
+  try{return new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(d);}
+  catch(e){return d.toLocaleTimeString("de-DE");}
+}
+function fmtRefreshCountdown(sec){
+  sec=Math.max(0,Math.ceil(Number(sec)||0));
+  var min=Math.floor(sec/60),rem=sec%60;
+  return min ? min+" min "+rem+" s" : rem+" s";
+}
 function updateSnapshotAge(){
-  if(!lastSnapshotIso)return;
-  var t=Date.parse(lastSnapshotIso);
-  if(!Number.isFinite(t))return;
-  $("snapshotAge").textContent=fmtSnapshotAge(Math.max(0,(Date.now()-t)/1000));
+  if(lastSnapshotIso){
+    var t=Date.parse(lastSnapshotIso);
+    if(Number.isFinite(t))$("snapshotAge").textContent=fmtSnapshotAge(Math.max(0,(Date.now()-t)/1000));
+  }
+  var status=$("refreshStatus");
+  if(!status)return;
+  if(lastSuccessAt===null){
+    if(!refreshInFlight&&!lastFetchError){
+      status.textContent="Noch kein erfolgreicher Netzwerkabruf. Die Seite prüft den zuletzt veröffentlichten Snapshot automatisch alle 3 Minuten; neue Server-Snapshots entstehen ungefähr alle 5 Minuten.";
+    }
+    return;
+  }
+  var remaining=nextRefreshAt===null?0:Math.max(0,(nextRefreshAt-Date.now())/1000);
+  status.textContent=(lastFetchError?"Letzter erfolgreicher Abruf ":"Letzter erfolgreicher Abruf ")+fmtLocalClock(new Date(lastSuccessAt))+
+    (lastFetchError?" · letzter Netzwerkabruf fehlgeschlagen; angezeigter Stand bleibt erhalten.":" · Daten frisch abgerufen.")+
+    (remaining>0?" · erneuter Seitenabruf in "+fmtRefreshCountdown(remaining):" · Seitenabruf wird ausgelöst …")+
+    " Server-Snapshot etwa alle 5 Minuten.";
 }
 function updateClock(){
   var now=new Date();
@@ -252,25 +279,58 @@ function renderEmbedded(){
   return false;
 }
 // Forschungsressourcen aktiv = distinct research resources, not raw job count.
-function load(){
+function load(manual){
+  if(refreshInFlight)return;
+  refreshInFlight=true;
+  var button=$("refresh");
+  var status=$("refreshStatus");
+  if(manual&&button){
+    button.disabled=true;
+    button.setAttribute("aria-busy","true");
+    button.textContent="Snapshot wird geladen…";
+  }
   $("error").hidden=true;
   var rendered=renderEmbedded();
+  if(status&&lastSuccessAt===null)status.textContent="Lade den zuletzt veröffentlichten Snapshot …";
   var url=new URL("dashboard_data.json",document.baseURI);
   url.searchParams.set("ts",String(Date.now()));
   var controller=typeof AbortController==="function"?new AbortController():null;
   var timeoutId=controller?setTimeout(function(){controller.abort();},6000):null;
   var opts={cache:"no-store"}; if(controller)opts.signal=controller.signal;
-  fetch(url.toString(),opts).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(render).catch(function(e){
-    if(!rendered){$("error").textContent="Snapshot konnte nicht geladen werden: "+(e&&e.message||String(e));$("error").hidden=false;}
-    else{$("meta").insertAdjacentHTML("beforeend"," · <span class='unknown'>Netzwerk-Refresh nicht verfügbar; eingebetteter Snapshot bleibt sichtbar.</span>");}
-  }).then(function(){if(timeoutId!==null)clearTimeout(timeoutId);});
+  fetch(url.toString(),opts).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(function(data){
+    render(data);
+    lastSuccessAt=Date.now();
+    nextRefreshAt=lastSuccessAt+refreshIntervalMs;
+    lastFetchError=false;
+  }).catch(function(e){
+    lastFetchError=true;
+    nextRefreshAt=Date.now()+refreshIntervalMs;
+    if(status)status.textContent="Netzwerk-Refresh fehlgeschlagen ("+(e&&e.message||String(e))+"). Der vorhandene Snapshot bleibt sichtbar; neuer Versuch in 3 Minuten.";
+    if(!rendered){
+      $("error").textContent="Snapshot konnte nicht geladen werden: "+(e&&e.message||String(e));
+      $("error").hidden=false;
+    }
+  }).then(function(){
+    if(timeoutId!==null)clearTimeout(timeoutId);
+    refreshInFlight=false;
+    if(manual&&button){
+      button.disabled=false;
+      button.removeAttribute("aria-busy");
+      button.textContent="Snapshot aktualisieren";
+    }
+    updateSnapshotAge();
+  });
 }
 document.addEventListener("DOMContentLoaded",function(){
   updateClock();
   setInterval(updateClock,1000);
   setInterval(updateSnapshotAge,1000);
-  $("refresh").addEventListener("click",load);
-  load();
-  setInterval(load,180000);
+  $("refresh").addEventListener("click",function(){load(true);});
+  load(false);
+  setInterval(function(){load(false);},refreshIntervalMs);
+  document.addEventListener("visibilitychange",function(){
+    if(!document.hidden&&(!lastSuccessAt||Date.now()-lastSuccessAt>45000))load(false);
+  });
+  window.addEventListener("online",function(){load(false);});
 });
 })();
