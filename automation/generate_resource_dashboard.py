@@ -406,7 +406,7 @@ CANDIDATE_DEVELOPMENT_MILESTONES = (
     "ONE-SHOT PERFORMANCE",
 )
 
-FOCUS_CANDIDATES = ("Q104:I19", "Q218")
+FOCUS_CANDIDATES = ("Q104:I19", "Q218", "Q220")
 ACTIVE_RUN_STATUSES = {"queued", "in_progress", "waiting", "pending"}
 
 
@@ -728,12 +728,71 @@ def q218_prereg_status() -> dict[str, Any]:
         "next_gate": "frozen preregistration + immutable authorization reconcile",
     }
 
+def q220_as_filed_population_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
+    """Classify Q220 only from a positive immutable population receipt or a live run."""
+    receipt = read_json_file("research/evidence/q220_as_filed_xbrl_population_latest.json")
+    status = str(receipt.get("status") or "")
+    fingerprint = str(receipt.get("receipt_fingerprint") or "")
+    positive = (
+        receipt.get("candidate_id") == "Q220"
+        and receipt.get("mode") == "population"
+        and status == "Q220_AS_FILED_XBRL_POPULATION_COMPLETED"
+        and int(receipt.get("failure_count") or 0) == 0
+        and int(receipt.get("record_count") or 0) >= 40
+        and int(receipt.get("row_count") or 0) >= 40
+        and len(fingerprint) == 64
+        and all(ch in "0123456789abcdef" for ch in fingerprint.lower())
+    )
+    active_statuses = {"queued", "in_progress", "waiting", "pending", "requested"}
+    active = any(
+        isinstance(run, dict)
+        and str(run.get("status") or "") in active_statuses
+        and (
+            "Q220 As-Filed SEC-XBRL Population Repair" in " ".join(
+                str(run.get(k) or "") for k in ("name", "display_title", "run_name")
+            )
+            or str(run.get("path") or run.get("workflow_path") or "").endswith(
+                ".github/workflows/q220-as-filed-xbrl-population.yml"
+            )
+        )
+        for run in runs
+    )
+    if positive:
+        return {
+            "state": "complete", "progress_percent": 100,
+            "detail": "Positive fixed-population receipt: 8 issuers, archived as-filed instances, TextBlock/XSD/presentation mapping and zero record failures.",
+            "next_gate": "historical prefix/acceptance-time PIT representation-state compiler",
+            "receipt_fingerprint": fingerprint,
+        }
+    if active:
+        return {
+            "state": "running", "progress_percent": 0,
+            "detail": "Q220 as-filed population workflow is active; the historical population/mapping gate is not yet positively closed.",
+            "next_gate": "positive fixed-population receipt",
+            "receipt_fingerprint": fingerprint or None,
+        }
+    if status == "Q220_AS_FILED_XBRL_POPULATION_BLOCKED" or status:
+        return {
+            "state": "blocked", "progress_percent": 0,
+            "detail": "Latest Q220 receipt is not positive; inspect per-issuer original-10-K coverage and TextBlock/presentation-linkage requirements before retrying.",
+            "next_gate": "repair only the receipt-identified population/schema blocker",
+            "receipt_fingerprint": fingerprint or None,
+        }
+    return {
+        "state": "open", "progress_percent": 0,
+        "detail": "No current positive as-filed population receipt is published.",
+        "next_gate": "fixed-population SEC as-filed and XBRL mapping gate",
+        "receipt_fingerprint": None,
+    }
+
+
 def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q104_census = q104_census_status(runs)
     q218_prereg = q218_prereg_status()
     q218_receipts = q218_receipt_state()
 
     q104_compiler = q104_historical_compilation_status()
+    q220_population = q220_as_filed_population_status(runs)
     q104_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Exact-XBRL-Kontrakt eingefroren"},
         {"label": "Source feasibility", "status": "complete", "progress": 100, "detail": "Q104 source feasibility receipt vorhanden"},
@@ -773,8 +832,18 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
         score = completed_units + partial_units
         return int(round(100 * score / total)), completed_units, total
 
+    q220_state = q220_population["state"]
+    q220_milestones = [
+        {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Fixed eight-issuer universe and as-filed SEC/XBRL representation contract"},
+        {"label": "As-filed population + TextBlock/XSD/presentation mapping", "status": q220_state, "progress": q220_population["progress_percent"], "detail": q220_population["detail"]},
+        {"label": "Historical prefix / representation-gap PIT compiler", "status": "ready" if q220_state == "complete" else "blocked", "progress": 0, "detail": "opens only after a positive fixed-population receipt with stable mapping"},
+        {"label": "Independent PIT reproduction", "status": "blocked", "progress": 0, "detail": "requires frozen historical compiler inputs and an independent source route"},
+        {"label": "Pre-performance robustness", "status": "blocked", "progress": 0, "detail": "length/readability controls, future-text exclusion, taxonomy drift and disjoint OOS remain required"},
+    ]
+
     q104_overall, q104_complete, q104_total = overall(q104_milestones)
     q218_overall, q218_complete, q218_total = overall(q218_milestones)
+    q220_overall, q220_complete, q220_total = overall(q220_milestones)
 
     return {
         "method": "receipt_and_contract_based_development_index",
@@ -802,6 +871,18 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 ),
                 "next_gate": q104_census["next_gate"] if q104_census["state"] != "completed" else q104_compiler["next_gate"],
                 "milestones": q104_milestones,
+                "performance_authorization_allowed": False,
+            },
+            "Q220": {
+                "overall_progress_percent": q220_overall,
+                "completed_milestones": q220_complete,
+                "total_milestones": q220_total,
+                "current_milestone": "Historical prefix / representation-gap PIT compiler" if q220_state == "complete" else "As-filed population + TextBlock/XSD/presentation mapping",
+                "current_milestone_progress_percent": 0 if q220_state == "complete" else q220_population["progress_percent"],
+                "current_milestone_status": "ready" if q220_state == "complete" else q220_state,
+                "current_milestone_detail": q220_population["detail"],
+                "next_gate": q220_population["next_gate"],
+                "milestones": q220_milestones,
                 "performance_authorization_allowed": False,
             },
             "Q218": {
@@ -933,6 +1014,16 @@ def candidate_development_roadmap(
             {"id": "Q104-G4", "label": "Frozen preregistration + authorization reconcile", "status": "blocked", "next": "independent reproduction"},
             {"id": "Q104-G5", "label": "One-shot performance", "status": "closed", "next": "separate explicit authorization"},
         ]
+    if candidate == "Q220":
+        q220 = q220_as_filed_population_status([])
+        complete = q220["state"] == "complete"
+        return [
+            {"id": "Q220-CONTRACT", "label": "Frozen as-filed representation-gap contract", "status": "completed", "next": "fixed eight-issuer filing universe"},
+            {"id": "Q220-POPULATION", "label": "SEC as-filed population + TextBlock/XSD/presentation mapping", "status": q220["state"], "next": q220["next_gate"]},
+            {"id": "Q220-PIT", "label": "Historical prefix / representation-gap PIT compiler", "status": "ready" if complete else "blocked", "next": "positive population receipt"},
+            {"id": "Q220-REPRO", "label": "Independent PIT reproduction", "status": "blocked", "next": "positive historical PIT compiler receipt"},
+            {"id": "Q220-ROBUST", "label": "Cheap falsifiers: length/readability, future text, taxonomy drift", "status": "blocked", "next": "frozen PIT inputs and independent reproduction"},
+        ]
     prereg = q218_prereg_status()
     execution_done = bool(prereg.get("performance_executed"))
     source_event_done = q218_receipts.get("source_complete") and q218_receipts.get("event_pair_complete")
@@ -978,6 +1069,7 @@ def candidate_pipeline(
 
     state_by_candidate = {
         "Q104:I19": "FORMAL READINESS · HISTORICAL 13F CENSUS",
+        "Q220": "FRONTIER DISCOVERY · AS-FILED SEC/XBRL POPULATION + REPRESENTATION GAP",
         "Q218": (
             "FRONTIER DISCOVERY · PREREGISTRATION + AUTHORIZATION RECONCILE"
             if q218_receipts["independent_complete"]
@@ -1431,6 +1523,8 @@ def planned_capacity_plan(
 
     for item in sorted(queue, key=lambda x: (priority_bonus(x), queue.index(x))):
         candidate = str(item["candidate"])
+        if candidate not in FOCUS_CANDIDATES:
+            continue
         plan_id = str(item.get("plan_id") or "")
         if candidate == "Q104:I19" and plan_id == "Q104-I19-CENSUS":
             # Never advertise a duplicate full census while the existing six-shard
@@ -1913,6 +2007,7 @@ def main() -> None:
             ]
             for candidate in FOCUS_CANDIDATES
         },
+        "focus_candidates": list(FOCUS_CANDIDATES),
         "pipeline": candidate_pipeline(
             top4, work, workflow_benchmarks, job_benchmarks, recent_runs, planned_capacity
         ),
