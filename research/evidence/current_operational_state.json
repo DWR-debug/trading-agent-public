@@ -1501,7 +1501,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-09T00:41:20.921232+00:00",
+    "generated_at_utc": "2026-10-09T00:46:20.944162+00:00",
     "next_research_focus": "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Q218 one-shot performance has completed deterministically in PAPER_ONLY mode; the immutable result is recorded and the one-shot authorization is consumed. The remaining gate is fresh current-master source/event receipts plus independent PIT revalidation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1509,7 +1509,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "050a552a73efb36310f31eb88c8c97b166c66ca2"
+    "source_master_sha": "39c339ac6617a51930428d9ffb8ddd28360c5133"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-09T00:41:20.921232+00:00",
+  "generated_at_utc": "2026-10-09T00:46:20.944162+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4538,6 +4538,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "fix/q218-replication-artifact-verification-and-rule-receipt-20261009",
+        "number": 1251,
+        "title": "FIX: verify Q218 replication bundle locally and align SEC pairing receipt",
+        "updatedAt": "2026-10-09T00:45:51Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1251"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "research/q218-independent-replication-capacity",
         "number": 1241,
         "title": "ORCH: saturate free capacity with Q218 replication and Q104 QA",
@@ -4611,6 +4619,31 @@
     ],
     "recent_commits": [
       {
+        "message": "GUARD: stop Q218 replication dispatch until exact trial authorization exists",
+        "sha": "39c339ac6617a51930428d9ffb8ddd28360c5133",
+        "timestamp": "2026-10-09T02:46:07+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "890f45165c7470045ea2d8aa6fd7bce6951f7ad0",
+        "timestamp": "2026-10-09T00:43:14Z"
+      },
+      {
+        "message": "TEST: prevent Q218 replication retry loop while unauthorized",
+        "sha": "0711f1c029e0259aa6f5d3e46f438df6e4c234ca",
+        "timestamp": "2026-10-09T02:42:59+02:00"
+      },
+      {
+        "message": "GUARD: block Q218 replication dispatch without exact authorization",
+        "sha": "2b7d89d8253cefd1393629d1340078c22f86a336",
+        "timestamp": "2026-10-09T02:42:56+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f609c483d336e19877eee71dd82aea4a25177204",
+        "timestamp": "2026-10-09T00:41:23Z"
+      },
+      {
         "message": "OPS: resume Q218 replication preparation after exact-master gate recovery",
         "sha": "050a552a73efb36310f31eb88c8c97b166c66ca2",
         "timestamp": "2026-10-09T02:41:08+02:00"
@@ -4624,31 +4657,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "9b9fd07b3a6277268ea80242b043148ad146c8ee",
         "timestamp": "2026-10-09T00:15:09Z"
-      },
-      {
-        "message": "OPS: update AI credit availability plan",
-        "sha": "513561893b172d39d5544ac30cd2b1f828dd4353",
-        "timestamp": "2026-10-09T00:15:05Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "f73114f7c72e09b7c2493cf68f724b100366296b",
-        "timestamp": "2026-10-09T00:15:02Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "c3cdd49b08e4cc513ebfd3d50ed7e4a6e5c5bd84",
-        "timestamp": "2026-10-09T00:14:36Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "a6072078086c66045921c200e9f0213df18e38c9",
-        "timestamp": "2026-10-09T00:14:31Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "8fd749e3bead1d9f047209337b83f2c2d219e261",
-        "timestamp": "2026-10-08T23:58:31Z"
       }
     ]
   },
@@ -4746,7 +4754,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "050a552a73efb36310f31eb88c8c97b166c66ca2",
+  "source_master_sha": "39c339ac6617a51930428d9ffb8ddd28360c5133",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4860,6 +4868,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37866027433"
+    "run_id": "37866445623"
   }
 }
