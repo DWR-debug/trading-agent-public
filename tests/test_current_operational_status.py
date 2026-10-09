@@ -112,4 +112,4 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "primary trial current-context revalidation remains a separate open gate" in focus
     assert "bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7" in focus
     assert "no holdout selection, tuning, ranking, promotion or live execution is inferred" in focus
-    assert "Q218 primary one-shot" in doc
+    assert "canonical current operational status" in doc
