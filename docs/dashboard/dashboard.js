@@ -93,6 +93,71 @@ function renderProgressCharts(data,pipeline){
   }).join(""):"<div class='empty'>Kein Milestone-Status verfügbar.</div>";
 }
 
+function renderCandidatePortfolio(data){
+  var items=data.candidate_portfolio||[];
+  var method=data.candidate_portfolio_methodology||{};
+  var searchEl=$("portfolioSearch"), tierEl=$("portfolioTier");
+  if(!searchEl||!tierEl||!$("candidatePortfolio"))return;
+  function tierLabel(x){
+    var map={
+      VERY_HIGH:"Sehr hoch",
+      HIGH_CONDITIONAL:"Hoch · bedingt",
+      MEDIUM_HIGH:"Mittel bis hoch",
+      MEDIUM:"Mittel",
+      MEDIUM_RISK_STATE:"Risikozustand",
+      CONDITIONAL:"Quelle zuerst prüfen",
+      BLOCKED_SOURCE:"Datenblocker"
+    };
+    return map[x]||String(x||"Unklassifiziert").replace(/_/g," ");
+  }
+  function tierClass(x){
+    if(x==="VERY_HIGH"||x==="HIGH_CONDITIONAL")return "potential-high";
+    if(x==="BLOCKED_SOURCE")return "potential-blocked";
+    return "potential-mid";
+  }
+  function renderRows(){
+    var q=String(searchEl.value||"").trim().toLowerCase();
+    var filter=String(tierEl.value||"ALL");
+    var selected=items.filter(function(x){
+      if(filter!=="ALL"&&x.tier!==filter)return false;
+      var hay=[x.code,x.name,x.mechanism,x.current_state,x.next_gate,x.blocker,x.why,x.first_falsifier,x.portfolio_action].join(" ").toLowerCase();
+      return !q||hay.indexOf(q)>=0;
+    });
+    $("portfolioCount").textContent=selected.length+" / "+items.length+" Kandidaten";
+    if(!selected.length){
+      $("candidatePortfolio").innerHTML="<div class='empty'>Keine Kandidaten entsprechen diesem Filter.</div>";
+      return;
+    }
+    $("candidatePortfolio").innerHTML="<table class='portfolio-table'><thead><tr>"+
+      "<th>Rang</th><th>Kandidat / Mechanismus</th><th>Forschungs-<br>potenzial</th><th>Aktueller Evidenzstand</th><th>Nächstes hartes Gate / Blocker</th><th>Planungsdauer</th><th>Strategie-Erfolgschance</th>"+
+      "</tr></thead><tbody>"+selected.map(function(x){
+        var tier=tierLabel(x.tier), cls=tierClass(x.tier);
+        var oddsTitle=(method.success_probability||"Erfolgschance nicht schätzbar");
+        var action=String(x.portfolio_action||"").replace(/_/g," ");
+        var why=x.why||"";
+        var falsifier=x.first_falsifier||"";
+        var blocker=x.blocker||"";
+        return "<tr>"+
+          "<td><div class='portfolio-rank'>"+esc(x.rank)+"</div><div class='small muted'>"+(x.separate_workpack_allowed===false?"gebündelt":"Priorität")+"</div></td>"+
+          "<td><div class='portfolio-code'>"+esc(x.code)+"</div><div class='portfolio-name'>"+esc(x.name)+"</div>"+
+            "<div class='portfolio-mechanism'>"+esc(x.mechanism||"")+"</div>"+
+            "<details class='portfolio-details'><summary>Begründung und billiger Falsifikator</summary><div><strong>Warum:</strong> "+esc(why)+"</div><div><strong>Früher Falsifikator:</strong> "+esc(falsifier)+"</div><div><strong>Disposition:</strong> "+esc(action)+"</div></details></td>"+
+          "<td class='portfolio-tier'><span class='"+cls+"'>"+esc(tier)+"</span><div class='small muted'>"+esc(x.potential||"")+"</div></td>"+
+          "<td>"+esc(x.current_state||"nicht erfasst")+"</td>"+
+          "<td><strong>"+esc(x.next_gate||"Nicht dokumentiert")+"</strong><div class='small muted' style='margin-top:4px'><strong>Blocker:</strong> "+esc(blocker)+"</div></td>"+
+          "<td class='portfolio-eta'><strong>Nächstes Gate</strong>"+esc(x.next_gate_eta||"nicht geschätzt")+"<div style='margin-top:7px'><strong>Bis unabh. PIT</strong>"+esc(x.independent_pit_eta||"nicht geschätzt")+"</div><div class='small muted'>"+esc(x.duration_estimate_confidence==="LOW_PLANNING_RANGE"?"niedrige Vertrauensstufe":"nicht kalibriert")+"</div></td>"+
+          "<td class='portfolio-odds' title='"+esc(oddsTitle)+"'>Nicht schätzbar<div class='small muted'>Keine unabhängige, kostenbereinigte OOS-Basis</div></td>"+
+        "</tr>";
+      }).join("")+"</tbody></table>";
+  }
+  if(!searchEl.dataset.bound){
+    searchEl.addEventListener("input",renderRows);
+    tierEl.addEventListener("change",renderRows);
+    searchEl.dataset.bound="1";
+  }
+  renderRows();
+}
+
 function render(data){
   var s=data.dashboard_summary||{};
   var resources=(data.resources||[]).filter(function(x){
@@ -170,6 +235,8 @@ function render(data){
       "<div class='candidate-foot'><span>"+esc(x.overall_progress_basis||"Entwicklungsindex")+"</span><span>"+esc(x.capacity_summary||"Kapazität nicht sichtbar")+"</span><span>"+(x.performance_authorization_allowed?"AUTORISIERUNG ERLAUBT":"NICHT AUTORISIERT")+"</span></div>"+
     "</article>";
   }).join(""):"<div class='empty'>Kein Fokus-Kandidat im Snapshot.</div>";
+
+  renderCandidatePortfolio(data);
 
   var order={"Windows self-hosted A":0,"Windows self-hosted B":1,"Windows self-hosted C":2,"GitHub-hosted Ubuntu x64":3,"GitHub-hosted ARM64":4,"Free AI pool":5};
   resources.sort(function(a,b){return order[a.name]-order[b.name];});
