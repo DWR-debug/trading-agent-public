@@ -115,3 +115,36 @@ def test_focused_q218_slot_mode_is_explicit_and_non_authorizing():
     assert "automation/q218_sec_multichannel_source_gate" in text
     assert "automation/q218_sec_event_pair_lineage_gate" in text
     assert "SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION" in text
+
+
+def test_dashboard_capacity_plan_includes_q219_q220_q221_receipt_defined_source_work():
+    from automation import generate_resource_dashboard as dashboard
+
+    resources = [
+        {"name": "Windows self-hosted A", "current_assignments": 1, "capacity_state": "operating"},
+        {"name": "Windows self-hosted B", "current_assignments": 0, "capacity_state": "available"},
+        {"name": "Windows self-hosted C", "current_assignments": 0, "capacity_state": "available"},
+        {"name": "GitHub-hosted Ubuntu x64", "current_assignments": 1, "capacity_state": "operating"},
+        {"name": "GitHub-hosted ARM64", "current_assignments": 1, "capacity_state": "operating"},
+        {"name": "Free AI pool", "current_assignments": 0, "capacity_state": "available"},
+    ]
+    board = [
+        {"code": "Q104:I19", "next_gate": "historical 13F census"},
+        {"code": "Q218", "next_gate": "current-context revalidation"},
+        {"code": "Q219", "next_gate": "options source breadth"},
+        {"code": "Q220", "next_gate": "as-filed mapping"},
+        {"code": "Q221", "next_gate": "historical public clock"},
+    ]
+    plan = dashboard.planned_capacity_plan(resources, [], board, {}, {})
+    scheduled = {
+        item["candidate"]: item
+        for row in plan for item in row["planned_assignments"]
+        if item.get("scheduled")
+    }
+    assert {"Q104:I19", "Q219", "Q220", "Q221"}.issubset(scheduled)
+    for code in ("Q219", "Q220", "Q221"):
+        assert scheduled[code]["execution_workflow"] == ".github/workflows/top4-candidate-slot-research.yml"
+        assert scheduled[code]["dispatchable"] is True
+        assert scheduled[code]["execution_workflow_inputs"]["gate"] == "all"
+    assert scheduled["Q219"]["plan_id"] == "Q219-OPTIONS-SOURCE-BREADTH"
+    assert scheduled["Q221"]["plan_id"] == "Q221-USASPENDING-PUBLIC-CLOCK"
