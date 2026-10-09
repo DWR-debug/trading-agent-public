@@ -251,6 +251,9 @@ def test_repair_fails_closed_if_top_level_failure_set_differs_from_archive_failu
 
 def test_repair_does_not_retry_identity_mismatch():
     receipt = make_shard_receipt(make_archive())
+    receipt["acceptance_failures"][ACCESSION] = "ACCESSION_MISMATCH"
+    receipt["archives"][0]["acceptance_failures"][ACCESSION] = "ACCESSION_MISMATCH"
+    receipt["receipt_fingerprint"] = canonical_fingerprint(receipt)
     fixed, entries = repair_shard_payload(
         receipt,
         rate_limiter=NoopLimiter(),
