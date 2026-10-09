@@ -1,6 +1,10 @@
+import hashlib
+
 from automation.q218_publish_focus_gate_receipt import (
+    blob_sha,
     paper_only_boundary_is_closed,
     performance_boundary_is_closed,
+    select_run_artifact,
 )
 
 
@@ -56,3 +60,27 @@ def test_q218_publisher_rejects_missing_non_boolean_or_conflicting_safety_flags(
         "paper_only": True,
         "safety": {"PAPER_ONLY": False},
     }) is False
+
+
+def test_q218_blob_sha_matches_git_blob_object_format(tmp_path):
+    path = tmp_path / "fixture.txt"
+    path.write_bytes(b"test")
+    expected = hashlib.sha1(b"blob 4\0test").hexdigest()
+    assert blob_sha(path) == expected
+
+
+def test_q218_artifact_selection_ignores_expired_and_digestless_artifacts():
+    payload = {
+        "artifacts": [
+            {"id": 1, "digest": "sha256:expired", "expired": True},
+            {"id": 2, "digest": None, "expired": False},
+            {"id": 3, "digest": "sha256:current", "expired": False},
+        ]
+    }
+    assert select_run_artifact(payload) == (3, "sha256:current")
+
+
+def test_q218_artifact_selection_fails_closed_without_a_current_digested_artifact():
+    assert select_run_artifact({"artifacts": []}) is None
+    assert select_run_artifact({"artifacts": [{"id": 1, "digest": "sha256:x", "expired": True}]}) is None
+    assert select_run_artifact({"artifacts": [{"id": 1, "digest": None, "expired": False}]}) is None
