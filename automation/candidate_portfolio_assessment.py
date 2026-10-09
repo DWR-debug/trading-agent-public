@@ -11,12 +11,14 @@ import json
 from pathlib import Path
 from typing import Any
 
-ASSESSMENT_VERSION = "2026-10-10.1"
+ASSESSMENT_VERSION = "2026-10-10.2"
 INVENTORY_PATH = "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
+ACTIVE_PORTFOLIO_CODES = ("Q104:I19", "Q220", "Q218")
 
 PORTFOLIO_METHODOLOGY = {
     "version": ASSESSMENT_VERSION,
-    "purpose": "Relative research-resource priority, not a return, alpha, or candidate-performance ranking.",
+    "purpose": "Active three-candidate research-resource priority only; not a return, alpha, or candidate-performance ranking.",
+    "active_candidate_scope": ["Q104:I19", "Q220", "Q218"],
     "dimensions": [
         "economic mechanism distinctiveness and overlap risk",
         "historical public-observation clock / PIT and identity feasibility",
@@ -44,22 +46,22 @@ A: dict[str, dict[str, Any]] = {
         "portfolio_action": "FOCUS_NOW",
     },
     "Q220": {
-        "rank": 2, "tier": "VERY_HIGH", "potential": "Hoch",
+        "rank": 2, "tier": "VERY_HIGH", "potential": "Sehr hoch",
         "next_gate": "As-filed-SEC-Archiv und XBRL-Narrative-/Presentation-Linkage deterministisch einfrieren; Taxonomie- und TextBlock-Mapping über den fixierten Filing-Pool testen.",
         "next_eta": "2–5 Arbeitstage", "pit_eta": "5–10 Arbeitstage",
         "blocker": "Taxonomie-/Schema-Drift und instabiles TextBlock-/Presentation-Mapping; unvollständiges Mapping muss den Kandidaten stoppen.",
         "why": "Klar unterscheidbarer Mechanismus mit historischem SEC-As-filed-Material; relevante Information ist die Repräsentationslücke, nicht generische Länge oder Sentiment.",
         "first_falsifier": "Stabilität bricht auf der eingefrorenen Taxonomie, Future-Text kontaminiert den Prefix oder Länge/Readability erklärt das Signal vollständig.",
-        "portfolio_action": "TOP4",
+        "portfolio_action": "FOCUS_NOW",
     },
     "Q218": {
         "rank": 3, "tier": "VERY_HIGH", "potential": "Hoch, aber unbestätigt",
-        "next_gate": "Source-/Event-Pair-Receipts und unabhängige PIT-Reproduktion am aktuellen Master-Kontext erneut verifizieren; Ergebnis-Provenienz und aktuelle Code-Fingerprints reconciliieren.",
-        "next_eta": "0,5–2 Arbeitstage", "pit_eta": "1–3 Arbeitstage",
-        "blocker": "Die vorhandenen One-shot- und disjunkten Replikationsergebnisse ersetzen nicht die aktuelle Kontext-Revalidierung, Kosten-/Robustheitsprüfung oder breite unabhängige OOS-Evidenz.",
+        "next_gate": "Receipt/code-hash cross-check is already positive: source and event-pair implementation fingerprints match master, the independent PIT receipt references those exact receipts, and the frozen fresh-symbol replication receipt is complete. Do not launch duplicate Q218 work unless a fingerprint or frozen-contract input changes.",
+        "next_eta": "bereits erfüllt; 0 zusätzliche Arbeitstage", "pit_eta": "unabhängige PIT-Reproduktion abgeschlossen",
+        "blocker": "Keine offene Source/Event/independent-PIT-/Fresh-Symbol-Receipt-Lücke im derzeitigen Codekontext. Breite kostenbereinigte OOS-Evidenz ist weiterhin nicht vorhanden; keine neue Performance-Ausführung, Tuning, Auswahl oder Promotion aus diesem Status ableiten.",
         "why": "Distinct channel-allocation mechanism und abgeschlossene initiale Event-/PIT-/One-shot-Stufen; weiterführende Erfolgsaussage ist nicht zulässig.",
         "first_falsifier": "Channel-label permutation, same-event shuffle oder Erklärung durch Länge/generische Ähnlichkeit hebt den eigenständigen Mechanismus auf.",
-        "portfolio_action": "FOCUS_NOW",
+        "portfolio_action": "FOCUS_MONITOR",
     },
     "Q221": {
         "rank": 4, "tier": "HIGH_CONDITIONAL", "potential": "Hoch, bedingt",
@@ -326,15 +328,19 @@ def build_candidate_portfolio(
                 progress_index[str(row["code"])] = row
 
     portfolio = []
-    for code, assessment in A.items():
+    for code in ACTIVE_PORTFOLIO_CODES:
+        assessment = A[code]
         spec = specs.get(code, {})
         aliases = _code_aliases(code)
         current = next((status_index[a] for a in aliases if a in status_index), {})
         live = progress_index.get(code, {})
         next_gate = assessment["next_gate"]
         current_milestone = str(live.get("current_milestone") or "")
-        if code in {"Q104:I19", "Q218"} and current_milestone:
-            next_gate = current_milestone
+        if code in {"Q104:I19", "Q220", "Q218"} and current_milestone:
+            if code != "Q218" or str(live.get("current_milestone_status") or "").lower() not in {"complete", "completed"}:
+                next_gate = current_milestone
+            else:
+                next_gate = str(live.get("next_gate") or "Q218 current-context receipts complete; no duplicate workpack needed")
         state = str(
             live.get("current_milestone_status")
             or current.get("state")
