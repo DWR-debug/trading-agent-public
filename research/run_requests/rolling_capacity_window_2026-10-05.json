@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "record_type": "rolling_capacity_window",
   "status": "ACTIVE",
-  "window_id": "TA-2H-2026-10-07-RUNNER-C-CANDIDATE-1600Z",
-  "start_utc": "2026-10-07T16:00:00Z",
-  "end_utc": "2026-10-07T18:00:00Z",
+  "window_id": "TA-2H-2026-10-09-RUNNER-C-INDEPENDENT-PIT-2044Z",
+  "start_utc": "2026-10-09T20:44:00Z",
+  "end_utc": "2026-10-09T22:44:00Z",
   "cadence_minutes": 10,
   "max_dispatch_per_tick": 1,
   "retry_limit_per_workflow_per_phase": 1,
@@ -24,7 +24,6 @@
   "safety": {
     "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
-    "ORDERS_ENABLED": false,
     "AUTOMATIC_PROMOTION": false,
     "performance": false,
     "holdout_selection": false,
@@ -42,12 +41,12 @@
     "Scientific authority remains unchanged; this scheduler only allocates execution capacity.",
     "Successful source-feasibility workflows are not re-run as filler; only their explicit next-gate workflows may be scheduled."
   ],
-  "retargeted_at_utc": "2026-10-07T16:00:00Z",
-  "retarget_reason": "Refresh the expired Runner-C window at the current operating horizon so one otherwise-idle self-hosted slot can execute the already-defined independent long deterministic candidate-development/readiness workpack; preserve all scientific gates and suppress duplicates.",
+  "retargeted_at_utc": "2026-10-09T20:44:00Z",
+  "retarget_reason": "Renew the expired Runner-C capacity lease for one bounded independent source/PIT readiness workpack; no current Runner-C workpack is active, and the scheduler retains active-run, recent-success cooldown, and per-phase retry checks.",
   "session_mode": {
     "status": "ACTIVE_2H",
     "duration_minutes": 120,
-    "directive": "Use one otherwise-idle Runner C slot for bounded independent candidate development and PIT-readiness work; preserve scientific gates and suppress duplicates.",
+    "directive": "Use Runner C for the existing bounded deterministic source/PIT readiness workpack; do not duplicate active Q104 I19 census or Q218 performance work; preserve all authorization and fail-closed scientific gates.",
     "no_artificial_work": true,
     "no_duplicate_work": true,
     "scientific_boundary_unchanged": true
