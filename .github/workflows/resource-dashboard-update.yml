@@ -3,12 +3,24 @@ name: Resource Dashboard Update
 on:
   schedule:
     - cron: "*/5 * * * *"
+  workflow_run:
+    workflows:
+      - "Q104 I19 Historical 13F Identity Census"
+      - "Q104 I19 Historical PIT Compilation"
+      - "Q104 I19 Independent PIT Reproduction"
+      - "Top-4 Candidate Slot Research"
+      - "Q218 Independent Architecture PIT Reproduction"
+      - "Q218 Independent Fresh-Symbol Replication"
+    types: [completed]
+    branches: [master]
   push:
     branches: [master]
     paths:
       - "research/run_requests/dashboard_refresh.trigger"
       - ".github/workflows/resource-dashboard-update.yml"
       - "automation/generate_resource_dashboard.py"
+      - "docs/CURRENT_STATUS.md"
+      - "research/evidence/current_operational_state.json"
       - "docs/dashboard/index.html"
       - "docs/dashboard/dashboard.js"
       - "ops/trading_agent_os_state.json"
@@ -36,7 +48,12 @@ concurrency:
 
 jobs:
   update_and_deploy:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (github.event_name != 'workflow_run' ||
+       (github.event.workflow_run.head_branch == 'master' &&
+        (contains(github.event.workflow_run.display_title, 'Q218') ||
+         contains(github.event.workflow_run.display_title, 'Q104 I19'))))
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     environment:
