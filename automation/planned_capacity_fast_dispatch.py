@@ -38,6 +38,19 @@ Q218_INDEPENDENT_WORKFLOW = ".github/workflows/q218-independent-architecture-pit
 FOCUSED_GATE_CANCEL_COOLDOWN_SECONDS = 300
 
 
+def q218_replication_authorization_block_reason() -> str | None:
+    """Fail closed before auto-dispatch unless the exact replication trial is authorized."""
+    try:
+        from automation.q218_independent_replication_authorization_guard import validate_authorization
+        validate_authorization()
+    except Exception as exc:
+        # The guard validates exact trial identity, the frozen contract SHA, explicit
+        # user authorization, one-shot scope and paper-only safety. Any uncertainty
+        # blocks dispatch instead of spending resources on a known-doomed trial.
+        return f"Q218_REPLICATION_EXPLICIT_AUTHORIZATION_REQUIRED:{type(exc).__name__}:{exc}"
+    return None
+
+
 def focused_gate_recently_cancelled(
     runs: list[dict[str, Any]], candidate: str, gate: str, *, now: datetime | None = None
 ) -> bool:
@@ -491,6 +504,15 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     for item in planned:
         workflow = str(item["execution_workflow"])
         candidate = str(item.get("candidate") or "")
+        if candidate == "Q218" and workflow.endswith("q218-independent-replication-once.yml"):
+            auth_block = q218_replication_authorization_block_reason()
+            if auth_block:
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_Q218_REPLICATION_EXPLICIT_AUTHORIZATION_REQUIRED",
+                    "reason": auth_block,
+                })
+                continue
         if not item["resource_free"]:
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_RESOURCE_BUSY"})
             continue
