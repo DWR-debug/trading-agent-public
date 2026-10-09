@@ -270,7 +270,7 @@ function renderEmbedded(){
   if(snap&&typeof snap==="object"){render(snap);return true;}
   return false;
 }
-// Browser refresh reads the latest published static snapshot; it never starts or authorizes a workflow.
+// Forschungsressourcen aktiv = distinct research resources, not raw job count. Browser refresh reads the latest published static snapshot; it never starts or authorizes a workflow.
 function load(manual){
   if(refreshing){
     if(manual)setRefreshStatus("loading","Eine Snapshot-Abfrage läuft bereits. Bitte kurz warten.");
@@ -286,7 +286,7 @@ function load(manual){
   var url=new URL("dashboard_data.json",document.baseURI);
   url.searchParams.set("ts",String(Date.now()));
   var controller=typeof AbortController==="function"?new AbortController():null;
-  var timeoutId=controller?setTimeout(function(){controller.abort();},8000):null;
+  var timeoutId=controller?setTimeout(function(){controller.abort();},6000):null;
   var opts={cache:"no-store"}; if(controller)opts.signal=controller.signal;
   fetch(url.toString(),opts)
     .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();})
@@ -320,7 +320,7 @@ document.addEventListener("DOMContentLoaded",function(){
   $("refresh").addEventListener("click",function(){load(true);});
   load(false);
   // Refresh the latest published snapshot every three minutes; source workflow runs on a five-minute schedule.
-  setInterval(function(){load(false);},180000);
+  setInterval(load,180000);
   document.addEventListener("visibilitychange",function(){
     if(document.visibilityState==="visible"&&lastFetchIso&&Date.now()-Date.parse(lastFetchIso)>=180000)load(false);
   });
