@@ -300,7 +300,7 @@ def build_candidate_portfolio(
     evidence: dict[str, Any],
     candidate_progress: Any = None,
 ) -> list[dict[str, Any]]:
-    """Build a broad, status-enriched portfolio from the frozen candidate inventory."""
+    """Build a status-enriched portfolio for the active three-candidate focus from the frozen inventory."""
     inventory = json.loads((root / INVENTORY_PATH).read_text(encoding="utf-8"))
     specs = {
         str(row.get("id")): row
