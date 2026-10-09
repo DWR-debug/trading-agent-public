@@ -97,3 +97,19 @@ def test_current_status_renders_q202_q204_frontier() -> None:
     assert frontier["Q204"]["stage"] == "SOURCE_COMPONENT_READY"
     assert frontier["performance_authorized"] is False
     assert frontier["pit_validated"] is False
+
+def test_current_status_reports_completed_q218_replication_and_open_primary_revalidation() -> None:
+    from automation.sync_current_operational_status import generate
+
+    payload, doc = generate(
+        source_master_sha="abc123",
+        workflow_run_id=None,
+        github_state_path=None,
+    )
+    focus = payload["chat_handoff"]["next_research_focus"]
+    assert "Q218 primary one-shot and pre-registered fresh-symbol replication both completed" in focus
+    assert "8 event pairs across GOOGL/META/ORCL/PFE" in focus
+    assert "primary trial current-context revalidation remains a separate open gate" in focus
+    assert "bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7" in focus
+    assert "no holdout selection, tuning, ranking, promotion or live execution is inferred" in focus
+    assert "canonical current operational status" in doc
