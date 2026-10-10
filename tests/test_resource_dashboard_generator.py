@@ -364,3 +364,59 @@ def test_q221_public_clock_does_not_claim_historical_applicability_without_a_dur
     assert gate["progress_percent"] == 0
     assert "No positive, fingerprinted historical USAspending" in gate["detail"]
     assert gate["next_gate"].startswith("historical USAspending public boundary")
+
+
+
+def test_q221_dashboard_only_closes_historical_policy_vintage_gate_with_fingerprinted_archive_receipt(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    receipt = {
+        "record_type": "q221_historical_source_vintage_gate",
+        "candidate_id": "Q221",
+        "status": "Q221_HISTORICAL_POLICY_VINTAGES_RECONSTRUCTED",
+        "historical_policy_vintages_reconstructed": True,
+        "all_target_windows_covered": True,
+        "policy_markers_consistent_across_vintages": True,
+        "historical_applicability_proven": False,
+        "award_level_public_boundary_proven": False,
+        "lookahead_used": False,
+        "receipt_fingerprint": "a" * 64,
+        "capture_rows": [
+            {"target_window": target, "status": "CAPTURE_PARSED"}
+            for target in ("2025-01-01", "2025-07-01", "2026-01-01", "2026-07-01", "2026-10-05")
+        ],
+    }
+    current = {
+        "record_type": "q221_usaspending_public_clock_gate",
+        "candidate_id": "Q221",
+        "source_clock_contract_ready": True,
+    }
+    monkeypatch.setattr(
+        dashboard,
+        "read_json_file",
+        lambda path: receipt if "q221_historical_source_vintages_latest.json" in path else current,
+    )
+
+    result = dashboard.q221_public_clock_status()
+    assert result["state"] == "complete"
+    assert result["progress_percent"] == 100
+    assert "award-level public observability" in result["detail"]
+    assert "award-level public-observation boundary" in result["next_gate"]
+    assert result["parsed_target_windows"] == 5
+
+
+def test_q221_dashboard_does_not_treat_live_source_smoke_as_historical_clock_proof(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    current = {
+        "record_type": "q221_usaspending_public_clock_gate",
+        "candidate_id": "Q221",
+        "source_clock_contract_ready": True,
+    }
+    monkeypatch.setattr(dashboard, "read_json_file", lambda path: current if "q221_usaspending_public_clock_gate_latest.json" in path else {})
+
+    result = dashboard.q221_public_clock_status()
+    assert result["state"] == "ready"
+    assert result["progress_percent"] == 0
+    assert "cannot establish what was publicly observable historically" in result["detail"]
+    assert result["next_gate"].startswith("archived USAspending policy vintages")
