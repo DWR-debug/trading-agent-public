@@ -885,21 +885,28 @@ def q220_as_filed_population_status(runs: list[dict[str, Any]]) -> dict[str, Any
 
 
 def q221_public_clock_status() -> dict[str, Any]:
-    """Fail closed unless the historical USAspending public clock is evidenced durably."""
-    receipt = read_json_file("research/evidence/q221_historical_public_boundary_latest.json")
+    """Read the archived policy-vintage receipt; never mistake live docs for historical event PIT."""
+    receipt = read_json_file("research/evidence/q221_historical_source_vintages_latest.json")
     fingerprint = str(receipt.get("receipt_fingerprint") or "")
     fingerprint_valid = (
         len(fingerprint) == 64
         and all(ch in "0123456789abcdef" for ch in fingerprint.lower())
     )
+    rows = receipt.get("capture_rows", [])
+    parsed_rows = [
+        row for row in rows
+        if isinstance(row, dict) and row.get("status") == "CAPTURE_PARSED"
+    ]
+    parsed_windows = len({str(row.get("target_window")) for row in parsed_rows})
     positive = (
-        receipt.get("record_type") == "q221_historical_public_boundary_gate"
+        receipt.get("record_type") == "q221_historical_source_vintage_gate"
         and receipt.get("candidate_id") == "Q221"
-        and receipt.get("status") == "Q221_HISTORICAL_PUBLIC_BOUNDARY_COMPLETED"
-        and receipt.get("historical_applicability_proven") is True
-        and receipt.get("transaction_semantics_frozen") is True
-        and receipt.get("agency_exceptions_classified") is True
-        and receipt.get("recipient_to_issuer_mapping_frozen") is True
+        and receipt.get("status") == "Q221_HISTORICAL_POLICY_VINTAGES_RECONSTRUCTED"
+        and receipt.get("historical_policy_vintages_reconstructed") is True
+        and receipt.get("all_target_windows_covered") is True
+        and receipt.get("policy_markers_consistent_across_vintages") is True
+        and receipt.get("historical_applicability_proven") is False
+        and receipt.get("award_level_public_boundary_proven") is False
         and receipt.get("lookahead_used") is False
         and fingerprint_valid
     )
@@ -913,23 +920,47 @@ def q221_public_clock_status() -> dict[str, Any]:
         return {
             "state": "complete",
             "progress_percent": 100,
-            "detail": "Historical USAspending public-observation boundary, transaction semantics, agency exceptions and frozen issuer mapping are recorded in a fingerprinted receipt.",
-            "next_gate": "independent PIT reproduction with revision/modification lineage",
+            "detail": (
+                "Timestamped USAspending About-the-Data PDF vintages cover all five fixed boundary windows and preserve the documented clock/exception markers. "
+                "This reconstructs policy-document history only; exact award-level public observability and recipient-to-issuer mapping remain unproven."
+            ),
+            "next_gate": "award-level public-observation boundary + exact transaction-class applicability + recipient-to-issuer mapping",
             "receipt_fingerprint": fingerprint,
+            "parsed_target_windows": parsed_windows,
+        }
+    if receipt.get("record_type") == "q221_historical_source_vintage_gate":
+        status = str(receipt.get("status") or "")
+        progress = min(99, int(round(100 * parsed_windows / 5)))
+        if status == "Q221_HISTORICAL_POLICY_VINTAGE_COVERAGE_INCOMPLETE_OR_SEMANTICS_DRIFT":
+            state = "blocked" if rows and parsed_windows == len(rows) else ("running" if parsed_windows else "ready")
+        else:
+            state = "running" if parsed_windows else "ready"
+        detail = (
+            "Historical policy capture exists, but target-window coverage or clock/exception consistency is incomplete. "
+            "Resolve missing archived vintages or semantic drift before claiming historical clock feasibility."
+        )
+        return {
+            "state": state,
+            "progress_percent": progress,
+            "detail": detail,
+            "next_gate": "repair missing historical target windows and reconcile any documented clock/exception changes",
+            "receipt_fingerprint": fingerprint or None,
+            "parsed_target_windows": parsed_windows,
         }
     detail = (
-        "The current USAspending source-clock markers were observed, but the smoke gate explicitly does not prove historical applicability. "
-        "Reconstruct the historical publication vintage, award-versus-modification semantics, DoD/USACE 90-day and FAR exception handling, and recipient-to-issuer mapping."
+        "The live USAspending source-clock smoke gate is positive, but it cannot establish what was publicly observable historically. "
+        "Run the bounded CDX/Wayback vintage reconstruction over the five fixed windows before event-level PIT work."
         if current_source_markers
         else
-        "No positive, fingerprinted historical USAspending public-boundary receipt is recorded. First test the historical publication clock, award/modification semantics, DoD/USACE and FAR exceptions, and recipient-to-issuer mapping."
+        "No timestamped historical USAspending policy-vintage receipt is recorded. Reconstruct archived clock/exception documents before making event-level timing claims."
     )
     return {
         "state": "ready",
         "progress_percent": 0,
         "detail": detail,
-        "next_gate": "historical USAspending public boundary + award/modification semantics + agency exceptions + recipient-to-issuer mapping",
+        "next_gate": "archived USAspending policy vintages for fixed target windows, then award-level public-boundary and issuer mapping",
         "receipt_fingerprint": fingerprint or None,
+        "parsed_target_windows": parsed_windows,
     }
 
 
@@ -1016,12 +1047,12 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q221_clock = q221_public_clock_status()
     q221_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Frozen R&D-to-procurement option-value mechanism and non-overlap contract"},
-        {"label": "Historical public-observation clock + agency exceptions", "status": "complete" if q221_clock["state"] == "complete" else "ready", "progress": q221_clock["progress_percent"], "detail": q221_clock["detail"]},
-        {"label": "Historical publication-vintage applicability", "status": "ready" if q221_clock["state"] == "complete" else "blocked", "progress": 0, "detail": "Current live-source markers are not historical clock proof"},
+        {"label": "Timestamped historical USAspending policy vintages", "status": q221_clock["state"], "progress": q221_clock["progress_percent"], "detail": q221_clock["detail"]},
+        {"label": "Award-level public-observation boundary + exact transaction applicability", "status": "ready" if q221_clock["state"] == "complete" else "blocked", "progress": 0, "detail": "Historical documentation alone does not prove first public observation for the fixed award transaction class"},
         {"label": "Award/modification and agency-specific transaction semantics", "status": "blocked", "progress": 0, "detail": "DoD/USACE 90-day and FAR exception treatment must be historically applicable to the fixed transaction classes"},
         {"label": "Frozen recipient-to-issuer mapping + pre-event capability", "status": "blocked", "progress": 0, "detail": "Issuer/entity identity and capability state must be fixed before outcomes"},
         {"label": "Correction/modification revision lineage", "status": "blocked", "progress": 0, "detail": "Transaction corrections and amendments must preserve the as-observable historical state"},
-        {"label": "Independent PIT reproduction", "status": "blocked", "progress": 0, "detail": "Requires positive historical public-boundary and identity receipts"},
+        {"label": "Independent PIT reproduction", "status": "blocked", "progress": 0, "detail": "Requires positive award-level clock and identity receipts"},
         {"label": "Pre-performance cheap falsifiers", "status": "blocked", "progress": 0, "detail": "Award-size-only collapse, lookahead, mapping permutation and agency-clock perturbation"},
     ]
 
@@ -1120,12 +1151,12 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "completed_milestones": q221_complete,
                 "total_milestones": q221_total,
                 "current_milestone": (
-                    "Historical USAspending public-boundary / issuer-mapping PIT gate"
+                    "Award-level public-observation boundary + issuer mapping"
                     if q221_clock["state"] == "complete"
-                    else "Historical USAspending public-clock applicability and agency exceptions"
+                    else "Historical USAspending policy vintages"
                 ),
                 "current_milestone_progress_percent": 0 if q221_clock["state"] == "complete" else q221_clock["progress_percent"],
-                "current_milestone_status": "ready",
+                "current_milestone_status": q221_clock["state"] if q221_clock["state"] != "complete" else "ready",
                 "current_milestone_detail": q221_clock["detail"],
                 "next_gate": q221_clock["next_gate"],
                 "milestones": q221_milestones,
@@ -1241,9 +1272,9 @@ def candidate_development_roadmap(
         complete = q221_gate["state"] == "complete"
         return [
             {"id": "Q221-CONTRACT", "label": "Frozen R&D → procurement-option-value contract", "status": "completed", "next": "fixed transaction classes and pre-event exposure"},
-            {"id": "Q221-CLOCK", "label": "Historical USAspending public-observation clock + agency exceptions", "status": "completed" if complete else "ready", "next": q221_gate["next_gate"]},
-            {"id": "Q221-APPLICABILITY", "label": "Historical publication-vintage / transaction-class applicability", "status": "ready" if complete else "blocked", "next": "immutable historical public-boundary receipt"},
-            {"id": "Q221-TRANSACTION", "label": "Award-versus-modification state and agency-specific delay classification", "status": "blocked", "next": "frozen transaction semantics"},
+            {"id": "Q221-VINTAGES", "label": "Timestamped historical USAspending policy vintages", "status": "completed" if complete else q221_gate["state"], "next": q221_gate["next_gate"]},
+            {"id": "Q221-BOUNDARY", "label": "Award-level public-observation boundary and exact transaction applicability", "status": "ready" if complete else "blocked", "next": "fixed target award transactions with documented observable state"},
+            {"id": "Q221-TRANSACTION", "label": "Award-versus-modification state and DoD/USACE + FAR exception classification", "status": "blocked", "next": "frozen historical transaction semantics"},
             {"id": "Q221-IDENTITY", "label": "Frozen recipient-to-issuer mapping and pre-event capability", "status": "blocked", "next": "identity and capability provenance receipt"},
             {"id": "Q221-LINEAGE", "label": "Transaction correction / modification lineage", "status": "blocked", "next": "candidate-specific revision lineage"},
             {"id": "Q221-REPRO", "label": "Independent PIT reproduction", "status": "blocked", "next": "positive historical clock and identity receipts"},
