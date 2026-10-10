@@ -1574,13 +1574,16 @@ def planned_capacity_plan(
         status_value = str(run.get("status") or "")
         if status_value not in active_statuses:
             continue
+        # Candidate names in a commit message or maintenance/dispatch title do
+        # not imply that candidate's research is running. Only a real
+        # candidate-scoped Top-4 slot run may populate these two structures;
+        # ordinary candidate jobs are detected from the normalized work list.
         if "Top-4 Slot " in title:
             parts = title.split("Top-4 Slot ", 1)[1].strip().split()
             if len(parts) >= 2 and parts[0] in {"windows", "ubuntu_x64", "ubuntu_arm64"}:
                 active_slot_scopes.add((parts[0], parts[1]))
-        for code in ("Q218", "Q219", "Q220", "Q221"):
-            if code.lower() in title.lower():
-                active_candidate_names.add(code)
+                if parts[1] in {"Q218", "Q219", "Q220", "Q221"}:
+                    active_candidate_names.add(parts[1])
 
     q104_census_receipt = read_json_file("research/evidence/q104_i19_13f_historical_identity_census_latest.json")
     q104_census_ready = q104_census_clock_complete(q104_census_receipt)
