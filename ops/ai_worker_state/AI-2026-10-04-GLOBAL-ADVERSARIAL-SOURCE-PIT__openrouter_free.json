@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-09T22:54:15.432445Z",
+  "observed_at_utc": "2026-10-10T06:23:05.535622Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 41.077,
-  "stdout": "\n\n## Adversarial Review Handoff — Q202‑Q204 / Q205 Source‑PIT Readiness\n\n**Task:** AI‑2026‑10‑04‑GLOBAL‑ADVERSARIAL‑SOURCE‑PIT  \n**Role:** Independent adversarial methods reviewer (second opinion)  \n**Standard:** Grok Q194‑Q201 review extended to the information‑timing family and the NLRB channel  \n**Constraint:** Paper‑only; no performance, ranking, tuning, promotion, or live execution.\n\n---\n\n### 1. Summary of Findings\n\n| Candidate | Current Gate (from `orthogonal_pit_next_gate.py`) | Durability Class (per `source_readiness_snapshot_guard.py`) | Core Attack Surface |\n|-----------|---------------------------------------------------|-------------------------------------------------------------|---------------------|\n| **Q202** | `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT` | `PROVISIONAL_LIVE_PROBE_ONLY` (unless receipt contains durable key) | Endpoint drift, timestamp granularity, revision lineage |\n| **Q203** | `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT` | Same as above | Same as above; possible overlap with Q202 |\n| **Q204** | `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT` | Same as above | Same as above; possible financing‑transmission confound |\n| **Q205** | *Not present in `NEXT_GATES`* (discovery‑only) | No receipt exists | Entire channel is unvalidated; entity‑exposure mapping, public‑observation clock, and revision lineage are completely unexamined |\n\n**Bottom line:** None of the four candidates currently meets the immutable‑snapshot standard required for PIT validation. Q202‑Q204 are stuck at a provisional feasibility receipt that is not durably bound to a frozen historical artifact. Q205 has not even completed discovery, let alone source‑feasibility validation.\n\n---\n\n### 2. Candidate‑Specific Attacks\n\n#### Q202‑Q204 (Information‑Timing Family)\n\n**Mechanism (inferred from context):** These candidates presumably exploit the *absence* or *latency* of public information (e.g., SEC filing arrival, financing transmission, public‑information latency). The exact mechanism is not fully specified in the provided candidate specs, but the next‑gate compiler treats them as a block sharing the receipt `research/evidence/q202_q204_information_timing_feasibility_latest.json`.\n\n**Attacks:**\n\n1. **Current‑endpoint drift** – The feasibility receipt is likely based on a live probe of an API or documentation page. If the receipt lacks an immutable dated snapshot (e.g., `snapshot_sha256`, `vintage_sha256`), then the “source feasibility” classification is provisional and could be invalidated by a routine API update or terms‑of‑service change.  \n   *Minimal falsifier:* Re‑run the same probe today and compare the response hash to the receipt’s recorded hash. A mismatch proves the receipt is not durable.  \n   *Missing artifact:* An immutable, dated snapshot of the source API response (or a frozen copy of the relevant documentation) covering the entire historical event window, stored with a cryptographic hash and a chain‑of‑custody record.\n\n2. **Historical observation/publication timestamps** – For an information‑timing candidate, the exact timestamp of public dissemination is the *entire* event clock. If the source system backfills or revises timestamps (e.g., EDGAR’s filing time vs. acceptance time, or a news‑wire correction), the candidate’s clock is broken.  \n   *Minimal falsifier:* Attempt to retrieve the original timestamp for a known historical event from the current live system. If the current system returns a different timestamp (or a “last updated” flag) than what was recorded at the time, the clock is not stable.  \n   *Missing artifact:* A frozen, time‑stamped extract of the raw public‑observation feed (e.g., full SEC EDGAR submission feed, RSS, or wire‑service API) for the entire study period, with a manifest of retrieval times and any system‑side revision flags.\n\n3. **Revision/amendment/correction/QC lineage** – SEC filings are frequently amended (e.g., 8‑K/A, 10‑K/A). If the candidate does not explicitly track the amendment lineage, it may treat a corrected filing as a new event or miss the original dissemination entirely.  \n   *Minimal falsifier:* Feed a known amended filing (with a documented correction history) into the candidate’s event‑detection logic and verify that it uses the *original* public‑observation time of the first complete version, not the amendment time.  \n   *Missing artifact:* A frozen mapping of filing‑accession‑number → (original filing time, amendment history, public‑observation time) for all events in the universe, sourced from an immutable snapshot.\n\n4. **Same‑day/date‑only leakage** – If the candidate’s decision boundary says “if only a date is available, use next regular trading‑session boundary,” but the underlying source actually provides intraday timestamps, the candidate may be inadvertently using future information (if the timestamp is not yet public at the hypothetical entry time).  \n   *Minimal falsifier:* Check a sample of historical events where only a date was recorded in the candidate’s feature set. Verify that the source system *did not* provide an intraday timestamp at the time of the event. If it did, the candidate’s clock discipline is violated.  \n   *Missing artifact:* A documented, frozen decision‑rule matrix that maps source‑timestamp granularity (date‑only vs. intraday) to the appropriate public‑observation boundary, with a provenance trail for each mapping.\n\n5. **Synthetic mutation tests in candidate‑specific compilers** – The next‑gate compiler (`orthogonal_pit_next_gate.py`) likely contains mutation tests (shift event time, shuffle assignments). If the underlying data source has changed since the mutation test was designed, the test may no longer be valid.  \n   *Minimal falsifier:* Re‑run the mutation test on a current snapshot of the source data. If the test’s expected outcome (e.g., “candidate fails to predict”) changes, the test is invalidated by source drift.  \n   *Missing artifact:* A version‑locked copy of the source data snapshot used to design the mutation tests, with a hash that can be compared against any future snapshot.\n\n#### Q205 (NLRB Labor‑Representation Certification Channel)\n\n**Status:** Discovery‑only; no source‑feasibility receipt exists.\n\n**Attacks:**\n\n1. **Unvalidated source channel** – The NLRB certification process is a completely new information source. There is no evidence that the public‑observation clock (the date/time the certification becomes publicly observable) is stable, that the data can be retrieved historically, or that the entity‑to‑issuer mapping is frozen.  \n   *Minimal falsifier:* Attempt to retrieve a historical NLRB certification decision from a public source. If the source does not provide a stable, time‑stamped record, the channel fails the basic feasibility test.  \n   *Missing artifact:* A discovery report that includes (a) a preliminary source‑feasibility assessment, (b) a specification of the public‑observation clock, (c) a frozen entity‑exposure mapping (certified‑union‑facility → issuer), and (d) a plan for obtaining an immutable historical snapshot.\n\n2. **Frozen pre‑event entity/exposure mapping** – The NLRB certification targets a specific facility or bargaining unit. Mapping that facility to a publicly traded issuer requires a corporate‑structure map (e.g., parent‑subsidiary relationships) that must be frozen *before* any outcome observation. If the mapping is based on current corporate structure, it may be retrospectively altered by mergers, spin‑offs, or name changes.  \n   *Minimal falsifier:* Take a historical NLRB certification event and map the facility to the issuer using *only* the corporate structure that existed at the time of the certification. Compare this to a mapping made using current corporate data. A discrepancy proves the mapping is not frozen.  \n   *Missing artifact:* A frozen, time‑",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 19.09,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter returned tool-call syntax instead of a final worker handoff.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791586455-a1JCXTJWavYoDswk7PME",
-  "usage": {
-    "prompt_tokens": 5387,
-    "completion_tokens": 3200,
-    "total_tokens": 8587,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1645,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
