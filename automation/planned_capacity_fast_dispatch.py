@@ -27,9 +27,9 @@ PLATFORM_NAMES = {
     "Planned Capacity Fast Dispatch",
 }
 
-FOCUS_CANDIDATES = {"Q104:I19", "Q218", "Q220"}
-TOP4_CANDIDATES = {"Q218", "Q220"}
-TOP4_PRIORITY = ("Q218", "Q220")
+FOCUS_CANDIDATES = {"Q104:I19", "Q220", "Q221"}
+TOP4_CANDIDATES = {"Q220", "Q221"}
+TOP4_PRIORITY = ("Q220", "Q221")
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 I19_CENSUS_WORKFLOW = ".github/workflows/q104-i19-13f-historical-identity-census.yml"
 
