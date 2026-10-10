@@ -1501,7 +1501,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-10T15:53:52.069860+00:00",
+    "generated_at_utc": "2026-10-10T16:11:55.446792+00:00",
     "next_research_focus": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220, and Q218. Q104:I19 next: finish the already-running historical 13F census; after it terminates, recover only failed shards under the bounded retry policy, then compile the frozen candidate-specific PIT state and require independent reproduction. Do not launch a duplicate full census while a useful run remains active. Q220 historical as-filed population gate is positive: 55 filing records across the frozen eight-issuer universe, archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. Next gate: historical prefix/acceptance-time PIT representation-state compiler. Population receipt fingerprint 047795d1816b6d99570b47fcc4d00f801e5d624b80db7d2fe4c77c1adba7e5bd. Q218 next: reconcile original-result/current-context receipts and the fixed contract; do not repeat the consumed primary one-shot or its already-recorded 8-event fresh-symbol replication. Q219 and Q221 remain reserve design/source tracks and are outside active automatic dispatch; their prior evidence is preserved.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1509,7 +1509,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "34121448e421582ecd8c99d57f430d4ebfb47b35"
+    "source_master_sha": "4b4cc8dc34edbda6998fd80322581604cf5f1e2e"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-10T15:53:52.069860+00:00",
+  "generated_at_utc": "2026-10-10T16:11:55.446792+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4538,6 +4538,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "ops/visible-chat-handoff-dashboard-decision-log-20261010",
+        "number": 1289,
+        "title": "OPS: show durable chat handoff and recent decisions on dashboard",
+        "updatedAt": "2026-10-10T15:55:24Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1289"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/q104-pre2015-hdr-sgml-fallback-20261010",
         "number": 1285,
         "title": "FIX: repair legacy Q104 acceptance headers through exact SEC SGML fallback",
@@ -4667,6 +4675,16 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: surface a copyable current chat handoff in the dashboard (#1290)",
+        "sha": "4b4cc8dc34edbda6998fd80322581604cf5f1e2e",
+        "timestamp": "2026-10-10T18:11:41+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "dd1f594247601a369cdd61dfc3ec545c075a41a7",
+        "timestamp": "2026-10-10T15:53:54Z"
+      },
+      {
         "message": "OPS: correct current handoff and Q104 dashboard run selection",
         "sha": "34121448e421582ecd8c99d57f430d4ebfb47b35",
         "timestamp": "2026-10-10T17:53:41+02:00"
@@ -4695,16 +4713,6 @@
         "message": "OPS: synchronize S10 phone runtime status",
         "sha": "2d9fb266c7298f037859c68872473f82526ee9b3",
         "timestamp": "2026-10-10T15:34:25Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f9738849c354c85be8693236f1a71b5958969c2d",
-        "timestamp": "2026-10-10T15:33:27Z"
-      },
-      {
-        "message": "OPS: refresh dashboard after candidate fixes and handoff update",
-        "sha": "90bc810796d3d1a1e47100eef7af463ba78b1e9f",
-        "timestamp": "2026-10-10T17:33:11+02:00"
       }
     ]
   },
@@ -4802,7 +4810,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "34121448e421582ecd8c99d57f430d4ebfb47b35",
+  "source_master_sha": "4b4cc8dc34edbda6998fd80322581604cf5f1e2e",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4916,6 +4924,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "38065452639"
+    "run_id": "38066667799"
   }
 }
