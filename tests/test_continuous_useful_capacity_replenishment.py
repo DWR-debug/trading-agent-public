@@ -245,5 +245,5 @@ def test_unrelated_research_waves_do_not_start_on_focused_pull_request():
     )
     for path in paths:
         text = (root / path).read_text(encoding="utf-8")
-        assert "\\n  pull_request:" not in text, path
+        assert "\n  pull_request:" not in text, path
         assert "workflow_dispatch:" in text, path
