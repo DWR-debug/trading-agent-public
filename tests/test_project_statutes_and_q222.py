@@ -49,10 +49,11 @@ def test_focused_operational_state_locks_automatic_candidate_dispatch():
     import json
     state=json.loads((ROOT/"ops/trading_agent_os_state.json").read_text(encoding="utf-8"))
     overlay=state["top_candidate_capacity_overlay"]["windows_B"]
-    assert overlay["priority"] == ["Q220", "Q218"]
+    assert overlay["priority"] == ["Q220", "Q221"]
     assert "Q104:I19" in overlay["new_overlay"] or "Q104:I19" in state["current_research_focus"]["active_next"]
-    assert state["top_candidate_capacity_overlay"].get("discovery_reserve") == []
-    assert state["top_candidate_capacity_overlay"].get("paused_candidates") == ["Q219","Q221"]
+    assert state["top_candidate_capacity_overlay"].get("discovery_reserve") == ["Q218", "Q219"]
+    assert state["top_candidate_capacity_overlay"].get("paused_candidates") == ["Q218","Q219"]
     assert "Q219" not in overlay["priority"]
     assert "Q220" in overlay["priority"]
-    assert "Q221" not in overlay["priority"]
+    assert "Q221" in overlay["priority"]
+    assert "Q218" not in overlay["priority"]

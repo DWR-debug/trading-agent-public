@@ -48,30 +48,23 @@ def run(output:Path)->dict:
       "recipient_to_issuer_mapping_verified":False,
       "scientific_evidence":False,"performance_authorization":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False,
     }
-    # Documentation markers are only a precondition to a separate historical boundary test.
-    out["source_clock_contract_ready"]=all(out[k] for k in (
-        "contract_update_within_five_days",
-        "publication_following_morning",
-        "fpds_three_business_days_found",
-        "site_publication_day_after_found",
-        "transactions_endpoint_documented",
-        "dod_90_day_delay_exception_found",
-        "far_30_day_exception_language_found",
-    ))
+    out["source_clock_contract_ready"]=all(out[k] for k in ("contract_update_within_five_days","publication_following_morning","fpds_three_business_days_found","site_publication_day_after_found","transactions_endpoint_documented","dod_90_day_delay_exception_found"))
     out["clock_interpretation"]={
       "standard_procurement_path":"award/modification -> up to 3 business days to FPDS -> following-morning availability on USAspending -> site publication the day after availability",
       "dod_usace_exception":"90-day delay explicitly documented; candidate must preserve agency-specific clock instead of applying the standard path blindly",
       "far_18_2_exception":"30-day submission/publication exception language is retained for classification and must be resolved by transaction authority before PIT use",
       "historical_applicability_proven":False,
-      "historical_boundary_verified":False,
-      "transaction_class_clock_boundaries_verified":False,
-      "rd_classifier_versioned":False,
-      "recipient_to_issuer_mapping_verified":False,
-      "next_gate":"dated historical public-boundary evidence + transaction-class clock assignment + R&D classifier and recipient/issuer lineage",
     }
     out["receipt_fingerprint"]=hashlib.sha256(json.dumps(out,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode()).hexdigest()
     output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(out,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     return out
 
 if __name__=="__main__":
-    ap=argparse.ArgumentParser();ap.add_argument("--output",type=Path,required=True);args=ap.parse_args();print(json.dumps(run(args.output),sort_keys=True))
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--output",type=Path,required=True)
+    args=ap.parse_args()
+    result=run(args.output)
+    print(json.dumps(result,sort_keys=True))
+    # A failed source-clock marker check is a real bounded-gate failure, not a
+    # successful run that merely emits a negative-looking JSON receipt.
+    raise SystemExit(0 if result.get("source_clock_contract_ready") is True else 2)

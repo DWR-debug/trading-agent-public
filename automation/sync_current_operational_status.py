@@ -29,48 +29,69 @@ def _load_json(path: Path, default: Any) -> Any:
 
 
 def q220_population_focus_sentence(receipt: dict[str, Any]) -> str:
-    """Render Q220 progress only from a positive receipt tied to exact current code/contract."""
+    """Render Q220 progress only when the current source gate and contract both match."""
     status = str(receipt.get("status") or "")
     fingerprint = str(receipt.get("receipt_fingerprint") or "")
+    gate_sha = str(receipt.get("gate_code_sha256") or "")
+    contract_sha = str(receipt.get("contract_sha256") or "")
+
+    def valid_sha(value: str) -> bool:
+        return len(value) == 64 and all(ch in "0123456789abcdef" for ch in value.lower())
+
     try:
-        gate_code_sha = hashlib.sha256((ROOT / "automation/q220_as_filed_xbrl_population_gate.py").read_bytes()).hexdigest()
-        contract_sha = hashlib.sha256((ROOT / "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json").read_bytes()).hexdigest()
+        current_gate_sha = hashlib.sha256(
+            (ROOT / "automation/q220_as_filed_xbrl_population_gate.py").read_bytes()
+        ).hexdigest()
+        current_contract_sha = hashlib.sha256(
+            (ROOT / "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json").read_bytes()
+        ).hexdigest()
     except OSError:
-        gate_code_sha = contract_sha = ""
-    current = bool(gate_code_sha and contract_sha) and (
-        receipt.get("gate_code_sha256") == gate_code_sha
-        and receipt.get("contract_sha256") == contract_sha
-    )
-    positive = (
+        current_gate_sha = ""
+        current_contract_sha = ""
+
+    if status != "Q220_AS_FILED_XBRL_POPULATION_COMPLETED":
+        if status == "Q220_AS_FILED_XBRL_POPULATION_BLOCKED" or int(receipt.get("failure_count") or 0) > 0:
+            return (
+                "Q220 current-code population gate is BLOCKED: no positive current-code receipt is published. "
+                "Complete and reconcile the bounded fixed-population gate before opening the historical prefix/PIT compiler. "
+            )
+        return (
+            "Q220 current-code population gate is BLOCKED: no positive current-code receipt is published. "
+            "The fixed-population source/schema gate must complete before the historical prefix/PIT compiler opens. "
+        )
+
+    positive_shape = (
         receipt.get("candidate_id") == "Q220"
         and receipt.get("mode") == "population"
-        and status == "Q220_AS_FILED_XBRL_POPULATION_COMPLETED"
         and int(receipt.get("failure_count") or 0) == 0
         and int(receipt.get("record_count") or 0) >= 40
         and int(receipt.get("row_count") or 0) >= 40
-        and len(fingerprint) == 64
-        and all(ch in "0123456789abcdef" for ch in fingerprint.lower())
-        and current
+        and valid_sha(fingerprint)
     )
-    if positive:
+    current_provenance = (
+        valid_sha(gate_sha)
+        and valid_sha(contract_sha)
+        and gate_sha == current_gate_sha
+        and contract_sha == current_contract_sha
+    )
+    if not current_provenance:
         return (
-            "Q220 historical as-filed population gate is positive and version-bound: "
-            f"{int(receipt.get('row_count') or 0)} filing records across the frozen eight-issuer universe, "
-            "archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. "
-            "Next gate: historical prefix/acceptance-time PIT representation-state compiler. "
-            f"Population receipt fingerprint {fingerprint}. "
+            "Q220 population receipt is STALE: the receipt does not match the current gate code and frozen contract. "
+            "A fresh post-fix population receipt is required; no historical prefix/PIT compiler may open from a legacy or hashless receipt. "
         )
-    if status == "Q220_AS_FILED_XBRL_POPULATION_BLOCKED" and fingerprint:
-        return "Q220 current-code population gate is BLOCKED; preserve the negative receipt and repair only its identified source/mapping or publication blocker. "
-    if status == "Q220_AS_FILED_XBRL_POPULATION_COMPLETED" and not current:
+    if not positive_shape:
         return (
-            "Q220 previous population receipt is STALE because it does not bind the current gate-code SHA and frozen contract SHA. "
-            "A fresh post-fix population receipt must be published and reconciled before starting the historical prefix/acceptance-time PIT compiler. "
+            "Q220 current-code population gate is BLOCKED: no positive current-code receipt is published. "
+            "Reconcile the receipt schema, counts, and zero-failure requirement before proceeding. "
         )
     return (
-        "Q220 next: the version-pinned SEC CYD resolver is merged, but no positive current-code receipt is published. "
-        "Repair the population receipt publication path and complete the bounded fixed-population gate before the historical prefix/PIT compiler. "
+        "Q220 historical as-filed population gate is positive and version-bound: "
+        f"{int(receipt.get('row_count') or 0)} filing records across the frozen eight-issuer universe, "
+        "archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. "
+        "Next gate: historical prefix/acceptance-time PIT representation-state compiler. "
+        f"Population receipt fingerprint {fingerprint}. "
     )
+
 
 def _git(*args: str) -> str:
     return subprocess.check_output(
@@ -593,15 +614,15 @@ def generate(
         else:
             q218_sentence = " Q218 remains non-authorized for performance. "
         recorded_next_research_focus = (
-            "Active execution focus is locked to exactly three candidates: Q104:I19, Q220, and Q218. "
-            "Q104:I19 next: finish the already-running historical 13F census; after it terminates, recover only failed shards "
-            "under the bounded retry policy, then compile the frozen candidate-specific PIT state and require independent reproduction. "
-            "Do not launch a duplicate full census while a useful run remains active. "
+            "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. "
+            "Q104:I19 next: finish the existing historical 13F census or its currently useful successor run; after a terminal result, recover only unresolved shard/header evidence and never restart the full census blindly. "
+            "Then compile the frozen concept-specific PIT state and require independent reproduction. "
             + q220_population_sentence +
-            "Q218 next: reconcile original-result/current-context receipts and the fixed contract; do not repeat the consumed primary one-shot "
-            "or its already-recorded 8-event fresh-symbol replication. "
-            "Q219 and Q221 remain reserve design/source tracks and are outside active automatic dispatch; their prior evidence is preserved. "
+            "Q221 next: run the bounded USAspending public-clock workpack in parallel with Q220 when Windows capacity allows. "
+            "The current live-source marker check is not historical proof: reconstruct the publication vintage and transaction classes, classify the DoD/USACE 90-day and FAR exceptions, and freeze recipient-to-issuer mapping before PIT validation. "
+            "Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run. "
             + q218_sentence +
+            "Q219 remains paused; its prior evidence is preserved. "
             "OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) "
             "returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. "
             "Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. "
