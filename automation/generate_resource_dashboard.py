@@ -406,7 +406,7 @@ CANDIDATE_DEVELOPMENT_MILESTONES = (
     "ONE-SHOT PERFORMANCE",
 )
 
-FOCUS_CANDIDATES = ("Q104:I19", "Q218", "Q220")
+FOCUS_CANDIDATES = ("Q104:I19", "Q220", "Q218")
 ACTIVE_RUN_STATUSES = {"queued", "in_progress", "waiting", "pending"}
 
 
@@ -786,10 +786,35 @@ def q220_as_filed_population_status(runs: list[dict[str, Any]]) -> dict[str, Any
     }
 
 
+
+def q218_fresh_symbol_replication_complete() -> bool:
+    """Validate the already-recorded disjoint Q218 trial without initiating another outcome run."""
+    result = read_json_file("research/evidence/q218_independent_replication_performance_latest.json")
+    return (
+        result.get("replication_trial_id") == "T-2026-10-08-Q218-REPLICATION-01"
+        and result.get("source_trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+        and result.get("performance_evaluation") is True
+        and result.get("holdout_evaluation") is False
+        and result.get("selection_used") is False
+        and result.get("holdout_used_for_selection") is False
+        and result.get("parameter_search") is False
+        and result.get("threshold_search") is False
+        and result.get("horizon_search") is False
+        and result.get("asset_search") is False
+        and result.get("variant_search") is False
+        and result.get("family_ranking") is False
+        and result.get("promotion_decision") is False
+        and result.get("safety", {}).get("paper_only") is True
+        and result.get("safety", {}).get("live_trading_enabled") is False
+        and result.get("safety", {}).get("orders_enabled") is False
+        and result.get("safety", {}).get("automatic_promotion") is False
+    )
+
 def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q104_census = q104_census_status(runs)
     q218_prereg = q218_prereg_status()
     q218_receipts = q218_receipt_state()
+    q218_replication_complete = q218_fresh_symbol_replication_complete()
 
     q104_compiler = q104_historical_compilation_status()
     q220_population = q220_as_filed_population_status(runs)
@@ -818,6 +843,7 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
         {"label": "Independent Architecture PIT", "status": q218_ind_state, "progress": q218_ind_progress, "detail": q218_ind_detail},
         {"label": "Preregistration + authorization reconcile", "status": q218_prereg["state"], "progress": q218_prereg["progress_percent"], "detail": q218_prereg["detail"]},
         {"label": "One-shot performance", "status": "complete" if q218_prereg.get("performance_executed") else ("ready" if q218_prereg.get("performance_authorized") else "closed"), "progress": 100 if q218_prereg.get("performance_executed") else 0, "detail": q218_prereg.get("detail") if q218_prereg.get("performance_executed") else ("explizit autorisiert; Ausführung ausstehend" if q218_prereg.get("performance_authorized") else "erst nach separater immutable authorization; aktuell geschlossen")},
+        {"label": "Disjoint fresh-symbol replication", "status": "complete" if q218_replication_complete else ("next" if q218_prereg.get("performance_executed") else "blocked"), "progress": 100 if q218_replication_complete else 0, "detail": "Positive immutable replication receipt: 8 event pairs; descriptive only" if q218_replication_complete else "separate replication trial not yet positively closed"},
     ]
 
     def overall(milestones: list[dict[str, Any]]) -> tuple[int, int, int]:
@@ -890,13 +916,15 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "completed_milestones": q218_complete,
                 "total_milestones": q218_total,
                 "current_milestone": (
-                    "Post-performance validation / fresh-symbol replication"
+                    "Cost-adjusted independent OOS assessment"
+                    if q218_prereg.get("performance_executed") and q218_replication_complete
+                    else ("Post-performance validation / fresh-symbol replication"
                     if q218_prereg.get("performance_executed")
                     else (
                         "Preregistration + authorization reconcile"
                         if q218_receipts["independent_complete"]
                         else ("Independent Architecture PIT" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-pair gate" if q218_receipts["source_complete"] else "Source gate"))
-                    )
+                    ))
                 ),
                 "current_milestone_progress_percent": (
                     0 if q218_prereg.get("performance_executed")
@@ -904,21 +932,26 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                           else (100 if q218_receipts["event_pair_complete"] and q218_receipts["source_complete"] else 0))
                 ),
                 "current_milestone_status": (
-                    "next" if q218_prereg.get("performance_executed")
+                    "blocked" if q218_prereg.get("performance_executed") and q218_replication_complete
+                    else ("next" if q218_prereg.get("performance_executed")
                     else (q218_prereg["state"] if q218_receipts["independent_complete"]
-                          else "open")
+                          else "open"))
                 ),
                 "current_milestone_detail": (
-                    "Die 6 definierten Q218-Milestones sind abgeschlossen; nächste Generalisierungsprüfung: disjunkte Fresh-Symbol-Replikation"
+                    "Die disjunkte Fresh-Symbol-Replikation ist mit 8 Event-Paaren dokumentiert; unabhängige kostenbereinigte OOS-Evidenz fehlt. Jeder weitere outcome-bearing Lauf benötigt eine separate explizite Autorisierung."
+                    if q218_prereg.get("performance_executed") and q218_replication_complete
+                    else ("Die 6 definierten Q218-Milestones sind abgeschlossen; disjunkte Fresh-Symbol-Replikation folgt."
                     if q218_prereg.get("performance_executed")
                     else (q218_prereg["detail"] if q218_receipts["independent_complete"]
-                          else (q218_ind_detail if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-Pair receipt fehlt" if q218_receipts["source_complete"] else "Source-Gate Receipt fehlt")))
+                          else (q218_ind_detail if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("Event-Pair receipt fehlt" if q218_receipts["source_complete"] else "Source-Gate Receipt fehlt"))))
                 ),
                 "next_gate": (
-                    "independent fresh-symbol replication / post-performance generalization"
+                    "separate explicit authorization and preregistration for any new cost-aware independent OOS trial"
+                    if q218_prereg.get("performance_executed") and q218_replication_complete
+                    else ("independent fresh-symbol replication / post-performance generalization"
                     if q218_prereg.get("performance_executed")
                     else (q218_prereg["next_gate"] if q218_receipts["independent_complete"]
-                          else ("independent architecture PIT reproduction" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("event-pair gate" if q218_receipts["source_complete"] else "source gate")))
+                          else ("independent architecture PIT reproduction" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("event-pair gate" if q218_receipts["source_complete"] else "source gate"))))
                 ),
                 "milestones": q218_milestones,
                 "performance_authorization_allowed": False,
@@ -1030,6 +1063,7 @@ def candidate_development_roadmap(
         ]
     prereg = q218_prereg_status()
     execution_done = bool(prereg.get("performance_executed"))
+    replication_done = q218_fresh_symbol_replication_complete()
     source_event_done = q218_receipts.get("source_complete") and q218_receipts.get("event_pair_complete")
     if execution_done:
         return [
@@ -1039,7 +1073,8 @@ def candidate_development_roadmap(
             {"id": "Q218-ROBUST", "label": "Pre-performance robustness", "status": "completed", "next": "post-performance generalization"},
             {"id": "Q218-G4", "label": "Exact current-master re-authorization reconcile", "status": "completed", "next": "authorization consumed by completed one-shot"},
             {"id": "Q218-G5", "label": "One-shot performance", "status": "completed", "next": "fresh-symbol disjoint replication"},
-            {"id": "Q218-POST", "label": "Post-performance validation / fresh-symbol replication", "status": "next", "next": "disjoint GOOGL/META/ORCL/PFE replication"},
+            {"id": "Q218-POST", "label": "Post-performance validation / fresh-symbol replication", "status": "completed" if replication_done else "next", "next": "8 disjoint event pairs have a positive descriptive receipt" if replication_done else "disjoint GOOGL/META/ORCL/PFE replication"},
+            {"id": "Q218-OOS", "label": "Cost-adjusted independent OOS evidence", "status": "blocked", "next": "separate explicit authorization and frozen cost/OOS preregistration"},
         ]
     return [
         {"id": "Q218-SOURCE-EVENT", "label": "Fresh SEC Source + strict Item 2.02 Event-Pair revalidation", "status": "completed" if source_event_done else "ready", "next": "fresh current-context receipts after strict eligibility change"},
@@ -1061,6 +1096,8 @@ def candidate_pipeline(
     runs = runs or []
     progress = candidate_progress_snapshot(runs)
     q218_receipts = q218_receipt_state()
+    q218_prereg = q218_prereg_status()
+    q218_replication_complete = q218_fresh_symbol_replication_complete()
     result = []
     active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in FOCUS_CANDIDATES}
     for item in work:
@@ -1075,9 +1112,13 @@ def candidate_pipeline(
         "Q104:I19": "FORMAL READINESS · HISTORICAL 13F CENSUS",
         "Q220": "FRONTIER DISCOVERY · AS-FILED SEC/XBRL POPULATION + REPRESENTATION GAP",
         "Q218": (
-            "FRONTIER DISCOVERY · PREREGISTRATION + AUTHORIZATION RECONCILE"
-            if q218_receipts["independent_complete"]
-            else "FRONTIER DISCOVERY · INDEPENDENT ARCHITECTURE PIT"
+            "FRONTIER DISCOVERY · COST-AWARE OOS GATE BLOCKED"
+            if q218_prereg.get("performance_executed") and q218_replication_complete
+            else (
+                "FRONTIER DISCOVERY · PREREGISTRATION + AUTHORIZATION RECONCILE"
+                if q218_receipts["independent_complete"]
+                else "FRONTIER DISCOVERY · INDEPENDENT ARCHITECTURE PIT"
+            )
         ),
     }
     for candidate in FOCUS_CANDIDATES:
@@ -1241,25 +1282,7 @@ def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str
     ]
     by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
     q218_prereg = q218_prereg_status()
-    q218_replication = read_json_file("research/evidence/q218_independent_replication_performance_latest.json")
-    q218_replication_complete = (
-        q218_replication.get("replication_trial_id") == "T-2026-10-08-Q218-REPLICATION-01"
-        and q218_replication.get("source_trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
-        and q218_replication.get("performance_evaluation") is True
-        and q218_replication.get("holdout_evaluation") is False
-        and q218_replication.get("selection_used") is False
-        and q218_replication.get("parameter_search") is False
-        and q218_replication.get("threshold_search") is False
-        and q218_replication.get("horizon_search") is False
-        and q218_replication.get("asset_search") is False
-        and q218_replication.get("variant_search") is False
-        and q218_replication.get("family_ranking") is False
-        and q218_replication.get("promotion_decision") is False
-        and q218_replication.get("safety", {}).get("paper_only") is True
-        and q218_replication.get("safety", {}).get("live_trading_enabled") is False
-        and q218_replication.get("safety", {}).get("orders_enabled") is False
-        and q218_replication.get("safety", {}).get("automatic_promotion") is False
-    )
+    q218_replication_complete = q218_fresh_symbol_replication_complete()
     q218_gates = q218_receipt_state()
     q218_blocked = bool(
         q218_gates.get("source_complete")
@@ -1358,25 +1381,7 @@ def planned_capacity_plan(
     q104_census_ready = q104_census_clock_complete(q104_census_receipt)
     q218_receipts = q218_receipt_state()
     q218_prereg = q218_prereg_status()
-    q218_replication_result = read_json_file("research/evidence/q218_independent_replication_performance_latest.json")
-    q218_replication_complete = (
-        q218_replication_result.get("replication_trial_id") == "T-2026-10-08-Q218-REPLICATION-01"
-        and q218_replication_result.get("source_trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
-        and q218_replication_result.get("performance_evaluation") is True
-        and q218_replication_result.get("holdout_evaluation") is False
-        and q218_replication_result.get("selection_used") is False
-        and q218_replication_result.get("parameter_search") is False
-        and q218_replication_result.get("threshold_search") is False
-        and q218_replication_result.get("horizon_search") is False
-        and q218_replication_result.get("asset_search") is False
-        and q218_replication_result.get("variant_search") is False
-        and q218_replication_result.get("family_ranking") is False
-        and q218_replication_result.get("promotion_decision") is False
-        and q218_replication_result.get("safety", {}).get("paper_only") is True
-        and q218_replication_result.get("safety", {}).get("live_trading_enabled") is False
-        and q218_replication_result.get("safety", {}).get("orders_enabled") is False
-        and q218_replication_result.get("safety", {}).get("automatic_promotion") is False
-    )
+    q218_replication_complete = q218_fresh_symbol_replication_complete()
 
     overlay = os_state.get("top_candidate_capacity_overlay", {})
     a_priority = [str(x) for x in overlay.get("windows_A", {}).get("priority", [])]
