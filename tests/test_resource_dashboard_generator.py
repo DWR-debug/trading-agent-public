@@ -420,3 +420,42 @@ def test_q221_dashboard_does_not_treat_live_source_smoke_as_historical_clock_pro
     assert result["progress_percent"] == 0
     assert "cannot establish what was publicly observable historically" in result["detail"]
     assert result["next_gate"].startswith("historical USAspending public boundary")
+
+
+
+def test_capacity_planner_ignores_candidate_names_in_active_maintenance_run_titles():
+    from automation import generate_resource_dashboard as dashboard
+
+    resources = [
+        {"name": "Windows self-hosted A", "capacity_state": "available", "current_assignments": 0},
+        {"name": "Windows self-hosted B", "capacity_state": "available", "current_assignments": 0},
+        {"name": "Windows self-hosted C", "capacity_state": "available", "current_assignments": 0},
+        {"name": "GitHub-hosted Ubuntu x64", "capacity_state": "available", "current_assignments": 0},
+        {"name": "GitHub-hosted ARM64", "capacity_state": "available", "current_assignments": 0},
+        {"name": "Free AI pool", "capacity_state": "available", "current_assignments": 0},
+    ]
+    active_maintenance = [{
+        "id": 12345,
+        "status": "in_progress",
+        "name": "Planned Capacity Fast Dispatch",
+        "display_title": "OPS: dispatch fresh receipt-defined Q220/Q221 capacity after status sync",
+        "path": ".github/workflows/planned-capacity-fast-dispatch.yml",
+    }]
+    focused = [
+        {"code": "Q104:I19", "next_gate": "historical 13F census"},
+        {"code": "Q220", "next_gate": "historical SEC/XBRL PIT compiler"},
+        {"code": "Q221", "next_gate": "historical USAspending policy-vintage gate"},
+    ]
+
+    plan = dashboard.planned_capacity_plan(resources, [], focused, {}, {}, recent_runs=active_maintenance)
+    planned = [
+        assignment
+        for row in plan
+        for assignment in row["planned_assignments"]
+        if assignment.get("scheduled") and assignment.get("dispatchable")
+    ]
+    q221 = [item for item in planned if item.get("candidate") == "Q221"]
+    assert len(q221) == 1
+    assert q221[0]["plan_id"] == "Q221-USASPENDING-PUBLIC-CLOCK"
+    assert next(row for row in plan if row["resource"] == "Windows self-hosted C")["planned_count"] == 1
+    assert all(item.get("candidate") not in {"Q218", "Q219"} for item in planned)
