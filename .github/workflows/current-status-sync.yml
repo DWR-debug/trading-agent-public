@@ -97,7 +97,7 @@ jobs:
       - name: Generate and publish synchronized status atomically
         shell: bash
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           export PUBLISH_MESSAGE='OPS: synchronize current operational status'
@@ -107,15 +107,15 @@ jobs:
           # and the contents/ref publish. On that race, regenerate from the new
           # master; never rebase stale status output onto a newer source commit.
           for attempt in 1 2 3 4 5; do
-            echo "STATUS_SYNC_ATTEMPT=\${attempt}/5"
+            echo "STATUS_SYNC_ATTEMPT=${attempt}/5"
             git fetch origin master
             git reset --hard origin/master
             source_master_sha="$(git rev-parse HEAD)"
-            export STATUS_SOURCE_SHA="\${source_master_sha}"
+            export STATUS_SOURCE_SHA="${source_master_sha}"
 
             # Refresh the mutable GitHub metadata on each attempt as well.
-            gh api "/repos/\${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" > "\${RUNNER_TEMP}/status/open_prs_raw.json"
-            gh api "/repos/\${GITHUB_REPOSITORY}/issues?state=open&labels=agent-cli-ready&per_page=100" > "\${RUNNER_TEMP}/status/agent_ready_issues_raw.json"
+            gh api "/repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" > "${RUNNER_TEMP}/status/open_prs_raw.json"
+            gh api "/repos/${GITHUB_REPOSITORY}/issues?state=open&labels=agent-cli-ready&per_page=100" > "${RUNNER_TEMP}/status/agent_ready_issues_raw.json"
             python - <<'PY'
           import json
           import os
@@ -152,16 +152,16 @@ jobs:
           PY
 
             python -m automation.sync_current_operational_status \
-              --source-master-sha "\${source_master_sha}" \
-              --workflow-run-id "\${GITHUB_RUN_ID}" \
-              --github-state "\${RUNNER_TEMP}/status/github_state.json"
+              --source-master-sha "${source_master_sha}" \
+              --workflow-run-id "${GITHUB_RUN_ID}" \
+              --github-state "${RUNNER_TEMP}/status/github_state.json"
             git diff --check
 
             # Do not publish if the branch changed during generation.
             latest_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
-            if [ "\${latest_master_sha}" != "\${source_master_sha}" ]; then
-              echo "STATUS_SYNC_RETRY_STALE_GENERATION attempt=\${attempt} source=\${source_master_sha} latest=\${latest_master_sha}"
-              sleep "\${attempt}"
+            if [ "${latest_master_sha}" != "${source_master_sha}" ]; then
+              echo "STATUS_SYNC_RETRY_STALE_GENERATION attempt=${attempt} source=${source_master_sha} latest=${latest_master_sha}"
+              sleep "${attempt}"
               continue
             fi
 
@@ -180,15 +180,15 @@ jobs:
           PY
 
             publish_args=(
-              --repository "\${GITHUB_REPOSITORY}"
+              --repository "${GITHUB_REPOSITORY}"
               --branch master
-              --base-sha "\${source_master_sha}"
+              --base-sha "${source_master_sha}"
               --file "docs/CURRENT_STATUS.md=docs/CURRENT_STATUS.md"
               --file "research/evidence/current_operational_state.json=research/evidence/current_operational_state.json"
               --file "research/evidence/trading_agent_chat_handoff.json=research/evidence/trading_agent_chat_handoff.json"
             )
-            if python -m automation.github_contents_publish "\${publish_args[@]}"; then
-              echo "CURRENT_STATUS_SYNC_PUBLISH_OK source=\${source_master_sha}"
+            if python -m automation.github_contents_publish "${publish_args[@]}"; then
+              echo "CURRENT_STATUS_SYNC_PUBLISH_OK source=${source_master_sha}"
               published=true
               break
             fi
@@ -196,15 +196,15 @@ jobs:
             # The publisher intentionally refuses to rebase a stale payload.
             # Retry only when master actually moved; otherwise surface a real error.
             latest_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
-            if [ "\${latest_master_sha}" = "\${source_master_sha}" ]; then
+            if [ "${latest_master_sha}" = "${source_master_sha}" ]; then
               echo "::error::Status publish failed without a concurrent master move."
               exit 1
             fi
-            echo "STATUS_SYNC_RETRY_PUBLISH_RACE attempt=\${attempt} source=\${source_master_sha} latest=\${latest_master_sha}"
-            sleep "\${attempt}"
+            echo "STATUS_SYNC_RETRY_PUBLISH_RACE attempt=${attempt} source=${source_master_sha} latest=${latest_master_sha}"
+            sleep "${attempt}"
           done
 
-          if [ "\${published}" != "true" ]; then
+          if [ "${published}" != "true" ]; then
             echo "::error::Master kept moving; status sync exhausted five bounded regeneration attempts."
             exit 1
           fi
