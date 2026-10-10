@@ -1501,7 +1501,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-10T14:55:36.352373+00:00",
+    "generated_at_utc": "2026-10-10T15:09:18.851445+00:00",
     "next_research_focus": "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1509,7 +1509,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "25549fc5ad2553ca83b93b3d301565f44da48b38"
+    "source_master_sha": "a09ba58eb8ec065b57e1d155e1a79ba8671dfd1f"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-10T14:55:36.352373+00:00",
+  "generated_at_utc": "2026-10-10T15:09:18.851445+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4667,6 +4667,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: resolve Q220 version-pinned SEC CYD presentation taxonomy",
+        "sha": "a09ba58eb8ec065b57e1d155e1a79ba8671dfd1f",
+        "timestamp": "2026-10-10T17:09:05+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a6df8decd6379a072a529c77a79ba1f11888766a",
+        "timestamp": "2026-10-10T14:55:39Z"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "25549fc5ad2553ca83b93b3d301565f44da48b38",
         "timestamp": "2026-10-10T14:54:06Z"
@@ -4695,16 +4705,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "8c6eff823d6e78db81840f8e1e0fccb11d32d368",
         "timestamp": "2026-10-10T13:52:50Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "c6fcc0ef7470c609c3f70cc0e159c2980d4b5666",
-        "timestamp": "2026-10-10T13:32:20Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "9d149213be49132a1f2209d5d58b66d584731fbb",
-        "timestamp": "2026-10-10T13:04:57Z"
       }
     ]
   },
@@ -4802,7 +4802,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "25549fc5ad2553ca83b93b3d301565f44da48b38",
+  "source_master_sha": "a09ba58eb8ec065b57e1d155e1a79ba8671dfd1f",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4916,6 +4916,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "38061535313"
+    "run_id": "38062446870"
   }
 }
