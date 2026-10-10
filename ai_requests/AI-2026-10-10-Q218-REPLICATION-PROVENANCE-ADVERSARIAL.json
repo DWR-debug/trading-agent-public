@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-10-Q218-REPLICATION-PROVENANCE-ADVERSARIAL",
+  "providers": [
+    "openrouter_free"
+  ],
+  "scope": "Q218 primary-result provenance discrepancy and symbol-disjoint replication: post-execution adversarial interpretation only",
+  "prompt": "Conduct a skeptical, post-execution methods audit of the supplied Q218 primary performance artifacts and the separately frozen independent symbol-disjoint replication. The scientific runs already exist; do not initiate, propose, or imply a rerun of either consumed one-shot. This is worker review only, not scientific evidence or an authorization.\n\nFacts to interrogate against the supplied artifacts:\n- Primary trial T-2026-10-08-Q218-PERFORMANCE-01 has 13 events, 5 positive outcomes, a descriptive arithmetic mean of about -1.071% and median about -0.808%; report fingerprint 78c4a667b01bebe0aa23361e78856155fa3e3fe861cb6fcc1e4b79973cbddc5d. Its result claims bundle fingerprint 0b9f95fc0b471f2a8efde48d4655be6e262eff717a4f17c6161281739adbea1a, while the current frozen primary input-bundle receipt claims da17cdad7478ed7c6df7c6971e3a658b83e1b4a37726b4a85a6d48cd475e9af2. Do not reconcile this mismatch by assumption.\n- Replication trial T-2026-10-08-Q218-REPLICATION-01 uses a fixed, fresh-symbol universe of GOOGL, META, ORCL and PFE, two events per issuer, with a one-session XNYS outcome defined as same-session close/open - 1.0. The eight reported decimal outcomes are 0.0013607290357966484, 0.06095060760007143, -0.01409260242387056, 0.0011933402377890534, -0.038340790722084406, -0.029783188584134423, 0.01419803709961509, and 0.01804122878759351. Descriptive summary: 5/8 positive, arithmetic mean +0.169092%, median +0.127703%, range -3.834079% to +6.095061%.\n- Replication bundle fingerprint e36d11115f9baa51dc235580d7a7e3491ce78e8f4f96e92d62a76ee66a293b46; replication report fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7. The replication report references the primary report fingerprint for provenance only and says primary output was not used for rule changes. Replication robustness receipt reports all six mutation probes rejected.\n- Neither run includes a holdout evaluation; these eight returns are gross one-session event outcomes, not validated portfolio/strategy returns. No net-of-cost, signal-to-position, risk-adjusted, or economic-acceptance conclusion follows from the positive mean alone.\n\nTasks:\n1. Separate claims the visible artifacts actually support from unresolved provenance or inference.\n2. Audit primary result/input-bundle mismatch and replication internal cross-artifact identity. State exact existing receipt/path(s) needed for a deterministic reconciliation; do not manufacture missing hashes.\n3. Attack sample-size, issuer clustering/dependence, repeated issuer events, event-pair confounds, non-tradable outcome interpretation, absent costs, and absent untouched holdout. Do not infer that a positive mean is an edge.\n4. Name the single smallest valuable next deterministic gate/artifact, or state that no further performance work is justified until provenance is resolved. Reuse existing frozen evidence; no second one-shot.\n5. Preserve uncertainty and disagreement. Label every AI observation as non-authorizing.\n\nDo not tune rules, thresholds, horizons, assets, features, or parameters. Do not select a holdout, rank candidates, alter research gates, authorize performance/promotion, or propose live execution. Do not convert the results into a strategy P&L claim.",
+  "max_runtime_minutes": 12,
+  "deterministic_compute": false,
+  "holdout_selection": false,
+  "parameter_selection": false,
+  "asset_selection": false,
+  "threshold_selection": false,
+  "horizon_selection": false,
+  "research_gate_changes": false,
+  "promotion_decision": false,
+  "live_execution": false,
+  "paid_usage": false,
+  "research_decision": false,
+  "allow_workspace_writes": false,
+  "context_files": [
+    "research/evidence/q218_performance_input_bundle_latest.json",
+    "research/evidence/q218_deterministic_performance_result_latest.json",
+    "research/governance/q218_performance_contract_2026_10_08.json",
+    "research/evidence/q218_independent_replication_input_bundle_latest.json",
+    "research/evidence/q218_independent_replication_performance_latest.json",
+    "research/governance/q218_independent_replication_contract_2026_10_08.json",
+    "research/evidence/q218_independent_replication_robustness_latest.json"
+  ],
+  "context_fingerprint_files": [
+    "research/evidence/q218_performance_input_bundle_latest.json",
+    "research/evidence/q218_deterministic_performance_result_latest.json",
+    "research/governance/q218_performance_contract_2026_10_08.json",
+    "research/evidence/q218_independent_replication_input_bundle_latest.json",
+    "research/evidence/q218_independent_replication_performance_latest.json",
+    "research/governance/q218_independent_replication_contract_2026_10_08.json",
+    "research/evidence/q218_independent_replication_robustness_latest.json"
+  ],
+  "review_revision": "Q218-REPLICATION-PROVENANCE-2026-10-10-R1",
+  "trigger_reason": "Material new independent replication result was published; the review is restricted to current provenance reconciliation and economic-interpretation falsification, not a rerun or selection."
+}
