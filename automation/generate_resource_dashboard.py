@@ -415,7 +415,7 @@ CANDIDATE_DEVELOPMENT_MILESTONES = (
     "ONE-SHOT PERFORMANCE",
 )
 
-FOCUS_CANDIDATES = ("Q104:I19", "Q220", "Q218")
+FOCUS_CANDIDATES = ("Q104:I19", "Q220", "Q221")
 
 
 
@@ -884,6 +884,55 @@ def q220_as_filed_population_status(runs: list[dict[str, Any]]) -> dict[str, Any
 
 
 
+def q221_public_clock_status() -> dict[str, Any]:
+    """Fail closed unless the historical USAspending public clock is evidenced durably."""
+    receipt = read_json_file("research/evidence/q221_historical_public_boundary_latest.json")
+    fingerprint = str(receipt.get("receipt_fingerprint") or "")
+    fingerprint_valid = (
+        len(fingerprint) == 64
+        and all(ch in "0123456789abcdef" for ch in fingerprint.lower())
+    )
+    positive = (
+        receipt.get("record_type") == "q221_historical_public_boundary_gate"
+        and receipt.get("candidate_id") == "Q221"
+        and receipt.get("status") == "Q221_HISTORICAL_PUBLIC_BOUNDARY_COMPLETED"
+        and receipt.get("historical_applicability_proven") is True
+        and receipt.get("transaction_semantics_frozen") is True
+        and receipt.get("agency_exceptions_classified") is True
+        and receipt.get("recipient_to_issuer_mapping_frozen") is True
+        and receipt.get("lookahead_used") is False
+        and fingerprint_valid
+    )
+    current = read_json_file("research/evidence/q221_usaspending_public_clock_gate_latest.json")
+    current_source_markers = (
+        current.get("record_type") == "q221_usaspending_public_clock_gate"
+        and current.get("candidate_id") == "Q221"
+        and current.get("source_clock_contract_ready") is True
+    )
+    if positive:
+        return {
+            "state": "complete",
+            "progress_percent": 100,
+            "detail": "Historical USAspending public-observation boundary, transaction semantics, agency exceptions and frozen issuer mapping are recorded in a fingerprinted receipt.",
+            "next_gate": "independent PIT reproduction with revision/modification lineage",
+            "receipt_fingerprint": fingerprint,
+        }
+    detail = (
+        "The current USAspending source-clock markers were observed, but the smoke gate explicitly does not prove historical applicability. "
+        "Reconstruct the historical publication vintage, award-versus-modification semantics, DoD/USACE 90-day and FAR exception handling, and recipient-to-issuer mapping."
+        if current_source_markers
+        else
+        "No positive, fingerprinted historical USAspending public-boundary receipt is recorded. First test the historical publication clock, award/modification semantics, DoD/USACE and FAR exceptions, and recipient-to-issuer mapping."
+    )
+    return {
+        "state": "ready",
+        "progress_percent": 0,
+        "detail": detail,
+        "next_gate": "historical USAspending public boundary + award/modification semantics + agency exceptions + recipient-to-issuer mapping",
+        "receipt_fingerprint": fingerprint or None,
+    }
+
+
 def q218_fresh_symbol_replication_complete() -> bool:
     """Validate the already-recorded disjoint Q218 trial without initiating another outcome run."""
     result = read_json_file("research/evidence/q218_independent_replication_performance_latest.json")
@@ -964,10 +1013,22 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
         {"label": "Independent PIT reproduction", "status": "blocked", "progress": 0, "detail": "requires frozen historical compiler inputs and an independent source route"},
         {"label": "Pre-performance robustness", "status": "blocked", "progress": 0, "detail": "length/readability controls, future-text exclusion, taxonomy drift and disjoint OOS remain required"},
     ]
+    q221_clock = q221_public_clock_status()
+    q221_milestones = [
+        {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Frozen R&D-to-procurement option-value mechanism and non-overlap contract"},
+        {"label": "Historical public-observation clock + agency exceptions", "status": "complete" if q221_clock["state"] == "complete" else "ready", "progress": q221_clock["progress_percent"], "detail": q221_clock["detail"]},
+        {"label": "Historical publication-vintage applicability", "status": "ready" if q221_clock["state"] == "complete" else "blocked", "progress": 0, "detail": "Current live-source markers are not historical clock proof"},
+        {"label": "Award/modification and agency-specific transaction semantics", "status": "blocked", "progress": 0, "detail": "DoD/USACE 90-day and FAR exception treatment must be historically applicable to the fixed transaction classes"},
+        {"label": "Frozen recipient-to-issuer mapping + pre-event capability", "status": "blocked", "progress": 0, "detail": "Issuer/entity identity and capability state must be fixed before outcomes"},
+        {"label": "Correction/modification revision lineage", "status": "blocked", "progress": 0, "detail": "Transaction corrections and amendments must preserve the as-observable historical state"},
+        {"label": "Independent PIT reproduction", "status": "blocked", "progress": 0, "detail": "Requires positive historical public-boundary and identity receipts"},
+        {"label": "Pre-performance cheap falsifiers", "status": "blocked", "progress": 0, "detail": "Award-size-only collapse, lookahead, mapping permutation and agency-clock perturbation"},
+    ]
 
     q104_overall, q104_complete, q104_total = overall(q104_milestones)
     q218_overall, q218_complete, q218_total = overall(q218_milestones)
     q220_overall, q220_complete, q220_total = overall(q220_milestones)
+    q221_overall, q221_complete, q221_total = overall(q221_milestones)
 
     return {
         "method": "receipt_and_contract_based_development_index",
@@ -1052,6 +1113,22 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                           else ("independent architecture PIT reproduction" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("event-pair gate" if q218_receipts["source_complete"] else "source gate"))))
                 ),
                 "milestones": q218_milestones,
+                "performance_authorization_allowed": False,
+            },
+            "Q221": {
+                "overall_progress_percent": q221_overall,
+                "completed_milestones": q221_complete,
+                "total_milestones": q221_total,
+                "current_milestone": (
+                    "Historical USAspending public-boundary / issuer-mapping PIT gate"
+                    if q221_clock["state"] == "complete"
+                    else "Historical USAspending public-clock applicability and agency exceptions"
+                ),
+                "current_milestone_progress_percent": 0 if q221_clock["state"] == "complete" else q221_clock["progress_percent"],
+                "current_milestone_status": "ready",
+                "current_milestone_detail": q221_clock["detail"],
+                "next_gate": q221_clock["next_gate"],
+                "milestones": q221_milestones,
                 "performance_authorization_allowed": False,
             },
         },
@@ -1159,6 +1236,19 @@ def candidate_development_roadmap(
             {"id": "Q220-REPRO", "label": "Independent PIT reproduction", "status": "blocked", "next": "positive historical PIT compiler receipt"},
             {"id": "Q220-ROBUST", "label": "Cheap falsifiers: length/readability, future text, taxonomy drift", "status": "blocked", "next": "frozen PIT inputs and independent reproduction"},
         ]
+    if candidate == "Q221":
+        q221_gate = q221_public_clock_status()
+        complete = q221_gate["state"] == "complete"
+        return [
+            {"id": "Q221-CONTRACT", "label": "Frozen R&D → procurement-option-value contract", "status": "completed", "next": "fixed transaction classes and pre-event exposure"},
+            {"id": "Q221-CLOCK", "label": "Historical USAspending public-observation clock + agency exceptions", "status": "completed" if complete else "ready", "next": q221_gate["next_gate"]},
+            {"id": "Q221-APPLICABILITY", "label": "Historical publication-vintage / transaction-class applicability", "status": "ready" if complete else "blocked", "next": "immutable historical public-boundary receipt"},
+            {"id": "Q221-TRANSACTION", "label": "Award-versus-modification state and agency-specific delay classification", "status": "blocked", "next": "frozen transaction semantics"},
+            {"id": "Q221-IDENTITY", "label": "Frozen recipient-to-issuer mapping and pre-event capability", "status": "blocked", "next": "identity and capability provenance receipt"},
+            {"id": "Q221-LINEAGE", "label": "Transaction correction / modification lineage", "status": "blocked", "next": "candidate-specific revision lineage"},
+            {"id": "Q221-REPRO", "label": "Independent PIT reproduction", "status": "blocked", "next": "positive historical clock and identity receipts"},
+            {"id": "Q221-ROBUST", "label": "Cheap falsifiers: award-size-only, lookahead, and mapping permutation", "status": "blocked", "next": "frozen PIT inputs and independent reproduction"},
+        ]
     prereg = q218_prereg_status()
     execution_done = bool(prereg.get("performance_executed"))
     replication_done = q218_fresh_symbol_replication_complete()
@@ -1209,6 +1299,7 @@ def candidate_pipeline(
     state_by_candidate = {
         "Q104:I19": "FORMAL READINESS · HISTORICAL 13F CENSUS",
         "Q220": "FRONTIER DISCOVERY · AS-FILED SEC/XBRL POPULATION + REPRESENTATION GAP",
+        "Q221": "FRONTIER DISCOVERY · HISTORICAL USASPENDING PUBLIC CLOCK + ENTITY MAPPING",
         "Q218": (
             "FRONTIER DISCOVERY · COST-AWARE OOS GATE BLOCKED"
             if q218_prereg.get("performance_executed") and q218_replication_complete
@@ -1372,40 +1463,24 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
 
 
 def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Show all three focused candidates, but mark gates blocked by missing authorization as non-dispatchable."""
+    """Expose exactly the three active candidates and their next non-authorizing gate."""
     order = [
-        ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A"),
-        ("Q220", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B"),
-        ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "No dispatch — separate authorization required"),
+        ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A / bounded census recovery"),
+        ("Q220", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B / historical XBRL PIT"),
+        ("Q221", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted C or GitHub-hosted ARM64 / USAspending clock"),
     ]
     by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
-    q218_prereg = q218_prereg_status()
-    q218_replication_complete = q218_fresh_symbol_replication_complete()
-    q218_gates = q218_receipt_state()
-    q218_blocked = bool(
-        q218_gates.get("source_complete")
-        and q218_gates.get("event_pair_complete")
-        and q218_gates.get("independent_complete")
-        and q218_prereg.get("performance_executed")
-        and q218_replication_complete
-        and not q218_prereg.get("performance_authorized")
-    )
     backlog = []
     for rank, (code, workflow, resource) in enumerate(order, start=1):
         item = by_code.get(code)
-        blocked = code == "Q218" and q218_blocked
         backlog.append({
             "queue_rank": rank,
             "candidate": code,
             "lane": str(item.get("lane") or ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY")) if item else ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY"),
-            "next_gate": (
-                "fresh-symbol replication already has a positive receipt; no further outcome-bearing run is dispatchable without a separate explicit authorization"
-                if blocked else
-                (str(item.get("next_gate") or "next receipt-defined research gate") if item else "next receipt-defined research gate")
-            ),
-            "execution_workflow": None if blocked else workflow,
+            "next_gate": str(item.get("next_gate") or "next receipt-defined research gate") if item else "next receipt-defined research gate",
+            "execution_workflow": workflow,
             "resource_hint": resource,
-            "planned_status": "BLOCKED_SEPARATE_EXPLICIT_PERFORMANCE_AUTHORIZATION" if blocked else "READY_NEXT_GATE",
+            "planned_status": "READY_NEXT_GATE",
             "non_authorizing": True,
         })
     return backlog
