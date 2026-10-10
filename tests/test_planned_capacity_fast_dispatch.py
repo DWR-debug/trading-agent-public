@@ -565,8 +565,10 @@ def test_fast_dispatch_skips_successful_same_slot_but_allows_other_architecture(
         "display_title":"Top-4 Slot ubuntu_x64 Q220","run_name":"Top-4 Slot ubuntu_x64 Q220"
     }]
     plan2 = dispatch_candidates(base, completed_x64, max_dispatches=4)
-    assert plan2["dispatches"] == []
-    assert not any(x["candidate"] in {"Q219", "Q221"} for x in plan2["dispatches"])
+    assert len(plan2["dispatches"]) == 1
+    assert plan2["dispatches"][0]["candidate"] == "Q221"
+    assert plan2["dispatches"][0]["inputs"]["resource"] == "ubuntu_x64"
+    assert not any(x["candidate"] in {"Q218", "Q219"} for x in plan2["dispatches"])
 
 
 def test_fast_dispatch_allows_one_retry_then_backfills_next_candidate_after_second_failure():
