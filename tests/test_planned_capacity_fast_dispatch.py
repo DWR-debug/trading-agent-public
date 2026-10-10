@@ -380,7 +380,7 @@ def test_fast_dispatch_zero_active_starts_q221_clock_workpack_and_skips_complete
             },
         ],
     }
-    plan = dispatch_candidates(snapshot, [], max_dispatches=4)
+    plan = dispatcher.dispatch_candidates(snapshot, [], max_dispatches=4)
     assert plan["zero_active_research_jobs"] is True
     assert [x["workflow"] for x in plan["dispatches"]] == [
         ".github/workflows/top4-candidate-slot-research.yml",
