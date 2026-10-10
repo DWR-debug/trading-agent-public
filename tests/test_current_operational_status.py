@@ -149,9 +149,9 @@ def test_q220_population_focus_sentence_requires_a_positive_fingerprinted_receip
     assert "a" * 64 in rendered
 
     negative = dict(positive, status="Q220_AS_FILED_XBRL_POPULATION_BLOCKED")
-    assert "Complete and reconcile the bounded fixed-population gate" in q220_population_focus_sentence(negative)
+    assert "Q220 current-code population gate is BLOCKED" in q220_population_focus_sentence(negative)
     negative = dict(positive, failure_count=1)
-    assert "Complete and reconcile the bounded fixed-population gate" in q220_population_focus_sentence(negative)
+    assert "no positive current-code receipt is published" in q220_population_focus_sentence(negative)
 
 
 
