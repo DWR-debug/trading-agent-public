@@ -36,6 +36,10 @@ def test_current_status_separates_operations_from_science(tmp_path, monkeypatch)
     assert "### Q068 execution pipeline" in doc
     assert "### Q070 execution pipeline" in doc
     assert "canonical current operational status" in doc
+    assert "Active execution focus is locked to exactly three candidates: Q104:I19, Q220, and Q218." in focus
+    assert "Q219 and Q221 remain reserve design/source tracks and are outside active automatic dispatch" in focus
+    assert "Do not launch a duplicate full census while a useful run remains active." in focus
+    assert "do not repeat the consumed primary one-shot" in focus
     assert payload["safety"]["status"] == "SAFE"
 
 

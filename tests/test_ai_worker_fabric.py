@@ -469,3 +469,27 @@ def test_q218_replication_provenance_review_has_bounded_event_driven_route():
     assert f"path={task_path}" in workflow
     assert "--provider 'openrouter_free'" in workflow
 
+
+
+
+def test_q220_cyd_taxonomy_review_is_single_provider_free_only_and_event_driven():
+    import json
+    from pathlib import Path
+
+    task_id = "AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL"
+    task_path = Path("ai_requests") / f"{task_id}.json"
+    payload = json.loads(task_path.read_text(encoding="utf-8"))
+    workflow = (Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml").read_text(encoding="utf-8")
+
+    assert payload["providers"] == ["openrouter_free"]
+    assert payload["paid_usage"] is False
+    assert payload["allow_workspace_writes"] is False
+    assert payload["research_decision"] is False
+    assert payload["research_gate_changes"] is False
+    assert payload["performance_authorized"] is False
+    assert payload["live_execution"] is False
+    assert "q220_cyd_taxonomy_paths" in workflow
+    assert f"changed.intersection(q220_cyd_taxonomy_paths)" in workflow
+    assert f"'{task_id}'" in workflow
+    assert f"path=ai_requests/{task_id}.json" in workflow
+    assert "cyd-af-sub-YYYY.xsd" in payload["prompt"]
