@@ -459,7 +459,7 @@ def test_fast_dispatch_allows_top4_with_parallel_ai_review():
         }],
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
-    assert plan["dispatches"][0]["workflow"].endswith("top4-candidate-research-capacity.yml")
+    assert plan["dispatches"][0]["workflow"].endswith("top4-candidate-slot-research.yml")
 
 
 def test_fast_dispatch_allows_independent_candidates_on_one_slot_workflow():
