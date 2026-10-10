@@ -1555,6 +1555,8 @@ def planned_capacity_plan(
         candidate = str(item.get("candidate"))
         if candidate == "Q104:I19" and any("Q104 I19" in x for x in a_priority):
             return -100
+        if candidate == "Q220" and candidate in b_priority:
+            return -60
         if candidate in {x for x in b_priority}:
             return -50
         return 0
@@ -2018,7 +2020,7 @@ def main() -> None:
             "available_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "available"),
             "planned_capacity_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if item.get("scheduled")),
             "planned_research_queue_items": len(planned_research_queue),
-            "planned_research_queue_target": 2,
+            "planned_research_queue_target": 3,
             "candidate_focus_lock": list(FOCUS_CANDIDATES),
             "blocked_planned_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if not item.get("scheduled")),
             "unallocated_routable_items": sum(1 for row in planned_capacity if row.get("capacity_state") == "available" and not row.get("planned_assignments")),
