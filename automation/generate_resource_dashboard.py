@@ -1233,26 +1233,61 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
 
 
 def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Expose a real bounded queue of future next-gate research, independent of live slot occupancy."""
+    """Show all three focused candidates, but mark gates blocked by missing authorization as non-dispatchable."""
     order = [
         ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A"),
-        ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B"),
+        ("Q220", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B"),
+        ("Q218", ".github/workflows/top4-candidate-slot-research.yml", "No dispatch — separate authorization required"),
     ]
     by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
+    q218_prereg = q218_prereg_status()
+    q218_replication = read_json_file("research/evidence/q218_independent_replication_performance_latest.json")
+    q218_replication_complete = (
+        q218_replication.get("replication_trial_id") == "T-2026-10-08-Q218-REPLICATION-01"
+        and q218_replication.get("source_trial_id") == "T-2026-10-08-Q218-PERFORMANCE-01"
+        and q218_replication.get("performance_evaluation") is True
+        and q218_replication.get("holdout_evaluation") is False
+        and q218_replication.get("selection_used") is False
+        and q218_replication.get("parameter_search") is False
+        and q218_replication.get("threshold_search") is False
+        and q218_replication.get("horizon_search") is False
+        and q218_replication.get("asset_search") is False
+        and q218_replication.get("variant_search") is False
+        and q218_replication.get("family_ranking") is False
+        and q218_replication.get("promotion_decision") is False
+        and q218_replication.get("safety", {}).get("paper_only") is True
+        and q218_replication.get("safety", {}).get("live_trading_enabled") is False
+        and q218_replication.get("safety", {}).get("orders_enabled") is False
+        and q218_replication.get("safety", {}).get("automatic_promotion") is False
+    )
+    q218_gates = q218_receipt_state()
+    q218_blocked = bool(
+        q218_gates.get("source_complete")
+        and q218_gates.get("event_pair_complete")
+        and q218_gates.get("independent_complete")
+        and q218_prereg.get("performance_executed")
+        and q218_replication_complete
+        and not q218_prereg.get("performance_authorized")
+    )
     backlog = []
     for rank, (code, workflow, resource) in enumerate(order, start=1):
         item = by_code.get(code)
+        blocked = code == "Q218" and q218_blocked
         backlog.append({
             "queue_rank": rank,
             "candidate": code,
             "lane": str(item.get("lane") or ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY")) if item else ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY"),
-            "next_gate": str(item.get("next_gate") or "next receipt-defined research gate") if item else "next receipt-defined research gate",
-            "execution_workflow": workflow,
+            "next_gate": (
+                "fresh-symbol replication already has a positive receipt; no further outcome-bearing run is dispatchable without a separate explicit authorization"
+                if blocked else
+                (str(item.get("next_gate") or "next receipt-defined research gate") if item else "next receipt-defined research gate")
+            ),
+            "execution_workflow": None if blocked else workflow,
             "resource_hint": resource,
-            "planned_status": "READY_NEXT_GATE",
+            "planned_status": "BLOCKED_SEPARATE_EXPLICIT_PERFORMANCE_AUTHORIZATION" if blocked else "READY_NEXT_GATE",
             "non_authorizing": True,
         })
-    return backlog[:2]
+    return backlog
 
 
 def planned_capacity_plan(
