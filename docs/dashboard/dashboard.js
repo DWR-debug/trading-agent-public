@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 var lastSnapshotIso=null;
-var FOCUS=["Q104:I19","Q220","Q218"];
+var FOCUS=["Q104:I19","Q220","Q221"];
 
 function $(id){return document.getElementById(id);}
 function esc(v){
@@ -65,10 +65,16 @@ function candidateInfo(code){
       lane:"FRONTIER DISCOVERY",
       cardClass:"candidate-q220"
     },
-    "Q218":{
-      name:"SEC disclosure event pairing",
-      mechanism:"Mandatory/voluntary 10-K → 8-K Item 2.02 pairing with acceptance-time lineage",
+    "Q221":{
+      name:"Government R&D → procurement option value",
+      mechanism:"Public R&D awards, competition/agency state and pre-event capability; historical USAspending clock and issuer mapping first",
       lane:"FRONTIER DISCOVERY",
+      cardClass:"candidate-q221"
+    },
+    "Q218":{
+      name:"SEC disclosure event pairing (archived / outside active focus)",
+      mechanism:"Historical evidence retained; no active Top-3 dispatch",
+      lane:"ARCHIVED · OUTSIDE ACTIVE FOCUS",
       cardClass:"candidate-q218"
     }
   };
@@ -152,10 +158,10 @@ function renderCandidateDecisionRules(pipeline){
       stop:"Fail-closed, falls historische öffentliche Uhr, Schema-/Taxonomie-Drift oder das narrative/strukturierte Mapping nicht eindeutig rekonstruierbar ist. Keine Performance-Auswertung vor erfolgreicher unabhängiger PIT-Reproduktion und separater Autorisierung."
     },
     {
-      code:"Q218",cls:"decision-q218",disposition:"Begrenzt · Provenance/PIT",
-      title:"Aktuellen Kontext unabhängig abgleichen",
-      advance:"Original-Resultat, aktuelle Master-Code-Fingerprints, fixierten Vertrag/Präregistrierung und Quell-/Event-Pair-Receipts reconciliieren; die PIT-Lineage unabhängig reproduzieren. Die abgeschlossenen One-shot- und 8-Paar-Replikationsläufe nicht wiederholen.",
-      stop:"Parken, wenn Ergebnis und aktueller Code-Kontext nicht reconciliierbar sind, PIT ungültig/unreproduzierbar ist oder der Mechanismus gegenüber bestehender Disclosure-Divergence-Literatur nicht hinreichend separierbar ist. Kein neuer outcome-bearing Lauf ohne separate exakte formale Autorisierung."
+      code:"Q221",cls:"decision-q221",disposition:"Weiter · Source/PIT zuerst",
+      title:"Historische USAspending-Uhr beweisen",
+      advance:"Den begrenzten USAspending/FPDS-Public-Clock- und Agency-Exception-Gate ausführen. Anschließend historische Anwendbarkeit für die fixierte Transaktionsklasse, Award-vs.-Modification-Semantik, DoD/USACE-90-Tage- und FAR-Ausnahmen, Recipient-to-Issuer-Mapping und Revisionslineage belegen.",
+      stop:"Eine aktuelle Dokumenten-Smoke-Prüfung ist kein historischer PIT-Nachweis. Parken, wenn die historische Veröffentlichungsuhr oder Agency-Ausnahmen nicht deterministisch rekonstruierbar sind oder Mapping Lookahead erfordert. Kein Performance-Lauf aus dieser Quellenprüfung ableiten."
     }
   ];
   var host=$("candidateDecisionRules");
@@ -173,7 +179,7 @@ function renderCandidateDecisionRules(pipeline){
         "<div class='decision-field'><strong>Stop-/Wechselregel</strong>"+esc(r.stop)+"</div>"+
       "</article>";
     }).join("")+"</div>"+
-    "<div class='decision-fallback'><strong>Reserve Q221:</strong> erst nach dokumentiertem Park-/Ersatzentscheid für Q218. Vor einer Aufnahme genügt zunächst ein enges Go/No-Go zur historischen USAspending-Veröffentlichungsuhr, Award-vs.-Modification-Semantik, Behördenausnahmen und Recipient-to-Issuer-Zuordnung. Keine automatische Erweiterung der Top-3 oder künstliche Kapazitätsbelegung.</div>";
+    "<div class='decision-fallback'><strong>Archivierter Track:</strong> Q218 bleibt mit seinen bestehenden Receipts zur Reproduzierbarkeit erhalten, wird aber nicht automatisch weiter disponiert. Die aktive Top-3 ist fest auf Q104:I19, Q220 und Q221 begrenzt.</div>";
 }
 
 function renderCandidatePortfolio(data){
@@ -292,7 +298,7 @@ function render(data){
   renderProgressCharts(data,pipeline);
 
   $("focusSummary").innerHTML=
-    "<div class='focus-kpi'><span class='eyebrow'>Aktive Top-3</span><strong>Q104:I19 · Q220 · Q218</strong><span>Drei getrennte Forschungsaufträge; weitere Kandidaten bleiben pausiert.</span></div>"+
+    "<div class='focus-kpi'><span class='eyebrow'>Aktive Top-3</span><strong>Q104:I19 · Q220 · Q221</strong><span>Drei getrennte Forschungsaufträge; Q218 ist archiviert und nicht Teil des Auto-Dispatch.</span></div>"+
     "<div class='focus-kpi'><span class='eyebrow'>Entwicklungsindex</span><strong>"+overallAvg+"%</strong><span>arithmetischer Index der drei Tracks, keine Erfolgswahrscheinlichkeit</span></div>"+
     "<div class='focus-kpi'><span class='eyebrow'>Aktive Candidate-Jobs</span><strong>"+activeCount+"</strong><span>sichtbar in der aktuellen Actions-Telemetrie</span></div>";
 
