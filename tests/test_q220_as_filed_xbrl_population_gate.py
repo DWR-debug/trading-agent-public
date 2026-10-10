@@ -1,5 +1,5 @@
 from pathlib import Path
-from automation.q220_as_filed_xbrl_population_gate import TARGET_ISSUERS,WINDOW_START,WINDOW_END,ROUTE_QUARTERS,choose_presentation_source,concept_spec,ix_textblocks,xsd_metadata,presentation_metadata,console_summary
+from automation.q220_as_filed_xbrl_population_gate import TARGET_ISSUERS,WINDOW_START,WINDOW_END,ROUTE_QUARTERS,choose_presentation_source,concept_spec,ix_textblocks,xsd_metadata,presentation_metadata,console_summary,primary_document_from_index,choose_primary
 ROOT=Path(__file__).parents[1]
 
 def test_q220_population_window_and_identity_are_frozen():
@@ -140,3 +140,23 @@ def test_q220_windows_receipt_publisher_is_cli_independent_and_preserves_gate():
     assert 'original_10k_count"]>=(1 if mode=="route" else 5)' in gate
     assert 'textblock_ready_originals"]>=(1 if mode=="route" else 5)' in gate
 
+
+
+def test_q220_historical_primary_document_uses_sec_form_typed_filing_index():
+    index_html = b'''
+    <table class="tableFile">
+      <tr><th>Seq</th><th>Description</th><th>Document</th><th>Type</th><th>Size</th></tr>
+      <tr><td>1</td><td>10-K</td><td><a href="/ix?doc=/Archives/edgar/data/820027/000082002719000010/amp12312018.htm">amp12312018.htm</a> iXBRL</td><td>10-K</td><td>10087676</td></tr>
+      <tr><td>2</td><td>EXHIBIT 10.11</td><td><a href="/Archives/edgar/data/820027/000082002719000010/R1.htm">R1.htm</a></td><td>EX-10.11</td><td>34034</td></tr>
+    </table>
+    '''
+    items = ["R1.htm", "amp12312018.htm"]
+    assert primary_document_from_index(index_html, "10-K") == "amp12312018.htm"
+    assert choose_primary(items, "amp12312018.htm") == "amp12312018.htm"
+    # Missing mappings must never silently degrade to alphabetical R1.htm.
+    assert choose_primary(items, None) is None
+
+
+def test_q220_form_index_parser_fails_closed_without_matching_form_row():
+    index_html = b'''<table><tr><td>1</td><td>EXHIBIT 10.11</td><td><a href="/Archives/edgar/data/1/2/R1.htm">R1.htm</a></td><td>EX-10.11</td><td>100</td></tr></table>'''
+    assert primary_document_from_index(index_html, "10-K") is None
