@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL",
+  "providers": [
+    "openrouter_free"
+  ],
+  "scope": "Q220 post-merge adversarial audit of exact-version SEC CYD taxonomy presentation mapping; source/PIT engineering only",
+  "prompt": "Audit the merged Q220 change as a skeptical XBRL methods reviewer. The code now maps a namespace exactly matching http://xbrl.sec.gov/cyd/YYYY to https://xbrl.sec.gov/cyd/YYYY/cyd-af-sub-YYYY.xsd, parses presentation locator fragments from that official entry point, records response status/byte count/SHA256/mapped concepts, merges mapped concepts with filing-local mappings and fails closed if the external taxonomy cannot be retrieved. Attack this implementation and tests for: taxonomy namespace/date version drift, the SEC entry-point naming/version contract, imported XSD/linkbase completeness, XML namespace prefixes and QName identity, locator fragments, taxonomy URL canonicalization, presentation arc/role parsing, concept collision, mapping coverage accounting, hashing of all relationship bytes, cache/URL immutability, future/current taxonomy contamination, and mutation tests that could pass incorrectly. Use only the specified fixed source/PIT scope; do not inspect returns. Identify the smallest falsifier and exact receipt/test. Preserve dissent; do not edit files or seek consensus. This is a non-authorizing review, not scientific evidence.",
+  "max_runtime_minutes": 12,
+  "deterministic_compute": false,
+  "holdout_selection": false,
+  "parameter_selection": false,
+  "asset_selection": false,
+  "threshold_selection": false,
+  "horizon_selection": false,
+  "research_gate_changes": false,
+  "performance_authorized": false,
+  "promotion_decision": false,
+  "live_execution": false,
+  "paid_usage": false,
+  "research_decision": false,
+  "allow_workspace_writes": false,
+  "context_files": [
+    "docs/CURRENT_STATUS.md",
+    "docs/research_design/Q220_AS_FILED_XBRL_REPAIR_2026-10-06.md",
+    "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json",
+    "automation/q220_as_filed_xbrl_population_gate.py",
+    "tests/test_q220_as_filed_xbrl_population_gate.py"
+  ],
+  "context_fingerprint_files": [
+    "docs/CURRENT_STATUS.md",
+    "docs/research_design/Q220_AS_FILED_XBRL_REPAIR_2026-10-06.md",
+    "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json",
+    "automation/q220_as_filed_xbrl_population_gate.py",
+    "tests/test_q220_as_filed_xbrl_population_gate.py"
+  ],
+  "review_revision": "Q220-CYD-TAXONOMY-ADVERSARIAL-2026-10-10-R1",
+  "trigger_reason": "Material new merged CYD entry-point mapping implementation; use one bounded free-only adversarial review instead of repeated unchanged prompts."
+}

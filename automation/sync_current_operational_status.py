@@ -542,9 +542,19 @@ def generate(
         else:
             q218_sentence = " Q218 remains non-authorized for performance. "
         recorded_next_research_focus = (
-            "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, "
-            "Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, "
-            "and Q219 filing-change/options-response processing wedge." + q218_sentence +
+            "Active execution focus is locked to exactly three candidates: Q104:I19, Q220, and Q218. "
+            "Q104:I19 next: finish the already-running historical 13F census; after it terminates, recover only failed shards "
+            "under the bounded retry policy, then compile the frozen candidate-specific PIT state and require independent reproduction. "
+            "Do not launch a duplicate full census while a useful run remains active. "
+            "Q220 next: the version-pinned SEC CYD presentation-taxonomy resolver has merged; run its bounded fixed-population gate, "
+            "inspect per-issuer mapping receipts, then proceed to the historical prefix/PIT compiler only if population mapping is positive. "
+            "Q218 next: reconcile original-result/current-context receipts and the fixed contract; do not repeat the consumed primary one-shot "
+            "or its already-recorded 8-event fresh-symbol replication. "
+            "Q219 and Q221 remain reserve design/source tracks and are outside active automatic dispatch; their prior evidence is preserved. "
+            + q218_sentence +
+            "Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers "
+            "8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). "
+            "The primary trial current-context revalidation remains a separate open gate. "
             "Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. "
             "No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs."
         )
