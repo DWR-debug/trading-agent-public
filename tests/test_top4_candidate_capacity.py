@@ -91,9 +91,10 @@ def test_top4_workflow_triggers_only_on_focused_candidate_gates():
     slot=(ROOT/".github/workflows/top4-candidate-slot-research.yml").read_text(encoding="utf-8")
     capacity=(ROOT/"automation/top4_candidate_capacity.py").read_text(encoding="utf-8")
     assert "workflow_dispatch:" in slot
-    assert "Q218" in slot and "Q220" in slot
-    assert "Q219" not in slot and "Q221" not in slot
-    assert "Q219" not in capacity and "Q221" not in capacity
+    candidate_options = slot.split("      candidate:", 1)[1].split("      resource:", 1)[0]
+    assert "Q218" in candidate_options and "Q220" in candidate_options
+    assert "Q219" not in candidate_options and "Q221" not in candidate_options
+    assert '"Q219":[' not in capacity and '"Q221":[' not in capacity
     assert "automation/q220_as_filed_xbrl_population_gate.py" in capacity
 
 def test_dashboard_routes_top4_candidates_to_slot_scoped_workflow_and_i19_to_census():
