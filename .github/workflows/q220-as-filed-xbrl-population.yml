@@ -99,21 +99,11 @@ jobs:
           )
           if not exist "%PY_EXE%" exit /b 1
           cd /d "%GITHUB_WORKSPACE%" || exit /b 1
-          set /a PUBLISH_ATTEMPT=0
-          :PUBLISH_AGAIN
-          set /a PUBLISH_ATTEMPT+=1
-          set "MASTER_SHA="
-          for /f "delims=" %%S in ('gh api "/repos/%GITHUB_REPOSITORY%/git/ref/heads/master" --jq ".object.sha"') do set "MASTER_SHA=%%S"
-          if not defined MASTER_SHA exit /b 1
+          rem The publisher resolves master through the authenticated GitHub API itself;
+          rem do not depend on a separately installed gh.exe on this Windows runner.
           set "PUBLISH_MESSAGE=EVIDENCE: persist Q220 as-filed XBRL population receipt"
-          "%PY_EXE%" automation\\github_contents_publish.py --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%MASTER_SHA%" --file research/evidence/q220_as_filed_xbrl_population_latest.json="%RECEIPT%"
-          if errorlevel 1 (
-            if %PUBLISH_ATTEMPT% LSS 3 (
-              timeout /t 2 /nobreak >nul
-              goto PUBLISH_AGAIN
-            )
-            exit /b 1
-          )
+          "%PY_EXE%" automation\\github_contents_publish.py --repository "%GITHUB_REPOSITORY%" --branch master --base-sha latest --file research/evidence/q220_as_filed_xbrl_population_latest.json="%RECEIPT%"
+          if errorlevel 1 exit /b 1
           endlocal
       - name: Enforce positive population receipt
         if: always()

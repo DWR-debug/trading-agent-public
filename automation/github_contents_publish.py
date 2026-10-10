@@ -30,7 +30,11 @@ def publish(repository,branch,base_sha,files):
     for attempt in range(1, 6):
         ref=api("GET",f"{api_root}/git/ref/heads/{branch}")
         current=ref["object"]["sha"]
-        if attempt == 1 and current != requested_base_sha:
+        # "latest" means resolve the branch tip through the API inside this
+        # publisher. This is useful on runners without the GitHub CLI and still
+        # preserves the fast-forward-only retry logic below. Explicit SHAs retain
+        # the strict snapshot check on the first attempt.
+        if attempt == 1 and requested_base_sha != "latest" and current != requested_base_sha:
             raise RuntimeError(
                 f"ref moved from {requested_base_sha} to {current}; refusing non-fast-forward publish"
             )
