@@ -11,6 +11,28 @@ def test_q220_textblock_rule_is_deterministic():
     html=b'<html xmlns:ix="http://www.xbrl.org/2013/inlineXBRL" xmlns:c="http://example.invalid/custom"><ix:nonNumeric name="c:RiskFactorsTextBlock" contextRef="C1" id="f1">text</ix:nonNumeric><ix:nonNumeric name="c:NotAParagraph" contextRef="C1">x</ix:nonNumeric></html>'
     assert ix_textblocks(html)==[{"qname":"c:RiskFactorsTextBlock","local_name":"RiskFactorsTextBlock","namespace":"http://example.invalid/custom","context_ref":"C1","fact_id":"f1"}]
 
+def test_q220_cyd_entrypoint_uses_the_exact_namespace_version():
+    from automation.q220_as_filed_xbrl_population_gate import sec_standard_taxonomy_entrypoint
+    assert sec_standard_taxonomy_entrypoint("http://xbrl.sec.gov/cyd/2024") == "https://xbrl.sec.gov/cyd/2024/cyd-af-sub-2024.xsd"
+    assert sec_standard_taxonomy_entrypoint("http://xbrl.sec.gov/cyd/2025") == "https://xbrl.sec.gov/cyd/2025/cyd-af-sub-2025.xsd"
+    assert sec_standard_taxonomy_entrypoint("http://xbrl.sec.gov/cyd/2026") == "https://xbrl.sec.gov/cyd/2026/cyd-af-sub-2026.xsd"
+    assert sec_standard_taxonomy_entrypoint("http://xbrl.sec.gov/cyd/2025") != "https://xbrl.sec.gov/cyd/2026/cyd-af-sub-2026.xsd"
+    assert sec_standard_taxonomy_entrypoint("http://example.invalid/custom") is None
+
+
+def test_q220_standard_taxonomy_presentation_resolves_versioned_cyd_qname():
+    from automation.q220_as_filed_xbrl_population_gate import presentation_metadata, qname_presentation_fragment
+    qname="cyd:CybersecurityRiskManagementProcessesIntegratedTextBlock"
+    taxonomy_xsd=b'''<xs:schema xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <link:presentationLink xlink:role="http://example.invalid/role">
+        <link:loc xlink:label="concept" xlink:href="cyd-2025.xsd#cyd_CybersecurityRiskManagementProcessesIntegratedTextBlock"/>
+        <link:presentationArc xlink:from="root" xlink:to="concept"/>
+      </link:presentationLink>
+    </xs:schema>'''
+    pm=presentation_metadata(taxonomy_xsd)
+    assert qname_presentation_fragment(qname) in pm["loc_concepts"]
+
+
 def test_q220_xsd_and_presentation_metadata_are_extractable():
     xsd=b'<xsd:schema targetNamespace="http://example.invalid/custom"><xsd:element name="RiskFactorsTextBlock"/><xsd:element name="OperatingIncome"/></xsd:schema>'
     pre=b'<link:presentationLink xlink:role="http://example.invalid/role"><link:presentationArc xlink:from="c:Root" xlink:to="c:RiskFactorsTextBlock"/></link:presentationLink>'
@@ -62,7 +84,7 @@ def test_q220_presentation_source_prefers_dedicated_linkbase():
 def test_q220_prefixed_qname_matches_sec_presentation_fragment():
     gate = (ROOT / 'automation/q220_as_filed_xbrl_population_gate.py').read_text(encoding='utf-8')
     assert 'return f"{prefix}_{local}"' in gate
-    assert 'qname_fragment(q)' in gate
+    assert 'qname_presentation_fragment(q)' in gate
 
 def test_q220_mapping_completion_uses_qnames_after_qname_normalization():
     gate = (ROOT / "automation/q220_as_filed_xbrl_population_gate.py").read_text(encoding="utf-8")
