@@ -5,12 +5,12 @@ on:
   workflow_dispatch:
     inputs:
       candidate:
-        description: "One independent bounded Top-4 candidate workpack"
+        description: "One independent bounded active Top-3 candidate workpack"
         required: true
         type: choice
         options:
-          - Q218
           - Q220
+          - Q221
       resource:
         description: "Exact capacity class to fill"
         required: true
@@ -20,12 +20,12 @@ on:
           - ubuntu_x64
           - ubuntu_arm64
       focus_wave:
-        description: "Focused Q218 wave; bypass prior slot-scope completion"
+        description: "Legacy compatibility input; keep false for active Q220/Q221 workpacks"
         required: true
         default: false
         type: boolean
       gate:
-        description: "Focused Q218 gate"
+        description: "Legacy gate selector; active Top-3 workpacks use all"
         required: true
         default: all
         type: choice
