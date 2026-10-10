@@ -74,6 +74,62 @@ def test_fetch_uses_shared_rate_limiter_on_each_attempt(monkeypatch):
     assert len(calls) == 2
 
 
+
+def test_fetch_retries_http_incomplete_read_with_shared_rate_limiter(monkeypatch):
+    import http.client
+    from automation import q104_i19_13f_historical_identity_census as census
+
+    class Limiter:
+        def __init__(self):
+            self.waits = 0
+
+        def wait(self):
+            self.waits += 1
+
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self):
+            return b"complete archive"
+
+    calls = []
+
+    def fake_urlopen(req, timeout):
+        calls.append(req.full_url)
+        if len(calls) == 1:
+            raise http.client.IncompleteRead(b"truncated", 100)
+        return Response()
+
+    limiter = Limiter()
+    monkeypatch.setattr(census.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(census.time, "sleep", lambda *_args: None)
+
+    assert census.fetch("https://example.invalid/archive.zip", retries=2, rate_limiter=limiter) == b"complete archive"
+    assert calls == ["https://example.invalid/archive.zip"] * 2
+    assert limiter.waits == 2
+
+
+def test_fetch_incomplete_read_stops_at_retry_bound(monkeypatch):
+    import http.client
+    import pytest
+    from automation import q104_i19_13f_historical_identity_census as census
+
+    calls = []
+    def fake_urlopen(req, timeout):
+        calls.append(req.full_url)
+        raise http.client.IncompleteRead(b"truncated", 100)
+
+    monkeypatch.setattr(census.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(census.time, "sleep", lambda *_args: None)
+
+    with pytest.raises(http.client.IncompleteRead):
+        census.fetch("https://example.invalid/archive.zip", retries=2)
+    assert len(calls) == 2
+
 def test_synthetic_contract():
     assert all(synthetic_contract().values())
 

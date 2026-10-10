@@ -1,6 +1,7 @@
 """Q104:I19 historical SEC 13F identity/archive census; source/PIT only."""
 from __future__ import annotations
 import argparse,csv,hashlib,html.parser,io,json,re,threading,time,urllib.error,urllib.request,zipfile
+import http.client
 from concurrent.futures import ThreadPoolExecutor,as_completed
 from datetime import date,datetime,timezone
 from pathlib import Path
@@ -93,6 +94,13 @@ def fetch(url,retries=MAX_FETCH_RETRIES,rate_limiter=None):
                 retry_after=0
             delay=max(ARCHIVE_REQUEST_GAP_SECONDS, retry_after, min(MAX_RETRY_DELAY_SECONDS, 5*(2**i)))
             time.sleep(delay)
+        except http.client.IncompleteRead as e:
+            # urllib can raise IncompleteRead from response.read() when the
+            # server closes a large SEC ZIP stream early. Discard the partial
+            # bytes and retry the whole immutable URL through the same limiter.
+            last=e
+            if i+1>=retries: raise
+            time.sleep(min(MAX_RETRY_DELAY_SECONDS, 5*(2**i)))
         except (urllib.error.URLError, TimeoutError, OSError) as e:
             last=e
             if i+1>=retries: raise
