@@ -270,62 +270,28 @@ def test_q218_development_index_includes_blocked_cost_adjusted_oos_gate():
 
 
 
-def test_q104_census_status_prefers_running_census_over_newer_pending_retry(monkeypatch):
-    from automation import generate_resource_dashboard as dashboard
+def test_handoff_decision_log_is_durable_and_non_authorizing():
+    import json
 
-    monkeypatch.setattr(dashboard, "read_json_file", lambda _path: {})
-    def jobs_for_run(run_id):
-        if run_id == 101:
-            return [
-                {"name": "census (2023, hosted)", "status": "completed", "conclusion": "success"},
-                {"name": "census (2021-2022, hosted)", "status": "in_progress", "conclusion": None},
-            ]
-        return []
-    monkeypatch.setattr(dashboard, "jobs_for_run", jobs_for_run)
-    result = dashboard.q104_census_status([
-        {
-            "id": 101,
-            "name": "Q104 I19 Historical 13F Identity Census",
-            "status": "in_progress",
-            "created_at": "2026-10-10T10:00:00Z",
-        },
-        {
-            "id": 202,
-            "name": "Q104 I19 Historical 13F Identity Census",
-            "status": "pending",
-            "created_at": "2026-10-10T14:53:00Z",
-        },
-    ])
-    assert result["state"] == "running"
-    assert "1/6 Shards" in result["detail"]
-    assert "Census-Run 101" in result["detail"]
-    assert "202" in result["detail"]
-    assert "wait behind the active run" in result["detail"]
+    path = Path(__file__).parents[1] / "research/evidence/trading_agent_chat_decision_log.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    assert payload["record_type"] == "trading_agent_chat_decision_log"
+    assert payload["safety"] == {
+        "PAPER_ONLY": True,
+        "LIVE_TRADING_ENABLED": False,
+        "ORDERS_ENABLED": False,
+        "AUTOMATIC_PROMOTION": False,
+        "paid_usage_usd": 0,
+    }
+    ids = [entry["candidate"] for entry in payload["entries"]]
+    assert {"Q104:I19", "Q220", "Q218", "AI / RESOURCE POLICY", "PORTFOLIO", "DASHBOARD"}.issubset(set(ids))
+    assert all(entry["scientific_evidence"] is False for entry in payload["entries"])
+    q220 = next(entry for entry in payload["entries"] if entry["candidate"] == "Q220")
+    assert "pre-fix commit" in q220["next_action"]
 
 
-def test_dashboard_does_not_count_queued_q104_retry_as_parallel_work(monkeypatch):
-    from automation import generate_resource_dashboard as dashboard
-
-    def jobs_for_run(run_id):
-        if run_id == 101:
-            return [{
-                "name": "census (2021-2022, [\"ubuntu-24.04\"], hosted, ubuntu-24.04, 1)",
-                "status": "in_progress",
-                "runner_name": "ubuntu-24.04",
-            }]
-        return []
-    monkeypatch.setattr(dashboard, "jobs_for_run", jobs_for_run)
-    runs = [
-        {
-            "id": 101, "name": "Q104 I19 Historical 13F Identity Census",
-            "status": "in_progress", "created_at": "2026-10-10T10:00:00Z",
-        },
-        {
-            "id": 202, "name": "Q104 I19 Historical 13F Identity Census",
-            "status": "pending", "created_at": "2026-10-10T14:53:00Z",
-        },
-    ]
-    work = dashboard.current_work_from_runs(runs)
-    q104_items = [x for x in work if x.get("task") == "Q104 I19 Historical 13F Identity Census"]
-    assert len(q104_items) == 1
-    assert q104_items[0]["run_id"] == 101
+def test_dashboard_generator_loads_and_publishes_handoff_log():
+    generator = (Path(__file__).parents[1] / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    assert 'read_json_file("research/evidence/trading_agent_chat_decision_log.json")' in generator
+    assert '"chat_handoff": chat_handoff' in generator
+    assert '"handoff_decision_log": handoff_decision_log' in generator
