@@ -95,7 +95,7 @@ def test_top4_workflow_triggers_only_on_focused_candidate_gates():
     assert "Q218" in candidate_options and "Q220" in candidate_options
     assert "Q219" not in candidate_options and "Q221" not in candidate_options
     assert '"Q219":[' not in capacity and '"Q221":[' not in capacity
-    assert "automation/q220_as_filed_xbrl_population_gate.py" in capacity
+    assert "tests/test_q220_as_filed_xbrl_population_gate.py" in capacity
 
 def test_dashboard_routes_top4_candidates_to_slot_scoped_workflow_and_i19_to_census():
     text=(ROOT/"automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
