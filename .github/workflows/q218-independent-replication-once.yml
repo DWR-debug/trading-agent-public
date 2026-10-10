@@ -288,14 +288,30 @@ jobs:
           set -euo pipefail
           python3 automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')" --file "research/evidence/q218_independent_replication_performance_latest.json=replication_bundle/q218_independent_replication_performance_result.json"
 
-      - name: Refresh dashboard and next-gate dispatcher
+      - name: Refresh dashboard and next-gate dispatcher (best effort)
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          gh workflow run resource-dashboard-update.yml --repo "$GITHUB_REPOSITORY" --ref master
-          gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master
+          # The immutable replication result has already been published above. Some
+          # GitHub App/GITHUB_TOKEN contexts reject workflow_dispatch with HTTP 403;
+          # that must not mislabel a valid research result as a failed computation.
+          # Both requests are attempted independently. The five-minute schedules and
+          # workflow_run relays remain the fallback when dispatch is not permitted.
+          if gh workflow run resource-dashboard-update.yml --repo "$GITHUB_REPOSITORY" --ref master; then
+            echo "DASHBOARD_REFRESH_DISPATCH_REQUESTED=true"
+          else
+            echo "::warning::Dashboard workflow dispatch was rejected; result remains published and scheduled refresh is the fallback."
+            echo "DASHBOARD_REFRESH_DISPATCH_REQUESTED=false"
+          fi
+          if gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master; then
+            echo "CAPACITY_DISPATCH_REQUESTED=true"
+          else
+            echo "::warning::Capacity workflow dispatch was rejected; the scheduled dispatcher is the fallback."
+            echo "CAPACITY_DISPATCH_REQUESTED=false"
+          fi
+          echo "POST_RESULT_REFRESH_ATTEMPTED=true"
 
       - name: Upload immutable replication result
         if: always() && hashFiles('replication_bundle/q218_independent_replication_performance_result.json') != ''
