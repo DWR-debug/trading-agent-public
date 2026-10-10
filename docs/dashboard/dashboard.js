@@ -230,7 +230,7 @@ function render(data){
       +"; ORDERS_ENABLED="+String((handoff.safety||{}).ORDERS_ENABLED===true)
       +"; AUTOMATIC_PROMOTION="+String((handoff.safety||{}).AUTOMATIC_PROMOTION===true)
       +"; paid_usage_usd="+String((handoff.safety||{}).paid_usage_usd==null?0:(handoff.safety||{}).paid_usage_usd)
-  ].join("\\n");
+  ].join("\n");
   if($("chatHandoffText"))$("chatHandoffText").value=handoffText;
 
   $("meta").innerHTML="Snapshot <code>"+esc(data.generated_at_utc)+"</code> · master <code>"+esc(data.master_sha)+"</code> · Status-Quelle <code>"+esc(data.operational_snapshot_sha||"nicht synchron")+"</code>"+
