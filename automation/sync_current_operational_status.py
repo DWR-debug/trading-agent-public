@@ -28,30 +28,67 @@ def _load_json(path: Path, default: Any) -> Any:
 
 
 def q220_population_focus_sentence(receipt: dict[str, Any]) -> str:
-    """Render Q220 next gate only from a positive, fingerprinted population receipt."""
+    """Render Q220 progress only when the current source gate and contract both match."""
     status = str(receipt.get("status") or "")
     fingerprint = str(receipt.get("receipt_fingerprint") or "")
-    positive = (
+    gate_sha = str(receipt.get("gate_code_sha256") or "")
+    contract_sha = str(receipt.get("contract_sha256") or "")
+
+    def valid_sha(value: str) -> bool:
+        return len(value) == 64 and all(ch in "0123456789abcdef" for ch in value.lower())
+
+    try:
+        current_gate_sha = hashlib.sha256(
+            (ROOT / "automation/q220_as_filed_xbrl_population_gate.py").read_bytes()
+        ).hexdigest()
+        current_contract_sha = hashlib.sha256(
+            (ROOT / "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json").read_bytes()
+        ).hexdigest()
+    except OSError:
+        current_gate_sha = ""
+        current_contract_sha = ""
+
+    if status != "Q220_AS_FILED_XBRL_POPULATION_COMPLETED":
+        if status == "Q220_AS_FILED_XBRL_POPULATION_BLOCKED" or int(receipt.get("failure_count") or 0) > 0:
+            return (
+                "Q220 current-code population gate is BLOCKED: no positive current-code receipt is published. "
+                "Complete and reconcile the bounded fixed-population gate before opening the historical prefix/PIT compiler. "
+            )
+        return (
+            "Q220 current-code population gate is BLOCKED: no positive current-code receipt is published. "
+            "The fixed-population source/schema gate must complete before the historical prefix/PIT compiler opens. "
+        )
+
+    positive_shape = (
         receipt.get("candidate_id") == "Q220"
         and receipt.get("mode") == "population"
-        and status == "Q220_AS_FILED_XBRL_POPULATION_COMPLETED"
         and int(receipt.get("failure_count") or 0) == 0
         and int(receipt.get("record_count") or 0) >= 40
         and int(receipt.get("row_count") or 0) >= 40
-        and len(fingerprint) == 64
-        and all(ch in "0123456789abcdef" for ch in fingerprint.lower())
+        and valid_sha(fingerprint)
     )
-    if positive:
+    current_provenance = (
+        valid_sha(gate_sha)
+        and valid_sha(contract_sha)
+        and gate_sha == current_gate_sha
+        and contract_sha == current_contract_sha
+    )
+    if not current_provenance:
         return (
-            "Q220 historical as-filed population gate is positive: "
-            f"{int(receipt.get('row_count') or 0)} filing records across the frozen eight-issuer universe, "
-            "archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. "
-            "Next gate: historical prefix/acceptance-time PIT representation-state compiler. "
-            f"Population receipt fingerprint {fingerprint}. "
+            "Q220 population receipt is STALE: the receipt does not match the current gate code and frozen contract. "
+            "A fresh post-fix population receipt is required; no historical prefix/PIT compiler may open from a legacy or hashless receipt. "
+        )
+    if not positive_shape:
+        return (
+            "Q220 current-code population gate is BLOCKED: no positive current-code receipt is published. "
+            "Reconcile the receipt schema, counts, and zero-failure requirement before proceeding. "
         )
     return (
-        "Q220 next: the version-pinned SEC CYD presentation-taxonomy resolver has merged. "
-        "Complete and reconcile the bounded fixed-population gate before opening the historical prefix/PIT compiler. "
+        "Q220 historical as-filed population gate is positive: "
+        f"{int(receipt.get('row_count') or 0)} filing records across the frozen eight-issuer universe, "
+        "archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. "
+        "Next gate: historical prefix/acceptance-time PIT representation-state compiler. "
+        f"Population receipt fingerprint {fingerprint}. "
     )
 
 
