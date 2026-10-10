@@ -111,9 +111,9 @@ def test_planned_research_backlog_is_locked_to_three_focus_candidates():
     board = [{"code": code, "lane":"FRONTIER DISCOVERY", "next_gate":"gate"} for code in ("Q104:I19","Q218","Q219","Q220","Q221","Q224","Q229")]
     queue = planned_research_backlog(board)
     assert len(queue) == 3
-    assert [x["candidate"] for x in queue] == ["Q104:I19","Q220","Q218"]
-    assert queue[2]["planned_status"] == "BLOCKED_SEPARATE_EXPLICIT_PERFORMANCE_AUTHORIZATION"
-    assert queue[2]["execution_workflow"] is None
+    assert [x["candidate"] for x in queue] == ["Q104:I19","Q220","Q221"]
+    assert all(x["planned_status"] == "READY_NEXT_GATE" for x in queue)
+    assert all(x["execution_workflow"] for x in queue)
 
 
 def test_dashboard_filters_platform_work_from_research_capacity():
@@ -179,10 +179,11 @@ def test_dashboard_pipeline_is_locked_to_focus_candidates():
         {"code":"Q104:I19","state":"SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED"},
         {"code":"Q218","state":"DESIGN_ONLY_ACTIVE"},
         {"code":"Q220","state":"DESIGN_ONLY_ACTIVE"},
+        {"code":"Q221","state":"DESIGN_ONLY_ACTIVE"},
         {"code":"Q219","state":"DESIGN_ONLY_ACTIVE"},
     ]
     rows = candidate_pipeline(top4, [], {}, {})
-    assert [x["code"] for x in rows] == ["Q104:I19","Q220","Q218"]
+    assert [x["code"] for x in rows] == ["Q104:I19","Q220","Q221"]
 
 
 def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
@@ -204,7 +205,7 @@ def test_chat_handoff_snapshot_uses_persisted_next_chat_decisions_and_safety():
     handoff = chat_handoff_snapshot(evidence, os_state)
 
     assert handoff["record_type"] == "dashboard_chat_handoff"
-    assert handoff["active_execution_focus"] == ["Q104:I19", "Q220", "Q218"]
+    assert handoff["active_execution_focus"] == ["Q104:I19", "Q220", "Q221"]
     assert handoff["next_research_focus"]
     assert "Q104:I19" in handoff["next_research_focus"]
     assert handoff["safety"]["PAPER_ONLY"] is True
@@ -217,16 +218,18 @@ def test_dashboard_focused_backlog_is_three_candidates():
     from automation.generate_resource_dashboard import planned_research_backlog
     rows = planned_research_backlog([
         {"code":"Q104:I19","lane":"FORMAL READINESS","next_gate":"13F completeness"},
-        {"code":"Q218","lane":"FRONTIER DISCOVERY","next_gate":"SEC multi-channel/PIT"},
-        {"code":"Q220","lane":"FRONTIER DISCOVERY","next_gate":"as-filed XBRL population and mapping"},
+        {"code":"Q218","lane":"FRONTIER DISCOVERY","next_gate":"archived SEC source/PIT"},
+        {"code":"Q220","lane":"FRONTIER DISCOVERY","next_gate":"historical as-filed XBRL PIT compiler"},
+        {"code":"Q221","lane":"FRONTIER DISCOVERY","next_gate":"historical USAspending public clock + issuer mapping"},
         {"code":"Q219","lane":"FRONTIER DISCOVERY","next_gate":"options PIT"},
     ])
-    assert [x["candidate"] for x in rows] == ["Q104:I19","Q220","Q218"]
+    assert [x["candidate"] for x in rows] == ["Q104:I19","Q220","Q221"]
     assert [x["planned_status"] for x in rows] == [
         "READY_NEXT_GATE",
         "READY_NEXT_GATE",
-        "BLOCKED_SEPARATE_EXPLICIT_PERFORMANCE_AUTHORIZATION",
+        "READY_NEXT_GATE",
     ]
+    assert "historical USAspending" in rows[2]["next_gate"]
 
 
 def test_dashboard_s10_support_is_non_authorizing():
@@ -349,3 +352,15 @@ def test_dashboard_does_not_count_queued_q104_retry_as_parallel_work(monkeypatch
     q104_items = [x for x in work if x.get("task") == "Q104 I19 Historical 13F Identity Census"]
     assert len(q104_items) == 1
     assert q104_items[0]["run_id"] == 101
+
+
+def test_q221_public_clock_does_not_claim_historical_applicability_without_a_durable_receipt(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    monkeypatch.setattr(dashboard, "read_json_file", lambda _path: {})
+    gate = dashboard.q221_public_clock_status()
+
+    assert gate["state"] == "ready"
+    assert gate["progress_percent"] == 0
+    assert "No positive, fingerprinted historical USAspending" in gate["detail"]
+    assert gate["next_gate"].startswith("historical USAspending public boundary")
