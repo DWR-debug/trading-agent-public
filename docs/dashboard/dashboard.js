@@ -44,8 +44,11 @@ function updateClock(){
   }
 }
 function candidateFrom(text){
-  text=String(text||"");
-  for(var i=0;i<FOCUS.length;i++)if(text.indexOf(FOCUS[i])>=0)return FOCUS[i];
+  var normalized=String(text||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+  for(var i=0;i<FOCUS.length;i++){
+    var key=FOCUS[i].toUpperCase().replace(/[^A-Z0-9]/g,"");
+    if(normalized.indexOf(key)>=0)return FOCUS[i];
+  }
   return "—";
 }
 function candidateInfo(code){
@@ -244,6 +247,13 @@ function render(data){
           "<div class='metric-row'><span>Milestone-Fortschritt</span><strong>"+next+"%</strong></div>"+
           progressBar(next,true)+
           "<div class='small muted'>"+esc(x.next_milestone_progress_basis||"kein aktiver Milestone")+"</div>"+
+          "<div class='gate-context' aria-label='Gate-Status, Befund und nächste Aktion'>"+
+            "<div class='gate-context-row'><span class='metric-title'>Gate-Status</span><span class='badge blocked-badge'>"+esc(String(x.current_milestone_status||"UNBEKANNT").toUpperCase())+"</span></div>"+
+            "<div class='metric-title' style='margin-top:5px'>Gate-Befund / Blocker</div>"+
+            "<div class='gate-context-value'>"+esc(x.next_milestone_progress_basis||"Kein receipt-basierter Befund dokumentiert.")+"</div>"+
+            "<div class='metric-title' style='margin-top:5px'>Nächste sinnvolle Aktion</div>"+
+            "<div class='gate-context-value'><strong>"+esc(x.next_gate||"Keine nächste Aktion dokumentiert.")+"</strong></div>"+
+          "</div>"+
           "<div class='capacity-assignment' style='margin-top:12px'>"+
             "<div class='metric-title'>Kapazitäten / Runner</div>"+
             "<div class='small'><strong>Aktiv:</strong> "+esc((x.active_capacity_assignments||[]).map(function(a){return (a.resource||"")+" · "+(a.worker||"");}).join(" | ")||"keine")+"</div>"+
