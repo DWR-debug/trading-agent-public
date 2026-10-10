@@ -116,6 +116,30 @@ def presentation_metadata(body:bytes)->dict[str,object]:
             "roles":roles[:200],"endpoints":sorted(set(endpoints))[:1000],
             "loc_concepts":sorted(set(mapped))[:2000]}
 
+def sec_standard_taxonomy_entrypoint(namespace:str|None)->str|None:
+    """Return an explicitly version-matched SEC CYD AF presentation/label entrypoint.
+
+    The QName namespace is the version clock: never silently upgrade an old
+    filing to the newest taxonomy. Other namespaces remain unresolved here.
+    """
+    m=re.fullmatch(r"http://xbrl\\.sec\\.gov/cyd/(20\\d{2})",str(namespace or ""))
+    if not m: return None
+    year=m.group(1)
+    return f"https://xbrl.sec.gov/cyd/{year}/cyd-af-sub-{year}.xsd"
+
+
+def taxonomy_url_namespace_values(url:str)->set[str]:
+    m=re.fullmatch(r"https://xbrl\\.sec\\.gov/cyd/(20\\d{2})/cyd-af-sub-20\\d{2}\\.xsd",url)
+    return {f"http://xbrl.sec.gov/cyd/{m.group(1)}"} if m else set()
+
+
+def qname_presentation_fragment(qname:str)->str:
+    if ":" in qname:
+        prefix,local=qname.split(":",1)
+        return f"{prefix}_{local}"
+    return qname
+
+
 def submission_primary_map(cik:str)->dict[str,str]:
     status,body=fetch(f"https://data.sec.gov/submissions/CIK{cik}.json")
     if status!=200: raise RuntimeError(f"SUBMISSIONS_HTTP_{status}:{cik}")
@@ -193,18 +217,45 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
     instance_name=xml_names[0] if xml_names and fetch(f"{base}/{xml_names[0]}")[0]==200 else None
     tb=ix_textblocks(p); xm=xsd_metadata(xsd); pm=presentation_metadata(pre); qnames=sorted(set(x["qname"] for x in tb))
     loc_concepts=set(pm["loc_concepts"])
-    def qname_fragment(qname:str)->str:
-        if ":" in qname:
-            prefix,local=qname.split(":",1)
-            return f"{prefix}_{local}"
-        return qname
-    hits=sorted(q for q in qnames if qname_fragment(q) in loc_concepts or local_name(q) in loc_concepts)
+    hits=set(q for q in qnames if qname_presentation_fragment(q) in loc_concepts)
+    qname_namespaces={str(x["qname"]):str(x.get("namespace") or "") for x in tb if x.get("qname")}
+    taxonomy_urls=sorted({url for namespace in qname_namespaces.values()
+                          if (url:=sec_standard_taxonomy_entrypoint(namespace))})
+    taxonomy_presentations=[]
+    taxonomy_hits=set()
+    for taxonomy_url in taxonomy_urls:
+        taxonomy_row={"url":taxonomy_url,"status":"NOT_FETCHED","byte_count":0,"sha256":None,"matched_textblock_concepts":[]}
+        try:
+            taxonomy_status,taxonomy_body=fetch(taxonomy_url)
+            taxonomy_row["status"]=taxonomy_status
+            if taxonomy_status==200:
+                taxonomy_row["byte_count"]=len(taxonomy_body)
+                taxonomy_row["sha256"]=sha256(taxonomy_body)
+                taxonomy_pm=presentation_metadata(taxonomy_body)
+                taxonomy_loc_concepts=set(taxonomy_pm["loc_concepts"])
+                matching={q for q in qnames
+                          if qname_namespaces.get(q,"") in taxonomy_url_namespace_values(taxonomy_url)
+                          and qname_presentation_fragment(q) in taxonomy_loc_concepts}
+                taxonomy_row["matched_textblock_concepts"]=sorted(matching)
+                taxonomy_hits.update(matching)
+                taxonomy_row["presentation_metadata_sha256"]=taxonomy_pm["sha256"]
+            else:
+                taxonomy_row["error_code"]=f"TAXONOMY_ENTRYPOINT_HTTP_{taxonomy_status}"
+        except Exception as exc:
+            taxonomy_row["status"]="ERROR"
+            taxonomy_row["error_code"]=type(exc).__name__
+            taxonomy_row["error"]=str(exc)[:240]
+        taxonomy_presentations.append(taxonomy_row)
+    hits.update(taxonomy_hits)
+    complete=bool(tb) and len(hits)>=len(qnames) and all(x["status"]==200 for x in taxonomy_presentations)
     return {"canonical_key":{"cik":row["cik"],"form":row["form"],"filed_date":row["filed_date"],"accession":acc},"acceptance_datetime":accepted,
             "header_sha256":sha256(h),"directory_index_sha256":sha256(d),"primary_document":primary,"primary_document_source":primary_source,"primary_document_sha256":sha256(p),
             "primary_document_bytes":len(p),"xsd":xsd_names[0],"xsd_metadata":xm,"presentation_linkbase":pre_names[0],"presentation_source_type":presentation_source[1],"presentation_metadata":pm,
+            "standard_taxonomy_presentation_sources":taxonomy_presentations,
             "instance_document":instance_name,"instance_available":bool(instance_name),"textblock_fact_count":len(tb),
-            "textblock_concepts":sorted(set(x["qname"] for x in tb)),"presentation_mapped_textblock_concepts":hits,
-            "presentation_mapping_complete_for_observed_textblocks":bool(tb) and len(hits)>=len(qnames),"raw_archive_as_filed":True,
+            "textblock_concepts":sorted(set(x["qname"] for x in tb)),"presentation_mapped_textblock_concepts":sorted(hits),
+            "unmapped_textblock_concepts":sorted(set(qnames)-hits),
+            "presentation_mapping_complete_for_observed_textblocks":complete,"raw_archive_as_filed":True,
             "performance_authorization":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False}
 
 def concept_spec()->dict[str,object]:
