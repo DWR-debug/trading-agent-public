@@ -12,6 +12,16 @@
 
 ## Current state
 
+### Active Top-3 candidate focus — 2026-10-10
+
+- **Execution allowlist:** `Q104:I19`, `Q220`, `Q221` — Q218 is archived evidence and excluded from automatic dispatch; Q219 and all other candidates remain paused.
+- **Q104:I19 — Formal Readiness / Windows A:** finish the already-running historical 13F security census. Recent Windows shard failures and intermittent Actions broker/DNS errors are execution failures, not candidate falsifiers. Do not relaunch a duplicate full census while any census shard remains active. After terminal state, preserve artifacts and recover only receipt-identified failed shards/SEC acceptance headers, then run the frozen PIT compiler and independent reproduction.
+- **Q220 — Frontier Discovery / Windows B:** the fixed eight-issuer as-filed SEC/XBRL population and mapping receipt opens the historical prefix/acceptance-time PIT compiler; it is not itself a PIT-validity or performance result.
+- **Q221 — Frontier Discovery / Windows C:** bounded USAspending/FPDS publication-clock and agency-exception gate. A source-document smoke pass does not prove historical applicability. Freeze transaction-class semantics and award/modification lineage, preserve DoD/USACE and FAR exceptions, and prove recipient-to-issuer mapping before independent PIT reproduction.
+- **Parallelism:** route Q220 and Q221 only to distinct live-verified free Windows B/C or useful hosted slots; keep Windows A on Q104 and use C for long deterministic/independent QA when it is not running its Q221 gate. Do not manufacture work or duplicate active gates.
+- **Safety:** `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, `AUTOMATIC_PROMOTION=False`. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized by compute capacity or source-gate success.
+
+
 ### Engineering
 
 - Paper/Shadow/Forward infrastructure: **MERGED** via PR #352, merge commit `a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba`.
