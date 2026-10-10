@@ -1,6 +1,6 @@
 """Publish text evidence files with the GitHub Git Data API; no local git required."""
 from __future__ import annotations
-import argparse, json, os, time, urllib.error, urllib.request
+import argparse, http.client, json, os, time, urllib.error, urllib.request
 
 RETRYABLE_HTTP_CODES = {429, 502, 503, 504}
 API_RETRY_ATTEMPTS = 3
@@ -11,17 +11,24 @@ def api(method, url, payload=None):
     token=os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
     if not token: raise RuntimeError("GH_TOKEN/GITHUB_TOKEN is required")
     data=None if payload is None else json.dumps(payload).encode("utf-8")
-    for attempt in range(1, API_RETRY_ATTEMPTS + 1):
+    attempts = 5
+    timeout = 120 if method == "POST" and url.endswith("/git/blobs") else 45
+    for attempt in range(1, attempts + 1):
         req=urllib.request.Request(url,data=data,method=method,headers={"Authorization":f"Bearer {token}","Accept":"application/vnd.github+json","Content-Type":"application/json"})
         try:
-            with urllib.request.urlopen(req,timeout=30) as r:
+            with urllib.request.urlopen(req,timeout=timeout) as r:
                 return json.loads(r.read().decode("utf-8"))
         except urllib.error.HTTPError as exc:
             body=exc.read().decode("utf-8","replace")
-            if exc.code in RETRYABLE_HTTP_CODES and attempt < API_RETRY_ATTEMPTS:
-                time.sleep(API_RETRY_DELAY_SECONDS * attempt)
+            if exc.code in {429, 500, 502, 503, 504} and attempt < attempts:
+                time.sleep(min(12.0, API_RETRY_DELAY_SECONDS * (2 ** (attempt - 1))))
                 continue
             raise RuntimeError(f"GitHub API {method} {url} failed: {exc.code}: {body}") from exc
+        except (urllib.error.URLError, TimeoutError, OSError, http.client.IncompleteRead) as exc:
+            if attempt >= attempts:
+                raise RuntimeError(f"GitHub API {method} {url} transport failed after {attempts} attempts: {type(exc).__name__}: {exc}") from exc
+            # Bounded retries recover connection resets/truncated API responses.
+            time.sleep(min(12.0, API_RETRY_DELAY_SECONDS * (2 ** (attempt - 1))))
 
 def publish(repository,branch,base_sha,files):
     """Publish immutably while retrying a concurrent fast-forward race."""

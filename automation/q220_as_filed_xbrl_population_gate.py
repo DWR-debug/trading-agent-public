@@ -6,6 +6,9 @@ from datetime import date, datetime, timezone
 from html import unescape
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
+import hashlib
+ROOT=Path(__file__).resolve().parents[1]
+CONTRACT_PATH=ROOT/"research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json"
 
 TARGET_ISSUERS={"SPGI":"0000064040","NDAQ":"0001120193","AMP":"0000820027","RJF":"0000720005","WMB":"0000107263","VLO":"0001035002","DVN":"0001090012","EMN":"0000915389"}
 FORMS={"10-K","10-K/A"}; WINDOW_START=date(2019,1,1); WINDOW_END=date(2025,9,24); ROUTE_QUARTERS=((2024,4),(2025,1),(2025,2),(2025,3))
@@ -288,7 +291,10 @@ def run(mode:str,output:Path)->dict[str,object]:
            all(v["textblock_ready_originals"]>=(1 if mode=="route" else 5) for v in summary.values()))
     result={"schema_version":"1.0","task_id":f"Q-2026-10-06-Q220-AS-FILED-XBRL-{mode.upper()}","candidate_id":"Q220","mode":mode,
             "status":f"Q220_AS_FILED_XBRL_{mode.upper()}_COMPLETED" if ready else f"Q220_AS_FILED_XBRL_{mode.upper()}_BLOCKED",
-            "generated_at_utc":datetime.now(timezone.utc).isoformat(),"fixed_universe":TARGET_ISSUERS,
+            "generated_at_utc":datetime.now(timezone.utc).isoformat(),
+            "gate_code_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "contract_sha256":hashlib.sha256(CONTRACT_PATH.read_bytes()).hexdigest(),
+            "fixed_universe":TARGET_ISSUERS,
             "window":{"start":WINDOW_START.isoformat(),"end":WINDOW_END.isoformat()},
             "source_route":{"master_index":"SEC quarterly full-index","raw_archive":"SEC Archives filing directory","acceptance_header":True,
                             "directory_index":"index.json","primary_document":True,"extension_taxonomy":True,"presentation_linkbase":True,"flattened_fsn_not_authoritative":True},

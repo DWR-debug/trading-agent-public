@@ -40,15 +40,34 @@ def run(output:Path)->dict:
       "fpds_three_business_days_found":"THREE BUSINESS DAYS" in upper and "FPDS" in upper,
       "site_publication_day_after_found":"DAY AFTER THAT" in upper and ("PUBLISHED TO THE WEBSITE" in upper or "PUBLISHED TO THE SITE" in upper),
       "api_status":api_status,"api_content_type":api_ctype,"api_bytes":len(api_body),
+      "clock_readiness_scope":"CURRENT_DOCUMENTATION_ONLY",
       "historical_applicability_proven":False,
+      "historical_boundary_verified":False,
+      "transaction_class_clock_boundaries_verified":False,
+      "rd_classifier_versioned":False,
+      "recipient_to_issuer_mapping_verified":False,
       "scientific_evidence":False,"performance_authorization":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False,
     }
-    out["source_clock_contract_ready"]=all(out[k] for k in ("contract_update_within_five_days","publication_following_morning","fpds_three_business_days_found","site_publication_day_after_found","transactions_endpoint_documented","dod_90_day_delay_exception_found"))
+    # Documentation markers are only a precondition to a separate historical boundary test.
+    out["source_clock_contract_ready"]=all(out[k] for k in (
+        "contract_update_within_five_days",
+        "publication_following_morning",
+        "fpds_three_business_days_found",
+        "site_publication_day_after_found",
+        "transactions_endpoint_documented",
+        "dod_90_day_delay_exception_found",
+        "far_30_day_exception_language_found",
+    ))
     out["clock_interpretation"]={
       "standard_procurement_path":"award/modification -> up to 3 business days to FPDS -> following-morning availability on USAspending -> site publication the day after availability",
       "dod_usace_exception":"90-day delay explicitly documented; candidate must preserve agency-specific clock instead of applying the standard path blindly",
       "far_18_2_exception":"30-day submission/publication exception language is retained for classification and must be resolved by transaction authority before PIT use",
       "historical_applicability_proven":False,
+      "historical_boundary_verified":False,
+      "transaction_class_clock_boundaries_verified":False,
+      "rd_classifier_versioned":False,
+      "recipient_to_issuer_mapping_verified":False,
+      "next_gate":"dated historical public-boundary evidence + transaction-class clock assignment + R&D classifier and recipient/issuer lineage",
     }
     out["receipt_fingerprint"]=hashlib.sha256(json.dumps(out,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode()).hexdigest()
     output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(out,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")

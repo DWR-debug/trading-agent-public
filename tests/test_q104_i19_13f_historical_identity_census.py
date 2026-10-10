@@ -186,3 +186,13 @@ def test_six_shard_request_budget_stays_below_sec_global_limit():
     assert HEADER_REQUEST_GAP_SECONDS >= 0.67
     assert len(SHARDS) / ARCHIVE_REQUEST_GAP_SECONDS < 10
     assert len(SHARDS) / HEADER_REQUEST_GAP_SECONDS < 10
+
+
+
+def test_windows_setup_python_uses_process_scoped_policy_only():
+    from pathlib import Path
+    workflow = (Path(__file__).parents[1] / ".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
+    step = workflow.split("Set up Python 3.13 on Windows self-hosted runner", 1)[1].split("Download frozen SEC source snapshot", 1)[0]
+    assert "PSExecutionPolicyPreference: Bypass" in step
+    assert "Set-ExecutionPolicy -Scope LocalMachine" not in workflow
+    assert "Set-ExecutionPolicy -Scope CurrentUser" not in workflow
