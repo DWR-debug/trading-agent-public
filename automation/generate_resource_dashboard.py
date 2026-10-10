@@ -959,7 +959,7 @@ def q221_public_clock_status() -> dict[str, Any]:
         "state": "ready",
         "progress_percent": 0,
         "detail": detail,
-        "next_gate": "archived USAspending policy vintages for fixed target windows, then award-level public-boundary and issuer mapping",
+        "next_gate": "historical USAspending public boundary: archived policy vintages for fixed target windows, then award-level observability and issuer mapping",
         "receipt_fingerprint": fingerprint or None,
         "parsed_target_windows": parsed_windows,
     }
