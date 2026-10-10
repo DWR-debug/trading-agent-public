@@ -1215,3 +1215,20 @@ def test_fast_dispatch_hard_blocks_q219_and_q221_outside_the_three_candidate_foc
     assert plan["paper_only"] is True
     assert plan["live_execution"] is False
     assert plan["promotion"] is False
+
+
+def test_legacy_candidate_matrix_contains_only_q218_and_q220():
+    workflow = (ROOT / ".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
+    assert "candidate: [Q218]" in workflow
+    assert workflow.count("candidate: [Q220]") == 2
+    assert "Q219" not in workflow
+    assert "Q221" not in workflow
+
+
+def test_dispatcher_default_and_dashboard_focus_are_intersected_with_fixed_allowlist():
+    from automation.planned_capacity_fast_dispatch import effective_focus_candidates, FOCUS_CANDIDATES
+
+    assert effective_focus_candidates({}) == {"Q104:I19", "Q218", "Q220"}
+    assert effective_focus_candidates({"focus_candidates": ["Q104:I19", "Q218", "Q219", "Q221"]}) == {"Q104:I19", "Q218"}
+    assert effective_focus_candidates({"focus_candidates": ["Q219", "Q221"]}) == set()
+    assert FOCUS_CANDIDATES == {"Q104:I19", "Q218", "Q220"}
