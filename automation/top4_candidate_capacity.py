@@ -38,14 +38,15 @@ LANES={
         [PYTHON,"-m","pytest","-q","tests/test_q104_i19_xbrl_concept_freeze.py","tests/test_q104_i19_xbrl_pit_compiler.py","tests/test_q104_candidate_wave_contract.py"],
         [PYTHON,"-m","pytest","-q","tests/test_q104_i19_13f_historical_identity_census.py","tests/test_q104_i19_historical_identity_census.py"],
     ],
+    "Q220":[
+        [PYTHON,"-m","pytest","-q","tests/test_q220_as_filed_xbrl_population_gate.py"],
+        [PYTHON,"-m","pytest","-q","tests/test_q104_xbrl_concept_freeze_audit.py","tests/test_q104_i19_xbrl_pit_compiler.py"],
+    ],
+}
     "Q221":[
         [PYTHON,"-m","automation.q221_usaspending_public_clock_gate","--output","{OUT}/q221_usaspending_public_clock_gate.json"],
         [PYTHON,"-m","automation.q221_historical_source_vintage_gate","--output","{OUT}/q221_historical_source_vintages.json"],
         [PYTHON,"-m","pytest","-q","tests/test_q221_usaspending_public_clock_gate.py","tests/test_q221_historical_source_vintage_gate.py"],
-    ],
-    "Q220":[
-        [PYTHON,"-m","pytest","-q","tests/test_q220_as_filed_xbrl_population_gate.py"],
-        [PYTHON,"-m","pytest","-q","tests/test_q104_xbrl_concept_freeze_audit.py","tests/test_q104_i19_xbrl_pit_compiler.py"],
     ],
 }
 
