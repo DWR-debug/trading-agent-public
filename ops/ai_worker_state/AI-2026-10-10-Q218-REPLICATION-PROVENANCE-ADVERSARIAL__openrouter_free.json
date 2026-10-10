@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-10-Q218-REPLICATION-PROVENANCE-ADVERSARIAL",
+  "provider": "openrouter_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "openrouter_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "litellm_transport_enabled": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_mode_attestation": {
+      "eligible": true,
+      "provider": "openrouter_free",
+      "fixed_model": "openrouter/free",
+      "free_mode_attested": true,
+      "attestation_required": false,
+      "attestation_type": "provider_fixed_zero_price_route",
+      "attestation_env": null,
+      "paid_usage_allowed": false,
+      "paid_fallback_allowed": false,
+      "personal_credit_fallback_allowed": false,
+      "reasons": []
+    },
+    "free_enforcement": "fixed_model_openrouter_free",
+    "reasons": []
+  },
+  "litellm_transport_enabled": false,
+  "task_fingerprint": "6c0c17983bd553d7a236ab03564a3120365b08208b321ba5a7fecf9e1ccd4280",
+  "context_fingerprint": "a759da4bf622c39a47c78c8d113da8192191fb9ace9d50f26cf70ac87ea7789d",
+  "observed_at_utc": "2026-10-10T01:45:38.087852Z",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 78.074,
+  "stdout": "Here's a thinking process:\n\n1.  **Analyze the Request and Context:**\n   - I'm a bounded research worker in a paper-only system.\n   - LIVE_TRADING_ENABLED=False, ORDERS_ENABLED=False, AUTOMATIC_PROMOTION=False.\n   - I need to conduct a skeptical, post-execution methods audit of Q218 primary performance and independent symbol-disjoint replication artifacts.\n   - I must not perform backtests, select parameters, alter gates, authorize promotion, or treat output as scientific evidence.\n   - I need to separate supported claims from unresolved issues, audit mismatches, attack assumptions, and name the smallest next gate or state no further work is justified until provenance is resolved.\n   - I must preserve uncertainty, label observations as non-authorizing, and reuse existing frozen evidence.\n\n2.  **Identify Key Artifacts and Data:**\n   - **Primary trial** T-2026-10-08-Q218-PERFORMANCE-01:\n     - 13 events, 5 positive outcomes\n     - Descriptive mean ~-1.071%, median ~-0.808%\n     - Result fingerprint: 78c4a667b01bebe0aa23361e78856155fa3e3fe861cb6fcc1e4b79973cbddc5d\n     - Input-bundle fingerprint in result: 0b9f95fc0b471f2a8efde48d4655be6e262eff717a4f17c6161281739adbea1a\n     - Current frozen input-bundle receipt fingerprint: da17cdad7478ed7c6df7c6971e3a658b83e1b4a37726b4a85a6d48cd475e9af2\n     - Mismatch between result's claimed bundle fingerprint and current frozen input-bundle receipt fingerprint.\n   - **Replication trial** T-2026-10-08-Q218-REPLICATION-01:\n     - Fixed fresh-symbol universe: GOOGL, META, ORCL, PFE\n     - 2 events per issuer, 8 events total\n     - Outcomes listed: 0.0013607290357966484, 0.06095060760007143, -0.01409260242387056, 0.0011933402377890534, -0.038340790722084406, -0.029783188584134423, 0.01419803709961509, 0.01804122878759351\n     - 5/8 positive, mean +0.169092%, median +0.127703%, range -3.834079% to +6.095061%\n     - Replication bundle fingerprint: e36d11115f9baa51dc235580d7a7e3491ce78e8f4f96e92d62a76ee66a293b46\n     - Replication report fingerprint: bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7\n     - Robustness receipt: all 6 mutation probes rejected\n     - Contract says primary output not used for rule changes\n   - **Governance/contract artifacts** provide structure but the key issue is provenance mismatch and replication independence.\n\n3.  **Interrogate the Facts (Task 1: Separate supported claims from unresolved provenance/inference):**\n   - Supported claims (from artifacts alone, no external validation):\n     * Primary trial executed, 13 events recorded, outcomes logged.\n     * Replication trial executed, 8 fresh-symbol events recorded, outcomes logged.\n     * Both runs are marked paper_only, no live trading, no orders, no promotion.\n     * Replication contract explicitly states fresh-symbol disjoint, no outcome filtering, no primary result reuse for rule changes.\n     * Robustness probes all rejected, indicating contract integrity checks passed internally.\n   - Unresolved provenance/inference:\n     * Primary result fingerprint (78c4a667...) claims bundle fingerprint 0b9f95fc..., but current frozen input-bundle receipt is da17cdad... Mismatch. Source: not reconciled by assumption.\n     * Replication report fingerprint bfed980b... referenced primary report fingerprint for provenance only. Need to verify if that primary report fingerprint matches the primary result fingerprint or something else.\n     * No holdout evaluation in either run. Outcomes are gross one-session event outcomes.\n     * Positive mean in replication (0.169%) is descriptive only; no statistical validation, no risk adjustment, no cost deduction, no signal-to-position mapping.\n     * Sample size: 13 primary, 8 replication. Small, issuer-clustering possible (MSFT appears twice in primary, ORCL/GOOGL/META in replication).\n     * Repeated issuer events: MSFT has two events in primary with different outcomes (-0.039, +0.030). Could indicate within-issuer variability or data artifacts.\n     * Event-pair confounds: The pairing rule involves \"latest eligible non-amended Form 8-K Item 2.02 within the reporting-cycle interval bounded by the preceding 10-K acceptance and target 10-K acceptance.\" Not fully detailed in outcomes, but potential for window/interval dependence.\n     * Non-tradable outcome interpretation: Outcome = close/open - 1.0 same-session. Without transaction costs, bid-ask, timing slippage, not directly tradable.\n     * Absent costs: Explicitly noted: no net-of-cost conclusion.\n     * Absent holdout: No out-of-sample validation.\n\n4.  **Audit Primary Result/Input-Bundle Mismatch (Task 2):**\n   - Primary result record claims bundle fingerprint 0b9f95fc0b471f2a8efde48d4655be6e262eff717a4f17c6161281739adbea1a\n   - Current frozen input-bundle receipt claims da17cdad7478ed7c6df7c6971e3a658b83e1b4a37726b4a85a6d48cd475e9af2\n   - These are different SHA256 hashes. Cannot reconcile by assumption.\n   - Existing receipt/path(s) needed for deterministic reconciliation:\n     * The artifact path for the primary result: actions://artifacts/11585118679 (from input_bundle)\n     * The artifact path for the current frozen input-bundle: need to check if there's a newer artifact or if the fingerprint da17cdad... corresponds to a different trial state.\n     * The trial_id T-2026-10-08-Q218-PERFORMANCE-01 has artifact id 11585118679, digest sha256:6881a38b5beee2e6ea795d9cc8bab69de3e28d9d9bbec3a3598a4ec406d5b043\n     * Wait, the input-bundle receipt fingerprint da17cdad... is listed in the input_bundle file under \"bundle_fingerprint\": \"da17cdad7478ed7c6df7c6971e3a658b83e1b4a37726b4a85a6d48cd475e9af2\"\n     * The result record has \"bundle_fingerprint\": \"0b9f95fc0b471f2a8efde48d4655be6e262eff717a4f17c6161281739adbea1a\"\n     * These two fingerprints differ. The reconciliation would require matching the exact artifact digest that was used to generate the result vs the current frozen input-bundle receipt.\n     * Existing paths/Receipts needed:\n       - The primary result artifact digest: sha256:6881a38b5beee2e6ea795d9cc8bab69de3e28d9d9bbec3a3598a4ec406d5b043 (from artifact id 11585118679)\n       - The input-bundle receipt fingerprint: da17cdad7478ed7c6df7c6971e3a658b83e1b4a37726b4a85a6d48cd475e9af2\n       - The contract receipt fingerprint from governance: f3d1d7b98881687af331717fcc7773fefd556ded96b4dd1229722515513cb1e4 (upstream source_gate_receipt_fingerprint)\n       - Need to determine if 6881a38b... matches da17cdad... or 0b9f95fc... A quick mental check: they're all different 64-char hex strings. So three distinct fingerprints.\n       - For deterministic reconciliation, we need the exact artifact that was frozen at the time of the primary result generation, and verify its fingerprint against the result's claimed bundle fingerprint. The current frozen input-bundle receipt may represent a later or different state.\n       - The task says: \"State exact existing receipt/path(s) needed for a deterministic reconciliation; do not manufacture missing hashes.\"\n       - So I should list the specific fingerprints and artifact paths that exist and would need to be cross-checked, without assuming they match.\n\n5.  **Attack Assumptions (Task 3):**\n   - Sample size: 13 primary, 8 replication. Very small. No inference of edge possible.\n   - Issuer clustering/dependence: MSFT appears twice in primary, ORCL/GOOGL/META in replication. Events from same issuer may not be independent. Temporal clustering: primary events span 2025-02 to 2026-07; replication events span 2025-01 to 2026-06. Overlapping time windows could induce dependence.\n   - Repeated issuer events: MSFT two events with opposite signs. Could be data artifact, different fiscal periods, or pairing rule edge cases.\n   - Event-pair confounds: The pairing rule ties outcome to \"latest eligible non-amended Form 8-K Item 2.02 within reporting-cycle interval bounded by preceding 10-K acceptance and target 10-K acceptance.\" Without full lineage trace, hard to know if windows are comparable across issuers. Amended forms excluded, but what about 8-K amendments? Diagnostic only flag present.\n   - Non-tradable outcome: close/open - 1.0 same-session. No bid-ask, no execution price, no position size. Gross return only.\n   - Absent costs: Explicitly no net-of-cost conclusion. Transaction costs could easily erase the small positive replication mean (+0.169%).\n   - Absent holdout: No out-of-sample test. The positive mean could be overfitting to the event sample.\n\n6.  **Name Smallest Next Deterministic Gate/Artifact (Task 4):**\n   - The core issue is provenance mismatch between primary result's claimed bundle fingerprint and current frozen input-bundle receipt.\n   - Smallest next gate: Resolve the bundle fingerprint provenance. Specifically, verify the primary result artifact (id 11585118679, digest 6881a38b...) against the input-bundle receipt fingerprint da17cdad... and the result's claimed bundle fingerprint 0b9f95fc...\n   - If they don't match, the next gate is to either:\n     a) Find the artifact that produced bundle fingerprint 0b9f95fc... and verify it matches the primary result, OR\n     b) Freeze the correct input-bundle artifact that matches the primary result's claimed bundle fingerprint, and update the receipt accordingly.\n   - Alternatively, if reconciliation shows the primary result was generated from a different bundle than currently frozen, the gate is to re-freeze the bundle that was actually used, or document the drift.\n   - The task says: \"Reuse existing frozen evidence; no second one-shot.\" So I should not propose running a new trial. The next deterministic gate is an artifact-provenance cross-check using existing receipts/fingerprints.\n   - Statement: \"No further performance work is justified until provenance is resolved.\" Or \"The single smallest valuable next deterministic gate is a cross-fingerprint verification of the primary result artifact (id 11585118679, digest 6881a38b...) against the input-bundle receipt fingerprint da17cdad... and the result's claimed bundle fingerprint 0b9f95fc... to determine if the result was generated from a now-drifting bundle, and if so, which artifact must be re-frozen for deterministic continuity.\"\n\n7.  **Structure the Output:**\n   - Concise structured worker handoff with findings, counterarguments, concrete next actions, uncertainty.\n   - Label every AI observation as non-authorizing.\n   - No validation, promotion, or strategy claims.\n\n   Let's outline:\n   - **Findings: Supported Claims** (bullet list from artifacts)\n   - **Findings: Unres",
+  "stderr": "",
+  "command_binary": "https-openrouter",
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791596738-8vnaJJiHba1JXxaBLCUA",
+  "usage": {
+    "prompt_tokens": 9810,
+    "completion_tokens": 3200,
+    "total_tokens": 13010,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2653,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
+}
