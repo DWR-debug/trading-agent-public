@@ -44,6 +44,8 @@ def run(output:Path)->dict:
       "historical_applicability_proven":False,
       "historical_boundary_verified":False,
       "transaction_class_clock_boundaries_verified":False,
+      "rd_classifier_versioned":False,
+      "recipient_to_issuer_mapping_verified":False,
       "scientific_evidence":False,"performance_authorization":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False,
     }
     out["source_clock_contract_ready"]=all(out[k] for k in ("contract_update_within_five_days","publication_following_morning","fpds_three_business_days_found","site_publication_day_after_found","transactions_endpoint_documented","dod_90_day_delay_exception_found"))
