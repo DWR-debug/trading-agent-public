@@ -55,4 +55,11 @@ def run(output:Path)->dict:
     return out
 
 if __name__=="__main__":
-    ap=argparse.ArgumentParser();ap.add_argument("--output",type=Path,required=True);args=ap.parse_args();print(json.dumps(run(args.output),sort_keys=True))
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--output",type=Path,required=True)
+    args=ap.parse_args()
+    result=run(args.output)
+    print(json.dumps(result,sort_keys=True))
+    # A failed source-clock marker check is a real bounded-gate failure, not a
+    # successful run that merely emits a negative-looking JSON receipt.
+    raise SystemExit(0 if result.get("source_clock_contract_ready") is True else 2)
