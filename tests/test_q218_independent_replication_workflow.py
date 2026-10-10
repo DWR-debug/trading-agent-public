@@ -19,8 +19,19 @@ def test_q218_missing_performance_result_does_not_create_secondary_artifact_fail
     anchor = "- name: Upload immutable replication result\n        if: always() && hashFiles('replication_bundle/q218_independent_replication_performance_result.json') != ''"
     assert anchor in workflow
 
-def test_q218_replication_can_dispatch_dashboard_and_capacity_refresh():
+def test_q218_replication_refresh_dispatch_is_best_effort_after_result_publication():
     workflow = Path(".github/workflows/q218-independent-replication-once.yml").read_text(encoding="utf-8")
     assert "permissions:\n  contents: write\n  actions: write" in workflow
-    assert 'gh workflow run resource-dashboard-update.yml --repo "$GITHUB_REPOSITORY" --ref master' in workflow
-    assert 'gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master' in workflow
+
+    start = workflow.index("- name: Refresh dashboard and next-gate dispatcher (best effort)")
+    end = workflow.index("- name: Upload immutable replication result", start)
+    refresh_step = workflow[start:end]
+
+    assert 'if gh workflow run resource-dashboard-update.yml --repo "$GITHUB_REPOSITORY" --ref master; then' in refresh_step
+    assert 'if gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master; then' in refresh_step
+    assert "DASHBOARD_REFRESH_DISPATCH_REQUESTED=false" in refresh_step
+    assert "CAPACITY_DISPATCH_REQUESTED=false" in refresh_step
+    assert "POST_RESULT_REFRESH_ATTEMPTED=true" in refresh_step
+    assert "::warning::" in refresh_step
+    assert "five-minute schedules" in refresh_step
+    assert "exit 1" not in refresh_step
