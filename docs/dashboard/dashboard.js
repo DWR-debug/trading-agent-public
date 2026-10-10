@@ -134,6 +134,48 @@ function renderProgressCharts(data,pipeline){
   }).join(""):"<div class='empty'>Kein Milestone-Status verfügbar.</div>";
 }
 
+
+function renderCandidateDecisionRules(pipeline){
+  var byCode={};
+  (pipeline||[]).forEach(function(x){byCode[x.code]=x;});
+  var rules=[
+    {
+      code:"Q104:I19",cls:"decision-q104",disposition:"Weiter · Single-flight",
+      title:"13F-Abdeckung zuerst schließen",
+      advance:"Den bereits laufenden Census nicht duplizieren. Nach dessen terminalem Zustand nur fehlgeschlagene Shards nach Behebung des Bootstrap-/Runner-Fehlers gezielt wiederholen; erfolgreiche Receipts bleiben unverändert.",
+      stop:"Runner-, Netzwerk- oder Python-Bootstrap-Fehler sind kein wissenschaftlicher Falsifikator. Parken nur, wenn nach begrenzter Reparatur historische Security-Identität, Coverage oder Acceptance-Time-Lineage nicht belegbar ist."
+    },
+    {
+      code:"Q220",cls:"decision-q220",disposition:"Weiter · PIT-Compiler",
+      title:"Positive Population in einen PIT-Zustand überführen",
+      advance:"Den fixierten As-filed-Pool mit Acceptance-Time und historischem Filing-Präfix kompilieren; Taxonomie-, TextBlock-, XSD- und Presentation-Zuordnung deterministisch einfrieren und anschließend unabhängig reproduzieren.",
+      stop:"Fail-closed, falls historische öffentliche Uhr, Schema-/Taxonomie-Drift oder das narrative/strukturierte Mapping nicht eindeutig rekonstruierbar ist. Keine Performance-Auswertung vor erfolgreicher unabhängiger PIT-Reproduktion und separater Autorisierung."
+    },
+    {
+      code:"Q218",cls:"decision-q218",disposition:"Begrenzt · Provenance/PIT",
+      title:"Aktuellen Kontext unabhängig abgleichen",
+      advance:"Original-Resultat, aktuelle Master-Code-Fingerprints, fixierten Vertrag/Präregistrierung und Quell-/Event-Pair-Receipts reconciliieren; die PIT-Lineage unabhängig reproduzieren. Die abgeschlossenen One-shot- und 8-Paar-Replikationsläufe nicht wiederholen.",
+      stop:"Parken, wenn Ergebnis und aktueller Code-Kontext nicht reconciliierbar sind, PIT ungültig/unreproduzierbar ist oder der Mechanismus gegenüber bestehender Disclosure-Divergence-Literatur nicht hinreichend separierbar ist. Kein neuer outcome-bearing Lauf ohne separate exakte formale Autorisierung."
+    }
+  ];
+  var host=$("candidateDecisionRules");
+  if(!host)return;
+  host.innerHTML=
+    "<div class='decision-board-head'><div><div class='section-kicker'>Decision control · receipt-first</div><div class='decision-board-title'>Nächster Schritt, Falsifikator und Wechselregel</div></div><div class='small muted'>Forschungsdisposition — keine Rendite-Rangliste oder Erfolgswahrscheinlichkeit.</div></div>"+
+    "<div class='decision-grid'>"+rules.map(function(r){
+      var x=byCode[r.code]||{};
+      var status=String(x.current_milestone_status||"nicht im Snapshot").replace(/_/g," ").toUpperCase();
+      var gate=String(x.current_milestone||x.next_gate||"Kein Gate im Snapshot");
+      return "<article class='decision-card "+r.cls+"' data-decision-candidate='"+esc(r.code)+"'>"+
+        "<div class='decision-head'><div class='decision-code'>"+esc(r.code)+"</div><span class='decision-disposition'>"+esc(r.disposition)+"</span></div>"+
+        "<div class='decision-current'>Snapshot-Gate: <strong>"+esc(status)+"</strong> · "+esc(gate)+"</div>"+
+        "<div class='decision-field'><strong>Nächster zulässiger Schritt</strong><b>"+esc(r.title)+".</b> "+esc(r.advance)+"</div>"+
+        "<div class='decision-field'><strong>Stop-/Wechselregel</strong>"+esc(r.stop)+"</div>"+
+      "</article>";
+    }).join("")+"</div>"+
+    "<div class='decision-fallback'><strong>Reserve Q221:</strong> erst nach dokumentiertem Park-/Ersatzentscheid für Q218. Vor einer Aufnahme genügt zunächst ein enges Go/No-Go zur historischen USAspending-Veröffentlichungsuhr, Award-vs.-Modification-Semantik, Behördenausnahmen und Recipient-to-Issuer-Zuordnung. Keine automatische Erweiterung der Top-3 oder künstliche Kapazitätsbelegung.</div>";
+}
+
 function renderCandidatePortfolio(data){
   var items=data.candidate_portfolio||[];
   var method=data.candidate_portfolio_methodology||{};
@@ -304,6 +346,7 @@ function render(data){
     "</article>";
   }).join(""):"<div class='empty'>Kein Fokus-Kandidat im Snapshot.</div>";
 
+  renderCandidateDecisionRules(pipeline);
   renderCandidatePortfolio(data);
 
   var order={"Windows self-hosted A":0,"Windows self-hosted B":1,"Windows self-hosted C":2,"GitHub-hosted Ubuntu x64":3,"GitHub-hosted ARM64":4,"Free AI pool":5};

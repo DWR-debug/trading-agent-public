@@ -119,8 +119,8 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "Do not launch a duplicate full census while a useful run remains active." in focus
     assert "do not repeat the consumed primary one-shot" in focus
     assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY") == 1
-    assert "Q220 previous population receipt is STALE" in focus
-    assert "before starting the historical prefix/acceptance-time PIT compiler" in focus
+    assert "Q220 historical as-filed population gate is positive and version-bound" in focus
+    assert "Next gate: historical prefix/acceptance-time PIT representation-state compiler" in focus
     assert "transport-success/content-unusable" in focus
     assert "not a methods review or scientific evidence" in focus
 
