@@ -88,9 +88,9 @@ def test_dashboard_top_three_focus_includes_q104_q220_q218_everywhere():
     dashboard_js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
     html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
 
-    assert 'var FOCUS=["Q104:I19","Q220","Q218"]' in dashboard_js
+    assert 'var FOCUS=["Q104:I19","Q220","Q221"]' in dashboard_js
     assert 'slice(0,3)' in dashboard_js
-    assert 'Q104:I19 · Q220 · Q218' in dashboard_js
+    assert 'Q104:I19 · Q220 · Q221' in dashboard_js
     assert "DATEN-GATE BLOCKIERT" in dashboard_js
     assert "FOLGEGATE GESPERRT" in dashboard_js
     status_fn = dashboard_js.split("function candidateStatus(x){", 1)[1].split("function pct(v){", 1)[0]
@@ -98,6 +98,6 @@ def test_dashboard_top_three_focus_includes_q104_q220_q218_everywhere():
     assert "Top-3-Kandidatensteuerung" in html
     assert 'data-candidate=' in dashboard_js
     assert "Next-Gate-Backlog · Top 3" in html
-    for candidate in ("Q104:I19", "Q220", "Q218"):
+    for candidate in ("Q104:I19", "Q220", "Q221"):
         assert f">{candidate}</span>" in html
 
