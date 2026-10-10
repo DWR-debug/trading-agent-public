@@ -22,13 +22,13 @@ COMMON_TESTS=[
 ]
 WORKPACK_PURPOSES={
     "Q104:I19":"13F acceptance-time closure and deterministic XBRL PIT compiler contract diagnostics",
-    "Q218":"SEC multi-channel filing/event pairing and acceptance-lineage repair",
+    "Q221":"USAspending historical public-clock, agency-exception and recipient-to-issuer mapping gate",
     "Q220":"as-filed XBRL narrative/structured mapping and concept-freeze diagnostics",
 }
 
 WORKPACK_GATE_PATHS={
     "Q104:I19":["automation/q104_i19_13f_historical_identity_census.py","automation/q104_i19_xbrl_pit_compiler.py","automation/q104_xbrl_concept_freeze_audit.py"],
-    "Q218":["automation/q218_sec_multichannel_source_gate.py","automation/q218_sec_event_pair_lineage_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
+    "Q221":["automation/q221_usaspending_public_clock_gate.py","tests/test_q221_usaspending_public_clock_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
     "Q220":["tests/test_q220_as_filed_xbrl_population_gate.py","automation/q104_xbrl_concept_freeze_audit.py","automation/q104_i19_xbrl_pit_compiler.py"],
 }
 
@@ -38,11 +38,9 @@ LANES={
         [PYTHON,"-m","pytest","-q","tests/test_q104_i19_xbrl_concept_freeze.py","tests/test_q104_i19_xbrl_pit_compiler.py","tests/test_q104_candidate_wave_contract.py"],
         [PYTHON,"-m","pytest","-q","tests/test_q104_i19_13f_historical_identity_census.py","tests/test_q104_i19_historical_identity_census.py"],
     ],
-    "Q218":[
-        [PYTHON,"-m","automation.q218_sec_multichannel_source_gate","--output","{OUT}/q218_sec_multichannel_source_gate.json"],
-        [PYTHON,"-m","automation.q218_sec_event_pair_lineage_gate","--output","{OUT}/q218_sec_event_pair_lineage_gate.json"],
-        [PYTHON,"-m","pytest","-q",*COMMON_TESTS],
-        [PYTHON,"-m","pytest","-q","tests/test_q218_sec_multichannel_source_gate.py","tests/test_q218_sec_event_pair_lineage_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
+    "Q221":[
+        [PYTHON,"-m","automation.q221_usaspending_public_clock_gate","--output","{OUT}/q221_usaspending_public_clock_gate.json"],
+        [PYTHON,"-m","pytest","-q","tests/test_q221_usaspending_public_clock_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
     ],
     "Q220":[
         [PYTHON,"-m","pytest","-q","tests/test_q220_as_filed_xbrl_population_gate.py"],
