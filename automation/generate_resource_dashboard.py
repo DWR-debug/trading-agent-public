@@ -1615,6 +1615,8 @@ def planned_capacity_plan(
     overlay = os_state.get("top_candidate_capacity_overlay", {})
     a_priority = [str(x) for x in overlay.get("windows_A", {}).get("priority", [])]
     b_priority = [str(x) for x in overlay.get("windows_B", {}).get("priority", [])]
+    q221_vintage_gate = q221_public_clock_status()
+
     queue = [
         {
             "plan_id": "Q104-I19-CENSUS",
@@ -1772,9 +1774,13 @@ def planned_capacity_plan(
             "lane": "FRONTIER DISCOVERY",
             "task": "historical USAspending RDT&E transaction/public-observation clock falsification",
             "preferred": ["Windows self-hosted C", "GitHub-hosted ARM64", "Windows self-hosted B", "GitHub-hosted Ubuntu x64", "Windows self-hosted A"],
-            "readiness": "READY_HISTORICAL_PUBLIC_CLOCK_FALSIFICATION",
-            "basis": "bounded source/PIT gate for historical applicability, modification-vs-award semantics, agency exceptions, and recipient-to-issuer mapping",
-            "dispatchable": True,
+            "readiness": (
+                "COMPLETE_POLICY_VINTAGES_NEXT_GATE_NEEDS_NEW_WORKPACK"
+                if q221_vintage_gate.get("state") == "complete"
+                else "READY_HISTORICAL_PUBLIC_CLOCK_FALSIFICATION"
+            ),
+            "basis": "dispatch only while the fixed-window historical policy-vintage receipt is absent/incomplete; after a positive receipt, the next award-level boundary gate requires a distinct workpack",
+            "dispatchable": q221_vintage_gate.get("state") != "complete",
             "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
             "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
         },
