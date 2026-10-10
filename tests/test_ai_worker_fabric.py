@@ -418,3 +418,54 @@ def test_global_adversarial_task_is_provider_neutral_and_source_durable():
     assert task["allow_workspace_writes"] is False
     assert task["research_gate_changes"] is False
     assert task["performance_authorized"] is False if "performance_authorized" in task else True
+
+def test_q218_replication_provenance_review_is_free_only_and_receipt_bound():
+    task_path = Path(
+        "ai_requests/AI-2026-10-10-Q218-REPLICATION-PROVENANCE-ADVERSARIAL.json"
+    )
+    payload = load_task(task_path)
+
+    assert payload["providers"] == ["openrouter_free"]
+    assert payload["max_runtime_minutes"] <= 12
+    assert payload["paid_usage"] is False
+    assert payload["allow_workspace_writes"] is False
+    assert payload["deterministic_compute"] is False
+    assert payload["holdout_selection"] is False
+    assert payload["parameter_selection"] is False
+    assert payload["asset_selection"] is False
+    assert payload["threshold_selection"] is False
+    assert payload["horizon_selection"] is False
+    assert payload["research_gate_changes"] is False
+    assert payload["promotion_decision"] is False
+    assert payload["live_execution"] is False
+    assert payload["research_decision"] is False
+
+    expected_receipts = {
+        "research/evidence/q218_performance_input_bundle_latest.json",
+        "research/evidence/q218_deterministic_performance_result_latest.json",
+        "research/governance/q218_performance_contract_2026_10_08.json",
+        "research/evidence/q218_independent_replication_input_bundle_latest.json",
+        "research/evidence/q218_independent_replication_performance_latest.json",
+        "research/governance/q218_independent_replication_contract_2026_10_08.json",
+        "research/evidence/q218_independent_replication_robustness_latest.json",
+    }
+    assert expected_receipts.issubset(set(payload["context_files"]))
+    assert expected_receipts.issubset(set(payload["context_fingerprint_files"]))
+    assert payload["context_files"] == payload["context_fingerprint_files"]
+    assert "do not initiate" in payload["prompt"].lower()
+    assert "bundle fingerprint" in payload["prompt"].lower()
+    assert "holdout evaluation" in payload["prompt"].lower()
+
+
+def test_q218_replication_provenance_review_has_bounded_event_driven_route():
+    workflow = (Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml").read_text(encoding="utf-8")
+    task_id = "AI-2026-10-10-Q218-REPLICATION-PROVENANCE-ADVERSARIAL"
+    task_path = f"ai_requests/{task_id}.json"
+
+    assert f'"{task_path}"' in workflow
+    assert task_id in workflow
+    assert f"changed.intersection(q218_replication_paths)" in workflow
+    assert f"'{task_path}'" in workflow
+    assert f"path={task_path}" in workflow
+    assert "--provider 'openrouter_free'" in workflow
+
