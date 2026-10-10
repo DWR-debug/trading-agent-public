@@ -38,7 +38,7 @@ def test_q222_is_design_only_and_merge_or_kill_protected():
 
 def test_current_bounded_session_directive_is_bounded():
     d=json.loads((ROOT/"research/run_requests/rolling_capacity_window_2026-10-05.json").read_text(encoding="utf-8"))
-    assert d["session_mode"]["status"] in {"ACTIVE", "ACTIVE_2H"}
+    assert d["session_mode"]["status"] == "EXPIRED"
     assert d["session_mode"]["duration_minutes"] == 120
     assert d["session_mode"]["no_artificial_work"] is True
     assert d["session_mode"]["no_duplicate_work"] is True
@@ -49,9 +49,10 @@ def test_focused_operational_state_locks_automatic_candidate_dispatch():
     import json
     state=json.loads((ROOT/"ops/trading_agent_os_state.json").read_text(encoding="utf-8"))
     overlay=state["top_candidate_capacity_overlay"]["windows_B"]
-    assert overlay["priority"] == ["Q218"]
+    assert overlay["priority"] == ["Q220", "Q218"]
     assert "Q104:I19" in overlay["new_overlay"] or "Q104:I19" in state["current_research_focus"]["active_next"]
-    assert state["top_candidate_capacity_overlay"].get("discovery_reserve") == ["Q219","Q220","Q221"]
+    assert state["top_candidate_capacity_overlay"].get("discovery_reserve") == []
+    assert state["top_candidate_capacity_overlay"].get("paused_candidates") == ["Q219","Q221"]
     assert "Q219" not in overlay["priority"]
-    assert "Q220" not in overlay["priority"]
+    assert "Q220" in overlay["priority"]
     assert "Q221" not in overlay["priority"]
