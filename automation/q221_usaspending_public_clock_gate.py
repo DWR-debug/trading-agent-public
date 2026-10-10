@@ -40,6 +40,7 @@ def run(output:Path)->dict:
       "fpds_three_business_days_found":"THREE BUSINESS DAYS" in upper and "FPDS" in upper,
       "site_publication_day_after_found":"DAY AFTER THAT" in upper and ("PUBLISHED TO THE WEBSITE" in upper or "PUBLISHED TO THE SITE" in upper),
       "api_status":api_status,"api_content_type":api_ctype,"api_bytes":len(api_body),
+      "clock_readiness_scope":"CURRENT_DOCUMENTATION_ONLY",
       "historical_applicability_proven":False,
       "scientific_evidence":False,"performance_authorization":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False,
     }
