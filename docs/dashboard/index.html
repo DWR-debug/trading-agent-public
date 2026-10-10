@@ -150,6 +150,7 @@
     @media(max-width:1100px){.capacity-grid{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:700px){.capacity-grid{grid-template-columns:1fr}.grid{display:block}.card{margin-bottom:14px}}
   </style>
+  <link rel="stylesheet" href="research-control-board.css">
 </head>
 <body>
 <main>
@@ -197,21 +198,7 @@
   </div>
 
   <section id="app" class="grid" hidden>
-    <article class="card handoff-card">
-      <div class="section-heading">
-        <div>
-          <div class="section-kicker">Chat-Kontinuität · maschinenlesbarer Stand</div>
-          <h2>Übergabeblock für den nächsten „trading agent“-Chat</h2>
-          <p class="muted small">Enthält Fokus, nächste Gates, bekannte Blocker, KI-Review-Qualität und Sicherheitsgrenzen aus dem kanonischen Handoff. Den gesamten Text kopieren und im nächsten Chat einfügen.</p>
-        </div>
-        <div class="handoff-actions">
-          <button id="copyHandoff" type="button">Übergabeblock kopieren</button>
-          <span id="copyHandoffStatus" class="handoff-status" aria-live="polite"></span>
-        </div>
-      </div>
-      <textarea id="chatHandoffText" class="handoff-text" aria-label="Kopierbarer Trading-Agent-Chat-Handoff" readonly rows="9"></textarea>
-    </article>
-    <article class="card">
+    <article class="card focus-card">
       <div class="section-heading">
         <div>
           <div class="section-kicker">Trading Agent · Research OS</div>
@@ -220,6 +207,7 @@
         </div>
         <div class="safety-lock" aria-label="Safety-Modus">
           <span class="badge blocked-badge">PAPER ONLY</span>
+          <span class="badge blocked-badge">LIVE TRADING AUS</span>
           <span class="badge blocked-badge">ORDERS AUS</span>
           <span class="badge blocked-badge">AUTO-PROMOTION AUS</span>
         </div>
@@ -237,6 +225,37 @@
       </div>
       <div id="candidateFocus" class="candidate-focus"></div>
       <div id="opsSummary" class="ops-strip"></div>
+    </article>
+
+    <article class="card queue-card">
+      <h2>Next-Gate-Backlog · Top 3</h2>
+      <div id="plannedQueue"></div>
+      <div id="planned" style="margin-top:12px"></div>
+    </article>
+
+    <article class="card work-card">
+      <h2>Aktive fokussierte Jobs</h2>
+      <div id="work"></div>
+    </article>
+
+    <article class="card capacity-card">
+      <h2>Kapazitätsfabrik</h2>
+      <div id="capacity"></div>
+      <div class="small muted" style="margin-top:10px">ARBEITET zählt nur sichtbare Research-Jobs; Runner-Busy bleibt davon getrennt.</div>
+      <div class="small muted" style="margin-top:10px">
+        ARBEITET = sichtbare Research-Arbeit. RUNNER BESETZT = physischer Runner belegt, aber Research-Zuordnung nicht sichtbar.
+        AUTO-DISPATCH = bereits definierte, nicht-authorisierende Folgearbeit. Keine künstliche Beschäftigung.
+      </div>
+    </article>
+
+    <article class="card evidence-card">
+      <h2>Erreicht / wissenschaftliche Grenze</h2>
+      <div id="achieved"></div>
+    </article>
+
+    <article class="card milestones-card">
+      <h2>Milestones · letzte 12 Stunden</h2>
+      <div id="milestones12h"></div>
     </article>
 
     <article class="card portfolio-card">
@@ -268,40 +287,24 @@
       <div class="portfolio-footer">Entwicklungszeiten sind niedrige Vertrauensstufen für die Planung – keine gemessenen Laufzeiten. „Bis unabhängiger PIT-Reproduktion“ ist kein Termin für autorisierte Performance-Tests, Promotion oder Live-Handel. Q227/Q231 sind als ein gemeinsames Workpack ausgewiesen; Q217 bleibt bis zur Orthogonalitätsprüfung gebündelt.</div>
     </article>
 
-    <article class="card">
-      <h2>Kapazitätsfabrik</h2>
-      <div id="capacity"></div>
-      <div class="small muted" style="margin-top:10px">ARBEITET zählt nur sichtbare Research-Jobs; Runner-Busy bleibt davon getrennt.</div>
-      <div class="small muted" style="margin-top:10px">
-        ARBEITET = sichtbare Research-Arbeit. RUNNER BESETZT = physischer Runner belegt, aber Research-Zuordnung nicht sichtbar.
-        AUTO-DISPATCH = bereits definierte, nicht-authorisierende Folgearbeit. Keine künstliche Beschäftigung.
-      </div>
-    </article>
-
-    <article class="card">
+    <article class="card support-card">
       <h2>S10 · technische Support-Kapazität</h2>
       <div id="s10"></div>
     </article>
 
-    <article class="card">
-      <h2>Aktive fokussierte Jobs</h2>
-      <div id="work"></div>
-    </article>
-
-    <article class="card">
-      <h2>Next-Gate-Backlog · Top 3</h2>
-      <div id="plannedQueue"></div>
-      <div id="planned" style="margin-top:12px"></div>
-    </article>
-
-    <article class="card">
-      <h2>Milestones · letzte 12 Stunden</h2>
-      <div id="milestones12h"></div>
-    </article>
-
-    <article class="card">
-      <h2>Erreicht / wissenschaftliche Grenze</h2>
-      <div id="achieved"></div>
+    <article class="card handoff-card">
+      <div class="section-heading">
+        <div>
+          <div class="section-kicker">Chat-Kontinuität · maschinenlesbarer Stand</div>
+          <h2>Übergabeblock für den nächsten „trading agent“-Chat</h2>
+          <p class="muted small">Enthält Fokus, nächste Gates, bekannte Blocker, KI-Review-Qualität und Sicherheitsgrenzen aus dem kanonischen Handoff. Den gesamten Text kopieren und im nächsten Chat einfügen.</p>
+        </div>
+        <div class="handoff-actions">
+          <button id="copyHandoff" type="button">Übergabeblock kopieren</button>
+          <span id="copyHandoffStatus" class="handoff-status" aria-live="polite"></span>
+        </div>
+      </div>
+      <textarea id="chatHandoffText" class="handoff-text" aria-label="Kopierbarer Trading-Agent-Chat-Handoff" readonly rows="9"></textarea>
     </article>
   </section>
 
