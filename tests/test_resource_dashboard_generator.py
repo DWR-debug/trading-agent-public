@@ -489,3 +489,47 @@ def test_q221_positive_vintage_receipt_closes_this_workpack_until_award_boundary
     assert len(q221) == 1
     assert q221[0]["dispatchable"] is False
     assert q221[0]["readiness"] == "COMPLETE_POLICY_VINTAGES_NEXT_GATE_NEEDS_NEW_WORKPACK"
+
+
+def test_q221_open_vintage_gate_can_use_free_slot_despite_old_successful_run(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    monkeypatch.setattr(
+        dashboard,
+        "q221_public_clock_status",
+        lambda: {"state": "ready", "progress_percent": 0, "next_gate": "historical USAspending policy vintages"},
+    )
+    resources = [{
+        "name": "Windows self-hosted C",
+        "capacity_state": "available",
+        "current_assignments": 0,
+        "research_capacity_slots": 1,
+        "research_slots_free": 1,
+    }]
+    prior_success = [{
+        "id": 789,
+        "name": "Top-4 Slot windows Q221 all",
+        "display_title": "Top-4 Slot windows Q221 all",
+        "path": ".github/workflows/top4-candidate-slot-research.yml",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "older-workpack-before-policy-vintage-gate",
+    }]
+    top3 = [
+        {"code": "Q104:I19", "next_gate": "historical 13F census"},
+        {"code": "Q220", "next_gate": "historical prefix/representation-gap PIT compiler"},
+        {"code": "Q221", "next_gate": "historical USAspending policy vintages"},
+    ]
+    plan = dashboard.planned_capacity_plan(resources, [], top3, {}, {}, recent_runs=prior_success)
+    q221 = [
+        (row, item)
+        for row in plan
+        for item in row["planned_assignments"]
+        if item.get("plan_id") == "Q221-USASPENDING-PUBLIC-CLOCK"
+    ]
+    assert len(q221) == 1
+    row, item = q221[0]
+    assert row["resource"] == "Windows self-hosted C"
+    assert item["scheduled"] is True
+    assert item["dispatchable"] is True
+    assert item["dispatch_state"] == "READY_FOR_FAST_DISPATCH"

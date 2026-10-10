@@ -1862,7 +1862,15 @@ def planned_capacity_plan(
             if resource is None or len(plans.get(resource_name, [])) >= 1:
                 continue
             slot = resource_slot(resource_name)
-            if slot is not None and (slot, candidate) in completed_slots:
+            # A prior successful Q221 slot predates the new historical policy-vintage
+            # gate unless a positive fingerprinted receipt closes that exact stage.
+            # The queue's dispatchable flag is already receipt-derived above.
+            q221_vintage_gate_still_open = (
+                candidate == "Q221"
+                and plan_id == "Q221-USASPENDING-PUBLIC-CLOCK"
+                and q221_vintage_gate.get("state") != "complete"
+            )
+            if slot is not None and (slot, candidate) in completed_slots and not q221_vintage_gate_still_open:
                 continue
             if slot is not None and (slot, candidate) in active_slot_scopes:
                 continue
