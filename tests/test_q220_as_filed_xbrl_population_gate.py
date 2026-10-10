@@ -137,6 +137,6 @@ def test_q220_windows_receipt_publisher_is_cli_independent_and_preserves_gate():
     assert "--base-sha latest" in publish
     assert "github_contents_publish.py" in publish
     assert "int(r.get('failure_count',1))==0" in enforce
-    assert 'original_10k_count>=(1 if mode=="route" else 5)' in gate
-    assert 'textblock_ready_originals]>=(1 if mode=="route" else 5)' in gate
+    assert 'original_10k_count"]>=(1 if mode=="route" else 5)' in gate
+    assert 'textblock_ready_originals"]>=(1 if mode=="route" else 5)' in gate
 
