@@ -32,3 +32,10 @@ def test_top_three_queue_layout_has_responsive_breakpoints():
     assert ".queue-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}" in html
     assert ".queue-grid{grid-template-columns:repeat(2,minmax(0,1fr))}" in html
     assert ".queue-grid{grid-template-columns:1fr}" in html
+
+
+
+def test_resource_dashboard_redeploys_when_q220_population_receipt_changes():
+    workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    push_block = workflow.split("  push:", 1)[1].split("  workflow_dispatch:", 1)[0]
+    assert '"research/evidence/q220_as_filed_xbrl_population_latest.json"' in push_block
