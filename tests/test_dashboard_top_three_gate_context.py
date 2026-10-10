@@ -57,3 +57,21 @@ def test_dashboard_exposes_copyable_current_chat_handoff():
     assert '"chat_handoff": chat_handoff_snapshot(evidence, os_state)' in generator
     assert "Active execution focus: " in js
     assert "PAPER_ONLY=" in js
+
+
+def test_dashboard_uses_prioritized_research_control_board_layout():
+    html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    css = (ROOT / "docs/dashboard/research-control-board.css").read_text(encoding="utf-8")
+    assert 'href="research-control-board.css"' in html
+    assert 'grid-template-areas:' in css
+    assert '"focus focus focus focus focus focus focus focus focus focus focus focus"' in css
+    assert css.index('"queue queue queue queue queue queue work work work work work work"') < css.index('"portfolio portfolio portfolio portfolio portfolio portfolio portfolio portfolio portfolio portfolio portfolio portfolio"')
+    assert 'LIVE TRADING AUS' in html
+    assert 'PAPER ONLY' in html
+    assert 'grid-template-areas:"focus" "queue" "work" "capacity" "evidence" "milestones" "portfolio" "support" "handoff"' in css
+
+
+def test_dashboard_top_three_remain_in_the_existing_candidate_focus_order():
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    assert 'var FOCUS=["Q104:I19","Q220","Q218"];' in js
+    assert 'Q104:I19 · Q220 · Q218' in js
