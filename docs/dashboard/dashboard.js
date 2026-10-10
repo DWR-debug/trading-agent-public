@@ -239,7 +239,7 @@ function render(data){
       "<p class='candidate-mechanism'>"+esc(info.mechanism)+"</p>"+
       "<div class='candidate-main'>"+
         "<div class='ring-wrap'><div class='progress-ring' style='--pct:"+overall+"'><div><strong>"+overall+"%</strong><span>Entwicklung</span></div></div></div>"+
-        "<div class='candidate-detail'>
+        "<div class='candidate-detail'>"+
           "<div class='metric-title'>Nächster Milestone</div><div class='milestone'>"+esc(x.current_milestone||x.next_gate||"nicht aufgezeichnet")+"</div>"+
           "<div class='metric-row'><span>Milestone-Fortschritt</span><strong>"+next+"%</strong></div>"+
           progressBar(next,true)+
