@@ -3,7 +3,9 @@ from __future__ import annotations
 import argparse, hashlib, json, re, threading, time, urllib.error, urllib.request
 from collections import defaultdict
 from datetime import date, datetime, timezone
+from html import unescape
 from pathlib import Path
+from urllib.parse import parse_qs, unquote, urlparse
 
 TARGET_ISSUERS={"SPGI":"0000064040","NDAQ":"0001120193","AMP":"0000820027","RJF":"0000720005","WMB":"0000107263","VLO":"0001035002","DVN":"0001090012","EMN":"0000915389"}
 FORMS={"10-K","10-K/A"}; WINDOW_START=date(2019,1,1); WINDOW_END=date(2025,9,24); ROUTE_QUARTERS=((2024,4),(2025,1),(2025,2),(2025,3))
@@ -122,10 +124,34 @@ def submission_primary_map(cik:str)->dict[str,str]:
         if form in FORMS and fd<=WINDOW_END.isoformat(): out[str(acc)]=str(doc)
     return out
 
+def _cell_text(cell:str)->str:
+    return re.sub(r"\s+", " ", unescape(re.sub(r"<[^>]+>", " ", cell))).strip()
+
+def primary_document_from_index(index_html:bytes, form:str)->str|None:
+    """Resolve the SEC filing-index row whose document Type equals the target form.
+
+    Directory listing order is not filing-role order (it can put R1.htm first).
+    Do not guess alphabetically when the exact submissions mapping is absent.
+    """
+    text=index_html.decode("utf-8",errors="replace")
+    for row in re.findall(r"<tr\b[^>]*>(.*?)</tr>",text,re.I|re.S):
+        cells=re.findall(r"<t[dh]\b[^>]*>(.*?)</t[dh]>",row,re.I|re.S)
+        if len(cells)<4:
+            continue
+        if _cell_text(cells[1]).upper()!=form.upper() or _cell_text(cells[3]).upper()!=form.upper():
+            continue
+        for match in re.finditer(r"<a\b[^>]*\bhref\s*=\s*(['\"])(.*?)\1",cells[2],re.I|re.S):
+            href=unescape(match.group(2).strip())
+            target=parse_qs(urlparse(href).query).get("doc",[href])[0]
+            path=urlparse(target).path
+            filename=unquote(path.rsplit("/",1)[-1])
+            if filename:
+                return filename
+    return None
+
 def choose_primary(items:list[str],preferred:str|None)->str|None:
-    if preferred and preferred in items: return preferred
-    c=[n for n in items if n.lower().endswith((".htm",".html")) and "index" not in n.lower()]
-    return sorted(c)[0] if c else None
+    """Accept a known primary only; unresolved cases must use SEC form-index evidence."""
+    return preferred if preferred and preferred in items else None
 
 def choose_presentation_source(items:list[str])->tuple[str,str]|None:
     dedicated=sorted(n for n in items if n.lower().endswith(("_pre.xml","-pre.xml")))
@@ -144,8 +170,17 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
     if not accepted: raise RuntimeError(f"MISSING_ACCEPTANCE_DATETIME:{acc}")
     sd,d=fetch(f"{base}/index.json")
     if sd!=200: raise RuntimeError(f"DIRECTORY_HTTP_{sd}:{acc}")
-    items=parse_items(d); primary=choose_primary(items,pmap.get(acc))
-    if not primary: raise RuntimeError(f"PRIMARY_DOCUMENT_NOT_FOUND:{acc}")
+    items=parse_items(d)
+    preferred=pmap.get(acc)
+    primary=choose_primary(items,preferred)
+    primary_source="company_submissions_recent" if primary else None
+    if not primary:
+        si,index_page=fetch(f"{base}/{acc}-index.html")
+        if si!=200: raise RuntimeError(f"FILING_INDEX_HTTP_{si}:{acc}")
+        primary=primary_document_from_index(index_page,row["form"])
+        if not primary or primary not in items:
+            raise RuntimeError(f"PRIMARY_DOCUMENT_NOT_FOUND_FROM_FORM_INDEX:{acc}")
+        primary_source="sec_filing_index_form_row"
     sp,p=fetch(f"{base}/{primary}")
     if sp!=200: raise RuntimeError(f"PRIMARY_HTTP_{sp}:{acc}")
     xsd_names=sorted(n for n in items if n.lower().endswith(".xsd")); presentation_source=choose_presentation_source(items); pre_names=[presentation_source[0]] if presentation_source else []
@@ -165,7 +200,7 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
         return qname
     hits=sorted(q for q in qnames if qname_fragment(q) in loc_concepts or local_name(q) in loc_concepts)
     return {"canonical_key":{"cik":row["cik"],"form":row["form"],"filed_date":row["filed_date"],"accession":acc},"acceptance_datetime":accepted,
-            "header_sha256":sha256(h),"directory_index_sha256":sha256(d),"primary_document":primary,"primary_document_sha256":sha256(p),
+            "header_sha256":sha256(h),"directory_index_sha256":sha256(d),"primary_document":primary,"primary_document_source":primary_source,"primary_document_sha256":sha256(p),
             "primary_document_bytes":len(p),"xsd":xsd_names[0],"xsd_metadata":xm,"presentation_linkbase":pre_names[0],"presentation_source_type":presentation_source[1],"presentation_metadata":pm,
             "instance_document":instance_name,"instance_available":bool(instance_name),"textblock_fact_count":len(tb),
             "textblock_concepts":sorted(set(x["qname"] for x in tb)),"presentation_mapped_textblock_concepts":hits,
