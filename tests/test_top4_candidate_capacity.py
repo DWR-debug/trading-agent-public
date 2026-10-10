@@ -4,29 +4,31 @@ from automation import top4_candidate_capacity as worker
 ROOT = Path(__file__).parents[1]
 
 def test_focused_capacity_has_only_three_candidate_workpacks_and_no_authority():
-    assert list(worker.LANES) == ["Q104:I19", "Q218", "Q220"]
+    assert list(worker.LANES) == ["Q104:I19", "Q220", "Q221"]
     for candidate, commands in worker.LANES.items():
         assert commands
-        flattened=" ".join(" ".join(str(x) for x in cmd) for cmd in commands)
+        flattened = " ".join(" ".join(str(x) for x in cmd) for cmd in commands)
         assert "performance_authorization" not in flattened
         assert "holdout_selection" not in flattened
         assert "ranking" not in flattened
         assert "tuning" not in flattened
         assert "live_execution" not in flattened
 
+
 def test_focused_workpacks_are_mechanistically_separate():
-    q104=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q104:I19"])
-    q218=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q218"])
-    q220=" ".join(" ".join(map(str,c)) for c in worker.LANES["Q220"])
+    q104 = " ".join(" ".join(map(str, c)) for c in worker.LANES["Q104:I19"])
+    q220 = " ".join(" ".join(map(str, c)) for c in worker.LANES["Q220"])
+    q221 = " ".join(" ".join(map(str, c)) for c in worker.LANES["Q221"])
     assert "q104_i19_xbrl_pit_compiler" in q104
     assert "q104_i19_13f_historical_identity_census" in q104
     assert "q104_i19_xbrl_concept_freeze" in q104
-    assert "q218_sec_multichannel_source_gate" in q218
-    assert "q218_sec_event_pair_lineage_gate" in q218
-    assert "test_q220_as_filed_xbrl_population_gate.py" in q220
+    assert "q220_as_filed_xbrl_population_gate.py" in q220
     assert "q104_xbrl_concept_freeze_audit.py" in q220
     assert "q104_i19_xbrl_pit_compiler.py" in q220
-    assert set(worker.LANES) == {"Q104:I19", "Q218", "Q220"}
+    assert "q221_usaspending_public_clock_gate" in q221
+    assert "test_q221_usaspending_public_clock_gate.py" in q221
+    assert "historical_applicability_proven" in q221 or "historical USAspending" in q221
+    assert set(worker.LANES) == {"Q104:I19", "Q220", "Q221"}
 
 def test_top4_workflow_uses_three_windows_and_hosted_x64_arm64():
     text=(ROOT/".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
@@ -34,10 +36,10 @@ def test_top4_workflow_uses_three_windows_and_hosted_x64_arm64():
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "runs-on: ubuntu-24.04" in text
     assert "runs-on: ubuntu-24.04-arm" in text
-    assert "candidate: [Q218]" in text
+    assert "candidate: [Q221]" in text
     assert text.count("candidate: [Q220]") == 2
+    assert "Q218" not in text
     assert "Q219" not in text
-    assert "Q221" not in text
     assert "candidate: [Q104:I19" not in text
     assert "\n  schedule:" not in text
     assert "\n  push:" not in text
@@ -57,10 +59,10 @@ def test_legacy_research_loops_are_manual_only():
 
 def test_top4_balances_hosted_capacity_slots():
     text=(ROOT/".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
-    assert 'candidate: [Q218]' in text
+    assert 'candidate: [Q221]' in text
     assert text.count('candidate: [Q220]') == 2
+    assert 'candidate: [Q218]' not in text
     assert 'candidate: [Q219]' not in text
-    assert 'candidate: [Q221]' not in text
     hosted = text.split("  hosted_x64:", 1)[1]
     assert "Q219" not in hosted
     assert "trading-agent-research-hosted-ubuntu-24.04" in hosted
@@ -92,9 +94,9 @@ def test_top4_workflow_triggers_only_on_focused_candidate_gates():
     capacity=(ROOT/"automation/top4_candidate_capacity.py").read_text(encoding="utf-8")
     assert "workflow_dispatch:" in slot
     candidate_options = slot.split("      candidate:", 1)[1].split("      resource:", 1)[0]
-    assert "Q218" in candidate_options and "Q220" in candidate_options
-    assert "Q219" not in candidate_options and "Q221" not in candidate_options
-    assert '"Q219":[' not in capacity and '"Q221":[' not in capacity
+    assert "Q218" not in candidate_options and "Q220" in candidate_options and "Q221" in candidate_options
+    assert "Q219" not in candidate_options
+    assert '"Q218":[' not in capacity and '"Q219":[' not in capacity and '"Q221":[' in capacity
     assert "tests/test_q220_as_filed_xbrl_population_gate.py" in capacity
 
 def test_dashboard_routes_top4_candidates_to_slot_scoped_workflow_and_i19_to_census():
@@ -140,11 +142,14 @@ def test_dashboard_capacity_plan_includes_only_focused_receipt_defined_candidate
         for row in plan for item in row["planned_assignments"]
         if item.get("scheduled")
     }
-    assert {"Q104:I19", "Q220"}.issubset(scheduled)
-    assert "Q219" not in scheduled and "Q221" not in scheduled
+    assert {"Q104:I19", "Q220", "Q221"}.issubset(scheduled)
+    assert "Q219" not in scheduled and "Q218" not in scheduled
     assert scheduled["Q220"]["execution_workflow"] == ".github/workflows/top4-candidate-slot-research.yml"
+    assert scheduled["Q221"]["execution_workflow"] == ".github/workflows/top4-candidate-slot-research.yml"
     assert scheduled["Q220"]["dispatchable"] is True
+    assert scheduled["Q221"]["dispatchable"] is True
     assert scheduled["Q220"]["execution_workflow_inputs"]["gate"] == "all"
+    assert scheduled["Q221"]["execution_workflow_inputs"]["gate"] == "all"
 
 def test_dashboard_capacity_plan_hides_active_or_failed_full_i19_census():
     from automation import generate_resource_dashboard as dashboard
@@ -220,5 +225,4 @@ def test_dashboard_does_not_backfill_out_of_focus_candidates_when_q220_active():
     }
     assert "Q220" not in scheduled
     assert "Q219" not in scheduled
-    assert "Q221" not in scheduled
-    assert all(candidate in {"Q104:I19", "Q218", "Q220"} for candidate in scheduled)
+    assert all(candidate in {"Q104:I19", "Q220", "Q221"} for candidate in scheduled)
