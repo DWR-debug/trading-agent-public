@@ -1,0 +1,82 @@
+name: Q218 Focus Gate Receipt Index Updater
+
+on:
+  workflow_run:
+    workflows: ["Top-4 Candidate Slot Research"]
+    types: [completed]
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: q218-focus-gate-receipt-index
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      startsWith(github.event.workflow_run.display_title, 'Top-4 Slot windows Q218 ') &&
+      (endsWith(github.event.workflow_run.display_title, ' source') ||
+       endsWith(github.event.workflow_run.display_title, ' event_pair'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Resolve artifact
+        id: artifact
+        env:
+          GH_TOKEN: \${{ github.token }}
+          RUN_ID: \${{ github.event.workflow_run.id }}
+          TITLE: \${{ github.event.workflow_run.display_title }}
+        run: |
+          set -euo pipefail
+          data="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID/artifacts?per_page=100")"
+          row="$(printf "%s" "$data" | jq -c '.artifacts[] | select(.name | startswith("top4-slot-windows-Q218-")) | select(.expired == false)' | head -n1)"
+          test -n "$row"
+          echo "name=$(printf "%s" "$row" | jq -r '.name')" >> "$GITHUB_OUTPUT"
+          echo "artifact_id=$(printf "%s" "$row" | jq -r '.id')" >> "$GITHUB_OUTPUT"
+          echo "artifact_digest=$(printf "%s" "$row" | jq -r '.digest')" >> "$GITHUB_OUTPUT"
+          gate="$(printf "%s" "$TITLE" | sed 's/^Top-4 Slot windows Q218 //')"
+          test "$gate" = source -o "$gate" = event_pair
+          echo "gate=$gate" >> "$GITHUB_OUTPUT"
+      - name: Download receipt
+        env:
+          GH_TOKEN: \${{ github.token }}
+          RUN_ID: \${{ github.event.workflow_run.id }}
+          ARTIFACT_NAME: \${{ steps.artifact.outputs.name }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/q218-gate"
+          gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$ARTIFACT_NAME" --dir "$RUNNER_TEMP/q218-gate"
+          receipt="$(find "$RUNNER_TEMP/q218-gate" -type f -name receipt.json | head -n1)"
+          test -n "$receipt"
+          cp "$receipt" "$RUNNER_TEMP/q218-gate/receipt.json"
+      - name: Update and publish index
+        env:
+          GH_TOKEN: \${{ github.token }}
+          GATE: \${{ steps.artifact.outputs.gate }}
+          RUN_ID: \${{ github.event.workflow_run.id }}
+          ARTIFACT_ID: \${{ steps.artifact.outputs.artifact_id }}
+          ARTIFACT_DIGEST: \${{ steps.artifact.outputs.artifact_digest }}
+          PUBLISH_MESSAGE: "EVIDENCE: update current Q218 focus gate receipt index"
+        run: |
+          set -euo pipefail
+          python3 automation/q218_focus_gate_receipt_index_updater.py --gate "$GATE" --run-id "$RUN_ID" --artifact-id "$ARTIFACT_ID" --artifact-digest "$ARTIFACT_DIGEST" --receipt "$RUNNER_TEMP/q218-gate/receipt.json"
+          base_sha="$(git rev-parse HEAD)"
+          python3 automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$base_sha" --file research/evidence/q218_focus_gate_receipt_index_latest.json=research/evidence/q218_focus_gate_receipt_index_latest.json
+      - name: Wake next gate
+        env:
+          GH_TOKEN: \${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run planned-capacity-fast-dispatch.yml --repo "$GITHUB_REPOSITORY" --ref master
+          gh workflow run resource-dashboard-update.yml --repo "$GITHUB_REPOSITORY" --ref master

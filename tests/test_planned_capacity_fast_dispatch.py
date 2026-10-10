@@ -969,12 +969,12 @@ def test_q104_compiler_failure_streak_resets_on_new_master_sha(monkeypatch):
             "created_at": "2026-10-08T14:19:00Z",
         },
     ]
-    plan = dispatcher.plan_dispatch(snapshot, runs, repo="DWR-debug/trading-agent-public", max_dispatches=6)
+    plan = dispatcher.dispatch_candidates(snapshot, runs, max_dispatches=6)
     assert any(x["plan_id"] == "Q104-I19-COMPILER" for x in plan["dispatches"])
 
 def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
     from automation import planned_capacity_fast_dispatch as dispatcher
-    monkeypatch.setattr(dispatcher, "completed_q218_gates_for_current_context", lambda runs: {"event_pair"})
+    monkeypatch.setattr(dispatcher, "q218_positive_gate_index_current", lambda: {"event_pair"})
     snapshot = {
         "focus_candidates": ["Q218"],
         "planned_capacity": [{
@@ -993,7 +993,7 @@ def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
         }],
         "work_assignments": [],
     }
-    plan = dispatcher.plan_dispatch(snapshot, [], repo="DWR-debug/trading-agent-public", max_dispatches=6)
+    plan = dispatcher.dispatch_candidates(snapshot, [], max_dispatches=6)
     assert plan["dispatches"] == []
     assert any(d["decision"] == "SKIP_FOCUSED_GATE_ALREADY_COMPLETED_CURRENT_CONTEXT" for d in plan["decisions"])
 
