@@ -1015,11 +1015,15 @@ def candidate_development_roadmap(
             {"id": "Q104-G5", "label": "One-shot performance", "status": "closed", "next": "separate explicit authorization"},
         ]
     if candidate == "Q220":
-        q220 = q220_as_filed_population_status([])
-        complete = q220["state"] == "complete"
+        q220_progress = progress["candidates"]["Q220"]
+        q220_gate = next(
+            item for item in q220_progress["milestones"]
+            if item["label"] == "As-filed population + TextBlock/XSD/presentation mapping"
+        )
+        complete = q220_gate["status"] == "complete"
         return [
             {"id": "Q220-CONTRACT", "label": "Frozen as-filed representation-gap contract", "status": "completed", "next": "fixed eight-issuer filing universe"},
-            {"id": "Q220-POPULATION", "label": "SEC as-filed population + TextBlock/XSD/presentation mapping", "status": q220["state"], "next": q220["next_gate"]},
+            {"id": "Q220-POPULATION", "label": "SEC as-filed population + TextBlock/XSD/presentation mapping", "status": q220_gate["status"], "next": q220_progress["next_gate"]},
             {"id": "Q220-PIT", "label": "Historical prefix / representation-gap PIT compiler", "status": "ready" if complete else "blocked", "next": "positive population receipt"},
             {"id": "Q220-REPRO", "label": "Independent PIT reproduction", "status": "blocked", "next": "positive historical PIT compiler receipt"},
             {"id": "Q220-ROBUST", "label": "Cheap falsifiers: length/readability, future text, taxonomy drift", "status": "blocked", "next": "frozen PIT inputs and independent reproduction"},
