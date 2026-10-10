@@ -72,13 +72,15 @@ function candidateInfo(code){
   return map[code]||{name:code,mechanism:"",lane:"RESEARCH",cardClass:""};
 }
 function candidateStatus(x){
-  if(x.active)return {label:"ARBEIT LÄUFT",cls:"active-badge"};
   var status=String(x.current_milestone_status||"").toLowerCase();
+  // Scientific gate outcome outranks ancillary job activity. A route probe can
+  // remain queued while the fixed population it supports is already blocked.
   if(status==="blocked"||status.indexOf("blocked")>=0){
     return x.code==="Q218"
       ?{label:"FOLGEGATE GESPERRT",cls:"blocked-badge"}
       :{label:"DATEN-GATE BLOCKIERT",cls:"blocked-badge"};
   }
+  if(x.active)return {label:"ARBEIT LÄUFT",cls:"active-badge"};
   if(status==="complete"||status==="completed")return {label:"MEILENSTEIN ERREICHT",cls:"active-badge"};
   if(status==="ready")return {label:"NÄCHSTES GATE BEREIT",cls:"planned-badge"};
   if(status==="running")return {label:"GATE LÄUFT",cls:"active-badge"};
