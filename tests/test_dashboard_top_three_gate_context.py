@@ -39,3 +39,21 @@ def test_resource_dashboard_redeploys_when_q220_population_receipt_changes():
     workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
     push_block = workflow.split("  push:", 1)[1].split("  workflow_dispatch:", 1)[0]
     assert '"research/evidence/q220_as_filed_xbrl_population_latest.json"' in push_block
+
+
+
+def test_dashboard_exposes_copyable_current_chat_handoff():
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+
+    assert 'id="chatHandoffText"' in html
+    assert 'id="copyHandoff"' in html
+    assert 'id="copyHandoffStatus"' in html
+    assert "data.chat_handoff" in js
+    assert "next_research_focus" in js
+    assert "navigator.clipboard.writeText(payload)" in js
+    assert "field.select()" in js
+    assert '"chat_handoff": chat_handoff_snapshot(evidence, os_state)' in generator
+    assert "Active execution focus: " in js
+    assert "PAPER_ONLY=" in js

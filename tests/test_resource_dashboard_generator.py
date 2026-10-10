@@ -193,6 +193,26 @@ def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
     assert "sys.path.insert(0, str(ROOT))" in generator
 
 
+def test_chat_handoff_snapshot_uses_persisted_next_chat_decisions_and_safety():
+    from automation.generate_resource_dashboard import chat_handoff_snapshot
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).parents[1]
+    evidence = json.loads((root / "research/evidence/current_operational_state.json").read_text(encoding="utf-8"))
+    os_state = json.loads((root / "ops/trading_agent_os_state.json").read_text(encoding="utf-8"))
+    handoff = chat_handoff_snapshot(evidence, os_state)
+
+    assert handoff["record_type"] == "dashboard_chat_handoff"
+    assert handoff["active_execution_focus"] == ["Q104:I19", "Q220", "Q218"]
+    assert handoff["next_research_focus"]
+    assert "Q104:I19" in handoff["next_research_focus"]
+    assert handoff["safety"]["PAPER_ONLY"] is True
+    assert handoff["safety"]["LIVE_TRADING_ENABLED"] is False
+    assert handoff["safety"]["ORDERS_ENABLED"] is False
+    assert handoff["safety"]["AUTOMATIC_PROMOTION"] is False
+
+
 def test_dashboard_focused_backlog_is_three_candidates():
     from automation.generate_resource_dashboard import planned_research_backlog
     rows = planned_research_backlog([

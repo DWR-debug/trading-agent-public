@@ -416,6 +416,41 @@ CANDIDATE_DEVELOPMENT_MILESTONES = (
 )
 
 FOCUS_CANDIDATES = ("Q104:I19", "Q220", "Q218")
+
+
+
+def chat_handoff_snapshot(evidence: dict[str, Any], os_state: dict[str, Any]) -> dict[str, Any]:
+    """Make the persistent next-chat handoff available in every dashboard snapshot."""
+    handoff_path = ROOT / "research" / "evidence" / "trading_agent_chat_handoff.json"
+    handoff: dict[str, Any] = {}
+    try:
+        loaded = json.loads(handoff_path.read_text(encoding="utf-8"))
+        if isinstance(loaded, dict):
+            handoff = loaded
+    except (OSError, json.JSONDecodeError):
+        pass
+    if not handoff:
+        candidate = evidence.get("chat_handoff", {})
+        if isinstance(candidate, dict):
+            handoff = candidate
+    safety = os_state.get("permanent_safety", {})
+    return {
+        "record_type": "dashboard_chat_handoff",
+        "generated_at_utc": str(handoff.get("generated_at_utc") or ""),
+        "source_master_sha": str(handoff.get("source_master_sha") or ""),
+        "active_execution_focus": list(FOCUS_CANDIDATES),
+        "next_research_focus": str(handoff.get("next_research_focus") or "Current handoff missing; read docs/CURRENT_STATUS.md and verify live state before action."),
+        "resume_rule": str(handoff.get("resume_rule") or "Read canonical current status first; verify current master, live Actions/runners and immutable scientific receipts."),
+        "safety": {
+            "PAPER_ONLY": bool(safety.get("PAPER_ONLY", True)),
+            "LIVE_TRADING_ENABLED": bool(safety.get("LIVE_TRADING_ENABLED", False)),
+            "ORDERS_ENABLED": bool(safety.get("ORDERS_ENABLED", False)),
+            "AUTOMATIC_PROMOTION": bool(safety.get("AUTOMATIC_PROMOTION", False)),
+            "paid_usage_usd": safety.get("paid_usage_usd", 0),
+        },
+    }
+
+
 ACTIVE_RUN_STATUSES = {"queued", "in_progress", "waiting", "pending"}
 
 
@@ -2059,6 +2094,7 @@ def main() -> None:
         "operational_snapshot_sha": snapshot_sha,
         "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json + ops/trading_agent_os_state.json",
         "scientific_boundary": os_state.get("permanent_safety", {}),
+        "chat_handoff": chat_handoff_snapshot(evidence, os_state),
         "dashboard_summary": {
             "active_work_items": len(work),
             # A lane is a distinct resource currently occupied by research, not a raw job count.
