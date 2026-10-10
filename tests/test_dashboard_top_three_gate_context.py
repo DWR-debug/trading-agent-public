@@ -8,7 +8,7 @@ def test_top_three_dashboard_surfaces_gate_status_blocker_and_next_action():
     js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
     html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
 
-    assert 'var FOCUS=["Q104:I19","Q220","Q218"];' in js
+    assert 'var FOCUS=["Q104:I19","Q220","Q221"];' in js
     assert "Gate-Status" in js
     assert "Gate-Befund / Blocker" in js
     assert "Nächste sinnvolle Aktion" in js
@@ -17,8 +17,10 @@ def test_top_three_dashboard_surfaces_gate_status_blocker_and_next_action():
     assert "x.next_gate" in js
     assert 'badge active-badge">Q104:I19' in html
     assert 'badge active-badge">Q220' in html
-    assert 'badge active-badge">Q218' in html
+    assert 'badge active-badge">Q221' in html
+    assert 'badge active-badge">Q218' not in html
     assert "Referenzansicht des Prospect-Portfolios." in html
+    assert "Q221" in html
 
 
 def test_dashboard_candidate_work_matching_ignores_identifier_punctuation():
@@ -73,5 +75,5 @@ def test_dashboard_uses_prioritized_research_control_board_layout():
 
 def test_dashboard_top_three_remain_in_the_existing_candidate_focus_order():
     js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
-    assert 'var FOCUS=["Q104:I19","Q220","Q218"];' in js
-    assert 'Q104:I19 · Q220 · Q218' in js
+    assert 'var FOCUS=["Q104:I19","Q220","Q221"];' in js
+    assert 'Q104:I19 · Q220 · Q221' in js
