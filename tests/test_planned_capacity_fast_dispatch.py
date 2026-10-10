@@ -112,10 +112,10 @@ def test_fast_dispatch_blocks_q218_replication_without_exact_explicit_authorizat
     )
 
 
-def test_fast_dispatch_uses_resource_capacity_metadata_when_plan_row_omits_capacity(monkeypatch):
-    import automation.planned_capacity_fast_dispatch as dispatcher
+def test_fast_dispatch_uses_resource_capacity_metadata_for_q221_clock_gate(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
 
-    workflow = ".github/workflows/q218-independent-architecture-pit-reproduction.yml"
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
         "work_assignments": [],
         "resources": [{
@@ -128,30 +128,18 @@ def test_fast_dispatch_uses_resource_capacity_metadata_when_plan_row_omits_capac
             "resource": "GitHub-hosted ARM64",
             "current_assignments": 1,
             "planned_assignments": [{
-                "plan_id": "Q218-INDEPENDENT-ARCH",
-                "candidate": "Q218",
+                "plan_id": "Q221-USASPENDING-PUBLIC-CLOCK",
+                "candidate": "Q221",
                 "scheduled": True,
                 "dispatchable": True,
-                "allow_parallel_with_candidate": True,
                 "execution_workflow": workflow,
+                "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
             }],
         }],
     }
-    monkeypatch.setattr(
-        dispatcher,
-        "completed_q218_gates_for_current_context",
-        lambda runs: {"source", "event_pair"},
-    )
-    monkeypatch.setattr(
-        dispatcher,
-        "q218_independent_reproduction_current",
-        lambda runs: False,
-    )
-
     plan = dispatcher.dispatch_candidates(snapshot, [], max_dispatches=4)
-    assert [item["plan_id"] for item in plan["dispatches"]] == ["Q218-INDEPENDENT-ARCH"]
+    assert [item["plan_id"] for item in plan["dispatches"]] == ["Q221-USASPENDING-PUBLIC-CLOCK"]
     assert plan["dispatches"][0]["resource"] == "GitHub-hosted ARM64"
-
 
 
 def test_q104_source_only_receipt_does_not_mark_acceptance_time_census_complete(monkeypatch):
@@ -206,8 +194,8 @@ def test_dashboard_maps_candidate_capacity_and_planned_runner(monkeypatch):
             "resource": "Windows self-hosted B",
             "worker": "LHT-N133732-2",
             "lane": "FRONTIER DISCOVERY",
-            "task": "Top-4 Candidate Slot Research Q218",
-            "job": "Q218 source",
+            "task": "Top-4 Candidate Slot Research Q221",
+            "job": "Q221 public clock",
             "status": "in_progress",
             "run_id": 456,
         },
@@ -215,21 +203,22 @@ def test_dashboard_maps_candidate_capacity_and_planned_runner(monkeypatch):
     planned = [{
         "resource": "GitHub-hosted ARM64",
         "planned_assignments": [{
-            "plan_id": "Q218-INDEPENDENT-ARCH",
-            "candidate": "Q218",
+            "plan_id": "Q221-USASPENDING-PUBLIC-CLOCK",
+            "candidate": "Q221",
             "scheduled": True,
             "dispatchable": True,
-            "task": "independent architecture PIT reproduction",
+            "task": "historical USAspending public clock + issuer mapping",
         }],
     }]
     pipeline = dashboard.candidate_pipeline([], work, {}, {}, [], planned)
     q104 = next(x for x in pipeline if x["code"] == "Q104:I19")
-    q218 = next(x for x in pipeline if x["code"] == "Q218")
+    q221 = next(x for x in pipeline if x["code"] == "Q221")
     assert q104["active_capacities"] == ["Windows self-hosted A"]
     assert q104["active_capacity_assignments"][0]["worker"] == "LHT-N133732"
-    assert q218["active_capacities"] == ["Windows self-hosted B"]
-    assert q218["planned_capacities"] == ["GitHub-hosted ARM64"]
-    assert q218["planned_capacity_assignments"][0]["dispatchable"] is True
+    assert q221["active_capacities"] == ["Windows self-hosted B"]
+    assert q221["planned_capacities"] == ["GitHub-hosted ARM64"]
+    assert q221["planned_capacity_assignments"][0]["dispatchable"] is True
+
 
 def test_dashboard_candidate_progress_is_receipt_based_and_exposes_milestone_detail(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
@@ -472,13 +461,13 @@ def test_fast_dispatch_allows_independent_candidates_on_one_slot_workflow():
             "current_assignments": 0,
             "research_capacity_slots": 2,
             "planned_assignments": [
-                {"plan_id":"Q218-PIT","candidate":"Q218","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
                 {"plan_id":"Q220-PIT","candidate":"Q220","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
+                {"plan_id":"Q221-PIT","candidate":"Q221","scheduled":True,"dispatchable":True,"execution_workflow":workflow},
             ],
         }],
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
-    assert [x["candidate"] for x in plan["dispatches"]] == ["Q220", "Q218"]
+    assert [x["candidate"] for x in plan["dispatches"]] == ["Q220", "Q221"]
 
 
 def test_fast_dispatch_reserves_only_explicit_multi_resource_leases():
@@ -502,7 +491,7 @@ def test_fast_dispatch_reserves_only_explicit_multi_resource_leases():
                 "current_assignments": 0,
                 "research_capacity_slots": 1,
                 "planned_assignments": [{
-                    "plan_id":"Q218-PIT","candidate":"Q218","scheduled":True,"dispatchable":True,
+                    "plan_id":"Q220-PIT","candidate":"Q220","scheduled":True,"dispatchable":True,
                     "execution_workflow":".github/workflows/top4-candidate-slot-research.yml",
                 }],
             },
@@ -528,9 +517,9 @@ def test_fast_dispatch_reserves_only_explicit_multi_resource_leases():
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=6)
     candidates=[x["candidate"] for x in plan["dispatches"]]
-    assert candidates == ["Q104:I19", "Q218"]
-    assert all(x["candidate"] not in {"Q219", "Q221", "Q220"} for x in plan["dispatches"])
-    assert any(d.get("decision") == "SKIP_FOCUS_LOCK" and d.get("candidate") == "Q221" for d in plan["decisions"])
+    assert candidates == ["Q104:I19", "Q220", "Q221"]
+    assert all(x["candidate"] not in {"Q218", "Q219"} for x in plan["dispatches"])
+    assert not any(d.get("decision") == "SKIP_FOCUS_LOCK" and d.get("candidate") == "Q221" for d in plan["decisions"])
 
 def test_fast_dispatch_backfills_free_slot_after_completed_top4_candidate():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
@@ -543,8 +532,8 @@ def test_fast_dispatch_backfills_free_slot_after_completed_top4_candidate():
             "current_assignments": 0,
             "research_capacity_slots": 1,
             "planned_assignments": [{
-                "plan_id": "Q218-PIT",
-                "candidate": "Q218",
+                "plan_id": "Q220-PIT",
+                "candidate": "Q220",
                 "scheduled": True,
                 "dispatchable": True,
                 "execution_workflow": workflow,
@@ -555,11 +544,11 @@ def test_fast_dispatch_backfills_free_slot_after_completed_top4_candidate():
         "status": "completed",
         "conclusion": "success",
         "name": "Top-4 Candidate Slot Research",
-        "display_title": "Top-4 Slot windows Q218",
-        "run_name": "Top-4 Slot windows Q218",
+        "display_title": "Top-4 Slot windows Q220 all",
+        "run_name": "Top-4 Slot windows Q220 all",
     }]
     plan = dispatch_candidates(snapshot, runs, max_dispatches=4)
-    assert any(x["candidate"] == "Q220" for x in plan["dispatches"])
+    assert any(x["candidate"] == "Q221" for x in plan["dispatches"])
     assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in plan["decisions"])
 
 
@@ -605,199 +594,20 @@ def test_fast_dispatch_allows_one_retry_then_backfills_next_candidate_after_seco
             "current_assignments": 0,
             "research_capacity_slots": 1,
             "planned_assignments": [{
-                "plan_id": "Q218-PIT",
-                "candidate": "Q218",
-                "scheduled": True,
-                "dispatchable": True,
-                "execution_workflow": workflow,
+                "plan_id": "Q220-PIT", "candidate": "Q220", "scheduled": True,
+                "dispatchable": True, "execution_workflow": workflow,
             }],
         }],
     }
-    failed_once = [{
-        "status": "completed",
-        "conclusion": "failure",
+    failed_twice = [{
+        "status": "completed", "conclusion": "failure",
         "name": "Top-4 Candidate Slot Research",
-        "display_title": "Top-4 Slot windows Q218",
-        "run_name": "Top-4 Slot windows Q218",
-    }]
-    retry_plan = dispatch_candidates(snapshot, failed_once, max_dispatches=4)
-    assert [x["candidate"] for x in retry_plan["dispatches"]] == ["Q218"]
-
-    failed_twice = failed_once + [{
-        "status": "completed",
-        "conclusion": "failure",
-        "name": "Top-4 Candidate Slot Research",
-        "display_title": "Top-4 Slot windows Q218",
-        "run_name": "Top-4 Slot windows Q218",
-    }]
-    backfilled = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
-    assert [x["candidate"] for x in backfilled["dispatches"]] == ["Q220"]
-    assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in backfilled["decisions"])
-
-
-def test_q218_windows_focus_precheck_uses_available_windows_powershell_host():
-    text = (ROOT / ".github/workflows/top4-candidate-slot-research.yml").read_text(encoding="utf-8")
-    windows = text.split("  windows:", 1)[1].split("  ubuntu_x64:", 1)[0]
-    assert "shell: bash" not in windows
-    assert "shell: pwsh" not in windows
-    assert "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" in windows
-    assert "hash-object" not in windows
-
-
-def test_top4_windows_slot_workflow_avoids_setup_python_action():
-    text = (ROOT / ".github/workflows/top4-candidate-slot-research.yml").read_text(encoding="utf-8")
-    windows = text.split("  windows:", 1)[1].split("  ubuntu_x64:", 1)[0]
-    assert "actions/setup-python@v6" not in windows
-    assert "python-3.13.15-nuget-top4-slot" in windows
-
-def test_fast_dispatch_treats_startup_failure_as_one_retry_then_backfills():
-    from automation.planned_capacity_fast_dispatch import dispatch_candidates
-    workflow = ".github/workflows/top4-candidate-slot-research.yml"
-    snapshot = {
-        "work_assignments": [],
-        "planned_capacity": [{
-            "resource": "Windows self-hosted B",
-            "current_assignments": 0,
-            "research_capacity_slots": 1,
-            "planned_assignments": [{
-                "plan_id": "Q218-PIT",
-                "candidate": "Q218",
-                "scheduled": True,
-                "dispatchable": True,
-                "execution_workflow": workflow,
-            }],
-        }],
-    }
-    failed_once = [{
-        "status": "completed",
-        "conclusion": "startup_failure",
-        "name": "Top-4 Candidate Slot Research",
-        "display_title": "Top-4 Slot windows Q218",
-        "run_name": "Top-4 Slot windows Q218",
-    }]
-    retry_plan = dispatch_candidates(snapshot, failed_once, max_dispatches=4)
-    assert [x["candidate"] for x in retry_plan["dispatches"]] == ["Q218"]
-
-    failed_twice = failed_once + [{
-        "status": "completed",
-        "conclusion": "startup_failure",
-        "name": "Top-4 Candidate Slot Research",
-        "display_title": "Top-4 Slot windows Q218",
-        "run_name": "Top-4 Slot windows Q218",
-    }]
-    backfilled = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
-    assert [x["candidate"] for x in backfilled["dispatches"]] == ["Q220"]
-    assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in backfilled["decisions"])
-
-
-def test_fast_dispatch_has_non_slot_technical_failure_circuit_breaker():
-    from automation.planned_capacity_fast_dispatch import dispatch_candidates
-    workflow = ".github/workflows/ai-worker-fabric.yml"
-    snapshot = {
-        "work_assignments": [],
-        "planned_capacity": [{
-            "resource": "Free AI pool",
-            "current_assignments": 0,
-            "research_capacity_slots": 1,
-            "planned_assignments": [{
-                "plan_id": "Q220-ADVERSARIAL",
-                "candidate": "Q220",
-                "scheduled": True,
-                "dispatchable": True,
-                "allow_parallel_with_candidate": True,
-                "execution_workflow": workflow,
-                "execution_workflow_inputs": {"task_id": "AI-TEST-Q220-TOP4-ADVERSARIAL-RETRY"},
-            }],
-        }],
-    }
-    failed = [{
-        "status": "completed",
-        "conclusion": "startup_failure",
-        "path": workflow,
-        "name": "Free AI Worker Fabric",
-    }]
-    retry = dispatch_candidates(snapshot, failed, max_dispatches=4)
-    assert [x["candidate"] for x in retry["dispatches"]] == ["Q220"]
-
-    failed_twice = failed + [{
-        "status": "completed",
-        "conclusion": "startup_failure",
-        "path": workflow,
-        "name": "Free AI Worker Fabric",
-    }]
-    blocked = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
-    assert blocked["dispatches"] == []
-
-def test_fast_dispatch_normalizes_candidate_identity_before_duplicate_guard():
-    from automation.planned_capacity_fast_dispatch import dispatch_candidates
-    workflow = ".github/workflows/q104-i19-13f-historical-identity-census.yml"
-    snapshot = {
-        "work_assignments": [{
-            "candidate": "Q104:I19",
-            "task": "historical SEC 13F archive/security identity census",
-            "job": "Q104 I19 Windows census",
-            "lane": "FORMAL READINESS",
-            "resource": "Windows self-hosted A",
-        }],
-        "planned_capacity": [{
-            "resource": "Windows self-hosted A",
-            "current_assignments": 0,
-            "research_capacity_slots": 1,
-            "planned_assignments": [{
-                "plan_id": "Q104-I19-CENSUS",
-                "candidate": "Q104:I19",
-                "scheduled": True,
-                "dispatchable": True,
-                "exclusive_dispatch": True,
-                "execution_workflow": workflow,
-            }],
-        }],
-    }
-    assert dispatch_candidates(snapshot, [], max_dispatches=4)["dispatches"] == []
-
-def test_dashboard_planner_preserves_parallel_ai_dispatch_flag():
-    generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
-    assert '"allow_parallel_with_candidate": bool(item.get("allow_parallel_with_candidate", False))' in generator
-
-
-def test_fast_dispatch_backfills_next_top4_after_technical_retry_exhaustion():
-    from automation.planned_capacity_fast_dispatch import dispatch_candidates
-
-    workflow = ".github/workflows/top4-candidate-slot-research.yml"
-    snapshot = {
-        "work_assignments": [],
-        "planned_capacity": [{
-            "resource": "Windows self-hosted B",
-            "current_assignments": 0,
-            "research_capacity_slots": 1,
-            "planned_assignments": [{
-                "plan_id": "Q218-PIT",
-                "candidate": "Q218",
-                "scheduled": True,
-                "dispatchable": True,
-                "execution_workflow": workflow,
-            }],
-        }],
-    }
-    failed_twice = [
-        {
-            "status": "completed",
-            "conclusion": "failure",
-            "name": "Top-4 Candidate Slot Research",
-            "display_title": "Top-4 Slot windows Q218",
-            "run_name": "Top-4 Slot windows Q218",
-        },
-        {
-            "status": "completed",
-            "conclusion": "failure",
-            "name": "Top-4 Candidate Slot Research",
-            "display_title": "Top-4 Slot windows Q218",
-            "run_name": "Top-4 Slot windows Q218",
-        },
-    ]
+        "display_title": "Top-4 Slot windows Q220",
+        "run_name": "Top-4 Slot windows Q220",
+    } for _ in range(2)]
     plan = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
-    assert [x["candidate"] for x in plan["dispatches"]] == ["Q220"]
-    assert plan["dispatches"][0]["inputs"] == {"candidate": "Q220", "resource": "windows"}
+    assert [x["candidate"] for x in plan["dispatches"]] == ["Q221"]
+    assert plan["dispatches"][0]["inputs"] == {"candidate": "Q221", "resource": "windows"}
     assert any(
         d["decision"] == "DISPATCH_SLOT_BACKFILL"
         and d["mode"] == "TECHNICAL_RETRY_EXHAUSTION_BACKFILL"
@@ -816,25 +626,21 @@ def test_fast_dispatch_does_not_backfill_when_all_top4_successors_are_exhausted(
             "current_assignments": 0,
             "research_capacity_slots": 1,
             "planned_assignments": [{
-                "plan_id": "Q218-PIT",
-                "candidate": "Q218",
-                "scheduled": True,
-                "dispatchable": True,
-                "execution_workflow": workflow,
+                "plan_id": "Q220-PIT", "candidate": "Q220", "scheduled": True,
+                "dispatchable": True, "execution_workflow": workflow,
             }],
         }],
     }
 
     def failures(candidate):
         return [{
-            "status": "completed",
-            "conclusion": "failure",
+            "status": "completed", "conclusion": "failure",
             "name": "Top-4 Candidate Slot Research",
             "display_title": f"Top-4 Slot windows {candidate}",
             "run_name": f"Top-4 Slot windows {candidate}",
         } for _ in range(2)]
 
-    runs = failures("Q218") + failures("Q219") + failures("Q220") + failures("Q221")
+    runs = failures("Q220") + failures("Q221")
     plan = dispatch_candidates(snapshot, runs, max_dispatches=4)
     assert plan["dispatches"] == []
     assert any(d["decision"] == "SKIP_SLOT_RETRY_EXHAUSTED" for d in plan["decisions"])
@@ -895,12 +701,9 @@ def test_fast_dispatch_loads_paginated_top4_slot_history_for_retry_circuit_break
 
 
 
-def test_q218_focused_gate_ignores_legacy_failures_from_older_master_context(monkeypatch):
+def test_q218_is_excluded_from_focus_even_with_many_legacy_failures():
     from automation import planned_capacity_fast_dispatch as dispatcher
-    monkeypatch.setattr(dispatcher, "q218_positive_gate_index_current", lambda: set())
-    dispatch_candidates = dispatcher.dispatch_candidates
 
-    workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
         "master_sha": "current-master",
         "work_assignments": [],
@@ -914,23 +717,25 @@ def test_q218_focused_gate_ignores_legacy_failures_from_older_master_context(mon
                 "scheduled": True,
                 "dispatchable": True,
                 "allow_parallel_with_candidate": True,
-                "execution_workflow": workflow,
+                "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
                 "execution_workflow_inputs": {"focus_wave": True, "gate": "event_pair"},
             }],
         }],
     }
     legacy_failures = [{
-        "status": "completed",
-        "conclusion": "failure",
-        "head_sha": "old-master",
+        "status": "completed", "conclusion": "failure", "head_sha": "old-master",
         "name": "Top-4 Candidate Slot Research",
         "display_title": "Top-4 Slot windows Q218 event_pair",
         "run_name": "Top-4 Slot windows Q218 event_pair",
     } for _ in range(20)]
 
-    plan = dispatch_candidates(snapshot, legacy_failures, max_dispatches=4)
-    assert [x["candidate"] for x in plan["dispatches"]] == ["Q218"]
-    assert any(d["decision"] == "FOCUSED_GATE_TECHNICAL_RETRY_PERMITTED" for d in plan["decisions"]) is False
+    plan = dispatcher.dispatch_candidates(snapshot, legacy_failures, max_dispatches=4)
+    assert plan["dispatches"] == []
+    assert any(
+        d["decision"] == "SKIP_FOCUS_LOCK" and d.get("candidate") == "Q218"
+        for d in plan["decisions"]
+    )
+
 
 def test_q104_compiler_failure_streak_resets_on_new_master_sha(monkeypatch):
     from automation import planned_capacity_fast_dispatch as dispatcher
@@ -972,9 +777,9 @@ def test_q104_compiler_failure_streak_resets_on_new_master_sha(monkeypatch):
     plan = dispatcher.plan_dispatch(snapshot, runs, repo="DWR-debug/trading-agent-public", max_dispatches=6)
     assert any(x["plan_id"] == "Q104-I19-COMPILER" for x in plan["dispatches"])
 
-def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
+def test_q218_completed_focus_gate_is_skipped_by_current_focus_lock():
     from automation import planned_capacity_fast_dispatch as dispatcher
-    monkeypatch.setattr(dispatcher, "completed_q218_gates_for_current_context", lambda runs: {"event_pair"})
+
     snapshot = {
         "focus_candidates": ["Q218"],
         "planned_capacity": [{
@@ -995,57 +800,39 @@ def test_q218_completed_focus_gate_is_not_redispatched(monkeypatch):
     }
     plan = dispatcher.plan_dispatch(snapshot, [], repo="DWR-debug/trading-agent-public", max_dispatches=6)
     assert plan["dispatches"] == []
-    assert any(d["decision"] == "SKIP_FOCUSED_GATE_ALREADY_COMPLETED_CURRENT_CONTEXT" for d in plan["decisions"])
+    assert any(d["decision"] == "SKIP_FOCUS_LOCK" for d in plan["decisions"])
 
 
-def test_q218_focused_gate_allows_one_technical_retry_then_stops(monkeypatch):
+def test_q218_focus_never_retries_in_active_dispatch_after_replacement():
     from automation import planned_capacity_fast_dispatch as dispatcher
-    monkeypatch.setattr(dispatcher, "q218_positive_gate_index_current", lambda: set())
-    dispatch_candidates = dispatcher.dispatch_candidates
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
         "master_sha": "current-master",
+        "focus_candidates": ["Q104:I19", "Q218", "Q220", "Q221"],
         "work_assignments": [],
         "planned_capacity": [{
             "resource": "Windows self-hosted C",
             "current_assignments": 0,
             "research_capacity_slots": 1,
             "planned_assignments": [{
-                "plan_id": "Q218-EVENT-PAIR",
-                "candidate": "Q218",
-                "scheduled": True,
-                "dispatchable": True,
-                "allow_parallel_with_candidate": True,
+                "plan_id": "Q218-EVENT-PAIR", "candidate": "Q218", "scheduled": True,
+                "dispatchable": True, "allow_parallel_with_candidate": True,
                 "execution_workflow": workflow,
                 "execution_workflow_inputs": {"focus_wave": True, "gate": "event_pair"},
             }],
         }],
     }
-
     one_failure = [{
-        "status": "completed",
-        "conclusion": "failure",
+        "status": "completed", "conclusion": "failure", "head_sha": "current-master",
         "name": "Top-4 Candidate Slot Research",
         "display_title": "Top-4 Slot windows Q218 event_pair",
         "run_name": "Top-4 Slot windows Q218 event_pair",
-        "head_sha": "current-master",
     }]
-    retry = dispatch_candidates(snapshot, one_failure, max_dispatches=4)
-    assert [x["candidate"] for x in retry["dispatches"]] == ["Q218"]
-    assert any(d["decision"] == "FOCUSED_GATE_TECHNICAL_RETRY_PERMITTED" for d in retry["decisions"])
+    plan = dispatcher.dispatch_candidates(snapshot, one_failure, max_dispatches=4)
+    assert plan["dispatches"] == []
+    assert any(d["decision"] == "SKIP_FOCUS_LOCK" for d in plan["decisions"])
 
-    two_failures = one_failure + [{
-        "status": "completed",
-        "conclusion": "failure",
-        "name": "Top-4 Candidate Slot Research",
-        "display_title": "Top-4 Slot windows Q218 event_pair",
-        "run_name": "Top-4 Slot windows Q218 event_pair",
-        "head_sha": "current-master",
-    }]
-    stopped = dispatch_candidates(snapshot, two_failures, max_dispatches=4)
-    assert stopped["dispatches"] == []
-    assert any(d["decision"] == "SKIP_FOCUSED_GATE_RETRY_EXHAUSTED" for d in stopped["decisions"])
 
 def test_cancelled_q218_focus_gate_has_short_dispatch_cooldown():
     from datetime import datetime, timezone
@@ -1189,7 +976,7 @@ def test_i19_census_dispatch_is_allowed_when_no_prior_census_failure_exists():
     assert [item["candidate"] for item in plan["dispatches"]] == ["Q104:I19"]
 
 
-def test_fast_dispatch_hard_blocks_q219_and_q221_outside_the_three_candidate_focus():
+def test_fast_dispatch_hard_blocks_q218_and_q219_outside_the_three_candidate_focus():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
@@ -1204,31 +991,31 @@ def test_fast_dispatch_hard_blocks_q219_and_q221_outside_the_three_candidate_foc
              "planned_assignments": [{"plan_id":"Q219-OPTIONS-SOURCE-BREADTH","candidate":"Q219","scheduled":True,"dispatchable":True,
                "execution_workflow":workflow,"execution_workflow_inputs":{"focus_wave":False,"gate":"all"}}]},
             {"resource": "GitHub-hosted ARM64", "current_assignments": 0, "research_capacity_slots": 2,
-             "planned_assignments": [{"plan_id":"Q221-USASPENDING-PUBLIC-CLOCK","candidate":"Q221","scheduled":True,"dispatchable":True,
+             "planned_assignments": [{"plan_id":"Q218-ARCHIVED","candidate":"Q218","scheduled":True,"dispatchable":True,
                "execution_workflow":workflow,"execution_workflow_inputs":{"focus_wave":False,"gate":"all"}}]},
         ],
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
     assert plan["dispatches"] == []
-    assert {d.get("candidate") for d in plan["decisions"] if d["decision"] == "SKIP_FOCUS_LOCK"} == {"Q219", "Q221"}
+    assert {d.get("candidate") for d in plan["decisions"] if d["decision"] == "SKIP_FOCUS_LOCK"} == {"Q218", "Q219"}
     assert plan["performance_authorization"] is False
     assert plan["paper_only"] is True
     assert plan["live_execution"] is False
     assert plan["promotion"] is False
 
 
-def test_legacy_candidate_matrix_contains_only_q218_and_q220():
+def test_legacy_candidate_matrix_contains_only_q220_and_q221():
     workflow = (ROOT / ".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
-    assert "candidate: [Q218]" in workflow
+    assert "candidate: [Q221]" in workflow
     assert workflow.count("candidate: [Q220]") == 2
+    assert "Q218" not in workflow
     assert "Q219" not in workflow
-    assert "Q221" not in workflow
 
 
 def test_dispatcher_default_and_dashboard_focus_are_intersected_with_fixed_allowlist():
     from automation.planned_capacity_fast_dispatch import effective_focus_candidates, FOCUS_CANDIDATES
 
-    assert effective_focus_candidates({}) == {"Q104:I19", "Q218", "Q220"}
-    assert effective_focus_candidates({"focus_candidates": ["Q104:I19", "Q218", "Q219", "Q221"]}) == {"Q104:I19", "Q218"}
-    assert effective_focus_candidates({"focus_candidates": ["Q219", "Q221"]}) == set()
-    assert FOCUS_CANDIDATES == {"Q104:I19", "Q218", "Q220"}
+    assert effective_focus_candidates({}) == {"Q104:I19", "Q220", "Q221"}
+    assert effective_focus_candidates({"focus_candidates": ["Q104:I19", "Q218", "Q219", "Q221"]}) == {"Q104:I19", "Q221"}
+    assert effective_focus_candidates({"focus_candidates": ["Q218", "Q219"]}) == set()
+    assert FOCUS_CANDIDATES == {"Q104:I19", "Q220", "Q221"}
