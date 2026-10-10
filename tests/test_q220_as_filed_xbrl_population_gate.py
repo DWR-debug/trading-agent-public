@@ -115,8 +115,28 @@ def test_q220_blocked_receipt_is_published_before_positive_gate_fails():
         "      - uses: actions/upload-artifact@v6", 1
     )[0]
     assert "if: always()" in publish
-    assert "gh api \"/repos/%GITHUB_REPOSITORY%/git/ref/heads/master\"" in publish
+    assert "gh api " not in publish
+    assert "--base-sha latest" in publish
     assert "github_contents_publish.py" in publish
     assert "if: always()" in enforce
     assert "Q220_POPULATION_POSITIVE=" in enforce
     assert "Q220_AS_FILED_XBRL_POPULATION_COMPLETED" in enforce
+
+def test_q220_windows_receipt_publisher_is_cli_independent_and_preserves_gate():
+    workflow = (ROOT / ".github/workflows/q220-as-filed-xbrl-population.yml").read_text(encoding="utf-8")
+    publish = workflow.split("      - name: Publish population receipt", 1)[1].split(
+        "      - name: Enforce positive population receipt", 1
+    )[0]
+    enforce = workflow.split("      - name: Enforce positive population receipt", 1)[1].split(
+        "      - uses: actions/upload-artifact@v6", 1
+    )[0]
+    gate = (ROOT / "automation/q220_as_filed_xbrl_population_gate.py").read_text(encoding="utf-8")
+
+    assert "shell: cmd" in publish
+    assert "gh api " not in publish
+    assert "--base-sha latest" in publish
+    assert "github_contents_publish.py" in publish
+    assert "int(r.get('failure_count',1))==0" in enforce
+    assert 'original_10k_count>=(1 if mode=="route" else 5)' in gate
+    assert 'textblock_ready_originals]>=(1 if mode=="route" else 5)' in gate
+
