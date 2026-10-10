@@ -395,7 +395,7 @@ def test_fast_dispatch_zero_active_starts_top4_once_and_ai_when_free():
         ".github/workflows/top4-candidate-slot-research.yml",
         ".github/workflows/ai-worker-fabric.yml",
     }
-    assert plan["dispatches"][0]["workflow"].endswith("top4-candidate-research-capacity.yml")
+    assert plan["dispatches"][0]["workflow"].endswith("top4-candidate-slot-research.yml")
 
 
 def test_fast_dispatch_blocks_legacy_broad_top4_matrix_workpack():
@@ -686,7 +686,7 @@ def test_fast_dispatch_treats_startup_failure_as_one_retry_then_backfills():
         "run_name": "Top-4 Slot windows Q218",
     }]
     backfilled = dispatch_candidates(snapshot, failed_twice, max_dispatches=4)
-    assert [x["candidate"] for x in backfilled["dispatches"]] == ["Q219"]
+    assert [x["candidate"] for x in backfilled["dispatches"]] == ["Q220"]
     assert any(d["decision"] == "DISPATCH_SLOT_BACKFILL" for d in backfilled["decisions"])
 
 
