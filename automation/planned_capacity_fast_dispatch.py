@@ -685,7 +685,12 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                     "gate": gate,
                 })
                 continue
-            if scope and scope in completed_slots and not focus_wave:
+            q221_vintage_gate_still_open = (
+                candidate == "Q221"
+                and str(item.get("plan_id") or "") == "Q221-USASPENDING-PUBLIC-CLOCK"
+                and item.get("dispatchable") is True
+            )
+            if scope and scope in completed_slots and not focus_wave and not q221_vintage_gate_still_open:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ALREADY_COMPLETED"})
                 fallback = top4_slot_fallback(
                     resource,
