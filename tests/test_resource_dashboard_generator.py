@@ -106,12 +106,14 @@ def test_planned_capacity_keeps_one_step_lookahead_while_resource_is_active():
     assert by_resource["Windows self-hosted A"]["planned_assignments"][0]["scheduled"] is True
 
 
-def test_planned_research_backlog_is_locked_to_focus_candidates():
+def test_planned_research_backlog_is_locked_to_three_focus_candidates():
     from automation.generate_resource_dashboard import planned_research_backlog
     board = [{"code": code, "lane":"FRONTIER DISCOVERY", "next_gate":"gate"} for code in ("Q104:I19","Q218","Q219","Q220","Q221","Q224","Q229")]
     queue = planned_research_backlog(board)
-    assert len(queue) == 2
-    assert [x["candidate"] for x in queue] == ["Q104:I19","Q218"]
+    assert len(queue) == 3
+    assert [x["candidate"] for x in queue] == ["Q104:I19","Q220","Q218"]
+    assert queue[2]["planned_status"] == "BLOCKED_SEPARATE_EXPLICIT_PERFORMANCE_AUTHORIZATION"
+    assert queue[2]["execution_workflow"] is None
 
 
 def test_dashboard_filters_platform_work_from_research_capacity():
