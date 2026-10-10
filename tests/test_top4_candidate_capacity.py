@@ -26,7 +26,8 @@ def test_focused_workpacks_are_mechanistically_separate():
     assert "q104_xbrl_concept_freeze_audit.py" in q220
     assert "q104_i19_xbrl_pit_compiler.py" in q220
     assert "q221_usaspending_public_clock_gate" in q221
-    assert "test_q221_usaspending_public_clock_gate.py" in q221
+    assert "q221_historical_source_vintage_gate" in q221
+    assert "test_q221_historical_source_vintage_gate.py" in q221
     assert "historical_applicability_proven" in q221 or "historical USAspending" in q221
     assert set(worker.LANES) == {"Q104:I19", "Q220", "Q221"}
 
