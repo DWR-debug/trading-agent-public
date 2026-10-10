@@ -1019,3 +1019,41 @@ def test_dispatcher_default_and_dashboard_focus_are_intersected_with_fixed_allow
     assert effective_focus_candidates({"focus_candidates": ["Q104:I19", "Q218", "Q219", "Q221"]}) == {"Q104:I19", "Q221"}
     assert effective_focus_candidates({"focus_candidates": ["Q218", "Q219"]}) == set()
     assert FOCUS_CANDIDATES == {"Q104:I19", "Q220", "Q221"}
+
+
+def test_fast_dispatch_reopens_q221_historical_vintage_gate_despite_old_successful_slot():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    snapshot = {
+        "master_sha": "current-master",
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted C",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q221-USASPENDING-PUBLIC-CLOCK",
+                "candidate": "Q221",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+                "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+            }],
+        }],
+    }
+    prior_success = [{
+        "id": 123,
+        "name": "Top-4 Slot windows Q221 all",
+        "display_title": "Top-4 Slot windows Q221 all",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "old-code-before-vintage-gate",
+        "path": ".github/workflows/top4-candidate-slot-research.yml",
+    }]
+    plan = dispatch_candidates(snapshot, prior_success, max_dispatches=2)
+    assert [item["plan_id"] for item in plan["dispatches"]] == ["Q221-USASPENDING-PUBLIC-CLOCK"]
+    assert plan["dispatches"][0]["candidate"] == "Q221"
+    assert not any(
+        decision.get("decision") == "SKIP_SLOT_ALREADY_COMPLETED"
+        for decision in plan["decisions"]
+    )
