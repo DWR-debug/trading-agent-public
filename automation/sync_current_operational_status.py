@@ -85,7 +85,7 @@ def q220_population_focus_sentence(receipt: dict[str, Any]) -> str:
             "Reconcile the receipt schema, counts, and zero-failure requirement before proceeding. "
         )
     return (
-        "Q220 historical as-filed population gate is positive: "
+        "Q220 historical as-filed population gate is positive and version-bound: "
         f"{int(receipt.get('row_count') or 0)} filing records across the frozen eight-issuer universe, "
         "archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. "
         "Next gate: historical prefix/acceptance-time PIT representation-state compiler. "
