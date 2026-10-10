@@ -230,3 +230,20 @@ def test_dashboard_three_minute_live_refresh_and_five_minute_server_refresh():
     workflow = (root / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
     assert "setInterval(load,180000)" in js
     assert 'cron: "*/5 * * * *"' in workflow
+
+
+def test_unrelated_research_waves_do_not_start_on_focused_pull_request():
+    root = Path(__file__).parents[1]
+    paths = (
+        ".github/workflows/q179-q184-source-feasibility.yml",
+        ".github/workflows/q179-q184-pit-readiness.yml",
+        ".github/workflows/q133-q170-pit-readiness.yml",
+        ".github/workflows/q188-q192-pit-census-r2.yml",
+        ".github/workflows/q185-q186-source-feasibility.yml",
+        ".github/workflows/temporal-identity-state-spine-waves.yml",
+        ".github/workflows/wide-search.yml",
+    )
+    for path in paths:
+        text = (root / path).read_text(encoding="utf-8")
+        assert "\\n  pull_request:" not in text, path
+        assert "workflow_dispatch:" in text, path
