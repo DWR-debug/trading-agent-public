@@ -176,10 +176,11 @@ def test_dashboard_pipeline_is_locked_to_focus_candidates():
     top4 = [
         {"code":"Q104:I19","state":"SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED"},
         {"code":"Q218","state":"DESIGN_ONLY_ACTIVE"},
+        {"code":"Q220","state":"DESIGN_ONLY_ACTIVE"},
         {"code":"Q219","state":"DESIGN_ONLY_ACTIVE"},
     ]
     rows = candidate_pipeline(top4, [], {}, {})
-    assert [x["code"] for x in rows] == ["Q104:I19","Q218"]
+    assert [x["code"] for x in rows] == ["Q104:I19","Q218","Q220"]
 
 
 def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
@@ -190,15 +191,16 @@ def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
     assert "sys.path.insert(0, str(ROOT))" in generator
 
 
-def test_dashboard_focused_backlog_is_two_candidates():
+def test_dashboard_focused_backlog_is_three_candidates():
     from automation.generate_resource_dashboard import planned_research_backlog
     rows = planned_research_backlog([
         {"code":"Q104:I19","lane":"FORMAL READINESS","next_gate":"13F completeness"},
         {"code":"Q218","lane":"FRONTIER DISCOVERY","next_gate":"SEC multi-channel/PIT"},
+        {"code":"Q220","lane":"FRONTIER DISCOVERY","next_gate":"as-filed XBRL population and mapping"},
         {"code":"Q219","lane":"FRONTIER DISCOVERY","next_gate":"options PIT"},
     ])
-    assert [x["candidate"] for x in rows] == ["Q104:I19","Q218"]
-    assert [x["planned_status"] for x in rows] == ["READY_NEXT_GATE","READY_NEXT_GATE"]
+    assert [x["candidate"] for x in rows] == ["Q104:I19","Q218","Q220"]
+    assert [x["planned_status"] for x in rows] == ["READY_NEXT_GATE","READY_NEXT_GATE","READY_NEXT_GATE"]
 
 
 def test_dashboard_s10_support_is_non_authorizing():
