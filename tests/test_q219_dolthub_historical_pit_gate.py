@@ -22,7 +22,7 @@ def test_q219_historical_pit_gate_is_paused_by_three_candidate_focus():
     assert "Q219" not in candidate_options
     assert "Q220" in candidate_options
     assert '"Q219":[' not in capacity
-    assert '"Q221":[' not in capacity
+    assert '"Q221":[' in capacity
 
 
 def test_q219_pit_gate_is_non_authorizing():
