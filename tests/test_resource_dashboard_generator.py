@@ -215,3 +215,55 @@ def test_dashboard_s10_support_is_non_authorizing():
     assert payload["resource_id"] == "S10"
     assert payload["scientific_evidence"] is False
     assert payload["performance_authorization"] is False
+
+def test_q220_blocked_population_receipt_is_not_masked_by_active_route_probe(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    receipt = {
+        "candidate_id": "Q220",
+        "mode": "population",
+        "status": "Q220_AS_FILED_XBRL_POPULATION_BLOCKED",
+        "failure_count": 0,
+        "record_count": 55,
+        "row_count": 55,
+        "receipt_fingerprint": "a" * 64,
+        "per_issuer_minimum_originals_and_textblock_ready": 5,
+        "issuer_summary": {
+            "AMP": {"original_10k_count": 7, "textblock_ready_originals": 4},
+            "NDAQ": {"original_10k_count": 7, "textblock_ready_originals": 5},
+        },
+    }
+    monkeypatch.setattr(dashboard, "read_json_file", lambda _path: receipt)
+
+    result = dashboard.q220_as_filed_population_status([
+        {
+            "name": "Q220 As-Filed SEC-XBRL Population Repair",
+            "path": ".github/workflows/q220-as-filed-xbrl-population.yml",
+            "status": "pending",
+        }
+    ])
+
+    assert result["state"] == "blocked"
+    assert result["progress_percent"] == 0
+    assert "AMP: 4/5 TextBlock-ready original 10-Ks" in result["detail"]
+    assert "route probe does not clear" in result["detail"]
+    assert result["active_route_probe"] is True
+    assert "preserve the frozen minimum" in result["next_gate"]
+
+
+def test_q218_development_index_includes_blocked_cost_adjusted_oos_gate():
+    from automation.generate_resource_dashboard import candidate_progress_snapshot
+
+    snapshot = candidate_progress_snapshot([])
+    q218 = snapshot["candidates"]["Q218"]
+    oos = next(
+        item for item in q218["milestones"]
+        if item["label"] == "Cost-adjusted independent OOS assessment"
+    )
+
+    assert oos["status"] == "blocked"
+    assert oos["progress"] == 0
+    assert "separate explicit authorization" in oos["detail"]
+    assert q218["overall_progress_percent"] < 100
+    assert q218["current_milestone_status"] == "blocked"
+
