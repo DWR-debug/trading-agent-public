@@ -56,7 +56,7 @@ def accession_hdr_sgml_url(cik: str, accession: str) -> str:
     """Canonical SEC archive URL for the raw SGML header, including accession dashes."""
     cik10 = str(cik).strip().zfill(10)
     acc = str(accession).strip()
-    if not re.fullmatch(r"d{10}-d{2}-d{6}", acc):
+    if not re.fullmatch(r"\d{10}-\d{2}-\d{6}", acc):
         raise ValueError("SEC_ACCESSION_UNPARSEABLE:" + acc)
     normalized = acc.replace("-", "")
     return (
