@@ -34,7 +34,8 @@ def test_agent_queue_treats_copilot_exhaustion_as_pause_but_keeps_other_errors_c
 
 def test_t052_allows_ai_credit_operational_plan_in_master_move_guard() -> None:
     text = Path(".github/workflows/t052-exact-master-ci-gate.yml").read_text(encoding="utf-8")
-    assert "ops/ai_credit_availability_plan\\.json" in text
+    assert "ops/ai_credit_availability_plan.json" in text
+    assert "case \"$path\" in" in text
 
 
 def test_q121r6_now_uses_three_windows_shards_for_third_runner() -> None:
