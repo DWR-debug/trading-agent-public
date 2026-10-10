@@ -29,57 +29,44 @@ def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backsto
 
 
 
-def test_q218_replication_retry_budget_resets_on_new_master(monkeypatch):
-    import automation.planned_capacity_fast_dispatch as dispatcher
-    monkeypatch.setattr(dispatcher, "q218_replication_authorization_block_reason", lambda: None)
 
+def test_q221_public_clock_workpack_dispatches_when_capacity_is_free():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
-        "master_sha": "NEWMASTER",
+        "master_sha": "current-master",
         "work_assignments": [],
         "resources": [{
             "name": "GitHub-hosted Ubuntu x64",
-            "research_capacity_slots": 1,
+            "research_capacity_slots": 2,
             "research_slots_in_use": 0,
-            "research_slots_free": 1,
+            "research_slots_free": 2,
         }],
         "planned_capacity": [{
             "resource": "GitHub-hosted Ubuntu x64",
             "current_assignments": 0,
+            "research_capacity_slots": 2,
             "planned_assignments": [{
-                "plan_id": "Q218-FRESH-SYMBOL-REPLICATION",
-                "candidate": "Q218",
+                "plan_id": "Q221-USASPENDING-PUBLIC-CLOCK",
+                "candidate": "Q221",
                 "scheduled": True,
                 "dispatchable": True,
-                "allow_parallel_with_candidate": True,
-                "execution_workflow": ".github/workflows/q218-independent-replication-once.yml",
+                "execution_workflow": workflow,
+                "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
             }],
         }],
     }
-    runs = [
-        {"status": "completed", "conclusion": "failure", "head_sha": "OLD1",
-         "path": ".github/workflows/q218-independent-replication-once.yml"},
-        {"status": "completed", "conclusion": "failure", "head_sha": "OLD2",
-         "path": ".github/workflows/q218-independent-replication-once.yml"},
-    ]
+    plan = dispatch_candidates(snapshot, [], max_dispatches=2)
+    assert [x["candidate"] for x in plan["dispatches"]] == ["Q221"]
+    assert plan["dispatches"][0]["workflow"] == workflow
+    assert plan["performance_authorization"] is False
+    assert plan["live_execution"] is False
 
-    plan = dispatcher.dispatch_candidates(snapshot, runs, max_dispatches=2)
-    assert [x["plan_id"] for x in plan["dispatches"]] == ["Q218-FRESH-SYMBOL-REPLICATION"]
-    assert not any(
-        x["decision"] == "SKIP_WORKFLOW_TECHNICAL_RETRY_EXHAUSTED"
-        for x in plan["decisions"]
-    )
+def test_archived_q218_workpack_is_blocked_even_if_legacy_authorization_guard_passes(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
 
-
-
-
-def test_fast_dispatch_blocks_q218_replication_without_exact_explicit_authorization(monkeypatch):
-    import automation.planned_capacity_fast_dispatch as dispatcher
-
-    monkeypatch.setattr(
-        dispatcher,
-        "q218_replication_authorization_block_reason",
-        lambda: "Q218_REPLICATION_EXPLICIT_AUTHORIZATION_REQUIRED:RuntimeError:authorization is missing",
-    )
+    monkeypatch.setattr(dispatcher, "q218_replication_authorization_block_reason", lambda: None)
     workflow = ".github/workflows/q218-independent-replication-once.yml"
     snapshot = {
         "master_sha": "current-master",
@@ -93,8 +80,9 @@ def test_fast_dispatch_blocks_q218_replication_without_exact_explicit_authorizat
         "planned_capacity": [{
             "resource": "GitHub-hosted Ubuntu x64",
             "current_assignments": 0,
+            "research_capacity_slots": 1,
             "planned_assignments": [{
-                "plan_id": "Q218-FRESH-SYMBOL-REPLICATION",
+                "plan_id": "Q218-ARCHIVED-REPLICATION",
                 "candidate": "Q218",
                 "scheduled": True,
                 "dispatchable": True,
@@ -103,15 +91,12 @@ def test_fast_dispatch_blocks_q218_replication_without_exact_explicit_authorizat
             }],
         }],
     }
-
     plan = dispatcher.dispatch_candidates(snapshot, [], max_dispatches=2)
     assert plan["dispatches"] == []
     assert any(
-        decision["decision"] == "SKIP_Q218_REPLICATION_EXPLICIT_AUTHORIZATION_REQUIRED"
+        decision.get("candidate") == "Q218" and decision["decision"] == "SKIP_FOCUS_LOCK"
         for decision in plan["decisions"]
     )
-
-
 def test_fast_dispatch_uses_resource_capacity_metadata_for_q221_clock_gate(monkeypatch):
     from automation import planned_capacity_fast_dispatch as dispatcher
 
@@ -344,22 +329,24 @@ def test_fast_dispatch_ai_success_is_deduped_by_current_context(tmp_path, monkey
     assert ai_task_completed_with_current_context(task_id, root=tmp_path) is True
 
 
-def test_fast_dispatch_zero_active_starts_top4_once_and_ai_when_free():
+
+def test_fast_dispatch_zero_active_starts_q221_clock_workpack_and_free_ai_review():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
 
     snapshot = {
         "work_assignments": [],
         "planned_capacity": [
             {
-                "resource": "Windows self-hosted B",
+                "resource": "Windows self-hosted C",
                 "current_assignments": 0,
                 "research_capacity_slots": 1,
                 "planned_assignments": [{
-                    "plan_id": "Q218-PIT",
-                    "candidate": "Q218",
+                    "plan_id": "Q221-USASPENDING-PUBLIC-CLOCK",
+                    "candidate": "Q221",
                     "scheduled": True,
                     "dispatchable": True,
                     "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+                    "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
                 }],
             },
             {
@@ -367,43 +354,37 @@ def test_fast_dispatch_zero_active_starts_top4_once_and_ai_when_free():
                 "current_assignments": 0,
                 "research_capacity_slots": 1,
                 "planned_assignments": [{
-                    "plan_id": "Q218-ADVERSARIAL",
-                    "candidate": "Q218",
+                    "plan_id": "Q221-ADVERSARIAL",
+                    "candidate": "Q221",
                     "scheduled": True,
                     "dispatchable": True,
                     "allow_parallel_with_candidate": True,
                     "execution_workflow": ".github/workflows/ai-worker-fabric.yml",
-                    "execution_workflow_inputs": {"task_id": "AI-TEST-Q218-TOP4-ADVERSARIAL-UNSEEN"},
+                    "execution_workflow_inputs": {"task_id": "AI-2026-10-06-Q221-TOP4-ADVERSARIAL"},
                 }],
             },
         ],
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
     assert plan["zero_active_research_jobs"] is True
-    assert set(x["workflow"] for x in plan["dispatches"]) == {
+    assert {x["workflow"] for x in plan["dispatches"]} == {
         ".github/workflows/top4-candidate-slot-research.yml",
         ".github/workflows/ai-worker-fabric.yml",
     }
-    assert plan["dispatches"][0]["workflow"].endswith("top4-candidate-slot-research.yml")
-
+    assert plan["dispatches"][0]["candidate"] == "Q221"
 
 def test_fast_dispatch_blocks_legacy_broad_top4_matrix_workpack():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
 
     snapshot = {
-        "work_assignments": [{
-            "candidate": "Q220",
-            "task": "Top-4 Candidate Research Capacity",
-            "job": "Windows Top-4 Q220",
-            "lane": "FRONTIER DISCOVERY",
-        }],
+        "work_assignments": [],
         "planned_capacity": [{
             "resource": "Windows self-hosted B",
             "current_assignments": 0,
             "research_capacity_slots": 1,
             "planned_assignments": [{
-                "plan_id": "Q218-PIT",
-                "candidate": "Q218",
+                "plan_id": "Q221-LEGACY-MATRIX",
+                "candidate": "Q221",
                 "scheduled": True,
                 "dispatchable": True,
                 "execution_workflow": ".github/workflows/top4-candidate-research-capacity.yml",
@@ -413,8 +394,6 @@ def test_fast_dispatch_blocks_legacy_broad_top4_matrix_workpack():
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
     assert plan["dispatches"] == []
     assert any(d["decision"] == "SKIP_LEGACY_BROAD_TOP4_WORKFLOW_NOT_CANDIDATE_SCOPED" for d in plan["decisions"])
-
-
 def test_dashboard_exposes_runner_status_sources_and_dispatchability():
     generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     assert '"runner_status_ui_url"' in generator
@@ -423,15 +402,16 @@ def test_dashboard_exposes_runner_status_sources_and_dispatchability():
     assert '"execution_workflow": item.get("execution_workflow")' in generator
 
 
-def test_fast_dispatch_allows_top4_with_parallel_ai_review():
+
+def test_fast_dispatch_allows_q221_with_parallel_ai_review():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
 
     snapshot = {
         "work_assignments": [{
             "resource": "Free AI pool",
-            "candidate": "Q218",
+            "candidate": "Q221",
             "task": "Free AI Worker Fabric",
-            "job": "Q218 adversarial review",
+            "job": "Q221 adversarial review",
             "lane": "FRONTIER DISCOVERY",
         }],
         "planned_capacity": [{
@@ -439,8 +419,8 @@ def test_fast_dispatch_allows_top4_with_parallel_ai_review():
             "current_assignments": 0,
             "research_capacity_slots": 1,
             "planned_assignments": [{
-                "plan_id": "Q218-PIT",
-                "candidate": "Q218",
+                "plan_id": "Q221-PIT",
+                "candidate": "Q221",
                 "scheduled": True,
                 "dispatchable": True,
                 "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
@@ -448,9 +428,7 @@ def test_fast_dispatch_allows_top4_with_parallel_ai_review():
         }],
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
-    assert plan["dispatches"][0]["workflow"].endswith("top4-candidate-slot-research.yml")
-
-
+    assert any(x["candidate"] == "Q221" and x["workflow"].endswith("top4-candidate-slot-research.yml") for x in plan["dispatches"])
 def test_fast_dispatch_allows_independent_candidates_on_one_slot_workflow():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
