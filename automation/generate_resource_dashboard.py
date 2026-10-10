@@ -1574,16 +1574,37 @@ def planned_capacity_plan(
         status_value = str(run.get("status") or "")
         if status_value not in active_statuses:
             continue
-        # Candidate names in a commit message or maintenance/dispatch title do
-        # not imply that candidate's research is running. Only a real
-        # candidate-scoped Top-4 slot run may populate these two structures;
-        # ordinary candidate jobs are detected from the normalized work list.
         if "Top-4 Slot " in title:
             parts = title.split("Top-4 Slot ", 1)[1].strip().split()
             if len(parts) >= 2 and parts[0] in {"windows", "ubuntu_x64", "ubuntu_arm64"}:
                 active_slot_scopes.add((parts[0], parts[1]))
                 if parts[1] in {"Q218", "Q219", "Q220", "Q221"}:
                     active_candidate_names.add(parts[1])
+            continue
+
+        # Keep recognising real active candidate jobs outside the slot workflow,
+        # but do not infer candidate activity from a maintenance run's commit
+        # title (e.g. "OPS: dispatch Q220/Q221 capacity after status sync").
+        path = str(run.get("path") or run.get("workflow_path") or "").lower()
+        lower_title = title.lower()
+        maintenance_paths = {
+            ".github/workflows/planned-capacity-fast-dispatch.yml",
+            ".github/workflows/resource-dashboard-update.yml",
+            ".github/workflows/current-operational-status-synchronizer.yml",
+            ".github/workflows/current-status-drift-guard.yml",
+            ".github/workflows/research-completion-monitor-a.yml",
+            ".github/workflows/research-completion-monitor-b.yml",
+        }
+        maintenance_prefixes = (
+            "ops:", "orch/ui:", "ui:", "fix:", "test:", "planned capacity fast dispatch",
+            "resource dashboard update", "current operational status synchronizer",
+            "current status drift guard", "research completion monitor",
+        )
+        if path.endswith(tuple(maintenance_paths)) or lower_title.startswith(maintenance_prefixes):
+            continue
+        for code in ("Q218", "Q219", "Q220", "Q221"):
+            if code.lower() in lower_title:
+                active_candidate_names.add(code)
 
     q104_census_receipt = read_json_file("research/evidence/q104_i19_13f_historical_identity_census_latest.json")
     q104_census_ready = q104_census_clock_complete(q104_census_receipt)
