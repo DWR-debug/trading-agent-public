@@ -419,4 +419,4 @@ def test_q221_dashboard_does_not_treat_live_source_smoke_as_historical_clock_pro
     assert result["state"] == "ready"
     assert result["progress_percent"] == 0
     assert "cannot establish what was publicly observable historically" in result["detail"]
-    assert result["next_gate"].startswith("archived USAspending policy vintages")
+    assert result["next_gate"].startswith("historical USAspending public boundary")
