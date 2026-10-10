@@ -213,6 +213,26 @@ function render(data){
   var cr=data.current_research||{};
   lastSnapshotIso=data.generated_at_utc||null;
 
+  var handoff=data.chat_handoff||{};
+  var handoffText=[
+    "TRADING AGENT — CHAT HANDOFF",
+    "Dashboard generated UTC: "+String(data.generated_at_utc||"unknown"),
+    "Dashboard master SHA: "+String(data.master_sha||"unknown"),
+    "Operational status snapshot SHA: "+String(data.operational_snapshot_sha||"unknown"),
+    "Handoff generated UTC: "+String(handoff.generated_at_utc||"unknown"),
+    "Handoff source master SHA: "+String(handoff.source_master_sha||"unknown"),
+    "Active execution focus: "+(handoff.active_execution_focus||FOCUS).join(" | "),
+    "Next research focus and decision log:",
+    String(handoff.next_research_focus||"Handoff missing; verify docs/CURRENT_STATUS.md and live state before acting."),
+    "Resume rule: "+String(handoff.resume_rule||"Read canonical current status first; verify live Actions/runners and immutable receipts."),
+    "Safety: PAPER_ONLY="+String((handoff.safety||{}).PAPER_ONLY!==false)
+      +"; LIVE_TRADING_ENABLED="+String((handoff.safety||{}).LIVE_TRADING_ENABLED===true)
+      +"; ORDERS_ENABLED="+String((handoff.safety||{}).ORDERS_ENABLED===true)
+      +"; AUTOMATIC_PROMOTION="+String((handoff.safety||{}).AUTOMATIC_PROMOTION===true)
+      +"; paid_usage_usd="+String((handoff.safety||{}).paid_usage_usd==null?0:(handoff.safety||{}).paid_usage_usd)
+  ].join("\n");
+  if($("chatHandoffText"))$("chatHandoffText").value=handoffText;
+
   $("meta").innerHTML="Snapshot <code>"+esc(data.generated_at_utc)+"</code> · master <code>"+esc(data.master_sha)+"</code> · Status-Quelle <code>"+esc(data.operational_snapshot_sha||"nicht synchron")+"</code>"+
     ((data.dashboard_policy||{}).runner_status_ui_url?" · <a href='"+esc(data.dashboard_policy.runner_status_ui_url)+"' target='_blank' rel='noopener'>Runner-Status</a>":"");
 
@@ -385,6 +405,27 @@ document.addEventListener("DOMContentLoaded",function(){
   setInterval(updateClock,1000);
   setInterval(updateSnapshotAge,1000);
   $("refresh").addEventListener("click",load);
+  $("copyHandoff").addEventListener("click",function(){
+    var field=$("chatHandoffText");
+    var status=$("copyHandoffStatus");
+    if(!field)return;
+    var payload=field.value;
+    if(navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){
+      navigator.clipboard.writeText(payload).then(function(){
+        if(status)status.textContent="Übergabe kopiert.";
+      }).catch(function(){
+        field.focus();field.select();
+        var copied=false;
+        try{copied=document.execCommand("copy");}catch(e){}
+        if(status)status.textContent=copied?"Übergabe kopiert.":"Text markiert — bitte manuell kopieren.";
+      });
+    }else{
+      field.focus();field.select();
+      var copied=false;
+      try{copied=document.execCommand("copy");}catch(e){}
+      if(status)status.textContent=copied?"Übergabe kopiert.":"Text markiert — bitte manuell kopieren.";
+    }
+  });
   load();
   setInterval(load,180000);
 });

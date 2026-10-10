@@ -35,6 +35,10 @@
     @media(max-width:700px){.clock-panel{display:block}.clock-date,.snapshot-age{text-align:left;margin-top:4px}}
     button,a.button{border:1px solid var(--border);border-radius:9px;padding:9px 12px;background:ButtonFace;color:ButtonText;text-decoration:none;cursor:pointer}
     .notice{margin-top:16px;border:1px solid var(--border);border-radius:10px;padding:11px 13px}
+    .handoff-card{border-top:3px solid var(--info)}
+    .handoff-text{display:block;width:100%;min-height:170px;resize:vertical;border:1px solid var(--border);border-radius:9px;padding:12px;background:Canvas;color:CanvasText;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap}
+    .handoff-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .handoff-status{font-size:12px;color:var(--muted);min-height:1em}
     .legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:var(--muted)}
     .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
     .dot.operating{background:var(--operating)} .dot.available{background:var(--available)} .dot.unknown{background:var(--offline)}
@@ -193,6 +197,20 @@
   </div>
 
   <section id="app" class="grid" hidden>
+    <article class="card handoff-card">
+      <div class="section-heading">
+        <div>
+          <div class="section-kicker">Chat-Kontinuität · maschinenlesbarer Stand</div>
+          <h2>Übergabeblock für den nächsten „trading agent“-Chat</h2>
+          <p class="muted small">Enthält Fokus, nächste Gates, bekannte Blocker, KI-Review-Qualität und Sicherheitsgrenzen aus dem kanonischen Handoff. Den gesamten Text kopieren und im nächsten Chat einfügen.</p>
+        </div>
+        <div class="handoff-actions">
+          <button id="copyHandoff" type="button">Übergabeblock kopieren</button>
+          <span id="copyHandoffStatus" class="handoff-status" aria-live="polite"></span>
+        </div>
+      </div>
+      <textarea id="chatHandoffText" class="handoff-text" aria-label="Kopierbarer Trading-Agent-Chat-Handoff" readonly rows="9"></textarea>
+    </article>
     <article class="card">
       <div class="section-heading">
         <div>
