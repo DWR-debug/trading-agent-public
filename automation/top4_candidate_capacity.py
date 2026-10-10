@@ -28,7 +28,7 @@ WORKPACK_PURPOSES={
 
 WORKPACK_GATE_PATHS={
     "Q104:I19":["automation/q104_i19_13f_historical_identity_census.py","automation/q104_i19_xbrl_pit_compiler.py","automation/q104_xbrl_concept_freeze_audit.py"],
-    "Q221":["automation/q221_usaspending_public_clock_gate.py","tests/test_q221_usaspending_public_clock_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
+    "Q221":["automation/q221_usaspending_public_clock_gate.py","automation/q221_historical_source_vintage_gate.py","tests/test_q221_usaspending_public_clock_gate.py","tests/test_q221_historical_source_vintage_gate.py"],
     "Q220":["tests/test_q220_as_filed_xbrl_population_gate.py","automation/q104_xbrl_concept_freeze_audit.py","automation/q104_i19_xbrl_pit_compiler.py"],
 }
 
@@ -40,7 +40,8 @@ LANES={
     ],
     "Q221":[
         [PYTHON,"-m","automation.q221_usaspending_public_clock_gate","--output","{OUT}/q221_usaspending_public_clock_gate.json"],
-        [PYTHON,"-m","pytest","-q","tests/test_q221_usaspending_public_clock_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
+        [PYTHON,"-m","automation.q221_historical_source_vintage_gate","--output","{OUT}/q221_historical_source_vintages.json"],
+        [PYTHON,"-m","pytest","-q","tests/test_q221_usaspending_public_clock_gate.py","tests/test_q221_historical_source_vintage_gate.py"],
     ],
     "Q220":[
         [PYTHON,"-m","pytest","-q","tests/test_q220_as_filed_xbrl_population_gate.py"],
