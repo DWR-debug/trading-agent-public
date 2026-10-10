@@ -459,3 +459,33 @@ def test_capacity_planner_ignores_candidate_names_in_active_maintenance_run_titl
     assert q221[0]["plan_id"] == "Q221-USASPENDING-PUBLIC-CLOCK"
     assert next(row for row in plan if row["resource"] == "Windows self-hosted C")["planned_count"] == 1
     assert all(item.get("candidate") not in {"Q218", "Q219"} for item in planned)
+
+
+def test_q221_positive_vintage_receipt_closes_this_workpack_until_award_boundary_workpack_exists(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    monkeypatch.setattr(
+        dashboard,
+        "q221_public_clock_status",
+        lambda: {"state": "complete", "next_gate": "award-level public-observation boundary"},
+    )
+    resources = [{
+        "name": "Windows self-hosted C",
+        "capacity_state": "available",
+        "current_assignments": 0,
+        "research_capacity_slots": 1,
+        "research_slots_free": 1,
+    }]
+    top3 = [
+        {"code": "Q104:I19", "next_gate": "historical 13F census"},
+        {"code": "Q220", "next_gate": "historical XBRL PIT compiler"},
+        {"code": "Q221", "next_gate": "award-level public-observation boundary"},
+    ]
+    plan = dashboard.planned_capacity_plan(resources, [], top3, {}, {})
+    q221 = [
+        item for row in plan for item in row["planned_assignments"]
+        if item.get("plan_id") == "Q221-USASPENDING-PUBLIC-CLOCK"
+    ]
+    assert len(q221) == 1
+    assert q221[0]["dispatchable"] is False
+    assert q221[0]["readiness"] == "COMPLETE_POLICY_VINTAGES_NEXT_GATE_NEEDS_NEW_WORKPACK"
