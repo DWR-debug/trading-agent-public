@@ -1501,15 +1501,15 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-10T17:41:11.672534+00:00",
-    "next_research_focus": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220, and Q218. Q104:I19 next: finish the already-running historical 13F census; after it terminates, recover only failed shards under the bounded retry policy, then compile the frozen candidate-specific PIT state and require independent reproduction. Do not launch a duplicate full census while a useful run remains active. Q220 historical as-filed population gate is positive and version-bound: 55 filing records across the frozen eight-issuer universe, archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. Next gate: historical prefix/acceptance-time PIT representation-state compiler. Population receipt fingerprint 3e35f9c8c913ca07a2c46725ad95c95ee091372de772387cd7a181e653b14a67. Q218 next: reconcile original-result/current-context receipts and the fixed contract; do not repeat the consumed primary one-shot or its already-recorded 8-event fresh-symbol replication. Q219 and Q221 remain reserve design/source tracks and are outside active automatic dispatch; their prior evidence is preserved.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
+    "generated_at_utc": "2026-10-10T19:00:32.927434+00:00",
+    "next_research_focus": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. Q104:I19 next: finish the existing historical 13F census or its currently useful successor run; after a terminal result, recover only unresolved shard/header evidence and never restart the full census blindly. Then compile the frozen concept-specific PIT state and require independent reproduction. Q220 historical as-filed population gate is positive and version-bound: 55 filing records across the frozen eight-issuer universe, archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. Next gate: historical prefix/acceptance-time PIT representation-state compiler. Population receipt fingerprint 3e35f9c8c913ca07a2c46725ad95c95ee091372de772387cd7a181e653b14a67. Q221 next: run the bounded USAspending public-clock workpack in parallel with Q220 when Windows capacity allows. The current live-source marker check is not historical proof: reconstruct the publication vintage and transaction classes, classify the DoD/USACE 90-day and FAR exceptions, and freeze recipient-to-issuer mapping before PIT validation. Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred. Q219 remains paused; its prior evidence is preserved. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
     "record_type": "trading_agent_chat_handoff",
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "e19a22ec4fa56f256ab3ba5b2bb18f1c13d0a86d"
+    "source_master_sha": "6898b30f6d8895754d431a1914e5022a51d32486"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-10T17:41:11.672534+00:00",
+  "generated_at_utc": "2026-10-10T19:00:32.927434+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2599,7 +2599,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "20bda9bbfb5dfa63c04f721f5087118ab925f5a9b6798186cb250fde17c83a3d",
+    "receipt_fingerprint": "59a23f4c20893ee87fc40bb1b29fa65fbfd563c7717aad405b1ef5191622d073",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2647,7 +2647,7 @@
           }
         ],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
-        "content_sha256": "bd0a774690aa0c1229ff136fabeaf1d30e47c42e0058ecf34c62f5da0c461c46",
+        "content_sha256": "dbec71d9e43fade47a52a85782633de6f52e400f0b7567b714f06c64380eaf78",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2677,7 +2677,7 @@
           }
         ],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
-        "content_sha256": "b7a8126225d1d779307e836364d764dbb930a01e924082c4a1e6f5b166683115",
+        "content_sha256": "d023c6ea1d3b4573b85d7eaaf889414bf57d64d9d29cf8eb23d8e4430269062e",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2698,7 +2698,7 @@
           }
         ],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
-        "content_sha256": "dfb28e93b80006ac4b410dc536b97efd2565596865463f0279ea57c4648aaf30",
+        "content_sha256": "d4ee71e52ea438df798e7ea9aadb97f20db0f25ad3b5dd14decc671ea8c7a7d8",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2715,7 +2715,7 @@
           }
         ],
         "clock_contract": "Investigation event and publication times remain distinct.",
-        "content_sha256": "e113cd9a129715b8b705d236f6fac5c0f9b9ba5eaf3c84cc1dce2b4c8ffe5818",
+        "content_sha256": "6641de0beb4e52b7dd0ba032bfbfbebfb1da3f65bfa302a6927dfe8ac8c4cbea",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2732,7 +2732,7 @@
           }
         ],
         "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
-        "content_sha256": "3d375478f3cab42fa2447d4b55f1e8f4ba7b34117b46c94f5fb1ab91c73d8b2d",
+        "content_sha256": "c1dd26c8c6c832d851af2a543569ac7faee762bd566ad981ee31a84216aff247",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -4538,6 +4538,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "ui/research-control-board-refresh-2026-10-10",
+        "number": 1293,
+        "title": "ORCH/UI: focus Q104:I19, Q220 and Q221; refresh research control board",
+        "updatedAt": "2026-10-10T18:01:49Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1293"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "ops/visible-chat-handoff-dashboard-decision-log-20261010",
         "number": 1289,
         "title": "OPS: show durable chat handoff and recent decisions on dashboard",
@@ -4675,6 +4683,36 @@
     ],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "6898b30f6d8895754d431a1914e5022a51d32486",
+        "timestamp": "2026-10-10T19:00:29Z"
+      },
+      {
+        "message": "ORCH/UI: focus Q104:I19, Q220, Q221 with Q221 historical clock gate",
+        "sha": "b40a955cc3c560c97d7d7a166a7b7b8af98e110e",
+        "timestamp": "2026-10-10T21:00:16+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "2ba087a0b4718125ac980a94edf56b364c2f15d6",
+        "timestamp": "2026-10-10T18:57:04Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "484676adfc160c52d2ad973854d88f9756215cf4",
+        "timestamp": "2026-10-10T18:43:07Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "19f70f747b6f764ea0b523e5d056e35dfee176e5",
+        "timestamp": "2026-10-10T17:51:31Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "055135488912b56b5a9711b0390e1847464893a3",
+        "timestamp": "2026-10-10T17:41:15Z"
+      },
+      {
         "message": "UI: add receipt-first Top-3 decision board",
         "sha": "e19a22ec4fa56f256ab3ba5b2bb18f1c13d0a86d",
         "timestamp": "2026-10-10T19:40:54+02:00"
@@ -4683,36 +4721,6 @@
         "message": "EVIDENCE: persist Q169 R4 independent reproduction receipt",
         "sha": "cfff78d893a83f58b0bc5eb0cb20197771765fcc",
         "timestamp": "2026-10-10T17:26:33Z"
-      },
-      {
-        "message": "EVIDENCE: persist Q220 as-filed XBRL population receipt",
-        "sha": "65f725a4cde933750d2b06bd4345ab314018bab9",
-        "timestamp": "2026-10-10T17:19:39Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "414676ca0c45acaa8c771c1196d60551a6a8e6ca",
-        "timestamp": "2026-10-10T17:15:19Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "f458c49a92cf0e5e02cb289aa616b9c82694600c",
-        "timestamp": "2026-10-10T17:15:04Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "da151f6bd9da1055e326fe1795ecb5bd9661055b",
-        "timestamp": "2026-10-10T17:14:38Z"
-      },
-      {
-        "message": "FIX: require current Q220 receipts and unblock bounded Q104 recovery (#1291)",
-        "sha": "53a61c49703010ffb9470d41f9f65ef3ec89fcf9",
-        "timestamp": "2026-10-10T19:14:20+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "561859b265af34ef407f5c2d0b227d2681191d56",
-        "timestamp": "2026-10-10T16:50:36Z"
       }
     ]
   },
@@ -4772,7 +4780,7 @@
     },
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-    "next_research_focus_recorded": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220, and Q218. Q104:I19 next: finish the already-running historical 13F census; after it terminates, recover only failed shards under the bounded retry policy, then compile the frozen candidate-specific PIT state and require independent reproduction. Do not launch a duplicate full census while a useful run remains active. Q220 historical as-filed population gate is positive and version-bound: 55 filing records across the frozen eight-issuer universe, archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. Next gate: historical prefix/acceptance-time PIT representation-state compiler. Population receipt fingerprint 3e35f9c8c913ca07a2c46725ad95c95ee091372de772387cd7a181e653b14a67. Q218 next: reconcile original-result/current-context receipts and the fixed contract; do not repeat the consumed primary one-shot or its already-recorded 8-event fresh-symbol replication. Q219 and Q221 remain reserve design/source tracks and are outside active automatic dispatch; their prior evidence is preserved.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
+    "next_research_focus_recorded": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. Q104:I19 next: finish the existing historical 13F census or its currently useful successor run; after a terminal result, recover only unresolved shard/header evidence and never restart the full census blindly. Then compile the frozen concept-specific PIT state and require independent reproduction. Q220 historical as-filed population gate is positive and version-bound: 55 filing records across the frozen eight-issuer universe, archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. Next gate: historical prefix/acceptance-time PIT representation-state compiler. Population receipt fingerprint 3e35f9c8c913ca07a2c46725ad95c95ee091372de772387cd7a181e653b14a67. Q221 next: run the bounded USAspending public-clock workpack in parallel with Q220 when Windows capacity allows. The current live-source marker check is not historical proof: reconstruct the publication vintage and transaction classes, classify the DoD/USACE 90-day and FAR exceptions, and freeze recipient-to-issuer mapping before PIT validation. Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred. Q219 remains paused; its prior evidence is preserved. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -4810,7 +4818,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e19a22ec4fa56f256ab3ba5b2bb18f1c13d0a86d",
+  "source_master_sha": "6898b30f6d8895754d431a1914e5022a51d32486",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4924,6 +4932,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "38072728625"
+    "run_id": "38078053335"
   }
 }
