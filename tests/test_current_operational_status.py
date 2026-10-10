@@ -114,8 +114,9 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "no holdout selection, tuning, ranking, promotion or live execution is inferred" in focus
     assert "canonical current operational status" in doc
 
-    assert "Active execution focus is locked to exactly three candidates: Q104:I19, Q220, and Q218." in focus
-    assert "Q219 and Q221 remain reserve design/source tracks and are outside active automatic dispatch" in focus
+    assert "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221." in focus
+    assert "Q218 has been removed from active focus and automatic dispatch" in focus
+    assert "Q219 remains paused; its prior evidence is preserved." in focus
     assert "Do not launch a duplicate full census while a useful run remains active." in focus
     assert "do not repeat the consumed primary one-shot" in focus
     assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY") == 1
