@@ -117,16 +117,13 @@ def presentation_metadata(body:bytes)->dict[str,object]:
             "loc_concepts":sorted(set(mapped))[:2000]}
 
 def sec_standard_taxonomy_entrypoint(namespace:str|None)->str|None:
-    """Return an explicitly version-matched SEC CYD AF presentation/label entrypoint.
-
-    The QName namespace is the version clock: never silently upgrade an old
-    filing to the newest taxonomy. Other namespaces remain unresolved here.
-    """
-    m=re.fullmatch(r"http://xbrl\.sec\\.gov/cyd/(20\d{2})",str(namespace or ""))
-    if not m: return None
-    year=m.group(1)
+    """Resolve the exact version encoded in an official SEC CYD QName namespace."""
+    prefix="http://xbrl.sec.gov/cyd/"
+    value=str(namespace or "")
+    if not value.startswith(prefix): return None
+    year=value[len(prefix):]
+    if len(year)!=4 or not year.isdigit() or not year.startswith("20"): return None
     return f"https://xbrl.sec.gov/cyd/{year}/cyd-af-sub-{year}.xsd"
-
 
 def qname_presentation_fragment(qname:str)->str:
     if ":" in qname:
