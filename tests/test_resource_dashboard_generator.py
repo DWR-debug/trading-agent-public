@@ -349,3 +349,35 @@ def test_dashboard_does_not_count_queued_q104_retry_as_parallel_work(monkeypatch
     q104_items = [x for x in work if x.get("task") == "Q104 I19 Historical 13F Identity Census"]
     assert len(q104_items) == 1
     assert q104_items[0]["run_id"] == 101
+
+
+
+def test_q220_positive_legacy_receipt_is_stale_until_code_and_contract_hashes_match(monkeypatch):
+    import hashlib
+    from pathlib import Path
+    from automation import generate_resource_dashboard as dashboard
+
+    root = Path(__file__).parents[1]
+    receipt = {
+        "candidate_id": "Q220",
+        "mode": "population",
+        "status": "Q220_AS_FILED_XBRL_POPULATION_COMPLETED",
+        "failure_count": 0,
+        "record_count": 55,
+        "row_count": 55,
+        "receipt_fingerprint": "a" * 64,
+    }
+    monkeypatch.setattr(dashboard, "read_json_file", lambda _path: receipt)
+    result = dashboard.q220_as_filed_population_status([])
+    assert result["state"] == "blocked"
+    assert result["progress_percent"] == 0
+    assert "STALE" in result["detail"]
+    assert "current-code" in result["next_gate"]
+
+    receipt["gate_code_sha256"] = hashlib.sha256((root / "automation/q220_as_filed_xbrl_population_gate.py").read_bytes()).hexdigest()
+    receipt["contract_sha256"] = hashlib.sha256((root / "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json").read_bytes()).hexdigest()
+    result = dashboard.q220_as_filed_population_status([])
+    assert result["state"] == "complete"
+    assert result["progress_percent"] == 100
+    assert result["receipt_code_sha256"] == receipt["gate_code_sha256"]
+    assert result["receipt_contract_sha256"] == receipt["contract_sha256"]

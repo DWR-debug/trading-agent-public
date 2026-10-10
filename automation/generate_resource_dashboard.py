@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -793,11 +794,20 @@ def q218_prereg_status() -> dict[str, Any]:
     }
 
 def q220_as_filed_population_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
-    """Classify Q220 only from a positive immutable population receipt or a live run."""
+    """Require an immutable population receipt tied to today's code and frozen contract."""
     receipt = read_json_file("research/evidence/q220_as_filed_xbrl_population_latest.json")
     status = str(receipt.get("status") or "")
     fingerprint = str(receipt.get("receipt_fingerprint") or "")
-    positive = (
+    try:
+        code_sha = hashlib.sha256((ROOT / "automation/q220_as_filed_xbrl_population_gate.py").read_bytes()).hexdigest()
+        contract_sha = hashlib.sha256((ROOT / "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json").read_bytes()).hexdigest()
+    except OSError:
+        code_sha = contract_sha = ""
+    receipt_is_current = bool(code_sha and contract_sha) and (
+        receipt.get("gate_code_sha256") == code_sha
+        and receipt.get("contract_sha256") == contract_sha
+    )
+    shape_positive = (
         receipt.get("candidate_id") == "Q220"
         and receipt.get("mode") == "population"
         and status == "Q220_AS_FILED_XBRL_POPULATION_COMPLETED"
@@ -807,6 +817,7 @@ def q220_as_filed_population_status(runs: list[dict[str, Any]]) -> dict[str, Any
         and len(fingerprint) == 64
         and all(ch in "0123456789abcdef" for ch in fingerprint.lower())
     )
+    positive = shape_positive and receipt_is_current
     active_statuses = {"queued", "in_progress", "waiting", "pending", "requested"}
     active = any(
         isinstance(run, dict)
@@ -824,13 +835,12 @@ def q220_as_filed_population_status(runs: list[dict[str, Any]]) -> dict[str, Any
     if positive:
         return {
             "state": "complete", "progress_percent": 100,
-            "detail": "Positive fixed-population receipt: 8 issuers, archived as-filed instances, TextBlock/XSD/presentation mapping and zero record failures.",
+            "detail": "Positive fixed-population receipt is fingerprinted to the current Q220 gate code and frozen contract: 8 issuers, archived as-filed instances, TextBlock/XSD/presentation mapping and zero record failures.",
             "next_gate": "historical prefix/acceptance-time PIT representation-state compiler",
             "receipt_fingerprint": fingerprint,
+            "receipt_code_sha256": code_sha,
+            "receipt_contract_sha256": contract_sha,
         }
-
-    # A live route probe is separate from the frozen population gate. Never let
-    # that ancillary job mask an already-published negative population receipt.
     if (
         receipt.get("candidate_id") == "Q220"
         and receipt.get("mode") == "population"
@@ -860,28 +870,43 @@ def q220_as_filed_population_status(runs: list[dict[str, Any]]) -> dict[str, Any
             "receipt_fingerprint": fingerprint,
             "active_route_probe": active,
         }
-
     if active:
+        if shape_positive and not receipt_is_current:
+            detail = "A prior positive population receipt is STALE: its gate-code/contract hashes do not match the current implementation. The running workflow must publish a fresh fingerprinted receipt before the PIT compiler opens."
+            next_gate = "fresh fixed-population receipt bound to current gate code + frozen contract"
+        else:
+            detail = "Q220 as-filed population workflow is active; the historical population/mapping gate is not yet positively closed."
+            next_gate = "positive current-code fixed-population receipt"
         return {
             "state": "running", "progress_percent": 0,
-            "detail": "Q220 as-filed population workflow is active; the historical population/mapping gate is not yet positively closed.",
-            "next_gate": "positive fixed-population receipt",
+            "detail": detail,
+            "next_gate": next_gate,
             "receipt_fingerprint": fingerprint or None,
+            "receipt_is_current": receipt_is_current,
         }
-    if status == "Q220_AS_FILED_XBRL_POPULATION_BLOCKED" or status:
+    if shape_positive and not receipt_is_current:
         return {
             "state": "blocked", "progress_percent": 0,
-            "detail": "Latest Q220 receipt is not positive; inspect per-issuer original-10-K coverage and TextBlock/presentation-linkage requirements before retrying.",
-            "next_gate": "repair only the receipt-identified population/schema blocker",
+            "detail": "Latest Q220 population looks structurally positive but is STALE: it is not fingerprinted to the current version-pinned CYD mapper and frozen contract. A fresh population run and durable receipt are required.",
+            "next_gate": "rerun current-code fixed population, persist its receipt, then verify code/contract SHA before opening the historical PIT compiler",
             "receipt_fingerprint": fingerprint or None,
+            "receipt_is_current": False,
+        }
+    if status:
+        return {
+            "state": "blocked", "progress_percent": 0,
+            "detail": "Latest Q220 receipt is not a current positive receipt; inspect per-issuer counts and publish a fresh current-code receipt before continuing.",
+            "next_gate": "bounded current-code population + durable receipt publication",
+            "receipt_fingerprint": fingerprint or None,
+            "receipt_is_current": receipt_is_current,
         }
     return {
         "state": "open", "progress_percent": 0,
         "detail": "No current positive as-filed population receipt is published.",
         "next_gate": "fixed-population SEC as-filed and XBRL mapping gate",
         "receipt_fingerprint": None,
+        "receipt_is_current": False,
     }
-
 
 
 def q218_fresh_symbol_replication_complete() -> bool:

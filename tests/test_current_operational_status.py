@@ -119,13 +119,17 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "Do not launch a duplicate full census while a useful run remains active." in focus
     assert "do not repeat the consumed primary one-shot" in focus
     assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY") == 1
-    assert "Q220 historical as-filed population gate is positive" in focus
-    assert "historical prefix/acceptance-time PIT representation-state compiler" in focus
+    assert "Q220 previous population receipt is STALE" in focus
+    assert "before starting the historical prefix/acceptance-time PIT compiler" in focus
     assert "transport-success/content-unusable" in focus
     assert "not a methods review or scientific evidence" in focus
 
 def test_q220_population_focus_sentence_requires_a_positive_fingerprinted_receipt():
+    import hashlib
+    from pathlib import Path
     from automation.sync_current_operational_status import q220_population_focus_sentence
+
+    root = Path(__file__).parents[1]
 
     positive = {
         "candidate_id": "Q220",
@@ -135,6 +139,8 @@ def test_q220_population_focus_sentence_requires_a_positive_fingerprinted_receip
         "record_count": 55,
         "failure_count": 0,
         "receipt_fingerprint": "a" * 64,
+        "gate_code_sha256": hashlib.sha256((root / "automation/q220_as_filed_xbrl_population_gate.py").read_bytes()).hexdigest(),
+        "contract_sha256": hashlib.sha256((root / "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json").read_bytes()).hexdigest(),
     }
     rendered = q220_population_focus_sentence(positive)
     assert "population gate is positive" in rendered
@@ -143,8 +149,26 @@ def test_q220_population_focus_sentence_requires_a_positive_fingerprinted_receip
     assert "a" * 64 in rendered
 
     negative = dict(positive, status="Q220_AS_FILED_XBRL_POPULATION_BLOCKED")
-    assert "Complete and reconcile the bounded fixed-population gate" in q220_population_focus_sentence(negative)
+    assert "Q220 current-code population gate is BLOCKED" in q220_population_focus_sentence(negative)
     negative = dict(positive, failure_count=1)
-    assert "Complete and reconcile the bounded fixed-population gate" in q220_population_focus_sentence(negative)
+    assert "no positive current-code receipt is published" in q220_population_focus_sentence(negative)
 
 
+
+
+
+def test_q220_hashless_legacy_population_receipt_is_not_a_positive_gate():
+    from automation.sync_current_operational_status import q220_population_focus_sentence
+
+    legacy = {
+        "candidate_id": "Q220",
+        "mode": "population",
+        "status": "Q220_AS_FILED_XBRL_POPULATION_COMPLETED",
+        "row_count": 55,
+        "record_count": 55,
+        "failure_count": 0,
+        "receipt_fingerprint": "a" * 64,
+    }
+    rendered = q220_population_focus_sentence(legacy)
+    assert "STALE" in rendered
+    assert "fresh post-fix population receipt" in rendered

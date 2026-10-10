@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 from datetime import datetime, timezone, timedelta
@@ -28,9 +29,18 @@ def _load_json(path: Path, default: Any) -> Any:
 
 
 def q220_population_focus_sentence(receipt: dict[str, Any]) -> str:
-    """Render Q220 next gate only from a positive, fingerprinted population receipt."""
+    """Render Q220 progress only from a positive receipt tied to exact current code/contract."""
     status = str(receipt.get("status") or "")
     fingerprint = str(receipt.get("receipt_fingerprint") or "")
+    try:
+        gate_code_sha = hashlib.sha256((ROOT / "automation/q220_as_filed_xbrl_population_gate.py").read_bytes()).hexdigest()
+        contract_sha = hashlib.sha256((ROOT / "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json").read_bytes()).hexdigest()
+    except OSError:
+        gate_code_sha = contract_sha = ""
+    current = bool(gate_code_sha and contract_sha) and (
+        receipt.get("gate_code_sha256") == gate_code_sha
+        and receipt.get("contract_sha256") == contract_sha
+    )
     positive = (
         receipt.get("candidate_id") == "Q220"
         and receipt.get("mode") == "population"
@@ -40,20 +50,27 @@ def q220_population_focus_sentence(receipt: dict[str, Any]) -> str:
         and int(receipt.get("row_count") or 0) >= 40
         and len(fingerprint) == 64
         and all(ch in "0123456789abcdef" for ch in fingerprint.lower())
+        and current
     )
     if positive:
         return (
-            "Q220 historical as-filed population gate is positive: "
+            "Q220 historical as-filed population gate is positive and version-bound: "
             f"{int(receipt.get('row_count') or 0)} filing records across the frozen eight-issuer universe, "
             "archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. "
             "Next gate: historical prefix/acceptance-time PIT representation-state compiler. "
             f"Population receipt fingerprint {fingerprint}. "
         )
+    if status == "Q220_AS_FILED_XBRL_POPULATION_BLOCKED" and fingerprint:
+        return "Q220 current-code population gate is BLOCKED; preserve the negative receipt and repair only its identified source/mapping or publication blocker. "
+    if status == "Q220_AS_FILED_XBRL_POPULATION_COMPLETED" and not current:
+        return (
+            "Q220 previous population receipt is STALE because it does not bind the current gate-code SHA and frozen contract SHA. "
+            "A fresh post-fix population receipt must be published and reconciled before starting the historical prefix/acceptance-time PIT compiler. "
+        )
     return (
-        "Q220 next: the version-pinned SEC CYD presentation-taxonomy resolver has merged. "
-        "Complete and reconcile the bounded fixed-population gate before opening the historical prefix/PIT compiler. "
+        "Q220 next: the version-pinned SEC CYD resolver is merged, but no positive current-code receipt is published. "
+        "Repair the population receipt publication path and complete the bounded fixed-population gate before the historical prefix/PIT compiler. "
     )
-
 
 def _git(*args: str) -> str:
     return subprocess.check_output(
