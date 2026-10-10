@@ -253,26 +253,33 @@ def test_q218_receipt_gate_requires_current_code_fingerprint():
     ) is False
 
 
-def test_dashboard_q218_completed_source_event_pair_exposes_independent_arch_queue(monkeypatch):
+def test_dashboard_never_dispatches_archived_q218_and_keeps_q221_clock_gate_ready(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
+
     resources = [{
-        "name": "GitHub-hosted ARM64",
+        "name": "Windows self-hosted C",
         "capacity_state": "available",
         "current_assignments": 0,
+        "research_capacity_slots": 1,
+        "research_slots_free": 1,
     }]
-    dashboard_top4 = [{
-        "code": "Q218",
-        "next_gate": "independent architecture PIT reproduction",
-    }]
-    monkeypatch.setattr(dashboard, "q218_receipt_state", lambda: {
-        "source_complete": True,
-        "event_pair_complete": True,
-        "independent_complete": False,
-    })
-    plan = dashboard.planned_capacity_plan(resources, [], dashboard_top4, {}, {})
-    rows = [item for row in plan for item in row["planned_assignments"] if item.get("scheduled")]
-    assert any(item["plan_id"] == "Q218-INDEPENDENT-ARCH" for item in rows)
-    assert all(item["plan_id"] not in {"Q218-SOURCE", "Q218-EVENT-PAIR"} for item in rows)
+    dashboard_top3 = [
+        {"code": "Q104:I19", "next_gate": "historical 13F census"},
+        {"code": "Q220", "next_gate": "historical XBRL PIT compiler"},
+        {"code": "Q221", "next_gate": "historical USAspending public clock + issuer mapping"},
+        {"code": "Q218", "next_gate": "archived SEC source/PIT"},
+    ]
+    plan = dashboard.planned_capacity_plan(resources, [], dashboard_top3, {}, {})
+    scheduled = [
+        item for row in plan for item in row["planned_assignments"]
+        if item.get("scheduled")
+    ]
+    assert any(
+        item.get("candidate") == "Q221"
+        and item.get("plan_id") == "Q221-USASPENDING-PUBLIC-CLOCK"
+        for item in scheduled
+    )
+    assert not any(item.get("candidate") == "Q218" for item in scheduled)
 
 
 def test_dashboard_html_exposes_progress_bar_panels():
