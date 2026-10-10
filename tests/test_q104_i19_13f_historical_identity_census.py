@@ -189,10 +189,15 @@ def test_six_shard_request_budget_stays_below_sec_global_limit():
 
 
 
-def test_windows_setup_python_uses_process_scoped_policy_only():
+def test_windows_python_bootstrap_avoids_blocked_powershell_setup_script():
     from pathlib import Path
     workflow = (Path(__file__).parents[1] / ".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
-    step = workflow.split("Set up Python 3.13 on Windows self-hosted runner", 1)[1].split("Download frozen SEC source snapshot", 1)[0]
-    assert "PSExecutionPolicyPreference: Bypass" in step
+    step = workflow.split("Bootstrap Python 3.13 on Windows self-hosted runner without PowerShell scripts", 1)[1].split("Download frozen SEC source snapshot", 1)[0]
+    assert "actions/setup-python@v6" not in step
+    assert "python.3.13.15-q104-census.nupkg" in step
+    assert "api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" in step
+    assert "tar.exe -xf" in step
+    assert 'echo %PY_ROOT%\\tools>>"%GITHUB_PATH%"' in step
+    assert "setup.ps1" not in step
     assert "Set-ExecutionPolicy -Scope LocalMachine" not in workflow
     assert "Set-ExecutionPolicy -Scope CurrentUser" not in workflow
