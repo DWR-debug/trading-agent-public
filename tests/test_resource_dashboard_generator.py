@@ -199,8 +199,12 @@ def test_dashboard_focused_backlog_is_three_candidates():
         {"code":"Q220","lane":"FRONTIER DISCOVERY","next_gate":"as-filed XBRL population and mapping"},
         {"code":"Q219","lane":"FRONTIER DISCOVERY","next_gate":"options PIT"},
     ])
-    assert [x["candidate"] for x in rows] == ["Q104:I19","Q218","Q220"]
-    assert [x["planned_status"] for x in rows] == ["READY_NEXT_GATE","READY_NEXT_GATE","READY_NEXT_GATE"]
+    assert [x["candidate"] for x in rows] == ["Q104:I19","Q220","Q218"]
+    assert [x["planned_status"] for x in rows] == [
+        "READY_NEXT_GATE",
+        "READY_NEXT_GATE",
+        "BLOCKED_SEPARATE_EXPLICIT_PERFORMANCE_AUTHORIZATION",
+    ]
 
 
 def test_dashboard_s10_support_is_non_authorizing():
