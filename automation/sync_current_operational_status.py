@@ -576,15 +576,15 @@ def generate(
         else:
             q218_sentence = " Q218 remains non-authorized for performance. "
         recorded_next_research_focus = (
-            "Active execution focus is locked to exactly three candidates: Q104:I19, Q220, and Q218. "
-            "Q104:I19 next: finish the already-running historical 13F census; after it terminates, recover only failed shards "
-            "under the bounded retry policy, then compile the frozen candidate-specific PIT state and require independent reproduction. "
-            "Do not launch a duplicate full census while a useful run remains active. "
+            "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. "
+            "Q104:I19 next: finish the existing historical 13F census or its currently useful successor run; after a terminal result, recover only unresolved shard/header evidence and never restart the full census blindly. "
+            "Then compile the frozen concept-specific PIT state and require independent reproduction. "
             + q220_population_sentence +
-            "Q218 next: reconcile original-result/current-context receipts and the fixed contract; do not repeat the consumed primary one-shot "
-            "or its already-recorded 8-event fresh-symbol replication. "
-            "Q219 and Q221 remain reserve design/source tracks and are outside active automatic dispatch; their prior evidence is preserved. "
+            "Q221 next: run the bounded USAspending public-clock workpack in parallel with Q220 when Windows capacity allows. "
+            "The current live-source marker check is not historical proof: reconstruct the publication vintage and transaction classes, classify the DoD/USACE 90-day and FAR exceptions, and freeze recipient-to-issuer mapping before PIT validation. "
+            "Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run. "
             + q218_sentence +
+            "Q219 remains paused; its prior evidence is preserved. "
             "OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) "
             "returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. "
             "Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. "
