@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "record_type": "trading_agent_chat_decision_log",
+  "purpose": "Durable operational handoff for future 'trading agent' chats; entries are not scientific evidence or trading authorization.",
+  "updated_at_utc": "2026-10-10T15:36:00Z",
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false,
+    "paid_usage_usd": 0
+  },
+  "entries": [
+    {
+      "date_utc": "2026-10-10T15:36:00Z",
+      "candidate": "Q104:I19",
+      "status": "CODE FIX MERGED; CENSUS STILL ACTIVE",
+      "title": "Q104 bounded SEC archive retries",
+      "decision": "PR #1207 merged as 7445374efffd2c8e39da81a96a53c611df9ed24b. Added bounded http.client.IncompleteRead retry through the existing shared rate limiter, moved Windows Python bootstrap to actions/setup-python@v6 (3.13.15 x64), added one failed-jobs-only retry after terminal failure and regression tests. CI and Full Suite passed before merge.",
+      "next_action": "Do not cancel or duplicate run 38049390630. As of 2026-10-10 15:35 UTC the 2021–2022 hosted and 2019–2020 Windows-C shards were still running; Windows A/B and ARM64 had failed in the earlier attempt. Let the existing census terminate, then inspect receipts and only recover failed shards under the bounded retry policy. Candidate PIT compilation and independent reproduction remain closed until the merged census receipt is positive.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/pull/1207",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38049390630",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-10T15:36:00Z",
+      "candidate": "Q220",
+      "status": "CODE FIX MERGED; FIXED-POPULATION RE-RUN STILL REQUIRED",
+      "title": "Version-pinned SEC CYD taxonomy presentation mapping",
+      "decision": "PR #1286 merged as 09e5204d45ed9b781de4b16b03c7c112fdbb9a91. Resolver uses the filing's CYD namespace year to select the matching SEC cyd-af-sub-YYYY.xsd, records URL/status/byte count/SHA256/mapped concepts and fails closed if the source is unavailable. CI run 38061789281 and Full Suite run 38061789252 passed.",
+      "next_action": "The current population run 38062446827 was still in progress at its receipt-publishing step and was created against pre-fix commit a09ba58eb8ec065b57e1d155e1a79ba8671dfd1f. Preserve its receipt as historical; it does not validate the new resolver. After that run finishes, dispatch one bounded fixed-population gate from current master, inspect per-issuer mappings and only open the historical prefix/PIT compiler if mapping coverage is positive.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/pull/1286",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38062446827",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-10T15:36:00Z",
+      "candidate": "Q218",
+      "status": "NO NEW PERFORMANCE RUN",
+      "title": "Q218 one-shot and replication boundary",
+      "decision": "Keep the consumed primary one-shot and its pre-registered fresh-symbol replication unchanged. Replication covers 8 event pairs across GOOGL/META/ORCL/PFE, report fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7. The reported primary mean was about -1.0705%; the replication gross event mean was about +0.1691%. Both are small descriptive event samples, not a validated tradable strategy; no holdout, execution-cost adjustment or risk-adjusted outcome is established.",
+      "next_action": "Reconcile the original-result/current-context receipts and the fixed contract; do not repeat the consumed one-shot or run a new performance experiment. Keep the candidate non-authorized.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/issues/1227",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-10T15:36:00Z",
+      "candidate": "AI / RESOURCE POLICY",
+      "status": "FREE-ONLY; Q220 REVIEW OUTPUT INVALID",
+      "title": "Use AI for bounded adversarial review, not evidence",
+      "decision": "Protected Copilot Free project reserve is exhausted 4/4 for October (next reset 2026-11-01T00:00:00Z). OpenRouter Free Q220 taxonomy review ran at 2026-10-10T15:33:02Z with reported cost $0, but returned repeated generic text ('We need to see the rest of the file') and no useful adversarial findings; technical status SUCCESS is not semantic success. Treat its output as unusable. Gemini and Mistral secondary workers were skipped; Groq's most recent verified result is stale, so do not assume those endpoints are available. No paid fallbacks or personal credits.",
+      "next_action": "Use only an explicit free-only provider with a fresh preflight when a material new question exists. Require substantive-output sanity checking and archive its receipt. Avoid repeated identical requests; model output remains non-authorizing.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38064047684",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-10T15:36:00Z",
+      "candidate": "PORTFOLIO",
+      "status": "FOCUS LOCK",
+      "title": "Three active development tracks only",
+      "decision": "Automatic active execution focus is Q104:I19, Q220 and Q218. Q219 and Q221 remain reserve design/source tracks; prior receipts are preserved but they are outside active automatic dispatch. Prioritize source/PIT/structural falsification, no artificial work, and no duplicate work while a useful run is active.",
+      "next_action": "Reconcile live master/workflows/receipts before scheduling. Never infer candidate performance ranking, promotion or live authority from this operational focus lock.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/pull/1287",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-10T15:36:00Z",
+      "candidate": "DASHBOARD",
+      "status": "REFRESH REQUIRED AFTER MASTER CHANGES",
+      "title": "Current dashboard deployment and source lag",
+      "decision": "Resource Dashboard Update run 38064082149 succeeded and deployed the Pages artifact at 2026-10-10T15:34:24Z, built from snapshot master SHA 90bc810796d3d1a1e47100eef7af463ba78b1e9f. Master subsequently advanced to 2d9fb266c7298f037859c68872473f82526ee9b3 after S10 receipt/status changes, so refresh after these continuity changes is required.",
+      "next_action": "After this dashboard/handoff change merges, verify a fresh Resource Dashboard Update artifact timestamp, source master SHA, visible three-candidate handoff and safety flags. Re-check runner/workflow state in the next trading-agent chat.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38064082149",
+      "scientific_evidence": false
+    }
+  ]
+}

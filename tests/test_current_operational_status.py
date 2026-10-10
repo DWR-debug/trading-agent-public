@@ -118,33 +118,4 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "Q219 and Q221 remain reserve design/source tracks and are outside active automatic dispatch" in focus
     assert "Do not launch a duplicate full census while a useful run remains active." in focus
     assert "do not repeat the consumed primary one-shot" in focus
-    assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY") == 1
-    assert "Q220 historical as-filed population gate is positive" in focus
-    assert "historical prefix/acceptance-time PIT representation-state compiler" in focus
-    assert "transport-success/content-unusable" in focus
-    assert "not a methods review or scientific evidence" in focus
-
-def test_q220_population_focus_sentence_requires_a_positive_fingerprinted_receipt():
-    from automation.sync_current_operational_status import q220_population_focus_sentence
-
-    positive = {
-        "candidate_id": "Q220",
-        "mode": "population",
-        "status": "Q220_AS_FILED_XBRL_POPULATION_COMPLETED",
-        "row_count": 55,
-        "record_count": 55,
-        "failure_count": 0,
-        "receipt_fingerprint": "a" * 64,
-    }
-    rendered = q220_population_focus_sentence(positive)
-    assert "population gate is positive" in rendered
-    assert "55 filing records" in rendered
-    assert "historical prefix/acceptance-time PIT representation-state compiler" in rendered
-    assert "a" * 64 in rendered
-
-    negative = dict(positive, status="Q220_AS_FILED_XBRL_POPULATION_BLOCKED")
-    assert "Complete and reconcile the bounded fixed-population gate" in q220_population_focus_sentence(negative)
-    negative = dict(positive, failure_count=1)
-    assert "Complete and reconcile the bounded fixed-population gate" in q220_population_focus_sentence(negative)
-
-
+    assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed") == 1

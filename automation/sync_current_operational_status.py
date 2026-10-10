@@ -26,35 +26,6 @@ def _load_json(path: Path, default: Any) -> Any:
         return default
 
 
-
-def q220_population_focus_sentence(receipt: dict[str, Any]) -> str:
-    """Render Q220 next gate only from a positive, fingerprinted population receipt."""
-    status = str(receipt.get("status") or "")
-    fingerprint = str(receipt.get("receipt_fingerprint") or "")
-    positive = (
-        receipt.get("candidate_id") == "Q220"
-        and receipt.get("mode") == "population"
-        and status == "Q220_AS_FILED_XBRL_POPULATION_COMPLETED"
-        and int(receipt.get("failure_count") or 0) == 0
-        and int(receipt.get("record_count") or 0) >= 40
-        and int(receipt.get("row_count") or 0) >= 40
-        and len(fingerprint) == 64
-        and all(ch in "0123456789abcdef" for ch in fingerprint.lower())
-    )
-    if positive:
-        return (
-            "Q220 historical as-filed population gate is positive: "
-            f"{int(receipt.get('row_count') or 0)} filing records across the frozen eight-issuer universe, "
-            "archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. "
-            "Next gate: historical prefix/acceptance-time PIT representation-state compiler. "
-            f"Population receipt fingerprint {fingerprint}. "
-        )
-    return (
-        "Q220 next: the version-pinned SEC CYD presentation-taxonomy resolver has merged. "
-        "Complete and reconcile the bounded fixed-population gate before opening the historical prefix/PIT compiler. "
-    )
-
-
 def _git(*args: str) -> str:
     return subprocess.check_output(
         ["git", *args],
@@ -241,11 +212,6 @@ def generate(
     q091_authorized = q091_registry.get("performance_authorization_allowed") is True
     q218_registry = active_trials.get("Q218", {})
     q218_authorized = q218_registry.get("performance_authorization_allowed") is True
-    q220_population_receipt = _load_json(
-        ROOT / "research/evidence/q220_as_filed_xbrl_population_latest.json", {}
-    )
-    q220_population_sentence = q220_population_focus_sentence(q220_population_receipt)
-
     q218_auth_record = _load_json(ROOT / "research/authorizations/q218_performance_2026_10_08.json", {})
     q218_result = _load_json(ROOT / "research/evidence/q218_deterministic_performance_result_latest.json", {})
     q218_execution_completed = (
@@ -580,14 +546,12 @@ def generate(
             "Q104:I19 next: finish the already-running historical 13F census; after it terminates, recover only failed shards "
             "under the bounded retry policy, then compile the frozen candidate-specific PIT state and require independent reproduction. "
             "Do not launch a duplicate full census while a useful run remains active. "
-            + q220_population_sentence +
+            "Q220 next: the version-pinned SEC CYD presentation-taxonomy resolver has merged; run its bounded fixed-population gate, "
+            "inspect per-issuer mapping receipts, then proceed to the historical prefix/PIT compiler only if population mapping is positive. "
             "Q218 next: reconcile original-result/current-context receipts and the fixed contract; do not repeat the consumed primary one-shot "
             "or its already-recorded 8-event fresh-symbol replication. "
             "Q219 and Q221 remain reserve design/source tracks and are outside active automatic dispatch; their prior evidence is preserved. "
             + q218_sentence +
-            "OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) "
-            "returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. "
-            "Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. "
             "Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. "
             "No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs."
         )

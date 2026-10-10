@@ -15,6 +15,11 @@ def test_top_three_dashboard_surfaces_gate_status_blocker_and_next_action():
     assert "x.current_milestone_status" in js
     assert "x.next_milestone_progress_basis" in js
     assert "x.next_gate" in js
+    assert 'id="handoffPanel"' in html
+    assert '"handoff_decision_log": handoff_decision_log' in (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    assert "data.chat_handoff" in js
+    assert "data.handoff_decision_log" in js
+    assert "Letzte wichtige Entscheidungen und Sicherungspunkte" in js
     assert 'badge active-badge">Q104:I19' in html
     assert 'badge active-badge">Q220' in html
     assert 'badge active-badge">Q218' in html

@@ -323,15 +323,6 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         and x.get("status") in {"queued", "in_progress", "waiting", "pending"}
         and str(x.get("name") or "") not in hidden_non_research
     ]
-    q104_name = lambda x: str(x.get("name") or "") == "Q104 I19 Historical 13F Identity Census"
-    q104_in_progress = any(q104_name(x) and x.get("status") == "in_progress" for x in active)
-    if q104_in_progress:
-        # Do not count an automatic retry waiting behind the live census as a
-        # second active research work item or a separate capacity consumer.
-        active = [
-            x for x in active
-            if not (q104_name(x) and x.get("status") in {"queued", "pending", "waiting"})
-        ]
     active.sort(key=lambda x: str(x.get("created_at", "")), reverse=True)
     out: list[dict[str, Any]] = []
     job_budget = 60
@@ -524,16 +515,7 @@ def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
         and r.get("status") in ACTIVE_RUN_STATUSES
         and str(r.get("name") or "") == "Q104 I19 Historical 13F Identity Census"
     ]
-    # Prefer an actual running census over a newer queued/pending retry that
-    # is held behind it by the workflow's recovery guard/concurrency controls.
-    status_priority = {"in_progress": 4, "waiting": 3, "queued": 2, "pending": 1}
-    matching.sort(
-        key=lambda x: (
-            status_priority.get(str(x.get("status") or ""), 0),
-            str(x.get("created_at") or ""),
-        ),
-        reverse=True,
-    )
+    matching.sort(key=lambda x: str(x.get("created_at") or ""), reverse=True)
     run = matching[0] if matching else None
     if not run or not run.get("id"):
         return {
@@ -552,21 +534,10 @@ def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
         1 for j in shard_jobs
         if j.get("status") == "completed" and j.get("conclusion") == "success"
     )
-    newer_waiting = [
-        item for item in matching
-        if str(item.get("id")) != str(run.get("id"))
-        and str(item.get("status") or "") in {"queued", "pending", "waiting"}
-        and str(item.get("created_at") or "") > str(run.get("created_at") or "")
-    ]
-    waiting_note = (
-        f"; newer queued census run(s) {[item.get('id') for item in newer_waiting]} wait behind the active run"
-        if str(run.get("status") or "") == "in_progress" and newer_waiting
-        else ""
-    )
     return {
         "progress_percent": int(round(100 * min(completed, 6) / 6)),
         "state": "running",
-        "detail": f"{completed}/6 Shards mit positivem Abschluss · Census-Run {run['id']}{waiting_note}",
+        "detail": f"{completed}/6 Shards mit positivem Abschluss · Census-Run {run['id']}",
         "next_gate": "historical 13F archive/security completeness",
     }
 
@@ -2015,6 +1986,10 @@ def main() -> None:
     milestones_12h = milestone_history_12h()
     candidate_progress = candidate_progress_snapshot(recent_runs)
     candidate_portfolio = build_candidate_portfolio(ROOT, evidence, candidate_progress)
+    chat_handoff = evidence.get("chat_handoff", {}) if isinstance(evidence.get("chat_handoff"), dict) else {}
+    handoff_decision_log = read_json_file("research/evidence/trading_agent_chat_decision_log.json")
+    if not isinstance(handoff_decision_log.get("entries"), list):
+        handoff_decision_log = {"schema_version": 1, "entries": []}
 
     configured_resources = [
         {"name": "Windows self-hosted A", "type": "physical", "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
@@ -2097,6 +2072,8 @@ def main() -> None:
         "planned_research_queue": planned_research_queue,
         "milestone_history_12h": milestones_12h,
         "candidate_progress": candidate_progress,
+        "chat_handoff": chat_handoff,
+        "handoff_decision_log": handoff_decision_log,
         "candidate_portfolio": candidate_portfolio,
         "candidate_portfolio_methodology": PORTFOLIO_METHODOLOGY,
         "focus_live_telemetry": {
