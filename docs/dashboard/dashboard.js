@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 var lastSnapshotIso=null;
-var FOCUS=["Q104:I19","Q218"];
+var FOCUS=["Q104:I19","Q220","Q218"];
 
 function $(id){return document.getElementById(id);}
 function esc(v){
@@ -47,6 +47,42 @@ function candidateFrom(text){
   text=String(text||"");
   for(var i=0;i<FOCUS.length;i++)if(text.indexOf(FOCUS[i])>=0)return FOCUS[i];
   return "—";
+}
+function candidateInfo(code){
+  var map={
+    "Q104:I19":{
+      name:"Institutional demand × accrual state",
+      mechanism:"Fixed-concept accrual state × 13F institutional-ownership transitions",
+      lane:"FORMAL READINESS",
+      cardClass:"candidate-q104"
+    },
+    "Q220":{
+      name:"As-filed XBRL representation gap",
+      mechanism:"Narrative TextBlock versus structured XBRL mapping; fixed issuer pool and taxonomy drift",
+      lane:"FRONTIER DISCOVERY",
+      cardClass:"candidate-q220"
+    },
+    "Q218":{
+      name:"SEC disclosure event pairing",
+      mechanism:"Mandatory/voluntary 10-K → 8-K Item 2.02 pairing with acceptance-time lineage",
+      lane:"FRONTIER DISCOVERY",
+      cardClass:"candidate-q218"
+    }
+  };
+  return map[code]||{name:code,mechanism:"",lane:"RESEARCH",cardClass:""};
+}
+function candidateStatus(x){
+  if(x.active)return {label:"ARBEIT LÄUFT",cls:"active-badge"};
+  var status=String(x.current_milestone_status||"").toLowerCase();
+  if(status==="blocked"||status.indexOf("blocked")>=0){
+    return x.code==="Q218"
+      ?{label:"FOLGEGATE GESPERRT",cls:"blocked-badge"}
+      :{label:"DATEN-GATE BLOCKIERT",cls:"blocked-badge"};
+  }
+  if(status==="complete"||status==="completed")return {label:"MEILENSTEIN ERREICHT",cls:"active-badge"};
+  if(status==="ready")return {label:"NÄCHSTES GATE BEREIT",cls:"planned-badge"};
+  if(status==="running")return {label:"GATE LÄUFT",cls:"active-badge"};
+  return {label:"GATE OFFEN",cls:"planned-badge"};
 }
 function pct(v){return Math.max(0,Math.min(100,Number(v)||0));}
 function progressBar(v,large){
@@ -168,7 +204,7 @@ function render(data){
   var planned=(data.planned_capacity||[]).filter(function(x){
     return (x.planned_assignments||[]).some(function(p){return FOCUS.indexOf(p.candidate)>=0;});
   });
-  var queue=(data.planned_research_queue||[]).filter(function(x){return FOCUS.indexOf(x.candidate)>=0;}).slice(0,2);
+  var queue=(data.planned_research_queue||[]).filter(function(x){return FOCUS.indexOf(x.candidate)>=0;}).slice(0,3);
   var cr=data.current_research||{};
   lastSnapshotIso=data.generated_at_utc||null;
 
@@ -189,19 +225,20 @@ function render(data){
   renderProgressCharts(data,pipeline);
 
   $("focusSummary").innerHTML=
-    "<div class='focus-kpi'><span class='eyebrow'>Fokus</span><strong>Q104:I19 + Q218</strong><span>Automatische Kandidatenbeschickung ist auf diese zwei Tracks begrenzt.</span></div>"+
-    "<div class='focus-kpi'><span class='eyebrow'>Gesamtentwicklung</span><strong>"+overallAvg+"%</strong><span>arithmetischer Überblick der zwei Entwicklungsstände</span></div>"+
+    "<div class='focus-kpi'><span class='eyebrow'>Aktive Top-3</span><strong>Q104:I19 · Q220 · Q218</strong><span>Drei getrennte Forschungsaufträge; weitere Kandidaten bleiben pausiert.</span></div>"+
+    "<div class='focus-kpi'><span class='eyebrow'>Entwicklungsindex</span><strong>"+overallAvg+"%</strong><span>arithmetischer Index der drei Tracks, keine Erfolgswahrscheinlichkeit</span></div>"+
     "<div class='focus-kpi'><span class='eyebrow'>Aktive Candidate-Jobs</span><strong>"+activeCount+"</strong><span>sichtbar in der aktuellen Actions-Telemetrie</span></div>";
 
   $("candidateFocus").innerHTML=pipeline.length?pipeline.map(function(x){
     var active=Boolean(x.active);
     var overall=pct(x.overall_progress_percent), next=pct(x.next_milestone_progress_percent);
-    var state=active?"ARBEIT LÄUFT":"WARTET AUF GATE-START";
-    var badge=active?"active-badge":"planned-badge";
-    return "<article class='candidate-card'>"+
-      "<div class='candidate-head'><div><div class='candidate-code'>"+esc(x.code)+"</div><div class='candidate-stage'>"+esc(x.stage)+"</div></div><span class='badge "+badge+"'>"+state+"</span></div>"+
+    var info=candidateInfo(x.code);
+    var status=candidateStatus(x);
+    return "<article class='candidate-card "+esc(info.cardClass)+"' data-candidate='"+esc(x.code)+"'>"+
+      "<div class='candidate-head'><div><div class='candidate-code'>"+esc(x.code)+"</div><div class='candidate-name'>"+esc(info.name)+"</div><div class='candidate-stage'>"+esc(x.stage)+"</div></div><span class='badge "+status.cls+"'>"+status.label+"</span></div>"+
+      "<p class='candidate-mechanism'>"+esc(info.mechanism)+"</p>"+
       "<div class='candidate-main'>"+
-        "<div class='ring-wrap'><div class='progress-ring' style='--pct:"+overall+"'><div><strong>"+overall+"%</strong><span>Gesamt</span></div></div></div>"+
+        "<div class='ring-wrap'><div class='progress-ring' style='--pct:"+overall+"'><div><strong>"+overall+"%</strong><span>Entwicklung</span></div></div></div>"+
         "<div class='candidate-detail'>"+
           "<div class='metric-title'>Nächster Milestone</div><div class='milestone'>"+esc(x.current_milestone||x.next_gate||"nicht aufgezeichnet")+"</div>"+
           "<div class='metric-row'><span>Milestone-Fortschritt</span><strong>"+next+"%</strong></div>"+
