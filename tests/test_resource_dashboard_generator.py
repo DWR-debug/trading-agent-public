@@ -111,9 +111,9 @@ def test_planned_research_backlog_is_locked_to_three_focus_candidates():
     board = [{"code": code, "lane":"FRONTIER DISCOVERY", "next_gate":"gate"} for code in ("Q104:I19","Q218","Q219","Q220","Q221","Q224","Q229")]
     queue = planned_research_backlog(board)
     assert len(queue) == 3
-    assert [x["candidate"] for x in queue] == ["Q104:I19","Q220","Q218"]
-    assert queue[2]["planned_status"] == "BLOCKED_SEPARATE_EXPLICIT_PERFORMANCE_AUTHORIZATION"
-    assert queue[2]["execution_workflow"] is None
+    assert [x["candidate"] for x in queue] == ["Q104:I19","Q220","Q221"]
+    assert all(x["planned_status"] == "READY_NEXT_GATE" for x in queue)
+    assert all(x["execution_workflow"] for x in queue)
 
 
 def test_dashboard_filters_platform_work_from_research_capacity():
@@ -179,10 +179,11 @@ def test_dashboard_pipeline_is_locked_to_focus_candidates():
         {"code":"Q104:I19","state":"SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED"},
         {"code":"Q218","state":"DESIGN_ONLY_ACTIVE"},
         {"code":"Q220","state":"DESIGN_ONLY_ACTIVE"},
+        {"code":"Q221","state":"DESIGN_ONLY_ACTIVE"},
         {"code":"Q219","state":"DESIGN_ONLY_ACTIVE"},
     ]
     rows = candidate_pipeline(top4, [], {}, {})
-    assert [x["code"] for x in rows] == ["Q104:I19","Q220","Q218"]
+    assert [x["code"] for x in rows] == ["Q104:I19","Q220","Q221"]
 
 
 def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
@@ -204,7 +205,7 @@ def test_chat_handoff_snapshot_uses_persisted_next_chat_decisions_and_safety():
     handoff = chat_handoff_snapshot(evidence, os_state)
 
     assert handoff["record_type"] == "dashboard_chat_handoff"
-    assert handoff["active_execution_focus"] == ["Q104:I19", "Q220", "Q218"]
+    assert handoff["active_execution_focus"] == ["Q104:I19", "Q220", "Q221"]
     assert handoff["next_research_focus"]
     assert "Q104:I19" in handoff["next_research_focus"]
     assert handoff["safety"]["PAPER_ONLY"] is True
@@ -217,16 +218,18 @@ def test_dashboard_focused_backlog_is_three_candidates():
     from automation.generate_resource_dashboard import planned_research_backlog
     rows = planned_research_backlog([
         {"code":"Q104:I19","lane":"FORMAL READINESS","next_gate":"13F completeness"},
-        {"code":"Q218","lane":"FRONTIER DISCOVERY","next_gate":"SEC multi-channel/PIT"},
-        {"code":"Q220","lane":"FRONTIER DISCOVERY","next_gate":"as-filed XBRL population and mapping"},
+        {"code":"Q218","lane":"FRONTIER DISCOVERY","next_gate":"archived SEC source/PIT"},
+        {"code":"Q220","lane":"FRONTIER DISCOVERY","next_gate":"historical as-filed XBRL PIT compiler"},
+        {"code":"Q221","lane":"FRONTIER DISCOVERY","next_gate":"historical USAspending public clock + issuer mapping"},
         {"code":"Q219","lane":"FRONTIER DISCOVERY","next_gate":"options PIT"},
     ])
-    assert [x["candidate"] for x in rows] == ["Q104:I19","Q220","Q218"]
+    assert [x["candidate"] for x in rows] == ["Q104:I19","Q220","Q221"]
     assert [x["planned_status"] for x in rows] == [
         "READY_NEXT_GATE",
         "READY_NEXT_GATE",
-        "BLOCKED_SEPARATE_EXPLICIT_PERFORMANCE_AUTHORIZATION",
+        "READY_NEXT_GATE",
     ]
+    assert "historical USAspending" in rows[2]["next_gate"]
 
 
 def test_dashboard_s10_support_is_non_authorizing():
@@ -351,33 +354,69 @@ def test_dashboard_does_not_count_queued_q104_retry_as_parallel_work(monkeypatch
     assert q104_items[0]["run_id"] == 101
 
 
-
-def test_q220_positive_legacy_receipt_is_stale_until_code_and_contract_hashes_match(monkeypatch):
-    import hashlib
-    from pathlib import Path
+def test_q221_public_clock_does_not_claim_historical_applicability_without_a_durable_receipt(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
 
-    root = Path(__file__).parents[1]
-    receipt = {
-        "candidate_id": "Q220",
-        "mode": "population",
-        "status": "Q220_AS_FILED_XBRL_POPULATION_COMPLETED",
-        "failure_count": 0,
-        "record_count": 55,
-        "row_count": 55,
-        "receipt_fingerprint": "a" * 64,
-    }
-    monkeypatch.setattr(dashboard, "read_json_file", lambda _path: receipt)
-    result = dashboard.q220_as_filed_population_status([])
-    assert result["state"] == "blocked"
-    assert result["progress_percent"] == 0
-    assert "STALE" in result["detail"]
-    assert "current-code" in result["next_gate"]
+    monkeypatch.setattr(dashboard, "read_json_file", lambda _path: {})
+    gate = dashboard.q221_public_clock_status()
 
-    receipt["gate_code_sha256"] = hashlib.sha256((root / "automation/q220_as_filed_xbrl_population_gate.py").read_bytes()).hexdigest()
-    receipt["contract_sha256"] = hashlib.sha256((root / "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json").read_bytes()).hexdigest()
-    result = dashboard.q220_as_filed_population_status([])
+    assert gate["state"] == "ready"
+    assert gate["progress_percent"] == 0
+    assert "No positive, fingerprinted historical USAspending" in gate["detail"]
+    assert gate["next_gate"].startswith("historical USAspending public boundary")
+
+
+
+def test_q221_dashboard_only_closes_historical_policy_vintage_gate_with_fingerprinted_archive_receipt(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    receipt = {
+        "record_type": "q221_historical_source_vintage_gate",
+        "candidate_id": "Q221",
+        "status": "Q221_HISTORICAL_POLICY_VINTAGES_RECONSTRUCTED",
+        "historical_policy_vintages_reconstructed": True,
+        "all_target_windows_covered": True,
+        "policy_markers_consistent_across_vintages": True,
+        "historical_applicability_proven": False,
+        "award_level_public_boundary_proven": False,
+        "lookahead_used": False,
+        "receipt_fingerprint": "a" * 64,
+        "capture_rows": [
+            {"target_window": target, "status": "CAPTURE_PARSED"}
+            for target in ("2025-01-01", "2025-07-01", "2026-01-01", "2026-07-01", "2026-10-05")
+        ],
+    }
+    current = {
+        "record_type": "q221_usaspending_public_clock_gate",
+        "candidate_id": "Q221",
+        "source_clock_contract_ready": True,
+    }
+    monkeypatch.setattr(
+        dashboard,
+        "read_json_file",
+        lambda path: receipt if "q221_historical_source_vintages_latest.json" in path else current,
+    )
+
+    result = dashboard.q221_public_clock_status()
     assert result["state"] == "complete"
     assert result["progress_percent"] == 100
-    assert result["receipt_code_sha256"] == receipt["gate_code_sha256"]
-    assert result["receipt_contract_sha256"] == receipt["contract_sha256"]
+    assert "award-level public observability" in result["detail"]
+    assert "award-level public-observation boundary" in result["next_gate"]
+    assert result["parsed_target_windows"] == 5
+
+
+def test_q221_dashboard_does_not_treat_live_source_smoke_as_historical_clock_proof(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    current = {
+        "record_type": "q221_usaspending_public_clock_gate",
+        "candidate_id": "Q221",
+        "source_clock_contract_ready": True,
+    }
+    monkeypatch.setattr(dashboard, "read_json_file", lambda path: current if "q221_usaspending_public_clock_gate_latest.json" in path else {})
+
+    result = dashboard.q221_public_clock_status()
+    assert result["state"] == "ready"
+    assert result["progress_percent"] == 0
+    assert "cannot establish what was publicly observable historically" in result["detail"]
+    assert result["next_gate"].startswith("archived USAspending policy vintages")
