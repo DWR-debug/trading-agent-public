@@ -200,14 +200,14 @@ def test_dashboard_milestone_filter_excludes_platform_only_runs():
     assert _is_research_milestone_run({"status": "completed", "conclusion": "success", "name": "CI"}) is False
 
 
-def test_dashboard_exposes_six_job_future_queue():
+def test_dashboard_exposes_three_candidate_focus_queue():
     root = Path(__file__).parents[1]
     generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
     html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
     assert "planned_research_backlog" in generator
-    assert "return backlog[:2]" in generator
-    assert '"planned_research_queue_target": 2' in generator
+    assert "return backlog" in generator
+    assert '"planned_research_queue_target": 3' in generator
     assert '"planned_research_queue_items"' in generator
     assert "planned_research_queue" in script
     assert 'id="plannedQueue"' in html
@@ -230,3 +230,20 @@ def test_dashboard_three_minute_live_refresh_and_five_minute_server_refresh():
     workflow = (root / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
     assert "setInterval(load,180000)" in js
     assert 'cron: "*/5 * * * *"' in workflow
+
+
+def test_unrelated_research_waves_do_not_start_on_focused_pull_request():
+    root = Path(__file__).parents[1]
+    paths = (
+        ".github/workflows/q179-q184-source-feasibility.yml",
+        ".github/workflows/q179-q184-pit-readiness.yml",
+        ".github/workflows/q133-q170-pit-readiness.yml",
+        ".github/workflows/q188-q192-pit-census-r2.yml",
+        ".github/workflows/q185-q186-source-feasibility.yml",
+        ".github/workflows/temporal-identity-state-spine-waves.yml",
+        ".github/workflows/wide-search.yml",
+    )
+    for path in paths:
+        text = (root / path).read_text(encoding="utf-8")
+        assert "\n  pull_request:" not in text, path
+        assert "workflow_dispatch:" in text, path

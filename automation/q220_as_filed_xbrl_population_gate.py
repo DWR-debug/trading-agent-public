@@ -220,7 +220,31 @@ def run(mode:str,output:Path)->dict[str,object]:
     result["receipt_fingerprint"]=sha256(json.dumps(result,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode())
     output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(result,indent=2,ensure_ascii=False,sort_keys=True)+"\n",encoding="utf-8"); return result
 
+def console_summary(result:dict[str,object])->dict[str,object]:
+    """Emit a bounded diagnostic view even when the full-population gate fails closed."""
+    mode=str(result.get("mode") or "")
+    issuer_summary=result.get("issuer_summary",{})
+    if not isinstance(issuer_summary,dict): issuer_summary={}
+    fields=("original_10k_count","amendment_count","textblock_ready_originals","records_with_failures")
+    return {
+        "status":result.get("status"),
+        "candidate_id":result.get("candidate_id"),
+        "mode":mode,
+        "row_count":result.get("row_count"),
+        "record_count":result.get("record_count"),
+        "failure_count":result.get("failure_count"),
+        "receipt_fingerprint":result.get("receipt_fingerprint"),
+        "per_issuer_minimum_originals_and_textblock_ready":1 if mode=="route" else 5,
+        "issuer_summary":{
+            symbol:{key:values.get(key) for key in fields}
+            for symbol,values in issuer_summary.items() if isinstance(values,dict)
+        },
+        "first_failure_samples":list(result.get("failures",[]))[:5],
+        "performance_authorized":False,
+        "promotion_allowed":False,
+    }
+
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--mode",choices=("route","population"),required=True); ap.add_argument("--output",type=Path,required=True)
-    a=ap.parse_args(); r=run(a.mode,a.output); print(json.dumps({k:r[k] for k in ("status","mode","row_count","record_count","failure_count","receipt_fingerprint")},sort_keys=True))
+    a=ap.parse_args(); r=run(a.mode,a.output); print(json.dumps(console_summary(r),sort_keys=True))
 if __name__=="__main__": main()

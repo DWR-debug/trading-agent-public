@@ -106,12 +106,14 @@ def test_planned_capacity_keeps_one_step_lookahead_while_resource_is_active():
     assert by_resource["Windows self-hosted A"]["planned_assignments"][0]["scheduled"] is True
 
 
-def test_planned_research_backlog_is_locked_to_focus_candidates():
+def test_planned_research_backlog_is_locked_to_three_focus_candidates():
     from automation.generate_resource_dashboard import planned_research_backlog
     board = [{"code": code, "lane":"FRONTIER DISCOVERY", "next_gate":"gate"} for code in ("Q104:I19","Q218","Q219","Q220","Q221","Q224","Q229")]
     queue = planned_research_backlog(board)
-    assert len(queue) == 2
-    assert [x["candidate"] for x in queue] == ["Q104:I19","Q218"]
+    assert len(queue) == 3
+    assert [x["candidate"] for x in queue] == ["Q104:I19","Q220","Q218"]
+    assert queue[2]["planned_status"] == "BLOCKED_SEPARATE_EXPLICIT_PERFORMANCE_AUTHORIZATION"
+    assert queue[2]["execution_workflow"] is None
 
 
 def test_dashboard_filters_platform_work_from_research_capacity():
@@ -176,10 +178,11 @@ def test_dashboard_pipeline_is_locked_to_focus_candidates():
     top4 = [
         {"code":"Q104:I19","state":"SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED"},
         {"code":"Q218","state":"DESIGN_ONLY_ACTIVE"},
+        {"code":"Q220","state":"DESIGN_ONLY_ACTIVE"},
         {"code":"Q219","state":"DESIGN_ONLY_ACTIVE"},
     ]
     rows = candidate_pipeline(top4, [], {}, {})
-    assert [x["code"] for x in rows] == ["Q104:I19","Q218"]
+    assert [x["code"] for x in rows] == ["Q104:I19","Q220","Q218"]
 
 
 def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
@@ -190,15 +193,20 @@ def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
     assert "sys.path.insert(0, str(ROOT))" in generator
 
 
-def test_dashboard_focused_backlog_is_two_candidates():
+def test_dashboard_focused_backlog_is_three_candidates():
     from automation.generate_resource_dashboard import planned_research_backlog
     rows = planned_research_backlog([
         {"code":"Q104:I19","lane":"FORMAL READINESS","next_gate":"13F completeness"},
         {"code":"Q218","lane":"FRONTIER DISCOVERY","next_gate":"SEC multi-channel/PIT"},
+        {"code":"Q220","lane":"FRONTIER DISCOVERY","next_gate":"as-filed XBRL population and mapping"},
         {"code":"Q219","lane":"FRONTIER DISCOVERY","next_gate":"options PIT"},
     ])
-    assert [x["candidate"] for x in rows] == ["Q104:I19","Q218"]
-    assert [x["planned_status"] for x in rows] == ["READY_NEXT_GATE","READY_NEXT_GATE"]
+    assert [x["candidate"] for x in rows] == ["Q104:I19","Q220","Q218"]
+    assert [x["planned_status"] for x in rows] == [
+        "READY_NEXT_GATE",
+        "READY_NEXT_GATE",
+        "BLOCKED_SEPARATE_EXPLICIT_PERFORMANCE_AUTHORIZATION",
+    ]
 
 
 def test_dashboard_s10_support_is_non_authorizing():

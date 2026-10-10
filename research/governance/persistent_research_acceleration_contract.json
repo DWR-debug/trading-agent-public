@@ -44,7 +44,7 @@
         "lane_b_frontier_discovery": {
           "runner_slot": "Windows self-hosted slot B",
           "purpose": "Orthogonal source/PIT feasibility, cheap falsification and new information-channel discovery.",
-          "current_focus": "Q220, Q228, Q224 and Q227 source/PIT/clock feasibility with cheap falsification; Q218/Q221/Q219 as next independent frontier",
+          "current_focus": "Q220 fixed-pool as-filed SEC/XBRL population, TextBlock/presentation mapping and PIT; Q218 current-context SEC source/event-pair lineage. Other candidate execution is paused during the explicit three-candidate focus.",
           "performance_allowed": false,
           "selection_or_ranking": false,
           "availability": "always_routable"
@@ -52,7 +52,7 @@
         "runner_c_independent_reproduction_and_long_research": {
           "runner_slot": "Windows self-hosted slot C",
           "purpose": "Long deterministic archival parsing, independent reproduction, source/PIT census and materially useful cross-checks that do not duplicate Lane A/B work.",
-          "current_focus": "Q104:I19 independent reproduction when its exact frozen contract is ready; otherwise the highest-priority independent Q220/Q228/Q224/Q227 archive/source workload.",
+          "current_focus": "Q104:I19 receipt-defined census recovery and independent reproduction when prerequisites are satisfied; otherwise independent Q220 archived-instance/source work or Q218 provenance QA that does not duplicate Lane A/B.",
           "performance_allowed": "false unless an exact independent performance trial has its own current formal authorization; default role remains pre-performance research/reproduction.",
           "selection_or_ranking": false,
           "availability": "always_routable"
@@ -158,10 +158,9 @@
     },
     "principle": "Continuously discover unusual, economically coherent and genuinely orthogonal information advantages; verify before adoption and preserve dead ends.",
     "current_focus": [
-      "Q218",
-      "Q219",
+      "Q104:I19",
       "Q220",
-      "Q221"
+      "Q218"
     ],
     "anti_duplicate_rule": "Do not keep a separate candidate when the proposed mechanism empirically collapses to an existing lineage; merge Q217 back into Q131 if processing-friction decomposition is not distinct.",
     "integration_rules": {
@@ -170,13 +169,9 @@
       "crsp_history_revision": "hard reproducibility QA, not a candidate"
     },
     "candidate_development_focus": [
-      "Q218",
-      "Q219",
+      "Q104:I19",
       "Q220",
-      "Q221",
-      "Q224",
-      "Q229",
-      "Q230"
+      "Q218"
     ]
   },
   "rolling_capacity_wave_control": {
@@ -296,7 +291,7 @@
         ".github/workflows/q104-i19-13f-historical-identity-census.yml"
       ],
       "rules": [
-        "A running Q218/Q219/Q220/Q221 slot job blocks only the same candidate, not the entire slot workflow.",
+        "A running Q218 or Q220 slot job blocks only the same candidate, not the entire slot workflow; Q219 and Q221 remain paused for automatic execution.",
         "The same slot-scoped workflow may be dispatched concurrently for independent candidates and resources.",
         "A multi-resource workflow is dispatched as an exclusive pulse item because it internally leases multiple research pools.",
         "Free ARM64 and Ubuntu x64 are independently fillable whenever an admissible non-duplicate workpack exists.",
@@ -351,15 +346,9 @@
     "rule": "Never collapse occurrence time, public-observation time, identity validity or state transition into a single timestamp/label.",
     "routing": "Resolve shared temporal/identity/state prerequisites once; fan out candidate-specific PIT, revision and mapping gates.",
     "priority_candidates": [
-      "Q218",
-      "Q219",
+      "Q104:I19",
       "Q220",
-      "Q221",
-      "Q224",
-      "Q228",
-      "Q229",
-      "Q230",
-      "Q231"
+      "Q218"
     ],
     "performance_authorized": false,
     "holdout_selection": false,

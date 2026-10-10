@@ -15,14 +15,14 @@ def test_q219_historical_pit_contract_is_frozen():
     assert API_BASE.endswith("/post-no-preference/options/master")
 
 
-def test_q219_top4_routes_historical_pit_gate():
+def test_q219_historical_pit_gate_is_paused_by_three_candidate_focus():
     workflow = (ROOT / ".github/workflows/top4-candidate-slot-research.yml").read_text(encoding="utf-8")
     capacity = (ROOT / "automation/top4_candidate_capacity.py").read_text(encoding="utf-8")
-    assert "Q219" in workflow
-    assert "automation/q219_dolthub_historical_pit_gate.py" in capacity
-    assert "Q219" in workflow
-    lane = (ROOT / 'automation/top4_candidate_capacity.py').read_text(encoding='utf-8')
-    assert 'q219_dolthub_historical_pit_gate.json' in lane
+    candidate_options = workflow.split("      candidate:", 1)[1].split("      resource:", 1)[0]
+    assert "Q219" not in candidate_options
+    assert "Q220" in candidate_options
+    assert '"Q219":[' not in capacity
+    assert '"Q221":[' not in capacity
 
 
 def test_q219_pit_gate_is_non_authorizing():

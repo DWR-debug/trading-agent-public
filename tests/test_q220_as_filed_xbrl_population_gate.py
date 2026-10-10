@@ -1,5 +1,5 @@
 from pathlib import Path
-from automation.q220_as_filed_xbrl_population_gate import TARGET_ISSUERS,WINDOW_START,WINDOW_END,ROUTE_QUARTERS,choose_presentation_source,concept_spec,ix_textblocks,xsd_metadata,presentation_metadata
+from automation.q220_as_filed_xbrl_population_gate import TARGET_ISSUERS,WINDOW_START,WINDOW_END,ROUTE_QUARTERS,choose_presentation_source,concept_spec,ix_textblocks,xsd_metadata,presentation_metadata,console_summary
 ROOT=Path(__file__).parents[1]
 
 def test_q220_population_window_and_identity_are_frozen():
@@ -75,3 +75,48 @@ def test_q220_publish_step_avoids_windows_powershell_execution_policy():
     assert "shell: cmd" in publish
     assert "shell: powershell" not in publish
     assert "github_contents_publish.py" in publish
+
+
+def test_q220_console_summary_exposes_per_issuer_gate_blockers():
+    receipt = {
+        "candidate_id": "Q220",
+        "mode": "population",
+        "status": "Q220_AS_FILED_XBRL_POPULATION_BLOCKED",
+        "row_count": 55,
+        "record_count": 55,
+        "failure_count": 0,
+        "receipt_fingerprint": "a" * 64,
+        "issuer_summary": {
+            "SPGI": {
+                "original_10k_count": 5,
+                "amendment_count": 1,
+                "textblock_ready_originals": 4,
+                "records_with_failures": 0,
+            }
+        },
+        "failures": [],
+        "records": [{"large": "payload must not be printed"}],
+    }
+    summary = console_summary(receipt)
+    assert summary["per_issuer_minimum_originals_and_textblock_ready"] == 5
+    assert summary["issuer_summary"]["SPGI"]["textblock_ready_originals"] == 4
+    assert summary["failure_count"] == 0
+    assert "records" not in summary
+    assert summary["performance_authorized"] is False
+    assert summary["promotion_allowed"] is False
+
+
+def test_q220_blocked_receipt_is_published_before_positive_gate_fails():
+    workflow = (ROOT / ".github/workflows/q220-as-filed-xbrl-population.yml").read_text(encoding="utf-8")
+    publish = workflow.split("      - name: Publish population receipt", 1)[1].split(
+        "      - name: Enforce positive population receipt", 1
+    )[0]
+    enforce = workflow.split("      - name: Enforce positive population receipt", 1)[1].split(
+        "      - uses: actions/upload-artifact@v6", 1
+    )[0]
+    assert "if: always()" in publish
+    assert "gh api \"/repos/%GITHUB_REPOSITORY%/git/ref/heads/master\"" in publish
+    assert "github_contents_publish.py" in publish
+    assert "if: always()" in enforce
+    assert "Q220_POPULATION_POSITIVE=" in enforce
+    assert "Q220_AS_FILED_XBRL_POPULATION_COMPLETED" in enforce
