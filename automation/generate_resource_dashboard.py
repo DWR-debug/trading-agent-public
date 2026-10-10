@@ -764,6 +764,39 @@ def q220_as_filed_population_status(runs: list[dict[str, Any]]) -> dict[str, Any
             "next_gate": "historical prefix/acceptance-time PIT representation-state compiler",
             "receipt_fingerprint": fingerprint,
         }
+
+    # A live route probe is separate from the frozen population gate. Never let
+    # that ancillary job mask an already-published negative population receipt.
+    if (
+        receipt.get("candidate_id") == "Q220"
+        and receipt.get("mode") == "population"
+        and status == "Q220_AS_FILED_XBRL_POPULATION_BLOCKED"
+        and fingerprint
+    ):
+        minimum = int(receipt.get("per_issuer_minimum_originals_and_textblock_ready") or 5)
+        issuer_summary = receipt.get("issuer_summary") if isinstance(receipt.get("issuer_summary"), dict) else {}
+        gaps = []
+        for issuer, counts in sorted(issuer_summary.items()):
+            if not isinstance(counts, dict):
+                continue
+            originals = int(counts.get("original_10k_count") or 0)
+            textblock_ready = int(counts.get("textblock_ready_originals") or 0)
+            if originals < minimum:
+                gaps.append(f"{issuer}: {originals}/{minimum} original 10-Ks")
+            if textblock_ready < minimum:
+                gaps.append(f"{issuer}: {textblock_ready}/{minimum} TextBlock-ready original 10-Ks")
+        detail = "Population receipt is BLOCKED"
+        if gaps:
+            detail += ": " + "; ".join(gaps)
+        detail += ". A queued/running route probe does not clear this fixed-population gate."
+        return {
+            "state": "blocked", "progress_percent": 0,
+            "detail": detail,
+            "next_gate": "repair only the receipt-identified issuer/TextBlock coverage gap; preserve the frozen minimum",
+            "receipt_fingerprint": fingerprint,
+            "active_route_probe": active,
+        }
+
     if active:
         return {
             "state": "running", "progress_percent": 0,
@@ -844,6 +877,7 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
         {"label": "Preregistration + authorization reconcile", "status": q218_prereg["state"], "progress": q218_prereg["progress_percent"], "detail": q218_prereg["detail"]},
         {"label": "One-shot performance", "status": "complete" if q218_prereg.get("performance_executed") else ("ready" if q218_prereg.get("performance_authorized") else "closed"), "progress": 100 if q218_prereg.get("performance_executed") else 0, "detail": q218_prereg.get("detail") if q218_prereg.get("performance_executed") else ("explizit autorisiert; Ausführung ausstehend" if q218_prereg.get("performance_authorized") else "erst nach separater immutable authorization; aktuell geschlossen")},
         {"label": "Disjoint fresh-symbol replication", "status": "complete" if q218_replication_complete else ("next" if q218_prereg.get("performance_executed") else "blocked"), "progress": 100 if q218_replication_complete else 0, "detail": "Positive immutable replication receipt: 8 event pairs; descriptive only" if q218_replication_complete else "separate replication trial not yet positively closed"},
+        {"label": "Cost-adjusted independent OOS assessment", "status": "blocked", "progress": 0, "detail": "requires separate explicit authorization and a frozen cost/OOS contract; the existing eight-event replication is descriptive, not an economic acceptance test"},
     ]
 
     def overall(milestones: list[dict[str, Any]]) -> tuple[int, int, int]:
