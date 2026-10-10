@@ -163,11 +163,11 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Three-candidate focus only: Q104:I19 historical 13F acceptance-time closure and compiler; Q220 as-filed SEC/XBRL population, mapping and PIT; Q218 current-context SEC source/event-pair provenance and next gated reproduction. Q219 and Q221 remain paused for automatic execution.",
+    "active_next": "Three-candidate focus only: Q104:I19 historical 13F acceptance-time closure, frozen PIT compiler and independent reproduction; Q220 as-filed SEC/XBRL representation-gap historical-prefix compiler; Q221 historical USAspending public-observation clock, agency/transaction semantics and frozen recipient-to-issuer mapping. Q218 and Q219 are outside active automatic execution; their historical evidence is preserved.",
     "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
     "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
-    "discovery_frontier": "Q218 mandatory-voluntary disclosure semantic wedge; source/PIT/structure-first cheap falsification only.",
-    "literature_discovery": "PERMANENT: daily/weekly assistant research plus 6-hour free public-metadata scout; preserve negative evidence. Current candidate-development capacity is restricted to Q104:I19, Q220 and Q218; all other candidate execution remains paused.",
+    "discovery_frontier": "Q221 government R&D-to-procurement option-value state; source/PIT/clock-first cheap falsification, with historical applicability and issuer mapping treated as open.",
+    "literature_discovery": "PERMANENT: daily/weekly assistant research plus 6-hour free public-metadata scout; preserve negative evidence. Current candidate-development capacity is restricted to Q104:I19, Q220 and Q221; Q218, Q219 and all other candidate execution remains paused unless explicitly re-authorized.",
     "current_research_frontier": [
       "Q211",
       "Q212",
@@ -355,7 +355,9 @@
       "name": "FRONTIER_DISCOVERY",
       "slot": "Windows self-hosted B",
       "focus": [
-        "Q218"
+        "Q220 as-filed SEC/XBRL population, mapping and historical PIT",
+        "Q221 USAspending historical public-clock and recipient-to-issuer mapping",
+        "Q221 is the replacement for Q218 in the active Top-3; no new Q218 work is automatically dispatched."
       ],
       "performance_authorization_from_lane": false
     },
@@ -482,7 +484,7 @@
       "mode": "RUNNER_C_INDEPENDENT_CANDIDATE_DEVELOPMENT"
     },
     "current_window_status": "EXPIRED_NO_DISPATCH",
-    "current_window_note": "The last Runner-C lease expired on 2026-10-09T22:44:00Z. Do not renew the broad Q185-Q201 workpack as filler; wait for a receipt-defined Q104:I19, Q220 or Q218 task that does not duplicate active work.",
+    "current_window_note": "Do not renew an expired broad workpack as filler. Route receipt-defined Q104:I19 recovery/compiler, Q220 historical-prefix/XBRL PIT or Q221 USAspending clock/identity work only when independent and useful.",
     "wave_policy": [
       "W1 close source/PIT/clock gates and start Runner-C long deterministic research when free",
       "W2 compile bounded candidate contracts and information-timing components",
@@ -492,8 +494,8 @@
     "existing_continuous_capacity": [
       "Focused candidate fast dispatcher every 5 minutes",
       "Q104:I19 13F receipt recovery, acceptance-time closure and downstream PIT compiler chaining",
-      "Q220 as-filed SEC/XBRL population, durable blocked-receipt diagnostics and PIT mapping",
-      "Q218 current-context source/event-pair provenance and receipt-defined independent reproduction",
+      "Q220 as-filed SEC/XBRL population, historical-prefix PIT compiler and deterministic mapping",
+      "Q221 historical USAspending public-clock applicability, agency exceptions and issuer mapping",
       "Free AI bounded Q218 adversarial review when the focused task context is not already completed",
       "S10 bounded mechanical research/governance QA support only"
     ],
@@ -516,7 +518,7 @@
   "top_candidate_capacity_overlay": {
     "effective_date_utc": "2026-10-06",
     "status": "ACTIVE",
-    "purpose": "Focused three-candidate wave: Q104:I19 formal readiness, Q220 as-filed XBRL representation gap, and Q218 source/PIT provenance.",
+    "purpose": "Focused three-candidate wave: Q104:I19 formal readiness, Q220 as-filed XBRL representation gap, and Q221 USAspending R&D-to-procurement option-value source/PIT.",
     "windows_A": {
       "role": "FORMAL_READINESS / local_reproduction",
       "priority": [
@@ -529,9 +531,9 @@
       "role": "FRONTIER_DISCOVERY / data_qa",
       "priority": [
         "Q220",
-        "Q218"
+        "Q221"
       ],
-      "new_overlay": "Q220 as-filed SEC/XBRL population and deterministic mapping; Q218 current-context SEC source/PIT and event-pair lineage",
+      "new_overlay": "Q220 historical-prefix SEC/XBRL representation-gap compiler; Q221 historical USAspending public clock, agency exceptions, transaction semantics and issuer mapping",
       "scientific_authority": false,
       "candidate_gate_compiler": "automation/q218_q221_candidate_gate_compiler.py"
     },
@@ -540,7 +542,7 @@
       "status": "explicitly_reactivated",
       "scientific_authority": false
     },
-    "rule": "Automatic candidate dispatch is limited to Q104:I19, Q220 and Q218. Q219, Q221 and all other candidates are paused for automatic execution; no artificial filler.",
+    "rule": "Automatic candidate dispatch is limited to Q104:I19, Q220 and Q221. Q218, Q219 and all other candidates are paused for automatic execution; no artificial filler.",
     "safety": {
       "performance": false,
       "holdout_selection": false,
@@ -553,12 +555,15 @@
     "active_shortlist": [
       "Q104:I19",
       "Q220",
-      "Q218"
-    ],
-    "discovery_reserve": [],
-    "paused_candidates": [
-      "Q219",
       "Q221"
+    ],
+    "discovery_reserve": [
+      "Q218",
+      "Q219"
+    ],
+    "paused_candidates": [
+      "Q218",
+      "Q219"
     ]
   },
   "knowledge_relation_plane": {
