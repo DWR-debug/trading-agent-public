@@ -180,7 +180,7 @@ def test_dashboard_pipeline_is_locked_to_focus_candidates():
         {"code":"Q219","state":"DESIGN_ONLY_ACTIVE"},
     ]
     rows = candidate_pipeline(top4, [], {}, {})
-    assert [x["code"] for x in rows] == ["Q104:I19","Q218","Q220"]
+    assert [x["code"] for x in rows] == ["Q104:I19","Q220","Q218"]
 
 
 def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
