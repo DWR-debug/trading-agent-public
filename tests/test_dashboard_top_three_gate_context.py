@@ -57,3 +57,16 @@ def test_dashboard_exposes_copyable_current_chat_handoff():
     assert '"chat_handoff": chat_handoff_snapshot(evidence, os_state)' in generator
     assert "Active execution focus: " in js
     assert "PAPER_ONLY=" in js
+
+
+def test_top_three_decision_panel_precedes_progress_meters():
+    html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+
+    assert 'id="candidateDecisionRules"' in html
+    assert html.index('id="candidateFocus"') < html.index('id="candidateDecisionRules"')
+    assert html.index('id="candidateDecisionRules"') < html.index('class="progress-overview"')
+    assert "function renderCandidateDecisionRules(pipeline)" in js
+    for code in ('Q104:I19', 'Q220', 'Q218'):
+        assert 'code:"' + code + '"' in js
+    assert "Reserve Q221" in js
