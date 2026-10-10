@@ -475,12 +475,14 @@
     "cadence_utc": "*/10 * * * *",
     "objective": "Ideal useful utilization of every available independent lane for Q104:I19, Q220 and Q218 whenever receipt-defined bounded backlog exists; no artificial activity.",
     "current_window": {
-      "window_id": "TA-28M-2026-10-05-1958Z",
-      "start_utc": "2026-10-05T19:58:00Z",
-      "end_utc": "2026-10-05T20:26:00Z",
-      "cadence_minutes": 5,
-      "mode": "AUTONOMOUS_CANDIDATE_DEVELOPMENT_AND_USEFUL_CAPACITY_REPLENISHMENT"
+      "window_id": "TA-2H-2026-10-09-RUNNER-C-INDEPENDENT-PIT-2044Z",
+      "start_utc": "2026-10-09T20:44:00Z",
+      "end_utc": "2026-10-09T22:44:00Z",
+      "cadence_minutes": 10,
+      "mode": "RUNNER_C_INDEPENDENT_CANDIDATE_DEVELOPMENT"
     },
+    "current_window_status": "EXPIRED_NO_DISPATCH",
+    "current_window_note": "The last Runner-C lease expired on 2026-10-09T22:44:00Z. Do not renew the broad Q185-Q201 workpack as filler; wait for a receipt-defined Q104:I19, Q220 or Q218 task that does not duplicate active work.",
     "wave_policy": [
       "W1 close source/PIT/clock gates and start Runner-C long deterministic research when free",
       "W2 compile bounded candidate contracts and information-timing components",
