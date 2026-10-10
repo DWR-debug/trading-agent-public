@@ -949,10 +949,11 @@ def q221_public_clock_status() -> dict[str, Any]:
         }
     detail = (
         "The live USAspending source-clock smoke gate is positive, but it cannot establish what was publicly observable historically. "
+        "No positive, fingerprinted historical USAspending policy-vintage receipt exists yet. "
         "Run the bounded CDX/Wayback vintage reconstruction over the five fixed windows before event-level PIT work."
         if current_source_markers
         else
-        "No timestamped historical USAspending policy-vintage receipt is recorded. Reconstruct archived clock/exception documents before making event-level timing claims."
+        "No positive, fingerprinted historical USAspending policy-vintage receipt is recorded. Reconstruct archived clock/exception documents before making event-level timing claims."
     )
     return {
         "state": "ready",
@@ -1734,7 +1735,7 @@ def planned_capacity_plan(
             "candidate": "Q220",
             "lane": "FRONTIER DISCOVERY",
             "task": "as-filed XBRL narrative/structured mapping and taxonomy drift diagnostics",
-            "preferred": ["Windows self-hosted B", "GitHub-hosted ARM64", "GitHub-hosted Ubuntu x64", "Windows self-hosted C", "Windows self-hosted A"],
+            "preferred": ["Windows self-hosted B", "GitHub-hosted ARM64", "GitHub-hosted Ubuntu x64", "Windows self-hosted A"],
             "readiness": "READY_FIXED_POOL_SCHEMA_MAPPING",
             "basis": "deterministic fixed-population source/schema checks; fail closed on TextBlock, taxonomy, or presentation-linkage instability",
             "dispatchable": True,
@@ -1746,7 +1747,7 @@ def planned_capacity_plan(
             "candidate": "Q221",
             "lane": "FRONTIER DISCOVERY",
             "task": "historical USAspending RDT&E transaction/public-observation clock falsification",
-            "preferred": ["GitHub-hosted ARM64", "Windows self-hosted C", "Windows self-hosted B", "GitHub-hosted Ubuntu x64", "Windows self-hosted A"],
+            "preferred": ["Windows self-hosted C", "GitHub-hosted ARM64", "Windows self-hosted B", "GitHub-hosted Ubuntu x64", "Windows self-hosted A"],
             "readiness": "READY_HISTORICAL_PUBLIC_CLOCK_FALSIFICATION",
             "basis": "bounded source/PIT gate for historical applicability, modification-vs-award semantics, agency exceptions, and recipient-to-issuer mapping",
             "dispatchable": True,
