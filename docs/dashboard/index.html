@@ -78,12 +78,25 @@
     .bar-fill{height:100%;width:0;background:var(--info);transition:width .35s ease}.bar-fill.milestone{background:var(--available)}
     .bar-sub{margin-top:4px;color:var(--muted);font-size:11px;line-height:1.35}
     .milestone-list{display:grid;gap:9px}.milestone-item{display:grid;grid-template-columns:minmax(135px,1.2fr) 2fr minmax(90px,.7fr);gap:9px;align-items:center;font-size:11px}.milestone-item .label{font-weight:650}.milestone-item .state{color:var(--muted)}
-    @media(max-width:900px){.progress-overview{grid-template-columns:1fr}}
-    @media(max-width:700px){.milestone-item{grid-template-columns:1fr}.progress-panel{padding:12px}}
+    @media(max-width:900px){.progress-overview{grid-template-columns:1fr}.decision-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:700px){.milestone-item{grid-template-columns:1fr}.progress-panel{padding:12px}.decision-grid{grid-template-columns:1fr}}
     .focus-summary{display:grid;grid-template-columns:1.5fr .8fr .8fr;gap:10px;margin-bottom:16px}
     .focus-kpi{border:1px solid var(--border);border-radius:13px;padding:15px;background:color-mix(in srgb,Canvas 98%,CanvasText 2%);min-width:0}
     .focus-kpi strong{display:block;font-size:21px;margin-top:5px;overflow-wrap:anywhere}.focus-kpi span:last-child{font-size:11px;color:var(--muted)}
     .candidate-focus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}
+.decision-board{margin:16px 0 20px}
+.decision-board-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 10px}
+.decision-board-title{font-size:15px;font-weight:800;letter-spacing:-.01em}
+.decision-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.decision-card{min-width:0;border:1px solid var(--border);border-top:4px solid var(--info);border-radius:12px;padding:13px;background:color-mix(in srgb,Canvas 99%,CanvasText 1%)}
+.decision-q104{border-top-color:#4263eb}.decision-q220{border-top-color:#0f8b8d}.decision-q218{border-top-color:#7950a1}
+.decision-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.decision-code{font-size:18px;font-weight:850;letter-spacing:-.02em}
+.decision-disposition{font-size:10px;font-weight:800;letter-spacing:.035em;text-transform:uppercase;border:1px solid var(--border);border-radius:999px;padding:4px 7px}
+.decision-current{font-size:11px;color:var(--muted);margin:7px 0 11px}
+.decision-field{font-size:12px;line-height:1.45;margin:8px 0 0}
+.decision-field strong{display:block;font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.decision-fallback{border-top:1px solid var(--border);margin-top:10px;padding-top:10px;font-size:12px;line-height:1.45;color:var(--muted)}
     .candidate-card{min-width:0;border:1px solid var(--border);border-top:4px solid var(--info);border-radius:16px;padding:16px;background:color-mix(in srgb,Canvas 99%,CanvasText 1%);box-shadow:0 4px 16px rgba(0,0,0,.035)}
     .candidate-q104{border-top-color:#4263eb}.candidate-q220{border-top-color:#0f8b8d}.candidate-q218{border-top-color:#7950a1}
     .candidate-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.candidate-code{font-size:25px;font-weight:850;letter-spacing:-.02em}.candidate-name{font-size:14px;font-weight:750;line-height:1.25;margin-top:2px}.candidate-stage{font-size:10px;color:var(--muted);margin-top:7px;line-height:1.35}
@@ -225,6 +238,8 @@
         </div>
       </div>
       <div class="focus-summary" id="focusSummary"></div>
+      <div id="candidateFocus" class="candidate-focus"></div>
+      <section class="decision-board" id="candidateDecisionRules" aria-label="Entscheidungsregeln der drei Top-Kandidaten"></section>
       <div class="progress-overview">
         <div class="progress-panel">
           <h3>Gesamtfortschritt der fokussierten Kandidaten</h3>
@@ -235,7 +250,6 @@
           <div id="milestoneProgressBars"></div>
         </div>
       </div>
-      <div id="candidateFocus" class="candidate-focus"></div>
       <div id="opsSummary" class="ops-strip"></div>
     </article>
 
