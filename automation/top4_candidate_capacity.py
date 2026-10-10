@@ -74,7 +74,7 @@ def main()->int:
         "workpack_contract_version":"focused-2026-10-10-v1",
         "workpack_purpose":WORKPACK_PURPOSES[args.candidate],
         "workpack_gate_paths":WORKPACK_GATE_PATHS[args.candidate],
-        "source_commit":os.environ.get("GITHUB_SHA"),
+        "source_commit":subprocess.check_output(["git","rev-parse","HEAD"], text=True).strip(),
         "runner_name":os.environ.get("RUNNER_NAME"),
         "execution_mode":os.environ.get("TOP4_EXECUTION_MODE","STANDARD_BOUNDED_RESEARCH"),
         "python_version":platform.python_version(),
