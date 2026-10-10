@@ -337,8 +337,16 @@ def test_fast_dispatch_ai_success_is_deduped_by_current_context(tmp_path, monkey
 
 
 
-def test_fast_dispatch_zero_active_starts_q221_clock_workpack_and_free_ai_review():
-    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+def test_fast_dispatch_zero_active_starts_q221_clock_workpack_and_skips_completed_free_ai_review(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
+
+    # The current-context Q221 AI receipt has already succeeded; assert it is
+    # not duplicated while the useful Windows workpack still dispatches.
+    monkeypatch.setattr(
+        dispatcher,
+        "ai_task_completed_with_current_context",
+        lambda task_id: task_id == "AI-2026-10-06-Q221-TOP4-ADVERSARIAL",
+    )
 
     snapshot = {
         "work_assignments": [],
@@ -374,11 +382,16 @@ def test_fast_dispatch_zero_active_starts_q221_clock_workpack_and_free_ai_review
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
     assert plan["zero_active_research_jobs"] is True
-    assert {x["workflow"] for x in plan["dispatches"]} == {
+    assert [x["workflow"] for x in plan["dispatches"]] == [
         ".github/workflows/top4-candidate-slot-research.yml",
-        ".github/workflows/ai-worker-fabric.yml",
-    }
+    ]
     assert plan["dispatches"][0]["candidate"] == "Q221"
+    assert plan["dispatches"][0]["plan_id"] == "Q221-USASPENDING-PUBLIC-CLOCK"
+    assert any(
+        x.get("plan_id") == "Q221-ADVERSARIAL"
+        and x.get("decision") == "SKIP_AI_TASK_ALREADY_COMPLETED_CURRENT_CONTEXT"
+        for x in plan["decisions"]
+    )
 
 def test_fast_dispatch_blocks_legacy_broad_top4_matrix_workpack():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
