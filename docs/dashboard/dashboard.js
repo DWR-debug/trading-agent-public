@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 var lastSnapshotIso=null;
-var FOCUS=["Q104:I19","Q220","Q218"];
+var FOCUS=["Q104:I19","Q220","Q221"];
 
 function $(id){return document.getElementById(id);}
 function esc(v){
@@ -65,10 +65,16 @@ function candidateInfo(code){
       lane:"FRONTIER DISCOVERY",
       cardClass:"candidate-q220"
     },
-    "Q218":{
-      name:"SEC disclosure event pairing",
-      mechanism:"Mandatory/voluntary 10-K → 8-K Item 2.02 pairing with acceptance-time lineage",
+    "Q221":{
+      name:"Government R&D → procurement option value",
+      mechanism:"Public R&D awards, competition/agency state and pre-event capability; historical USAspending clock and issuer mapping first",
       lane:"FRONTIER DISCOVERY",
+      cardClass:"candidate-q221"
+    },
+    "Q218":{
+      name:"SEC disclosure event pairing (archived / outside active focus)",
+      mechanism:"Historical evidence retained; no active Top-3 dispatch",
+      lane:"ARCHIVED · OUTSIDE ACTIVE FOCUS",
       cardClass:"candidate-q218"
     }
   };
@@ -250,7 +256,7 @@ function render(data){
   renderProgressCharts(data,pipeline);
 
   $("focusSummary").innerHTML=
-    "<div class='focus-kpi'><span class='eyebrow'>Aktive Top-3</span><strong>Q104:I19 · Q220 · Q218</strong><span>Drei getrennte Forschungsaufträge; weitere Kandidaten bleiben pausiert.</span></div>"+
+    "<div class='focus-kpi'><span class='eyebrow'>Aktive Top-3</span><strong>Q104:I19 · Q220 · Q221</strong><span>Drei getrennte Forschungsaufträge; weitere Kandidaten bleiben pausiert.</span></div>"+
     "<div class='focus-kpi'><span class='eyebrow'>Entwicklungsindex</span><strong>"+overallAvg+"%</strong><span>arithmetischer Index der drei Tracks, keine Erfolgswahrscheinlichkeit</span></div>"+
     "<div class='focus-kpi'><span class='eyebrow'>Aktive Candidate-Jobs</span><strong>"+activeCount+"</strong><span>sichtbar in der aktuellen Actions-Telemetrie</span></div>";
 
