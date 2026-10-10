@@ -122,15 +122,10 @@ def sec_standard_taxonomy_entrypoint(namespace:str|None)->str|None:
     The QName namespace is the version clock: never silently upgrade an old
     filing to the newest taxonomy. Other namespaces remain unresolved here.
     """
-    m=re.fullmatch(r"http://xbrl\\.sec\\.gov/cyd/(20\\d{2})",str(namespace or ""))
+    m=re.fullmatch(r"http://xbrl\.sec\\.gov/cyd/(20\d{2})",str(namespace or ""))
     if not m: return None
     year=m.group(1)
     return f"https://xbrl.sec.gov/cyd/{year}/cyd-af-sub-{year}.xsd"
-
-
-def taxonomy_url_namespace_values(url:str)->set[str]:
-    m=re.fullmatch(r"https://xbrl\\.sec\\.gov/cyd/(20\\d{2})/cyd-af-sub-20\\d{2}\\.xsd",url)
-    return {f"http://xbrl.sec.gov/cyd/{m.group(1)}"} if m else set()
 
 
 def qname_presentation_fragment(qname:str)->str:
@@ -219,8 +214,9 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
     loc_concepts=set(pm["loc_concepts"])
     hits=set(q for q in qnames if qname_presentation_fragment(q) in loc_concepts)
     qname_namespaces={str(x["qname"]):str(x.get("namespace") or "") for x in tb if x.get("qname")}
-    taxonomy_urls=sorted({url for namespace in qname_namespaces.values()
-                          if (url:=sec_standard_taxonomy_entrypoint(namespace))})
+    taxonomy_namespace_by_url={url:namespace for namespace in qname_namespaces.values()
+                              if (url:=sec_standard_taxonomy_entrypoint(namespace))}
+    taxonomy_urls=sorted(taxonomy_namespace_by_url)
     taxonomy_presentations=[]
     taxonomy_hits=set()
     for taxonomy_url in taxonomy_urls:
@@ -233,8 +229,9 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
                 taxonomy_row["sha256"]=sha256(taxonomy_body)
                 taxonomy_pm=presentation_metadata(taxonomy_body)
                 taxonomy_loc_concepts=set(taxonomy_pm["loc_concepts"])
+                exact_namespace=taxonomy_namespace_by_url[taxonomy_url]
                 matching={q for q in qnames
-                          if qname_namespaces.get(q,"") in taxonomy_url_namespace_values(taxonomy_url)
+                          if qname_namespaces.get(q,"")==exact_namespace
                           and qname_presentation_fragment(q) in taxonomy_loc_concepts}
                 taxonomy_row["matched_textblock_concepts"]=sorted(matching)
                 taxonomy_hits.update(matching)
