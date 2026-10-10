@@ -82,3 +82,46 @@ def test_api_retries_transient_502(monkeypatch):
     monkeypatch.setenv("GH_TOKEN", "test-token")
     assert module.api("GET", "https://api.github.com/test") == {"ok": True}
     assert calls["count"] == 3
+
+def test_publish_resolves_latest_branch_head_without_external_cli(monkeypatch, tmp_path) -> None:
+    module = importlib.import_module("automation.github_contents_publish")
+    payload = tmp_path / "evidence.json"
+    payload.write_text('{"status":"ok"}\\n', encoding="utf-8")
+
+    base = "1" * 40
+    tree = "2" * 40
+    blob = "3" * 40
+    commit = "4" * 40
+    calls = []
+
+    def fake_api(method, url, request=None):
+        calls.append((method, url))
+        if method == "GET" and url.endswith("/git/ref/heads/master"):
+            return {"object": {"sha": base}}
+        if method == "GET" and url.endswith(f"/git/commits/{base}"):
+            return {"tree": {"sha": tree}}
+        if method == "POST" and url.endswith("/git/blobs"):
+            return {"sha": blob}
+        if method == "POST" and url.endswith("/git/trees"):
+            return {"sha": "5" * 40}
+        if method == "POST" and url.endswith("/git/commits"):
+            return {"sha": commit}
+        if method == "PATCH" and url.endswith("/git/refs/heads/master"):
+            return {"ok": True}
+        raise AssertionError(f"Unexpected API call: {method} {url}")
+
+    monkeypatch.setattr(module, "api", fake_api)
+    result = module.publish(
+        "DWR-debug/trading-agent-public",
+        "master",
+        "latest",
+        [("research/evidence/test.json", str(payload))],
+    )
+
+    assert result == commit
+    assert calls[0] == (
+        "GET",
+        "https://api.github.com/repos/DWR-debug/trading-agent-public/git/ref/heads/master",
+    )
+    assert calls[-1][0] == "PATCH"
+
