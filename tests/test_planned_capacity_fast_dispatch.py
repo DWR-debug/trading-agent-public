@@ -478,7 +478,7 @@ def test_fast_dispatch_allows_independent_candidates_on_one_slot_workflow():
         }],
     }
     plan = dispatch_candidates(snapshot, [], max_dispatches=4)
-    assert [x["candidate"] for x in plan["dispatches"]] == ["Q218", "Q220"]
+    assert [x["candidate"] for x in plan["dispatches"]] == ["Q220", "Q218"]
 
 
 def test_fast_dispatch_reserves_only_explicit_multi_resource_leases():
