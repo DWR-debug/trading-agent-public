@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "9f990cefaa66384a331903764af949124f403f3545c65cb612cdb0381e710ffc",
-  "context_fingerprint": "b9edd639597bb1f04f344dfa3263a316906dcaf0f74ac60a506a5d0ce6131ce5",
-  "observed_at_utc": "2026-10-10T14:53:25.404582Z",
+  "context_fingerprint": "fb16c5b15cf5b5cc0b59c938df3ba3beca5d1653dd2395b09f05a61936a1aead",
+  "observed_at_utc": "2026-10-10T17:14:41.433760Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 39.752,
-  "stdout": "\n\n# Q104:I19 Adversarial Contract Review — Census & PIT Compiler Readiness Chain\n\n## 1. Archive Completeness\n\n### Failure Mode: Silent missingness in archive discovery\nThe `discover_archives` function parses the SEC data-research page for `.zip` links containing `\"form13f\"`. Two attack vectors:\n\n1. **Page-format drift**: If SEC restructures the page (e.g., moves to JavaScript-rendered content, changes link patterns, or uses non-`.zip` delivery), `LinkParser` yields zero archives. The census would produce an empty or partial result without raising — there is no fail-closed check on the discovered-archive count against an expected minimum.\n\n2. **Pattern-mismatched filenames**: `parse_period_start` handles two patterns (`20XXQY_form13f.zip` and `DDMonYYYY-`). Any archive whose filename deviates (e.g., `form13f_2013q3.zip`, or a date format not in `parse_date`'s four accepted formats) returns `None` from `parse_period_start` and is silently dropped from the shard mapping.\n\n**Smallest deterministic falsifier**: Feed `discover_archives` a synthetic SEC page HTML containing exactly one `<a>` tag whose `href` is a valid 13F ZIP but whose filename matches neither `parse_period_start` pattern. Assert the returned dictionary is empty (not erroring). Then feed a page with zero `<a>` tags matching the filter and assert the census proceeds without raising an `ARCHIVE_DISCOVERY_EMPTY` exception.\n\n**Required artifact**: A unit test `tests/test_q104_i19_census_discovery_fail_closed.py` that injects malformed/empty page content and asserts either an exception or a non-empty `discovery_errors` list in the census output JSON.\n\n### Failure Mode: Shard-boundary double-counting or gap\nThe shards use `[start, end)` intervals. The boundaries are contiguous, but the *assignment logic* in the truncated census script is not visible. If `parse_period_start` returns a `date` and the shard assignment uses `start <= period_start < end`, boundaries are clean. If it uses `<=` on both sides, the last day of one shard overlaps the first day of the next.\n\n**Smallest deterministic falsifier**: Construct two synthetic archives with `period_start` exactly on a shard boundary (e.g., `2017-01-01`) and verify the census assigns it to exactly one shard. Then construct an archive with `period_start` exactly at `END` (`2025-10-01`) and verify it is excluded (or flagged as out-of-window).\n\n**Required artifact**: A boundary-reconciliation report in the census output JSON: `shard_boundary_audit` listing every archive whose `period_start` falls within 1 day of any shard boundary, with its assigned shard.\n\n## 2. Frozen Target CUSIP Identity\n\n### Failure Mode: CUSIP-to-issuer drift across time\nThe coverage evidence (`q113_13f_q107_coverage_result.json`) lists SPGI CUSIPs `78409V104`, `78409V112`, `78409V904`, `78409V954` from a *synthetic* 2026 archive. The historical census spans 2013–2025. A corporate action (spin-off, merger, rebranding) could cause a CUSIP that belonged to issuer X in 2013 to belong to issuer Y in 2025. If the census joins on CUSIP alone without temporal issuer validation, it conflates distinct entities.\n\n**Smallest deterministic falsifier**: In the historical census output, search for any CUSIP that maps to more than one distinct issuer name across the time window. For each such CUSIP, check whether the issuer-name changes are accompanied by a dated corporate-action event (name-change filing, merger, spin-off). If any CUSIP shows issuer drift without a documented corporate action, that is a silent confound.\n\n**Required artifact**: A `cusip_issuer_drift_audit` section in the census output: for every CUSIP in the frozen target set, list the distinct issuer names observed, the date ranges for each, and whether a corporate-action record supports each transition. Any drift without a supporting record is a fail-closed error.\n\n### Failure",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 22.284,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791644005-906gH09WQ5uEQlavdvXK",
-  "usage": {
-    "prompt_tokens": 6615,
-    "completion_tokens": 3200,
-    "total_tokens": 9815,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 2081,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
