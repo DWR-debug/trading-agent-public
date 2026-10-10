@@ -1501,7 +1501,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-10T09:48:08.534950+00:00",
+    "generated_at_utc": "2026-10-10T10:18:54.690598+00:00",
     "next_research_focus": "Top-candidate development frontier remains active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1509,7 +1509,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "a39fa736f5bf9c82553cae9634458ad3c6cfcd7e"
+    "source_master_sha": "cc492156551301b382a40f9ca018d2741d45d4d6"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-10T09:48:08.534950+00:00",
+  "generated_at_utc": "2026-10-10T10:18:54.690598+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4667,6 +4667,21 @@
     ],
     "recent_commits": [
       {
+        "message": "UI: redesign dashboard around the Top-3 candidate control board",
+        "sha": "cc492156551301b382a40f9ca018d2741d45d4d6",
+        "timestamp": "2026-10-10T12:18:41+02:00"
+      },
+      {
+        "message": "EVIDENCE: persist Q220 as-filed XBRL population receipt",
+        "sha": "f59353eceb5891176a101708f059c3a830960e5d",
+        "timestamp": "2026-10-10T09:53:32Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8333c3f3bb821b89c49aa42be841089fa30dd30e",
+        "timestamp": "2026-10-10T09:48:11Z"
+      },
+      {
         "message": "FIX: publish Q220 population receipt without gh.exe",
         "sha": "a39fa736f5bf9c82553cae9634458ad3c6cfcd7e",
         "timestamp": "2026-10-10T11:47:55+02:00"
@@ -4690,21 +4705,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "c801852bdb75304f2af678802c2ccb0986e65f7a",
         "timestamp": "2026-10-10T09:44:26Z"
-      },
-      {
-        "message": "OPS: update AI credit availability plan",
-        "sha": "287793c4cf9d617518349a6c5fea44488ee549be",
-        "timestamp": "2026-10-10T09:42:34Z"
-      },
-      {
-        "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "07820a64b1188c8d5de2c7074af885acbc93e285",
-        "timestamp": "2026-10-10T09:30:48Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9be010b7f03e132f3147189c261ecab9b0bc26d4",
-        "timestamp": "2026-10-10T08:55:16Z"
       }
     ]
   },
@@ -4802,7 +4802,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a39fa736f5bf9c82553cae9634458ad3c6cfcd7e",
+  "source_master_sha": "cc492156551301b382a40f9ca018d2741d45d4d6",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4916,6 +4916,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "38042661433"
+    "run_id": "38044457279"
   }
 }
