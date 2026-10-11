@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_type": "trading_agent_chat_decision_log",
   "purpose": "Durable operational continuity for future Trading Agent OS chats. Entries are operational notes, not scientific evidence, performance authorization, ranking, or live-trading permission.",
-  "updated_at_utc": "2026-10-11T22:58:44Z",
+  "updated_at_utc": "2026-10-11T23:00:24Z",
   "safety": {
     "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
@@ -11,6 +11,17 @@
     "paid_usage_usd": 0
   },
   "entries": [
+    {
+      "date_utc": "2026-10-11T23:00:24Z",
+      "candidate": "Q220 QUEUE GATE",
+      "status": "FIXED IN WORKFLOW · OLD QUEUED RUN STILL VISIBLE",
+      "title": "Positive Q220 receipt now gates both population and route_probe",
+      "decision": "Run 38179574127 passed receipt_gate with a current positive population receipt and skipped the Windows population job, yet route_probe had no needs dependency and remained pending in the hosted Ubuntu concurrency group. An additional older scheduled run 38178545899 still has a population job queued from an older workflow revision. This shows some queue pressure is stale/ancillary work, not missing Windows capacity. The new workflow revision makes route_probe depend on a successful receipt_gate and run only when run_population=true. Existing already-queued runs are not retroactively canceled by this PR.",
+      "next_action": "Do not force a Q220 population rebuild. Monitor runs 38179574127 and 38178545899; preserve the positive 55-record receipt chain. Future route probes execute only when the fixed-population repair gate says work is required.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/blob/master/.github/workflows/q220-as-filed-xbrl-population.yml",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38179574127",
+      "scientific_evidence": false
+    },
     {
       "date_utc": "2026-10-11T22:58:44Z",
       "candidate": "Q104:I19 SEC SUBMISSIONS CLOCK AUDIT",
