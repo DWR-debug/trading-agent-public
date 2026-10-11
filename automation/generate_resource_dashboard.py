@@ -382,7 +382,17 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     "job": job_name,
                     "task": workflow,
                     "status": run.get("status"),
+                    "run_status": run.get("status"),
+                    "job_status": job.get("status"),
                     "started_at": run.get("run_started_at") or run.get("created_at"),
+                    "run_started_at": run.get("run_started_at"),
+                    "job_started_at": job.get("started_at"),
+                    "job_completed_at": job.get("completed_at"),
+                    "queued_at": run.get("created_at") if job.get("status") in WAITING_JOB_STATUSES else None,
+                    "queue_elapsed_basis": (
+                        "workflow_created_at_upper_bound; exact child-job queued_at unavailable"
+                        if job.get("status") in WAITING_JOB_STATUSES else None
+                    ),
                     "actor": (run.get("actor") or {}).get("login"),
                     "run_id": run.get("id"),
                     "run_url": run.get("html_url"),
@@ -440,21 +450,30 @@ def enrich_work_durations(
         entry["expected_duration_p90_seconds"] = expected_p90
         entry["duration_sample_count"] = int(benchmark["sample_count"]) if benchmark else 0
         entry["duration_source"] = str(benchmark["source"]) if benchmark else "no completed comparable workflow run available"
-        status = str(entry.get("status") or "")
+        status = str(entry.get("run_status") or entry.get("status") or "")
+        job_status = _work_item_status(entry)
         run_started = parse_dt(entry.get("run_started_at"))
         if run_started is None and status == "in_progress":
             run_started = parse_dt(entry.get("started_at"))
         queued_at = parse_dt(entry.get("queued_at"))
         elapsed = max(0, int((now - run_started).total_seconds())) if run_started and status == "in_progress" else 0
-        queued_elapsed = max(0, int((now - queued_at).total_seconds())) if queued_at and status != "in_progress" else 0
+        queued_elapsed = (
+            max(0, int((now - queued_at).total_seconds()))
+            if queued_at and job_status in WAITING_JOB_STATUSES else 0
+        )
         entry["elapsed_seconds"] = elapsed
         entry["queue_elapsed_seconds"] = queued_elapsed
-        entry["p50_elapsed_exceeded"] = bool(expected is not None and status == "in_progress" and elapsed >= expected)
-        entry["p90_elapsed_exceeded"] = bool(expected_p90 is not None and status == "in_progress" and elapsed >= expected_p90)
-        entry["remaining_seconds"] = max(0, expected - elapsed) if expected is not None and status == "in_progress" else None
-        entry["remaining_p90_seconds"] = max(0, expected_p90 - elapsed) if expected_p90 is not None and status == "in_progress" else None
-        entry["expected_finish_at"] = (run_started + timedelta(seconds=expected)).isoformat() if expected is not None and run_started and status == "in_progress" else None
-        entry["expected_p90_finish_at"] = (run_started + timedelta(seconds=expected_p90)).isoformat() if expected_p90 is not None and run_started and status == "in_progress" else None
+        entry["queue_elapsed_basis"] = (
+            entry.get("queue_elapsed_basis")
+            or ("workflow_created_at_upper_bound; exact child-job queued_at unavailable" if job_status in WAITING_JOB_STATUSES else None)
+        )
+        run_eta_applicable = status == "in_progress" and job_status == "in_progress"
+        entry["p50_elapsed_exceeded"] = bool(expected is not None and run_eta_applicable and elapsed >= expected)
+        entry["p90_elapsed_exceeded"] = bool(expected_p90 is not None and run_eta_applicable and elapsed >= expected_p90)
+        entry["remaining_seconds"] = max(0, expected - elapsed) if expected is not None and run_eta_applicable else None
+        entry["remaining_p90_seconds"] = max(0, expected_p90 - elapsed) if expected_p90 is not None and run_eta_applicable else None
+        entry["expected_finish_at"] = (run_started + timedelta(seconds=expected)).isoformat() if expected is not None and run_started and run_eta_applicable else None
+        entry["expected_p90_finish_at"] = (run_started + timedelta(seconds=expected_p90)).isoformat() if expected_p90 is not None and run_started and run_eta_applicable else None
         out.append(entry)
     return out
 
