@@ -901,6 +901,23 @@ def test_q104_census_dashboard_requires_exact_six_shard_clock_receipt():
         "archive_count": 50,
         "archives": [{} for _ in range(50)],
         "identity_conflicts": [],
+        "frozen_cusips": {
+            "SPGI": ["78409V104"], "NDAQ": ["631103108"], "AMP": ["03076C106"],
+            "RJF": ["754730109"], "WMB": ["278865100"], "VLO": ["91913Y100"],
+            "DVN": ["25179M103"], "EMN": ["03823U102"],
+        },
+        "issuer_name_cusip_audit": {
+            "SPGI": {}, "NDAQ": {}, "AMP": {}, "RJF": {},
+            "WMB": {}, "VLO": {}, "DVN": {}, "EMN": {},
+        },
+        "unresolved_issuer_name_cusips": [],
+        "identity_resolution_proven": False,
+        "identity_review": {
+            "status": "NO_VARIANT_OBSERVED_NOT_PROOF",
+            "unresolved_pair_count": 0,
+            "identity_resolution_proven": False,
+            "interpretation": "Issuer labels are descriptive fields. Variants under one frozen CUSIP are retained for review and do not rewrite the frozen universe or drop rows; a single observed normalized name is not proof of identity.",
+        },
         "acceptance_failures": {},
         "acceptance_time_join": {
             "target_unique_accessions": 136941,
@@ -920,6 +937,58 @@ def test_q104_census_dashboard_requires_exact_six_shard_clock_receipt():
     assert q104_census_clock_complete(base) is True
     base["completed_shards"].pop()
     assert q104_census_clock_complete(base) is False
+
+
+def test_q104_census_dashboard_blocks_missing_or_unresolved_issuer_name_audit(monkeypatch):
+    import automation.generate_resource_dashboard as dashboard
+
+    base = {
+        "candidate_id": "Q104:I19",
+        "status": "13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_PIT_CLOCK_ONLY",
+        "acceptance_timezone": "America/New_York",
+        "acceptance_clock_basis": "SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
+        "completed_shards": [
+            "2013-2016", "2017-2018", "2019-2020",
+            "2021-2022", "2023", "2024-2025-09",
+        ],
+        "archive_count": 1,
+        "archives": [{}],
+        "identity_conflicts": [],
+        "acceptance_failures": {},
+        "acceptance_time_join": {
+            "target_unique_accessions": 1, "records_checked": 1,
+            "failures": 0, "complete": True, "timezone_inference": False,
+        },
+        "receipt_fingerprint": "a" * 64,
+        "safety": {
+            "paper_only": True, "live_trading_enabled": False,
+            "orders_enabled": False, "automatic_promotion": False,
+        },
+        "frozen_cusips": {"AMP": ["03076C106"]},
+        "issuer_name_cusip_audit": {"AMP": {"03076C106": {"status": "UNRESOLVED_ISSUER_NAME_VARIANTS"}}},
+        "unresolved_issuer_name_cusips": [{
+            "symbol": "AMP", "cusip": "03076C106",
+            "status": "UNRESOLVED_ISSUER_NAME_VARIANTS",
+        }],
+        "identity_resolution_proven": False,
+        "identity_review": {
+            "status": "UNRESOLVED_CUSIP_ISSUER_NAME_VARIANTS_PRESENT",
+            "unresolved_pair_count": 1,
+            "identity_resolution_proven": False,
+        },
+    }
+    monkeypatch.setattr(dashboard, "read_json_file", lambda _path: base)
+    assert dashboard.q104_census_clock_complete(base) is False
+    status = dashboard.q104_census_status([])
+    assert status["state"] == "blocked"
+    assert "Issuer-Name/CUSIP-Audit fehlt oder enthält ungeklärte historische Varianten" in status["detail"]
+
+    missing = dict(base)
+    missing.pop("issuer_name_cusip_audit")
+    monkeypatch.setattr(dashboard, "read_json_file", lambda _path: missing)
+    status = dashboard.q104_census_status([])
+    assert status["state"] == "blocked"
+    assert "PIT-Compiler bleibt gesperrt" in status["detail"]
 
 
 def test_i19_census_failure_blocks_automatic_full_census_retry():
