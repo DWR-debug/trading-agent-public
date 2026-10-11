@@ -163,7 +163,7 @@ def _validate_shard(payload: dict[str, Any]) -> None:
                 raise ValueError("Q104_I19_ARCHIVE_ISSUER_NAME_ROW_COUNT_MISMATCH:"+shard+":"+symbol)
             target_names={normalize_text(str(x)) for x in hit.get("issuer_names",[])}
             audit_names={str(row.get("normalized_name") or "") for item in by_cusip.values() for row in item.get("observations",[]) if isinstance(row,dict)}
-            if target_names!=audit_names:
+            if target_names!={name for name in audit_names if name}:
                 raise ValueError("Q104_I19_ARCHIVE_ISSUER_NAME_VARIANT_CLOSURE_FAILED:"+shard+":"+symbol)
     expected_audit=aggregate_issuer_name_cusip_audit(payload["archives"],sorted(EXPECTED_SYMBOLS))
     if shard_audit!=expected_audit:
