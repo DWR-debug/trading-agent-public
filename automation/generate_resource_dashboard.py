@@ -369,7 +369,19 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         jobs = jobs_for_run(int(run["id"])) if job_budget and run.get("id") else []
         if jobs:
             job_budget -= 1
-            jobs = [j for j in jobs if j.get("status") in {"queued", "in_progress", "waiting", "pending"}]
+            q104_matrix_still_open = (
+                workflow == "Q104 I19 Historical 13F Identity Census"
+                and run.get("status") == "in_progress"
+            )
+            jobs = [
+                j for j in jobs
+                if j.get("status") in {"queued", "in_progress", "waiting", "pending"}
+                or (
+                    q104_matrix_still_open
+                    and j.get("status") == "completed"
+                    and j.get("conclusion") in {"failure", "cancelled"}
+                )
+            ]
             for job in jobs:
                 job_name = str(job.get("name") or "")
                 lane = infer_lane(workflow, job_name, run.get("event"))
@@ -384,6 +396,7 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     "status": run.get("status"),
                     "run_status": run.get("status"),
                     "job_status": job.get("status"),
+                    "job_conclusion": job.get("conclusion"),
                     "started_at": run.get("run_started_at") or run.get("created_at"),
                     "run_started_at": run.get("run_started_at"),
                     "job_started_at": job.get("started_at"),
