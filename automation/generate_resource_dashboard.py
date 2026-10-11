@@ -1244,31 +1244,45 @@ def candidate_capacity_snapshot(
     work: list[dict[str, Any]],
     planned_capacity: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Map a focus candidate to visible active and explicitly planned capacity."""
+    """Map running work separately from waiting jobs and planned capacity."""
     active: list[dict[str, Any]] = []
+    waiting: list[dict[str, Any]] = []
     seen_active: set[tuple[str, str, str]] = set()
+    seen_waiting: set[tuple[str, str, str]] = set()
     for item in work:
-        if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
-            continue
-        haystack = re.sub(r"[^a-z0-9]", "", f"{item.get('task', '')} {item.get('job', '')}".lower())
-        candidate_key = re.sub(r"[^a-z0-9]", "", candidate.lower())
-        if candidate_key not in haystack:
+        if not _work_item_matches_candidate(item, candidate):
             continue
         key = (str(item.get("resource") or ""), str(item.get("job") or ""), str(item.get("run_id") or ""))
-        if key in seen_active:
-            continue
-        seen_active.add(key)
-        active.append({
-            "resource": str(item.get("resource") or "unassigned"),
-            "worker": str(item.get("worker") or "pending runner assignment"),
-            "job": str(item.get("job") or item.get("task") or ""),
-            "status": str(item.get("status") or ""),
-            "started_at": item.get("started_at"),
-            "run_id": item.get("run_id"),
-            "run_url": item.get("run_url"),
-        })
+        status = _work_item_status(item)
+        if _work_item_is_running(item):
+            if key in seen_active:
+                continue
+            seen_active.add(key)
+            active.append({
+                "resource": str(item.get("resource") or "unassigned"),
+                "worker": str(item.get("worker") or "runner not assigned"),
+                "job": str(item.get("job") or item.get("task") or ""),
+                "status": status or "in_progress (legacy row without status)",
+                "started_at": item.get("started_at"),
+                "run_id": item.get("run_id"),
+                "run_url": item.get("run_url"),
+            })
+        elif _work_item_is_waiting(item):
+            if key in seen_waiting:
+                continue
+            seen_waiting.add(key)
+            waiting.append({
+                "resource": str(item.get("resource") or "unassigned"),
+                "worker": str(item.get("worker") or "waiting for a matching runner"),
+                "job": str(item.get("job") or item.get("task") or ""),
+                "status": status,
+                "started_at": item.get("started_at"),
+                "run_id": item.get("run_id"),
+                "run_url": item.get("run_url"),
+            })
 
     planned: list[dict[str, Any]] = []
+
     seen_planned: set[tuple[str, str]] = set()
     for row in planned_capacity or []:
         resource = str(row.get("resource") or "")
@@ -1294,11 +1308,15 @@ def candidate_capacity_snapshot(
             })
 
     active_resources = sorted({x["resource"] for x in active if x.get("resource")})
+    waiting_resources = sorted({x["resource"] for x in waiting if x.get("resource")})
     planned_resources = sorted({x["resource"] for x in planned if x.get("resource")})
     return {
         "active_capacities": active_resources,
         "active_capacity_count": len(active_resources),
         "active_capacity_assignments": active,
+        "waiting_capacity_count": len(waiting),
+        "waiting_capacity_assignments": waiting,
+        "waiting_capacities": waiting_resources,
         "planned_capacities": planned_resources,
         "planned_capacity_count": len(planned_resources),
         "planned_capacity_assignments": planned,
@@ -1389,13 +1407,17 @@ def candidate_pipeline(
     q218_replication_complete = q218_fresh_symbol_replication_complete()
     result = []
     active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in FOCUS_CANDIDATES}
+    waiting_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in FOCUS_CANDIDATES}
     for item in work:
         if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
             continue
         text_value = _candidate_key(f"{item.get('task', '')} {item.get('job', '')}")
         for candidate in active_by_candidate:
             if _candidate_key(candidate) in text_value:
-                active_by_candidate[candidate].append(item)
+                if _work_item_is_running(item):
+                    active_by_candidate[candidate].append(item)
+                elif _work_item_is_waiting(item):
+                    waiting_by_candidate[candidate].append(item)
 
     state_by_candidate = {
         "Q104:I19": "FORMAL READINESS · HISTORICAL 13F CENSUS",
@@ -1425,6 +1447,7 @@ def candidate_pipeline(
             "next_gate": p["next_gate"],
             "active": bool(active_by_candidate[candidate]),
             "active_jobs": len(active_by_candidate[candidate]),
+            "waiting_jobs": len(waiting_by_candidate[candidate]),
             "overall_progress_percent": p["overall_progress_percent"],
             "overall_progress_basis": f'{p["completed_milestones"]}/{p["total_milestones"]} Milestones vollständig; Teilfortschritt des aktuellen Milestones separat',
             "next_milestone_progress_percent": p["current_milestone_progress_percent"],
@@ -1530,6 +1553,35 @@ def capacity_state(resource: dict[str, Any], runner: dict[str, Any] | None, assi
     return "unknown"
 
 
+def _work_item_status(item: dict[str, Any]) -> str:
+    """Return job-level status when available; run-level status is only a fallback."""
+    job_status = str(item.get("job_status") or "").strip().lower()
+    if job_status:
+        return job_status
+    return str(item.get("status") or "").strip().lower()
+
+
+WAITING_JOB_STATUSES = frozenset({"queued", "pending", "waiting", "requested"})
+
+
+def _work_item_is_running(item: dict[str, Any]) -> bool:
+    status = _work_item_status(item)
+    # Legacy deterministic fixtures model an assigned slot without telemetry.
+    # Production rows have status fields; their queue state must never count as work.
+    return status == "in_progress" or not status
+
+
+def _work_item_is_waiting(item: dict[str, Any]) -> bool:
+    return _work_item_status(item) in WAITING_JOB_STATUSES
+
+
+def _work_item_matches_candidate(item: dict[str, Any], candidate: str) -> bool:
+    if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
+        return False
+    text_value = _candidate_key(f"{item.get('task', '')} {item.get('job', '')}")
+    return _candidate_key(candidate) in text_value
+
+
 def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, Any]], work: list[dict[str, Any]]) -> list[dict[str, Any]]:
     out = []
     runner_by_name = {str(r.get("name")): r for r in runners}
@@ -1538,6 +1590,12 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         research_assignments = [
             w for w in assignments
             if str(w.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"}
+            and _work_item_is_running(w)
+        ]
+        queued_research_assignments = [
+            w for w in assignments
+            if str(w.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"}
+            and _work_item_is_waiting(w)
         ]
         runner = runner_by_name.get(resource["configured_runner"])
         state = capacity_state(resource, runner, research_assignments)
@@ -1560,34 +1618,120 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "runner_status": runner.get("status") if runner else None,
             "labels": runner.get("labels", []) if runner else [],
             "current_assignments": len(research_assignments),
-            "total_active_assignments": len(assignments),
+            "queued_assignments": len(queued_research_assignments),
+            "queued_tasks": [w.get("job") or w.get("task") for w in queued_research_assignments[:4]],
+            "total_active_assignments": sum(1 for w in assignments if _work_item_is_running(w)),
             "research_capacity_slots": capacity_slots,
             "research_slots_in_use": research_slots_in_use,
             "research_slots_free": max(0, capacity_slots - research_slots_in_use),
-            "current_tasks": [w.get("task") for w in assignments[:4]],
+            "current_tasks": [w.get("job") or w.get("task") for w in research_assignments[:4]],
         })
     return out
 
 
-def planned_research_backlog(state_board: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Expose exactly the three active candidates and their next non-authorizing gate."""
-    order = [
-        ("Q104:I19", ".github/workflows/q104-i19-13f-historical-identity-census.yml", "Windows self-hosted A / bounded census recovery"),
-        ("Q220", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted B / historical XBRL PIT"),
-        ("Q221", ".github/workflows/top4-candidate-slot-research.yml", "Windows self-hosted C or GitHub-hosted ARM64 / USAspending clock"),
-    ]
-    by_code = {str(x.get("code")): x for x in state_board if isinstance(x, dict)}
-    backlog = []
-    for rank, (code, workflow, resource) in enumerate(order, start=1):
-        item = by_code.get(code)
+def planned_research_backlog(
+    pipeline: list[dict[str, Any]],
+    work: list[dict[str, Any]] | None = None,
+    planned_capacity: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    """Build the three-row next-gate queue from receipt-backed pipeline state.
+
+    Running jobs are single-flight. Queued jobs are visible but not active work.
+    A completed upstream gate requiring a new workpack gets no stale route/runner
+    hint or ETA until that workpack is explicitly frozen.
+    """
+    by_code = {str(x.get("code")): x for x in pipeline if isinstance(x, dict)}
+    work_rows = [x for x in (work or []) if isinstance(x, dict)]
+    assignments: list[tuple[str, dict[str, Any]]] = []
+    for row in planned_capacity or []:
+        resource = str(row.get("resource") or "")
+        items = row.get("planned_assignments", [])
+        if not isinstance(items, list):
+            continue
+        for assigned in items:
+            if isinstance(assigned, dict) and str(assigned.get("candidate") or "") in FOCUS_CANDIDATES:
+                assignments.append((resource, assigned))
+
+    backlog: list[dict[str, Any]] = []
+    for rank, code in enumerate(FOCUS_CANDIDATES, start=1):
+        item = by_code.get(code, {})
+        matched_work = [w for w in work_rows if _work_item_matches_candidate(w, code)]
+        running = [w for w in matched_work if _work_item_is_running(w)]
+        waiting = [w for w in matched_work if _work_item_is_waiting(w)]
+        candidate_assignments = [(r, assigned) for r, assigned in assignments if assigned.get("candidate") == code]
+        advisory_new_workpack = any(
+            assigned.get("dispatch_condition") == "ADVISORY_ONLY"
+            or "NEEDS_NEW_WORKPACK" in str(assigned.get("readiness") or "").upper()
+            for _, assigned in candidate_assignments
+        )
+        workpack_required = bool(item.get("next_workpack_required")) or advisory_new_workpack
+        executable = [
+            (resource, assigned) for resource, assigned in candidate_assignments
+            if assigned.get("scheduled") is True
+            and assigned.get("dispatchable") is True
+            and bool(assigned.get("execution_workflow"))
+        ]
+        executable.sort(key=lambda pair: (
+            pair[1].get("expected_duration_seconds") is not None,
+            int(pair[1].get("duration_sample_count") or 0),
+        ), reverse=True)
+
+        lane = str(item.get("lane") or ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY"))
+        next_gate = str(item.get("next_gate") or "next receipt-defined research gate")
+        workflow = None
+        resource_hint = "Kein ausführbarer Workpack/Runner aktuell belegt"
+        status = "NO_EXECUTABLE_ROUTE"
+        expected_seconds = None
+        expected_p90 = None
+        duration_samples = 0
+
+        if running:
+            run_ids = sorted({str(w.get("run_id")) for w in running if w.get("run_id") is not None})
+            run_hint = ", ".join("#" + run_id for run_id in run_ids) or "aktiver Job"
+            status = "ACTIVE_SINGLE_FLIGHT"
+            resource_hint = f"Aktiv ({run_hint}); keine zweite Instanz starten"
+            if code == "Q104:I19":
+                next_gate = (
+                    "Nach terminalem Census: sechs Shard-Receipts abgleichen; "
+                    "nur belegte Header-Lücken gezielt reparieren; anschließend PIT-Compiler"
+                )
+        elif workpack_required:
+            status = "WORKPACK_REQUIRED"
+            resource_hint = "Workpack zuerst spezifizieren; keine Ressource disponieren"
+        elif waiting:
+            status = "WAITING_EXISTING_RUNS"
+            run_ids = sorted({str(w.get("run_id")) for w in waiting if w.get("run_id") is not None})
+            run_hint = ", ".join("#" + run_id for run_id in run_ids) or "bereits eingereiht"
+            resource_hint = f"Bereits wartend ({run_hint}); keine zweite Instanz starten"
+        elif executable:
+            resource, assigned = executable[0]
+            status = "READY_NEXT_GATE"
+            resource_hint = resource or "explizit disponierter Runner"
+            workflow = str(assigned["execution_workflow"])
+            expected_seconds = assigned.get("expected_duration_seconds")
+            expected_p90 = assigned.get("expected_duration_p90_seconds")
+            duration_samples = int(assigned.get("duration_sample_count") or 0)
+            next_gate = str(assigned.get("task") or next_gate)
+        elif any(
+            assigned.get("scheduled") is False or assigned.get("dispatchable") is False
+            for _, assigned in candidate_assignments
+        ):
+            status = "PREREQUISITE_BLOCKED"
+            resource_hint = "Voraussetzung offen; kein Runner zugeordnet"
+
         backlog.append({
             "queue_rank": rank,
             "candidate": code,
-            "lane": str(item.get("lane") or ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY")) if item else ("FORMAL READINESS" if code == "Q104:I19" else "FRONTIER DISCOVERY"),
-            "next_gate": str(item.get("next_gate") or "next receipt-defined research gate") if item else "next receipt-defined research gate",
+            "lane": lane,
+            "next_gate": next_gate,
             "execution_workflow": workflow,
-            "resource_hint": resource,
-            "planned_status": "READY_NEXT_GATE",
+            "resource_hint": resource_hint,
+            "planned_status": status,
+            "expected_duration_seconds": expected_seconds,
+            "expected_duration_p90_seconds": expected_p90,
+            "duration_sample_count": duration_samples,
+            "waiting_job_count": len(waiting),
+            "waiting_run_ids": sorted({str(w.get("run_id")) for w in waiting if w.get("run_id") is not None}),
             "non_authorizing": True,
         })
     return backlog
@@ -2309,7 +2453,12 @@ def main() -> None:
         os_state,
         recent_runs=recent_runs,
     )
-    planned_research_queue = planned_research_backlog(state_board)
+    pipeline = candidate_pipeline(
+        top4, work, workflow_benchmarks, job_benchmarks, recent_runs, planned_capacity
+    )
+    planned_research_queue = planned_research_backlog(
+        pipeline, work=work, planned_capacity=planned_capacity
+    )
 
     payload = {
         "schema_version": 2,
@@ -2385,9 +2534,7 @@ def main() -> None:
             for candidate in FOCUS_CANDIDATES
         },
         "focus_candidates": list(FOCUS_CANDIDATES),
-        "pipeline": candidate_pipeline(
-            top4, work, workflow_benchmarks, job_benchmarks, recent_runs, planned_capacity
-        ),
+        "pipeline": pipeline,
         "duration_benchmarks": workflow_benchmarks,
         "job_duration_benchmarks": job_benchmarks,
         "workload_by_resource": {name: sum(1 for w in work if w.get("resource") == name) for name in sorted({w.get("resource") for w in work if w.get("resource")})},
