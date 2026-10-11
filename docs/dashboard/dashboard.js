@@ -395,6 +395,7 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
   }
   function statusFor(code,pipe,rec,activeRows){
     if(activeRows.length)return "AKTIVER RUN LÄUFT · NICHT DUPLIZIEREN";
+    if((pipe||{}).next_workpack_required)return "WORKPACK OFFEN · NICHT AUTO-DISPATCH";
     if(rec){
       var p=rec.item;
       var readiness=String(p.readiness||"").toUpperCase();
