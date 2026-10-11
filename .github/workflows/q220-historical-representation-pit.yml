@@ -9,6 +9,10 @@ on:
       - "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json"
       - "research/evidence/q220_as_filed_xbrl_population_latest.json"
       - ".github/workflows/q220-historical-representation-pit.yml"
+  workflow_run:
+    workflows: ["Q220 As-Filed SEC-XBRL Population Repair"]
+    types: [completed]
+    branches: [master]
   workflow_dispatch: {}
 
 permissions:
@@ -20,7 +24,9 @@ concurrency:
 
 jobs:
   compile:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 120
     steps:
