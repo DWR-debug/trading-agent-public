@@ -80,9 +80,9 @@ Q221 remains source-blocked until the alternate route provides a versioned, immu
 
 | Lane | Latest verified state | Next action |
 |---|---|---|
-| Q104:I19 | Run 38145062319 is still in progress. Some historical census shards have failed at SEC acceptance-time joins; other shards were still running; source snapshot completed. | Let the existing census reach terminal state. Reconcile every shard receipt. Repair only the exact frozen accessions/joins shown to be missing; do not restart the entire census. |
-| Q220 | Run 38155914188 population and route jobs completed successfully: 55 records and 8 route controls, both with zero failures; receipt fingerprints and current gate/contract hashes were independently reconciled. Five population records have no observed TextBlock facts. | Refresh the compiler's stale fixed population pin to the verified receipt, then let the existing historical-prefix compiler workflow run. Review source hashes, prefix ordering and explicit missing states; no PIT or performance pass is inferred in advance. |
-| Q221 | Archive catalog stage completed, but historical multi-version series not found; fail-closed status is correct. | Bounded alternate-source research as described above. No event-level public boundary, frozen recipient/issuer map or scientific evidence is claimed. |
+| Q104:I19 | Run 38168441086 remains active; source snapshot and recovery guard passed, and all six shards were still running at 21:55 UTC. | Let the existing census reach terminal state. Reconcile all six shard receipts; repair only proven header/identity gaps; do not restart the entire census. |
+| Q220 | Population, historical-prefix compiler and independent retrieval/parser receipts now validate as one pinned 55-record chain with zero hash, identity, prefix, structured-fact, TextBlock or change-state mismatches. Five no-TextBlock states remain explicit. | Freeze a bounded adversarial robustness + formal trial-governance reconciliation workpack. No performance authorization, ETA or automatic dispatch until the workpack is explicit. |
+| Q221 | Five fixed-window historical policy-document vintages have been reconstructed, but award-level first-public observation and historical applicability remain unproven. | Define a new award-level boundary and recipient-to-issuer workpack with fixed transaction classes, DoD/USACE/FAR semantics and correction lineage. No reuse of the completed policy-vintage probe as transaction proof. |
 
 ## 3. Reserve wave A — Q224 EDGAR document-acquisition demand
 
