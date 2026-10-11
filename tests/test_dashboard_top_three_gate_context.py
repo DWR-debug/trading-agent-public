@@ -241,3 +241,24 @@ def test_dashboard_refreshes_after_operational_status_sync_completion():
     assert "github.event.workflow_run.head_branch == 'master'" in workflow
 
 
+
+
+def test_dashboard_defaults_to_concise_operations_overview_and_progressively_discloses_detail():
+    html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    css = (ROOT / "docs/dashboard/research-control-board.css").read_text(encoding="utf-8")
+
+    assert 'id="opsNowTable"' in html
+    assert 'id="opsNextTable"' in html
+    assert 'id="opsKpis"' in html
+    assert "function renderOperationsOverview(data,work,pipeline,planned,queue)" in js
+    for field in ("x.resource", "x.worker", "x.elapsed_seconds", "x.expected_duration_seconds", "remainingRunLabel(x)"):
+        assert field in js
+    for field in ("p.task", "rec.resource", "nextDurationLabel(p,data,code)"):
+        assert field in js
+    assert 'summary>Ausführliche Kandidatenanalyse, Gate-Begründungen und Handoff</summary>' in html
+    assert 'summary>Aktive Jobs · vollständige Laufzeit- und Actions-Tabelle</summary>' in html
+    assert 'summary>Vollständiges Kandidaten-Portfolio' in html
+    assert ".ops-overview" in css and ".detail-drawer>summary" in css
+    assert "Fehlende Daten werden nicht geschätzt." in html
+
