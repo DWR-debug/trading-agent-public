@@ -23,6 +23,48 @@ def test_future_filing_is_excluded():
     assert r["target_hits"]["SPGI"]["issuer_names"]==["Old Name Corp"]
 
 
+def test_issuer_name_variants_under_frozen_cusip_are_retained_and_flagged():
+    sub = (
+        "ACCESSION_NUMBER\tFILING_DATE\tPERIODOFREPORT\n"
+        "A1\t01-JUL-2017\t30-JUN-2017\n"
+        "A2\t01-JUL-2018\t30-JUN-2018\n"
+        "A3\t01-NOV-2025\t30-SEP-2025\n"
+    )
+    info = (
+        "ACCESSION_NUMBER\tNAMEOFISSUER\tTITLEOFCLASS\tCUSIP\n"
+        "A1\tAmeriprise Financial Inc\tCommon Stock\t03076C106\n"
+        "A2\tAmerican Tower Corp\tCommon Stock\t03076C106\n"
+        "A3\tFuture Issuer Name\tCommon Stock\t03076C106\n"
+    )
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("SUBMISSION.tsv", sub)
+        archive.writestr("INFOTABLE.tsv", info)
+
+    result = scan_archive(
+        buffer.getvalue(),
+        {"url": "synthetic://issuer-name-cusip", "label": "2017-2018", "period_start": "2017-07-01"},
+        {"AMP": {"03076C106"}},
+    )
+
+    hit = result["target_hits"]["AMP"]
+    audit = result["issuer_name_cusip_audit"]["AMP"]["03076C106"]
+    assert hit["row_count"] == 2
+    assert hit["accessions"] == ["A1", "A2"]
+    assert set(hit["issuer_names"]) == {"Ameriprise Financial Inc", "American Tower Corp"}
+    assert audit["status"] == "UNRESOLVED_ISSUER_NAME_VARIANTS"
+    assert audit["identity_resolution_proven"] is False
+    assert {row["normalized_name"] for row in audit["observations"]} == {
+        "AMERIPRISE FINANCIAL INC", "AMERICAN TOWER CORP"
+    }
+    sample_pairs = {(row["accession"], row["raw_name"]) for item in audit["observations"] for row in item["row_samples"]}
+    assert ("A1", "Ameriprise Financial Inc") in sample_pairs
+    assert ("A2", "American Tower Corp") in sample_pairs
+    assert "Future Issuer Name" not in hit["issuer_names"]
+    assert result["identity_resolution_proven"] is False
+    assert result["unresolved_issuer_name_cusips"][0]["cusip"] == "03076C106"
+
+
 def test_q104_workflow_suppresses_duplicate_push_runs_without_cancelling_active_run():
     from pathlib import Path
 
