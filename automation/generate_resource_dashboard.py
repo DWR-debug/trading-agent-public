@@ -195,7 +195,9 @@ def duration_benchmarks(runs: list[dict[str, Any]], max_samples_per_workflow: in
     for run in runs:
         if not isinstance(run, dict) or run.get("status") != "completed":
             continue
-        if run.get("conclusion") == "cancelled":
+        # Runtime ETA should be calibrated on completed successful runs, not
+        # early failures that systematically understate normal execution time.
+        if run.get("conclusion") != "success":
             continue
         name = str(run.get("name") or "")
         duration = run_duration_seconds(run)
@@ -211,7 +213,7 @@ def duration_benchmarks(runs: list[dict[str, Any]], max_samples_per_workflow: in
             "p50_seconds": median(values) or 0,
             "p90_seconds": percentile(values, 0.90) or 0,
             "sample_count": len(values),
-            "source": "recent completed runs; cancelled runs excluded",
+            "source": "recent successful completed runs; failures and cancellations excluded",
         }
     return out
 
@@ -223,10 +225,16 @@ def job_duration_benchmarks(
 ) -> dict[str, dict[str, int | str]]:
     samples: dict[str, list[int]] = {}
     comparable_workflows = {workflow_name, "Top-4 Candidate Slot Research"}
-    selected = [r for r in runs if isinstance(r, dict) and r.get("name") in comparable_workflows and r.get("status") == "completed"]
+    selected = [
+        r for r in runs
+        if isinstance(r, dict)
+        and r.get("name") in comparable_workflows
+        and r.get("status") == "completed"
+        and r.get("conclusion") == "success"
+    ]
     for run in selected[:recent_runs]:
         for job in jobs_for_run(int(run["id"])) if run.get("id") else []:
-            if job.get("status") != "completed" or job.get("conclusion") == "cancelled":
+            if job.get("status") != "completed" or job.get("conclusion") != "success":
                 continue
             started = parse_dt(job.get("started_at"))
             finished = parse_dt(job.get("completed_at"))
@@ -243,7 +251,7 @@ def job_duration_benchmarks(
             "p50_seconds": median(values) or 0,
             "p90_seconds": percentile(values, 0.90) or 0,
             "sample_count": len(values),
-            "source": "completed Top-4 candidate capacity/slot job history; cancelled jobs excluded",
+            "source": "successful Top-4 capacity/slot runs and successful jobs only",
         }
         for candidate, values in samples.items()
     }
