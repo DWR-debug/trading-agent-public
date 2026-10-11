@@ -68,7 +68,7 @@ def fetch(url: str, limit: int) -> tuple[int, str, bytes]:
         if len(body) > limit:
             raise ValueError(f"compressed/raw response exceeded bounded byte limit ({limit})")
         encoding = str(response.headers.get("Content-Encoding", "")).lower()
-        is_gzip = body.startswith(b"\\x1f\\x8b")
+        is_gzip = body.startswith(bytes((31, 139)))
         if "gzip" in encoding or is_gzip:
             body = _bounded_gzip_decode(body, limit)
         elif len(body) > limit:
