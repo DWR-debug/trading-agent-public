@@ -227,6 +227,67 @@ function renderCandidatePortfolio(data){
   renderRows();
 }
 
+function renderCandidateIntake(data){
+  var plan=data.candidate_intake_plan||{};
+  var summary=plan.summary||{};
+  var host=$("candidateIntakeRows"), box=$("candidateIntakeSummary");
+  if(!host||!box)return;
+  var state=String(plan.status||"UNKNOWN");
+  box.innerHTML=
+    "<div class='intake-metric'><span>Queue-Status</span><strong>"+esc(state.replace(/_/g," "))+"</strong></div>"+
+    "<div class='intake-metric'><span>Vorschläge</span><strong>"+esc(summary.total_candidates||0)+"</strong></div>"+
+    "<div class='intake-metric'><span>Validiert · quarantänisiert</span><strong>"+esc(summary.validated_quarantined||0)+"</strong></div>"+
+    "<div class='intake-metric'><span>Blockiert</span><strong>"+esc(summary.blocked||0)+"</strong></div>"+
+    "<div class='intake-metric'><span>Runner-Zuteilung</span><strong>0 · geschützt</strong></div>";
+  var items=Array.isArray(plan.candidates)?plan.candidates:[];
+  if(plan.queue_error){
+    host.innerHTML="<div class='intake-row blocked'><strong>Queue nicht lesbar oder ungültig</strong><div>"+esc(plan.queue_error)+"</div></div>";
+  }else if(!items.length){
+    host.innerHTML="<div class='empty'>Keine neuen Vorschläge in der Queue. Leere Queue = null Compute-Verbrauch.</div>";
+  }else{
+    host.innerHTML="<table class='intake-table'><thead><tr><th>ID</th><th>Disposition</th><th>Nächstes Gate</th><th>Begründung</th><th>Fingerprint</th></tr></thead><tbody>"+
+      items.map(function(x){
+        var blocked=String(x.status||"").indexOf("BLOCKED_")===0;
+        return "<tr><td><strong>"+esc(x.candidate_id)+"</strong><div class='small muted'>"+esc(x.candidate_name)+"</div></td>"+
+          "<td><span class='intake-status "+(blocked?"blocked":"quarantined")+"'>"+esc(String(x.status||"UNKNOWN").replace(/_/g," "))+"</span><div class='small muted'>"+(x.dispatchable?"dispatchable":"kein Dispatch")+"</div></td>"+
+          "<td>"+esc(x.next_gate||"—")+"</td><td>"+esc(x.reason||"—")+"</td>"+
+          "<td><code>"+esc(x.candidate_fingerprint||"—")+"</code></td></tr>";
+      }).join("")+"</tbody></table>";
+  }
+  if(!plan.policy||plan.policy.active_focus_auto_widening!==false||plan.policy.new_candidates_auto_dispatch!==false){
+    host.insertAdjacentHTML("afterbegin","<div class='intake-row blocked'><strong>Governance-Guard:</strong> Intake-Policy fehlt oder weicht von fail-closed Vorgaben ab. Nicht disponieren.</div>");
+  }
+}
+function bindCandidateIntakeCopy(){
+  var button=$("copyCandidateIntakeTemplate"), field=$("candidateIntakeTemplate"), status=$("candidateIntakeCopyStatus");
+  if(!button||!field||button.dataset.bound)return;
+  var sample={
+    "id":"Q_NEW_ID",
+    "name":"Descriptive mechanism name",
+    "hypothesis":"One falsifiable, direction-neutral economic-information hypothesis.",
+    "construction":"Frozen deterministic feature construction with explicit public-observation/PIT boundary and issuer identity mapping.",
+    "sources":["https://official-source.example/"],
+    "next_gate":"free_source_and_historical_clock_feasibility",
+    "cheap_falsifiers":["Predeclared one-session clock shift test.","Issuer-identity shuffle within a frozen population."],
+    "gates":["Historical public-observation boundary and revision lineage.","Frozen identity mapping and independent PIT reproduction."]
+  };
+  field.value=JSON.stringify(sample,null,2);
+  button.addEventListener("click",function(){
+    var payload=field.value;
+    function fallbackCopy(){
+      field.focus();field.select();
+      var ok=false;try{ok=document.execCommand("copy");}catch(e){}
+      if(status)status.textContent=ok?"Vorlage kopiert.":"Text markieren und manuell kopieren.";
+    }
+    if(navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){
+      navigator.clipboard.writeText(payload).then(function(){
+        if(status)status.textContent="Vorlage kopiert.";
+      }).catch(fallbackCopy);
+    }else fallbackCopy();
+  });
+  button.dataset.bound="1";
+}
+
 function render(data){
   var s=data.dashboard_summary||{};
   var resources=(data.resources||[]).filter(function(x){
@@ -334,6 +395,7 @@ function render(data){
 
   renderCandidateDecisionRules(pipeline);
   renderCandidatePortfolio(data);
+  renderCandidateIntake(data);
 
   var order={"Windows self-hosted A":0,"Windows self-hosted B":1,"Windows self-hosted C":2,"GitHub-hosted Ubuntu x64":3,"GitHub-hosted ARM64":4,"Free AI pool":5};
   resources.sort(function(a,b){return order[a.name]-order[b.name];});
@@ -434,6 +496,7 @@ document.addEventListener("DOMContentLoaded",function(){
   setInterval(updateClock,1000);
   setInterval(updateSnapshotAge,1000);
   $("refresh").addEventListener("click",load);
+  bindCandidateIntakeCopy();
   $("copyHandoff").addEventListener("click",function(){
     var field=$("chatHandoffText");
     var status=$("copyHandoffStatus");

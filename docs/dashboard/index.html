@@ -301,6 +301,30 @@
       <div class="portfolio-footer">Entwicklungszeiten sind niedrige Vertrauensstufen für die Planung – keine gemessenen Laufzeiten. „Bis unabhängiger PIT-Reproduktion“ ist kein Termin für autorisierte Performance-Tests, Promotion oder Live-Handel. Q227/Q231 sind als ein gemeinsames Workpack ausgewiesen; Q217 bleibt bis zur Orthogonalitätsprüfung gebündelt.</div>
     </article>
 
+    
+    <article class="card intake-card">
+      <div class="section-heading">
+        <div>
+          <div class="section-kicker">Automatisierte Kandidatenaufnahme</div>
+          <h2>Neue Hypothese → Intake → Kapazitätsentscheidung</h2>
+          <p class="muted small">Ein zentraler Queue-Eintrag; automatische Schema-/Robustheits- und Dublettenprüfung. Kein automatischer Runner-Verbrauch.</p>
+        </div>
+        <a class="button" id="candidateIntakeEdit" href="https://github.com/DWR-debug/trading-agent-public/edit/master/research/candidates/candidate_intake_queue.json" target="_blank" rel="noopener">Intake-Queue bearbeiten</a>
+      </div>
+      <div id="candidateIntakeSummary" class="intake-summary"></div>
+      <div id="candidateIntakeRows" class="intake-rows"></div>
+      <details class="intake-howto">
+        <summary>Aufnahmeformat und Ablauf anzeigen</summary>
+        <p>Ein Objekt mit ID, Mechanismus, deterministischer PIT-/Public-Clock-Konstruktion, Quellen, nächstem billigen Gate, Falsifikatoren und nachgelagerten Gates in <code>candidates</code> ergänzen. Nach dem Push aktualisiert der Dashboard-Workflow die Disposition.</p>
+        <p><strong>Automatischer Status bedeutet keine Zulassung:</strong> Ein bestandener Eintrag bleibt isoliert. Die aktive Ausführungspipeline bleibt Q104:I19, Q220 und Q221, bis eine explizite Fokusentscheidung getroffen wurde.</p>
+        <textarea id="candidateIntakeTemplate" class="intake-template" readonly rows="19" aria-label="Vorlage für neue Kandidaten"></textarea>
+        <div class="intake-actions">
+          <button id="copyCandidateIntakeTemplate" type="button">JSON-Vorlage kopieren</button>
+          <span id="candidateIntakeCopyStatus" class="handoff-status" aria-live="polite"></span>
+          <a href="https://github.com/DWR-debug/trading-agent-public/blob/master/docs/research_design/CANDIDATE_INTAKE_CAPACITY.md" target="_blank" rel="noopener">Vollständiger Intake-Vertrag</a>
+        </div>
+      </details>
+    </article>
     <article class="card support-card">
       <h2>S10 · technische Support-Kapazität</h2>
       <div id="s10"></div>

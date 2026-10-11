@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "record_type": "candidate_intake_queue",
+  "purpose": "Single intake point for new public-information research hypotheses. FIFO only; no performance/selection authority.",
+  "instructions": [
+    "Append one candidate object to candidates in queue order.",
+    "Required fields: id, name, hypothesis, construction, sources, next_gate, cheap_falsifiers, gates.",
+    "Construction must encode a frozen deterministic point-in-time/public-observation boundary.",
+    "Sources are provenance leads, not scientific evidence. Candidates stay quarantined after successful intake.",
+    "Do not add return/drawdown, winner, selection/ranking, tuned-parameter, holdout, promotion, or authorization fields.",
+    "The active Q104:I19 / Q220 / Q221 focus is not widened automatically."
+  ],
+  "candidates": []
+}
