@@ -187,3 +187,8 @@ def test_q220_textblock_parser_preserves_facts_after_self_closing_fact():
     assert states["us-gaap:RiskTextBlock"][0]["normalized_character_count"] == len("Risk disclosure")
     assert states["us-gaap:SecondEmptyTextBlock"][0]["normalized_character_count"] == 0
     assert states["us-gaap:OtherTextBlock"][0]["normalized_character_count"] == len("Other disclosure")
+
+def test_q220_default_population_pin_matches_verified_master_receipt():
+    from automation.q220_historical_representation_pit import EXPECTED_POPULATION_RECEIPT_FINGERPRINT
+
+    assert EXPECTED_POPULATION_RECEIPT_FINGERPRINT == "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543"

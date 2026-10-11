@@ -81,7 +81,7 @@ Q221 remains source-blocked until the alternate route provides a versioned, immu
 | Lane | Latest verified state | Next action |
 |---|---|---|
 | Q104:I19 | Run 38145062319 is still in progress. Some historical census shards have failed at SEC acceptance-time joins; other shards were still running; source snapshot completed. | Let the existing census reach terminal state. Reconcile every shard receipt. Repair only the exact frozen accessions/joins shown to be missing; do not restart the entire census. |
-| Q220 | Run 38155914188 is pending overall. Its population job succeeded: 55/55 records, zero record failures, eight-issuer frozen universe. Route probe remains pending. | Wait for route probe and reconcile population receipt provenance with gate-code/contract hashes. Do not start a duplicate run or declare the downstream PIT gate positive. |
+| Q220 | Run 38155914188 population and route jobs completed successfully: 55 records and 8 route controls, both with zero failures; receipt fingerprints and current gate/contract hashes were independently reconciled. Five population records have no observed TextBlock facts. | Refresh the compiler's stale fixed population pin to the verified receipt, then let the existing historical-prefix compiler workflow run. Review source hashes, prefix ordering and explicit missing states; no PIT or performance pass is inferred in advance. |
 | Q221 | Archive catalog stage completed, but historical multi-version series not found; fail-closed status is correct. | Bounded alternate-source research as described above. No event-level public boundary, frozen recipient/issuer map or scientific evidence is claimed. |
 
 ## 3. Reserve wave A — Q224 EDGAR document-acquisition demand
