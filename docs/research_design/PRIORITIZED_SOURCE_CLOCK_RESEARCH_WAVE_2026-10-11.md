@@ -151,6 +151,12 @@ The SEC states that filing-review correspondence has been publicly released thro
 
 The cited studies support the importance of SEC scrutiny and its potential effect on disclosure/information environment. They do not establish a short-horizon return effect from the first public correspondence filing.
 
+### Existing Q228 implementation: current source-page check only
+
+The repository defines workflow .github/workflows/q228-sec-correspondence-source-gate.yml and automation/q228_sec_correspondence_source_gate.py. The script currently fetches two present-day SEC pages (correspondence guidance and EDGAR search), hashes each response and checks for a small set of text markers. That is a current-page structure check; by construction it does not census historical letters, link comment/response cycles, prove each record's first public timestamp, or validate an issuer-level PIT join.
+
+The only checked-in test at this point verifies that the script's main function is callable; it does not exercise marker drift, fetch failure, receipt status or PIT-boundary behavior. The workflow definition has a 30-minute schedule and a workflow-dispatch trigger, but no Q228 run/receipt appeared in the recent Actions run page checked for this wave. This plan therefore does not claim the current Q228 workflow has passed. Its next step is to verify a real scheduled-run receipt, then move beyond present-day page accessibility to the historical census and identity/clock gates below.
+
 ### Ordered gate sequence
 
 **Q228-A — historical archive census**
