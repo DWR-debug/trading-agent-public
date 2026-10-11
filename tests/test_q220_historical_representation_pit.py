@@ -6,6 +6,7 @@ from automation.q220_historical_representation_pit import (
     canonical_fingerprint,
     compile_receipt,
     sha256,
+    textblock_states,
 )
 
 
@@ -164,3 +165,25 @@ def test_q220_receipt_fingerprint_is_self_consistent(tmp_path):
     population, contract, docs, root = _fixture(tmp_path)
     result = _compile(population, contract, root=root, fetcher=lambda cik, accession, filename: (docs[accession], 200), sleep_seconds=0)
     assert canonical_fingerprint(result) == result["receipt_fingerprint"]
+
+
+def test_q220_textblock_parser_preserves_facts_after_self_closing_fact():
+    document = """
+    <html xmlns:ix="http://www.xbrl.org/2013/inlineXBRL">
+      <ix:nonNumeric name="us-gaap:EmptyTextBlock" contextRef="C0" id="empty"/>
+      <ix:nonNumeric name="us-gaap:RiskTextBlock" contextRef="C1" id="risk"><p>Risk disclosure</p></ix:nonNumeric>
+      <ix:nonNumeric name="us-gaap:SecondEmptyTextBlock" contextRef="C2" id="empty2" />
+      <ix:nonNumeric name="us-gaap:OtherTextBlock" contextRef="C3" id="other">Other disclosure</ix:nonNumeric>
+    </html>
+    """
+    states = textblock_states(document)
+    assert set(states) == {
+        "us-gaap:EmptyTextBlock",
+        "us-gaap:RiskTextBlock",
+        "us-gaap:SecondEmptyTextBlock",
+        "us-gaap:OtherTextBlock",
+    }
+    assert states["us-gaap:EmptyTextBlock"][0]["normalized_character_count"] == 0
+    assert states["us-gaap:RiskTextBlock"][0]["normalized_character_count"] == len("Risk disclosure")
+    assert states["us-gaap:SecondEmptyTextBlock"][0]["normalized_character_count"] == 0
+    assert states["us-gaap:OtherTextBlock"][0]["normalized_character_count"] == len("Other disclosure")
