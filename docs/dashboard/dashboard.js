@@ -319,6 +319,115 @@ function renderCandidateIntake(data){
     "<div class='small muted' style='margin-top:8px'>FIFO statt Rendite-Ranking. Neue Kandidaten bleiben nicht-authorisierende Hypothesen. Explizite Fokusentscheidung vor jeder Kapazitätszuteilung erforderlich.</div>";
 }
 
+
+function operationStatusClass(status){
+  var s=String(status||"").toLowerCase();
+  if(s==="in_progress"||s==="running")return "active-badge";
+  if(s==="queued"||s==="pending"||s==="waiting"||s==="ready")return "planned-badge";
+  if(s.indexOf("block")>=0||s.indexOf("fail")>=0||s.indexOf("unknown")>=0)return "blocked-badge";
+  return "blocked-badge";
+}
+function nextDurationLabel(item,data,code){
+  if(item&&item.scheduled===false)return "Nicht disponiert · keine Laufzeitprognose";
+  if(item&&item.expected_duration_seconds!=null&&Number(item.duration_sample_count)>0){
+    return durationBenchmarkLabel(item.expected_duration_seconds,item.expected_duration_p90_seconds,item.duration_sample_count);
+  }
+  var b=(data.job_duration_benchmarks||{})[code]||null;
+  if(b&&b.p50_seconds!=null&&Number(b.sample_count)>0){
+    return durationBenchmarkLabel(b.p50_seconds,b.p90_seconds,b.sample_count);
+  }
+  return "Nicht kalibriert";
+}
+function renderOperationsOverview(data,work,pipeline,planned,queue){
+  var kpis=$("opsKpis"), nowTable=$("opsNowTable"), nextTable=$("opsNextTable");
+  if(!kpis||!nowTable||!nextTable)return;
+  var rows=Array.isArray(work)?work.slice():[];
+  var running=rows.filter(function(x){return String(x.status||x.run_status||"")==="in_progress";});
+  var waiting=rows.filter(function(x){return ["queued","waiting","pending"].indexOf(String(x.status||x.run_status||""))>=0;});
+  var calibrated=rows.filter(function(x){return Number(x.duration_sample_count||0)>0&&x.expected_duration_seconds!=null;});
+  kpis.innerHTML=
+    "<div class='ops-kpi'><span>JETZT AKTIV</span><strong>"+running.length+"</strong><small>sichtbare Fokus-Jobs</small></div>"+
+    "<div class='ops-kpi'><span>WARTET AUF START</span><strong>"+waiting.length+"</strong><small>Queue-Zeit separat erfasst</small></div>"+
+    "<div class='ops-kpi'><span>ZEITBASIS</span><strong>"+calibrated.length+"/"+rows.length+"</strong><small>aktive Jobs mit Vergleichslaufzeiten</small></div>";
+  nowTable.innerHTML=rows.length?
+    "<table class='ops-table ops-compact'><thead><tr><th>Was / Kandidat</th><th>Wer / Runner</th><th>Status · Start</th><th>Bereits</th><th>Historische Dauer</th><th>Restlaufzeit</th><th>Run</th></tr></thead><tbody>"+
+    rows.map(function(x){
+      var runStatus=String(x.status||x.run_status||"unknown");
+      var jobStatus=String(x.job_status||runStatus);
+      var isRunning=runStatus==="in_progress";
+      var candidate=candidateFrom((x.task||"")+" "+(x.job||""));
+      var started=x.run_started_at||(isRunning?x.started_at:(x.queued_at||x.started_at));
+      var elapsed=isRunning?fmtDuration(x.elapsed_seconds):"Queue "+fmtDuration(x.queue_elapsed_seconds);
+      var benchmark=(Number(x.duration_sample_count||0)>0&&x.expected_duration_seconds!=null)
+        ?durationBenchmarkLabel(x.expected_duration_seconds,x.expected_duration_p90_seconds,x.duration_sample_count)
+        :"Nicht kalibriert";
+      var remaining=isRunning?remainingRunLabel(x):"Run noch nicht gestartet";
+      var url=safeHttpsUrl(x.run_url);
+      var link=url?"<a href='"+esc(url)+"' target='_blank' rel='noopener'>#"+esc(x.run_id||"—")+"</a>":esc("#"+String(x.run_id||"—"));
+      return "<tr>"+
+        "<td><strong>"+esc(candidate)+"</strong><div class='ops-clamp'>"+esc(x.job||x.task||"Aufgabe nicht benannt")+"</div><small class='muted'>"+esc(x.task||"")+"</small></td>"+
+        "<td><strong>"+esc(x.resource||"Ressource unbekannt")+"</strong><small>"+esc(x.worker||"Runner nicht zugeordnet")+"</small></td>"+
+        "<td><span class='badge "+operationStatusClass(jobStatus)+"'>"+esc(jobStatus.replace(/_/g," "))+"</span><small>Run: "+esc(runStatus.replace(/_/g," "))+"</small></td>"+
+        "<td><strong>"+esc(elapsed)+"</strong><small>"+esc(ts(started))+"</small></td>"+
+        "<td>"+esc(benchmark)+"</td>"+
+        "<td>"+esc(remaining)+"</td>"+
+        "<td>"+link+"</td></tr>";
+    }).join("")+"</tbody></table>"
+    :"<div class='empty'>Im aktuellen Snapshot sind keine aktiven Top-3-Jobs sichtbar.</div>";
+
+  var byCode={};(pipeline||[]).forEach(function(x){byCode[x.code]=x;});
+  var queuedByCode={};(queue||[]).forEach(function(x){queuedByCode[x.candidate]=x;});
+  var assignments=[];
+  (planned||[]).forEach(function(r){
+    (r.planned_assignments||[]).forEach(function(p){
+      if(FOCUS.indexOf(p.candidate)>=0)assignments.push({resource:r.resource,item:p});
+    });
+  });
+  function assignmentScore(rec){
+    var p=rec.item;
+    return (p.scheduled?4:0)+(p.dispatchable?2:0)+(p.expected_duration_seconds!=null?1:0);
+  }
+  function plannedFor(code){
+    return assignments.filter(function(rec){return rec.item.candidate===code;}).sort(function(a,b){return assignmentScore(b)-assignmentScore(a);})[0]||null;
+  }
+  function statusFor(code,pipe,rec,activeRows){
+    if(activeRows.length)return "AKTIVE ARBEIT ZUERST";
+    if(rec){
+      var p=rec.item;
+      if(p.scheduled===false)return "VORAUSSETZUNG OFFEN";
+      if(p.dispatchable)return p.dispatch_condition==="FREE_SLOT"?"BEREIT ZU STARTEN":"BEREIT · SLOT PRÜFEN";
+      return "GEPLANT · NICHT DISPATCHABLE";
+    }
+    var s=String((pipe||{}).current_milestone_status||"").toLowerCase();
+    if(s.indexOf("block")>=0)return "BLOCKIERT";
+    if(s==="ready")return "GATE BEREIT";
+    if(s==="running"||s==="in_progress")return "GATE LÄUFT";
+    if(s==="complete"||s==="completed")return "GATE ERREICHT";
+    return "ALS NÄCHSTES ZU PRÜFEN";
+  }
+  nextTable.innerHTML="<table class='ops-table ops-compact ops-next-table'><thead><tr><th>Reihenfolge</th><th>Status</th><th>Was kommt als Nächstes?</th><th>Wer / Ressource</th><th>Zeitbedarf</th></tr></thead><tbody>"+
+    FOCUS.map(function(code,index){
+      var pipe=byCode[code]||{};
+      var activeRows=rows.filter(function(x){return candidateFrom((x.task||"")+" "+(x.job||""))===code;});
+      var rec=plannedFor(code), q=queuedByCode[code]||{};
+      var gate=String(pipe.next_gate||pipe.current_milestone||q.next_gate||"Nächstes Gate nicht dokumentiert");
+      var task=rec&&rec.item.task?String(rec.item.task):(q.next_gate?String(q.next_gate):gate);
+      if(activeRows.length&&!rec)task="Nach Abschluss: "+gate;
+      var owner=rec&&rec.resource?String(rec.resource):(q.resource_hint?String(q.resource_hint):(activeRows.length?"Nach Abschluss neu disponieren":"Noch nicht zugeordnet"));
+      var p=rec?rec.item:null;
+      var status=statusFor(code,pipe,rec,activeRows);
+      var estimate=nextDurationLabel(p,data,code);
+      var basis=p?String(p.readiness||p.basis||""):String(pipe.current_milestone_status||"");
+      if(activeRows.length&&!rec)basis="Keinen Parallel-Run starten; den aktiven Lauf zuerst abschließen.";
+      var cls=operationStatusClass(status);
+      return "<tr><td><strong>"+(index+1)+". "+esc(code)+"</strong></td>"+
+        "<td><span class='badge "+cls+"'>"+esc(status)+"</span></td>"+
+        "<td><strong class='ops-clamp'>"+esc(task)+"</strong><small>"+esc(basis)+"</small></td>"+
+        "<td>"+esc(owner)+"</td>"+
+        "<td><strong>"+esc(estimate)+"</strong><small>Historische Vergleichslaufzeit; Wartezeit nicht enthalten</small></td></tr>";
+    }).join("")+"</tbody></table>";
+}
+
 function render(data){
   lastRenderedSnapshotKey=snapshotKey(data);
   var s=data.dashboard_summary||{};
@@ -333,6 +442,7 @@ function render(data){
   var queue=(data.planned_research_queue||[]).filter(function(x){return FOCUS.indexOf(x.candidate)>=0;}).slice(0,3);
   var cr=data.current_research||{};
   lastSnapshotIso=data.generated_at_utc||null;
+  renderOperationsOverview(data,work,pipeline,planned,queue);
 
   var handoff=data.chat_handoff||{};
   var handoffText=[
