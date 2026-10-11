@@ -88,6 +88,7 @@ def test_q220_compile_builds_strict_prefix_and_exact_fact_state(tmp_path):
     assert result["compiled_event_count"] == 2
     assert result["source_complete"] is True
     assert result["gate_positive"] is True
+    assert result["historical_prefix_order_valid"] is True
     first, second = result["events"]
     assert first["prior_same_issuer_filing_count"] == 0
     assert second["prior_same_issuer_filing_count"] == 1
@@ -110,9 +111,10 @@ def test_q220_refuses_changed_primary_document_hash(tmp_path):
         fetcher=lambda cik, accession, filename: (mutated[accession], 200),
         sleep_seconds=0,
     )
-    assert result["source_hash_failure_count"] == 2
+    assert result["source_hash_failure_count"] == 1
     assert result["gate_positive"] is False
     assert result["status"] == "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED"
+    assert result["historical_prefix_order_valid"] is False
 
 
 def test_q220_refuses_population_receipt_fingerprint_mutation(tmp_path):
@@ -132,6 +134,7 @@ def test_q220_same_acceptance_timestamp_never_enters_strict_prefix(tmp_path):
     population["receipt_fingerprint"] = canonical_fingerprint(population)
     result = compile_receipt(population, contract, root=root, fetcher=lambda cik, accession, filename: (docs[accession], 200), sleep_seconds=0)
     assert all(event["prior_same_issuer_filing_count"] == 0 for event in result["events"])
+    assert result["historical_prefix_order_valid"] is True
 
 
 def test_q220_receipt_fingerprint_is_self_consistent(tmp_path):
