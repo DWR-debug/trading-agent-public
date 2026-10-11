@@ -14,6 +14,10 @@ function esc(v){
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 }
+function safeHttpsUrl(v){
+  try{var u=new URL(String(v||""));return u.protocol==="https:"?u.href:"";}
+  catch(e){return "";}
+}
 function ts(v){
   if(!v)return "—";
   try{return new Date(v).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"medium"});}
@@ -370,6 +374,31 @@ function render(data){
     "<div class='focus-kpi'><span class='eyebrow'>Aktive Top-3</span><strong>Q104:I19 · Q220 · Q221</strong><span>Drei getrennte Forschungsaufträge; weitere Kandidaten bleiben pausiert.</span></div>"+
     "<div class='focus-kpi'><span class='eyebrow'>Entwicklungsindex</span><strong>"+overallAvg+"%</strong><span>arithmetischer Index der drei Tracks, keine Erfolgswahrscheinlichkeit</span></div>"+
     "<div class='focus-kpi'><span class='eyebrow'>Aktive Candidate-Jobs</span><strong>"+activeCount+"</strong><span>sichtbar in der aktuellen Actions-Telemetrie</span></div>";
+
+  var decisionLog=data.handoff_decision_log||{};
+  var decisions=Array.isArray(decisionLog.entries)?decisionLog.entries.slice(0,6):[];
+  var handoff=data.chat_handoff||{};
+  var panel=$("handoffPanel");
+  if(panel){
+    var focus=String(handoff.next_research_focus||"Aktuelle Next-Gate-Anweisung fehlt; kanonischen Status und Live-Läufe prüfen.");
+    var sourceSha=String(handoff.source_master_sha||"nicht aufgezeichnet");
+    panel.innerHTML=
+      "<div class='handoff-meta'>Dashboard-Master <code>"+esc(data.master_sha||"unbekannt")+"</code> · Handoff-Quellstand <code>"+esc(sourceSha)+"</code> · Entscheidungsprotokoll <code>"+esc(decisionLog.updated_at_utc||"nicht aufgezeichnet")+"</code></div>"+
+      "<p class='handoff-focus-text'>"+esc(focus)+"</p>"+
+      "<h3>Letzte wichtige Entscheidungen und Sicherungspunkte</h3>"+
+      "<div class='handoff-decisions'>"+(decisions.length?decisions.map(function(item){
+        var url=safeHttpsUrl(item.url);
+        var related=safeHttpsUrl(item.related_run_url);
+        return "<article class='handoff-entry'>"+
+          "<div class='handoff-status'>"+esc(item.date_utc||"")+" · "+esc(item.status||"")+"</div>"+
+          "<h4>"+esc(item.title||item.candidate||"Entscheidung")+"</h4>"+
+          "<p><strong>Befund / Entscheidung:</strong> "+esc(item.decision||"")+"</p>"+
+          "<p><strong>Nächster Schritt:</strong> "+esc(item.next_action||"")+"</p>"+
+          (url?"<a href='"+esc(url)+"' target='_blank' rel='noopener'>PR / Referenz öffnen</a> ":"")+
+          (related?"<a href='"+esc(related)+"' target='_blank' rel='noopener'>Lauf öffnen</a>":"")+
+        "</article>";
+      }).join(""):"<div class='empty'>Noch keine gesicherten Entscheidungen.</div>")+"</div>";
+  }
 
   $("candidateFocus").innerHTML=pipeline.length?pipeline.map(function(x){
     var active=Boolean(x.active);
