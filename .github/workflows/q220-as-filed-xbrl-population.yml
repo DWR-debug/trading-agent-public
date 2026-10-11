@@ -11,12 +11,40 @@ on:
       - ".github/workflows/q220-as-filed-xbrl-population.yml"
   schedule:
     - cron: "17 */6 * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: "Force population repair even when the current positive receipt matches code and contract hashes."
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 jobs:
+  receipt_gate:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    outputs:
+      run_population: ${{ steps.freshness.outputs.run_population }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Check population receipt, code hash, contract hash, and safety
+        id: freshness
+        env:
+          FORCE_REBUILD: ${{ github.event.inputs.force_rebuild || 'false' }}
+        run: |
+          set -euo pipefail
+          python -m automation.q220_population_freshness_gate --force "$FORCE_REBUILD" --github-output "$GITHUB_OUTPUT"
+
   route_probe:
     if: github.repository == 'DWR-debug/trading-agent-public'
     concurrency:
@@ -46,7 +74,11 @@ jobs:
           retention-days: 30
 
   population:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [receipt_gate]
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (needs.receipt_gate.result != 'success' ||
+       needs.receipt_gate.outputs.run_population == 'true')
     concurrency:
       group: trading-agent-q220-as-filed-population
       cancel-in-progress: true
