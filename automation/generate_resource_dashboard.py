@@ -10,9 +10,11 @@ from pathlib import Path
 from typing import Any
 try:
     from automation.candidate_portfolio_assessment import build_candidate_portfolio, PORTFOLIO_METHODOLOGY
+    from automation.candidate_intake_capacity_plan import build_candidate_intake_plan
 except ModuleNotFoundError:
     # Direct script execution places automation/ on sys.path.
     from candidate_portfolio_assessment import build_candidate_portfolio, PORTFOLIO_METHODOLOGY
+    from candidate_intake_capacity_plan import build_candidate_intake_plan
 
 ROOT = Path(__file__).parents[1]
 if str(ROOT) not in sys.path:
@@ -2195,6 +2197,7 @@ def main() -> None:
     milestones_12h = milestone_history_12h()
     candidate_progress = candidate_progress_snapshot(recent_runs)
     candidate_portfolio = build_candidate_portfolio(ROOT, evidence, candidate_progress)
+    candidate_intake_plan = build_candidate_intake_plan(ROOT, active_focus=list(FOCUS_CANDIDATES))
 
     configured_resources = [
         {"name": "Windows self-hosted A", "type": "physical", "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
@@ -2257,6 +2260,10 @@ def main() -> None:
             "runner_status_auth_mode": "dedicated_read_only_token" if os.environ.get("RUNNER_STATUS_TOKEN") else "GITHUB_TOKEN_fallback",
             "research_tracks": len(state_board),
             "candidate_inventory_count": len(candidate_portfolio),
+            "candidate_intake_queue_count": candidate_intake_plan["summary"]["total_candidates"],
+            "candidate_intake_validated_quarantined": candidate_intake_plan["summary"]["validated_quarantined"],
+            "candidate_intake_blocked": candidate_intake_plan["summary"]["blocked"],
+            "candidate_intake_dispatchable_now": candidate_intake_plan["summary"]["dispatchable_now"],
             "ai_providers": len(ai),
             "active_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "operating"),
             "research_capacity_slots_total": sum(int(r.get("research_capacity_slots", 1) or 1) for r in configured_resources),
@@ -2280,6 +2287,7 @@ def main() -> None:
         "candidate_progress": candidate_progress,
         "candidate_portfolio": candidate_portfolio,
         "candidate_portfolio_methodology": PORTFOLIO_METHODOLOGY,
+        "candidate_intake_plan": candidate_intake_plan,
         "focus_live_telemetry": {
             candidate: [
                 {

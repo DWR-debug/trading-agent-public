@@ -227,6 +227,40 @@ function renderCandidatePortfolio(data){
   renderRows();
 }
 
+function renderCandidateIntake(data){
+  var plan=data.candidate_intake_plan||{};
+  var summary=plan.summary||{};
+  var rows=plan.candidates||[];
+  var host=$("candidateIntake");
+  if(!host)return;
+  var focus=(plan.active_focus_lock||FOCUS).join(" · ");
+  host.innerHTML=
+    "<div class='ops-strip'>"+
+      "<span><strong>"+esc(summary.total_candidates||0)+"</strong> Vorschläge</span>"+
+      "<span><strong>"+esc(summary.validated_quarantined||0)+"</strong> validiert, quarantänisiert</span>"+
+      "<span><strong>"+esc(summary.blocked||0)+"</strong> blockiert</span>"+
+      "<span><strong>"+esc(summary.dispatchable_now||0)+"</strong> automatisch disponiert</span>"+
+    "</div>"+
+    "<div class='small muted' style='margin:8px 0'>Status: <strong>"+esc(plan.status||"UNBEKANNT")+"</strong> · Fokus gesperrt: "+esc(focus)+" · Plan-Fingerprint: "+esc(plan.plan_fingerprint||"—")+"</div>"+
+    (plan.queue_error?"<div class='empty'>Queue-Fehler: "+esc(plan.queue_error)+"</div>":"")+
+    (rows.length?
+      "<div style='overflow-x:auto'><table><thead><tr><th>Reihenfolge</th><th>Kandidat</th><th>Disposition</th><th>Nächster Falsifikator</th><th>Kapazität</th></tr></thead><tbody>"+
+      rows.map(function(x){
+        var blocked=String(x.status||"").indexOf("BLOCKED")===0;
+        var badgeClass=blocked?"blocked-badge":"planned-badge";
+        var falsifier=(x.cheap_falsifiers||[])[0]||x.next_gate||"Falsifikator fehlt";
+        return "<tr><td>"+esc(x.queue_position||"—")+"</td>"+
+          "<td class='rowtitle'>"+esc(x.candidate_id)+"<div class='small muted'>"+esc(x.candidate_name||"")+"</div></td>"+
+          "<td><span class='badge "+badgeClass+"'>"+esc(x.status||"UNBEKANNT")+"</span><div class='small muted'>"+esc(x.reason||"")+"</div></td>"+
+          "<td>"+esc(falsifier)+"</td>"+
+          "<td>"+(x.dispatchable?"DISPATCHABLE":"KEINE ZUTEILUNG")+"</td></tr>";
+      }).join("")+
+      "</tbody></table></div>":
+      "<div class='empty'>Intake-Queue ist leer. Keine Rechenarbeit, keine Kapazitätsbelegung. Neue Vorschläge in research/candidates/candidate_intake_queue.json eintragen.</div>"
+    )+
+    "<div class='small muted' style='margin-top:8px'>FIFO statt Rendite-Ranking. Neue Kandidaten bleiben nicht-authorisierende Hypothesen. Explizite Fokusentscheidung vor jeder Kapazitätszuteilung erforderlich.</div>";
+}
+
 function render(data){
   var s=data.dashboard_summary||{};
   var resources=(data.resources||[]).filter(function(x){
@@ -334,6 +368,7 @@ function render(data){
 
   renderCandidateDecisionRules(pipeline);
   renderCandidatePortfolio(data);
+  renderCandidateIntake(data);
 
   var order={"Windows self-hosted A":0,"Windows self-hosted B":1,"Windows self-hosted C":2,"GitHub-hosted Ubuntu x64":3,"GitHub-hosted ARM64":4,"Free AI pool":5};
   resources.sort(function(a,b){return order[a.name]-order[b.name];});
