@@ -120,7 +120,17 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "never restart the full census blindly" in focus
     assert "do not repeat an outcome-bearing run" in focus
     assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY") == 1
-    assert "Q220 historical as-filed population gate is positive and version-bound" in focus
+    # This status sync must fail closed when the population source code changed
+    # but the old immutable receipt has not yet been regenerated. The focused
+    # q220_population_focus_sentence tests cover the positive current-code case.
+    assert any(
+        marker in focus
+        for marker in (
+            "Q220 historical as-filed population gate is positive and version-bound",
+            "Q220 population receipt is STALE:",
+            "Q220 current-code population gate is BLOCKED:",
+        )
+    )
     assert "Next gate: historical prefix/acceptance-time PIT representation-state compiler" in focus
     assert "transport-success/content-unusable" in focus
     assert "not a methods review or scientific evidence" in focus
