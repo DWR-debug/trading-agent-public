@@ -461,8 +461,11 @@ def reproduce(
     )
     compiler_fp = str(compiler_receipt.get("receipt_fingerprint") or "")
     compiler_self_valid = len(compiler_fp) == 64 and canonical_fingerprint(compiler_receipt) == compiler_fp
+    expected_compiler_code_sha256 = sha256((ROOT / "automation/q220_historical_representation_pit.py").read_bytes())
+    compiler_code_pinned = compiler_receipt.get("compiler_code_sha256") == expected_compiler_code_sha256
     compiler_positive = (
-        compiler_receipt.get("candidate_id") == "Q220"
+        compiler_code_pinned
+        and compiler_receipt.get("candidate_id") == "Q220"
         and compiler_receipt.get("status") == "Q220_HISTORICAL_REPRESENTATION_PIT_COMPILED"
         and compiler_receipt.get("gate_positive") is True
         and int(compiler_receipt.get("record_count", -1)) == expected_record_count
@@ -667,6 +670,7 @@ def reproduce(
         "population_version_pinned": population_version_valid,
         "population_contract_hash_valid": contract_valid,
         "compiler_fingerprint_valid": compiler_self_valid,
+        "primary_compiler_code_version_matches_receipt": compiler_code_pinned,
         "compiler_upstream_gate_positive": compiler_positive,
         "fixed_universe_and_record_identity_valid": universe_valid and timestamp_valid and key_join_valid and not identity_mismatches,
         "all_primary_sources_independently_retrieved_and_hash_verified": independently_retrieved == expected_record_count and not source_hash_failures and not errors,
@@ -765,12 +769,23 @@ def main() -> int:
         population = json.loads(args.population.read_text(encoding="utf-8"))
         contract = json.loads(contract_bytes.decode("utf-8"))
         compiler_receipt = json.loads(args.compiler_receipt.read_text(encoding="utf-8"))
-        result = reproduce(
-            population,
-            contract,
-            compiler_receipt,
-            contract_bytes=contract_bytes,
-        )
+        expected_compiler_code_sha256 = sha256((ROOT / "automation/q220_historical_representation_pit.py").read_bytes())
+        if compiler_receipt.get("compiler_code_sha256") != expected_compiler_code_sha256:
+            # The compiler and independent workflow both trigger on master changes.
+            # Do not redownload 55 filings against a stale compiler receipt; persist a
+            # fail-closed lineage receipt and let the updated compiler receipt trigger
+            # the next independent run.
+            result = _new_blocked_receipt("Q220_COMPILER_RECEIPT_NOT_CURRENT_FOR_PRIMARY_CODE")
+            result["expected_compiler_code_sha256"] = expected_compiler_code_sha256
+            result["observed_compiler_code_sha256"] = compiler_receipt.get("compiler_code_sha256")
+            result["receipt_fingerprint"] = canonical_fingerprint(result)
+        else:
+            result = reproduce(
+                population,
+                contract,
+                compiler_receipt,
+                contract_bytes=contract_bytes,
+            )
     except Exception as exc:
         result = _new_blocked_receipt(f"{type(exc).__name__}:{str(exc)}")
     args.output.parent.mkdir(parents=True, exist_ok=True)
