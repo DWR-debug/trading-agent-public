@@ -6,6 +6,7 @@ from automation.q220_historical_representation_pit import (
     canonical_fingerprint,
     compile_receipt,
     sha256,
+    structured_states,
     textblock_states,
 )
 
@@ -165,6 +166,9 @@ def test_q220_receipt_fingerprint_is_self_consistent(tmp_path):
     population, contract, docs, root = _fixture(tmp_path)
     result = _compile(population, contract, root=root, fetcher=lambda cik, accession, filename: (docs[accession], 200), sleep_seconds=0)
     assert canonical_fingerprint(result) == result["receipt_fingerprint"]
+    assert result["compiler_code_sha256"] == sha256(
+        (Path(__file__).resolve().parents[1] / "automation/q220_historical_representation_pit.py").read_bytes()
+    )
 
 
 def test_q220_textblock_parser_preserves_facts_after_self_closing_fact():
@@ -192,3 +196,44 @@ def test_q220_default_population_pin_matches_verified_master_receipt():
     from automation.q220_historical_representation_pit import EXPECTED_POPULATION_RECEIPT_FINGERPRINT
 
     assert EXPECTED_POPULATION_RECEIPT_FINGERPRINT == "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543"
+
+
+def test_q220_nested_textblocks_preserve_outer_and_inner_content():
+    document = """
+    <html xmlns:ix="http://www.xbrl.org/2013/inlineXBRL">
+      <ix:nonNumeric name="custom:RiskFactorsTextBlock" contextRef="C0" id="outer">
+        Outer before
+        <ix:nonNumeric name="custom:NestedRiskTextBlock" contextRef="C1" id="inner">Inner disclosure</ix:nonNumeric>
+        outer after
+      </ix:nonNumeric>
+    </html>
+    """
+    states = textblock_states(document)
+
+    assert states["custom:RiskFactorsTextBlock"][0]["normalized_character_count"] == len(
+        "Outer before Inner disclosure outer after"
+    )
+    assert states["custom:NestedRiskTextBlock"][0]["normalized_character_count"] == len(
+        "Inner disclosure"
+    )
+    assert states["custom:RiskFactorsTextBlock"][0]["content_sha256"] == sha256(
+        b"Outer before Inner disclosure outer after"
+    )
+
+
+def test_q220_self_closing_numeric_fact_does_not_swallow_following_fact():
+    document = """
+    <html xmlns:ix="http://www.xbrl.org/2013/inlineXBRL">
+      <ix:nonFraction name="us-gaap:Assets" contextRef="EMPTY" unitRef="USD" />
+      <ix:nonFraction name="us-gaap:Assets" contextRef="VALUED" unitRef="USD">100</ix:nonFraction>
+    </html>
+    """
+    states = structured_states(document)["us-gaap:Assets"]
+    by_context = {row["context_ref"]: row for row in states}
+
+    assert set(by_context) == {"EMPTY", "VALUED"}
+    assert by_context["EMPTY"]["normalized_value"] is None
+    assert by_context["EMPTY"]["parse_status"] == "UNPARSEABLE_NUMERIC_TEXT"
+    assert by_context["EMPTY"]["raw_value_sha256"] == sha256(b"")
+    assert by_context["VALUED"]["normalized_value"] == "100"
+    assert by_context["VALUED"]["parse_status"] == "PARSED"

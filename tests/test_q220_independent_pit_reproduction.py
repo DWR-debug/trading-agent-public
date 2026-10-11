@@ -259,6 +259,7 @@ def _make_tiny_inputs():
         "source_population_receipt_fingerprint": population["receipt_fingerprint"],
         "source_population_contract_sha256": population["contract_sha256"],
         "source_population_gate_code_sha256": population["gate_code_sha256"],
+        "compiler_code_sha256": sha256((__import__("pathlib").Path(__file__).resolve().parents[1] / "automation/q220_historical_representation_pit.py").read_bytes()),
         "fixed_universe": population["fixed_universe"],
         "window": population["window"],
         "exact_numeric_qnames": list(NUMERIC_QNAMES),
@@ -320,3 +321,21 @@ def test_independent_reproduction_compares_all_states_and_fails_closed_on_hash_d
     assert bad["source_hash_failure_count"] == 2
     assert bad["checks"]["all_primary_sources_independently_retrieved_and_hash_verified"] is False
     assert bad["performance_authorization"] is False
+
+
+def test_independent_parser_keeps_empty_self_closing_numeric_fact_separate():
+    document = """
+    <html xmlns:ix="http://www.xbrl.org/2013/inlineXBRL">
+      <ix:nonFraction name="us-gaap:Assets" contextRef="EMPTY" unitRef="USD" />
+      <ix:nonFraction name="us-gaap:Assets" contextRef="VALUED" unitRef="USD">100</ix:nonFraction>
+    </html>
+    """
+    facts = parse_structured_states(document)["us-gaap:Assets"]
+    by_context = {row["context_ref"]: row for row in facts}
+
+    assert set(by_context) == {"EMPTY", "VALUED"}
+    assert by_context["EMPTY"]["normalized_value"] is None
+    assert by_context["EMPTY"]["parse_status"] == "UNPARSEABLE_NUMERIC_TEXT"
+    assert by_context["EMPTY"]["raw_value_sha256"] == sha256(b"")
+    assert by_context["VALUED"]["normalized_value"] == "100"
+    assert by_context["VALUED"]["parse_status"] == "PARSED"

@@ -71,12 +71,39 @@ def continuation_map(document: str) -> dict[str, tuple[dict[str, str], str]]:
     return found
 
 
+def matching_element_content(document: str, start: int, local_tag_name: str) -> str | None:
+    """Return an element's inner HTML while respecting nested elements of the same QName.
+
+    SEC TextBlock facts may legally wrap other TextBlock facts, and a raw first-close
+    regex truncates the outer fact at the nested fact's closing tag. This scanner is
+    still deliberately lexical, but skips comments/script/style payloads and balances
+    real ix:<tag> start/end tags. Self-closing facts do not change nesting depth.
+    """
+    tag = re.escape(local_tag_name)
+    token_pattern = re.compile(
+        rf"(?is)<!--.*?-->|<script\b[^>]*>.*?</script\s*>|<style\b[^>]*>.*?</style\s*>|</?ix:{tag}\b[^>]*>"
+    )
+    depth = 1
+    for token_match in token_pattern.finditer(document, start):
+        token = token_match.group(0)
+        lowered = token.lower()
+        if lowered.startswith("<!--") or re.match(r"<(?:script|style)\b", lowered):
+            continue
+        if lowered.startswith("</"):
+            depth -= 1
+            if depth == 0:
+                return document[start:token_match.start()]
+        elif not token.rstrip().endswith("/>"):
+            depth += 1
+    return None
+
+
 def textblock_states(document: str) -> dict[str, list[dict[str, Any]]]:
     continuations = continuation_map(document)
     states: dict[str, list[dict[str, Any]]] = {}
     # Iterate opening tags independently of their content. SEC Inline XBRL filings
-    # include self-closing ix:nonNumeric TextBlock facts; a regex that searches for a
-    # later closing tag can swallow subsequent facts after a self-closing element.
+    # include self-closing ix:nonNumeric TextBlock facts; they remain explicit empty
+    # states. Balanced matching also preserves outer TextBlocks that wrap inner ones.
     for match in re.finditer(r"(?is)<ix:nonNumeric\b([^>]*)>", document):
         attrs = attributes(match.group(1))
         qname = attrs.get("name", "")
@@ -87,12 +114,11 @@ def textblock_states(document: str) -> dict[str, list[dict[str, Any]]]:
         if opening_is_self_closing:
             fragment = ""
         else:
-            closing = re.search(r"</ix:nonNumeric\s*>", document[match.end():], re.I)
+            fragment = matching_element_content(document, match.end(), "nonNumeric")
             # A missing closure is not converted into an empty fact. It remains visible
             # as a QName reconciliation gap against the immutable population receipt.
-            if closing is None:
+            if fragment is None:
                 continue
-            fragment = document[match.end():match.end() + closing.start()]
         chain_ids: list[str] = []
         next_id = attrs.get("continuedat")
         visited: set[str] = set()
@@ -152,13 +178,22 @@ def parse_numeric(raw: str, attrs: dict[str, str]) -> tuple[str | None, str]:
 def structured_states(document: str) -> dict[str, list[dict[str, Any]]]:
     states: dict[str, list[dict[str, Any]]] = {}
     wanted = set(NUMERIC_QNAMES)
-    for match in re.finditer(r"(?is)<ix:nonFraction\b([^>]*)>(.*?)</ix:nonFraction\s*>", document):
+    # Handle self-closing facts as explicit empty/unparseable states instead of
+    # allowing a first-close regex to consume the following numeric fact.
+    for match in re.finditer(r"(?is)<ix:nonFraction\b([^>]*)>", document):
         attrs = attributes(match.group(1))
         qname = attrs.get("name", "")
         if qname not in wanted:
             continue
-        visible = normalized_text(match.group(2))
-        value, parse_status = parse_numeric(match.group(2), attrs)
+        opening_is_self_closing = match.group(0).rstrip().endswith("/>")
+        if opening_is_self_closing:
+            raw = ""
+        else:
+            raw = matching_element_content(document, match.end(), "nonFraction")
+            if raw is None:
+                continue
+        visible = normalized_text(raw)
+        value, parse_status = parse_numeric(raw, attrs)
         states.setdefault(qname, []).append({
             "context_ref": attrs.get("contextref"),
             "unit_ref": attrs.get("unitref"),
@@ -403,6 +438,7 @@ def compile_receipt(
         "source_population_receipt_fingerprint": stored_fp,
         "source_population_contract_sha256": population.get("contract_sha256"),
         "source_population_gate_code_sha256": population.get("gate_code_sha256"),
+        "compiler_code_sha256": sha256(Path(__file__).read_bytes()),
         "fixed_universe": population.get("fixed_universe"),
         "window": population.get("window"),
         "exact_numeric_qnames": list(NUMERIC_QNAMES),
