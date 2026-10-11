@@ -24,14 +24,14 @@ def _policy():
     return value
 
 
-def _transaction():
+def _transaction(year: int = 2021):
     return {
-        "Award ID": "FA000001",
-        "Mod": "P00001",
+        "Award ID": f"FA{year}0001",
+        "Mod": f"P{year % 100:02d}",
         "Recipient Name": "EXAMPLE RESEARCH LLC",
         "Recipient UEI": "ABC123UEI456",
         "recipient_id": "recipient-1",
-        "Action Date": "2021-06-03",
+        "Action Date": f"{year}-06-03",
         "Action Type": "AWARD",
         "Transaction Amount": "123456.00",
         "Awarding Agency": "Department of Defense",
@@ -42,9 +42,9 @@ def _transaction():
         "PSC": "A",
         "Award Type": "PURCHASE ORDER",
         "Transaction Description": "Research prototype",
-        "generated_internal_id": "CONT_AWD_EXAMPLE_1",
-        "internal_id": "1001",
-        "Issued Date": "2021-06-02",
+        "generated_internal_id": f"CONT_AWD_EXAMPLE_{year}",
+        "internal_id": f"100{year % 10}",
+        "Issued Date": f"{year}-06-02",
         "Last Modified Date": "2026-01-02",
     }
 
@@ -66,8 +66,9 @@ def test_q221_sample_is_captured_but_public_boundary_and_mapping_remain_blocked(
 
     def post(url, payload):
         calls.append((url, payload))
+        year = int(payload["filters"]["time_period"][0]["start_date"][:4])
         return 200, json.dumps({
-            "results": [_transaction()],
+            "results": [_transaction(year)],
             "page_metadata": {"page": 1, "hasNext": False, "last_record_unique_id": 1001, "last_record_sort_value": "2021-06-03"},
         }).encode()
 
@@ -95,7 +96,8 @@ def test_q221_incomplete_query_is_not_misreported_as_economic_falsification(tmp_
     def post(url, payload):
         if payload["filters"]["time_period"][0]["start_date"] == "2020-01-01":
             raise RuntimeError("simulated transport issue")
-        return 200, json.dumps({"results": [_transaction()], "page_metadata": {"page": 1, "hasNext": False}}).encode()
+        year = int(payload["filters"]["time_period"][0]["start_date"][:4])
+        return 200, json.dumps({"results": [_transaction(year)], "page_metadata": {"page": 1, "hasNext": False}}).encode()
 
     receipt = run_gate(tmp_path / "receipt.json", _policy(), post=post, pause_seconds=0)
     assert receipt["source_sample_complete"] is False
