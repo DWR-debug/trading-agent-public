@@ -48,7 +48,11 @@ jobs:
           python -m automation.q220_population_freshness_gate --force "$FORCE_REBUILD" --github-output "$GITHUB_OUTPUT"
 
   route_probe:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [receipt_gate]
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      needs.receipt_gate.result == 'success' &&
+      needs.receipt_gate.outputs.run_population == 'true'
     concurrency:
       group: trading-agent-research-hosted-ubuntu-24.04-slot-1
       cancel-in-progress: false
