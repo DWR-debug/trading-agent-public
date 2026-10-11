@@ -77,13 +77,19 @@ def _fixture(tmp_path: Path):
     return population, contract, docs, tmp_path
 
 
+def _compile(population, contract, root, **kwargs):
+    kwargs.setdefault("expected_population_fingerprint", str(population.get("receipt_fingerprint") or ""))
+    kwargs.setdefault("expected_record_count", 2)
+    return compile_receipt(population, contract, root=root, **kwargs)
+
+
 def test_q220_compile_builds_strict_prefix_and_exact_fact_state(tmp_path):
     population, contract, docs, root = _fixture(tmp_path)
 
     def fetcher(cik, accession, filename):
         return docs[accession], 200
 
-    result = compile_receipt(population, contract, root=root, fetcher=fetcher, sleep_seconds=0)
+    result = _compile(population, contract, root=root, fetcher=fetcher, sleep_seconds=0)
     assert result["record_count"] == 2
     assert result["compiled_event_count"] == 2
     assert result["source_complete"] is True
@@ -101,12 +107,29 @@ def test_q220_compile_builds_strict_prefix_and_exact_fact_state(tmp_path):
     assert result["live_execution"] is False
 
 
+def test_q220_refuses_population_outside_frozen_version_pin(tmp_path):
+    population, contract, docs, root = _fixture(tmp_path)
+    try:
+        compile_receipt(
+            population,
+            contract,
+            root=root,
+            fetcher=lambda *args: (_ for _ in ()).throw(AssertionError("must fail before source fetch")),
+            expected_population_fingerprint="0" * 64,
+            expected_record_count=2,
+        )
+    except ValueError as exc:
+        assert "Q220_POPULATION_RECEIPT_VERSION_MISMATCH" in str(exc)
+    else:
+        raise AssertionError("a self-consistent but unpinned population must fail closed")
+
+
 def test_q220_refuses_changed_primary_document_hash(tmp_path):
     population, contract, docs, root = _fixture(tmp_path)
     mutated = dict(docs)
     mutated["0000064040-20-000001"] = docs["0000064040-20-000001"] + b"<!-- mutation -->"
 
-    result = compile_receipt(
+    result = _compile(
         population, contract, root=root,
         fetcher=lambda cik, accession, filename: (mutated[accession], 200),
         sleep_seconds=0,
@@ -121,7 +144,7 @@ def test_q220_refuses_population_receipt_fingerprint_mutation(tmp_path):
     population, contract, docs, root = _fixture(tmp_path)
     population["records"][0]["canonical_key"]["cik"] = "0000000001"
     try:
-        compile_receipt(population, contract, root=root, fetcher=lambda *args: (b"", 200), sleep_seconds=0)
+        _compile(population, contract, root, fetcher=lambda *args: (b"", 200), sleep_seconds=0)
     except ValueError as exc:
         assert "FINGERPRINT_MISMATCH" in str(exc)
     else:
@@ -132,12 +155,12 @@ def test_q220_same_acceptance_timestamp_never_enters_strict_prefix(tmp_path):
     population, contract, docs, root = _fixture(tmp_path)
     population["records"][1]["acceptance_datetime"] = population["records"][0]["acceptance_datetime"]
     population["receipt_fingerprint"] = canonical_fingerprint(population)
-    result = compile_receipt(population, contract, root=root, fetcher=lambda cik, accession, filename: (docs[accession], 200), sleep_seconds=0)
+    result = _compile(population, contract, root=root, fetcher=lambda cik, accession, filename: (docs[accession], 200), sleep_seconds=0)
     assert all(event["prior_same_issuer_filing_count"] == 0 for event in result["events"])
     assert result["historical_prefix_order_valid"] is True
 
 
 def test_q220_receipt_fingerprint_is_self_consistent(tmp_path):
     population, contract, docs, root = _fixture(tmp_path)
-    result = compile_receipt(population, contract, root=root, fetcher=lambda cik, accession, filename: (docs[accession], 200), sleep_seconds=0)
+    result = _compile(population, contract, root=root, fetcher=lambda cik, accession, filename: (docs[accession], 200), sleep_seconds=0)
     assert canonical_fingerprint(result) == result["receipt_fingerprint"]
