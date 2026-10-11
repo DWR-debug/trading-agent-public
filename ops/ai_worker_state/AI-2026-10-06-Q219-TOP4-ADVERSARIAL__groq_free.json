@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
   "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
-  "observed_at_utc": "2026-10-11T12:39:36.716870Z",
+  "observed_at_utc": "2026-10-11T21:49:47.448751Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.183,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5091, Requested 5691. Please try again in 20.865s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 4.124,
+  "stdout": "**Q219 Options‑Source Breadth Gate – Adversarial Review**  \n*Bounded research‑support worker output – no performance claims, no promotion, no live‑trading authorization.*\n\n| Section | Content |\n|---------|---------|\n| **1. Summary of Findings** | • The `q219_options_source_breadth_gate.py` script only enumerates asset names and basic HTTP status codes; it does **not** validate any of the data‑quality or provenance guarantees required by the Q129 contract. <br>• No check is performed on the *event clock* (SEC filing acceptance time) or on the *EOD timestamp semantics* of the `date` column. <br>• The script does not verify that the dataset contains implied‑volatility fields, quotes, or open‑interest, all of which are needed for a meaningful options‑response wedge. <br>• Calendar‑roll logic (expiration dates, weekly/monthly roll schedules) is absent; the script does not confirm that all expirations in the contract’s date range are present. <br>• Cross‑market wedge claims (e.g., adding CBOE volume or quotes) are not substantiated; the script sets `cboe_is_quotes_iv_oi_source_proven` to `False` and never checks the CBOE archive for the required columns. <br>• The script truncates before completing the payload (`\"free_\"`), indicating incomplete data capture. |\n| **2. Counter‑Arguments / Potential Issues** | • **SEC Acceptance Clock** – The candidate’s event clock is undefined; the script never references the filing‑change timestamp or the SEC acceptance time. <br>• **Same‑Session Leakage** – Without a clear event window, the analysis cannot guarantee that the options data is strictly *after* the filing change, risking leakage of contemporaneous information. <br>• **Option EOD Timestamp Semantics** – The Q129 contract specifies “4 PM ET end‑of‑day snapshot”, yet the script does not confirm that the `date` column is a date‑only field, nor that it is aligned to 4 PM ET. <br>• **Q129 Source Release & Contract Selection** – The script only checks that the release ID matches the contract; it does not verify that the asset list, SHA‑256 checksums, or file sizes match the contract’s expectations. <br>• **Option Contract/Calendar Roll Effects** – No validation of expiration dates, roll schedules, or strike coverage; a missing roll could bias the wedge. <br>• **Stale/Absent Implied‑Volatility Fields** – The dataset lacks an `implied_vol` column; the script does not flag this absence, yet the wedge may rely on IV. <br>• **Event‑Window Definitions** – The script never defines or enforces an event window relative to the filing change. <br>• **Cross‑Market Wedge Value** – The script does not actually ingest any cross‑market data (CBOE volume, quotes, IV); therefore it cannot demonstrate that the wedge adds information beyond the options‑only state. |\n| **3. Minimal Deterministic Falsifiers** | 1. **Shift Release Date** – Re‑run the script with the Q129 release date advanced by 1–5 trading sessions; if the candidate still passes, the event clock assumption is falsified. <br>2. **Shuffle Underlying Symbols** – Randomly permute the underlying symbols in the parquet files and re‑run; failure indicates dependence on the specific mapping. <br>3. **Replace `date` with Full Timestamp** – Alter the `date` column to a full ISO‑8601 timestamp (including time zone) and re‑run; if the candidate still accepts, the EOD‑only semantics are not enforced. <br>4. **Remove Implied‑Vol Column** – Delete the `implied_vol` column from the parquet files and re‑run; if the wedge still functions, the implied‑vol assumption is invalid. <br>5. **Omit a Calendar Roll** – Delete all rows for a specific expiration (e.g., the last weekly expiry) and re‑run; failure indicates reliance on complete roll coverage. |\n| **4. Missing Artifacts / Gaps** | • Explicit **event_clock** definition (SEC filing acceptance timestamp). <br>• Verification that the `date` column is a **date‑only** field aligned to 4 PM ET. <br>• Presence of **implied‑volatility** and **quotes** columns (or a documented method to compute them). <br>• Full **expiration calendar** mapping (weekly/monthly roll dates) and strike coverage. <br>• Complete **asset‑to‑underlying** mapping that matches the contract’s universe. <br>• Full **SHA‑256 / size** checks for each asset to confirm integrity. <br>• A documented **event‑window** (e.g., 5‑day post‑filing) and a test that ensures no same‑session leakage. <br>• Evidence that the **cross‑market wedge** (CBOE volume/quotes/IV) is actually ingested and used. <br>• Completion of the payload (the truncated `\"free_\"` field). |\n| **5. Concrete Next Actions** | 1. **Augment the script** to: <br>   a. Read the `observation_date_field` and `observation_semantics` from the Q129 contract and enforce that the `date` column is a date‑only field with 4 PM ET alignment. <br>   b. Verify SHA‑256 and file size for each asset against the contract. <br>   c. Confirm the presence of `implied_vol`, `bid`, `ask`, `volume`, `open_interest` columns. <br>   d. Validate that all expirations in the contract’s date range are present and that roll schedules match the standard weekly/monthly pattern. <br>   e. Include a check that the CBOE archive contains the expected columns (e.g., `quotes`, `implied_vol`, `open_interest`). <br>2. **Define and enforce an event window**: e.g., “5 trading days after the SEC filing acceptance timestamp”. <br>3. **Implement the falsifiers",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-11T12:39:36.899578Z",
-    "blocked_until_utc": "2026-10-11T13:39:36.899578Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5091, Requested 5691. Please try again in 20.865s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-03c3d40e-c35c-4a0f-8a5b-b8402f92d4bd",
+  "usage": {
+    "queue_time": 0.083240561,
+    "prompt_tokens": 5303,
+    "prompt_time": 0.319265516,
+    "completion_tokens": 3200,
+    "completion_time": 3.462130201,
+    "total_tokens": 8503,
+    "total_time": 3.781395717,
+    "completion_tokens_details": {
+      "reasoning_tokens": 1856
+    }
   }
 }\n
