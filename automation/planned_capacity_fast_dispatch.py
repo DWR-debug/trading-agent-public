@@ -7,6 +7,7 @@ authorizes performance, ranking, tuning, promotion or live execution.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -32,6 +33,36 @@ TOP4_CANDIDATES = {"Q220", "Q221"}
 TOP4_PRIORITY = ("Q220", "Q221")
 SLOT_SCOPED_WORKFLOW = ".github/workflows/top4-candidate-slot-research.yml"
 I19_CENSUS_WORKFLOW = ".github/workflows/q104-i19-13f-historical-identity-census.yml"
+Q221_VINTAGE_GATE_PATH = Path(__file__).resolve().parents[1] / "automation/q221_historical_source_vintage_gate.py"
+Q221_VINTAGE_RECEIPT_PATH = Path(__file__).resolve().parents[1] / "research/evidence/q221_historical_source_vintages_latest.json"
+
+
+
+def q221_vintage_auto_dispatch_block_reason() -> str | None:
+    """Stop a same-code automatic retry loop on a version-bound Q221 vintage receipt.
+
+    Missing/legacy receipts and receipts produced by different gate code remain
+    eligible for one bounded run under the current implementation. Manual
+    workflow_dispatch is unaffected by this fast-dispatch guard.
+    """
+    try:
+        receipt = json.loads(Q221_VINTAGE_RECEIPT_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(receipt, dict) or receipt.get("candidate_id") != "Q221":
+        return None
+    recorded_sha = str(receipt.get("gate_code_sha256") or "")
+    if not recorded_sha:
+        return None
+    try:
+        current_sha = hashlib.sha256(Q221_VINTAGE_GATE_PATH.read_bytes()).hexdigest()
+    except OSError:
+        return None
+    if recorded_sha != current_sha:
+        return None
+    if receipt.get("status") == "Q221_HISTORICAL_POLICY_VINTAGES_RECONSTRUCTED":
+        return "SKIP_Q221_VINTAGE_GATE_ALREADY_RECONSTRUCTED_CURRENT_CODE"
+    return "SKIP_Q221_VINTAGE_NEGATIVE_RECEIPT_CURRENT_CODE_REQUIRES_REPAIR_OR_MANUAL_RETRY"
 
 
 def effective_focus_candidates(snapshot: dict[str, Any]) -> set[str]:
@@ -690,6 +721,14 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                 and str(item.get("plan_id") or "") == "Q221-USASPENDING-PUBLIC-CLOCK"
                 and item.get("dispatchable") is True
             )
+            if q221_vintage_gate_still_open:
+                q221_block_reason = q221_vintage_auto_dispatch_block_reason()
+                if q221_block_reason:
+                    decisions.append({
+                        "plan_id": item.get("plan_id"),
+                        "decision": q221_block_reason,
+                    })
+                    continue
             if scope and scope in completed_slots and not focus_wave and not q221_vintage_gate_still_open:
                 decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_SLOT_ALREADY_COMPLETED"})
                 fallback = top4_slot_fallback(
