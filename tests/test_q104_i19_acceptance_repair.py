@@ -348,3 +348,32 @@ def test_targeted_repair_routes_frozen_header_404s_to_hdr_sgml(monkeypatch):
     assert entries[0]["status"] == "REPAIRED"
     assert fixed["acceptance_failures"] == {}
     assert fixed["archives"][0]["target_hits"]["SPGI"]["acceptance_complete"] is True
+
+
+@pytest.mark.parametrize(
+    "reason",
+    [
+        "<urlopen error [Errno 11001] getaddrinfo failed>",
+        "<urlopen error [WinError 10065] Der Host war bei einem Socketvorgang nicht erreichbar>",
+        "[WinError 10054] Eine vorhandene Verbindung wurde vom Remotehost geschlossen",
+        "URLError:Temporary failure in name resolution",
+        "SEC_HEADER_HTTP_503",
+        "<urlopen error _ssl.c:1015: The handshake operation timed out>",
+    ],
+)
+def test_localized_windows_and_dns_transport_errors_are_repairable(reason):
+    assert is_transient_failure(reason)
+    assert is_repairable_failure(reason)
+
+
+@pytest.mark.parametrize(
+    "reason",
+    [
+        "FILING_DATE_MISMATCH",
+        "HEADER_VALIDATION:FILER_CIK_MISMATCH",
+        "HEADER_VALIDATION:ACCESSION_MISMATCH",
+        "SEC_HEADER_FALLBACK_HTTP_404",
+    ],
+)
+def test_repair_keeps_identity_and_irrecoverable_header_errors_fail_closed(reason):
+    assert not is_repairable_failure(reason)
