@@ -771,3 +771,29 @@ def test_dashboard_keeps_queued_research_work_out_of_runner_occupancy():
     assert enriched["current_assignments"] == 0
     assert enriched["queued_assignments"] == 1
     assert enriched["research_slots_free"] is None
+
+
+def test_dashboard_infers_physical_runner_busy_from_running_nonresearch_job():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    running_ci = {
+        "resource": "Windows self-hosted A",
+        "lane": "VALIDATION / CI",
+        "status": "in_progress",
+        "task": "CI",
+        "job": "test",
+    }
+    enriched = enrich_resources([resource], [], [running_ci])[0]
+    assert enriched["capacity_state"] == "unknown"
+    assert enriched["current_assignments"] == 0
+    assert enriched["runner_busy"] is True
+    assert enriched["runner_busy_basis"] == "ACTIVE_WORKFLOW_ASSIGNMENT"
+    assert enriched["research_slots_in_use"] == 1
+    assert enriched["research_slots_free"] == 0
