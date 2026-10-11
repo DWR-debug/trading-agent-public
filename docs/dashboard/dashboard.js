@@ -606,7 +606,10 @@ function render(data){
     var freeLabel=x.research_slots_free==null?"?":String(x.research_slots_free);
     var slotsInUseLabel=x.research_slots_in_use==null?"?":String(x.research_slots_in_use);
     var queuedCount=Number(x.queued_assignments||0);
-    var currentRows=work.filter(function(w){return w.resource===x.name;});
+    var currentRows=work.filter(function(w){
+      var status=String(w.job_status||w.status||w.run_status||"").toLowerCase();
+      return w.resource===x.name&&(status==="in_progress"||status==="running");
+    });
     var currentText=currentRows.slice(0,2).map(function(w){
       return candidateFrom((w.task||"")+" "+(w.job||""))+" · "+(w.job||w.task||"Research-Job")+" ["+(w.job_status||w.status||"—")+"]";
     });
