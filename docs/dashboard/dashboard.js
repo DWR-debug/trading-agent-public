@@ -14,6 +14,33 @@ function ts(v){
   try{return new Date(v).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"medium"});}
   catch(e){return String(v);}
 }
+function fmtDuration(sec){
+  if(sec==null||!Number.isFinite(Number(sec)))return "nicht geschätzt";
+  sec=Math.max(0,Math.round(Number(sec)));
+  if(sec<60)return sec+" s";
+  var min=Math.round(sec/60);
+  if(min<60)return min+" min";
+  var h=Math.floor(min/60),m=min%60;
+  if(h<48)return h+" h"+(m?" "+m+" min":"");
+  var d=Math.floor(h/24),rh=h%24;
+  return d+" d"+(rh?" "+rh+" h":"");
+}
+function durationBenchmarkLabel(p50,p90,count){
+  if(p50==null||!Number.isFinite(Number(p50)))return "Keine belastbare Vergleichsbasis";
+  return "P50 "+fmtDuration(p50)+(p90!=null&&Number.isFinite(Number(p90))?" · P90 "+fmtDuration(p90):"")+" · n="+String(count||0);
+}
+function remainingRunLabel(item){
+  if(String(item.status||"")!=="in_progress")return "Run noch nicht gestartet";
+  if(item.expected_duration_seconds==null)return "Keine historische Laufzeitbasis";
+  if(!item.p50_elapsed_exceeded)return "ca. "+fmtDuration(item.remaining_seconds)+" bis P50";
+  if(item.expected_duration_p90_seconds!=null&&!item.p90_elapsed_exceeded)return "P50 überschritten · ca. "+fmtDuration(item.remaining_p90_seconds)+" bis P90";
+  return "P"+(item.expected_duration_p90_seconds!=null?"90":"50")+" überschritten · Restlaufzeit offen";
+}
+function pipelineDurationLabel(item){
+  if(!item.scheduled)return "Keine Schätzung · prerequisite blockiert";
+  if(item.expected_duration_seconds==null)return "Noch nicht kalibriert";
+  return durationBenchmarkLabel(item.expected_duration_seconds,item.expected_duration_p90_seconds,item.duration_sample_count);
+}
 function fmtSnapshotAge(sec){
   if(sec==null||Number.isNaN(Number(sec)))return "Alter: —";
   sec=Math.max(0,Math.round(Number(sec)));
@@ -377,12 +404,26 @@ function render(data){
     var role=esc(x.role||"");
     var active=Number(x.current_assignments||0);
     var free=Number(x.research_slots_free||0);
+    var currentRows=work.filter(function(w){return w.resource===x.name;});
+    var currentText=currentRows.slice(0,2).map(function(w){
+      return candidateFrom((w.task||"")+" "+(w.job||""))+" · "+(w.job||w.task||"Research-Job")+" ["+(w.job_status||w.status||"—")+"]";
+    });
+    if(currentRows.length>2)currentText.push("+"+(currentRows.length-2)+" weitere aktive Jobs");
+    var planRow=planned.filter(function(r){return r.resource===x.name;})[0]||{};
+    var nextItems=(planRow.planned_assignments||[]).filter(function(p){return FOCUS.indexOf(p.candidate)>=0;});
+    var nextText=nextItems.slice(0,2).map(function(p){
+      var state=!p.scheduled?"blockiert":(p.dispatchable?(p.dispatch_condition==="FREE_SLOT"?"bereit für Dispatch":"bereit, wartet auf freien Slot"):"geplant, noch nicht startbar");
+      return p.candidate+" · "+p.task+" ["+state+"]";
+    });
+    if(nextItems.length>2)nextText.push("+"+(nextItems.length-2)+" weitere Pipeline-Schritte");
     return "<div class='capacity "+st.cls+"'>"+
       "<div class='name'>"+esc(x.name)+"</div>"+
       "<div class='state'>"+st.label+"</div>"+
       "<div class='role'>"+role+"</div>"+
       "<div class='capacity-numbers'><strong>"+active+"</strong> aktiv <span>·</span> <strong>"+free+"</strong> frei</div>"+
       "<div class='small muted'>Slots "+esc(x.research_slots_in_use||0)+"/"+esc(x.research_capacity_slots||1)+" · Runner "+esc(x.runner_status||"nicht sichtbar")+"</div>"+
+      "<div class='capacity-assignments'><div class='capacity-current'><strong>Arbeitet an</strong>"+(currentText.length?currentText.map(function(v){return "<div>"+esc(v)+"</div>";}).join(""):"<div class='muted'>Keine sichtbare aktive Top-3-Zuordnung</div>")+"</div>"+
+      "<div class='capacity-next'><strong>Nächster Pipeline-Schritt</strong>"+(nextText.length?nextText.map(function(v){return "<div>"+esc(v)+"</div>";}).join(""):"<div class='muted'>Kein separater Schritt disponiert</div>")+"</div></div>"+
       "</div>";
   }).join("")+"</div>";
 
@@ -397,31 +438,47 @@ function render(data){
     "</div>";
 
   $("work").innerHTML=work.length?
-    "<table><thead><tr><th>Kapazität</th><th>Candidate</th><th>Job</th><th>Status</th><th>Start</th><th>Run</th></tr></thead><tbody>"+
+    "<div class='ops-table-scroll'><table class='ops-table'><thead><tr><th>Kapazität / Runner</th><th>Kandidat / Job</th><th>Runner-Jobstatus</th><th>Run-Start / Queue</th><th>Run-Laufzeit</th><th>Historische Run-Dauer</th><th>Restlaufzeit (Run)</th><th>Actions</th></tr></thead><tbody>"+
     work.map(function(x){
+      var runStatus=String(x.status||x.run_status||"—");
+      var jobStatus=String(x.job_status||runStatus);
+      var jobCls=jobStatus==="in_progress"?"active-badge":(jobStatus==="queued"||jobStatus==="waiting"||jobStatus==="pending"?"planned-badge":"blocked-badge");
+      var startText=x.run_started_at||((runStatus==="in_progress")?x.started_at:(x.queued_at||x.started_at));
+      var elapsedText=runStatus==="in_progress"?fmtDuration(x.elapsed_seconds):"Queue "+fmtDuration(x.queue_elapsed_seconds);
+      var p50=durationBenchmarkLabel(x.expected_duration_seconds,x.expected_duration_p90_seconds,x.duration_sample_count);
+      var link=x.run_url?"<a href='"+esc(x.run_url)+"' target='_blank' rel='noopener'>Run #"+esc(x.run_id||"—")+"</a>":"#"+esc(x.run_id||"—");
       return "<tr><td class='rowtitle'>"+esc(x.resource)+"<div class='small muted'>"+esc(x.worker||"")+"</div></td>"+
-        "<td class='rowtitle'>"+esc(candidateFrom((x.task||"")+" "+(x.job||"")))+"</td>"+
-        "<td>"+esc(x.job||x.task||"—")+"</td>"+
-        "<td><span class='badge active-badge'>"+esc(x.status||"—")+"</span></td>"+
-        "<td>"+esc(ts(x.started_at))+"</td>"+
-        "<td>"+esc(x.run_id||"—")+"</td></tr>";
-    }).join("")+"</tbody></table>":"<div class='empty'>Keine aktiven Fokus-Jobs im Snapshot sichtbar.</div>";
+        "<td class='rowtitle'>"+esc(candidateFrom((x.task||"")+" "+(x.job||"")))+"<div class='small'>"+esc(x.job||x.task||"—")+"</div><div class='small muted'>Workflow: "+esc(x.task||"—")+"</div></td>"+
+        "<td><span class='badge "+jobCls+"'>"+esc(jobStatus.replace(/_/g," "))+"</span><div class='small muted'>Run: "+esc(runStatus.replace(/_/g," "))+"</div></td>"+
+        "<td>"+esc(ts(startText))+"</td>"+
+        "<td>"+esc(elapsedText)+"</td>"+
+        "<td title='"+esc(x.duration_source||"Keine Datenbasis")+"'>"+esc(p50)+"</td>"+
+        "<td>"+esc(remainingRunLabel(x))+"</td>"+
+        "<td>"+link+"</td></tr>";
+    }).join("")+"</tbody></table></div>":"<div class='empty'>Keine aktiven Fokus-Jobs im Snapshot sichtbar.</div>";
 
   $("plannedQueue").innerHTML=queue.length?
     "<div class='queue-grid'>"+queue.map(function(x){
-      return "<div class='queue-item'><span class='queue-rank'>"+esc(x.queue_rank)+"</span><div><strong>"+esc(x.candidate)+"</strong><div class='small'>"+esc(x.next_gate)+"</div><div class='small muted'>"+esc(x.execution_workflow)+"</div></div></div>";
+      var b=(data.job_duration_benchmarks||{})[x.candidate]||null;
+      var estimate=durationBenchmarkLabel(b&&b.p50_seconds,b&&b.p90_seconds,b&&b.sample_count);
+      return "<div class='queue-item'><span class='queue-rank'>"+esc(x.queue_rank)+"</span><div><strong>"+esc(x.candidate)+"</strong><div class='small'>"+esc(x.next_gate)+"</div><div class='small muted'>Kapazitätsziel: "+esc(x.resource_hint||"noch nicht zugeordnet")+"</div><div class='small muted'>Geschätzte Jobdauer: "+esc(estimate)+"</div><div class='small muted'>"+esc(x.execution_workflow)+"</div></div></div>";
     }).join("")+"</div>":"<div class='empty'>Kein bounded Next-Gate für den Fokus bereitgestellt.</div>";
 
   $("planned").innerHTML=planned.length?
-    "<table><thead><tr><th>Kapazität</th><th>Candidate</th><th>Nächste Arbeit</th><th>Status</th></tr></thead><tbody>"+
+    "<div class='ops-table-scroll'><table class='ops-table'><thead><tr><th>Kapazität</th><th>Kandidat</th><th>Nächste Arbeit / Blocker</th><th>Dispatch-Status</th><th>Geschätzte Jobdauer</th></tr></thead><tbody>"+
     planned.map(function(x){
       var items=(x.planned_assignments||[]).filter(function(p){return FOCUS.indexOf(p.candidate)>=0;});
       return items.map(function(p){
-        var status=p.dispatchable?"READY / AUTO-DISPATCH":(p.scheduled?"GEPLANT / NICHT GESTARTET":"BLOCKIERT / KEINE DISPOSITION");
-        var cls=p.dispatchable?"planned-badge":(p.scheduled?"planned-badge":"blocked-badge");
-        return "<tr><td class='rowtitle'>"+esc(x.resource)+"</td><td>"+esc(p.candidate)+"</td><td>"+esc(p.task)+"<div class='small muted'>"+esc(p.basis||"")+"</div></td><td><span class='badge "+cls+"'>"+status+"</span></td></tr>";
+        var status=!p.scheduled?"BLOCKIERT / KEINE DISPOSITION":(p.dispatchable?(p.dispatch_condition==="FREE_SLOT"?"BEREIT / AUTO-DISPATCH":"BEREIT / WARTET AUF FREIEN SLOT"):"GEPLANT / VORAUSSETZUNG OFFEN");
+        var cls=!p.scheduled?"blocked-badge":(p.dispatchable?"planned-badge":"blocked-badge");
+        var duration=pipelineDurationLabel(p);
+        return "<tr><td class='rowtitle'>"+esc(x.resource)+"</td>"+
+          "<td class='rowtitle'>"+esc(p.candidate)+"<div class='small muted'>"+esc(p.lane||"")+"</div></td>"+
+          "<td>"+esc(p.task)+"<div class='small muted'>"+esc(p.basis||"")+"</div><div class='small muted'>Readiness: "+esc(p.readiness||"unbekannt")+"</div></td>"+
+          "<td><span class='badge "+cls+"'>"+status+"</span><div class='small muted'>"+esc(p.dispatch_condition||"")+"</div></td>"+
+          "<td title='"+esc(p.duration_source||"Keine historische Vergleichsbasis")+"'>"+esc(duration)+"<div class='small muted'>Laufzeitspanne, keine Queue-Wartezeit</div></td></tr>";
       }).join("");
-    }).join("")+"</tbody></table>":"<div class='empty'>Kein fokussierter Plan-Slot im Snapshot.</div>";
+    }).join("")+"</tbody></table></div>":"<div class='empty'>Kein fokussierter Plan-Slot im Snapshot.</div>";
 
   var milestones=data.milestone_history_12h||[];
   $("milestones12h").innerHTML=milestones.length?
