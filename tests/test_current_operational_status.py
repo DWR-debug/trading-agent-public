@@ -123,15 +123,14 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     # This status sync must fail closed when the population source code changed
     # but the old immutable receipt has not yet been regenerated. The focused
     # q220_population_focus_sentence tests cover the positive current-code case.
-    assert any(
-        marker in focus
-        for marker in (
-            "Q220 historical as-filed population gate is positive and version-bound",
-            "Q220 population receipt is STALE:",
-            "Q220 current-code population gate is BLOCKED:",
-        )
-    )
-    assert "Next gate: historical prefix/acceptance-time PIT representation-state compiler" in focus
+    q220_positive = "Q220 historical as-filed population gate is positive and version-bound" in focus
+    q220_stale = "Q220 population receipt is STALE:" in focus
+    q220_blocked = "Q220 current-code population gate is BLOCKED:" in focus
+    assert q220_positive or q220_stale or q220_blocked
+    if q220_positive:
+        assert "Next gate: historical prefix/acceptance-time PIT representation-state compiler" in focus
+    else:
+        assert "historical prefix/PIT compiler" in focus
     assert "transport-success/content-unusable" in focus
     assert "not a methods review or scientific evidence" in focus
 
