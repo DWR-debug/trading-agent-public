@@ -1,10 +1,17 @@
 import json
 from pathlib import Path
 
+import io
+import urllib.error
+
+import pytest
+
 from automation.q221_historical_award_public_boundary import (
     ENDPOINT,
+    FIELDS,
     WINDOWS,
     canonical_fingerprint,
+    default_post,
     query_payload,
     run_gate,
 )
@@ -58,6 +65,12 @@ def test_q221_contract_uses_fixed_non_amount_sorted_r_and_d_windows():
     assert payload["order"] == "asc"
     assert payload["limit"] == 50
     assert payload["sort"] != "Transaction Amount"
+    # USAspending's documented TimePeriodObject accepts only start_date/end_date.
+    assert payload["filters"]["time_period"] == [
+        {"start_date": "2021-01-01", "end_date": "2021-12-31"}
+    ]
+    # Last Modified Date is not a documented selectable transaction-search field.
+    assert "Last Modified Date" not in FIELDS
 
 
 def test_q221_sample_is_captured_but_public_boundary_and_mapping_remain_blocked(tmp_path):
@@ -122,3 +135,19 @@ def test_q221_refuses_invalid_policy_vintage_without_querying(tmp_path):
     assert receipt["policy_vintage_receipt_verified"] is False
     assert receipt["source_sample_complete"] is False
     assert receipt["historical_first_public_observation_proven"] is False
+
+
+def test_q221_http_400_error_body_is_preserved_for_bounded_diagnostics(monkeypatch):
+    body = b'{"detail":"unsupported field name"}'
+
+    def fail_request(*args, **kwargs):
+        raise urllib.error.HTTPError(
+            ENDPOINT, 400, "Bad Request", hdrs=None, fp=io.BytesIO(body)
+        )
+
+    monkeypatch.setattr(
+        "automation.q221_historical_award_public_boundary.urllib.request.urlopen",
+        fail_request,
+    )
+    with pytest.raises(RuntimeError, match=r"USASPENDING_HTTP_400:.*unsupported field name"):
+        default_post(ENDPOINT, query_payload("2021-01-01", "2021-12-31"))

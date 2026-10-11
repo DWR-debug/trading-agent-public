@@ -38,7 +38,7 @@ FIELDS = [
     "Action Date", "Action Type", "Transaction Amount", "Awarding Agency",
     "Awarding Sub Agency", "Funding Agency", "Funding Sub Agency", "NAICS",
     "PSC", "Award Type", "Transaction Description", "generated_internal_id",
-    "internal_id", "Issued Date", "Last Modified Date",
+    "internal_id", "Issued Date",
 ]
 
 
@@ -89,9 +89,12 @@ def default_post(url: str, payload: dict[str, Any]) -> tuple[int, bytes]:
                     raise ValueError("USASPENDING_RESPONSE_EXCEEDS_12MB")
                 return int(getattr(response, "status", 200)), raw
         except urllib.error.HTTPError as exc:
-            last = f"HTTP_{exc.code}"
+            # Keep the public API's bounded validation detail in the receipt so
+            # malformed requests can be fixed without blind full-window retries.
+            detail = " ".join(exc.read(2000).decode("utf-8", errors="replace").split())[:300]
+            last = f"HTTP_{exc.code}:{detail}"
             if exc.code not in {429, 500, 502, 503, 504} or attempt == 3:
-                raise RuntimeError(f"USASPENDING_HTTP_{exc.code}") from exc
+                raise RuntimeError(f"USASPENDING_HTTP_{exc.code}:{detail}") from exc
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             last = type(exc).__name__
             if attempt == 3:
@@ -104,7 +107,7 @@ def query_payload(start: str, end: str) -> dict[str, Any]:
     return {
         "filters": {
             "award_type_codes": AWARD_TYPES,
-            "time_period": [{"start_date": start, "end_date": end, "date_type": "action_date"}],
+            "time_period": [{"start_date": start, "end_date": end}],
             "naics_codes": {"require": NAICS_PREFIXES},
         },
         "fields": FIELDS,
