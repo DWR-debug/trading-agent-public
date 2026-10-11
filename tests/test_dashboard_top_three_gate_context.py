@@ -320,3 +320,18 @@ def test_dashboard_fetches_bounded_historical_runs_for_duration_calibration(monk
     assert benchmark["p90_seconds"] == 1080
     assert benchmark["sample_count"] == 1
 
+
+
+def test_dashboard_q220_status_comes_from_population_compiler_and_independent_receipts():
+    generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    chain = (ROOT / "automation/q220_receipt_chain.py").read_text(encoding="utf-8")
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+
+    assert "evaluate_q220_receipt_chain(ROOT)" in generator
+    assert 'q220_chain["milestones"]' in generator
+    assert 'q220_chain["next_workpack_required"]' in generator
+    assert "Q220_INDEPENDENT_PIT_REPRODUCED" in chain
+    assert 'if(pipelineRow.next_workpack_required)return "Keine ETA · neues Workpack offen";' in js
+    assert 'if((pipe||{}).next_workpack_required)return "WORKPACK OFFEN · NICHT AUTO-DISPATCH";' in js
+    assert 'owner="Workpack zuerst spezifizieren · kein Runner zuordnen";' in js
+    assert "Neues begrenztes Robustheits-/Governance-Workpack definieren" in js
