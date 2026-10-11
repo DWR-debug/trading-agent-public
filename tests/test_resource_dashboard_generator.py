@@ -87,6 +87,70 @@ def test_dashboard_runner_busy_does_not_inflate_research_work():
     assert enriched["research_slots_free"] == 0
 
 
+def test_dashboard_does_not_report_missing_runner_inventory_as_idle():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    unknown = enrich_resources([resource], [], [])[0]
+    assert unknown["capacity_state"] == "unknown"
+    assert unknown["runner_busy"] is None
+    assert unknown["runner_busy_basis"] == "UNKNOWN_NO_RUNNER_INVENTORY"
+    assert unknown["runner_status"] is None
+    assert unknown["research_slots_free"] is None
+
+
+def test_dashboard_infers_runner_busy_from_a_live_assigned_workflow_only():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    active = {
+        "resource": "Windows self-hosted A",
+        "lane": "FORMAL READINESS",
+        "status": "in_progress",
+        "task": "Q104 I19 Historical 13F Identity Census",
+        "worker": "self-hosted-runner-a",
+    }
+    inferred = enrich_resources([resource], [], [active])[0]
+    assert inferred["capacity_state"] == "operating"
+    assert inferred["runner_busy"] is True
+    assert inferred["runner_busy_basis"] == "ACTIVE_WORKFLOW_ASSIGNMENT"
+    assert inferred["current_assignments"] == 1
+    assert inferred["research_slots_in_use"] == 1
+    assert inferred["research_slots_free"] == 0
+
+
+def test_dashboard_keeps_idle_unknown_runner_slots_unknown_and_not_dispatchable():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    unknown = enrich_resources(
+        [resource],
+        [],
+        [{"resource": "Windows self-hosted A", "status": "queued", "lane": "FORMAL READINESS"}],
+    )[0]
+    assert unknown["runner_busy"] is None
+    assert unknown["runner_busy_basis"] == "UNKNOWN_NO_RUNNER_INVENTORY"
+    assert unknown["research_slots_free"] is None
+
+
 def test_planned_capacity_keeps_one_step_lookahead_while_resource_is_active():
     from automation.generate_resource_dashboard import planned_capacity_plan
 
