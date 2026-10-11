@@ -166,6 +166,9 @@ def test_q220_receipt_fingerprint_is_self_consistent(tmp_path):
     population, contract, docs, root = _fixture(tmp_path)
     result = _compile(population, contract, root=root, fetcher=lambda cik, accession, filename: (docs[accession], 200), sleep_seconds=0)
     assert canonical_fingerprint(result) == result["receipt_fingerprint"]
+    assert result["compiler_code_sha256"] == sha256(
+        (Path(__file__).resolve().parents[1] / "automation/q220_historical_representation_pit.py").read_bytes()
+    )
 
 
 def test_q220_textblock_parser_preserves_facts_after_self_closing_fact():
