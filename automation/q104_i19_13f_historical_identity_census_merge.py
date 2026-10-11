@@ -9,7 +9,11 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from automation.q104_i19_13f_historical_identity_census import SHARDS as CENSUS_SHARDS
+from automation.q104_i19_13f_historical_identity_census import (
+    SHARDS as CENSUS_SHARDS,
+    aggregate_issuer_name_cusip_audit,
+)
+from automation.q111_security_identity_contract import normalize_text
 
 EXPECTED_SHARDS = {
     "2013-2016",
@@ -82,6 +86,37 @@ def _acceptance_record(accession: str, record: dict[str, Any]) -> None:
         raise ValueError("Q104_I19_ACCEPTANCE_HEADER_SIZE_INVALID:" + accession)
 
 
+def _unresolved_name_cusips(audit: dict[str, Any]) -> list[dict[str, Any]]:
+    unresolved=[]
+    for symbol,by_cusip in sorted(audit.items()):
+        if not isinstance(by_cusip,dict):
+            raise ValueError("Q104_I19_ISSUER_NAME_CUSIP_AUDIT_INVALID:"+str(symbol))
+        for cusip,item in sorted(by_cusip.items()):
+            if not isinstance(item,dict):
+                raise ValueError("Q104_I19_ISSUER_NAME_CUSIP_AUDIT_INVALID:"+str(symbol)+"/"+str(cusip))
+            status=str(item.get("status") or "")
+            if status.startswith("UNRESOLVED_"):
+                names=sorted({str(row.get("normalized_name")) for row in item.get("observations",[]) if isinstance(row,dict) and row.get("normalized_name")})
+                unresolved.append({
+                    "symbol":str(symbol),"cusip":str(cusip),"status":status,
+                    "normalized_name_count":int(item.get("normalized_name_count",0) or 0),
+                    "missing_name_rows":int(item.get("missing_name_rows",0) or 0),
+                    "observed_row_count":int(item.get("observed_row_count",0) or 0),
+                    "archive_labels":list(item.get("archive_labels",[])),
+                    "normalized_names":names,
+                })
+    return unresolved
+
+
+def _identity_review(unresolved: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "status":"UNRESOLVED_CUSIP_ISSUER_NAME_VARIANTS_PRESENT" if unresolved else "NO_VARIANT_OBSERVED_NOT_PROOF",
+        "unresolved_pair_count":len(unresolved),
+        "identity_resolution_proven":False,
+        "interpretation":"Issuer labels are descriptive fields. Variants under one frozen CUSIP are retained for review and do not rewrite the frozen universe or drop rows; a single observed normalized name is not proof of identity.",
+    }
+
+
 def _validate_shard(payload: dict[str, Any]) -> None:
     shard = str(payload.get("shard", ""))
     if shard not in EXPECTED_SHARDS:
@@ -110,6 +145,34 @@ def _validate_shard(payload: dict[str, Any]) -> None:
             raise ValueError("Q104_I19_ARCHIVE_PERIOD_INVALID:" + shard) from exc
         if not expected_start <= period_start < expected_end:
             raise ValueError("Q104_I19_ARCHIVE_OUTSIDE_SHARD_BOUNDARY:" + shard)
+    shard_audit=payload.get("issuer_name_cusip_audit")
+    if not isinstance(shard_audit,dict) or set(shard_audit)!=EXPECTED_SYMBOLS:
+        raise ValueError("Q104_I19_SHARD_ISSUER_NAME_CUSIP_AUDIT_MISSING:"+shard)
+    if payload.get("identity_resolution_proven") is not False:
+        raise ValueError("Q104_I19_SHARD_IDENTITY_RESOLUTION_CLAIM_INVALID:"+shard)
+    for archive in payload["archives"]:
+        hits=archive.get("target_hits",{})
+        archive_audit=archive.get("issuer_name_cusip_audit")
+        if not isinstance(archive_audit,dict) or set(archive_audit)!=EXPECTED_SYMBOLS:
+            raise ValueError("Q104_I19_ARCHIVE_ISSUER_NAME_CUSIP_AUDIT_MISSING:"+shard)
+        for symbol,hit in hits.items():
+            by_cusip=archive_audit.get(symbol)
+            if not isinstance(by_cusip,dict) or set(by_cusip)!=set(str(x) for x in hit.get("cusips",[])):
+                raise ValueError("Q104_I19_ARCHIVE_ISSUER_NAME_CUSIP_CLOSURE_FAILED:"+shard+":"+symbol)
+            if sum(int(x.get("observed_row_count",0) or 0) for x in by_cusip.values())!=int(hit.get("row_count",0) or 0):
+                raise ValueError("Q104_I19_ARCHIVE_ISSUER_NAME_ROW_COUNT_MISMATCH:"+shard+":"+symbol)
+            target_names={normalize_text(str(x)) for x in hit.get("issuer_names",[])}
+            audit_names={str(row.get("normalized_name") or "") for item in by_cusip.values() for row in item.get("observations",[]) if isinstance(row,dict)}
+            if target_names!={name for name in audit_names if name}:
+                raise ValueError("Q104_I19_ARCHIVE_ISSUER_NAME_VARIANT_CLOSURE_FAILED:"+shard+":"+symbol)
+    expected_audit=aggregate_issuer_name_cusip_audit(payload["archives"],sorted(EXPECTED_SYMBOLS))
+    if shard_audit!=expected_audit:
+        raise ValueError("Q104_I19_SHARD_ISSUER_NAME_CUSIP_AUDIT_MISMATCH:"+shard)
+    expected_unresolved=_unresolved_name_cusips(expected_audit)
+    if payload.get("unresolved_issuer_name_cusips")!=expected_unresolved:
+        raise ValueError("Q104_I19_SHARD_UNRESOLVED_ISSUER_NAME_CUSIPS_MISMATCH:"+shard)
+    if payload.get("identity_review")!=_identity_review(expected_unresolved):
+        raise ValueError("Q104_I19_SHARD_IDENTITY_REVIEW_MISMATCH:"+shard)
     if payload.get("archive_completeness_for_shard") is not True:
         raise ValueError("Q104_I19_SHARD_ARCHIVE_COMPLETENESS_FAILED:" + shard)
     if not payload.get("synthetic") or any(value is not True for value in payload["synthetic"].values()):
@@ -226,12 +289,19 @@ def build_receipt(payloads: list[dict[str, Any]], generated_at_utc: str | None =
         raise ValueError("Q104_I19_ACCEPTANCE_RECORD_COUNT_MISMATCH")
     if len(seen_accessions) != total_target_accessions:
         raise ValueError("Q104_I19_GLOBAL_ACCEPTANCE_JOIN_COUNT_MISMATCH")
+    issuer_name_cusip_audit=aggregate_issuer_name_cusip_audit(archives,sorted(frozen))
+    unresolved_issuer_name_cusips=_unresolved_name_cusips(issuer_name_cusip_audit)
+    identity_review=_identity_review(unresolved_issuer_name_cusips)
     coverage = {}
     for symbol in sorted(frozen):
         matched = sum(1 for archive in archives if archive["target_hits"].get(symbol, {}).get("row_count", 0) > 0)
+        unresolved_for_symbol=[x["cusip"] for x in unresolved_issuer_name_cusips if x["symbol"]==symbol]
         coverage[symbol] = {
             "archives_with_match": matched,
             "archives_without_match": len(archives) - matched,
+            "issuer_name_cusips_with_unresolved_variants": unresolved_for_symbol,
+            "issuer_name_identity_status":"UNRESOLVED_CUSIP_ISSUER_NAME_VARIANTS_PRESENT" if unresolved_for_symbol else "NO_VARIANT_OBSERVED_NOT_PROOF",
+            "identity_resolution_proven":False,
         }
 
     receipt: dict[str, Any] = {
@@ -250,6 +320,10 @@ def build_receipt(payloads: list[dict[str, Any]], generated_at_utc: str | None =
         "archives": archives,
         "coverage_summary": coverage,
         "identity_conflicts": [],
+        "issuer_name_cusip_audit":issuer_name_cusip_audit,
+        "unresolved_issuer_name_cusips":unresolved_issuer_name_cusips,
+        "identity_review":identity_review,
+        "identity_resolution_proven":False,
         "acceptance_time_join": {
             "target_unique_accessions": total_target_accessions,
             "records_checked": total_checked_records,
@@ -259,7 +333,10 @@ def build_receipt(payloads: list[dict[str, Any]], generated_at_utc: str | None =
         },
         "scientific_boundary": {key: False for key in EXPECTED_BOUNDARY_FALSE},
         "safety": dict(EXPECTED_SAFETY),
-        "next_gate": "concept-specific PIT compiler + independent reproduction",
+        "next_gate": (
+            "resolve historical issuer-name variants under the frozen CUSIP mapping before PIT compilation"
+            if unresolved_issuer_name_cusips else "concept-specific PIT compiler + independent reproduction"
+        ),
     }
     return seal(receipt)
 
