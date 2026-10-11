@@ -140,6 +140,7 @@ function candidateInfo(code){
 }
 function candidateStatus(x){
   var status=String(x.current_milestone_status||"").toLowerCase();
+  if(x.next_workpack_required)return {label:"WORKPACK OFFEN",cls:"blocked-badge"};
   // Scientific gate outcome outranks ancillary job activity. A route probe can
   // remain queued while the fixed population it supports is already blocked.
   if(status==="blocked"||status.indexOf("blocked")>=0){
@@ -216,7 +217,7 @@ function renderCandidateDecisionRules(pipeline){
   var host=$("candidateDecisionRules");
   if(!host)return;
   host.innerHTML="<div class='decision-board-head'><div><div class='section-kicker'>Receipt-first · aktuelle Gates</div><div class='decision-board-title'>Nächster Schritt und Stop-Regel je aktivem Kandidaten</div></div><div class='small muted'>Ressourcenpriorität, keine Rendite-Rangliste.</div></div><div class='decision-grid'>"+
-    rules.map(function(r){var x=byCode[r.code]||{};var status=String(x.current_milestone_status||"nicht im Snapshot").replace(/_/g," ").toUpperCase();var gate=String(x.current_milestone||x.next_gate||"Kein Gate im Snapshot");return "<article class='decision-card "+r.cls+"'><div class='decision-head'><div class='decision-code'>"+esc(r.code)+"</div><span class='decision-disposition'>"+esc(r.mode)+"</span></div><div class='decision-current'>Snapshot-Gate: <strong>"+esc(status)+"</strong> · "+esc(gate)+"</div><div class='decision-field'><strong>Nächster zulässiger Schritt</strong><b>"+esc(r.title)+".</b> "+esc(r.advance)+"</div><div class='decision-field'><strong>Stop-/Falsifikationsregel</strong>"+esc(r.stop)+"</div></article>";}).join("")+"</div>"+
+    rules.map(function(r){var x=byCode[r.code]||{};if(r.code==="Q220"&&x.next_workpack_required){r=Object.assign({},r,{mode:"WORKPACK OFFEN · NICHT AUTO-DISPATCH",title:"Neues begrenztes Robustheits-/Governance-Workpack definieren",advance:"Die 55/55 Population-, PIT-Compiler- und unabhängigen Reproduktionsbelege sind positiv; ein ausführbares nächstes Workpack ist noch nicht definiert. Keine automatische Disposition oder Performancefreigabe."});}else if(r.code==="Q220"&&x.current_milestone){r=Object.assign({},r,{title:String(x.current_milestone),advance:String(x.next_gate||r.advance)});}var status=String(x.current_milestone_status||"nicht im Snapshot").replace(/_/g," ").toUpperCase();var gate=String(x.current_milestone||x.next_gate||"Kein Gate im Snapshot");return "<article class='decision-card "+r.cls+"'><div class='decision-head'><div class='decision-code'>"+esc(r.code)+"</div><span class='decision-disposition'>"+esc(r.mode)+"</span></div><div class='decision-current'>Snapshot-Gate: <strong>"+esc(status)+"</strong> · "+esc(gate)+"</div><div class='decision-field'><strong>Nächster zulässiger Schritt</strong><b>"+esc(r.title)+".</b> "+esc(r.advance)+"</div><div class='decision-field'><strong>Stop-/Falsifikationsregel</strong>"+esc(r.stop)+"</div></article>";}).join("")+"</div>"+
     "<div class='decision-fallback'><strong>Archiviert, nicht aktiv:</strong> Q218 ist aus aktivem Fokus und automatischem Dispatch entfernt. One-shot und Acht-Ereignis-Replikation bleiben deskriptiv archiviert und werden nicht wiederholt. Q219 bleibt pausiert. Keine künstlichen Aufgaben und keine Performance-, Holdout-, Tuning-, Ranking-, Promotion- oder Live-Trading-Autorisierung aus dem Dashboard.</div>";
 }
 
@@ -328,6 +329,8 @@ function operationStatusClass(status){
   return "blocked-badge";
 }
 function nextDurationLabel(item,data,code){
+  var pipelineRow=(data.pipeline||[]).filter(function(x){return x.code===code;})[0]||{};
+  if(pipelineRow.next_workpack_required)return "Keine ETA · neues Workpack offen";
   if(item&&item.scheduled===false)return "Keine ETA · Voraussetzung blockiert";
   if(item&&item.dispatchable===false)return "Keine ETA · nicht auto-dispatchierbar";
   if(item&&item.expected_duration_seconds!=null&&Number(item.duration_sample_count)>0){
@@ -393,6 +396,7 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
   }
   function statusFor(code,pipe,rec,activeRows){
     if(activeRows.length)return "AKTIVER RUN LÄUFT · NICHT DUPLIZIEREN";
+    if((pipe||{}).next_workpack_required)return "WORKPACK OFFEN · NICHT AUTO-DISPATCH";
     if(rec){
       var p=rec.item;
       var readiness=String(p.readiness||"").toUpperCase();
@@ -421,6 +425,8 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
         task="Nach terminalem Census: sechs Shard-Receipts abgleichen → nur belegte Header-Lücken gezielt reparieren → PIT-Compiler.";
       }else if(activeRows.length){
         task="Nach Abschluss des aktiven Runs: "+gate;
+      }else if(pipe.next_workpack_required){
+        task="Neues begrenztes Workpack definieren: "+gate;
       }else if(p&&p.dispatchable&&p.scheduled){
         task=String(p.task||gate);
       }else{
@@ -431,6 +437,8 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
         owner="Aktiver Run zuerst · danach Ressource neu disponieren";
       }else if(p&&p.dispatchable&&p.scheduled&&rec.resource){
         owner=String(rec.resource);
+      }else if(pipe.next_workpack_required){
+        owner="Workpack zuerst spezifizieren · kein Runner zuordnen";
       }else if(p&&(!p.dispatchable||p.scheduled===false)){
         owner="Nicht disponieren · neues Workpack / Voraussetzung offen";
       }else{
@@ -440,6 +448,7 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
       var estimate=nextDurationLabel(p,data,code);
       var basis=p?String(p.readiness||p.basis||""):String(pipe.next_milestone_progress_basis||pipe.current_milestone_status||"");
       if(activeRows.length)basis="Keinen Parallel-Run starten; aktiven Lauf abschließen und erst danach Receipts prüfen.";
+      if(pipe.next_workpack_required)basis="PIT-Quittungskette positiv; der nächste Robustheits-/Governance-Workpack ist noch nicht definiert.";
       var cls=operationStatusClass(status);
       return "<tr><td><strong>"+(index+1)+". "+esc(code)+"</strong></td>"+
         "<td><span class='badge "+cls+"'>"+esc(status)+"</span></td>"+
@@ -536,6 +545,7 @@ function render(data){
     var overall=pct(x.overall_progress_percent), next=pct(x.next_milestone_progress_percent);
     var info=candidateInfo(x.code);
     var status=candidateStatus(x);
+    if(x.next_workpack_required)status={label:"WORKPACK OFFEN",cls:"blocked-badge"};
     return "<article class='candidate-card "+esc(info.cardClass)+"' data-candidate='"+esc(x.code)+"'>"+
       "<div class='candidate-head'><div><div class='candidate-code'>"+esc(x.code)+"</div><div class='candidate-name'>"+esc(info.name)+"</div><div class='candidate-stage'>"+esc(x.stage)+"</div></div><span class='badge "+status.cls+"'>"+status.label+"</span></div>"+
       "<p class='candidate-mechanism'>"+esc(info.mechanism)+"</p>"+

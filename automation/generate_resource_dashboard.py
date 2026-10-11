@@ -25,6 +25,7 @@ try:
 except ModuleNotFoundError:
     # Direct script execution puts automation/ on sys.path.
     from planned_capacity_fast_dispatch import ai_task_completed_with_current_context, TOP4_CANDIDATES, completed_slot_scopes
+from automation.q220_receipt_chain import evaluate_q220_receipt_chain
 OUT = ROOT / "docs" / "dashboard" / "dashboard_data.json"
 BOOTSTRAP = ROOT / "docs" / "dashboard" / "dashboard_bootstrap.js"
 REPO = os.environ.get("GITHUB_REPOSITORY", "DWR-debug/trading-agent-public")
@@ -1048,6 +1049,29 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
 
     q104_compiler = q104_historical_compilation_status()
     q220_population = q220_as_filed_population_status(runs)
+    q220_chain = evaluate_q220_receipt_chain(ROOT)
+    if q220_chain["population_positive"]:
+        q220_population = {
+            "state": "complete",
+            "progress_percent": 100,
+            "detail": "Current pinned Q220 population receipt is positive.",
+            "next_gate": q220_chain["next_gate"],
+            "receipt_fingerprint": q220_chain["population_receipt_fingerprint"],
+        }
+    elif q220_population.get("state") == "running":
+        q220_chain["current_milestone_status"] = "running"
+        q220_chain["current_milestone_detail"] = q220_population["detail"]
+        q220_chain["next_gate"] = "positive current-code fixed-population receipt"
+        q220_chain["milestones"][1]["status"] = "running"
+        q220_chain["milestones"][1]["detail"] = q220_population["detail"]
+    else:
+        q220_population = {
+            "state": "blocked",
+            "progress_percent": 0,
+            "detail": q220_chain["current_milestone_detail"],
+            "next_gate": q220_chain["next_gate"],
+            "receipt_fingerprint": q220_chain["population_receipt_fingerprint"],
+        }
     q104_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Exact-XBRL-Kontrakt eingefroren"},
         {"label": "Source feasibility", "status": "complete", "progress": 100, "detail": "Q104 source feasibility receipt vorhanden"},
@@ -1089,14 +1113,7 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
         score = completed_units + partial_units
         return int(round(100 * score / total)), completed_units, total
 
-    q220_state = q220_population["state"]
-    q220_milestones = [
-        {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Fixed eight-issuer universe and as-filed SEC/XBRL representation contract"},
-        {"label": "As-filed population + TextBlock/XSD/presentation mapping", "status": q220_state, "progress": q220_population["progress_percent"], "detail": q220_population["detail"]},
-        {"label": "Historical prefix / representation-gap PIT compiler", "status": "ready" if q220_state == "complete" else "blocked", "progress": 0, "detail": "opens only after a positive fixed-population receipt with stable mapping"},
-        {"label": "Independent PIT reproduction", "status": "blocked", "progress": 0, "detail": "requires frozen historical compiler inputs and an independent source route"},
-        {"label": "Pre-performance robustness", "status": "blocked", "progress": 0, "detail": "length/readability controls, future-text exclusion, taxonomy drift and disjoint OOS remain required"},
-    ]
+    q220_milestones = q220_chain["milestones"]
     q221_clock = q221_public_clock_status()
     q221_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Frozen R&D-to-procurement option-value mechanism and non-overlap contract"},
@@ -1146,11 +1163,13 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "overall_progress_percent": q220_overall,
                 "completed_milestones": q220_complete,
                 "total_milestones": q220_total,
-                "current_milestone": "Historical prefix / representation-gap PIT compiler" if q220_state == "complete" else "As-filed population + TextBlock/XSD/presentation mapping",
-                "current_milestone_progress_percent": 0 if q220_state == "complete" else q220_population["progress_percent"],
-                "current_milestone_status": "ready" if q220_state == "complete" else q220_state,
-                "current_milestone_detail": q220_population["detail"],
-                "next_gate": q220_population["next_gate"],
+                "current_milestone": q220_chain["current_milestone"],
+                "current_milestone_progress_percent": q220_chain["current_milestone_progress_percent"],
+                "current_milestone_status": q220_chain["current_milestone_status"],
+                "current_milestone_detail": q220_chain["current_milestone_detail"],
+                "next_gate": q220_chain["next_gate"],
+                "next_milestone_progress_basis": q220_chain["current_milestone_detail"],
+                "next_workpack_required": q220_chain["next_workpack_required"],
                 "milestones": q220_milestones,
                 "performance_authorization_allowed": False,
             },
@@ -1308,17 +1327,15 @@ def candidate_development_roadmap(
         ]
     if candidate == "Q220":
         q220_progress = progress["candidates"]["Q220"]
-        q220_gate = next(
-            item for item in q220_progress["milestones"]
-            if item["label"] == "As-filed population + TextBlock/XSD/presentation mapping"
-        )
-        complete = q220_gate["status"] == "complete"
+        stage_ids = ["Q220-CONTRACT", "Q220-POPULATION", "Q220-PIT", "Q220-REPRO", "Q220-ROBUST"]
         return [
-            {"id": "Q220-CONTRACT", "label": "Frozen as-filed representation-gap contract", "status": "completed", "next": "fixed eight-issuer filing universe"},
-            {"id": "Q220-POPULATION", "label": "SEC as-filed population + TextBlock/XSD/presentation mapping", "status": q220_gate["status"], "next": q220_progress["next_gate"]},
-            {"id": "Q220-PIT", "label": "Historical prefix / representation-gap PIT compiler", "status": "ready" if complete else "blocked", "next": "positive population receipt"},
-            {"id": "Q220-REPRO", "label": "Independent PIT reproduction", "status": "blocked", "next": "positive historical PIT compiler receipt"},
-            {"id": "Q220-ROBUST", "label": "Cheap falsifiers: length/readability, future text, taxonomy drift", "status": "blocked", "next": "frozen PIT inputs and independent reproduction"},
+            {
+                "id": stage_ids[index],
+                "label": milestone["label"],
+                "status": "COMPLETED" if milestone.get("status") == "complete" else str(milestone.get("status") or "blocked").upper(),
+                "next": str(milestone.get("detail") or q220_progress["next_gate"]),
+            }
+            for index, milestone in enumerate(q220_progress["milestones"])
         ]
     if candidate == "Q221":
         q221_gate = q221_public_clock_status()
@@ -1397,9 +1414,14 @@ def candidate_pipeline(
     for candidate in FOCUS_CANDIDATES:
         p = progress["candidates"][candidate]
         capacity = candidate_capacity_snapshot(candidate, work, planned_capacity)
+        stage = (
+            "FRONTIER DISCOVERY · " + str(p["current_milestone"]).upper()
+            if candidate == "Q220"
+            else state_by_candidate[candidate]
+        )
         result.append({
             "code": candidate,
-            "stage": state_by_candidate[candidate],
+            "stage": stage,
             "next_gate": p["next_gate"],
             "active": bool(active_by_candidate[candidate]),
             "active_jobs": len(active_by_candidate[candidate]),
@@ -1409,6 +1431,7 @@ def candidate_pipeline(
             "next_milestone_progress_basis": p["current_milestone_detail"],
             "current_milestone": p["current_milestone"],
             "current_milestone_status": p["current_milestone_status"],
+            "next_workpack_required": bool(p.get("next_workpack_required", False)),
             "milestones": p["milestones"],
             "performance_authorization_allowed": False,
             "active_capacities": capacity["active_capacities"],

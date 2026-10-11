@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_type": "trading_agent_chat_decision_log",
   "purpose": "Durable operational continuity for future Trading Agent OS chats. Entries are operational notes, not scientific evidence, performance authorization, ranking, or live-trading permission.",
-  "updated_at_utc": "2026-10-11T21:39:56Z",
+  "updated_at_utc": "2026-10-11T21:56:43Z",
   "safety": {
     "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
@@ -11,6 +11,17 @@
     "paid_usage_usd": 0
   },
   "entries": [
+    {
+      "date_utc": "2026-10-11T21:56:43Z",
+      "candidate": "Q220 PIT RECEIPT RECONCILIATION",
+      "status": "SOURCE/PIT POSITIVE · PERFORMANCE CLOSED",
+      "title": "Dashboard and canonical handoff now follow the full Q220 receipt chain",
+      "decision": "The frozen population receipt, historical-prefix representation PIT compiler receipt, and independent retrieval/parser reproduction are all present and linked by exact receipt fingerprints for the same 55-record/eight-issuer contract. The independent receipt reports zero source-hash, identity, prefix, structured-fact, TextBlock and change-state mismatches; five original filings with no observed TextBlock remain explicit missing states. This proves source/PIT engineering gates only, not strategy performance, and does not authorize holdout use, tuning, promotion or live execution.",
+      "next_action": "Define an explicit bounded adversarial robustness + formal trial-governance reconciliation workpack before assigning compute. Include future-text exclusion, taxonomy/representation drift, the five explicit no-TextBlock cases, input/future-row mutation invariants and a reviewed no-performance authorization ledger. Do not treat the diagnostic-only TextBlock comparison or prior unusable free-AI output as a substitute; no ETA or automatic dispatch until the workpack is frozen.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/blob/master/research/evidence/q220_independent_pit_reproduction_latest.json",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/blob/master/research/evidence/q220_historical_representation_pit_latest.json",
+      "scientific_evidence": false
+    },
     {
       "date_utc": "2026-10-11T21:39:56Z",
       "candidate": "PIT LITERATURE AUDIT",

@@ -13,6 +13,7 @@ from typing import Any
 from automation.q067_pipeline_state import summarize as summarize_q067_pipeline
 from automation.q068_pipeline_state import summarize as summarize_q068_pipeline
 from automation.q070_pipeline_state import summarize as summarize_q070_pipeline
+from automation.q220_receipt_chain import evaluate_q220_receipt_chain
 
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_DOC = ROOT / "docs" / "CURRENT_STATUS.md"
@@ -30,6 +31,30 @@ def _load_json(path: Path, default: Any) -> Any:
 
 def q220_population_focus_sentence(receipt: dict[str, Any]) -> str:
     """Render Q220 progress only when the current source gate and contract both match."""
+    current_receipt = _load_json(ROOT / "research/evidence/q220_as_filed_xbrl_population_latest.json", {})
+    if receipt.get("receipt_fingerprint") and receipt.get("receipt_fingerprint") == current_receipt.get("receipt_fingerprint"):
+        chain = evaluate_q220_receipt_chain(ROOT)
+        if not chain["population_positive"]:
+            return "Q220 current-code population receipt or source pins fail validation; compiler and independent stages remain closed. "
+        if chain["independent_positive"]:
+            return (
+                "Q220 PIT chain is positive for all 55 fixed filings: compiler and independent retrieval/parser agree; "
+                "source-hash, identity, prefix, structured-fact and TextBlock mismatch counts are zero. "
+                "Five records with no observed TextBlock remain explicit missing states. "
+                "Next gate: bounded adversarial robustness review and formal trial-governance reconciliation; performance authorization remains closed. "
+                f"Population={chain['population_receipt_fingerprint']}; compiler={chain['compiler_receipt_fingerprint']}; independent={chain['independent_receipt_fingerprint']}. "
+            )
+        if chain["compiler_positive"]:
+            return (
+                "Q220 historical-prefix/representation PIT compiler is positive for all 55 filings with verified sources and no mapping gaps. "
+                "Next gate: independent PIT reproduction; performance authorization remains closed. "
+                f"Compiler receipt fingerprint {chain['compiler_receipt_fingerprint']}. "
+            )
+        return (
+            "Q220 population is positive and pinned to all 55 fixed filings. "
+            "Next gate: historical prefix/acceptance-time PIT representation-state compiler; performance authorization remains closed. "
+            f"Population receipt fingerprint {chain['population_receipt_fingerprint']}. "
+        )
     status = str(receipt.get("status") or "")
     fingerprint = str(receipt.get("receipt_fingerprint") or "")
     gate_sha = str(receipt.get("gate_code_sha256") or "")
@@ -618,8 +643,8 @@ def generate(
             "Q104:I19 next: finish the existing historical 13F census or its currently useful successor run; after a terminal result, recover only unresolved shard/header evidence and never restart the full census blindly. "
             "Then compile the frozen concept-specific PIT state and require independent reproduction. "
             + q220_population_sentence +
-            "Q221 next: run the bounded USAspending public-clock workpack in parallel with Q220 when Windows capacity allows. "
-            "The current live-source marker check is not historical proof: reconstruct the publication vintage and transaction classes, classify the DoD/USACE 90-day and FAR exceptions, and freeze recipient-to-issuer mapping before PIT validation. "
+            "Q221 next: prepare a new bounded award-level public-observation workpack; the five archived USAspending policy vintages do not prove first-public time for an individual award or modification. "
+            "Freeze transaction classes and recipient-to-issuer mapping, classify the DoD/USACE 90-day and FAR exceptions, and preserve correction lineage. Do not dispatch until the new workpack and prerequisites are explicit. "
             "Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run. "
             + q218_sentence +
             "Q219 remains paused; its prior evidence is preserved. "

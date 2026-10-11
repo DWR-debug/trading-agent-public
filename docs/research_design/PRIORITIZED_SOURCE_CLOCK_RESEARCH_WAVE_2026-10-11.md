@@ -80,9 +80,9 @@ Q221 remains source-blocked until the alternate route provides a versioned, immu
 
 | Lane | Latest verified state | Next action |
 |---|---|---|
-| Q104:I19 | Run 38145062319 is still in progress. Some historical census shards have failed at SEC acceptance-time joins; other shards were still running; source snapshot completed. | Let the existing census reach terminal state. Reconcile every shard receipt. Repair only the exact frozen accessions/joins shown to be missing; do not restart the entire census. |
-| Q220 | Run 38155914188 population and route jobs completed successfully: 55 records and 8 route controls, both with zero failures; receipt fingerprints and current gate/contract hashes were independently reconciled. Five population records have no observed TextBlock facts. | Refresh the compiler's stale fixed population pin to the verified receipt, then let the existing historical-prefix compiler workflow run. Review source hashes, prefix ordering and explicit missing states; no PIT or performance pass is inferred in advance. |
-| Q221 | Archive catalog stage completed, but historical multi-version series not found; fail-closed status is correct. | Bounded alternate-source research as described above. No event-level public boundary, frozen recipient/issuer map or scientific evidence is claimed. |
+| Q104:I19 | Run 38168441086 remains active; source snapshot and recovery guard passed, and all six shards were still running at 21:55 UTC. | Let the existing census reach terminal state. Reconcile all six shard receipts; repair only proven header/identity gaps; do not restart the entire census. |
+| Q220 | Population, historical-prefix compiler and independent retrieval/parser receipts now validate as one pinned 55-record chain with zero hash, identity, prefix, structured-fact, TextBlock or change-state mismatches. Five no-TextBlock states remain explicit. | Freeze a bounded adversarial robustness + formal trial-governance reconciliation workpack. No performance authorization, ETA or automatic dispatch until the workpack is explicit. |
+| Q221 | Five fixed-window historical policy-document vintages have been reconstructed, but award-level first-public observation and historical applicability remain unproven. | Define a new award-level boundary and recipient-to-issuer workpack with fixed transaction classes, DoD/USACE/FAR semantics and correction lineage. No reuse of the completed policy-vintage probe as transaction proof. |
 
 ## 3. Reserve wave A — Q224 EDGAR document-acquisition demand
 
@@ -266,5 +266,16 @@ No candidate is added, no active-focus lock is widened, and no performance, hold
 
 - Active focus remains **Q104:I19, Q220 and Q221**; Q218 stays excluded from automatic dispatch.
 - Do not duplicate Q104. After it is terminal, reconcile the six receipts, apply the existing targeted .hdr.sgml recovery, then perform only the bounded source-consistency QA before the existing PIT compiler.
-- Q220 remains on its historical-prefix/PIT compiler gate; Q221 remains source-blocked pending immutable transaction-level vintages and presence/absence evidence.
+- Q220's frozen 55-record population, historical-prefix compiler and independent PIT reproduction are now positive and receipt-linked; the next gate is a bounded adversarial robustness review plus formal trial-governance reconciliation, with no performance authorization. Q221 remains source-blocked at the award-level public-observation boundary until a separate transaction-level workpack proves historical presence/absence and correction lineage.
 - No candidate contract, performance gate, holdout rule, ranking, tuning, promotion, paid service or live-execution boundary is changed.
+
+
+## 7. Unusual-source lead: Government Patent Register (reserve only)
+
+The NBER working paper [*The Government Patent Register: A New Resource for Measuring U.S. Government-Funded Patenting*](https://www.nber.org/papers/w32136) by Daniel P. Gross and Bhaven N. Sampat describes a historical register of U.S. government rights in patents. The published version appeared in *Research Policy* in 2025 ([journal record](https://www.sciencedirect.com/science/article/abs/pii/S0048733324001914)). Its useful distinction is between government-title patents and government-funded inventions licensed to private organizations; some license relationships cannot reliably be recovered from patent-text acknowledgements alone.
+
+**Potential connection to the existing Q221 mechanism:** as a later, independent entity/capability cross-check, patent-level government-rights evidence could help distinguish recipients that perform technical work from recipients that hold or license inventions, and might support post-award capability outcome audits. This is a lead to screen against Q221's already frozen mechanism—not a new candidate and not a replacement for the award-level public-clock gate.
+
+**PIT restriction:** the consolidated register was compiled retrospectively. Its current appearance in a register cannot be treated as contemporaneous public information at a historical award cutoff. Any future use must locate the exact patent record and use its own original publication/grant/publication-vintage evidence, while separately verifying the availability of the government-rights/licensing field. Do not infer award causality or transaction timing from the current register alone.
+
+**Disposition:** reserve for a later Q221 identity/capability workpack only after the award-level source clock, fixed transaction classes and recipient-to-issuer map have a defensible contract. Active focus stays Q104:I19, Q220 and Q221; no candidate expansion or dispatch is authorized by this source lead.
