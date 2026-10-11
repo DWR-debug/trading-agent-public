@@ -5,6 +5,7 @@ import hashlib
 import json
 from datetime import datetime, timezone
 
+from automation.q220_historical_representation_pit import textblock_states as primary_textblock_states
 from automation.q220_independent_pit_reproduction import (
     NUMERIC_QNAMES,
     canonical_fingerprint,
@@ -339,3 +340,27 @@ def test_independent_parser_keeps_empty_self_closing_numeric_fact_separate():
     assert by_context["EMPTY"]["raw_value_sha256"] == sha256(b"")
     assert by_context["VALUED"]["normalized_value"] == "100"
     assert by_context["VALUED"]["parse_status"] == "PARSED"
+
+
+def test_independent_and_primary_parsers_agree_on_nested_continuation_chain():
+    document = """
+    <html xmlns:ix="http://www.xbrl.org/2013/inlineXBRL">
+      <ix:nonNumeric name="custom:RiskTextBlock" contextRef="C1" id="risk" continuedAt="c1">Headline</ix:nonNumeric>
+      <ix:continuation id="c1" continuedAt="c3">
+        Alpha <span>beta</span>
+        <ix:continuation id="c2">Nested continuation text</ix:continuation>
+        omega
+      </ix:continuation>
+      <ix:continuation id="c3">Tail text</ix:continuation>
+    </html>
+    """
+    primary = primary_textblock_states(document)
+    independent = parse_textblock_states(document)
+
+    assert primary == independent
+    state = independent["custom:RiskTextBlock"][0]
+    expected = "Headline Alpha beta Nested continuation text omega Tail text"
+    assert state["continued_chain_length"] == 2
+    assert state["continued_chain_complete"] is True
+    assert state["normalized_character_count"] == len(expected)
+    assert state["content_sha256"] == sha256(expected.encode("utf-8"))
