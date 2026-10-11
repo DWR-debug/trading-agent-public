@@ -7,6 +7,7 @@ authorizes performance, ranking, tuning, promotion or live execution.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -54,7 +55,7 @@ def q221_vintage_auto_dispatch_block_reason() -> str | None:
     if not recorded_sha:
         return None
     try:
-        current_sha = __import__("hashlib").sha256(Q221_VINTAGE_GATE_PATH.read_bytes()).hexdigest()
+        current_sha = hashlib.sha256(Q221_VINTAGE_GATE_PATH.read_bytes()).hexdigest()
     except OSError:
         return None
     if recorded_sha != current_sha:
