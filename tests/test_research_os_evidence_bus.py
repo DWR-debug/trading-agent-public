@@ -58,3 +58,79 @@ def test_scheduler_keeps_s10_fail_closed_without_receipt(tmp_path, monkeypatch):
     s10 = next(item for item in p["agent_resources"] if item["id"] == "S10")
     assert s10["eligible"] is False
     assert s10["receipt_status"] == "NOT_PRESENT"
+
+
+def test_receipt_rejects_payload_mutation_with_old_but_well_formed_digest():
+    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    receipt = build_receipt(
+        source_id="SRC-SEC-FTD",
+        retrieved_at="2026-09-30T19:00:00Z",
+        raw_payload={"status": 200},
+        registry=registry,
+    )
+    receipt["pit_status"] = "PIT_VALIDATED"
+    with pytest.raises(ValueError, match="Receipt fingerprint mismatch"):
+        validate_receipt(receipt, registry=registry)
+
+
+def test_v2_receipt_requires_source_basis_for_public_availability():
+    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    receipt = build_receipt(
+        source_id="SRC-SEC-FTD",
+        schema_version=2,
+        retrieved_at="2026-09-30T19:00:00Z",
+        available_at="2026-09-30T18:55:00Z",
+        availability_basis="OFFICIAL_RELEASE_TIMESTAMP",
+        availability_evidence_url="https://www.sec.gov/data-research/sec-markets-data/fails-deliver-data",
+        vintage_id="release-2026-09-30",
+        revision_parent_fingerprint=None,
+        raw_payload={"release": "2026-09-30"},
+        registry=registry,
+    )
+    assert receipt["schema_version"] == 2
+    assert receipt["availability_basis"] == "OFFICIAL_RELEASE_TIMESTAMP"
+    assert receipt["availability_evidence_url"].startswith("https://")
+    validate_receipt(receipt, registry=registry)
+
+
+def test_v2_receipt_rejects_claimed_availability_without_evidence_url():
+    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    with pytest.raises(ValueError, match="availability_evidence_url must be HTTPS"):
+        build_receipt(
+            source_id="SRC-SEC-FTD",
+            schema_version=2,
+            retrieved_at="2026-09-30T19:00:00Z",
+            available_at="2026-09-30T18:55:00Z",
+            availability_basis="OFFICIAL_RELEASE_TIMESTAMP",
+            raw_payload={"release": "2026-09-30"},
+            registry=registry,
+        )
+
+
+def test_v2_unknown_availability_remains_explicit_and_non_authorizing():
+    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    receipt = build_receipt(
+        source_id="SRC-SEC-FTD",
+        schema_version=2,
+        retrieved_at="2026-09-30T19:00:00Z",
+        raw_payload={"http_status": 200},
+        registry=registry,
+    )
+    assert receipt["available_at"] is None
+    assert receipt["availability_basis"] == "UNKNOWN"
+    assert receipt["availability_evidence_url"] is None
+    assert receipt["scientific_evidence"] is False
+    validate_receipt(receipt, registry=registry)
+
+
+def test_v1_receipt_shape_stays_compatible_without_availability_basis():
+    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    receipt = build_receipt(
+        source_id="SRC-SEC-FTD",
+        retrieved_at="2026-09-30T19:00:00Z",
+        raw_payload={"http_status": 200},
+        registry=registry,
+    )
+    assert receipt["schema_version"] == 1
+    assert "availability_basis" not in receipt
+    validate_receipt(receipt, registry=registry)
