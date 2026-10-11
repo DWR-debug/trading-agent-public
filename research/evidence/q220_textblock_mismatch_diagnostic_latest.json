@@ -1,0 +1,2308 @@
+{
+  "baseline": {
+    "compiler_code_sha256": "23f681d18b0b9c6bc73ef58a5cddb64f80fc5f01fb7e2cddffd50ba34067fd88",
+    "compiler_receipt_fingerprint": "2706261882cb334e5c9f1e2f2cd89ff9922366775bec736c88d80b9d63675806",
+    "independent_failure_receipt_fingerprint": "a4670b39165457446fe96471cd9b94e708c3a13024b56266f30b09c98d04adeb",
+    "population_receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+    "source_fetch_scope": "first three records from the pinned failure receipt only"
+  },
+  "candidate_id": "Q220",
+  "diagnostic_only": true,
+  "errors": [],
+  "gate_positive": false,
+  "generated_at_utc": "2026-10-11T20:01:47.947133+00:00",
+  "holdout_selection": false,
+  "live_execution": false,
+  "performance_authorization": false,
+  "performance_authorized": false,
+  "promotion": false,
+  "ranking": false,
+  "receipt_fingerprint": "ece307b1893b0845f2c97fb11160af25ba1e76401e97ab397159b96de9f1020a",
+  "record_type": "q220_textblock_mismatch_diagnostic",
+  "records": [
+    {
+      "accession": "0000064040-20-000055",
+      "actual_primary_document_sha256": "de36e97c8c2c0f9ac77714a2388a916e0dca76a394ae514d8365cdc596ceb8ce",
+      "cik": "0000064040",
+      "compiler_distinct_qname_count": 81,
+      "compiler_textblock_fact_count": 81,
+      "expected_primary_document_sha256": "de36e97c8c2c0f9ac77714a2388a916e0dca76a394ae514d8365cdc596ceb8ce",
+      "field_difference_counts": {
+        "content_sha256": 26,
+        "continued_chain_complete": 22,
+        "continued_chain_length": 12,
+        "normalized_character_count": 26
+      },
+      "filed_date": "2020-02-10",
+      "form": "10-K",
+      "http_status": 200,
+      "independent_distinct_qname_count": 81,
+      "independent_textblock_fact_count": 81,
+      "mismatch_details": [
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-A76E0A3DF899A50D590767A2A3AF3655-0-wk-Fact-5B0EAE2FF514DA0E639167A2A27AA3B3",
+              "first_difference": {
+                "independent_context": "Capitalized technology costs We capitalize certain software development and website implementation costs. Capitalized costs only include i",
+                "independent_context_repr": "'Capitalized technology costs We capitalize certain software development and website implementation costs. Capitalized costs only include i'",
+                "index": 28,
+                "left_codepoint": null,
+                "primary_context": "Capitalized technology costs",
+                "primary_context_repr": "'Capitalized technology costs'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "0d8bf0729f2d67933a37e982d127778754ef802ec804fb3c49d7c8293ba0276d",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 1071,
+                "preview": "Capitalized technology costs We capitalize certain software development and website implementation costs. Capitalized costs only include incremental, direct costs of materials and "
+              },
+              "primary": {
+                "content_sha256": "52972b710e4248cd37c92674f56d66825c442fc56f3ebea1884c83ce4928add6",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 28,
+                "preview": "Capitalized technology costs"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "spgi:DeferredTechnologyCostsPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-587956C96FF2E13EA8C967A2A3B14ECA-0-wk-Fact-3F25CB92582955D31B4D67A2A2971DD1",
+              "first_difference": null,
+              "independent": {
+                "content_sha256": "1a434631184e7f522324ec84404792e0e615d9145ab4fdacf00d39e4f8281e30",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1375,
+                "preview": "Nature of operations S&P Global Inc. (together with its consolidated subsidiaries, the “Company,” the “Registrant,” “we,” “us” or “our”) is a leading provider of transparent and in"
+              },
+              "primary": {
+                "content_sha256": "1a434631184e7f522324ec84404792e0e615d9145ab4fdacf00d39e4f8281e30",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1375,
+                "preview": "Nature of operations S&P Global Inc. (together with its consolidated subsidiaries, the “Company,” the “Registrant,” “we,” “us” or “our”) is a leading provider of transparent and in"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "spgi:NatureOfOperationsPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-EB63DF4A20005DE8CC4D67A2A3B0ADFF-0-wk-Fact-E1A507F153581C79464E67A2A2923DCF",
+              "first_difference": {
+                "independent_context": "Redeemable Noncontrolling Interest The agreement with the minority partners of our S&P Dow Jones Indices LLC joint venture contains redemption f",
+                "independent_context_repr": "'Redeemable Noncontrolling Interest The agreement with the minority partners of our S&P Dow Jones Indices LLC joint venture contains redemption f'",
+                "index": 34,
+                "left_codepoint": null,
+                "primary_context": "Redeemable Noncontrolling Interest",
+                "primary_context_repr": "'Redeemable Noncontrolling Interest'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "0c6623a915e6274cf163b9cd0245664061f52e2a286dd3522c8f23c1e449daa1",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1668,
+                "preview": "Redeemable Noncontrolling Interest The agreement with the minority partners of our S&P Dow Jones Indices LLC joint venture contains redemption features whereby interests held by ou"
+              },
+              "primary": {
+                "content_sha256": "9d28d446a2059492c2ca916d2e5dafcf39eb385019631fe3bfe6a13581082fec",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 34,
+                "preview": "Redeemable Noncontrolling Interest"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "spgi:RedeemableNoncontrollingInterestPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-64D9074EF29C52444C7667A2A3B8EFF0-0-wk-Fact-984F8287AF85048409A567A2A35690C9",
+              "first_difference": {
+                "independent_context": "$ 2,123 Comprehensive income $ 3,446 $ 880 $ 2,697 $ ( 4,602 ) $ 2,421 Statement of Income Year Ended December 31, 2018 (in millions) S&P Global Inc. Standard & Poor's Financial Se",
+                "independent_context_repr": "\"$ 2,123 Comprehensive income $ 3,446 $ 880 $ 2,697 $ ( 4,602 ) $ 2,421 Statement of Income Year Ended December 31, 2018 (in millions) S&P Global Inc. Standard & Poor's Financial Se\"",
+                "index": 2694,
+                "left_codepoint": null,
+                "primary_context": "$ 2,123 Comprehensive income $ 3,446 $ 880 $ 2,697 $ ( 4,602 ) $ 2,421",
+                "primary_context_repr": "'$ 2,123 Comprehensive income $ 3,446 $ 880 $ 2,697 $ ( 4,602 ) $ 2,421'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "02a7c48bf052ab225d800a76e8940991f209706327e4ea38eafb7ff36b55860e",
+                "continued_chain_complete": true,
+                "continued_chain_length": 8,
+                "normalized_character_count": 16462,
+                "preview": "Condensed Consolidating Financial Statements On November 26, 2019, we issued $ 500 million of 2.5 % senior notes due in 2029 and $ 600 million of 3.25 % senior notes due in 2049. I"
+              },
+              "primary": {
+                "content_sha256": "953d9ae1a92053f50fed78aedabd82f1716b553a3b9a19169e857a593a975670",
+                "continued_chain_complete": false,
+                "continued_chain_length": 2,
+                "normalized_character_count": 2694,
+                "preview": "Condensed Consolidating Financial Statements On November 26, 2019, we issued $ 500 million of 2.5 % senior notes due in 2029 and $ 600 million of 3.25 % senior notes due in 2049. I"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "srt:CondensedFinancialStatementsTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-37EB535154DE937BB080F3057B0B9FC0-0-wk-Fact-CED5B0A1D540F8322E78F306C658B445",
+              "first_difference": {
+                "independent_context": " 500 million at a price equal to the then market price of the Company. 4 The ASR agreement was structured as an uncapped ASR agreement in which we paid $ 1 billion and received an ",
+                "independent_context_repr": "' 500 million at a price equal to the then market price of the Company. 4 The ASR agreement was structured as an uncapped ASR agreement in which we paid $ 1 billion and received an '",
+                "index": 1469,
+                "left_codepoint": null,
+                "primary_context": " 500 million at a price equal to the then market price of the Company.",
+                "primary_context_repr": "' 500 million at a price equal to the then market price of the Company.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "a08a33da92502b130be91d72451c1b78f8e66fa4cb795f10230b6c4c53a5e5d1",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1961,
+                "preview": "The terms of each ASR agreement entered for the years ended December 31, 2019 , 2018 and 2017 , structured as outlined above, are as follows: (in millions, except average price) AS"
+              },
+              "primary": {
+                "content_sha256": "3f0710513f1ed7195a7eb769b938eee62b818a3112174237d8e84b189f4ece66",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1469,
+                "preview": "The terms of each ASR agreement entered for the years ended December 31, 2019 , 2018 and 2017 , structured as outlined above, are as follows: (in millions, except average price) AS"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:AcceleratedShareRepurchasesTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-6F188CA00DEE9EC0137A67A2A3B79DD8-0-wk-Fact-ABEEED122F731C144F2A67A2A2F8CFA2",
+              "first_difference": {
+                "independent_context": "ssets obtained in exchange for lease obligations Operating leases 777 Weighted-average remaining lease term and discount rate for our operating leases as of December 31 are as foll",
+                "independent_context_repr": "'ssets obtained in exchange for lease obligations Operating leases 777 Weighted-average remaining lease term and discount rate for our operating leases as of December 31 are as foll'",
+                "index": 2332,
+                "left_codepoint": "U+0049",
+                "primary_context": "ssets obtained in exchange for lease obligations Operating leases 777 In view of the uncertainty inherent in litigation and government and regulatory enforcement matters, we cannot",
+                "primary_context_repr": "'ssets obtained in exchange for lease obligations Operating leases 777 In view of the uncertainty inherent in litigation and government and regulatory enforcement matters, we cannot'",
+                "right_codepoint": "U+0057"
+              },
+              "independent": {
+                "content_sha256": "a15f7ec3984807678139a1ebbb7b78c9913084bf039ab4929996fc0d3091bac8",
+                "continued_chain_complete": true,
+                "continued_chain_length": 3,
+                "normalized_character_count": 6108,
+                "preview": "Commitments and Contingencies Leases We determine whether an arrangement meets the criteria for an operating lease or a finance lease at the inception of the arrangement. We have o"
+              },
+              "primary": {
+                "content_sha256": "72b291395ea693b3b55cff59a4d426dc4a8d6a260d16b6e28de4c51f8730f902",
+                "continued_chain_complete": true,
+                "continued_chain_length": 3,
+                "normalized_character_count": 3280,
+                "preview": "Commitments and Contingencies Leases We determine whether an arrangement meets the criteria for an operating lease or a finance lease at the inception of the arrangement. We have o"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:CommitmentsAndContingenciesDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-097D9422E8F0B4A6C8E367A2A3B35BF5-0-wk-Fact-05C5A4A4E7BDAC394B5367A2A3386934",
+              "first_difference": {
+                "independent_context": "e unamortized debt discount and issuance costs total $ 10 million . 8 Interest payments are due semiannually on June 1 and December 1, beginning on June 1, 2020, and as of December",
+                "independent_context_repr": "'e unamortized debt discount and issuance costs total $ 10 million . 8 Interest payments are due semiannually on June 1 and December 1, beginning on June 1, 2020, and as of December'",
+                "index": 1666,
+                "left_codepoint": "U+004F",
+                "primary_context": "e unamortized debt discount and issuance costs total $ 10 million . 8 On November 26, 2019, we issued $ 500 million of 2.5 % senior notes due in 2029 and $ 600 million of 3.25 % se",
+                "primary_context_repr": "'e unamortized debt discount and issuance costs total $ 10 million . 8 On November 26, 2019, we issued $ 500 million of 2.5 % senior notes due in 2029 and $ 600 million of 3.25 % se'",
+                "right_codepoint": "U+0049"
+              },
+              "independent": {
+                "content_sha256": "5d1127864e4374f8f25ba19f58d90cce806c9044cc8c3627e735242e6fb3d2f4",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 4210,
+                "preview": "Debt A summary of long-term debt outstanding is as follows: (in millions) December 31, 2019 2018 3.3% Senior Notes, due 2020 1 $ — $ 698 4.0% Senior Notes, due 2025 2 694 693 4.4% "
+              },
+              "primary": {
+                "content_sha256": "0af88437ef16ebda7a6860e0e437c60faedb7649a1c8952d2e828e4bc1054e81",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 3838,
+                "preview": "Debt A summary of long-term debt outstanding is as follows: (in millions) December 31, 2019 2018 3.3% Senior Notes, due 2020 1 $ — $ 698 4.0% Senior Notes, due 2025 2 694 693 4.4% "
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:DebtDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-7674A220C41BF4B07C6567A2A3B51619-0-wk-Fact-354DDD023568144BDFD967A2A2CEA183",
+              "first_difference": {
+                "independent_context": ".67 - 6.07 Weighted-average grant-date fair value per option $ 112.98 Because lattice-based option-pricing models incorporate ranges of assumptions, those ranges are disclosed. The",
+                "independent_context_repr": "'.67 - 6.07 Weighted-average grant-date fair value per option $ 112.98 Because lattice-based option-pricing models incorporate ranges of assumptions, those ranges are disclosed. The'",
+                "index": 3928,
+                "left_codepoint": "U+0028",
+                "primary_context": ".67 - 6.07 Weighted-average grant-date fair value per option $ 112.98 (in millions, except per award amounts) Shares Weighted-average grant-date fair value Nonvested options outsta",
+                "primary_context_repr": "'.67 - 6.07 Weighted-average grant-date fair value per option $ 112.98 (in millions, except per award amounts) Shares Weighted-average grant-date fair value Nonvested options outsta'",
+                "right_codepoint": "U+0042"
+              },
+              "independent": {
+                "content_sha256": "4dff446f07afa3421e7572ad2d02456dd8b496a43c19c9c3cf7596154821389e",
+                "continued_chain_complete": true,
+                "continued_chain_length": 3,
+                "normalized_character_count": 8055,
+                "preview": "Stock-Based Compensation We issue stock-based incentive awards to our eligible employees under the 2019 Employee Stock Incentive Plan and to our eligible non-employee Directors und"
+              },
+              "primary": {
+                "content_sha256": "d9ea087cae1c189333ab3241125dadfc8cf23888b691863b0ba20b95ae7133ac",
+                "continued_chain_complete": true,
+                "continued_chain_length": 3,
+                "normalized_character_count": 4456,
+                "preview": "Stock-Based Compensation We issue stock-based incentive awards to our eligible employees under the 2019 Employee Stock Incentive Plan and to our eligible non-employee Directors und"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:DisclosureOfCompensationRelatedCostsShareBasedPaymentsTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-A7738AA5A97AAC91F84567A2A3B2DD98-0-wk-Fact-FB62CC38EA656B7E6C2267A2A2893626",
+              "first_difference": {
+                "independent_context": "20 $ 5 $ 108 $ 678 December 31, 2019 $ 298 $ 10 $ 202 $ 6 $ 62 $ 578 1 Primarily relates to the impact of foreign exchange and valuation adjustments for prior period acquisitions. ",
+                "independent_context_repr": "'20 $ 5 $ 108 $ 678 December 31, 2019 $ 298 $ 10 $ 202 $ 6 $ 62 $ 578 1 Primarily relates to the impact of foreign exchange and valuation adjustments for prior period acquisitions. '",
+                "index": 3246,
+                "left_codepoint": null,
+                "primary_context": "20 $ 5 $ 108 $ 678 December 31, 2019 $ 298 $ 10 $ 202 $ 6 $ 62 $ 578 1",
+                "primary_context_repr": "'20 $ 5 $ 108 $ 678 December 31, 2019 $ 298 $ 10 $ 202 $ 6 $ 62 $ 578 1'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "b073b0db4bbacb7656c29677067700e84c2bdff7c63838aff5c2ee84b88ef3d2",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 4019,
+                "preview": "Goodwill and Other Intangible Assets Goodwill Goodwill represents the excess of purchase price and related costs over the value assigned to the net tangible and identifiable intang"
+              },
+              "primary": {
+                "content_sha256": "d51cd7ab50ce482f6efd700fdbd86375937a1a427d4e04b99b730ab4d9e43044",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 3246,
+                "preview": "Goodwill and Other Intangible Assets Goodwill Goodwill represents the excess of purchase price and related costs over the value assigned to the net tangible and identifiable intang"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:GoodwillAndIntangibleAssetsDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-9B65747FEC665158C17E67A2A3B136A3-0-wk-Fact-B935C5AE888101339FAA67A2A28D4174",
+              "first_difference": {
+                "independent_context": "eness, taking into account certain factors including control premiums. If the fair value of the reporting unit is less than the carrying value, a second step is performed which com",
+                "independent_context_repr": "'eness, taking into account certain factors including control premiums. If the fair value of the reporting unit is less than the carrying value, a second step is performed which com'",
+                "index": 2311,
+                "left_codepoint": null,
+                "primary_context": "eness, taking into account certain factors including control premiums.",
+                "primary_context_repr": "'eness, taking into account certain factors including control premiums.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "e6d37d2e05ec317987c004d334b95c955c426692925da2836076843903772a68",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 4379,
+                "preview": "Goodwill and other indefinite-lived intangible assets Goodwill represents the excess of purchase price and related costs over the value assigned to the net tangible and identifiabl"
+              },
+              "primary": {
+                "content_sha256": "33e5af3eda22a28a94f5c11ec5caf0c37a3d7432af992a982c5650245b232882",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 2311,
+                "preview": "Goodwill and other indefinite-lived intangible assets Goodwill represents the excess of purchase price and related costs over the value assigned to the net tangible and identifiabl"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:GoodwillAndIntangibleAssetsPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-8FCCD7E5926AD5C3B12A915F1DC3412B-0-wk-Fact-1DDA44D363845E8CD2E8915FC000439D",
+              "first_difference": {
+                "independent_context": "erating lease cost $ 157 Sublease income ( 18 ) Total lease cost $ 139 Supplemental information related to leases for the year ended December 31 are as follows: (in millions) 2019 ",
+                "independent_context_repr": "'erating lease cost $ 157 Sublease income ( 18 ) Total lease cost $ 139 Supplemental information related to leases for the year ended December 31 are as follows: (in millions) 2019 '",
+                "index": 170,
+                "left_codepoint": null,
+                "primary_context": "erating lease cost $ 157 Sublease income ( 18 ) Total lease cost $ 139",
+                "primary_context_repr": "'erating lease cost $ 157 Sublease income ( 18 ) Total lease cost $ 139'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "8e62aa45b062e7cbcb53dc19a4e3a0693cb504c6daf50bb61d51d017a2afc67c",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 494,
+                "preview": "The components of lease expense for the year ended December 31 are as follows: (in millions) 2019 Operating lease cost $ 157 Sublease income ( 18 ) Total lease cost $ 139 Supplemen"
+              },
+              "primary": {
+                "content_sha256": "4f47d1a95212711aeaa7e03214b1979f81d255f7a8942832812e791816cbe424",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 170,
+                "preview": "The components of lease expense for the year ended December 31 are as follows: (in millions) 2019 Operating lease cost $ 157 Sublease income ( 18 ) Total lease cost $ 139"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:LeaseCostTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-9AEBE5A39B42E48D6A8C67A2A3B2D3F2-0-wk-Fact-BC1A63E5CB68D8464D4167A2A2851E3F",
+              "first_difference": null,
+              "independent": {
+                "content_sha256": "c35f0c641f42f16a6dcc9e44590fbb872cfdf471da1457deb6ae5b4d6137a342",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 6089,
+                "preview": "Recent Accounting Standards In January 2020, the Financial Accounting Standards Board (\"FASB\") issued a guidance intended to clarify the interaction of the accounting for equity se"
+              },
+              "primary": {
+                "content_sha256": "c35f0c641f42f16a6dcc9e44590fbb872cfdf471da1457deb6ae5b4d6137a342",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 6089,
+                "preview": "Recent Accounting Standards In January 2020, the Financial Accounting Standards Board (\"FASB\") issued a guidance intended to clarify the interaction of the accounting for equity se"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:NewAccountingPronouncementsPolicyPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-80DBF5AD87B2B7BA986C67A2A3B5A34E-0-wk-Fact-692758189C1A0A114A2D67A2A335795B",
+              "first_difference": {
+                "independent_context": "it 2 2 ( 13 ) ( 14 ) Total recognized $ 357 $ 462 $ ( 53 ) $ ( 55 ) 1 Relates to the impact of a retiree annuity purchase in 2019. The Company purchased a group annuity contract un",
+                "independent_context_repr": "'it 2 2 ( 13 ) ( 14 ) Total recognized $ 357 $ 462 $ ( 53 ) $ ( 55 ) 1 Relates to the impact of a retiree annuity purchase in 2019. The Company purchased a group annuity contract un'",
+                "index": 3641,
+                "left_codepoint": "U+0054",
+                "primary_context": "it 2 2 ( 13 ) ( 14 ) Total recognized $ 357 $ 462 $ ( 53 ) $ ( 55 ) 1 The actuarial gain included in accumulated other comprehensive loss for our postretirement plans and expected ",
+                "primary_context_repr": "'it 2 2 ( 13 ) ( 14 ) Total recognized $ 357 $ 462 $ ( 53 ) $ ( 55 ) 1 The actuarial gain included in accumulated other comprehensive loss for our postretirement plans and expected '",
+                "right_codepoint": "U+0052"
+              },
+              "independent": {
+                "content_sha256": "4dc70bf5db78caebdfe76c16875738453b960f922e3170456d68a7f115fc15d6",
+                "continued_chain_complete": true,
+                "continued_chain_length": 7,
+                "normalized_character_count": 17279,
+                "preview": "Employee Benefits We maintain a number of active defined contribution retirement plans for our employees. The majority of our defined benefit plans are frozen. As a result, no new "
+              },
+              "primary": {
+                "content_sha256": "a60b14ba45a5fb80d14fa131593f66a17d131c12105d5a8e4b2677faf32e2586",
+                "continued_chain_complete": true,
+                "continued_chain_length": 7,
+                "normalized_character_count": 11492,
+                "preview": "Employee Benefits We maintain a number of active defined contribution retirement plans for our employees. The majority of our defined benefit plans are frozen. As a result, no new "
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:PensionAndOtherPostretirementBenefitsDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-4D9F16CFB242BC799B4E67A2A3B1E9EC-0-wk-Fact-8CF95E7F73F96AD3C42167A2A27D2607",
+              "first_difference": {
+                "independent_context": "tual property, with revenue recognized when trading volumes are known. Arrangements with Multiple Performance Obligations Our contracts with customers may include multiple performa",
+                "independent_context_repr": "'tual property, with revenue recognized when trading volumes are known. Arrangements with Multiple Performance Obligations Our contracts with customers may include multiple performa'",
+                "index": 6386,
+                "left_codepoint": null,
+                "primary_context": "tual property, with revenue recognized when trading volumes are known.",
+                "primary_context_repr": "'tual property, with revenue recognized when trading volumes are known.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "4d296a2f2cab0bca4f65524b2b41622d9c249ddf4b05d9d82009635a18afd591",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 9900,
+                "preview": "Adoption of ASC 606, “Revenue from Contracts with Customers” We adopted FASB ASC 606 \"Revenue from Contracts with Customers\" using the modified retrospective transition method appl"
+              },
+              "primary": {
+                "content_sha256": "b0a20145a95d378ba6eaa1c468f6b0052612b2fe2e843554f3a485df92485a9a",
+                "continued_chain_complete": false,
+                "continued_chain_length": 2,
+                "normalized_character_count": 6386,
+                "preview": "Adoption of ASC 606, “Revenue from Contracts with Customers” We adopted FASB ASC 606 \"Revenue from Contracts with Customers\" using the modified retrospective transition method appl"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:RevenueFromContractWithCustomerPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-FFB6B34F489C4215669D67A2A3B6FBA4-0-wk-Fact-7337E91C2C489566217267A2A3561471",
+              "first_difference": {
+                "independent_context": "reclassed from accumulated other comprehensive loss to net earnings. 2 Reflects amortization of net actuarial losses and is net of a tax benefit of $ 39 million for the year ended ",
+                "independent_context_repr": "'reclassed from accumulated other comprehensive loss to net earnings. 2 Reflects amortization of net actuarial losses and is net of a tax benefit of $ 39 million for the year ended '",
+                "index": 888,
+                "left_codepoint": null,
+                "primary_context": "reclassed from accumulated other comprehensive loss to net earnings. 2",
+                "primary_context_repr": "'reclassed from accumulated other comprehensive loss to net earnings. 2'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "309f37d745e4ea7407752587f8224e2bdd50e22cbb5647da76e09067c2a1ded2",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1148,
+                "preview": "The following table summarizes the changes in the components of accumulated other comprehensive loss for the year ended December 31, 2019 : (in millions) Foreign Currency Translati"
+              },
+              "primary": {
+                "content_sha256": "d5a688e01b8f7d78772e8150fa7e918d7824fd5d598244627898f68c69554df5",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 888,
+                "preview": "The following table summarizes the changes in the components of accumulated other comprehensive loss for the year ended December 31, 2019 : (in millions) Foreign Currency Translati"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfAccumulatedOtherComprehensiveIncomeLossTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-0CF75A77053B476FED4467A2A3B435FD-0-wk-Fact-678CD97C2198FD1FD61A67A2A24E320E",
+              "first_difference": {
+                "independent_context": "62 $ 82 $ 1,141 $ 39 Collective investment funds 5 $ 698 Total $ 1,960 (in millions) December 31, 2018 Total Level 1 Level 2 Level 3 Cash and short-term investments $ 4 $ 4 $ — $ —",
+                "independent_context_repr": "'62 $ 82 $ 1,141 $ 39 Collective investment funds 5 $ 698 Total $ 1,960 (in millions) December 31, 2018 Total Level 1 Level 2 Level 3 Cash and short-term investments $ 4 $ 4 $ — $ —'",
+                "index": 668,
+                "left_codepoint": null,
+                "primary_context": "62 $ 82 $ 1,141 $ 39 Collective investment funds 5 $ 698 Total $ 1,960",
+                "primary_context_repr": "'62 $ 82 $ 1,141 $ 39 Collective investment funds 5 $ 698 Total $ 1,960'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "21cc677c2b0a2ac118c8512e2c1a24f9f96080ef0be76e4ed7c9e1c4447a7ae2",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 1806,
+                "preview": "The fair value of our defined benefit plans assets as of December 31, 2019 and 2018 , by asset class is as follows: (in millions) December 31, 2019 Total Level 1 Level 2 Level 3 Ca"
+              },
+              "primary": {
+                "content_sha256": "d1a43a2ced1b293cc2751948d1171a468f0f46a9969b5d1d9fbc23d82846a390",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 668,
+                "preview": "The fair value of our defined benefit plans assets as of December 31, 2019 and 2018 , by asset class is as follows: (in millions) December 31, 2019 Total Level 1 Level 2 Level 3 Ca"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfAllocationOfPlanAssetsTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-3464CB93F74E5BC12A6E67A2A3B4D21E-0-wk-Fact-09314CD27B6C503D3B8F67A2A24E01AF",
+              "first_difference": {
+                "independent_context": "K. plan 2 2.72 % 2.41 % 2.58 % Return on assets 3 6.00 % 6.00 % 6.25 % 1 The assumed weighted-average healthcare cost trend rate will decrease ratably from 6 % in 2019 to 5 % in 20",
+                "independent_context_repr": "'K. plan 2 2.72 % 2.41 % 2.58 % Return on assets 3 6.00 % 6.00 % 6.25 % 1 The assumed weighted-average healthcare cost trend rate will decrease ratably from 6 % in 2019 to 5 % in 20'",
+                "index": 384,
+                "left_codepoint": null,
+                "primary_context": "K. plan 2 2.72 % 2.41 % 2.58 % Return on assets 3 6.00 % 6.00 % 6.25 %",
+                "primary_context_repr": "'K. plan 2 2.72 % 2.41 % 2.58 % Return on assets 3 6.00 % 6.00 % 6.25 %'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "2a0ea9d7df4aedc8f54f03e0c83ad90107882ac132aaa3c415ac373b30ee9583",
+                "continued_chain_complete": true,
+                "continued_chain_length": 3,
+                "normalized_character_count": 1278,
+                "preview": "Retirement Plans Postretirement Plans 2019 2018 2017 2019 2018 2017 Benefit obligation: Discount rate 2 3.45 % 4.40 % 3.68 % 3.08 % 4.15 % 3.40 % Net periodic cost: Weighted-averag"
+              },
+              "primary": {
+                "content_sha256": "b4e1ef7f45febef98bf923d3000998117ea32539acdb34ed900747fca9bb3e63",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 384,
+                "preview": "Retirement Plans Postretirement Plans 2019 2018 2017 2019 2018 2017 Benefit obligation: Discount rate 2 3.45 % 4.40 % 3.68 % 3.08 % 4.15 % 3.40 % Net periodic cost: Weighted-averag"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfAssumptionsUsedTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-0AB592D2D9122078AC1A67A2A3B3C0C3-0-wk-Fact-E49C245D4284AACE1BC667A2A33BF50E",
+              "first_difference": {
+                "independent_context": " the unamortized debt discount and issuance costs total $ 10 million . 8 Interest payments are due semiannually on June 1 and December 1, beginning on June 1, 2020, and as of Decem",
+                "independent_context_repr": "' the unamortized debt discount and issuance costs total $ 10 million . 8 Interest payments are due semiannually on June 1 and December 1, beginning on June 1, 2020, and as of Decem'",
+                "index": 1658,
+                "left_codepoint": null,
+                "primary_context": " the unamortized debt discount and issuance costs total $ 10 million .",
+                "primary_context_repr": "' the unamortized debt discount and issuance costs total $ 10 million .'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "25b1fd074801bf7f9d1b443b232e5df4f2cae4e0d559b23233fd31de06f75328",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 1852,
+                "preview": "A summary of long-term debt outstanding is as follows: (in millions) December 31, 2019 2018 3.3% Senior Notes, due 2020 1 $ — $ 698 4.0% Senior Notes, due 2025 2 694 693 4.4% Senio"
+              },
+              "primary": {
+                "content_sha256": "4b99f5d3dfce9e68105a205d456e72f879d038ce2c89ee9898b4ef0b82a54dc7",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1658,
+                "preview": "A summary of long-term debt outstanding is as follows: (in millions) December 31, 2019 2018 3.3% Senior Notes, due 2020 1 $ — $ 698 4.0% Senior Notes, due 2025 2 694 693 4.4% Senio"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfDebtTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-C3570542EFAB5297034467A2A3B50037-0-wk-Fact-977AC3B977BD5D16A8A167A2A33475D1",
+              "first_difference": {
+                "independent_context": "redit 2 2 ( 13 ) ( 14 ) Total recognized $ 357 $ 462 $ ( 53 ) $ ( 55 ) 1 Relates to the impact of a retiree annuity purchase in 2019. The Company purchased a group annuity contract",
+                "independent_context_repr": "'redit 2 2 ( 13 ) ( 14 ) Total recognized $ 357 $ 462 $ ( 53 ) $ ( 55 ) 1 Relates to the impact of a retiree annuity purchase in 2019. The Company purchased a group annuity contract'",
+                "index": 1846,
+                "left_codepoint": null,
+                "primary_context": "redit 2 2 ( 13 ) ( 14 ) Total recognized $ 357 $ 462 $ ( 53 ) $ ( 55 )",
+                "primary_context_repr": "'redit 2 2 ( 13 ) ( 14 ) Total recognized $ 357 $ 462 $ ( 53 ) $ ( 55 )'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "d3cfbbcf544b889131f5054a6414011f0f23b5cbe0c145861f39cf66da9898b4",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 2167,
+                "preview": "A summary of the benefit obligation and the fair value of plan assets, as well as the funded status for the retirement and postretirement plans as of December 31, 2019 and 2018, is"
+              },
+              "primary": {
+                "content_sha256": "c7d2f00aa5bcd7d7f77c8eb185d9b9dbcafd5212e5ad7afaf2b4770bd07e3d15",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1846,
+                "preview": "A summary of the benefit obligation and the fair value of plan assets, as well as the funded status for the retirement and postretirement plans as of December 31, 2019 and 2018, is"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfDefinedBenefitPlansDisclosuresTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-78DADA28BE8CEC44932067A2A3B395CA-0-wk-Fact-D3E3F6BCFF3546A1733A67A2A28C4886",
+              "first_difference": {
+                "independent_context": " 220 $ 5 $ 108 $ 678 December 31, 2019 $ 298 $ 10 $ 202 $ 6 $ 62 $ 578 1 Primarily relates to the impact of foreign exchange and valuation adjustments for prior period acquisitions",
+                "independent_context_repr": "' 220 $ 5 $ 108 $ 678 December 31, 2019 $ 298 $ 10 $ 202 $ 6 $ 62 $ 578 1 Primarily relates to the impact of foreign exchange and valuation adjustments for prior period acquisitions'",
+                "index": 1128,
+                "left_codepoint": null,
+                "primary_context": " 220 $ 5 $ 108 $ 678 December 31, 2019 $ 298 $ 10 $ 202 $ 6 $ 62 $ 578",
+                "primary_context_repr": "' 220 $ 5 $ 108 $ 678 December 31, 2019 $ 298 $ 10 $ 202 $ 6 $ 62 $ 578'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "83495c7e6a3bfd5cae55d6fd27fb6f8f96f10303cab201e2c1e9f8464c83a5d6",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 1284,
+                "preview": "The following table summarizes our definite-lived intangible assets: (in millions) Cost Databases and software Content Customer relationships Tradenames Other intangibles Total Bal"
+              },
+              "primary": {
+                "content_sha256": "1290c9c17847ce709cde33ea307bdd63034f23411edeb3ee2afa9c69360a34cf",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1128,
+                "preview": "The following table summarizes our definite-lived intangible assets: (in millions) Cost Databases and software Content Customer relationships Tradenames Other intangibles Total Bal"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfFiniteLivedIntangibleAssetsTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-6A4328C9FE189268530667A2A3B449A5-0-wk-Fact-6CE1BFD9077721F3530B67A2A338148D",
+              "first_difference": {
+                "independent_context": " recognition of a portion of unamortized actuarial losses in the plan. 2 Represents a charge related to our U.K retirement plan.",
+                "independent_context_repr": "' recognition of a portion of unamortized actuarial losses in the plan. 2 Represents a charge related to our U.K retirement plan.'",
+                "index": 1081,
+                "left_codepoint": null,
+                "primary_context": " recognition of a portion of unamortized actuarial losses in the plan.",
+                "primary_context_repr": "' recognition of a portion of unamortized actuarial losses in the plan.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "3e8732bab7f4a5cbb86051048bba01e078b3602912a92b76556685989e888973",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 1139,
+                "preview": "A summary of net periodic benefit cost for our retirement and postretirement plans for the years ended December 31, is as follows: (in millions) Retirement Plans Postretirement Pla"
+              },
+              "primary": {
+                "content_sha256": "6ec1e03fa54fe0c3937902cd7fa06fc085b9dd5ff9a4aa175c9cf49bb3d8de97",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1081,
+                "preview": "A summary of net periodic benefit cost for our retirement and postretirement plans for the years ended December 31, is as follows: (in millions) Retirement Plans Postretirement Pla"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfNetBenefitCostsTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-358E2D15C858C225155767A2A3B702B2-0-wk-Fact-5DCD9148D62928D70D1167A2A2E90255",
+              "first_difference": {
+                "independent_context": " world 354 318 338 44 42 Total $ 6,699 $ 6,258 $ 6,063 $ 5,406 $ 5,429 Revenue Long-lived Assets Year ended December 31, December 31, 2019 2018 2017 2019 2018 U.S. 59 % 60 % 60 % 9",
+                "independent_context_repr": "' world 354 318 338 44 42 Total $ 6,699 $ 6,258 $ 6,063 $ 5,406 $ 5,429 Revenue Long-lived Assets Year ended December 31, December 31, 2019 2018 2017 2019 2018 U.S. 59 % 60 % 60 % 9'",
+                "index": 368,
+                "left_codepoint": null,
+                "primary_context": " world 354 318 338 44 42 Total $ 6,699 $ 6,258 $ 6,063 $ 5,406 $ 5,429",
+                "primary_context_repr": "' world 354 318 338 44 42 Total $ 6,699 $ 6,258 $ 6,063 $ 5,406 $ 5,429'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "f2b26c391cb112088cfbe93bf73003bcb2e0b2667e3357ccc92d86a12dc11194",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 597,
+                "preview": "The following provides revenue and long-lived assets by geographic region: (in millions) Revenue Long-lived Assets Year ended December 31, December 31, 2019 2018 2017 2019 2018 U.S"
+              },
+              "primary": {
+                "content_sha256": "87f1e09d1d3242b9a20700f49f619b788969c36ed696369b5e985ae0f28964ef",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 368,
+                "preview": "The following provides revenue and long-lived assets by geographic region: (in millions) Revenue Long-lived Assets Year ended December 31, December 31, 2019 2018 2017 2019 2018 U.S"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfRevenuesFromExternalCustomersAndLongLivedAssetsByGeographicalAreasTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-CBB085EF31AADC85B89967A2A3B7E586-0-wk-Fact-43D044CF286944C037BD67A2A2EA8519",
+              "first_difference": {
+                "independent_context": " 4,489 Total revenue $ 2,988 $ 1,683 $ 774 $ 728 $ — $ ( 110 ) $ 6,063 1 Intersegment eliminations mainly consists of a royalty charged to Market Intelligence for the rights to use",
+                "independent_context_repr": "' 4,489 Total revenue $ 2,988 $ 1,683 $ 774 $ 728 $ — $ ( 110 ) $ 6,063 1 Intersegment eliminations mainly consists of a royalty charged to Market Intelligence for the rights to use'",
+                "index": 6051,
+                "left_codepoint": null,
+                "primary_context": " 4,489 Total revenue $ 2,988 $ 1,683 $ 774 $ 728 $ — $ ( 110 ) $ 6,063",
+                "primary_context_repr": "' 4,489 Total revenue $ 2,988 $ 1,683 $ 774 $ 728 $ — $ ( 110 ) $ 6,063'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "8f1c5376b0e084d70543f8a41e366f272f9b025ac1681e87325e0ba60912b10a",
+                "continued_chain_complete": true,
+                "continued_chain_length": 4,
+                "normalized_character_count": 7640,
+                "preview": "A summary of operating results for the years ended December 31 is as follows: Revenue (in millions) 2019 2018 2017 Ratings $ 3,106 $ 2,883 $ 2,988 Market Intelligence 1,959 1,833 1"
+              },
+              "primary": {
+                "content_sha256": "a3b75099a997b590aeb0e076dd0b63d67004a47b6f01a6f9635ff619cc47ebc8",
+                "continued_chain_complete": false,
+                "continued_chain_length": 2,
+                "normalized_character_count": 6051,
+                "preview": "A summary of operating results for the years ended December 31 is as follows: Revenue (in millions) 2019 2018 2017 Ratings $ 3,106 $ 2,883 $ 2,988 Market Intelligence 1,959 1,833 1"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfSegmentReportingInformationBySegmentTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-2C6F7402C961D1A455FB67A2A3B5A6FE-0-wk-Fact-D8CD2817E465CDCECF1167A2A2CD85DF",
+              "first_difference": {
+                "independent_context": " $ 151 1 There are less than 0.1 million shares forfeited and expired. (in millions, except per award amounts) Shares Weighted-average grant-date fair value Nonvested options outst",
+                "independent_context_repr": "' $ 151 1 There are less than 0.1 million shares forfeited and expired. (in millions, except per award amounts) Shares Weighted-average grant-date fair value Nonvested options outst'",
+                "index": 507,
+                "left_codepoint": null,
+                "primary_context": " $ 151 1 There are less than 0.1 million shares forfeited and expired.",
+                "primary_context_repr": "' $ 151 1 There are less than 0.1 million shares forfeited and expired.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "98480666bb6e586344d29d01e89de566f65f7708bec42eb0a75c666072722d99",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1036,
+                "preview": "Stock option activity is as follows: (in millions, except per award amounts) Shares Weighted average exercise price Weighted-average remaining years of contractual term Aggregate i"
+              },
+              "primary": {
+                "content_sha256": "678c3fa1d2019d5cd18329546f96e549209fe47f2c700effaa7b928843459919",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 507,
+                "preview": "Stock option activity is as follows: (in millions, except per award amounts) Shares Weighted average exercise price Weighted-average remaining years of contractual term Aggregate i"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfShareBasedCompensationStockOptionsActivityTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-9A3C4BD5E86999FCEC5F67A2A3AF082D-0-wk-Fact-F38472C828F075B9F10867A2A293A084",
+              "first_difference": {
+                "independent_context": "5.67 - 6.07 Weighted-average grant-date fair value per option $ 112.98 We use a lattice-based option-pricing model to estimate the fair value of options granted. The following assu",
+                "independent_context_repr": "'5.67 - 6.07 Weighted-average grant-date fair value per option $ 112.98 We use a lattice-based option-pricing model to estimate the fair value of options granted. The following assu'",
+                "index": 368,
+                "left_codepoint": null,
+                "primary_context": "5.67 - 6.07 Weighted-average grant-date fair value per option $ 112.98",
+                "primary_context_repr": "'5.67 - 6.07 Weighted-average grant-date fair value per option $ 112.98'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "f4e0cb70053dd7f1583189367049d5ebde0a5dbdcb270430f65b3fe1cdea1dac",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 737,
+                "preview": "We use a lattice-based option-pricing model to estimate the fair value of options granted. The following assumptions were used in valuing the options granted: Year Ended December 3"
+              },
+              "primary": {
+                "content_sha256": "9464b58f5a593ea914d77523d7bd9fad90b2fa5fc67f6b8f69a8d29c727cd9a4",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 368,
+                "preview": "We use a lattice-based option-pricing model to estimate the fair value of options granted. The following assumptions were used in valuing the options granted: Year Ended December 3"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfShareBasedPaymentAwardStockOptionsValuationAssumptionsTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-67A20D778F61AE3B8C0B67A2A3B751F7-0-wk-Fact-1C15E727CD8C363A16EB67A2A2E914ED",
+              "first_difference": {
+                "independent_context": "llion and $ 23 million for the years ended December 31, 2019 and 2018. The following table presents our revenue disaggregated by revenue type for the years ended December 31 : (in ",
+                "independent_context_repr": "'llion and $ 23 million for the years ended December 31, 2019 and 2018. The following table presents our revenue disaggregated by revenue type for the years ended December 31 : (in '",
+                "index": 5128,
+                "left_codepoint": null,
+                "primary_context": "llion and $ 23 million for the years ended December 31, 2019 and 2018.",
+                "primary_context_repr": "'llion and $ 23 million for the years ended December 31, 2019 and 2018.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "f726602f1a30b216191a6c017b08a78c7c3b2cb1f0c454a0daabba0bc00c47ae",
+                "continued_chain_complete": true,
+                "continued_chain_length": 5,
+                "normalized_character_count": 9788,
+                "preview": "Segment and Geographic Information As discussed in Note 1 – Accounting Policies , we have four reportable segments: Ratings, Market Intelligence, Platts and Indices. Our Chief Exec"
+              },
+              "primary": {
+                "content_sha256": "72c4641b84068c8c85d477a19bd04fc20525f5c062fed6c707a91523366a5345",
+                "continued_chain_complete": false,
+                "continued_chain_length": 3,
+                "normalized_character_count": 5128,
+                "preview": "Segment and Geographic Information As discussed in Note 1 – Accounting Policies , we have four reportable segments: Ratings, Market Intelligence, Platts and Indices. Our Chief Exec"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:SegmentReportingDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-87B6A5E6C80821053C1C67A2A3B1DB8F-0-wk-Fact-F715BEA47DC367BB9C3E67A2A28348C0",
+              "first_difference": {
+                "independent_context": " for investment advisors, wealth managers and institutional investors. In April of 2018, we acquired Kensho Technologies Inc. (\"Kensho\") for approximately $ 550 million , net of ca",
+                "independent_context_repr": "' for investment advisors, wealth managers and institutional investors. In April of 2018, we acquired Kensho Technologies Inc. (\"Kensho\") for approximately $ 550 million , net of ca'",
+                "index": 1395,
+                "left_codepoint": null,
+                "primary_context": " for investment advisors, wealth managers and institutional investors.",
+                "primary_context_repr": "' for investment advisors, wealth managers and institutional investors.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "49136c9d13f8ee1d13ce10d66a1be6e4fe3fcd321dac40c1abf8b74b8c793008",
+                "continued_chain_complete": true,
+                "continued_chain_length": 9,
+                "normalized_character_count": 40429,
+                "preview": "Accounting Policies Nature of operations S&P Global Inc. (together with its consolidated subsidiaries, the “Company,” the “Registrant,” “we,” “us” or “our”) is a leading provider o"
+              },
+              "primary": {
+                "content_sha256": "d43e3643beb18ac85a7aa5465021660a28f938ae28a4eb0dc4d90553e2fb25ef",
+                "continued_chain_complete": false,
+                "continued_chain_length": 2,
+                "normalized_character_count": 1395,
+                "preview": "Accounting Policies Nature of operations S&P Global Inc. (together with its consolidated subsidiaries, the “Company,” the “Registrant,” “we,” “us” or “our”) is a leading provider o"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:SignificantAccountingPoliciesTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "FD2019Q4YTD",
+              "fact_id": "TextSelection-B0B72AA5D1BC403F175F67A2A3B6348F-0-wk-Fact-1D86D4416E9AAD1C20DD67A2A34E53EB",
+              "first_difference": {
+                "independent_context": "00 million at a price equal to the then market price of the Company. Additionally, we purchased shares of our common stock in the open market as follows (in millions, except averag",
+                "independent_context_repr": "'00 million at a price equal to the then market price of the Company. Additionally, we purchased shares of our common stock in the open market as follows (in millions, except averag'",
+                "index": 4452,
+                "left_codepoint": "U+0063",
+                "primary_context": "00 million at a price equal to the then market price of the Company. Accumulated Other Comprehensive Loss The following table summarizes the changes in the components of accumulate",
+                "primary_context_repr": "'00 million at a price equal to the then market price of the Company. Accumulated Other Comprehensive Loss The following table summarizes the changes in the components of accumulate'",
+                "right_codepoint": "U+0064"
+              },
+              "independent": {
+                "content_sha256": "3ea72d14067c61338d5f22cedff68513beca13cc561057380f1b7864d48ead94",
+                "continued_chain_complete": true,
+                "continued_chain_length": 5,
+                "normalized_character_count": 9219,
+                "preview": "Equity Capital Stock Two million shares of preferred stock, par value $ 1 per share, are authorized; none have been issued. On January 29, 2020, the Board of Directors approved an "
+              },
+              "primary": {
+                "content_sha256": "880d891d49b843089b65a6dcfc68d5afdb6135cbf62c535a93841199ef3dfff8",
+                "continued_chain_complete": false,
+                "continued_chain_length": 4,
+                "normalized_character_count": 5374,
+                "preview": "Equity Capital Stock Two million shares of preferred stock, par value $ 1 per share, are authorized; none have been issued. On January 29, 2020, the Board of Directors approved an "
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:StockholdersEquityNoteDisclosureTextBlock"
+        }
+      ],
+      "mismatch_details_truncated": false,
+      "mismatch_qname_count": 28,
+      "mismatching_qnames": [
+        "spgi:DeferredTechnologyCostsPolicyTextBlock",
+        "spgi:NatureOfOperationsPolicyTextBlock",
+        "spgi:RedeemableNoncontrollingInterestPolicyTextBlock",
+        "srt:CondensedFinancialStatementsTextBlock",
+        "us-gaap:AcceleratedShareRepurchasesTextBlock",
+        "us-gaap:CommitmentsAndContingenciesDisclosureTextBlock",
+        "us-gaap:DebtDisclosureTextBlock",
+        "us-gaap:DisclosureOfCompensationRelatedCostsShareBasedPaymentsTextBlock",
+        "us-gaap:GoodwillAndIntangibleAssetsDisclosureTextBlock",
+        "us-gaap:GoodwillAndIntangibleAssetsPolicyTextBlock",
+        "us-gaap:LeaseCostTableTextBlock",
+        "us-gaap:NewAccountingPronouncementsPolicyPolicyTextBlock",
+        "us-gaap:PensionAndOtherPostretirementBenefitsDisclosureTextBlock",
+        "us-gaap:RevenueFromContractWithCustomerPolicyTextBlock",
+        "us-gaap:ScheduleOfAccumulatedOtherComprehensiveIncomeLossTableTextBlock",
+        "us-gaap:ScheduleOfAllocationOfPlanAssetsTableTextBlock",
+        "us-gaap:ScheduleOfAssumptionsUsedTableTextBlock",
+        "us-gaap:ScheduleOfDebtTableTextBlock",
+        "us-gaap:ScheduleOfDefinedBenefitPlansDisclosuresTextBlock",
+        "us-gaap:ScheduleOfFiniteLivedIntangibleAssetsTableTextBlock",
+        "us-gaap:ScheduleOfNetBenefitCostsTableTextBlock",
+        "us-gaap:ScheduleOfRevenuesFromExternalCustomersAndLongLivedAssetsByGeographicalAreasTableTextBlock",
+        "us-gaap:ScheduleOfSegmentReportingInformationBySegmentTextBlock",
+        "us-gaap:ScheduleOfShareBasedCompensationStockOptionsActivityTableTextBlock",
+        "us-gaap:ScheduleOfShareBasedPaymentAwardStockOptionsValuationAssumptionsTableTextBlock",
+        "us-gaap:SegmentReportingDisclosureTextBlock",
+        "us-gaap:SignificantAccountingPoliciesTextBlock",
+        "us-gaap:StockholdersEquityNoteDisclosureTextBlock"
+      ],
+      "primary_document": "spgi-20191231x10k.htm",
+      "record_key": "0000064040|0000064040-20-000055|10-K|2020-02-10",
+      "source_hash_verified": true
+    },
+    {
+      "accession": "0000064040-21-000063",
+      "actual_primary_document_sha256": "94d607254f98ac16616b74e42114869f9998cad06778ac5086ab1a1b4e69c052",
+      "cik": "0000064040",
+      "compiler_distinct_qname_count": 77,
+      "compiler_textblock_fact_count": 77,
+      "expected_primary_document_sha256": "94d607254f98ac16616b74e42114869f9998cad06778ac5086ab1a1b4e69c052",
+      "field_difference_counts": {
+        "content_sha256": 19,
+        "continued_chain_complete": 14,
+        "continued_chain_length": 5,
+        "normalized_character_count": 19
+      },
+      "filed_date": "2021-02-09",
+      "form": "10-K",
+      "http_status": 200,
+      "independent_distinct_qname_count": 77,
+      "independent_textblock_fact_count": 77,
+      "mismatch_details": [
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMDMvZnJhZzpkNDcwMTJkMmQyZWE0NDkzYTA4ZjE0ZDk3OWY3MDVlZC90ZXh0cmVnaW9uOmQ0NzAxMmQyZDJlYTQ0OTNhMDhmMTRkOTc5ZjcwNWVkXzM5OTk2_a60a6414-edf1-4b13-988d-5312094209f5",
+              "first_difference": {
+                "independent_context": "Capitalized technology costs We capitalize certain software development and website implementation costs. Capitalized costs only include i",
+                "independent_context_repr": "'Capitalized technology costs We capitalize certain software development and website implementation costs. Capitalized costs only include i'",
+                "index": 28,
+                "left_codepoint": null,
+                "primary_context": "Capitalized technology costs",
+                "primary_context_repr": "'Capitalized technology costs'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "057beb137de01262f581331dbbdb443cbf1a8445db31d8502d1bb2e54c6e6b42",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1072,
+                "preview": "Capitalized technology costs We capitalize certain software development and website implementation costs. Capitalized costs only include incremental, direct costs of materials and "
+              },
+              "primary": {
+                "content_sha256": "52972b710e4248cd37c92674f56d66825c442fc56f3ebea1884c83ce4928add6",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 28,
+                "preview": "Capitalized technology costs"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "spgi:DeferredTechnologyCostsPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMzAvZnJhZzoxZWY0YThjOGZlOWU0NDAxODc0NzExMjkyZGVjNjA2Ni90ZXh0cmVnaW9uOjFlZjRhOGM4ZmU5ZTQ0MDE4NzQ3MTEyOTJkZWM2MDY2XzEyNDI3_08186152-6cea-4f67-9396-4a1e8aebc3c7",
+              "first_difference": {
+                "independent_context": "retirement plans and the impact of the Medicare subsidy is as follows: (in millions) Postretirement Plans 2 Retirement Plans 1 Gross payments Retiree contributions Medicare subsidy",
+                "independent_context_repr": "'retirement plans and the impact of the Medicare subsidy is as follows: (in millions) Postretirement Plans 2 Retirement Plans 1 Gross payments Retiree contributions Medicare subsidy'",
+                "index": 139,
+                "left_codepoint": null,
+                "primary_context": "retirement plans and the impact of the Medicare subsidy is as follows:",
+                "primary_context_repr": "'retirement plans and the impact of the Medicare subsidy is as follows:'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "2cb95541d955640f096ba0d82e83db01607a16b1b3bffd77e046562d3df03ae5",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 736,
+                "preview": "Information about the expected cash flows for our retirement and postretirement plans and the impact of the Medicare subsidy is as follows: (in millions) Postretirement Plans 2 Ret"
+              },
+              "primary": {
+                "content_sha256": "bfad7435329efbd7041ba66d2afa06e2ca5aa18323e2808c72cb350795c245a1",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 139,
+                "preview": "Information about the expected cash flows for our retirement and postretirement plans and the impact of the Medicare subsidy is as follows:"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "spgi:DefinedBenefitPlanEstimatedFutureBenefitPaymentsAndReceiptsTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMDMvZnJhZzpkNDcwMTJkMmQyZWE0NDkzYTA4ZjE0ZDk3OWY3MDVlZC90ZXh0cmVnaW9uOmQ0NzAxMmQyZDJlYTQ0OTNhMDhmMTRkOTc5ZjcwNWVkXzQwMDEz_7f2e9988-65d4-4e42-8b1a-a06691088682",
+              "first_difference": {
+                "independent_context": " for investment advisors, wealth managers and institutional investors. In the first quarter of 2020, we changed our allocation methodology for allocating our centrally managed tech",
+                "independent_context_repr": "' for investment advisors, wealth managers and institutional investors. In the first quarter of 2020, we changed our allocation methodology for allocating our centrally managed tech'",
+                "index": 1375,
+                "left_codepoint": null,
+                "primary_context": " for investment advisors, wealth managers and institutional investors.",
+                "primary_context_repr": "' for investment advisors, wealth managers and institutional investors.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "3989948553d9c88c9116a2aeaa5eac51a888029f94eb94ed6a423f9559a21cfd",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1675,
+                "preview": "Nature of operations S&P Global Inc. (together with its consolidated subsidiaries, the “Company,” the “Registrant,” “we,” “us” or “our”) is a leading provider of transparent and in"
+              },
+              "primary": {
+                "content_sha256": "1a434631184e7f522324ec84404792e0e615d9145ab4fdacf00d39e4f8281e30",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1375,
+                "preview": "Nature of operations S&P Global Inc. (together with its consolidated subsidiaries, the “Company,” the “Registrant,” “we,” “us” or “our”) is a leading provider of transparent and in"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "spgi:NatureOfOperationsPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMDMvZnJhZzpkNDcwMTJkMmQyZWE0NDkzYTA4ZjE0ZDk3OWY3MDVlZC90ZXh0cmVnaW9uOmQ0NzAxMmQyZDJlYTQ0OTNhMDhmMTRkOTc5ZjcwNWVkXzQwMDc5_b197b4f3-f0b4-4343-996a-685f51122aa5",
+              "first_difference": {
+                "independent_context": "Reclassification Certain prior year amounts have been reclassified for comparability purposes.",
+                "independent_context_repr": "'Reclassification Certain prior year amounts have been reclassified for comparability purposes.'",
+                "index": 16,
+                "left_codepoint": null,
+                "primary_context": "Reclassification",
+                "primary_context_repr": "'Reclassification'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "3514178339ccb933cef8b3441e4cb277064690918c1a554362a5607b52fac8a6",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 94,
+                "preview": "Reclassification Certain prior year amounts have been reclassified for comparability purposes."
+              },
+              "primary": {
+                "content_sha256": "9d9b8939dca45ee91904d3a2a7c46376a278195b0475a31d4205b853dac1eb1a",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 16,
+                "preview": "Reclassification"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "spgi:ReclassificationPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xNjAvZnJhZzo2NWIxMzA4NjBiYmQ0MTZlODFjZTZmOTBkMGYxN2E3OC90ZXh0cmVnaW9uOjY1YjEzMDg2MGJiZDQxNmU4MWNlNmY5MGQwZjE3YTc4XzUxODU_549d5c10-0a19-4ac4-a67c-618a77e9c8fc",
+              "first_difference": {
+                "independent_context": "s on our consolidated balance sheets as of December 31, 2020 and 2019: (in millions) 2020 2019 Balance Sheet Location Assets Right of use assets Lease right-of-use assets $ 494 $ 6",
+                "independent_context_repr": "'s on our consolidated balance sheets as of December 31, 2020 and 2019: (in millions) 2020 2019 Balance Sheet Location Assets Right of use assets Lease right-of-use assets $ 494 $ 6'",
+                "index": 151,
+                "left_codepoint": null,
+                "primary_context": "s on our consolidated balance sheets as of December 31, 2020 and 2019:",
+                "primary_context_repr": "'s on our consolidated balance sheets as of December 31, 2020 and 2019:'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "5eccf49e70e43ad01a1730704a052fdf05be9685c236614721794c700c7963d6",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 405,
+                "preview": "The following table provides information on the location and amounts of our leases on our consolidated balance sheets as of December 31, 2020 and 2019: (in millions) 2020 2019 Bala"
+              },
+              "primary": {
+                "content_sha256": "21605325d3667d77fddb274cab91780d38c7c6f7e3af68f1e878732f7be57dbc",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 151,
+                "preview": "The following table provides information on the location and amounts of our leases on our consolidated balance sheets as of December 31, 2020 and 2019:"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "spgi:ScheduleofLocationandAmountsofLeasesTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xNjAvZnJhZzo2NWIxMzA4NjBiYmQ0MTZlODFjZTZmOTBkMGYxN2E3OC90ZXh0cmVnaW9uOjY1YjEzMDg2MGJiZDQxNmU4MWNlNmY5MGQwZjE3YTc4XzUxODQ_c92966e3-c528-427f-a9b2-ae42523f58f6",
+              "first_difference": {
+                "independent_context": "Lease liabilities — non-current Non-current lease liabilities 544 620 The components of lease expense for the years ended December 31 are as follows: (in millions) 2020 2019 Operat",
+                "independent_context_repr": "'Lease liabilities — non-current Non-current lease liabilities 544 620 The components of lease expense for the years ended December 31 are as follows: (in millions) 2020 2019 Operat'",
+                "index": 2154,
+                "left_codepoint": "U+0052",
+                "primary_context": "Lease liabilities — non-current Non-current lease liabilities 544 620 Related Party Agreement In June of 2012, we entered into a license agreement (the \"License Agreement\") with th",
+                "primary_context_repr": "'Lease liabilities — non-current Non-current lease liabilities 544 620 Related Party Agreement In June of 2012, we entered into a license agreement (the \"License Agreement\") with th'",
+                "right_codepoint": "U+0054"
+              },
+              "independent": {
+                "content_sha256": "ccd5aae9c27d0a44be7629ce06d304a5c39167e216bdcf8a716b8ae5ed795d84",
+                "continued_chain_complete": true,
+                "continued_chain_length": 4,
+                "normalized_character_count": 8528,
+                "preview": "Commitments and Contingencies Leases We determine whether an arrangement meets the criteria for an operating lease or a finance lease at the inception of the arrangement. We have o"
+              },
+              "primary": {
+                "content_sha256": "525d8333b10f205b1eda16b912b42a5851f45531ef354c9fd3e1179d37bc50ca",
+                "continued_chain_complete": true,
+                "continued_chain_length": 4,
+                "normalized_character_count": 7504,
+                "preview": "Commitments and Contingencies Leases We determine whether an arrangement meets the criteria for an operating lease or a finance lease at the inception of the arrangement. We have o"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:CommitmentsAndContingenciesDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMzYvZnJhZzo1Nzg5MWJmOGQ5MDk0NWI0YWZjYzNiNzQ4ZjBhNjViZi90ZXh0cmVnaW9uOjU3ODkxYmY4ZDkwOTQ1YjRhZmNjM2I3NDhmMGE2NWJmXzU2ODk_38c54e74-c8cf-4639-bd49-658a63e85c2b",
+              "first_difference": {
+                "independent_context": ".67 - 6.07 Weighted-average grant-date fair value per option $ 112.98 Because lattice-based option-pricing models incorporate ranges of assumptions, those ranges are disclosed. The",
+                "independent_context_repr": "'.67 - 6.07 Weighted-average grant-date fair value per option $ 112.98 Because lattice-based option-pricing models incorporate ranges of assumptions, those ranges are disclosed. The'",
+                "index": 3901,
+                "left_codepoint": "U+0053",
+                "primary_context": ".67 - 6.07 Weighted-average grant-date fair value per option $ 112.98 Stock option activity is as follows: (in millions, except per award amounts) Shares Weighted average exercise ",
+                "primary_context_repr": "'.67 - 6.07 Weighted-average grant-date fair value per option $ 112.98 Stock option activity is as follows: (in millions, except per award amounts) Shares Weighted average exercise '",
+                "right_codepoint": "U+0042"
+              },
+              "independent": {
+                "content_sha256": "cbe3867383911b551eebd9ea8d63fd3ef05e7d073f6fb3b706bd873a4c45e8f9",
+                "continued_chain_complete": true,
+                "continued_chain_length": 4,
+                "normalized_character_count": 8010,
+                "preview": "Stock-Based Compensation We issue stock-based incentive awards to our eligible employees under the 2019 Employee Stock Incentive Plan and to our eligible non-employee Directors und"
+              },
+              "primary": {
+                "content_sha256": "dd69feb7c287b8a7d0ea7561aab105ca663b1439ec57eaf0a198a59268eca49a",
+                "continued_chain_complete": true,
+                "continued_chain_length": 4,
+                "normalized_character_count": 7028,
+                "preview": "Stock-Based Compensation We issue stock-based incentive awards to our eligible employees under the 2019 Employee Stock Incentive Plan and to our eligible non-employee Directors und"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:DisclosureOfCompensationRelatedCostsShareBasedPaymentsTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMDMvZnJhZzpkNDcwMTJkMmQyZWE0NDkzYTA4ZjE0ZDk3OWY3MDVlZC90ZXh0cmVnaW9uOmQ0NzAxMmQyZDJlYTQ0OTNhMDhmMTRkOTc5ZjcwNWVkXzQwMDky_115009d6-0a3d-4b82-a518-2b012168cee8",
+              "first_difference": {
+                "independent_context": "is performed. Conversely, if the results of our qualitative assessment determine that it is more likely than not that the fair value of any of our reporting units is less than thei",
+                "independent_context_repr": "'is performed. Conversely, if the results of our qualitative assessment determine that it is more likely than not that the fair value of any of our reporting units is less than thei'",
+                "index": 1076,
+                "left_codepoint": null,
+                "primary_context": "is performed. Conversely, if the results of our qualitative assessment",
+                "primary_context_repr": "'is performed. Conversely, if the results of our qualitative assessment'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "1aa6bb3580ff403c32f4dbb89263f817d91af375589a1b9602e49b1ca699fa32",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 3928,
+                "preview": "Goodwill and other indefinite-lived intangible assets Goodwill represents the excess of purchase price and related costs over the value assigned to the net tangible and identifiabl"
+              },
+              "primary": {
+                "content_sha256": "2c5ddc6db0a97704ad66c2f006f2f1d66af25f517e273e5dd3384fffefbfa9cc",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1076,
+                "preview": "Goodwill and other indefinite-lived intangible assets Goodwill represents the excess of purchase price and related costs over the value assigned to the net tangible and identifiabl"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:GoodwillAndIntangibleAssetsPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMDMvZnJhZzpkNDcwMTJkMmQyZWE0NDkzYTA4ZjE0ZDk3OWY3MDVlZC90ZXh0cmVnaW9uOmQ0NzAxMmQyZDJlYTQ0OTNhMDhmMTRkOTc5ZjcwNWVkXzEwNDQ1MzYwNTE4NTY1_0514ba35-2391-4ff5-9008-54d20d022237",
+              "first_difference": {
+                "independent_context": "d prospectively without restating prior period's financial statements. Recent Accounting Standards In August of 2020, the Financial Accounting Standards Board (\"FASB\") issued guida",
+                "independent_context_repr": "'d prospectively without restating prior period\\'s financial statements. Recent Accounting Standards In August of 2020, the Financial Accounting Standards Board (\"FASB\") issued guida'",
+                "index": 562,
+                "left_codepoint": null,
+                "primary_context": "d prospectively without restating prior period's financial statements.",
+                "primary_context_repr": "\"d prospectively without restating prior period's financial statements.\"",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "b31116d3059ea09e27d0f60693ef8e1c0c4668d001c9bd5b30f9469ec767d84f",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 4939,
+                "preview": "Adoption of ASC 842, “Leases” On January 1, 2019, we adopted Financial Accounting Standards Board Accounting Standards Codification (\"FASB ASC\") 842 that requires a lessee to recog"
+              },
+              "primary": {
+                "content_sha256": "783216f27808636863331fd4e5670a669dbc66582762788991402aad9c1bdaca",
+                "continued_chain_complete": false,
+                "continued_chain_length": 2,
+                "normalized_character_count": 562,
+                "preview": "Adoption of ASC 842, “Leases” On January 1, 2019, we adopted Financial Accounting Standards Board Accounting Standards Codification (\"FASB ASC\") 842 that requires a lessee to recog"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:NewAccountingPronouncementsPolicyPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMzAvZnJhZzoxZWY0YThjOGZlOWU0NDAxODc0NzExMjkyZGVjNjA2Ni90ZXh0cmVnaW9uOjFlZjRhOGM4ZmU5ZTQ0MDE4NzQ3MTEyOTJkZWM2MDY2XzEyNDg5_0a5bb61d-9ec5-42bb-a760-ce1cfa0e283d",
+              "first_difference": {
+                "independent_context": "20 was primarily due to a reduction in the discount rate from 2019. 2 Relates to the impact of a retiree annuity purchase in 2019. The Company purchased a group annuity contract un",
+                "independent_context_repr": "'20 was primarily due to a reduction in the discount rate from 2019. 2 Relates to the impact of a retiree annuity purchase in 2019. The Company purchased a group annuity contract un'",
+                "index": 3709,
+                "left_codepoint": "U+0041",
+                "primary_context": "20 was primarily due to a reduction in the discount rate from 2019. 2 A summary of net periodic benefit cost for our retirement and postretirement plans for the years ended Decembe",
+                "primary_context_repr": "'20 was primarily due to a reduction in the discount rate from 2019. 2 A summary of net periodic benefit cost for our retirement and postretirement plans for the years ended Decembe'",
+                "right_codepoint": "U+0052"
+              },
+              "independent": {
+                "content_sha256": "7066885ff096ad528b30dad1c7b363ece02cc015a85ebd4a6d852ea097dd78a5",
+                "continued_chain_complete": true,
+                "continued_chain_length": 7,
+                "normalized_character_count": 16719,
+                "preview": "Employee Benefits We maintain a number of active defined contribution retirement plans for our employees. The majority of our defined benefit plans are frozen. As a result, no new "
+              },
+              "primary": {
+                "content_sha256": "abb182b8b397561f2935e2be3f07ecd827f757d5fa4fa1e124559038373fd26c",
+                "continued_chain_complete": true,
+                "continued_chain_length": 7,
+                "normalized_character_count": 14434,
+                "preview": "Employee Benefits We maintain a number of active defined contribution retirement plans for our employees. The majority of our defined benefit plans are frozen. As a result, no new "
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:PensionAndOtherPostretirementBenefitsDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMDMvZnJhZzpkNDcwMTJkMmQyZWE0NDkzYTA4ZjE0ZDk3OWY3MDVlZC90ZXh0cmVnaW9uOmQ0NzAxMmQyZDJlYTQ0OTNhMDhmMTRkOTc5ZjcwNWVkXzQwMDk5_f386de63-39f6-41fe-89f2-efe3f07417e8",
+              "first_difference": {
+                "independent_context": "rily through web-based channels including Market Intelligence Desktop, RatingsDirect®, RatingsXpress®, and Credit Analytics. Subscription revenue at Platts is generated by providin",
+                "independent_context_repr": "'rily through web-based channels including Market Intelligence Desktop, RatingsDirect®, RatingsXpress®, and Credit Analytics. Subscription revenue at Platts is generated by providin'",
+                "index": 1391,
+                "left_codepoint": null,
+                "primary_context": "rily through web-based channels including Market Intelligence Desktop,",
+                "primary_context_repr": "'rily through web-based channels including Market Intelligence Desktop,'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "a5b23f616752b5c7c7476bf8408a88c0c0083e5a46b4b0933b944ec903cd911b",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 9901,
+                "preview": "Adoption of ASC 606, “Revenue from Contracts with Customers” We adopted FASB ASC 606 \"Revenue from Contracts with Customers\" using the modified retrospective transition method appl"
+              },
+              "primary": {
+                "content_sha256": "84f39d9ac8948c82fb82e889be9712c92c838d8caf154a5ad04c478cbf0c829b",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1391,
+                "preview": "Adoption of ASC 606, “Revenue from Contracts with Customers” We adopted FASB ASC 606 \"Revenue from Contracts with Customers\" using the modified retrospective transition method appl"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:RevenueFromContractWithCustomerPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMzAvZnJhZzoxZWY0YThjOGZlOWU0NDAxODc0NzExMjkyZGVjNjA2Ni90ZXh0cmVnaW9uOjFlZjRhOGM4ZmU5ZTQ0MDE4NzQ3MTEyOTJkZWM2MDY2XzEyNDk1_cea5c228-ae47-47be-bbfe-b27ad541f9ae",
+              "first_difference": {
+                "independent_context": "practical expedient: Collective investment funds 5 $ 677 Total $ 2,243 (in millions) December 31, 2019 Total Level 1 Level 2 Level 3 Cash and short-term investments $ 3 $ 3 $ — $ —",
+                "independent_context_repr": "'practical expedient: Collective investment funds 5 $ 677 Total $ 2,243 (in millions) December 31, 2019 Total Level 1 Level 2 Level 3 Cash and short-term investments $ 3 $ 3 $ — $ —'",
+                "index": 616,
+                "left_codepoint": null,
+                "primary_context": "practical expedient: Collective investment funds 5 $ 677 Total $ 2,243",
+                "primary_context_repr": "'practical expedient: Collective investment funds 5 $ 677 Total $ 2,243'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "e935baad172552085b13057f531ab379df5aacba88cffdac1f8a43e2d0642eaf",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1861,
+                "preview": "The fair value of our defined benefit plans assets as of December 31, 2020 and 2019, by asset class is as follows: (in millions) December 31, 2020 Total Level 1 Level 2 Level 3 Cas"
+              },
+              "primary": {
+                "content_sha256": "8ee6921c29aa3ba9f05c84f93b122b1f3561de87748b188a53a5daffbf98961b",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 616,
+                "preview": "The fair value of our defined benefit plans assets as of December 31, 2020 and 2019, by asset class is as follows: (in millions) December 31, 2020 Total Level 1 Level 2 Level 3 Cas"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfAllocationOfPlanAssetsTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMzAvZnJhZzoxZWY0YThjOGZlOWU0NDAxODc0NzExMjkyZGVjNjA2Ni90ZXh0cmVnaW9uOjFlZjRhOGM4ZmU5ZTQ0MDE4NzQ3MTEyOTJkZWM2MDY2XzEyNDkw_d3806b05-3fef-4af6-ad32-5fbf4e112e22",
+              "first_difference": {
+                "independent_context": " 2020 was primarily due to a reduction in the discount rate from 2019. 2 Relates to the impact of a retiree annuity purchase in 2019. The Company purchased a group annuity contract",
+                "independent_context_repr": "' 2020 was primarily due to a reduction in the discount rate from 2019. 2 Relates to the impact of a retiree annuity purchase in 2019. The Company purchased a group annuity contract'",
+                "index": 1914,
+                "left_codepoint": null,
+                "primary_context": " 2020 was primarily due to a reduction in the discount rate from 2019.",
+                "primary_context_repr": "' 2020 was primarily due to a reduction in the discount rate from 2019.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "f969257c5fe21d1131c8660653a87c8593e5dd47cb37d3d996c84a6234a63c84",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 2235,
+                "preview": "A summary of the benefit obligation and the fair value of plan assets, as well as the funded status for the retirement and postretirement plans as of December 31, 2020 and 2019, is"
+              },
+              "primary": {
+                "content_sha256": "af44dd2f6b78aa4b3b2aea409dff7f864cd7ca1d1df2efb20ae2be3850dede41",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1914,
+                "preview": "A summary of the benefit obligation and the fair value of plan assets, as well as the funded status for the retirement and postretirement plans as of December 31, 2020 and 2019, is"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfDefinedBenefitPlansDisclosuresTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMDMvZnJhZzpkNDcwMTJkMmQyZWE0NDkzYTA4ZjE0ZDk3OWY3MDVlZC90ZXh0cmVnaW9uOmQ0NzAxMmQyZDJlYTQ0OTNhMDhmMTRkOTc5ZjcwNWVkXzQwMDgw_ab4c82a4-3ef0-420d-a79b-872c2cb9a278",
+              "first_difference": {
+                "independent_context": " investments 1 19 5 Other (income) expense, net $ ( 31 ) $ 98 $ ( 25 ) 1 The net periodic benefit cost for our retirement and post retirement plans for the year ended December 31, ",
+                "independent_context_repr": "' investments 1 19 5 Other (income) expense, net $ ( 31 ) $ 98 $ ( 25 ) 1 The net periodic benefit cost for our retirement and post retirement plans for the year ended December 31, '",
+                "index": 276,
+                "left_codepoint": null,
+                "primary_context": " investments 1 19 5 Other (income) expense, net $ ( 31 ) $ 98 $ ( 25 )",
+                "primary_context_repr": "' investments 1 19 5 Other (income) expense, net $ ( 31 ) $ 98 $ ( 25 )'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "12c08aa23a44bf205ae9f834be4e6feba459f33558b8d8e196654b10d6a75565",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 944,
+                "preview": "The components of other (income) expense, net for the year ended December 31 are as follows: (in millions) 2020 2019 2018 Other components of net periodic benefit cost 1 $ ( 32 ) $"
+              },
+              "primary": {
+                "content_sha256": "e4772f362637bfa4629239ce55a3f9edd2780affe7fc13c72b9c1eb1a0129d4b",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 276,
+                "preview": "The components of other (income) expense, net for the year ended December 31 are as follows: (in millions) 2020 2019 2018 Other components of net periodic benefit cost 1 $ ( 32 ) $"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfOtherNonoperatingIncomeByComponentTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xNTQvZnJhZzo3Zjg5MTllNzQzOWE0ZTY0OGU2NGZmYjYyNjM1ZDk0NS90ZXh0cmVnaW9uOjdmODkxOWU3NDM5YTRlNjQ4ZTY0ZmZiNjI2MzVkOTQ1XzU4NDE_be16b7bc-4d2d-4ae5-b7b4-df3704a52e1d",
+              "first_difference": {
+                "independent_context": "on for the years ended December 31, 2020, 2019 and 2018, respectively. The following table presents our revenue disaggregated by revenue type for the years ended December 31: (in m",
+                "independent_context_repr": "'on for the years ended December 31, 2020, 2019 and 2018, respectively. The following table presents our revenue disaggregated by revenue type for the years ended December 31: (in m'",
+                "index": 4294,
+                "left_codepoint": null,
+                "primary_context": "on for the years ended December 31, 2020, 2019 and 2018, respectively.",
+                "primary_context_repr": "'on for the years ended December 31, 2020, 2019 and 2018, respectively.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "20b03ce4055447752d08fa794f6ef25a3babf0e7f1c2efea4e908dc244cedd4f",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 7469,
+                "preview": "A summary of operating results for the years ended December 31 is as follows: Revenue (in millions) 2020 2019 2018 Ratings $ 3,606 $ 3,106 $ 2,883 Market Intelligence 2,106 1,959 1"
+              },
+              "primary": {
+                "content_sha256": "117ac5b93a92a58644f83fc9d7c5829cbad526aaeff97a3600d877ee79857864",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 4294,
+                "preview": "A summary of operating results for the years ended December 31 is as follows: Revenue (in millions) 2020 2019 2018 Ratings $ 3,606 $ 3,106 $ 2,883 Market Intelligence 2,106 1,959 1"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfSegmentReportingInformationBySegmentTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMDMvZnJhZzpkNDcwMTJkMmQyZWE0NDkzYTA4ZjE0ZDk3OWY3MDVlZC90ZXh0cmVnaW9uOmQ0NzAxMmQyZDJlYTQ0OTNhMDhmMTRkOTc5ZjcwNWVkXzQwMDM2_c4a9ee30-5b76-48cd-b4e0-8bd282334f42",
+              "first_difference": {
+                "independent_context": "d. The following assumptions were used in valuing the options granted: Year Ended December 31, 2018 Risk-free average interest rate 2.6 - 2.7 % Dividend yield 1.1 % Volatility 21.8",
+                "independent_context_repr": "'d. The following assumptions were used in valuing the options granted: Year Ended December 31, 2018 Risk-free average interest rate 2.6 - 2.7 % Dividend yield 1.1 % Volatility 21.8'",
+                "index": 158,
+                "left_codepoint": null,
+                "primary_context": "d. The following assumptions were used in valuing the options granted:",
+                "primary_context_repr": "'d. The following assumptions were used in valuing the options granted:'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "4942428666e1a0365b8725421ae85723910873fc092da5eb135fae8b78614925",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 741,
+                "preview": "We use a lattice-based option-pricing model to estimate the fair value of options granted. The following assumptions were used in valuing the options granted: Year Ended December 3"
+              },
+              "primary": {
+                "content_sha256": "95b9ea38b7c9e8ffb389a2f07bc66c17a3e69b021bdc7a275d601852ad6807fa",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 158,
+                "preview": "We use a lattice-based option-pricing model to estimate the fair value of options granted. The following assumptions were used in valuing the options granted:"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfShareBasedPaymentAwardStockOptionsValuationAssumptionsTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMTIvZnJhZzpkYzNlOWYzNDhiNDA0NzRiYjJjMDM2OTFkMjQ0MWIwYS90ZXh0cmVnaW9uOmRjM2U5ZjM0OGI0MDQ3NGJiMmMwMzY5MWQyNDQxYjBhXzIyOTg_af411226-f013-4835-94e3-922f8a72a496",
+              "first_difference": {
+                "independent_context": "r 31, assuming no further acquisitions or dispositions, is as follows: (in millions) 2021 2022 2023 2024 2025 Amortization expense $ 96 $ 87 $ 81 $ 79 $ 61",
+                "independent_context_repr": "'r 31, assuming no further acquisitions or dispositions, is as follows: (in millions) 2021 2022 2023 2024 2025 Amortization expense $ 96 $ 87 $ 81 $ 79 $ 61'",
+                "index": 174,
+                "left_codepoint": null,
+                "primary_context": "r 31, assuming no further acquisitions or dispositions, is as follows:",
+                "primary_context_repr": "'r 31, assuming no further acquisitions or dispositions, is as follows:'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "7ff43cb9e50ad0defe01ec3ba8063059bd66be292fddec95bf620a3b5c0d2ae7",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 259,
+                "preview": "Expected amortization expense for intangible assets over the next five years for the years ended December 31, assuming no further acquisitions or dispositions, is as follows: (in m"
+              },
+              "primary": {
+                "content_sha256": "156f2ec4322aeebf0f0ad592a15028d876609aa6b98953cb6de53687ee776414",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 174,
+                "preview": "Expected amortization expense for intangible assets over the next five years for the years ended December 31, assuming no further acquisitions or dispositions, is as follows:"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleofFiniteLivedIntangibleAssetsFutureAmortizationExpenseTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xNTQvZnJhZzo3Zjg5MTllNzQzOWE0ZTY0OGU2NGZmYjYyNjM1ZDk0NS90ZXh0cmVnaW9uOjdmODkxOWU3NDM5YTRlNjQ4ZTY0ZmZiNjI2MzVkOTQ1XzU4NDA_13ac65ac-7585-446f-90d0-138077aa506d",
+              "first_difference": {
+                "independent_context": "ncludes East Windsor and New Jersey facility as of December 31, 2019. We do not have operations in any foreign country that represent more than 7 % of our consolidated revenue. Tra",
+                "independent_context_repr": "'ncludes East Windsor and New Jersey facility as of December 31, 2019. We do not have operations in any foreign country that represent more than 7 % of our consolidated revenue. Tra'",
+                "index": 8884,
+                "left_codepoint": "U+0054",
+                "primary_context": "ncludes East Windsor and New Jersey facility as of December 31, 2019. The following provides revenue and long-lived assets by geographic region: (in millions) Revenue Long-lived As",
+                "primary_context_repr": "'ncludes East Windsor and New Jersey facility as of December 31, 2019. The following provides revenue and long-lived assets by geographic region: (in millions) Revenue Long-lived As'",
+                "right_codepoint": "U+0057"
+              },
+              "independent": {
+                "content_sha256": "4f55de243f18709da9f7061f68d7d38a8da1bdd5cf94242c492db360f4066342",
+                "continued_chain_complete": true,
+                "continued_chain_length": 5,
+                "normalized_character_count": 9918,
+                "preview": "Segment and Geographic Information As discussed in Note 1 – Accounting Policies , we have four reportable segments: Ratings, Market Intelligence, Platts and Indices. Our Chief Exec"
+              },
+              "primary": {
+                "content_sha256": "0a4f8615e516b652ada07eed78984f875e930991497eb92dfe19ea6ebc1dda2b",
+                "continued_chain_complete": true,
+                "continued_chain_length": 5,
+                "normalized_character_count": 9612,
+                "preview": "Segment and Geographic Information As discussed in Note 1 – Accounting Policies , we have four reportable segments: Ratings, Market Intelligence, Platts and Indices. Our Chief Exec"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:SegmentReportingDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i39263e50e3374e85a29902440777f687_D20200101-20201231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmJmOTI3MWQyNGNmMjRiMDQ4OGUzMGRjOTk1OTFmNDc5L3NlYzpiZjkyNzFkMjRjZjI0YjA0ODhlMzBkYzk5NTkxZjQ3OV8xMDMvZnJhZzpkNDcwMTJkMmQyZWE0NDkzYTA4ZjE0ZDk3OWY3MDVlZC90ZXh0cmVnaW9uOmQ0NzAxMmQyZDJlYTQ0OTNhMDhmMTRkOTc5ZjcwNWVkXzEwNDQ1MzYwNTI4ODE5_1c16cf8d-e83f-4b52-9dea-4190a69e5fff",
+              "first_difference": {
+                "independent_context": " amounts have been reclassified to conform with current presentation. In April of 2018, we acquired Kensho Technologies Inc. (\"Kensho\") for approximately $ 550 million, net of cash",
+                "independent_context_repr": "' amounts have been reclassified to conform with current presentation. In April of 2018, we acquired Kensho Technologies Inc. (\"Kensho\") for approximately $ 550 million, net of cash'",
+                "index": 1696,
+                "left_codepoint": "U+0052",
+                "primary_context": " amounts have been reclassified to conform with current presentation. RatingsDirect®, RatingsXpress®, and Credit Analytics. Subscription revenue at Platts is generated by providing",
+                "primary_context_repr": "' amounts have been reclassified to conform with current presentation. RatingsDirect®, RatingsXpress®, and Credit Analytics. Subscription revenue at Platts is generated by providing'",
+                "right_codepoint": "U+0049"
+              },
+              "independent": {
+                "content_sha256": "db4af4e0d89571b8c7751c574021b5b970cedd7fe5d07cea6e0f17df3c5b811e",
+                "continued_chain_complete": true,
+                "continued_chain_length": 9,
+                "normalized_character_count": 38974,
+                "preview": "Accounting Policies Nature of operations S&P Global Inc. (together with its consolidated subsidiaries, the “Company,” the “Registrant,” “we,” “us” or “our”) is a leading provider o"
+              },
+              "primary": {
+                "content_sha256": "eec80e6cbd64b718e94fbb073e956157dc505752f15d6c1a2cb1830e25256495",
+                "continued_chain_complete": true,
+                "continued_chain_length": 9,
+                "normalized_character_count": 21791,
+                "preview": "Accounting Policies Nature of operations S&P Global Inc. (together with its consolidated subsidiaries, the “Company,” the “Registrant,” “we,” “us” or “our”) is a leading provider o"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:SignificantAccountingPoliciesTextBlock"
+        }
+      ],
+      "mismatch_details_truncated": false,
+      "mismatch_qname_count": 19,
+      "mismatching_qnames": [
+        "spgi:DeferredTechnologyCostsPolicyTextBlock",
+        "spgi:DefinedBenefitPlanEstimatedFutureBenefitPaymentsAndReceiptsTableTextBlock",
+        "spgi:NatureOfOperationsPolicyTextBlock",
+        "spgi:ReclassificationPolicyTextBlock",
+        "spgi:ScheduleofLocationandAmountsofLeasesTableTextBlock",
+        "us-gaap:CommitmentsAndContingenciesDisclosureTextBlock",
+        "us-gaap:DisclosureOfCompensationRelatedCostsShareBasedPaymentsTextBlock",
+        "us-gaap:GoodwillAndIntangibleAssetsPolicyTextBlock",
+        "us-gaap:NewAccountingPronouncementsPolicyPolicyTextBlock",
+        "us-gaap:PensionAndOtherPostretirementBenefitsDisclosureTextBlock",
+        "us-gaap:RevenueFromContractWithCustomerPolicyTextBlock",
+        "us-gaap:ScheduleOfAllocationOfPlanAssetsTableTextBlock",
+        "us-gaap:ScheduleOfDefinedBenefitPlansDisclosuresTextBlock",
+        "us-gaap:ScheduleOfOtherNonoperatingIncomeByComponentTextBlock",
+        "us-gaap:ScheduleOfSegmentReportingInformationBySegmentTextBlock",
+        "us-gaap:ScheduleOfShareBasedPaymentAwardStockOptionsValuationAssumptionsTableTextBlock",
+        "us-gaap:ScheduleofFiniteLivedIntangibleAssetsFutureAmortizationExpenseTableTextBlock",
+        "us-gaap:SegmentReportingDisclosureTextBlock",
+        "us-gaap:SignificantAccountingPoliciesTextBlock"
+      ],
+      "primary_document": "spgi-20201231.htm",
+      "record_key": "0000064040|0000064040-21-000063|10-K|2021-02-09",
+      "source_hash_verified": true
+    },
+    {
+      "accession": "0000064040-22-000055",
+      "actual_primary_document_sha256": "913188dfe7a9b5acee8d76e240a623863bea0e2ffe58db7409e0747df8be715c",
+      "cik": "0000064040",
+      "compiler_distinct_qname_count": 74,
+      "compiler_textblock_fact_count": 74,
+      "expected_primary_document_sha256": "913188dfe7a9b5acee8d76e240a623863bea0e2ffe58db7409e0747df8be715c",
+      "field_difference_counts": {
+        "content_sha256": 16,
+        "continued_chain_complete": 12,
+        "continued_chain_length": 7,
+        "normalized_character_count": 16
+      },
+      "filed_date": "2022-02-08",
+      "form": "10-K",
+      "http_status": 200,
+      "independent_distinct_qname_count": 74,
+      "independent_textblock_fact_count": 74,
+      "mismatch_details": [
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMzYvZnJhZzphODhhNjQ0N2RmZjU0MzNmYTliMTg4MzUzYmU4ODMwNi90ZXh0cmVnaW9uOmE4OGE2NDQ3ZGZmNTQzM2ZhOWIxODgzNTNiZTg4MzA2Xzc1NDM_e22c442f-7f63-4fef-a32c-642c8e680295",
+              "first_difference": {
+                "independent_context": "sets obtained in exchange for lease obligations Operating leases 29 8 Weighted-average remaining lease term and discount rate for our operating leases as of December 31 are as foll",
+                "independent_context_repr": "'sets obtained in exchange for lease obligations Operating leases 29 8 Weighted-average remaining lease term and discount rate for our operating leases as of December 31 are as foll'",
+                "index": 1489,
+                "left_codepoint": "U+0061",
+                "primary_context": "sets obtained in exchange for lease obligations Operating leases 29 8 admitted nor denied the SEC's allegations. The SEC found that Indices acted negligently in violation of Sectio",
+                "primary_context_repr": "\"sets obtained in exchange for lease obligations Operating leases 29 8 admitted nor denied the SEC's allegations. The SEC found that Indices acted negligently in violation of Sectio\"",
+                "right_codepoint": "U+0057"
+              },
+              "independent": {
+                "content_sha256": "9f85f99f948994406822998c855892d9fe4126860196b45aa66a7770ea1a4eb0",
+                "continued_chain_complete": true,
+                "continued_chain_length": 3,
+                "normalized_character_count": 7967,
+                "preview": "Commitments and Contingencies Leases During the years ended December 31, 2021 and 2020, we recorded a pre-tax impairment charge of $ 31 million and $ 120 million, respectively, rel"
+              },
+              "primary": {
+                "content_sha256": "46ecdf950a3e3afa4491ee21f9edb4e63e50671537d5a882a6eb9c9a5d71ac02",
+                "continued_chain_complete": true,
+                "continued_chain_length": 3,
+                "normalized_character_count": 5208,
+                "preview": "Commitments and Contingencies Leases During the years ended December 31, 2021 and 2020, we recorded a pre-tax impairment charge of $ 31 million and $ 120 million, respectively, rel"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:CommitmentsAndContingenciesDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMTIvZnJhZzo5ODhlNmZkYjY5NjM0MGRlOTk0YmNmNzBhODYwZGNmNi90ZXh0cmVnaW9uOjk4OGU2ZmRiNjk2MzQwZGU5OTRiY2Y3MGE4NjBkY2Y2XzM3Nzg_b3f811f1-307b-4b15-8328-a72766b9eaf7",
+              "first_difference": {
+                "independent_context": ", the unamortized debt discount and issuance costs total $ 19 million. Annual debt maturities are scheduled as follows based on book values as of December 31, 2021: no amounts due ",
+                "independent_context_repr": "', the unamortized debt discount and issuance costs total $ 19 million. Annual debt maturities are scheduled as follows based on book values as of December 31, 2021: no amounts due '",
+                "index": 1777,
+                "left_codepoint": null,
+                "primary_context": ", the unamortized debt discount and issuance costs total $ 19 million.",
+                "primary_context_repr": "', the unamortized debt discount and issuance costs total $ 19 million.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "f7542870ba95846b980d5e652d0d97901c965273016aabec1ccec033128cd241",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 4993,
+                "preview": "Debt A summary of long-term debt outstanding is as follows: (in millions) December 31, 2021 2020 4.0 % Senior Notes, due 2025 1 $ 696 $ 695 2.95 % Senior Notes, due 2027 2 496 495 "
+              },
+              "primary": {
+                "content_sha256": "bab0bc6bb4c201a52990094a7227bfc79c9b56d6de26f7b31957d877fdd5f656",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 1777,
+                "preview": "Debt A summary of long-term debt outstanding is as follows: (in millions) December 31, 2021 2020 4.0 % Senior Notes, due 2025 1 $ 696 $ 695 2.95 % Senior Notes, due 2027 2 496 495 "
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:DebtDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml85Ny9mcmFnOjk1MTU4YjYyYmEyOTQ2YTFiMjRkNDBiMDkzNWY4NzE0L3RleHRyZWdpb246OTUxNThiNjJiYTI5NDZhMWIyNGQ0MGIwOTM1Zjg3MTRfMzg2NDM_a4167165-7ae3-4495-b048-440f3605f161",
+              "first_difference": {
+                "independent_context": "eld for sale in the current period in our consolidated balance sheets. Discontinued Operations In determining whether a disposal of a component of an entity or a group of component",
+                "independent_context_repr": "'eld for sale in the current period in our consolidated balance sheets. Discontinued Operations In determining whether a disposal of a component of an entity or a group of component'",
+                "index": 2157,
+                "left_codepoint": null,
+                "primary_context": "eld for sale in the current period in our consolidated balance sheets.",
+                "primary_context_repr": "'eld for sale in the current period in our consolidated balance sheets.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "036b2c5f49305162c21344ae4fcb4c06caa4da10b632de933ca4d8be50d3637f",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 2964,
+                "preview": "Assets and Liabilities Held for Sale and Discontinued Operations Assets and Liabilities Held for Sale We classify a disposal group to be sold as held for sale in the period in whic"
+              },
+              "primary": {
+                "content_sha256": "c0d4df4cb6a2a9b09fd932ddb96c9315d912d263d0da6555f77af7f80672ac09",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 2157,
+                "preview": "Assets and Liabilities Held for Sale and Discontinued Operations Assets and Liabilities Held for Sale We classify a disposal group to be sold as held for sale in the period in whic"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:DiscontinuedOperationsPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml85Ny9mcmFnOjk1MTU4YjYyYmEyOTQ2YTFiMjRkNDBiMDkzNWY4NzE0L3RleHRyZWdpb246OTUxNThiNjJiYTI5NDZhMWIyNGQ0MGIwOTM1Zjg3MTRfMzg1NTA_6788cbdf-b481-4f9a-aa1f-3e61353c4852",
+              "first_difference": {
+                "independent_context": "n, we analyze any difference between the sum of the fair values of the reporting units and our total market capitalization for reasonableness, taking into account certain factors i",
+                "independent_context_repr": "'n, we analyze any difference between the sum of the fair values of the reporting units and our total market capitalization for reasonableness, taking into account certain factors i'",
+                "index": 2139,
+                "left_codepoint": null,
+                "primary_context": "n, we analyze any difference between the sum of the fair values of the",
+                "primary_context_repr": "'n, we analyze any difference between the sum of the fair values of the'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "29b1400483492664120a0aa43ec961e9cc2de836fd63c3efb324d82c213d0087",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 3861,
+                "preview": "Goodwill and other indefinite-lived intangible assets Goodwill represents the excess of purchase price and related costs over the value assigned to the net tangible and identifiabl"
+              },
+              "primary": {
+                "content_sha256": "dc3b8a5d0eae2d8f15f791022340f79f8337423d7407927e08f1805d427ff669",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 2139,
+                "preview": "Goodwill and other indefinite-lived intangible assets Goodwill represents the excess of purchase price and related costs over the value assigned to the net tangible and identifiabl"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:GoodwillAndIntangibleAssetsPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml85Ny9mcmFnOjk1MTU4YjYyYmEyOTQ2YTFiMjRkNDBiMDkzNWY4NzE0L3RleHRyZWdpb246OTUxNThiNjJiYTI5NDZhMWIyNGQ0MGIwOTM1Zjg3MTRfMzg1Nzk_2af896c7-7e69-4a03-b53e-208b591aab5b",
+              "first_difference": {
+                "independent_context": "ents about future events. It is possible that tax examinations will be settled prior to December 31, 2022. If any of these tax audit settlements do occur within that period we woul",
+                "independent_context_repr": "'ents about future events. It is possible that tax examinations will be settled prior to December 31, 2022. If any of these tax audit settlements do occur within that period we woul'",
+                "index": 1560,
+                "left_codepoint": null,
+                "primary_context": "ents about future events. It is possible that tax examinations will be",
+                "primary_context_repr": "'ents about future events. It is possible that tax examinations will be'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "7195e81b4d96173a47b0166e4532f86f2ba8425845a4b61528f46346f22aa023",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1748,
+                "preview": "Income taxes Deferred tax assets and liabilities are recognized for the future tax consequences attributable to differences between financial statement carrying amounts of existing"
+              },
+              "primary": {
+                "content_sha256": "925b1241e5dc1c66c58afdbf966df324b525a96378836746b4bc82a60bb8669d",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1560,
+                "preview": "Income taxes Deferred tax assets and liabilities are recognized for the future tax consequences attributable to differences between financial statement carrying amounts of existing"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:IncomeTaxPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMzYvZnJhZzphODhhNjQ0N2RmZjU0MzNmYTliMTg4MzUzYmU4ODMwNi90ZXh0cmVnaW9uOmE4OGE2NDQ3ZGZmNTQzM2ZhOWIxODgzNTNiZTg4MzA2Xzc1MzQ_269d9e90-8269-4fb2-aa0b-3d693e0917b3",
+              "first_difference": {
+                "independent_context": "t $ 124 $ 144 Sublease income ( 2 ) ( 6 ) Total lease cost $ 122 $ 138 Supplemental information related to leases for the years ended December 31 are as follows: (in millions) 2021",
+                "independent_context_repr": "'t $ 124 $ 144 Sublease income ( 2 ) ( 6 ) Total lease cost $ 122 $ 138 Supplemental information related to leases for the years ended December 31 are as follows: (in millions) 2021'",
+                "index": 193,
+                "left_codepoint": null,
+                "primary_context": "t $ 124 $ 144 Sublease income ( 2 ) ( 6 ) Total lease cost $ 122 $ 138",
+                "primary_context_repr": "'t $ 124 $ 144 Sublease income ( 2 ) ( 6 ) Total lease cost $ 122 $ 138'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "1c1864106589caa30f81ec49301867423c9ff833e44808cc2566a5cf50dafa0a",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 525,
+                "preview": "The components of lease expense for the years ended December 31 are as follows: (in millions) 2021 2020 Operating lease cost $ 124 $ 144 Sublease income ( 2 ) ( 6 ) Total lease cos"
+              },
+              "primary": {
+                "content_sha256": "8c8f859526d5b23ba387d81815ac6a179a074a617d2fbf4bca4a9b652b5eab83",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 193,
+                "preview": "The components of lease expense for the years ended December 31 are as follows: (in millions) 2021 2020 Operating lease cost $ 124 $ 144 Sublease income ( 2 ) ( 6 ) Total lease cos"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:LeaseCostTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMTgvZnJhZzo4NjMyNDZhNTY3ZTc0YWUyODcwMTI3MTIzNTk4NWEyYi90ZXh0cmVnaW9uOjg2MzI0NmE1NjdlNzRhZTI4NzAxMjcxMjM1OTg1YTJiXzEyMTQ3_8188be6f-3f95-48af-90a5-8ce4f2ff612a",
+              "first_difference": {
+                "independent_context": "loss in 2020 was primarily due to an increase in the discount rate. 2 Relates to the impact of a plan amendment in 2021. Net Periodic Benefit Cost For purposes of determining annua",
+                "independent_context_repr": "'loss in 2020 was primarily due to an increase in the discount rate. 2 Relates to the impact of a plan amendment in 2021. Net Periodic Benefit Cost For purposes of determining annua'",
+                "index": 3710,
+                "left_codepoint": "U+0041",
+                "primary_context": "loss in 2020 was primarily due to an increase in the discount rate. 2 A summary of net periodic benefit cost for our retirement and postretirement plans for the years ended Decembe",
+                "primary_context_repr": "'loss in 2020 was primarily due to an increase in the discount rate. 2 A summary of net periodic benefit cost for our retirement and postretirement plans for the years ended Decembe'",
+                "right_codepoint": "U+0052"
+              },
+              "independent": {
+                "content_sha256": "cf8475ee3ce5c5c8a18f9fc591b01c0e63f047c8f9ffe0db6ce5760acd7a35ad",
+                "continued_chain_complete": true,
+                "continued_chain_length": 7,
+                "normalized_character_count": 15945,
+                "preview": "Employee Benefits We maintain a number of active defined contribution retirement plans for our employees. The majority of our defined benefit plans are frozen. As a result, no new "
+              },
+              "primary": {
+                "content_sha256": "71c444f8cfbddd334db948c74085afbe3791eb0fa0a77e6e99b0834ab380eb83",
+                "continued_chain_complete": true,
+                "continued_chain_length": 7,
+                "normalized_character_count": 11294,
+                "preview": "Employee Benefits We maintain a number of active defined contribution retirement plans for our employees. The majority of our defined benefit plans are frozen. As a result, no new "
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:PensionAndOtherPostretirementBenefitsDisclosureTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml85Ny9mcmFnOjk1MTU4YjYyYmEyOTQ2YTFiMjRkNDBiMDkzNWY4NzE0L3RleHRyZWdpb246OTUxNThiNjJiYTI5NDZhMWIyNGQ0MGIwOTM1Zjg3MTRfMzg0NzE_ebce0090-23cb-4a18-b6a1-25ba8d7dcdc7",
+              "first_difference": {
+                "independent_context": "nment debt instruments; as well as structured finance instruments; and • bank loan ratings. Transaction revenue is recognized at the point in time when our performance obligation i",
+                "independent_context_repr": "'nment debt instruments; as well as structured finance instruments; and • bank loan ratings. Transaction revenue is recognized at the point in time when our performance obligation i'",
+                "index": 2639,
+                "left_codepoint": null,
+                "primary_context": "nment debt instruments; as well as structured finance instruments; and",
+                "primary_context_repr": "'nment debt instruments; as well as structured finance instruments; and'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "71b9ec0815f761db895334a6a0a33bb7b81ff6f6853682d51e07c7275f134d04",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 8878,
+                "preview": "Revenue Recognition Under ASC 606, revenue is recognized when a customer obtains control of promised goods or services in an amount that reflects the consideration the entity expec"
+              },
+              "primary": {
+                "content_sha256": "7cefffb475aa0cec2f5952c70eae32896b97386b3f6f5ae52da955f207f7a8d7",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 2639,
+                "preview": "Revenue Recognition Under ASC 606, revenue is recognized when a customer obtains control of promised goods or services in an amount that reflects the consideration the entity expec"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:RevenueFromContractWithCustomerPolicyTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMTgvZnJhZzo4NjMyNDZhNTY3ZTc0YWUyODcwMTI3MTIzNTk4NWEyYi90ZXh0cmVnaW9uOjg2MzI0NmE1NjdlNzRhZTI4NzAxMjcxMjM1OTg1YTJiXzEyMTE5_382c63d9-5774-4b0f-85e1-b2390b2c6d68",
+              "first_difference": {
+                "independent_context": "practical expedient: Collective investment funds 5 $ 659 Total $ 2,231 (in millions) December 31, 2020 Total Level 1 Level 2 Level 3 Cash and short-term investments $ 4 $ 4 $ — $ —",
+                "independent_context_repr": "'practical expedient: Collective investment funds 5 $ 659 Total $ 2,231 (in millions) December 31, 2020 Total Level 1 Level 2 Level 3 Cash and short-term investments $ 4 $ 4 $ — $ —'",
+                "index": 582,
+                "left_codepoint": null,
+                "primary_context": "practical expedient: Collective investment funds 5 $ 659 Total $ 2,231",
+                "primary_context_repr": "'practical expedient: Collective investment funds 5 $ 659 Total $ 2,231'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "e0ec234a85790db84069bc7b67a773834edd0db401a211e465beaa9b2ad74fb5",
+                "continued_chain_complete": true,
+                "continued_chain_length": 3,
+                "normalized_character_count": 1613,
+                "preview": "The fair value of our defined benefit plans assets as of December 31, 2021 and 2020, by asset class is as follows: (in millions) December 31, 2021 Total Level 1 Level 2 Level 3 Cas"
+              },
+              "primary": {
+                "content_sha256": "b0ac7091d7b70180512d9fcb985b4a7a24e4c044b762762e4787acb7cdaffc05",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 582,
+                "preview": "The fair value of our defined benefit plans assets as of December 31, 2021 and 2020, by asset class is as follows: (in millions) December 31, 2021 Total Level 1 Level 2 Level 3 Cas"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfAllocationOfPlanAssetsTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMTIvZnJhZzo5ODhlNmZkYjY5NjM0MGRlOTk0YmNmNzBhODYwZGNmNi90ZXh0cmVnaW9uOjk4OGU2ZmRiNjk2MzQwZGU5OTRiY2Y3MGE4NjBkY2Y2XzM3NzI_ad332552-e118-4298-a16a-ef0521a4098e",
+              "first_difference": {
+                "independent_context": ", the unamortized debt discount and issuance costs total $ 4 million . 4 Interest payments are due semiannually on February 15 and August 15, and as of December 31, 2021, the unamo",
+                "independent_context_repr": "', the unamortized debt discount and issuance costs total $ 4 million . 4 Interest payments are due semiannually on February 15 and August 15, and as of December 31, 2021, the unamo'",
+                "index": 938,
+                "left_codepoint": null,
+                "primary_context": ", the unamortized debt discount and issuance costs total $ 4 million .",
+                "primary_context_repr": "', the unamortized debt discount and issuance costs total $ 4 million .'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "737841e58310808a4a2d2543384c281e3cfde30ed1cb3478fdc0129a0ee98f7c",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1772,
+                "preview": "A summary of long-term debt outstanding is as follows: (in millions) December 31, 2021 2020 4.0 % Senior Notes, due 2025 1 $ 696 $ 695 2.95 % Senior Notes, due 2027 2 496 495 2.5 %"
+              },
+              "primary": {
+                "content_sha256": "32b51b6cd6263b3073acb99e600106ce78a21ccca95c6fdb43da4ae652b2811a",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 938,
+                "preview": "A summary of long-term debt outstanding is as follows: (in millions) December 31, 2021 2020 4.0 % Senior Notes, due 2025 1 $ 696 $ 695 2.95 % Senior Notes, due 2027 2 496 495 2.5 %"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfDebtTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMTgvZnJhZzo4NjMyNDZhNTY3ZTc0YWUyODcwMTI3MTIzNTk4NWEyYi90ZXh0cmVnaW9uOjg2MzI0NmE1NjdlNzRhZTI4NzAxMjcxMjM1OTg1YTJiXzEyMTI4_a275856f-ecda-4497-993d-ac16aa60ee3e",
+              "first_difference": {
+                "independent_context": "al loss in 2020 was primarily due to an increase in the discount rate. 2 Relates to the impact of a plan amendment in 2021.",
+                "independent_context_repr": "'al loss in 2020 was primarily due to an increase in the discount rate. 2 Relates to the impact of a plan amendment in 2021.'",
+                "index": 1915,
+                "left_codepoint": null,
+                "primary_context": "al loss in 2020 was primarily due to an increase in the discount rate.",
+                "primary_context_repr": "'al loss in 2020 was primarily due to an increase in the discount rate.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "4441580158d9f0cffc1359efb61a8d3dc78b2ec1da9ec802ca35bbbca123ff83",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 1968,
+                "preview": "A summary of the benefit obligation and the fair value of plan assets, as well as the funded status for the retirement and postretirement plans as of December 31, 2021 and 2020, is"
+              },
+              "primary": {
+                "content_sha256": "ee217144da2ba2b238d503c0d380ea745f3696d7ac2f7e1b6d4427fcdbe41476",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 1915,
+                "preview": "A summary of the benefit obligation and the fair value of plan assets, as well as the funded status for the retirement and postretirement plans as of December 31, 2021 and 2020, is"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfDefinedBenefitPlansDisclosuresTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMTgvZnJhZzo4NjMyNDZhNTY3ZTc0YWUyODcwMTI3MTIzNTk4NWEyYi90ZXh0cmVnaW9uOjg2MzI0NmE1NjdlNzRhZTI4NzAxMjcxMjM1OTg1YTJiXzEyMTU2_6ee0b2ef-444c-436e-a19e-6685a67006f9",
+              "first_difference": {
+                "independent_context": " cash flows for our retirement and postretirement plans is as follows: (in millions) Retirement Plans 1 Postretirement Plans 2 2022 $ 70 3 2023 73 3 2024 75 3 2025 79 3 2026 82 2 2",
+                "independent_context_repr": "' cash flows for our retirement and postretirement plans is as follows: (in millions) Retirement Plans 1 Postretirement Plans 2 2022 $ 70 3 2023 73 3 2024 75 3 2025 79 3 2026 82 2 2'",
+                "index": 100,
+                "left_codepoint": null,
+                "primary_context": " cash flows for our retirement and postretirement plans is as follows:",
+                "primary_context_repr": "' cash flows for our retirement and postretirement plans is as follows:'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "64255e793b686f4702320f3f7bd4a92b3a95eec94c413f765f216a8cebb850c1",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 461,
+                "preview": "Information about the expected cash flows for our retirement and postretirement plans is as follows: (in millions) Retirement Plans 1 Postretirement Plans 2 2022 $ 70 3 2023 73 3 2"
+              },
+              "primary": {
+                "content_sha256": "8aae29d4b5f4577592896649473e2211d2576e415bbd3a7e7c2a2e55c65863a3",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 100,
+                "preview": "Information about the expected cash flows for our retirement and postretirement plans is as follows:"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfExpectedBenefitPaymentsTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMTgvZnJhZzo4NjMyNDZhNTY3ZTc0YWUyODcwMTI3MTIzNTk4NWEyYi90ZXh0cmVnaW9uOjg2MzI0NmE1NjdlNzRhZTI4NzAxMjcxMjM1OTg1YTJiXzEyMTYy_285ab819-9eca-45e7-9b87-5cc3b397bbd1",
+              "first_difference": {
+                "independent_context": "the recognition of non-cash pre-tax settlement charges of $ 3 million. 2 Relates to the impact of a retiree annuity purchase in 2019. The Company purchased a group annuity contract",
+                "independent_context_repr": "'the recognition of non-cash pre-tax settlement charges of $ 3 million. 2 Relates to the impact of a retiree annuity purchase in 2019. The Company purchased a group annuity contract'",
+                "index": 882,
+                "left_codepoint": null,
+                "primary_context": "the recognition of non-cash pre-tax settlement charges of $ 3 million.",
+                "primary_context_repr": "'the recognition of non-cash pre-tax settlement charges of $ 3 million.'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "6d8d81a835fc66f03e9221391742422a216781ff8ced6311ffcb6e2c78e7d81c",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 1336,
+                "preview": "A summary of net periodic benefit cost for our retirement and postretirement plans for the years ended December 31, is as follows: (in millions) Retirement Plans Postretirement Pla"
+              },
+              "primary": {
+                "content_sha256": "7f7fb5099b52364d5aa1a51e832d2f7ccb93873ba658032cd8234f1e7b6f57be",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 882,
+                "preview": "A summary of net periodic benefit cost for our retirement and postretirement plans for the years ended December 31, is as follows: (in millions) Retirement Plans Postretirement Pla"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfNetBenefitCostsTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMzMvZnJhZzo1Yzk5YjhkYjI1ODI0MzVkOTExNzUzNzY0ZjIwODMzNy90ZXh0cmVnaW9uOjVjOTliOGRiMjU4MjQzNWQ5MTE3NTM3NjRmMjA4MzM3XzU5NDU_37852f38-36b6-4614-ad89-89e2465da06c",
+              "first_difference": {
+                "independent_context": "s of $ 7 million. Additionally, Corporate Unallocated expense includes amortization of intangibles from acquisitions of $ 7 million, $ 26 million, and $ 28 million for the years en",
+                "independent_context_repr": "'s of $ 7 million. Additionally, Corporate Unallocated expense includes amortization of intangibles from acquisitions of $ 7 million, $ 26 million, and $ 28 million for the years en'",
+                "index": 4613,
+                "left_codepoint": null,
+                "primary_context": "s of $ 7 million. Additionally, Corporate Unallocated expense includes",
+                "primary_context_repr": "'s of $ 7 million. Additionally, Corporate Unallocated expense includes'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "d3d93b78d5640188e4aafa6d7d59affb40401e9b5156813ac7ec5f222dc9863f",
+                "continued_chain_complete": true,
+                "continued_chain_length": 2,
+                "normalized_character_count": 8145,
+                "preview": "A summary of operating results for the years ended December 31 is as follows: Revenue (in millions) 2021 2020 2019 Ratings $ 4,097 $ 3,606 $ 3,106 Market Intelligence 2,247 2,106 1"
+              },
+              "primary": {
+                "content_sha256": "52fde09904c5b7d423b95216914b0fd804d673fa4ee1fc5943f20cbb2547dbb4",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 4613,
+                "preview": "A summary of operating results for the years ended December 31 is as follows: Revenue (in millions) 2021 2020 2019 Ratings $ 4,097 $ 3,606 $ 3,106 Market Intelligence 2,247 2,106 1"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleOfSegmentReportingInformationBySegmentTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml8xMDYvZnJhZzpjZWJkZDE3ZWRiZjc0YzY3YTZhNGZkOTFmYzcwMGViMi90ZXh0cmVnaW9uOmNlYmRkMTdlZGJmNzRjNjdhNmE0ZmQ5MWZjNzAwZWIyXzIzNDA_8d87eece-d8db-4f72-ad62-b0e252870a01",
+              "first_difference": {
+                "independent_context": "r 31, assuming no further acquisitions or dispositions, is as follows: (in millions) 2022 2023 2024 2025 2026 Amortization expense 1 $ 91 $ 85 $ 82 $ 65 $ 34 1 Amortization expense",
+                "independent_context_repr": "'r 31, assuming no further acquisitions or dispositions, is as follows: (in millions) 2022 2023 2024 2025 2026 Amortization expense 1 $ 91 $ 85 $ 82 $ 65 $ 34 1 Amortization expense'",
+                "index": 174,
+                "left_codepoint": null,
+                "primary_context": "r 31, assuming no further acquisitions or dispositions, is as follows:",
+                "primary_context_repr": "'r 31, assuming no further acquisitions or dispositions, is as follows:'",
+                "right_codepoint": "U+0020"
+              },
+              "independent": {
+                "content_sha256": "b8cbed9c15c6d46730444f53c3b39979fe73291938aae13b5973064c42df31d6",
+                "continued_chain_complete": true,
+                "continued_chain_length": 1,
+                "normalized_character_count": 401,
+                "preview": "Expected amortization expense for intangible assets over the next five years for the years ended December 31, assuming no further acquisitions or dispositions, is as follows: (in m"
+              },
+              "primary": {
+                "content_sha256": "156f2ec4322aeebf0f0ad592a15028d876609aa6b98953cb6de53687ee776414",
+                "continued_chain_complete": false,
+                "continued_chain_length": 1,
+                "normalized_character_count": 174,
+                "preview": "Expected amortization expense for intangible assets over the next five years for the years ended December 31, assuming no further acquisitions or dispositions, is as follows:"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:ScheduleofFiniteLivedIntangibleAssetsFutureAmortizationExpenseTableTextBlock"
+        },
+        {
+          "fact_details": [
+            {
+              "context_ref": "i91cb7ac063b24116ae051f22dbeea99e_D20210101-20211231",
+              "fact_id": "id3VybDovL2RvY3MudjEvZG9jOmE3ZDAxNzE1ZTEyMTQ1YzI4MWIzOThiZjRjMmM1OTQyL3NlYzphN2QwMTcxNWUxMjE0NWMyODFiMzk4YmY0YzJjNTk0Ml85Ny9mcmFnOjk1MTU4YjYyYmEyOTQ2YTFiMjRkNDBiMDkzNWY4NzE0L3RleHRyZWdpb246OTUxNThiNjJiYTI5NDZhMWIyNGQ0MGIwOTM1Zjg3MTRfMzg1Njk_d45670ce-b5a9-47cf-b549-1473ed97d9f0",
+              "first_difference": {
+                "independent_context": "r less. These costs are recorded within selling and general expenses. Other (Income) Expense, net The components of other (income) expense, net for the year ended December 31 are a",
+                "independent_context_repr": "'r less. These costs are recorded within selling and general expenses. Other (Income) Expense, net The components of other (income) expense, net for the year ended December 31 are a'",
+                "index": 10275,
+                "left_codepoint": "U+0044",
+                "primary_context": "r less. These costs are recorded within selling and general expenses. Discontinued Operations 2021 and 2020, respectively. Accumulated amortization of capitalized technology costs ",
+                "primary_context_repr": "'r less. These costs are recorded within selling and general expenses. Discontinued Operations 2021 and 2020, respectively. Accumulated amortization of capitalized technology costs '",
+                "right_codepoint": "U+004F"
+              },
+              "independent": {
+                "content_sha256": "c34e11ce42601a44e0a7664564ceff096872aac138f9e7d48c3e0ea601efdb67",
+                "continued_chain_complete": true,
+                "continued_chain_length": 8,
+                "normalized_character_count": 34884,
+                "preview": "Accounting Policies Nature of operations S&P Global Inc. (together with its consolidated subsidiaries, the “Company,” the “Registrant,” “we,” “us” or “our”) is a leading provider o"
+              },
+              "primary": {
+                "content_sha256": "c0f61c8b4d613c83c2b18cd9babe5f2161a796fcc9c272b7bf518773517c5592",
+                "continued_chain_complete": true,
+                "continued_chain_length": 8,
+                "normalized_character_count": 15908,
+                "preview": "Accounting Policies Nature of operations S&P Global Inc. (together with its consolidated subsidiaries, the “Company,” the “Registrant,” “we,” “us” or “our”) is a leading provider o"
+              }
+            }
+          ],
+          "independent_fact_count": 1,
+          "primary_fact_count": 1,
+          "qname": "us-gaap:SignificantAccountingPoliciesTextBlock"
+        }
+      ],
+      "mismatch_details_truncated": false,
+      "mismatch_qname_count": 16,
+      "mismatching_qnames": [
+        "us-gaap:CommitmentsAndContingenciesDisclosureTextBlock",
+        "us-gaap:DebtDisclosureTextBlock",
+        "us-gaap:DiscontinuedOperationsPolicyTextBlock",
+        "us-gaap:GoodwillAndIntangibleAssetsPolicyTextBlock",
+        "us-gaap:IncomeTaxPolicyTextBlock",
+        "us-gaap:LeaseCostTableTextBlock",
+        "us-gaap:PensionAndOtherPostretirementBenefitsDisclosureTextBlock",
+        "us-gaap:RevenueFromContractWithCustomerPolicyTextBlock",
+        "us-gaap:ScheduleOfAllocationOfPlanAssetsTableTextBlock",
+        "us-gaap:ScheduleOfDebtTableTextBlock",
+        "us-gaap:ScheduleOfDefinedBenefitPlansDisclosuresTextBlock",
+        "us-gaap:ScheduleOfExpectedBenefitPaymentsTableTextBlock",
+        "us-gaap:ScheduleOfNetBenefitCostsTableTextBlock",
+        "us-gaap:ScheduleOfSegmentReportingInformationBySegmentTextBlock",
+        "us-gaap:ScheduleofFiniteLivedIntangibleAssetsFutureAmortizationExpenseTableTextBlock",
+        "us-gaap:SignificantAccountingPoliciesTextBlock"
+      ],
+      "primary_document": "spgi-20211231.htm",
+      "record_key": "0000064040|0000064040-22-000055|10-K|2022-02-08",
+      "source_hash_verified": true
+    }
+  ],
+  "records_checked": 3,
+  "safety": {
+    "automatic_promotion": false,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "paper_only": true
+  },
+  "schema_version": 1,
+  "scientific_evidence": false,
+  "status": "Q220_TEXTBLOCK_DIAGNOSTIC_CAPTURED",
+  "tuning": false
+}
