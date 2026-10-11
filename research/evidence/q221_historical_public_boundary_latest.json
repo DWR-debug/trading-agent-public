@@ -1,0 +1,203 @@
+{
+  "action_date_is_not_public_observation_time": true,
+  "candidate_id": "Q221",
+  "dod_usace_exception_applicability_classified": false,
+  "endpoint": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+  "exact_transaction_class_applicability_proven": false,
+  "far_30_day_exception_applicability_classified": false,
+  "gate_positive": false,
+  "generated_at_utc": "2026-10-11T15:24:14.005460+00:00",
+  "historical_first_public_observation_proven": false,
+  "historical_policy_vintages_reconstructed": true,
+  "holdout_selection": false,
+  "interpretation": "The current USAspending search API returns transaction/action metadata, not the first public-observation timestamp for each historical transaction. No historical PIT boundary is inferred from Action Date, Issued Date, or Last Modified Date.",
+  "last_modified_date_is_not_assumed_to_be_first_public_observation": true,
+  "live_execution": false,
+  "next_gate": "repair the fixed-window source query/transport; do not treat incomplete coverage as a negative economic finding",
+  "performance_authorization": false,
+  "policy_vintage_receipt_fingerprint": "3bf4144b256856e268295f0e0a0a0003027751c2fb3a16e96e984b963d7b3561",
+  "policy_vintage_receipt_verified": true,
+  "promotion": false,
+  "queries": [
+    {
+      "end_date": "2019-12-31",
+      "endpoint": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "request_fingerprint": "9bfa369896a8c6682471a59be94ab4b0ddb84e1d315cb6138ac8efaa24586988",
+      "start_date": "2019-01-01",
+      "status": "QUERY_FAILED",
+      "window": "2019"
+    },
+    {
+      "end_date": "2020-12-31",
+      "endpoint": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "request_fingerprint": "81126cff9051a76f8fbe412050e698d6b27100bb3329185f706e400bf5045e9a",
+      "start_date": "2020-01-01",
+      "status": "QUERY_FAILED",
+      "window": "2020"
+    },
+    {
+      "end_date": "2021-12-31",
+      "endpoint": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "request_fingerprint": "41b49e78bb0e3ff78d1c6a8e07e524a59693db1b139b5b2d2746cbbdcfeb0f5a",
+      "start_date": "2021-01-01",
+      "status": "QUERY_FAILED",
+      "window": "2021"
+    },
+    {
+      "end_date": "2022-12-31",
+      "endpoint": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "request_fingerprint": "8eb21a54d55eaf18a8e09fbd211457d03f4bd73e5902a2db8375cb1f8bbabdbf",
+      "start_date": "2022-01-01",
+      "status": "QUERY_FAILED",
+      "window": "2022"
+    },
+    {
+      "end_date": "2023-12-31",
+      "endpoint": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "request_fingerprint": "36366724b12eb40e724839e8ebf3df5fa651343e99e3425067b6fb843cab871d",
+      "start_date": "2023-01-01",
+      "status": "QUERY_FAILED",
+      "window": "2023"
+    },
+    {
+      "end_date": "2024-12-31",
+      "endpoint": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "request_fingerprint": "e6461861753326c81101be4690dfcbc4436c414bbd8376b9f8c9e37d7475d24e",
+      "start_date": "2024-01-01",
+      "status": "QUERY_FAILED",
+      "window": "2024"
+    },
+    {
+      "end_date": "2025-09-24",
+      "endpoint": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "request_fingerprint": "22f9f9290226b20378945ffc8bfe56e1271ebcb21732ac695a2286b1f83bc33c",
+      "start_date": "2025-01-01",
+      "status": "QUERY_FAILED",
+      "window": "2025_partial"
+    }
+  ],
+  "query_failure_count": 7,
+  "query_failures": [
+    {
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "window": "2019"
+    },
+    {
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "window": "2020"
+    },
+    {
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "window": "2021"
+    },
+    {
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "window": "2022"
+    },
+    {
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "window": "2023"
+    },
+    {
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "window": "2024"
+    },
+    {
+      "error": "RuntimeError:USASPENDING_HTTP_400",
+      "window": "2025_partial"
+    }
+  ],
+  "ranking": false,
+  "receipt_fingerprint": "703bb019f58e794298d2cf695dfe9d934fbd196c0114a0bd39fe294e5e954c5e",
+  "recipient_identity_candidates": [],
+  "recipient_to_issuer_mapping_frozen": false,
+  "record_type": "q221_historical_award_public_boundary_falsification",
+  "revision_lineage_frozen": false,
+  "safety": {
+    "automatic_promotion": false,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "paper_only": true
+  },
+  "sampled_transaction_count": 0,
+  "sampling_contract": {
+    "award_type_codes": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "limit_per_window": 50,
+    "naics_require_prefix": [
+      "541713",
+      "541714",
+      "541715"
+    ],
+    "page": 1,
+    "selection_rule": "First 50 API transactions per fixed calendar window after ascending Action Date sort; no award-amount sorting and no market outcomes.",
+    "sort": [
+      "Action Date",
+      "asc"
+    ],
+    "windows": [
+      {
+        "end": "2019-12-31",
+        "label": "2019",
+        "start": "2019-01-01"
+      },
+      {
+        "end": "2020-12-31",
+        "label": "2020",
+        "start": "2020-01-01"
+      },
+      {
+        "end": "2021-12-31",
+        "label": "2021",
+        "start": "2021-01-01"
+      },
+      {
+        "end": "2022-12-31",
+        "label": "2022",
+        "start": "2022-01-01"
+      },
+      {
+        "end": "2023-12-31",
+        "label": "2023",
+        "start": "2023-01-01"
+      },
+      {
+        "end": "2024-12-31",
+        "label": "2024",
+        "start": "2024-01-01"
+      },
+      {
+        "end": "2025-09-24",
+        "label": "2025_partial",
+        "start": "2025-01-01"
+      }
+    ],
+    "years": [
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025_partial"
+    ]
+  },
+  "schema_version": 1,
+  "scientific_evidence": false,
+  "source_sample_complete": false,
+  "status": "Q221_HISTORICAL_AWARD_SOURCE_SAMPLE_BLOCKED",
+  "transactions": [],
+  "tuning": false,
+  "unique_recipient_identity_count": 0
+}
