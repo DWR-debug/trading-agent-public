@@ -106,6 +106,8 @@ def test_dashboard_uses_one_external_stylesheet_and_preserves_layout_rules():
     assert ".candidate-focus" in css
     assert "@media(max-width:700px)" in css
     assert "#focusSummary" not in css or ".focus-summary" in css
+    assert css.index("/* Existing board-specific theme and component overrides. */") < css.index("/* Base layout rules moved from index.html; kept after the existing board stylesheet to preserve the original CSS cascade. */")
+    assert css.index("/* Base layout rules moved from index.html; kept after the existing board stylesheet to preserve the original CSS cascade. */") < css.index(".refresh-status{")
 
 
 def test_dashboard_refresh_does_not_reset_to_embedded_snapshot_or_overlap_requests():
