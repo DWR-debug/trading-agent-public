@@ -245,6 +245,23 @@ The dashboard was deployed successfully from master 59f231db…, after which the
 
 The unusual-source ideas in [PR #1257](https://github.com/DWR-debug/trading-agent-public/pull/1257) (port satellite/AIS, exact-version CISA KEV × NVD CPE, official FDA state transitions), as well as Q202/Q203, already exist in the project and are not new candidates or a reason to widen automatic dispatch.
 
+### 6.4 New 2026 PIT literature: versioned values *and* versioned representations
+
+Three recent papers sharpen the methodological basis for the existing source-clock work. They are preprints/working papers, not a substitute for independent evidence on any Trading Agent candidate:
+
+- **Wang (2026), “Point-In-Time Data Integrity in Quantitative Equity Research”** ([SSRN 7183438](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7183438), posted August 6, 2026). The paper distinguishes period-end/latest-value, filing-date/latest-value, acceptance-time/original-value and tradable-time/original-value information sets; its bounded pilot reports that period-end activation with later-revised values inflated measured CAPM alpha relative to a strict tradable-time/original-value set in the studied large-cap sample. This supports keeping the original observation and its availability/version lineage together. It does not estimate a correction to Q104, Q220 or Q221.
+- **Lyle, Siano and Yohn (2026 revision), “Re-Adjusted Financial Statement Data: Challenges and Implications for Empirical Research”** ([SSRN 5107985](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5107985), revised February 16, 2026). Using Compustat Snapshot, the authors report frequent retrospective value changes and materially different inferences for a substantial portion of 35 accounting anomalies across data vintages. The data vendor and anomaly universe differ from this project; transfer the *version-control requirement*, not the reported effect sizes.
+- **Chen et al. (2026), “Does Training on Future Data Pay? Look-Ahead Bias in Forecasting with Pretrained Models”** ([arXiv:2609.20554](https://arxiv.org/abs/2609.20554), posted September 17, 2026). The authors compare annual model vintages with origin-aligned PIT forecasts and report that later model vintages often changed forecasts even when numerical input histories were held fixed. This is a preprint, not evidence for model alpha. It motivates an additional boundary if learned representations ever become strategy inputs: the **model/checkpoint and its training-corpus cutoff** must be versioned alongside the data.
+
+**Incremental engineering implication:** PIT applies to the whole transformation chain, not just source rows. For each historical observation that enters a formal compiler, retain the source/accession or transaction identity, source-vintage/hash, parser or transformation version, admissible public-time basis, and revision/parent lineage. If a future candidate uses model-generated features, record the exact model/version and historical training cutoff or fail closed; keep today's AI-worker outputs as design/review input only. The Research OS Evidence Bus v2 now supplies optional fields for source availability basis, evidence URL, vintage and revision parent, but its reachability probe correctly does not claim those clocks.
+
+**Bounded use in the current active three only:**
+- **Q104:I19:** after run [38168441086](https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086) is terminal and the six receipts reconcile, compare a fixed, outcome-blind sample of selected bulk-extract rows with the exact accession-level information table and preserve both hashes. The SEC explicitly says its quarterly extracts are not substitutes for the underlying filings and notes that the March 2024 refresh included fixes for missing information-table records ([official SEC page](https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets)).
+- **Q220:** preserve each as-filed document and the frozen XBRL/TextBlock/presentation mapping as distinct versioned inputs; later amended/restated values must not overwrite the earlier observable prefix.
+- **Q221:** keep policy-document vintages distinct from transaction vintages. The existing positive five-window USAspending policy-PDF receipt is not award-level timestamp, transaction-presence or issuer-mapping proof; the next workpack still needs those exact transaction-level boundaries.
+
+No candidate is added, no active-focus lock is widened, and no performance, holdout, ranking, tuning, promotion, paid-service or live-execution gate changes.
+
 ### Operational disposition
 
 - Active focus remains **Q104:I19, Q220 and Q221**; Q218 stays excluded from automatic dispatch.
