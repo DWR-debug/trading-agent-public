@@ -77,7 +77,7 @@ def textblock_states(document: str) -> dict[str, list[dict[str, Any]]]:
     # Iterate opening tags independently of their content. SEC Inline XBRL filings
     # include self-closing ix:nonNumeric TextBlock facts; a regex that searches for a
     # later closing tag can swallow subsequent facts after a self-closing element.
-    for match in re.finditer(r"(?is)<ix:nonNumeric\\b([^>]*)>", document):
+    for match in re.finditer(r"(?is)<ix:nonNumeric\b([^>]*)>", document):
         attrs = attributes(match.group(1))
         qname = attrs.get("name", "")
         if not qname or not qname.rsplit(":", 1)[-1].lower().endswith("textblock"):
@@ -87,7 +87,7 @@ def textblock_states(document: str) -> dict[str, list[dict[str, Any]]]:
         if opening_is_self_closing:
             fragment = ""
         else:
-            closing = re.search(r"</ix:nonNumeric\\s*>", document[match.end():], re.I)
+            closing = re.search(r"</ix:nonNumeric\s*>", document[match.end():], re.I)
             # A missing closure is not converted into an empty fact. It remains visible
             # as a QName reconciliation gap against the immutable population receipt.
             if closing is None:
