@@ -2,7 +2,10 @@ from copy import deepcopy
 
 import pytest
 
-from automation.q104_i19_13f_historical_identity_census import SHARDS as CENSUS_SHARDS
+from automation.q104_i19_13f_historical_identity_census import (
+    SHARDS as CENSUS_SHARDS,
+    aggregate_issuer_name_cusip_audit,
+)
 from automation.q104_i19_13f_historical_identity_census_merge import (
     EXPECTED_SHARDS,
     build_receipt,
@@ -81,6 +84,31 @@ def make_shard(shard, year, period_start, filing_date, report_period):
         "acceptance_record_count": 1,
         "target_unique_accession_count": 1,
     }
+    archive["issuer_name_cusip_audit"] = {symbol: {} for symbol in SYMBOLS}
+    archive["issuer_name_cusip_audit"]["SPGI"] = {
+        "78409V104": {
+            "status": "SINGLE_NORMALIZED_NAME_OBSERVED_NOT_IDENTITY_PROOF",
+            "identity_resolution_proven": False,
+            "normalized_name_count": 1,
+            "missing_name_rows": 0,
+            "observed_row_count": 1,
+            "observations": [{
+                "normalized_name": "ISSUER SPGI",
+                "row_count": 1,
+                "distinct_accession_count": 1,
+                "accession_samples": [accession],
+                "filing_date_min": filing_date,
+                "filing_date_max": filing_date,
+                "raw_variant_count": 1,
+                "raw_examples": ["Issuer SPGI"],
+                "row_samples": [{
+                    "accession": accession,
+                    "filing_date": filing_date,
+                    "raw_name": "Issuer SPGI",
+                }],
+            }],
+        }
+    }
     payload = {
         "schema_version": "1.0",
         "task_id": f"Q-2026-10-06-104-I19-{shard}",
@@ -138,6 +166,15 @@ def make_shard(shard, year, period_start, filing_date, report_period):
         },
         "next_gate": "historical security-identity closure + SEC acceptance-time join + concept-specific PIT compiler + independent reproduction",
     }
+    payload["issuer_name_cusip_audit"] = aggregate_issuer_name_cusip_audit(payload["archives"], sorted(SYMBOLS))
+    payload["unresolved_issuer_name_cusips"] = []
+    payload["identity_review"] = {
+        "status": "NO_VARIANT_OBSERVED_NOT_PROOF",
+        "unresolved_pair_count": 0,
+        "identity_resolution_proven": False,
+        "interpretation": "Issuer labels are descriptive fields. Variants under one frozen CUSIP are retained for review and do not rewrite the frozen universe or drop rows; a single observed normalized name is not proof of identity.",
+    }
+    payload["identity_resolution_proven"] = False
     return seal(payload)
 
 
@@ -159,6 +196,62 @@ def test_complete_six_shard_census_has_verified_acceptance_join():
         "timezone_inference": False,
     }
     assert receipt["receipt_fingerprint"] == canonical_fingerprint(receipt)
+    assert receipt["identity_review"]["status"] == "NO_VARIANT_OBSERVED_NOT_PROOF"
+    assert receipt["identity_resolution_proven"] is False
+    assert receipt["unresolved_issuer_name_cusips"] == []
+
+
+def test_cross_shard_issuer_name_variants_are_preserved_and_block_pit_compiler():
+    from automation.q104_i19_historical_pit_compiler import validate_census_receipt
+
+    payloads = sample_shards()
+    changed = payloads[1]["archives"][0]
+    changed["target_hits"]["SPGI"]["issuer_names"] = ["Different Issuer Name"]
+    changed["issuer_name_cusip_audit"]["SPGI"]["78409V104"] = {
+        "status": "SINGLE_NORMALIZED_NAME_OBSERVED_NOT_IDENTITY_PROOF",
+        "identity_resolution_proven": False,
+        "normalized_name_count": 1,
+        "missing_name_rows": 0,
+        "observed_row_count": 1,
+        "observations": [{
+            "normalized_name": "DIFFERENT ISSUER NAME",
+            "row_count": 1,
+            "distinct_accession_count": 1,
+            "accession_samples": [payloads[1]["archives"][0]["target_hits"]["SPGI"]["accessions"][0]],
+            "filing_date_min": payloads[1]["archives"][0]["target_hits"]["SPGI"]["filing_dates"][0],
+            "filing_date_max": payloads[1]["archives"][0]["target_hits"]["SPGI"]["filing_dates"][0],
+            "raw_variant_count": 1,
+            "raw_examples": ["Different Issuer Name"],
+            "row_samples": [{
+                "accession": payloads[1]["archives"][0]["target_hits"]["SPGI"]["accessions"][0],
+                "filing_date": payloads[1]["archives"][0]["target_hits"]["SPGI"]["filing_dates"][0],
+                "raw_name": "Different Issuer Name",
+            }],
+        }],
+    }
+    payloads[1]["issuer_name_cusip_audit"] = aggregate_issuer_name_cusip_audit(
+        payloads[1]["archives"], sorted(SYMBOLS)
+    )
+    payloads[1]["unresolved_issuer_name_cusips"] = []
+    payloads[1]["identity_review"] = {
+        "status": "NO_VARIANT_OBSERVED_NOT_PROOF",
+        "unresolved_pair_count": 0,
+        "identity_resolution_proven": False,
+        "interpretation": "Issuer labels are descriptive fields. Variants under one frozen CUSIP are retained for review and do not rewrite the frozen universe or drop rows; a single observed normalized name is not proof of identity.",
+    }
+    payloads[1] = seal(payloads[1])
+
+    receipt = build_receipt(payloads, generated_at_utc="2026-10-09T00:00:00+00:00")
+    audit = receipt["issuer_name_cusip_audit"]["SPGI"]["78409V104"]
+    assert audit["status"] == "UNRESOLVED_ISSUER_NAME_VARIANTS"
+    assert {x["normalized_name"] for x in audit["observations"]} == {
+        "ISSUER SPGI", "DIFFERENT ISSUER NAME"
+    }
+    assert receipt["identity_review"]["status"] == "UNRESOLVED_CUSIP_ISSUER_NAME_VARIANTS_PRESENT"
+    assert receipt["identity_resolution_proven"] is False
+    assert receipt["acceptance_time_join"]["complete"] is True
+    with pytest.raises(RuntimeError, match="ISSUER_NAME_CUSIP_VARIANTS_UNRESOLVED"):
+        validate_census_receipt(receipt)
 
 
 def test_missing_shard_fails_closed():
