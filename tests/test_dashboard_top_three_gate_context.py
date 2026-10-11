@@ -139,7 +139,7 @@ def test_dashboard_publishes_after_active_q104_q220_q221_gate_workflows():
         "Q221 Historical Award Public Boundary Falsification",
     ):
         assert f'"{name}"' in workflow
-    assert 'github.event.workflow_run.head_branch == 'master'' in workflow
+    assert "github.event.workflow_run.head_branch == 'master'" in workflow
     assert '"research/evidence/current_operational_state.json"' in push_block
     assert '"docs/CURRENT_STATUS.md"' in push_block
     assert '"research/evidence/trading_agent_chat_handoff.json"' in push_block
