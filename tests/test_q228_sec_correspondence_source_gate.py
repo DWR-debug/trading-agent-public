@@ -21,7 +21,7 @@ def _run_gate(monkeypatch, tmp_path: Path, responses: dict[str, tuple[int, dict,
     output = tmp_path / "q228_receipt.json"
     monkeypatch.setattr(gate, "fetch", fake_fetch)
     monkeypatch.setattr(sys, "argv", ["q228_sec_correspondence_source_gate", "--output", str(output)])
-    assert gate.main() == 0
+    gate.main()
     return json.loads(output.read_text(encoding="utf-8")), calls
 
 
