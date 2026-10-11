@@ -19,7 +19,7 @@ jobs:
       - name: Checkout dispatched commit
         uses: actions/checkout@v5
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Set up Python
@@ -34,19 +34,19 @@ jobs:
           set -euo pipefail
           python3 automation/q221_monthly_archive_inventory_probe.py \
             --input research/evidence/q221_historical_public_boundary_latest.json \
-            --output "\${RUNNER_TEMP}/q221-monthly-archive-inventory.json"
+            --output "${RUNNER_TEMP}/q221-monthly-archive-inventory.json"
 
       - name: Upload inventory receipt (including fail-closed outcomes)
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q221-monthly-archive-inventory-\${{ github.run_id }}-\${{ github.run_attempt }}
-          path: \${{ runner.temp }}/q221-monthly-archive-inventory.json
+          name: q221-monthly-archive-inventory-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/q221-monthly-archive-inventory.json
           if-no-files-found: error
           retention-days: 14
 
       - name: Keep unsuccessful inventory fail-closed
-        if: \${{ steps.probe.outcome != 'success' }}
+        if: ${{ steps.probe.outcome != 'success' }}
         run: |
           echo "Inventory did not establish a dated archive series; receipt was uploaded for diagnosis."
           exit 1
