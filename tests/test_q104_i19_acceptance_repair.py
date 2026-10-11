@@ -11,6 +11,8 @@ import pytest
 
 from automation import q104_i19_13f_historical_identity_census as census
 from automation.q104_i19_acceptance_repair import (
+    accession_hdr_sgml_url,
+    is_repairable_failure,
     is_transient_failure,
     repair_shard_payload,
     resolve_accession_header,
@@ -158,6 +160,7 @@ def fake_record(meta):
         "acceptance_timezone": "America/New_York",
         "acceptance_clock_basis": "SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
         "source_url": census.accession_header_url(CIK, ACCESSION),
+        "header_source_type": "sec_index_headers",
         "header_sha256": hashlib.sha256(body).hexdigest(),
         "header_bytes": len(body),
     }
@@ -262,3 +265,86 @@ def test_repair_does_not_retry_identity_mismatch():
     )
     assert entries[0]["status"] == "NOT_RETRIED_NONTRANSIENT"
     assert fixed["acceptance_time_join"]["complete"] is False
+
+
+
+def test_legacy_header_404_is_repairable_only_via_same_accession_sgml_fallback():
+    assert is_repairable_failure("SEC_HEADER_HTTP_404")
+    assert is_repairable_failure("MISSING_ACCEPTANCE_DATETIME")
+    assert is_repairable_failure("HEADER_VALIDATION:MISSING_ACCEPTANCE_DATETIME")
+    assert not is_repairable_failure("SEC_HEADER_FALLBACK_HTTP_404")
+    assert not is_repairable_failure("HEADER_VALIDATION:FILER_CIK_MISMATCH")
+    assert not is_repairable_failure("HEADER_VALIDATION:FILING_DATE_MISMATCH")
+
+
+def test_header_resolver_falls_back_to_exact_accession_hdr_sgml_after_index_404():
+    calls = []
+
+    def opener(req, timeout):
+        calls.append(req.full_url)
+        if req.full_url.endswith("-index-headers.html"):
+            raise urllib.error.HTTPError(req.full_url, 404, "not found", hdrs={}, fp=None)
+        assert req.full_url == accession_hdr_sgml_url(CIK, ACCESSION)
+        return Response(make_header())
+
+    meta = {"filer_cik": CIK, "filing_date": FILING_DATE, "period": PERIOD, "submission_type": FORM}
+    record, error, attempts = resolve_accession_header(
+        ACCESSION, meta, NoopLimiter(), retries=3, urlopen=opener, sleep=lambda _: None
+    )
+
+    assert error is None
+    assert attempts == 2
+    assert calls == [
+        census.accession_header_url(CIK, ACCESSION),
+        accession_hdr_sgml_url(CIK, ACCESSION),
+    ]
+    assert record["header_source_type"] == "sec_hdr_sgml_fallback"
+    assert record["source_url"] == accession_hdr_sgml_url(CIK, ACCESSION)
+    assert record["acceptance_datetime"] == "2025-01-15T16:15:42"
+
+
+def test_known_legacy_404_skips_the_missing_html_endpoint():
+    calls = []
+
+    def opener(req, timeout):
+        calls.append(req.full_url)
+        assert req.full_url == accession_hdr_sgml_url(CIK, ACCESSION)
+        return Response(make_header())
+
+    meta = {"filer_cik": CIK, "filing_date": FILING_DATE, "period": PERIOD, "submission_type": FORM}
+    record, error, attempts = resolve_accession_header(
+        ACCESSION, meta, NoopLimiter(), urlopen=opener, sleep=lambda _: None, prefer_sgml=True
+    )
+
+    assert error is None
+    assert attempts == 1
+    assert calls == [accession_hdr_sgml_url(CIK, ACCESSION)]
+    assert record["header_source_type"] == "sec_hdr_sgml_fallback"
+
+
+def test_targeted_repair_routes_frozen_header_404s_to_hdr_sgml(monkeypatch):
+    from automation import q104_i19_acceptance_repair as repair
+
+    blob = make_archive()
+    receipt = make_shard_receipt(blob)
+    receipt["acceptance_failures"][ACCESSION] = "SEC_HEADER_HTTP_404"
+    receipt["archives"][0]["acceptance_failures"][ACCESSION] = "SEC_HEADER_HTTP_404"
+    receipt["receipt_fingerprint"] = canonical_fingerprint(receipt)
+    calls = []
+
+    def opener(req, timeout):
+        calls.append(req.full_url)
+        assert req.full_url == accession_hdr_sgml_url(CIK, ACCESSION)
+        return Response(make_header())
+
+    monkeypatch.setattr(repair.urllib.request, "urlopen", opener)
+    fixed, entries = repair_shard_payload(
+        receipt,
+        rate_limiter=NoopLimiter(),
+        archive_fetcher=lambda _url, _limiter: blob,
+    )
+
+    assert calls == [accession_hdr_sgml_url(CIK, ACCESSION)]
+    assert entries[0]["status"] == "REPAIRED"
+    assert fixed["acceptance_failures"] == {}
+    assert fixed["archives"][0]["target_hits"]["SPGI"]["acceptance_complete"] is True

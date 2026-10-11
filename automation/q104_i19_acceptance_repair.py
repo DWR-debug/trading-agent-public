@@ -31,8 +31,38 @@ RETRYABLE_REASON = re.compile(
 
 
 def is_transient_failure(reason: str) -> bool:
-    """Only retry network/temporary server failures, never identity mismatches."""
+    """Retry only network/temporary server failures, never identity mismatches."""
     return bool(RETRYABLE_REASON.search(str(reason or "")))
+
+
+def is_repairable_failure(reason: str) -> bool:
+    """Repair retryable transport failures and known-missing legacy header routes.
+
+    SEC documents that pre-2015 submissions may lack the HTML index-header endpoint;
+    those accessions require the same filing's .hdr.sgml source instead.
+    """
+    value = str(reason or "").strip()
+    return (
+        is_transient_failure(value)
+        or value == "SEC_HEADER_HTTP_404"
+        or value in {
+            "MISSING_ACCEPTANCE_DATETIME",
+            "HEADER_VALIDATION:MISSING_ACCEPTANCE_DATETIME",
+        }
+    )
+
+
+def accession_hdr_sgml_url(cik: str, accession: str) -> str:
+    """Canonical SEC archive URL for the raw SGML header, including accession dashes."""
+    cik10 = str(cik).strip().zfill(10)
+    acc = str(accession).strip()
+    if not re.fullmatch(r"\d{10}-\d{2}-\d{6}", acc):
+        raise ValueError("SEC_ACCESSION_UNPARSEABLE:" + acc)
+    normalized = acc.replace("-", "")
+    return (
+        f"https://www.sec.gov/Archives/edgar/data/{int(cik10)}/"
+        f"{normalized}/{acc}.hdr.sgml"
+    )
 
 
 def _failure_description(exc: BaseException) -> str:
@@ -53,81 +83,123 @@ def resolve_accession_header(
     retries: int = MAX_HEADER_RETRIES,
     urlopen: Callable[..., Any] | None = None,
     sleep: Callable[[float], None] | None = None,
+    prefer_sgml: bool = False,
 ) -> tuple[dict[str, Any] | None, str | None, int]:
-    """Fetch and validate one header, with bounded retries for transient failures."""
+    """Resolve exact SEC acceptance time; use archived .hdr.sgml when the HTML header route is absent."""
     if retries < 1:
         raise ValueError("Q104_I19_REPAIR_RETRIES_MUST_BE_POSITIVE")
     opener = urlopen or urllib.request.urlopen
     sleeper = sleep or time.sleep
-    url = census.accession_header_url(meta.get("filer_cik", ""), accession)
+    index_url = census.accession_header_url(meta.get("filer_cik", ""), accession)
+    sgml_url = accession_hdr_sgml_url(meta.get("filer_cik", ""), accession)
+    routes = (
+        [("sec_hdr_sgml_fallback", sgml_url)]
+        if prefer_sgml
+        else [("sec_index_headers", index_url), ("sec_hdr_sgml_fallback", sgml_url)]
+    )
+    attempts_total = 0
     last_error = "Q104_I19_REPAIR_NO_ATTEMPT"
 
-    for attempt in range(1, retries + 1):
-        rate_limiter.wait()
-        req = urllib.request.Request(
-            url,
-            headers={
-                "User-Agent": census.UA,
-                "Accept": "text/html,text/plain,*/*",
-                "Accept-Encoding": "identity",
-                "Connection": "close",
-            },
-        )
-        try:
-            with opener(req, timeout=45) as response:
-                body = response.read()
-                status = int(getattr(response, "status", 200))
-            if status != 200:
-                last_error = f"SEC_HEADER_HTTP_{status}"
-                if status not in TRANSIENT_HTTP_CODES or attempt == retries:
-                    return None, last_error, attempt
+    for source_type, url in routes:
+        missing_route = False
+        for attempt in range(1, retries + 1):
+            rate_limiter.wait()
+            attempts_total += 1
+            req = urllib.request.Request(
+                url,
+                headers={
+                    "User-Agent": census.UA,
+                    "Accept": "text/html,text/plain,*/*",
+                    "Accept-Encoding": "identity",
+                    "Connection": "close",
+                },
+            )
+            try:
+                with opener(req, timeout=45) as response:
+                    body = response.read()
+                    status = int(getattr(response, "status", 200))
+            except urllib.error.HTTPError as exc:
+                last_error = _failure_description(exc)
+                if exc.code == 404 and source_type == "sec_index_headers":
+                    missing_route = True
+                    break
+                if exc.code == 404 and source_type == "sec_hdr_sgml_fallback":
+                    return None, "SEC_HEADER_FALLBACK_HTTP_404", attempts_total
+                if exc.code not in TRANSIENT_HTTP_CODES or attempt == retries:
+                    return None, last_error, attempts_total
+                try:
+                    retry_after = float((exc.headers or {}).get("Retry-After", "0"))
+                except (AttributeError, TypeError, ValueError):
+                    retry_after = 0.0
+                sleeper(max(1.0, min(15.0, retry_after or float(2 ** attempt))))
+                continue
+            except (urllib.error.URLError, TimeoutError, OSError) as exc:
+                last_error = _failure_description(exc)
+                if attempt == retries:
+                    return None, last_error, attempts_total
                 sleeper(min(15.0, float(2 ** attempt)))
                 continue
-        except urllib.error.HTTPError as exc:
-            last_error = _failure_description(exc)
-            if exc.code not in TRANSIENT_HTTP_CODES or attempt == retries:
-                return None, last_error, attempt
+
+            if status != 200:
+                last_error = f"SEC_HEADER_HTTP_{status}"
+                if status == 404 and source_type == "sec_index_headers":
+                    missing_route = True
+                    break
+                if status == 404 and source_type == "sec_hdr_sgml_fallback":
+                    return None, "SEC_HEADER_FALLBACK_HTTP_404", attempts_total
+                if status not in TRANSIENT_HTTP_CODES or attempt == retries:
+                    return None, last_error, attempts_total
+                sleeper(min(15.0, float(2 ** attempt)))
+                continue
+
             try:
-                retry_after = float((exc.headers or {}).get("Retry-After", "0"))
-            except (AttributeError, TypeError, ValueError):
-                retry_after = 0.0
-            sleeper(max(1.0, min(15.0, retry_after or float(2 ** attempt))))
-            continue
-        except (urllib.error.URLError, TimeoutError, OSError) as exc:
-            last_error = _failure_description(exc)
-            if attempt == retries:
-                return None, last_error, attempt
-            sleeper(min(15.0, float(2 ** attempt)))
-            continue
+                accepted = census.parse_acceptance_header(
+                    body.decode("utf-8", "replace"),
+                    meta["filer_cik"],
+                    accession,
+                    meta["submission_type"],
+                    meta["filing_date"],
+                )
+            except (ValueError, KeyError) as exc:
+                validation_error = str(exc)
+                if (
+                    source_type == "sec_index_headers"
+                    and validation_error == "MISSING_ACCEPTANCE_DATETIME"
+                ):
+                    last_error = "HEADER_VALIDATION:" + validation_error
+                    missing_route = True
+                    break
+                # Identity, form, accession and filing-date mismatches never fall
+                # back to a second source: contradictory identity is a hard stop.
+                return None, "HEADER_VALIDATION:" + validation_error, attempts_total
 
-        try:
-            accepted = census.parse_acceptance_header(
-                body.decode("utf-8", "replace"),
-                meta["filer_cik"],
-                accession,
-                meta["submission_type"],
-                meta["filing_date"],
-            )
-        except (ValueError, KeyError) as exc:
-            # A 200 response with identity/clock mismatch is not a transient fetch.
-            return None, "HEADER_VALIDATION:" + str(exc), attempt
+            record = {
+                "accession": accession,
+                "filer_cik": str(meta["filer_cik"]).zfill(10),
+                "filing_date": meta["filing_date"],
+                "period": meta.get("period"),
+                "submission_type": meta["submission_type"],
+                "acceptance_datetime": accepted,
+                "acceptance_timezone": "America/New_York",
+                "acceptance_clock_basis": "SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
+                "source_url": url,
+                "header_source_type": source_type,
+                "header_sha256": hashlib.sha256(body).hexdigest(),
+                "header_bytes": len(body),
+            }
+            return record, None, attempts_total
 
-        record = {
-            "accession": accession,
-            "filer_cik": str(meta["filer_cik"]).zfill(10),
-            "filing_date": meta["filing_date"],
-            "period": meta.get("period"),
-            "submission_type": meta["submission_type"],
-            "acceptance_datetime": accepted,
-            "acceptance_timezone": "America/New_York",
-            "acceptance_clock_basis": "SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
-            "source_url": url,
-            "header_sha256": hashlib.sha256(body).hexdigest(),
-            "header_bytes": len(body),
-        }
-        return record, None, attempt
+        if missing_route:
+            if source_type == "sec_index_headers":
+                continue
+            break
+        # A transient failure that exhausts its bounded retries is final. Do not
+        # silently switch source route after a live server/network failure.
+        return None, last_error, attempts_total
 
-    return None, last_error, retries
+    if last_error == "SEC_HEADER_HTTP_404":
+        last_error = "SEC_HEADER_FALLBACK_HTTP_404"
+    return None, last_error, attempts_total
 
 
 def _archive_accession_metadata(
@@ -216,7 +288,7 @@ def repair_shard_payload(
         if not set(failures).issubset(all_accessions):
             raise ValueError("Q104_I19_REPAIR_FAILURE_SET_NOT_IN_ARCHIVE_TARGETS:" + str(archive_record.get("archive", {}).get("url", "")))
 
-        retryable = {accession for accession, reason in failures.items() if is_transient_failure(reason)}
+        retryable = {accession for accession, reason in failures.items() if is_repairable_failure(reason)}
         if not retryable:
             for accession, reason in failures.items():
                 entries.append({
@@ -263,7 +335,19 @@ def repair_shard_payload(
                 })
                 continue
 
-            record, error, attempts = resolver(accession, meta, limiter)
+            if header_resolver is None:
+                prefer_sgml = (
+                    original_error == "SEC_HEADER_HTTP_404"
+                    or original_error in {
+                        "MISSING_ACCEPTANCE_DATETIME",
+                        "HEADER_VALIDATION:MISSING_ACCEPTANCE_DATETIME",
+                    }
+                )
+                record, error, attempts = resolve_accession_header(
+                    accession, meta, limiter, prefer_sgml=prefer_sgml
+                )
+            else:
+                record, error, attempts = resolver(accession, meta, limiter)
             if record is not None:
                 existing_records[accession] = record
                 failures.pop(accession, None)

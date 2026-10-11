@@ -10,13 +10,13 @@
 2. Ensure all six shard receipts exist for the same run and share the same frozen `source_page_sha256`. A Windows runner shutdown can leave a shard without a receipt. Re-run only the missing/failed shard jobs after the parent run is terminal; do not re-run the full workflow.
 3. Download the six receipts and the frozen source-page artifact for that exact run.
 4. The targeted recovery script checks every input shard fingerprint, exact shard universe, source-page bytes/hash, top-level-vs-per-archive failure-set equality, and each affected quarterly archive SHA-256. It recovers CIK, form, filing date and period only from the byte-identical source archive used by the original shard.
-5. It retries only accession headers whose frozen failure reason is transient (HTTP 408/425/429/500/502/503/504, timeout or network transport failure), with a fixed maximum of three header attempts per accession and the existing SEC request limiter. Identity/form/date/acceptance validation errors are not retried.
+5. It retries only frozen transient transport failures and historical header-route gaps. For HTTP 404 or a missing acceptance timestamp on `*-index-headers.html`, it queries the exact accession's official `.hdr.sgml` URL; when the frozen failure already identifies a 404, it goes directly to that fallback without repeating the known-missing endpoint. Each route has at most three attempts under the shared SEC request limiter. Identity, form and filing-date mismatches are never retried or overridden.
 6. It emits patched shard receipts and a separate immutable recovery receipt with original and repaired fingerprints, exact failed/repaired/unresolved accession sets and attempt counts.
 7. The existing strict six-shard merge remains authoritative. If any accession remains unresolved, a shard receipt is missing, the source archive hash differs, or timestamps/identities do not validate, no latest census receipt is published.
 
 ## Why this is not a full Census retry
 
-Acceptance failures occur after the quarterly archives were scanned. Reprocessing all six shards repeats successful archive scans and burns several hours of Windows and hosted capacity. The recovery lane revisits only source archives containing a frozen unresolved accession, verifies those archive bytes against their original SHA-256, and performs bounded header-only retries. If a source archive is no longer byte-identical, the task stops instead of mixing versions.
+Acceptance failures occur after the quarterly archives were scanned. Reprocessing all six shards repeats successful archive scans and burns several hours of Windows and hosted capacity. The recovery lane revisits only source archives containing a frozen unresolved accession, verifies those archive bytes against their original SHA-256, and performs bounded header-only resolution through either the normal HTML header or the official legacy SGML header. Resolved receipts record which header route supplied the acceptance timestamp. If a source archive is no longer byte-identical, the task stops instead of mixing versions.
 
 ## Restart/interruption policy
 
