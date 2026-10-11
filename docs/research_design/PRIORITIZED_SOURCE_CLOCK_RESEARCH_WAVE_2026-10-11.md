@@ -317,3 +317,12 @@ Reconsider a fourth runner only if a future receipt-cleared, focus-approved work
 Across SEC holdings, as-filed XBRL and USAspending, the reusable unit is not merely a numeric value or a dated filing. It is a versioned observation: **entity/accession or transaction identity + original value/representation + defensible public-time basis + source vintage/hash + transformation/parser version + correction lineage**. The Evidence Bus v2 supports this provenance envelope, but a producer must still establish the semantics of its source clock. Shared engineering can improve several candidates; it does not transfer validity or performance evidence from one candidate to another.
 
 **Disposition:** active focus remains exactly Q104:I19, Q220 and Q221. No new runner is requested; no candidate or workpack is automatically added; no performance, holdout, ranking, tuning, promotion, paid provider or live-execution authority is changed.
+
+
+## 9. Q220 stale-route queue correction — 2026-10-12
+
+A live workflow inspection found a concrete gap in the Q220 resource gate. In run [38179574127](https://github.com/DWR-debug/trading-agent-public/actions/runs/38179574127), `receipt_gate` succeeded and `population` correctly skipped after emitting `SKIP_CURRENT_POSITIVE_RECEIPT`, but `route_probe` had no `needs: [receipt_gate]` dependency and remained pending while holding a hosted Ubuntu concurrency group. Separately, scheduled run [38178545899](https://github.com/DWR-debug/trading-agent-public/actions/runs/38178545899), created on an older workflow revision before the current positive-receipt gate, still had its population job queued against a Windows runner.
+
+This PR fixes the **future-workflow** bug by making `route_probe` depend on a successful `receipt_gate` and requiring `run_population == true`. Thus the same fresh, version-bound positive receipt that suppresses Windows population repair also suppresses the ancillary hosted route probe. The new test verifies that contract. The already-enqueued older run is not canceled by a new commit; it is tracked separately and must not be assumed canceled. No stale run is relaunched or duplicated by this PR.
+
+Operationally, this is direct evidence that some apparent queue pressure is stale/nonessential work rather than lack of Windows hardware. A fourth Windows runner cannot free the blocked hosted Ubuntu route-probe slot, and the positive Q220 receipt already shows the population gate is closed. Existing scientific gates remain unchanged.
