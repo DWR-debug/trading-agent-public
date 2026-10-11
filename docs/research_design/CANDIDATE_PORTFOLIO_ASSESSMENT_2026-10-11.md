@@ -52,3 +52,13 @@ Run [38165018398](https://github.com/DWR-debug/trading-agent-public/actions/runs
 - Keep paid APIs/services out of scope absent separate permission.
 
 Safety invariants are unchanged: PAPER_ONLY=True; LIVE_TRADING_ENABLED=False; ORDERS_ENABLED=False; AUTOMATIC_PROMOTION=False.
+
+
+## Current receipt-chain reconciliation — 2026-10-11 21:56 UTC
+
+This operational addendum supersedes older “next gate” statements above where later immutable receipts have closed them. It does not rewrite the historical record of the earlier runs.
+
+- **Q104:I19:** run [38168441086](https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086) remains active. All six shards were still in their historical-shard steps at the latest check. Reconcile receipts only after terminal status; no duplicate or full restart.
+- **Q220:** the frozen population receipt (fingerprint `158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543`), historical PIT compiler (fingerprint `dc0ba88133fec8a362cd2a135e452fb8ea24a45349bedf4398113c37bc0fed61`), and independent PIT reproduction (fingerprint `4cdbcac030dced54d52a25235e7fd39426065fe1f5b50b1952314ae9a92d41d4`) are linked and positive across the frozen 55 records. Independent verification reports zero source-hash, identity, acceptance-prefix, structured-fact, TextBlock or change-state mismatches. Five no-TextBlock originals remain explicit missing states. **Next:** define a bounded adversarial robustness and formal trial-governance reconciliation workpack. No performance or promotion authorization; no ETA or auto-dispatch until that workpack is frozen.
+- **Q221:** the latest policy-vintage receipt covers the five fixed boundary windows but sets award-level public observation and historical applicability to false. The next workpack must identify exact fixed transaction classes, first-observation evidence, recipient-to-issuer mapping, DoD/USACE and FAR exceptions, and amendment/correction lineage. Policy document publication dates do not prove a given award's first public observation.
+- The active execution lock remains **Q104:I19, Q220, Q221**. Q218 remains excluded. Safety remains PAPER_ONLY=True; LIVE_TRADING_ENABLED=False; ORDERS_ENABLED=False; AUTOMATIC_PROMOTION=False.
