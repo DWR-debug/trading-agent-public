@@ -140,10 +140,18 @@ def agency_class(row: dict[str, Any]) -> str:
 
 
 def identity_key(row: dict[str, Any]) -> str:
+    # USAspending's generated_internal_id/internal_id can repeat across award
+    # modifications. Prefer a transaction-level natural key including Mod and
+    # Action Date; award-level IDs alone are not unique transaction identities.
+    award_id = text_field(row.get("Award ID"))
+    mod = text_field(row.get("Mod"))
+    action_date = text_field(row.get("Action Date"))
+    recipient_id = text_field(row.get("recipient_id"))
+    recipient_uei = text_field(row.get("Recipient UEI"))
+    if award_id or action_date:
+        return "|".join((award_id, mod, action_date, recipient_id, recipient_uei))
     stable = text_field(row.get("generated_internal_id")) or text_field(row.get("internal_id"))
-    if stable:
-        return stable
-    return "|".join(text_field(row.get(k)) for k in ("Award ID", "Mod", "Action Date", "recipient_id", "Recipient UEI"))
+    return stable
 
 
 def run_gate(

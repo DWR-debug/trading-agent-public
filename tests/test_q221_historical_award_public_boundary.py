@@ -14,6 +14,7 @@ from automation.q221_historical_award_public_boundary import (
     default_post,
     query_payload,
     run_gate,
+    identity_key,
 )
 
 
@@ -151,3 +152,40 @@ def test_q221_http_400_error_body_is_preserved_for_bounded_diagnostics(monkeypat
     )
     with pytest.raises(RuntimeError, match=r"USASPENDING_HTTP_400:.*unsupported field name"):
         default_post(ENDPOINT, query_payload("2021-01-01", "2021-12-31"))
+
+
+def test_q221_distinguishes_modifications_sharing_awardwide_internal_ids():
+    first = _transaction(2021)
+    second = dict(first)
+    second["Mod"] = "P00002"
+    second["Action Date"] = "2021-06-04"
+    # The award-wide internal identifiers repeat, as they can across modifications.
+    assert second["generated_internal_id"] == first["generated_internal_id"]
+    assert second["internal_id"] == first["internal_id"]
+    assert identity_key(first) != identity_key(second)
+
+
+def test_q221_sample_keeps_distinct_modifications_sharing_awardwide_ids(tmp_path):
+    policy = _policy()
+
+    def post(url, payload):
+        year = int(payload["filters"]["time_period"][0]["start_date"][:4])
+        first = _transaction(year)
+        second = dict(first)
+        second["Mod"] = "P00002"
+        second["Action Date"] = f"{year}-06-04"
+        # These two records belong to the same award but are distinct transactions.
+        second["generated_internal_id"] = first["generated_internal_id"]
+        second["internal_id"] = first["internal_id"]
+        return 200, json.dumps({
+            "results": [first, second],
+            "page_metadata": {"page": 1, "hasNext": False},
+        }).encode()
+
+    receipt = run_gate(tmp_path / "receipt.json", policy, post=post, pause_seconds=0)
+    assert receipt["source_sample_complete"] is True
+    assert receipt["query_failure_count"] == 0
+    assert receipt["sampled_transaction_count"] == len(WINDOWS) * 2
+    assert receipt["gate_positive"] is False
+    assert receipt["historical_first_public_observation_proven"] is False
+    assert len({row["transaction_key"] for row in receipt["transactions"]}) == len(WINDOWS) * 2
