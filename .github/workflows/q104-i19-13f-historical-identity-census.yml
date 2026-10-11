@@ -25,7 +25,11 @@ jobs:
     outputs:
       proceed: ${{ steps.guard.outputs.proceed }}
     steps:
-      - name: Suppress duplicate push-triggered census
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+      - name: Suppress unauthorised push-triggered census
         id: guard
         env:
           GH_TOKEN: ${{ github.token }}
@@ -35,6 +39,43 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             echo "proceed=true" >> "$GITHUB_OUTPUT"
             echo "Q104_CENSUS_DISPATCH=WORKFLOW_DISPATCH"
+            exit 0
+          fi
+          if [ "$GITHUB_EVENT_NAME" != "push" ]; then
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            echo "Q104_CENSUS_TRIGGER_SUPPRESSED=UNSUPPORTED_EVENT"
+            exit 0
+          fi
+          trigger_path="research/run_requests/q104_i19_census_recovery.trigger"
+          before_sha="$(jq -r '.before // empty' "$GITHUB_EVENT_PATH")"
+          if [ -z "$before_sha" ] || ! git cat-file -e "${before_sha}^{commit}" 2>/dev/null; then
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            echo "Q104_CENSUS_TRIGGER_SUPPRESSED=BASE_COMMIT_UNAVAILABLE"
+            exit 0
+          fi
+          if ! git diff --name-only "$before_sha" "$GITHUB_SHA" -- "$trigger_path" | grep -Fxq "$trigger_path"; then
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            echo "Q104_CENSUS_PUSH_SUPPRESSED=RECOVERY_TRIGGER_UNCHANGED"
+            exit 0
+          fi
+          for required_flag in \
+            "RUN_Q104_I19_CENSUS_RECOVERY=true" \
+            "SOURCE_RECEIPT_REUSE=false" \
+            "PERFORMANCE=false" \
+            "HOLDOUT_SELECTION=false" \
+            "RANKING=false" \
+            "TUNING=false" \
+            "PROMOTION=false" \
+            "LIVE_EXECUTION=false"; do
+            if ! grep -Fxq "$required_flag" "$trigger_path"; then
+              echo "proceed=false" >> "$GITHUB_OUTPUT"
+              echo "Q104_CENSUS_TRIGGER_SUPPRESSED=SAFETY_FLAG_MISSING"
+              exit 0
+            fi
+          done
+          if ! grep -Eq '^TRIGGER_SEQUENCE=20[0-9]{2}-[0-9]{2}-[0-9]{2}T' "$trigger_path"; then
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            echo "Q104_CENSUS_TRIGGER_SUPPRESSED=TRIGGER_SEQUENCE_MISSING"
             exit 0
           fi
           for status in in_progress queued pending; do
@@ -50,7 +91,7 @@ jobs:
             fi
           done
           echo "proceed=true" >> "$GITHUB_OUTPUT"
-          echo "Q104_CENSUS_DISPATCH=ELIGIBLE"
+          echo "Q104_CENSUS_DISPATCH=EXPLICIT_RECOVERY_TRIGGER"
   source_snapshot:
     needs: [recovery_guard]
     if: github.repository == 'DWR-debug/trading-agent-public' && needs.recovery_guard.outputs.proceed == 'true'
