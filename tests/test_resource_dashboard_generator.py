@@ -834,3 +834,57 @@ def test_enrich_work_durations_exposes_child_job_runtime_and_waiting_bound_separ
     assert "upper_bound" in waiting["queue_elapsed_basis"]
     assert active["job_elapsed_seconds"] >= 0
     assert active["remaining_seconds"] is not None
+
+
+def test_active_q104_matrix_keeps_failed_shard_visible_without_counting_it_as_capacity(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    run = {
+        "id": 99001,
+        "name": "Q104 I19 Historical 13F Identity Census",
+        "status": "in_progress",
+        "created_at": "2026-10-12T10:00:00Z",
+        "run_started_at": "2026-10-12T10:00:10Z",
+        "event": "workflow_dispatch",
+        "html_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/99001",
+    }
+    job_rows = [
+        {
+            "name": "census (2023, ubuntu-24.04, shard 2)",
+            "status": "completed",
+            "conclusion": "failure",
+            "started_at": "2026-10-12T10:00:20Z",
+            "completed_at": "2026-10-12T10:15:20Z",
+            "runner_name": "GitHub Actions 1000042253",
+        },
+        {
+            "name": "census (2019-2020, Windows, shard C)",
+            "status": "in_progress",
+            "conclusion": None,
+            "started_at": "2026-10-12T10:00:20Z",
+            "completed_at": None,
+            "runner_name": "LHT-N133732",
+        },
+        {
+            "name": "census (2021-2022, Ubuntu, shard 1)",
+            "status": "queued",
+            "conclusion": None,
+            "started_at": None,
+            "completed_at": None,
+            "runner_name": None,
+        },
+    ]
+    monkeypatch.setattr(dashboard, "jobs_for_run", lambda _run_id: job_rows)
+    work = dashboard.current_work_from_runs([run])
+
+    failed = next(row for row in work if row.get("job_conclusion") == "failure")
+    assert failed["job_status"] == "completed"
+    assert failed["run_status"] == "in_progress"
+    assert failed["job"] == "census (2023, ubuntu-24.04, shard 2)"
+
+    capacity = dashboard.candidate_capacity_snapshot("Q104:I19", work)
+    assert capacity["active_capacity_count"] == 1
+    assert capacity["waiting_capacity_count"] == 1
+    assert len(work) == 3
+
+
