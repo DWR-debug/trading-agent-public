@@ -1,0 +1,53 @@
+{
+  "record_type": "q220_stale_run_retirement_request",
+  "schema_version": 1,
+  "candidate_id": "Q220",
+  "purpose": "One-shot removal of two precisely identified obsolete queued workflow runs after the current full Q220 receipt chain is still positive.",
+  "created_at_utc": "2026-10-11T23:03:13Z",
+  "required_receipt_fingerprints": {
+    "population_receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+    "compiler_receipt_fingerprint": "dc0ba88133fec8a362cd2a135e452fb8ea24a45349bedf4398113c37bc0fed61",
+    "independent_receipt_fingerprint": "4cdbcac030dced54d52a25235e7fd39426065fe1f5b50b1952314ae9a92d41d4"
+  },
+  "targets": [
+    {
+      "run_id": 38179574127,
+      "expected_workflow_name": "Q220 As-Filed SEC-XBRL Population Repair",
+      "expected_head_sha": "ef526eac707f860bcceabc9aa3bab26a521882ca",
+      "expected_event": "push",
+      "allowed_run_statuses": [
+        "pending"
+      ],
+      "expected_active_job_names": [
+        "route_probe"
+      ],
+      "reason": "Current positive receipt gate skipped population, but the independent hosted route_probe remained pending without depending on the gate."
+    },
+    {
+      "run_id": 38178545899,
+      "expected_workflow_name": "Q220 As-Filed SEC-XBRL Population Repair",
+      "expected_head_sha": "71189a8063a09b9463b385701e674fe6a4b01100",
+      "expected_event": "schedule",
+      "allowed_run_statuses": [
+        "queued"
+      ],
+      "expected_active_job_names": [
+        "population"
+      ],
+      "reason": "Older pre-receipt-gate scheduled population job remained queued while the current positive receipt chain makes that rebuild obsolete."
+    }
+  ],
+  "safety": {
+    "only_cancel_workflow_runs_if_status_is_queued_or_pending": true,
+    "exact_run_id_sha_event_name_and_active_job_set_must_match": true,
+    "require_current_positive_population_compiler_independent_chain": true,
+    "running_workflows_never_cancelled": true,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  }
+}

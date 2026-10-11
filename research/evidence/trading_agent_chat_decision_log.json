@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_type": "trading_agent_chat_decision_log",
   "purpose": "Durable operational continuity for future Trading Agent OS chats. Entries are operational notes, not scientific evidence, performance authorization, ranking, or live-trading permission.",
-  "updated_at_utc": "2026-10-11T21:56:43Z",
+  "updated_at_utc": "2026-10-11T23:00:24Z",
   "safety": {
     "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
@@ -11,6 +11,39 @@
     "paid_usage_usd": 0
   },
   "entries": [
+    {
+      "date_utc": "2026-10-11T23:00:24Z",
+      "candidate": "Q220 QUEUE GATE",
+      "status": "FIXED IN WORKFLOW · OLD QUEUED RUN STILL VISIBLE",
+      "title": "Positive Q220 receipt now gates both population and route_probe",
+      "decision": "Run 38179574127 passed receipt_gate with a current positive population receipt and skipped the Windows population job, yet route_probe had no needs dependency and remained pending in the hosted Ubuntu concurrency group. An additional older scheduled run 38178545899 still has a population job queued from an older workflow revision. This shows some queue pressure is stale/ancillary work, not missing Windows capacity. The new workflow revision makes route_probe depend on a successful receipt_gate and run only when run_population=true. Existing already-queued runs are not retroactively canceled by this PR.",
+      "next_action": "Do not force a Q220 population rebuild. Monitor runs 38179574127 and 38178545899; preserve the positive 55-record receipt chain. Future route probes execute only when the fixed-population repair gate says work is required.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/blob/master/.github/workflows/q220-as-filed-xbrl-population.yml",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38179574127",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-11T22:58:44Z",
+      "candidate": "Q104:I19 SEC SUBMISSIONS CLOCK AUDIT",
+      "status": "BOUNDED SOURCE-CLOCK VALIDATION PENDING",
+      "title": "SEC submissions JSON acceptanceDateTime needs comparison with original SGML",
+      "decision": "Official SEC documentation confirms real-time per-filer submissions JSON and a separately republished nightly all-filer submissions.zip. A 2026-10-08 edgartools maintainer commit reports that acceptanceDateTime's trailing-Z timezone interpretation disagreed with the original SGML header/SEC index in one Apple 10-Q example and says offsets vary by filer/day. This is third-party evidence, not an official SEC correction and not proof the Q104 13F sample is affected. The original SGML header remains the reference until a fixed, outcome-blind cross-source comparison supports any change.",
+      "next_action": "After Q104 run 38168441086 and the existing targeted recovery are terminal, compare a predeclared sample of identical accessions across submissions JSON acceptanceDateTime, original .hdr.sgml ACCEPTANCE-DATETIME and SEC filing index. Consider daily Oldloads only as a request-efficient fallback for proven missing accessions if dates cluster and archive size/coverage semantics check out. Do not impute a fixed timezone offset or replace the frozen acceptance clock.",
+      "url": "https://github.com/dgunning/edgartools/commit/246010946cdbe588b0397643fb1598a04fe0cad6",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-11T22:58:44Z",
+      "candidate": "FOURTH RUNNER",
+      "status": "DEFER · MEASURED WINDOWS-SPECIFIC QUEUE REQUIRED",
+      "title": "Fourth self-hosted Windows runner not justified yet",
+      "decision": "Latest dashboard snapshot generated from master 7b577e3880d5d8e7a953af88fec9616378afb9b8 at 2026-10-11T22:57:34Z shows Windows self-hosted A/B/C occupied by active Q104 census jobs (occupancy basis ACTIVE_WORKFLOW_ASSIGNMENT; runner inventory unavailable; zero free physical slots). The existing six-shard Q104 matrix is already running. Its 2023 hosted-x64 shard failed on 22 transient SEC HTTP 503/timeouts out of 14,502 target accessions, which calls for targeted recovery, not more Windows concurrency. Follow-on Q104 compiler/reproduction are hosted x64/ARM64; Q220 is at adversarial/governance next gate; Q221 needs a new award-level workpack. Shared SEC request pacing already approaches the published 10 requests/second cap.",
+      "next_action": "Let Q104 reach terminal state and its existing recovery/targeted-header repair run. Reconsider an extra Windows runner only if a future focus-approved, receipt-cleared Windows-specific workpack remains queued while all three existing Windows runners are demonstrably occupied and a global SEC/request budget is specified. Keep untrusted PR code and valuable secrets off a personal work PC.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/blob/master/docs/research_design/PRIORITIZED_SOURCE_CLOCK_RESEARCH_WAVE_2026-10-11.md",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086",
+      "scientific_evidence": false
+    },
     {
       "date_utc": "2026-10-11T21:56:43Z",
       "candidate": "Q220 PIT RECEIPT RECONCILIATION",

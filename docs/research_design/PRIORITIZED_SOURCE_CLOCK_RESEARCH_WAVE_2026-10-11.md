@@ -279,3 +279,50 @@ The NBER working paper [*The Government Patent Register: A New Resource for Meas
 **PIT restriction:** the consolidated register was compiled retrospectively. Its current appearance in a register cannot be treated as contemporaneous public information at a historical award cutoff. Any future use must locate the exact patent record and use its own original publication/grant/publication-vintage evidence, while separately verifying the availability of the government-rights/licensing field. Do not infer award causality or transaction timing from the current register alone.
 
 **Disposition:** reserve for a later Q221 identity/capability workpack only after the award-level source clock, fixed transaction classes and recipient-to-issuer map have a defensible contract. Active focus stays Q104:I19, Q220 and Q221; no candidate expansion or dispatch is authorized by this source lead.
+
+
+## 8. SEC submission bulk clock and fourth-runner capacity decision — 2026-10-12
+
+### 8.1 A faster SEC metadata path is plausible, but acceptance time must be cross-checked
+
+The SEC's official [EDGAR APIs guide](https://www.sec.gov/search-filings/edgar-application-programming-interfaces) states that company submission JSON is updated throughout the day as filings are disseminated, with typical processing delay under one second (occasionally longer at peak load). The same guide says the consolidated `submission.zip` is republished nightly at approximately 3:00 a.m. ET. These are two different observation products: a real-time per-filer submission-history JSON and a derived nightly all-filer snapshot. A bulk snapshot is efficient for discovery and join preparation; its nightly generation time must not be mistaken for a filing's first-public time.
+
+A recent third-party parser report adds a specific caution. On 2026-10-08, the `edgartools` maintainer committed [a documented acceptanceDateTime timezone issue](https://github.com/dgunning/edgartools/commit/246010946cdbe588b0397643fb1598a04fe0cad6), reporting a disagreement between a submissions-JSON timestamp and the original SGML header/SEC index for an Apple 10-Q, with offsets said to vary by filer and date. This is a maintainer report, not an official SEC correction and not evidence that the 13F target headers in Q104 are affected. It is strong enough to prohibit replacing the current original-header source clock with the JSON field without a controlled validation.
+
+**Bounded test after Q104's current run and existing receipt repair are terminal:**
+1. Freeze an outcome-blind sample across predeclared years, CIKs, time-of-day bands and after-5:30 p.m. ET cases.
+2. For exactly the same accession, preserve and compare the submissions JSON `acceptanceDateTime`, the original accession `.hdr.sgml` `ACCEPTANCE-DATETIME`, and the SEC filing index date/time where present.
+3. Record raw URLs, source retrieval time, hashes, parser/schema version, timezone interpretation, missingness and per-field disagreement; do not derive a fixed offset from the first mismatch.
+4. Keep SGML headers as the acceptance-time reference unless the comparison provides form-specific, independently reviewed evidence supporting a change. Do not use the nightly ZIP timestamp, reporting period or later bulk-extract refresh as a substitute.
+
+A further official fallback exists: [SEC Accessing EDGAR Data](https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data) documents `/Archives/edgar/Oldloads/` as daily concatenated archives of public submissions complete with filing headers, and `/Archives/edgar/Feed/` as daily compressed feed archives. These are a possible lower-request fallback for *known missing accessions clustered by date*. They are not yet a proven replacement for the current targeted-repair path: file size, target-date clustering, exact coverage and revision/removal semantics must first be checked, and the SEC's 10-requests/second fair-access cap still applies.
+
+### 8.2 Fourth Windows runner — defer until a measured Windows-specific queue exists
+
+**Decision: do not add the fourth self-hosted Windows runner now.** The latest published dashboard snapshot was generated at `2026-10-11T22:57:34Z` from master `7b577e3880d5d8e7a953af88fec9616378afb9b8`, after the current-status synchronizer. It now reports Windows self-hosted A/B/C as occupied from live assigned Q104 workflow jobs (`runner_busy_basis=ACTIVE_WORKFLOW_ASSIGNMENT`) and shows zero free physical slots; runner inventory itself remains unavailable to the dashboard token. That is evidence of occupancy, not a guess from a missing inventory record.
+
+The active Q104 census run [38168441086](https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086) already has its six-shard matrix underway. Its 2023 hosted-x64 shard found 14,502 target accessions; 14,480 headers were read and 22 failed on transient HTTP 503/timeouts. The existing workflow owns terminal receipt aggregation, missing-shard recovery and targeted acceptance-header repair; do not start a second census or try to occupy a new PC with the current workpack.
+
+A fourth Windows machine would not change the already-running six-shard matrix retroactively and would not fix the hosted-x64 shard failure. The current request pacing is shared across all six SEC shards: at roughly 0.67 seconds between requests per shard, unconstrained parallelism is already near the SEC's published 10 requests/second ceiling. Increasing request concurrency without a global rate budget may increase 503/timeouts rather than throughput.
+
+The receipt-driven follow-on path also argues against new Windows hardware at this point:
+- **Q104:I19:** after Census/recovery closes, the historical PIT compiler runs on GitHub-hosted Ubuntu x64, then independent reproduction on GitHub-hosted ARM64.
+- **Q220:** the 55-record population, historical-prefix compiler and independent PIT reproduction receipts are positive; the next gate is bounded adversarial robustness plus formal trial-governance reconciliation, with performance authorization still closed. No new Windows-only job is authorized by the positive receipt chain.
+- **Q221:** the five policy-document vintages are source feasibility only. The award-level first-public boundary workpack still needs frozen transaction classes, exact public-observation evidence, correction lineage and recipient-to-issuer mapping; keep it non-dispatchable until that contract is explicit.
+
+Reconsider a fourth runner only if a future receipt-cleared, focus-approved workpack genuinely requires the Windows label and remains queued while the existing three Windows runners are demonstrably occupied, with a measured waiting-time benefit that exceeds host maintenance and security cost. Any added runner should use dedicated labels, least privilege and trusted-workflow-only access; do not route untrusted pull-request code or valuable secrets onto a personal work PC. A runner is capacity infrastructure, not research evidence, and its existence must never expand the three-candidate focus or weaken a gate.
+
+### 8.3 Methodological implication across the active three
+
+Across SEC holdings, as-filed XBRL and USAspending, the reusable unit is not merely a numeric value or a dated filing. It is a versioned observation: **entity/accession or transaction identity + original value/representation + defensible public-time basis + source vintage/hash + transformation/parser version + correction lineage**. The Evidence Bus v2 supports this provenance envelope, but a producer must still establish the semantics of its source clock. Shared engineering can improve several candidates; it does not transfer validity or performance evidence from one candidate to another.
+
+**Disposition:** active focus remains exactly Q104:I19, Q220 and Q221. No new runner is requested; no candidate or workpack is automatically added; no performance, holdout, ranking, tuning, promotion, paid provider or live-execution authority is changed.
+
+
+## 9. Q220 stale-route queue correction — 2026-10-12
+
+A live workflow inspection found a concrete gap in the Q220 resource gate. In run [38179574127](https://github.com/DWR-debug/trading-agent-public/actions/runs/38179574127), `receipt_gate` succeeded and `population` correctly skipped after emitting `SKIP_CURRENT_POSITIVE_RECEIPT`, but `route_probe` had no `needs: [receipt_gate]` dependency and remained pending while holding a hosted Ubuntu concurrency group. Separately, scheduled run [38178545899](https://github.com/DWR-debug/trading-agent-public/actions/runs/38178545899), created on an older workflow revision before the current positive-receipt gate, still had its population job queued against a Windows runner.
+
+This PR fixes the **future-workflow** bug by making `route_probe` depend on a successful `receipt_gate` and requiring `run_population == true`. Thus the same fresh, version-bound positive receipt that suppresses Windows population repair also suppresses the ancillary hosted route probe. The new test verifies that contract. The already-enqueued older run is not canceled by a new commit; it is tracked separately and must not be assumed canceled. No stale run is relaunched or duplicated by this PR.
+
+Operationally, this is direct evidence that some apparent queue pressure is stale/nonessential work rather than lack of Windows hardware. A fourth Windows runner cannot free the blocked hosted Ubuntu route-probe slot, and the positive Q220 receipt already shows the population gate is closed. Existing scientific gates remain unchanged.
