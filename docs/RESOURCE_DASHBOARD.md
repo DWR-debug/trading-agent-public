@@ -90,3 +90,10 @@ The candidate pipeline no longer uses expected job duration as a progress indica
 The resource card distinguishes four operational states. **ARBEITET** requires at least one visible active research job for that resource. A busy self-hosted runner without a mapped research job is shown as **RUNNER BESETZT** and does not masquerade as research work. When there is no active research job but a scheduled executable next-gate exists, the state is **AUTO-DISPATCH BEREIT**. **VERFÜGBAR** is reserved for capacity with neither active research work nor a pending executable plan.
 
 Planned work never increments active-job or research-job counts. Runner `busy` is surfaced separately from `current_assignments`, so incomplete runner/job visibility cannot convert planned or unknown work into false active research.
+
+
+## Runner-presence and queue semantics — 2026-10-12
+
+The dashboard distinguishes **running research assignments**, **queued research jobs**, and the actual runner inventory. A queued job awaiting assignment does not make a physical runner “busy” or “operating.” When the separate GitHub runner inventory is unavailable, the board reports the runner state as unknown and does not advertise free physical slots. A currently running workflow assignment can establish occupancy even if runner inventory is missing; the output records this evidence basis explicitly.
+
+This distinction is important for deciding whether more hardware would add useful parallelism. Research-runner absence in the inventory endpoint is not evidence of an idle runner, and a queue entry is not evidence that the runner has started executing. These fields measure operations only and do not alter the existing dispatch policy or research authorization boundaries.

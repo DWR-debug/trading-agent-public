@@ -662,11 +662,13 @@ def test_pull_request_validation_runs_are_not_counted_as_research_capacity():
         "lane": "VALIDATION / CI",
         "task": "Q219 PIT Readiness validation",
         "job": "test",
+        "status": "in_progress",
     }, {
         "resource": "GitHub-hosted Ubuntu x64",
         "lane": "FRONTIER DISCOVERY",
         "task": "Q104 I19 Historical 13F Identity Census",
         "job": "hosted census",
+        "status": "in_progress",
     }]
     resource = {
         "name": "GitHub-hosted Ubuntu x64",

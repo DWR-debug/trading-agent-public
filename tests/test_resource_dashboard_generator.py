@@ -59,7 +59,9 @@ def test_dashboard_capacity_state_is_explicit():
     physical = {"type":"physical"}
     cloud = {"type":"cloud"}
     assert capacity_state(physical, {"status":"online","busy":True}, []) == "available"
-    assert capacity_state(physical, {"status":"online","busy":True}, [{"lane":"FRONTIER DISCOVERY"}]) == "operating"
+    assert capacity_state(physical, {"status":"online","busy":True}, [{"lane":"FRONTIER DISCOVERY","status":"in_progress"}]) == "operating"
+    assert capacity_state(physical, {"status":"online","busy":False}, [{"lane":"FRONTIER DISCOVERY","status":"queued"}]) == "available"
+    assert capacity_state(physical, None, [{"lane":"FRONTIER DISCOVERY","status":"queued"}]) == "unknown"
     assert capacity_state(physical, {"status":"online","busy":False}, []) == "available"
     assert capacity_state(physical, None, []) == "unknown"
     assert capacity_state(cloud, None, []) == "available"
@@ -85,6 +87,72 @@ def test_dashboard_runner_busy_does_not_inflate_research_work():
     assert enriched["runner_busy"] is True
     assert enriched["research_slots_in_use"] == 1
     assert enriched["research_slots_free"] == 0
+
+
+def test_dashboard_does_not_report_missing_runner_inventory_as_idle():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    unknown = enrich_resources([resource], [], [])[0]
+    assert unknown["capacity_state"] == "unknown"
+    assert unknown["runner_busy"] is None
+    assert unknown["runner_busy_basis"] == "UNKNOWN_NO_RUNNER_INVENTORY"
+    assert unknown["runner_status"] is None
+    assert unknown["research_slots_free"] is None
+    assert unknown["current_assignments"] == 0
+    assert unknown["queued_assignments"] == 0
+
+
+def test_dashboard_infers_runner_busy_from_a_live_assigned_workflow_only():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    active = {
+        "resource": "Windows self-hosted A",
+        "lane": "FORMAL READINESS",
+        "status": "in_progress",
+        "task": "Q104 I19 Historical 13F Identity Census",
+        "worker": "self-hosted-runner-a",
+    }
+    inferred = enrich_resources([resource], [], [active])[0]
+    assert inferred["capacity_state"] == "operating"
+    assert inferred["runner_busy"] is True
+    assert inferred["runner_busy_basis"] == "ACTIVE_WORKFLOW_ASSIGNMENT"
+    assert inferred["current_assignments"] == 1
+    assert inferred["research_slots_in_use"] == 1
+    assert inferred["research_slots_free"] == 0
+
+
+def test_dashboard_keeps_idle_unknown_runner_slots_unknown_and_not_dispatchable():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    unknown = enrich_resources(
+        [resource],
+        [],
+        [{"resource": "Windows self-hosted A", "status": "queued", "lane": "FORMAL READINESS"}],
+    )[0]
+    assert unknown["runner_busy"] is None
+    assert unknown["runner_busy_basis"] == "UNKNOWN_NO_RUNNER_INVENTORY"
+    assert unknown["research_slots_free"] is None
 
 
 def test_planned_capacity_keeps_one_step_lookahead_while_resource_is_active():
@@ -677,3 +745,55 @@ def test_candidate_job_duration_benchmark_ignores_failed_runs_and_jobs(monkeypat
     assert benchmark["Q220"]["p50_seconds"] == 300
     assert benchmark["Q220"]["sample_count"] == 1
 
+
+
+def test_dashboard_keeps_queued_research_work_out_of_runner_occupancy():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    queued = {
+        "resource": "Windows self-hosted A",
+        "lane": "FORMAL READINESS",
+        "status": "queued",
+        "task": "Q220 population",
+        "worker": "pending runner assignment",
+    }
+    enriched = enrich_resources([resource], [], [queued])[0]
+    assert enriched["capacity_state"] == "unknown"
+    assert enriched["runner_busy"] is None
+    assert enriched["runner_busy_basis"] == "UNKNOWN_NO_RUNNER_INVENTORY"
+    assert enriched["current_assignments"] == 0
+    assert enriched["queued_assignments"] == 1
+    assert enriched["research_slots_free"] is None
+
+
+def test_dashboard_infers_physical_runner_busy_from_running_nonresearch_job():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    running_ci = {
+        "resource": "Windows self-hosted A",
+        "lane": "VALIDATION / CI",
+        "status": "in_progress",
+        "task": "CI",
+        "job": "test",
+    }
+    enriched = enrich_resources([resource], [], [running_ci])[0]
+    assert enriched["capacity_state"] == "unknown"
+    assert enriched["current_assignments"] == 0
+    assert enriched["runner_busy"] is True
+    assert enriched["runner_busy_basis"] == "ACTIVE_WORKFLOW_ASSIGNMENT"
+    assert enriched["research_slots_in_use"] == 1
+    assert enriched["research_slots_free"] == 0
