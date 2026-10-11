@@ -358,32 +358,38 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
   var rows=Array.isArray(work)?work.slice():[];
   var running=rows.filter(dashboardWorkIsRunning);
   var waiting=rows.filter(dashboardWorkIsWaiting);
-  var calibrated=rows.filter(function(x){return Number(x.duration_sample_count||0)>0&&x.expected_duration_seconds!=null;});
+  var calibrated=running.filter(function(x){return Number(x.duration_sample_count||0)>0&&x.expected_duration_seconds!=null;});
   kpis.innerHTML=
     "<div class='ops-kpi'><span>JETZT AKTIV</span><strong>"+running.length+"</strong><small>sichtbare Fokus-Jobs</small></div>"+
     "<div class='ops-kpi'><span>WARTET AUF START</span><strong>"+waiting.length+"</strong><small>Queue-Zeit separat erfasst</small></div>"+
-    "<div class='ops-kpi'><span>ZEITBASIS</span><strong>"+calibrated.length+"/"+rows.length+"</strong><small>aktive Jobs mit Vergleichslaufzeiten</small></div>";
+    "<div class='ops-kpi'><span>ZEITBASIS</span><strong>"+calibrated.length+"/"+running.length+"</strong><small>laufende Jobs mit Vergleichslaufzeiten</small></div>";
   nowTable.innerHTML=rows.length?
     "<table class='ops-table ops-compact'><thead><tr><th>Was / Kandidat</th><th>Wer / Runner</th><th>Status · Start</th><th>Bereits</th><th>Historische Dauer</th><th>Restlaufzeit</th><th>Run</th></tr></thead><tbody>"+
     rows.map(function(x){
       var runStatus=String(x.run_status||x.status||"unknown");
       var jobStatus=String(x.job_status||runStatus);
+      var jobConclusion=String(x.job_conclusion||"").toLowerCase();
+      var shardFailed=jobConclusion==="failure"||jobConclusion==="cancelled";
+      var displayJobStatus=shardFailed?"SHARD FAILED":jobStatus;
       var isRunning=dashboardWorkIsRunning(x);
+      var isWaiting=dashboardWorkIsWaiting(x);
       var candidate=candidateFrom((x.task||"")+" "+(x.job||""));
-      var started=isRunning?(x.job_started_at||x.run_started_at||x.started_at):(x.queued_at||x.started_at);
-      var elapsed=isRunning
-        ?"Jobzeit "+fmtDuration(x.job_elapsed_seconds)
-        :"Wartezeit "+fmtDuration(x.queue_elapsed_seconds)+(runStatus==="in_progress"?" · Workflow läuft seit "+fmtDuration(x.elapsed_seconds):"");
+      var started=shardFailed?(x.job_started_at||x.started_at):(isRunning?(x.job_started_at||x.run_started_at||x.started_at):(isWaiting?(x.queued_at||x.started_at):(x.job_completed_at||x.started_at)));
+      var elapsed=shardFailed
+        ?"Fehlgeschlagen · keine aktive Runner-Last"
+        :(isRunning
+          ?"Jobzeit "+fmtDuration(x.job_elapsed_seconds)
+          :(isWaiting?"Wartezeit "+fmtDuration(x.queue_elapsed_seconds)+(runStatus==="in_progress"?" · Workflow läuft seit "+fmtDuration(x.elapsed_seconds):""):"Job beendet"));
       var benchmark=(Number(x.duration_sample_count||0)>0&&x.expected_duration_seconds!=null)
         ?durationBenchmarkLabel(x.expected_duration_seconds,x.expected_duration_p90_seconds,x.duration_sample_count)
         :"Nicht kalibriert";
-      var remaining=isRunning?remainingRunLabel(x):"Run noch nicht gestartet";
+      var remaining=shardFailed?"Recovery erst nach Gesamtabschluss · keine ETA":(isRunning?remainingRunLabel(x):(isWaiting?"Job wartet · keine ETA":"Keine Restlaufzeit"));
       var url=safeHttpsUrl(x.run_url);
       var link=url?"<a href='"+esc(url)+"' target='_blank' rel='noopener'>#"+esc(x.run_id||"—")+"</a>":esc("#"+String(x.run_id||"—"));
       return "<tr>"+
         "<td><strong>"+esc(candidate)+"</strong><div class='ops-clamp'>"+esc(x.job||x.task||"Aufgabe nicht benannt")+"</div><small class='muted'>"+esc(x.task||"")+"</small></td>"+
         "<td><strong>"+esc(x.resource||"Ressource unbekannt")+"</strong><small>"+esc(x.worker||"Runner nicht zugeordnet")+"</small></td>"+
-        "<td><span class='badge "+operationStatusClass(jobStatus)+"'>"+esc(jobStatus.replace(/_/g," "))+"</span><small>Run: "+esc(runStatus.replace(/_/g," "))+"</small></td>"+
+        "<td><span class='badge "+operationStatusClass(displayJobStatus)+"'>"+esc(displayJobStatus.replace(/_/g," "))+"</span><small>Run: "+esc(runStatus.replace(/_/g," "))+"</small></td>"+
         "<td><strong>"+esc(elapsed)+"</strong><small>"+esc(ts(started))+"</small></td>"+
         "<td>"+esc(benchmark)+"</td>"+
         "<td>"+esc(remaining)+"</td>"+
