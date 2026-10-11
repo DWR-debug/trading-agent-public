@@ -1021,8 +1021,12 @@ def test_dispatcher_default_and_dashboard_focus_are_intersected_with_fixed_allow
     assert FOCUS_CANDIDATES == {"Q104:I19", "Q220", "Q221"}
 
 
-def test_fast_dispatch_reopens_q221_historical_vintage_gate_despite_old_successful_slot():
+def test_fast_dispatch_reopens_q221_historical_vintage_gate_despite_old_successful_slot(tmp_path, monkeypatch):
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
+    from automation import planned_capacity_fast_dispatch as dispatcher
+    # Make the legacy-receipt path deterministic; missing/versionless receipts
+    # permit one current-code attempt rather than inheriting historical slot success.
+    monkeypatch.setattr(dispatcher, "Q221_VINTAGE_RECEIPT_PATH", tmp_path / "missing-vintage-receipt.json")
 
     snapshot = {
         "master_sha": "current-master",
@@ -1057,3 +1061,100 @@ def test_fast_dispatch_reopens_q221_historical_vintage_gate_despite_old_successf
         decision.get("decision") == "SKIP_SLOT_ALREADY_COMPLETED"
         for decision in plan["decisions"]
     )
+
+
+def _q221_vintage_dispatch_snapshot():
+    return {
+        "master_sha": "current-master",
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted C",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q221-USASPENDING-PUBLIC-CLOCK",
+                "candidate": "Q221",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+                "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+            }],
+        }],
+    }
+
+
+def test_fast_dispatch_stops_repeating_same_code_q221_negative_vintage_receipt(tmp_path, monkeypatch):
+    import hashlib
+    from automation import planned_capacity_fast_dispatch as dispatcher
+
+    gate_path = tmp_path / "q221_historical_source_vintage_gate.py"
+    gate_path.write_text("gate implementation v1\n", encoding="utf-8")
+    receipt_path = tmp_path / "q221_historical_source_vintages_latest.json"
+    receipt_path.write_text(json.dumps({
+        "candidate_id": "Q221",
+        "status": "Q221_HISTORICAL_POLICY_VINTAGE_COVERAGE_INCOMPLETE_OR_SEMANTICS_DRIFT",
+        "gate_code_sha256": hashlib.sha256(gate_path.read_bytes()).hexdigest(),
+    }), encoding="utf-8")
+    monkeypatch.setattr(dispatcher, "Q221_VINTAGE_GATE_PATH", gate_path)
+    monkeypatch.setattr(dispatcher, "Q221_VINTAGE_RECEIPT_PATH", receipt_path)
+
+    prior_success = [{
+        "id": 123,
+        "name": "Top-4 Slot windows Q221 all",
+        "display_title": "Top-4 Slot windows Q221 all",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "old-sha",
+        "path": ".github/workflows/top4-candidate-slot-research.yml",
+    }]
+    plan = dispatcher.dispatch_candidates(_q221_vintage_dispatch_snapshot(), prior_success, max_dispatches=2)
+
+    assert plan["dispatches"] == []
+    assert any(
+        x.get("decision") == "SKIP_Q221_VINTAGE_NEGATIVE_RECEIPT_CURRENT_CODE_REQUIRES_REPAIR_OR_MANUAL_RETRY"
+        for x in plan["decisions"]
+    )
+
+
+def test_fast_dispatch_stops_q221_after_positive_same_code_vintage_receipt(tmp_path, monkeypatch):
+    import hashlib
+    from automation import planned_capacity_fast_dispatch as dispatcher
+
+    gate_path = tmp_path / "q221_historical_source_vintage_gate.py"
+    gate_path.write_text("gate implementation v2\n", encoding="utf-8")
+    receipt_path = tmp_path / "q221_historical_source_vintages_latest.json"
+    receipt_path.write_text(json.dumps({
+        "candidate_id": "Q221",
+        "status": "Q221_HISTORICAL_POLICY_VINTAGES_RECONSTRUCTED",
+        "gate_code_sha256": hashlib.sha256(gate_path.read_bytes()).hexdigest(),
+    }), encoding="utf-8")
+    monkeypatch.setattr(dispatcher, "Q221_VINTAGE_GATE_PATH", gate_path)
+    monkeypatch.setattr(dispatcher, "Q221_VINTAGE_RECEIPT_PATH", receipt_path)
+
+    plan = dispatcher.dispatch_candidates(_q221_vintage_dispatch_snapshot(), [], max_dispatches=2)
+
+    assert plan["dispatches"] == []
+    assert any(
+        x.get("decision") == "SKIP_Q221_VINTAGE_GATE_ALREADY_RECONSTRUCTED_CURRENT_CODE"
+        for x in plan["decisions"]
+    )
+
+
+def test_fast_dispatch_allows_one_q221_attempt_when_negative_receipt_is_from_old_gate_code(tmp_path, monkeypatch):
+    import hashlib
+    from automation import planned_capacity_fast_dispatch as dispatcher
+
+    gate_path = tmp_path / "q221_historical_source_vintage_gate.py"
+    gate_path.write_text("gate implementation v2\n", encoding="utf-8")
+    receipt_path = tmp_path / "q221_historical_source_vintages_latest.json"
+    receipt_path.write_text(json.dumps({
+        "candidate_id": "Q221",
+        "status": "Q221_HISTORICAL_POLICY_VINTAGE_COVERAGE_INCOMPLETE_OR_SEMANTICS_DRIFT",
+        "gate_code_sha256": hashlib.sha256(b"old gate implementation").hexdigest(),
+    }), encoding="utf-8")
+    monkeypatch.setattr(dispatcher, "Q221_VINTAGE_GATE_PATH", gate_path)
+    monkeypatch.setattr(dispatcher, "Q221_VINTAGE_RECEIPT_PATH", receipt_path)
+
+    plan = dispatcher.dispatch_candidates(_q221_vintage_dispatch_snapshot(), [], max_dispatches=2)
+
+    assert [x["plan_id"] for x in plan["dispatches"]] == ["Q221-USASPENDING-PUBLIC-CLOCK"]
