@@ -1549,6 +1549,7 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
     runner_by_name = {str(r.get("name")): r for r in runners}
     for resource in configured:
         assignments = [w for w in work if w.get("resource") == resource["name"]]
+        executing_assignments = [w for w in assignments if assignment_is_running(w)]
         research_assignments = [
             w for w in assignments
             if str(w.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"}
@@ -1561,9 +1562,10 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         ]
         runner = runner_by_name.get(resource["configured_runner"])
         state = capacity_state(resource, runner, research_assignments)
-        if executing_research_assignments:
+        if executing_assignments:
             # An explicitly running job assigned to this runner is stronger
-            # evidence of occupancy than a missing or stale runner snapshot.
+            # evidence of occupancy than a missing or stale runner snapshot,
+            # even when the job is CI/platform work rather than research.
             runner_busy: bool | None = True
             runner_busy_basis = "ACTIVE_WORKFLOW_ASSIGNMENT"
         elif runner is not None and isinstance(runner.get("busy"), bool):
