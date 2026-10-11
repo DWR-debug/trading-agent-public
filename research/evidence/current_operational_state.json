@@ -1501,7 +1501,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-11T15:14:01.952622+00:00",
+    "generated_at_utc": "2026-10-11T15:24:06.596135+00:00",
     "next_research_focus": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. Q104:I19 next: finish the existing historical 13F census or its currently useful successor run; after a terminal result, recover only unresolved shard/header evidence and never restart the full census blindly. Then compile the frozen concept-specific PIT state and require independent reproduction. Q220 historical as-filed population gate is positive and version-bound: 55 filing records across the frozen eight-issuer universe, archived source/instance and TextBlock/XSD/presentation mapping with zero record failures. Next gate: historical prefix/acceptance-time PIT representation-state compiler. Population receipt fingerprint 0d2e179928cc8f158da9892cde8cd222fa70db95a0b03972c6b1f7bd859950e9. Q221 next: run the bounded USAspending public-clock workpack in parallel with Q220 when Windows capacity allows. The current live-source marker check is not historical proof: reconstruct the publication vintage and transaction classes, classify the DoD/USACE 90-day and FAR exceptions, and freeze recipient-to-issuer mapping before PIT validation. Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred. Q219 remains paused; its prior evidence is preserved. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1509,7 +1509,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "35ce79e247f40d3cf079dd4013735fde491a3727"
+    "source_master_sha": "14b7d07a8cfc248c5ea9898fcc863c541c453d7a"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-11T15:14:01.952622+00:00",
+  "generated_at_utc": "2026-10-11T15:24:06.596135+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4538,6 +4538,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "ops/live-capacity-duration-dashboard-20261011",
+        "number": 1306,
+        "title": "OPS: clarify live candidate assignments and run/job duration estimates",
+        "updatedAt": "2026-10-11T15:23:02Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1306"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "ops/visible-chat-handoff-dashboard-decision-log-20261010",
         "number": 1289,
         "title": "OPS: show durable chat handoff and recent decisions on dashboard",
@@ -4667,6 +4675,21 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: install test dependencies for Q220/Q221 historical gate workflows",
+        "sha": "14b7d07a8cfc248c5ea9898fcc863c541c453d7a",
+        "timestamp": "2026-10-11T17:23:52+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "44916a8583690750567a05055bb02015f7ae77ef",
+        "timestamp": "2026-10-11T15:17:45Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f10fc27b9a18b2430a18408eca6be038ab2e71f8",
+        "timestamp": "2026-10-11T15:14:05Z"
+      },
+      {
         "message": "RESEARCH: add Q220 historical PIT and Q221 award public-clock workpack",
         "sha": "35ce79e247f40d3cf079dd4013735fde491a3727",
         "timestamp": "2026-10-11T17:13:48+02:00"
@@ -4690,21 +4713,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "2e9ffdefd9fa4bc03e2c9c2596270a2220e3dcdd",
         "timestamp": "2026-10-11T13:33:28Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "1addae65fda8b7f20c750cf45ea9c17d0b27045e",
-        "timestamp": "2026-10-11T13:32:01Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "605a23660e8cefb31d64d3d8b6e8a7389dc5d58e",
-        "timestamp": "2026-10-11T13:30:48Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "c6669fa5fc11d05ffb45b0b78a2d9051d2461fbc",
-        "timestamp": "2026-10-11T13:28:39Z"
       }
     ]
   },
@@ -4802,7 +4810,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "35ce79e247f40d3cf079dd4013735fde491a3727",
+  "source_master_sha": "14b7d07a8cfc248c5ea9898fcc863c541c453d7a",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4916,6 +4924,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "38150404013"
+    "run_id": "38151099844"
   }
 }
