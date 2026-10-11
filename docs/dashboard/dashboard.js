@@ -140,6 +140,28 @@ function renderProgressCharts(data,pipeline){
   }).join(""):"<div class='empty'>Kein Milestone-Status verfügbar.</div>";
 }
 
+
+function renderCandidateDecisionRules(pipeline){
+  var byCode={};
+  (pipeline||[]).forEach(function(x){byCode[x.code]=x;});
+  var rules=[
+    {code:"Q104:I19",cls:"decision-q104",mode:"Weiter · Single-flight",title:"Historische 13F-Vollständigkeit schließen",
+     advance:"Bestehende Census-Ausführung bzw. nützlichen Nachfolger bis zum terminalen Ergebnis verfolgen. Danach nur fehlende Shard-/Header-Belege gezielt wiederherstellen; anschließend den fixierten konzeptspezifischen PIT-Zustand kompilieren und unabhängig reproduzieren.",
+     stop:"Runner- oder Bootstrap-Fehler sind kein wissenschaftlicher Falsifikator. Parken, falls begrenzte Reparatur historische Security-Identität, Abdeckung oder SEC-Acceptance-Time-Lineage nicht belastbar rekonstruieren kann."},
+    {code:"Q220",cls:"decision-q220",mode:"Weiter · PIT-Compiler",title:"Positive Population historisch kompilieren",
+     advance:"Der versiongebundene Populationsbeleg umfasst 55 Filing-Datensätze aus acht fixierten Emittenten ohne Datensatzfehler. Als Nächstes den historischen Filing-Präfix-/Acceptance-Time- und Representation-State-Compiler bauen; TextBlock-, XSD-, Taxonomie- und Presentation-Mapping einfrieren.",
+     stop:"Fail-closed, wenn die historische öffentliche Zeitgrenze nicht rekonstruierbar ist, Schema-/Taxonomie-Drift die Zuordnung mehrdeutig macht oder der narrative/strukturierte Gap nicht deterministisch messbar ist. Der Free-AI-CYD-Output war inhaltlich unbrauchbar, keine wissenschaftliche Evidenz."},
+    {code:"Q221",cls:"decision-q221",mode:"Weiter · Public clock",title:"USAspending-Veröffentlichungsuhr rekonstruieren",
+     advance:"Den begrenzten USAspending-Workpack parallel zu Q220 starten, sobald unabhängige Kapazität frei ist: historische Veröffentlichungsvintages und Transaktionsklassen sichern, DoD/USACE-90-Tage- und FAR-Ausnahmen klassifizieren und Recipient-to-Issuer-Mapping einfrieren. PIT-Validierung folgt erst danach.",
+     stop:"Der aktuelle Live-Source-Marker ist kein historischer Nachweis. Fail-closed, wenn Veröffentlichungs-Vintage/Public-Clock, Ausnahmeklassen, Transaktionszustände oder das vorab fixierte Empfänger-zu-Emittent-Mapping nicht belastbar rekonstruierbar sind."}
+  ];
+  var host=$("candidateDecisionRules");
+  if(!host)return;
+  host.innerHTML="<div class='decision-board-head'><div><div class='section-kicker'>Receipt-first · aktuelle Gates</div><div class='decision-board-title'>Nächster Schritt und Stop-Regel je aktivem Kandidaten</div></div><div class='small muted'>Ressourcenpriorität, keine Rendite-Rangliste.</div></div><div class='decision-grid'>"+
+    rules.map(function(r){var x=byCode[r.code]||{};var status=String(x.current_milestone_status||"nicht im Snapshot").replace(/_/g," ").toUpperCase();var gate=String(x.current_milestone||x.next_gate||"Kein Gate im Snapshot");return "<article class='decision-card "+r.cls+"'><div class='decision-head'><div class='decision-code'>"+esc(r.code)+"</div><span class='decision-disposition'>"+esc(r.mode)+"</span></div><div class='decision-current'>Snapshot-Gate: <strong>"+esc(status)+"</strong> · "+esc(gate)+"</div><div class='decision-field'><strong>Nächster zulässiger Schritt</strong><b>"+esc(r.title)+".</b> "+esc(r.advance)+"</div><div class='decision-field'><strong>Stop-/Falsifikationsregel</strong>"+esc(r.stop)+"</div></article>";}).join("")+"</div>"+
+    "<div class='decision-fallback'><strong>Archiviert, nicht aktiv:</strong> Q218 ist aus aktivem Fokus und automatischem Dispatch entfernt. One-shot und Acht-Ereignis-Replikation bleiben deskriptiv archiviert und werden nicht wiederholt. Q219 bleibt pausiert. Keine künstlichen Aufgaben und keine Performance-, Holdout-, Tuning-, Ranking-, Promotion- oder Live-Trading-Autorisierung aus dem Dashboard.</div>";
+}
+
 function renderCandidatePortfolio(data){
   var items=data.candidate_portfolio||[];
   var method=data.candidate_portfolio_methodology||{};
@@ -310,6 +332,7 @@ function render(data){
     "</article>";
   }).join(""):"<div class='empty'>Kein Fokus-Kandidat im Snapshot.</div>";
 
+  renderCandidateDecisionRules(pipeline);
   renderCandidatePortfolio(data);
 
   var order={"Windows self-hosted A":0,"Windows self-hosted B":1,"Windows self-hosted C":2,"GitHub-hosted Ubuntu x64":3,"GitHub-hosted ARM64":4,"Free AI pool":5};
