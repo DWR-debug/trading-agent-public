@@ -63,11 +63,13 @@ def test_overlap_inventory_includes_legacy_waves_and_discovery_seeds():
     # Q157 lives in a legacy wave; Q233 lives in the discovery seed pack.
     # Q227/Q231 are in the current candidate contract. All must be compared.
     assert {"Q157", "Q227", "Q231", "Q233"}.issubset(inventory)
-    assert inventory["Q157"]["inventory_source"].endswith(
-        "q152_q165_candidate_wave_2026_10_03.json"
+    assert any(
+        source.endswith("q152_q165_candidate_wave_2026_10_03.json")
+        for source in inventory["Q157"]["inventory_sources"]
     )
-    assert inventory["Q233"]["inventory_source"].endswith(
-        "orthogonal_discovery_seed_pack_2026_10_06.json"
+    assert any(
+        source.endswith("orthogonal_discovery_seed_pack_2026_10_06.json")
+        for source in inventory["Q233"]["inventory_sources"]
     )
     # Current canonical contracts take precedence over copies in older waves.
     assert inventory["Q227"]["inventory_source"] == (
