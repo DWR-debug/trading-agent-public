@@ -57,6 +57,25 @@ The next work is a **bounded research question**, not an automatic new workflow 
 
 No second Q221 run was dispatched. The exact endpoint just tested should not be repeated without a change that is expected to yield new evidence.
 
+### Official SAM.gov alternative: useful lead, not a first-public clock
+
+The official [GSA/SAM.gov Contract Awards API documentation](https://open.gsa.gov/api/contract-awards/) provides a specific alternate source worth examining before closing the procurement-data family:
+
+- The documented `publicDeltaDate` parameter filters contracts using **Last Modified Date or Reveal Date**. It is therefore a retrieval filter over two possible clocks, not an explicit statement that the returned value is an event-level first-public timestamp.
+- The response schema documents `createdDate`, `lastModifiedDate` and `approvedDate` in transaction data. None should be substituted for a historical first-public-observation boundary without field-specific, transaction-level evidence.
+- The API requires a SAM.gov API key for revealed data. Unrevealed data is permission-restricted to DoD-assigned users; it is not an anonymously available general-purpose history source.
+- The documented 90-day DoD reveal rule describes a policy for whether records are revealed. It does not, by itself, prove the exact public-appearance timestamp for a particular transaction or that earlier public versions can be reconstructed.
+- No API key was provided or used, and no live SAM.gov API request was made in this preflight.
+
+**Next bounded Q221 desk check:** inspect the official OpenAPI/response contract and any publicly accessible examples or source documentation to establish whether Reveal Date is returned at transaction level, what exactly it represents, whether old versions can be queried/retrieved, and how deletion/correction lineage is represented. Do not build a connector or dispatch a new probe until the field/version semantics and access mode are concrete. A successful query that returns a contract based on `publicDeltaDate` is not enough unless it also supplies a reproducible record-level public clock and a historical vintage/presence-absence proof. The FPDS “Date/Time Stamp Accepted” field is a separate possible diagnostic, but acceptance by FPDS is not automatically publication to the public.
+
+Official source references:
+- [SAM.gov Contract Awards API](https://open.gsa.gov/api/contract-awards/)
+- [USAspending monthly-file API contract](https://github.com/fedspendingtransparency/usaspending-api/blob/master/usaspending_api/api_contracts/contracts/v2/bulk_download/list_monthly_files.md)
+- [FPDS Data Element Dictionary](https://dodprocurementtoolbox.com/uploads/FPDS_Data_Dictionary_V15_OT_17a47e9af5.pdf)
+
+Q221 remains source-blocked until the alternate route provides a versioned, immutable and transaction-specific history capable of testing both presence and absence at historical cutoffs.
+
 ## 2. Active lanes: operate the existing work, not duplicate it
 
 | Lane | Latest verified state | Next action |
@@ -155,7 +174,16 @@ The cited studies support the importance of SEC scrutiny and its potential effec
 
 The repository defines workflow .github/workflows/q228-sec-correspondence-source-gate.yml and automation/q228_sec_correspondence_source_gate.py. The script currently fetches two present-day SEC pages (correspondence guidance and EDGAR search), hashes each response and checks for a small set of text markers. That is a current-page structure check; by construction it does not census historical letters, link comment/response cycles, prove each record's first public timestamp, or validate an issuer-level PIT join.
 
-The only checked-in test at this point verifies that the script's main function is callable; it does not exercise marker drift, fetch failure, receipt status or PIT-boundary behavior. The workflow definition has a 30-minute schedule and a workflow-dispatch trigger, but no Q228 run/receipt appeared in the recent Actions run page checked for this wave. This plan therefore does not claim the current Q228 workflow has passed. Its next step is to verify a real scheduled-run receipt, then move beyond present-day page accessibility to the historical census and identity/clock gates below.
+### Verified Q228 run 38165018398: technical success, source gate incomplete
+
+The master-push run [38165018398](https://github.com/DWR-debug/trading-agent-public/actions/runs/38165018398) completed its source script and all four Q228 unit tests. The downloadable [workflow artifact](https://github.com/DWR-debug/trading-agent-public/actions/runs/38165018398/artifacts/11711498525) has ZIP digest `sha256:e7d1ec70bbbe3e9003b674dfc3dc5716507c8fcfc3504b7884850cd2f3191892`. The receipt is preserved as [q228_sec_correspondence_source_gate_run_38165018398.json](../../research/evidence/q228_sec_correspondence_source_gate_run_38165018398.json) with fingerprint `ea37489023cdef279c00495eeee93b814027519988d9ef284066886fb5b0d28c`.
+
+The receipt status is **SOURCE_STRUCTURE_INCOMPLETE**:
+- The correspondence guidance page was HTTP 200 and all configured markers were found.
+- The EDGAR search page was HTTP 200, but the response consumed by the workflow did not contain the exact `Filing review correspondence` marker. It recorded 30,813 bytes and SHA-256 `2f031e75c5a1186f95111950d51b5ef35e6846df6f4663d589421061327eb4f3`.
+- A separate live raw-HTML fetch performed during follow-up did include the filing-category dropdown entry with that exact label (including CORRESP/DOSLTR/DRSLTR/UPLOAD codes), and the response was materially larger than the workflow-captured body. The reason for this response variance is **not established**; do not assume missing functionality, a transient challenge, or a permanent SEC page change based on one response.
+
+The distinction matters: the GitHub Actions job's conclusion was success because the bounded script wrote an explicit incomplete receipt and returned normally. The *source gate* did not pass. All PIT and scientific-authority booleans remain false. The next step is a low-volume, bounded response diagnostic (status, content type, final URL if exposed, title/H1, a short marker context, size and hash; protect against logging unbounded page contents), then a focused decision whether the current marker is stable and semantically appropriate. Keep the gate incomplete until that is resolved. Do not weaken the marker to generic navigation text. Only after response/source structure is reproducible should work proceed to historical correspondence census, deterministic review-cycle links, public filing clock, amendments/closure lineage and independent PIT mutation tests.
 
 ### Ordered gate sequence
 

@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "task_id": "Q-2026-10-06-Q228-SEC-CORRESPONDENCE-SOURCE-GATE",
+  "candidate_id": "Q228",
+  "status": "SOURCE_STRUCTURE_INCOMPLETE",
+  "generated_at_utc": "2026-10-11T18:43:49.509944+00:00",
+  "source_contract": {
+    "public_release_start": "SEC public release program documented in 2005; guidance covers filing reviews for applicable filings after Aug 1 2004",
+    "public_observation": "EDGAR public release boundary of the correspondence record",
+    "post_review_delay": "SEC guidance describes at least 20 business days after review completion/effectiveness before public release",
+    "forms": {
+      "UPLOAD": "SEC-originated letters to filers",
+      "CORRESP": "filer response letters"
+    }
+  },
+  "results": [
+    {
+      "name": "SEC_CORRESPONDENCE_GUIDANCE",
+      "url": "https://www.sec.gov/search-filings/edgar-search-assistance/how-search-edgar-correspondence",
+      "reachable": true,
+      "status": 200,
+      "bytes": 68699,
+      "sha256": "96e4ffb6d83bd4fcb2a8f2ecb9d90a5540031eda979c7a4a6219bcfa3cf662b1",
+      "missing_markers": []
+    },
+    {
+      "name": "SEC_EDGAR_SEARCH",
+      "url": "https://www.sec.gov/edgar/search/",
+      "reachable": true,
+      "status": 200,
+      "bytes": 30813,
+      "sha256": "2f031e75c5a1186f95111950d51b5ef35e6846df6f4663d589421061327eb4f3",
+      "missing_markers": [
+        "Filing review correspondence"
+      ]
+    }
+  ],
+  "pit_contract": {
+    "public_observation_clock_proven": false,
+    "latent_review_start_tradable": false,
+    "same_day_use_allowed": false,
+    "review_cycle_filing_join_completed": false,
+    "future_correspondence_mutation_allowed": false
+  },
+  "next_gate": "historical correspondence archive census + deterministic filing/review-cycle identity compiler + public release clock reconstruction + amendment/closure lineage + independent PIT reproduction",
+  "scientific_boundary": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "ranking_allowed": false,
+    "tuning_allowed": false,
+    "promotion_allowed": false,
+    "live_execution_allowed": false
+  },
+  "receipt_fingerprint": "ea37489023cdef279c00495eeee93b814027519988d9ef284066886fb5b0d28c"
+}
