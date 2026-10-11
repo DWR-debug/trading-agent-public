@@ -7,7 +7,26 @@ permissions:
   contents: read
 
 jobs:
+  resolve_master:
+    name: Resolve current master for Top-4 cohort
+    runs-on: ubuntu-24.04
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+    steps:
+      - name: Resolve live master ref
+        id: resolve
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          test -n "$sha"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "Top-4 cohort frozen to master=$sha"
+
   windows:
+    needs: resolve_master
     concurrency:
       group: trading-agent-top4-${{ matrix.candidate }}
       cancel-in-progress: false
@@ -23,8 +42,18 @@ jobs:
       - name: Checkout exact master
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ needs.resolve_master.outputs.sha }}
           fetch-depth: 1
+      - name: Assert frozen master
+        shell: cmd
+        env:
+          TA_EXPECTED_SHA: ${{ needs.resolve_master.outputs.sha }}
+        run: |
+          @echo off
+          setlocal
+          for /f "delims=" %%S in ('git rev-parse HEAD') do set "TA_ACTUAL_SHA=%%S"
+          if /I not "%TA_ACTUAL_SHA%"=="%TA_EXPECTED_SHA%" exit /b 1
+          endlocal
       - name: Bootstrap pinned Python
         shell: cmd
         run: |
@@ -64,6 +93,7 @@ jobs:
           retention-days: 30
 
   hosted_x64:
+    needs: resolve_master
     concurrency:
       group: trading-agent-research-hosted-ubuntu-24.04-slot-2
       cancel-in-progress: false
@@ -79,8 +109,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ needs.resolve_master.outputs.sha }}
           fetch-depth: 1
+      - name: Assert frozen master
+        shell: bash
+        env:
+          TA_EXPECTED_SHA: ${{ needs.resolve_master.outputs.sha }}
+        run: test "$(git rev-parse HEAD)" = "$TA_EXPECTED_SHA"
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
@@ -97,6 +132,7 @@ jobs:
           retention-days: 30
 
   hosted_arm64:
+    needs: resolve_master
     concurrency:
       group: trading-agent-research-hosted-ubuntu-24.04-arm-slot-2
       cancel-in-progress: false
@@ -112,8 +148,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ needs.resolve_master.outputs.sha }}
           fetch-depth: 1
+      - name: Assert frozen master
+        shell: bash
+        env:
+          TA_EXPECTED_SHA: ${{ needs.resolve_master.outputs.sha }}
+        run: test "$(git rev-parse HEAD)" = "$TA_EXPECTED_SHA"
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
