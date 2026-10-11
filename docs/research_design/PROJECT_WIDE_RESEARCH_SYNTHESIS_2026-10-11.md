@@ -125,7 +125,7 @@ FDA AEMS public dashboard and limitations: https://www.fda.gov/drugs/fda-adverse
 
 Keep this as a sub-hypothesis under Q221/Q191/Q197 until the existing variables and decisive observable are audited. Sample from the full award universe, not a patents-only linked sample. Require direct award identity, technical-output publication boundary and independently linked follow-on realization. If the last join is “same vendor later won a contract,” reject it as insufficient.
 
-## 4. Cheap falsifiers and project-wide controls
+## 5. Cheap falsifiers and project-wide controls
 
 Before any expensive validation, each candidate should pass these controls:
 
@@ -140,7 +140,7 @@ Before any expensive validation, each candidate should pass these controls:
 9. **Resource discipline:** reuse validated compilers, block genuinely duplicate jobs, and never dispatch merely to occupy a runner.
 10. **Authority boundary:** CI, source feasibility, literature, model reviews and compute capacity do not imply profitable performance or permission to trade.
 
-## 5. Current execution implications
+## 6. Current execution implications
 
 - **Q104:I19:** allow the existing historical 13F census to terminate. Reconcile all shard receipts, then recover only accession headers demonstrably missing from the frozen failure set. Do not restart the full census blindly.
 - **Q220:** the old operational handoff still says its population receipt is stale, but a fresh check of run `38155914188` found the `population` job completed successfully: 55 rows / 55 records across the frozen eight-issuer universe, zero record failures, and receipt fingerprint `158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543`. The gate-code and contract files have identical Git blob SHAs at the run's source commit and current master, so their bytes are unchanged. The run's overall status remains `pending` because `route_probe` is still `pending`. Treat the population subgate as positive from the job log; do not mark the whole workflow or downstream PIT gate complete until the route probe and current receipt provenance are reconciled.
@@ -148,7 +148,7 @@ Before any expensive validation, each candidate should pass these controls:
 - **Q218:** excluded from active execution and successor selection. Historical artifacts remain preserved; no new Q218 job is authorized by this document.
 - **No performance authorization:** this note creates no trial, result, ranking, tuning, holdout choice, promotion or live-execution permission.
 
-## 6. Repository change included with this synthesis
+## 7. Repository change included with this synthesis
 
 The accompanying code change extends the Stage 4/5 overlap engine to form a deterministic candidate inventory from the current contract manifest, legacy candidate waves and discovery seed packs. The current manifest wins when an ID appears in multiple inventories. Two regression tests require Q157, Q227, Q231 and Q233 to appear in the comparison universe and verify deterministic review-only novelty output.
 
