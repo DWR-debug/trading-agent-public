@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
   "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
-  "observed_at_utc": "2026-10-10T21:34:08.579888Z",
+  "observed_at_utc": "2026-10-11T05:36:11.542453Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.536,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5041, Requested 5915. Please try again in 22.17s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.5,
+  "stdout": "**Worker Handoff – Q219 Breadth‑Gate Review**\n\n| Section | Content |\n|---------|---------|\n| **Findings** | 1. **SEC Acceptance Clock** – The Q129 contract specifies `event_clock: \"public observation boundary\"` and the options data is claimed to be a 4 PM ET end‑of‑day snapshot.  The Q219 script does **not** verify that the `date` column in the parquet files actually matches this 4 PM ET boundary (e.g., no check that the timestamp is ≤ 16:00 ET or that the day‑end flag is set).  <br>2. **Same‑Session Leakage** – No audit of the parquet metadata or the `date` column is performed to confirm that no intraday or same‑day timestamps are present.  The script only pulls the files; it never inspects the `date` values.  <br>3. **Option EOD Timestamp Semantics** – The script does not confirm that the `date` field is the observation date (not the expiration or settlement date).  It also does not check that the underlying `SPY_underlying.parquet` etc. use the same date semantics.  <br>4. **Q129 Source Release & Contract Selection** – The script fetches the GitHub release via the API and extracts the asset list, but it does **not** compare the SHA‑256 of the downloaded files against the `EXPECTED` dictionary in the contract.  The `sha256_file` helper is defined but never invoked.  <br>5. **Option Contract/Calendar Roll Effects** – No logic is present to detect or flag the transition of options from one contract month to the next (e.g., weekly expirations).  The script does not record the `expiration` field or check for roll‑over gaps.  <br>6. **Stale/Absent Implied‑Volatility Fields** – The contract lists `bid`, `ask`, `volume`, `open_interest`, but does **not** require an `implied_volatility` column.  The script does not verify the presence or absence of such a column, nor does it check for stale values (e.g., all‑zero IV).  <br>7. **Event‑Window Definitions** – The Q219 contract does not specify an explicit event window; the script merely collects the asset list.  There is no evidence that the event window aligns with the filing‑change or options‑only state.  <br>8. **Cross‑Market Wedge** – The script flags whether the underlying symbols include anything beyond SPY, QQQ, IWM, but it does not quantify the informational contribution of the additional symbols relative to the filing‑change signal.  <br>9. **Script Completeness** – The `run()` function ends abruptly with `\"free_\"` – the payload is truncated, so the output JSON is incomplete.  No validation of the `piekstra_repo_http_200`, `cboe_archive_http_200`, or other flags is performed beyond the HTTP status.  <br>10. **Missing Artifacts** – The script does not capture: <br>   * SHA‑256 checksums of each asset. <br>   * The `observation_date_field` and `observation_semantics` values from the contract. <br>   * The `same_day_` field (if any). <br>   * The `information_boundary` mapping. <br>   * Evidence that the options data is truly end‑of‑day (e.g., a sample of `date` values). <br>   * Documentation of how calendar rolls are handled. |\n| **Counter‑Arguments / Caveats** | • The Q129 contract’s `information_boundary` section is truncated in the provided JSON; it may contain additional constraints that the script ignores. <br>• The GitHub API may return a different release if the `release_id` changes; the script assumes the ID is stable. <br>• The `piekstra_repo_http_200` flag only checks HTTP status; it does not confirm that the repository actually hosts the claimed data. <br>• The CBOE archive check only verifies a 200 status; it does not confirm that the archive contains the expected symbols or that the data is in the required format. |\n| **Minimal Deterministic Falsifiers** | 1. **Timestamp Shift Test** – Replace the `date` column in a sample parquet file with a timestamp 1–5 minutes earlier/later and run the script; if the script still reports “EOD snapshot” it fails. <br>2. **Same‑Session Leakage Test** – Inject a row with a `date` value that is a known intraday timestamp (e.g., 12:00 PM ET) and verify that the script flags it. <br>3. **SHA‑256 Mismatch Test** – Corrupt a downloaded asset (e.g., flip a byte) and confirm that the script (once updated to compute checksums) rejects it. <br>4. **Calendar Roll Gap Test** – Remove all options with an `expiration` date in a given month and check that the script reports a missing contract month. <br>5. **Implied‑Volatility Absence Test** – Delete the `implied_volatility` column from a parquet file and confirm that the script (if extended) flags the structural invalidity. |\n| **Next Actions** | 1. **Extend the script** to: <br>   a. Compute and compare SHA‑256 checksums against the contract. <br>   b. Validate that the `date` column values are ≤ 16:00 ET and that the day‑end flag (if present) is set. <br>   c. Verify that the `expiration` field is present and that no contract month is missing. <br>   d. Check for the presence of an `implied_volatility` column and flag if absent or stale. <br>2. **Add a provenance record** that captures the exact `observation_date_field` and `observation_semantics` values from the contract. <br>3. **Document the event‑window definition** for Q219, clarifying how it relates to the filing‑change and options‑only signals. <br>4. **Complete the payload** by filling in the truncated `\"free_\"` field and any other missing flags. <br>5. **Run the falsifiers** listed above on a controlled subset of the data to confirm that the script correctly rejects invalid cases. <br>6. **Create a deterministic test harness** that can be invoked by the formal readiness lane to automatically validate the breadth gate before any performance run. |\n| **Uncertainty** | • The contract JSON is partially truncated; we cannot be certain of all required fields. <br>• The script’s incomplete payload may hide additional validation logic that is not visible. <br>• The CBOE archive URL points to a generic page; it is unclear whether the archive contains the specific options data needed. <br>• The “same_day_” field is missing; if it exists, it could impose additional constraints that are not currently checked. |\n\n--- \n\n**Summary**  \nThe current Q219 breadth‑gate implementation lacks critical validation steps for timestamp semantics, data integrity, and calendar roll handling. The script does not enforce the contract’s checksum requirements, does not verify that the data is truly end‑of‑day, and does not guard against same‑session leakage or missing implied‑volatility fields. The event‑window definition is absent, and the cross‑market wedge’s informational value is not quantified. The minimal falsifiers above can be used to expose these gaps deterministically. The next actions outline concrete script extensions and documentation updates needed to satisfy the formal readiness gate before any performance or promotion decisions.",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-10T21:34:09.116301Z",
-    "blocked_until_utc": "2026-10-10T22:34:09.116301Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5041, Requested 5915. Please try again in 22.17s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-02f7e2b2-4b2f-4418-acc0-494f8d0526ef",
+  "usage": {
+    "queue_time": 0.167865128,
+    "prompt_tokens": 5301,
+    "prompt_time": 0.289822723,
+    "completion_tokens": 2788,
+    "completion_time": 2.898282045,
+    "total_tokens": 8089,
+    "total_time": 3.188104768,
+    "completion_tokens_details": {
+      "reasoning_tokens": 1130
+    }
   }
 }\n
