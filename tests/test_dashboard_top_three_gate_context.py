@@ -262,3 +262,61 @@ def test_dashboard_defaults_to_concise_operations_overview_and_progressively_dis
     assert ".ops-overview" in css and ".detail-drawer>summary" in css
     assert "Fehlende Daten werden nicht geschätzt." in html
 
+
+
+def test_dashboard_next_step_uses_specific_gate_and_keeps_advisory_slots_blocked():
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+
+    assert 'task="Nach terminalem Census: sechs Shard-Receipts abgleichen' in js
+    assert 'String(pipe.next_gate||(p&&p.task)||q.next_gate||gate)' in js
+    assert 'p.dispatch_condition==="ADVISORY_ONLY"' in js
+    assert 'readiness.indexOf("NEEDS_NEW_WORKPACK")>=0' in js
+    assert 'Keine ETA · nicht auto-dispatchierbar' in js
+    assert 'VORAUSSETZUNG OFFEN · NICHT AUTO-DISPATCH' in js
+
+
+def test_dashboard_fetches_bounded_historical_runs_for_duration_calibration(monkeypatch):
+    from automation import generate_resource_dashboard as generator
+
+    calls = []
+    active = {
+        "id": 500,
+        "name": "Q104 I19 Historical 13F Identity Census",
+        "status": "in_progress",
+        "created_at": "2026-10-11T19:00:00Z",
+        "run_started_at": "2026-10-11T19:00:10Z",
+        "event": "workflow_dispatch",
+    }
+    historical = {
+        "id": 400,
+        "name": "Q104 I19 Historical 13F Identity Census",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-09T12:00:00Z",
+        "run_started_at": "2026-10-09T12:00:10Z",
+        "completed_at": "2026-10-09T12:18:10Z",
+        "event": "workflow_dispatch",
+    }
+
+    def fake_run_cmd_json(args, token=None):
+        endpoint = args[0]
+        calls.append(endpoint)
+        if endpoint.endswith("/actions/runs?per_page=100"):
+            return {"workflow_runs": [active]}
+        if "/actions/workflows/q104-i19-13f-historical-identity-census.yml/runs?" in endpoint:
+            return {"workflow_runs": [historical]}
+        return {"workflow_runs": []}
+
+    monkeypatch.setattr(generator, "run_cmd_json", fake_run_cmd_json)
+    runs = generator.fresh_action_runs()
+
+    assert {run["id"] for run in runs} == {400, 500}
+    assert any(
+        "/actions/workflows/q104-i19-13f-historical-identity-census.yml/runs?status=completed&per_page=100" in call
+        for call in calls
+    )
+    benchmark = generator.duration_benchmarks(runs)["Q104 I19 Historical 13F Identity Census"]
+    assert benchmark["p50_seconds"] == 1080
+    assert benchmark["p90_seconds"] == 1080
+    assert benchmark["sample_count"] == 1
+
