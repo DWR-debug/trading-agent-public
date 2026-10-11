@@ -52,8 +52,8 @@
     <span class="badge active-badge">Q104:I19</span>
     <span class="badge active-badge">Q220</span>
     <span class="badge active-badge">Q221</span>
-    <span class="muted">Source / PIT / Struktur zuerst. Keine weiteren Kandidaten ohne echten, separaten Kapazitätsüberschuss.</span><br>
-    <span class="muted">Entwicklungsindizes und Gate-Status sind keine Erfolgswahrscheinlichkeit, Renditeprognose oder Autorisierung.</span>
+    <span class="muted">Quelle & PIT zuerst · keine zusätzlichen Kandidaten ohne freie Kapazität.</span>
+    <span class="muted">Gate-Status ist keine Renditeprognose oder Autorisierung.</span>
   </div>
 
   <section id="app" class="grid" hidden>
@@ -71,6 +71,25 @@
           <span class="badge blocked-badge">AUTO-PROMOTION AUS</span>
         </div>
       </div>
+      <section class="ops-overview" aria-labelledby="opsOverviewTitle">
+        <div class="ops-overview-head">
+          <div><div class="section-kicker">Operativer Überblick</div><h2 id="opsOverviewTitle">Jetzt · Danach · Laufzeit</h2></div>
+          <span class="badge blocked-badge">PAPER ONLY · keine Live-Orders</span>
+        </div>
+        <div id="opsKpis" class="ops-kpis" aria-label="Aktive Jobs, Warteschlange und Zeitbasis"></div>
+        <section class="ops-overview-section">
+          <h3>Jetzt: Wer arbeitet woran?</h3>
+          <div id="opsNowTable" class="ops-table-scroll"></div>
+        </section>
+        <section class="ops-overview-section">
+          <h3>Danach: Nächster Schritt, zuständige Ressource und Dauer</h3>
+          <div id="opsNextTable" class="ops-table-scroll"></div>
+        </section>
+        <p class="ops-note">Laufzeit = seit Start; P50/P90 = historische Vergleichswerte aus abgeschlossenen, vergleichbaren Jobs. Wartezeit und Laufzeit bleiben getrennt. Fehlende Daten werden nicht geschätzt.</p>
+      </section>
+      <details class="detail-drawer focus-detail-drawer">
+        <summary>Ausführliche Kandidatenanalyse, Gate-Begründungen und Handoff</summary>
+        <div class="detail-content">
       <div class="focus-summary" id="focusSummary"></div>
       <section id="handoffPanel" class="handoff-panel" aria-label="Aktuelle Chat-Übergabe und wichtige Entscheidungen">
         <h3>Übergabe für den nächsten „trading agent“-Chat</h3>
@@ -89,41 +108,60 @@
         </div>
       </div>
       <div id="opsSummary" class="ops-strip"></div>
+        </div>
+      </details>
     </article>
 
     <article class="card queue-card">
-      <h2>Next-Gate-Backlog · Top 3</h2>
-      <div id="plannedQueue"></div>
-      <div id="planned" style="margin-top:12px"></div>
+      <details class="detail-drawer">
+        <summary>Next-Gate-Backlog · Top 3 — vollständige Kapazitätsplanung</summary>
+        <div class="detail-content">
+          <h2>Geplante Arbeit und Voraussetzungen</h2>
+          <div id="plannedQueue"></div>
+          <div id="planned" style="margin-top:12px"></div>
+        </div>
+      </details>
     </article>
 
     <article class="card work-card">
-      <h2>Aktive fokussierte Jobs</h2>
-      <div id="work"></div>
+      <details class="detail-drawer">
+        <summary>Aktive Jobs · vollständige Laufzeit- und Actions-Tabelle</summary>
+        <div class="detail-content">
+          <h2>Alle sichtbaren aktiven Fokus-Jobs</h2>
+          <div id="work"></div>
+        </div>
+      </details>
     </article>
 
     <article class="card capacity-card">
-      <h2>Kapazitätsfabrik</h2>
-      <div id="capacity"></div>
-      <div class="small muted" style="margin-top:10px">ARBEITET zählt nur sichtbare Research-Jobs; Runner-Busy bleibt davon getrennt.</div>
-      <div class="small muted" style="margin-top:10px">
-        ARBEITET = sichtbare Research-Arbeit. RUNNER BESETZT = physischer Runner belegt, aber Research-Zuordnung nicht sichtbar.
-        AUTO-DISPATCH = bereits definierte, nicht-authorisierende Folgearbeit. Keine künstliche Beschäftigung.
-      </div>
+      <details class="detail-drawer">
+        <summary>Kapazitätsfabrik · Runner, Verfügbarkeit und freie Kapazität</summary>
+        <div class="detail-content">
+          <div id="capacity"></div>
+          <p class="small muted">ARBEITET = sichtbare Research-Jobs. RUNNER BESETZT = physisch belegt, aber ohne sichtbare Research-Zuordnung. AUTO-DISPATCH = definierte Folgearbeit, keine künstliche Beschäftigung.</p>
+        </div>
+      </details>
     </article>
 
     <article class="card evidence-card">
-      <h2>Erreicht / wissenschaftliche Grenze</h2>
-      <div id="achieved"></div>
+      <details class="detail-drawer">
+        <summary>Erreicht · Evidenz und wissenschaftliche Grenze</summary>
+        <div class="detail-content"><div id="achieved"></div></div>
+      </details>
     </article>
 
     <article class="card milestones-card">
-      <h2>Milestones · letzte 12 Stunden</h2>
-      <div id="milestones12h"></div>
+      <details class="detail-drawer">
+        <summary>Meilensteine der letzten 12 Stunden</summary>
+        <div class="detail-content"><div id="milestones12h"></div></div>
+      </details>
     </article>
 
     <article class="card portfolio-card">
-      <h2>Kandidaten-Portfolio · Forschungspriorität und Entwicklungshorizont</h2>
+      <details class="detail-drawer">
+        <summary>Vollständiges Kandidaten-Portfolio · nur Referenz, nicht automatisch disponiert</summary>
+        <div class="detail-content">
+      <h2>Forschungspriorität und Entwicklungshorizont</h2>
       <div class="portfolio-intro">
         <div>
           <p>Referenzansicht des Prospect-Portfolios. Die aktive Ausführungspipeline ist auf Q104:I19, Q220 und Q221 begrenzt; weitere Einträge werden hier nur zur Einordnung angezeigt und nicht automatisch disponiert.</p>
@@ -149,20 +187,31 @@
       </div>
       <div id="candidatePortfolio" class="portfolio-scroll"></div>
       <div class="portfolio-footer">Entwicklungszeiten sind niedrige Vertrauensstufen für die Planung – keine gemessenen Laufzeiten. „Bis unabhängiger PIT-Reproduktion“ ist kein Termin für autorisierte Performance-Tests, Promotion oder Live-Handel. Q227/Q231 sind als ein gemeinsames Workpack ausgewiesen; Q217 bleibt bis zur Orthogonalitätsprüfung gebündelt.</div>
+        </div>
+      </details>
     </article>
 
     <article class="card intake-card">
-      <h2>Neue Kandidaten · automatischer Intake</h2>
-      <p class="muted small">Schema- und Robustheitsprüfung, Dublettenabgleich und Disposition. Ein bestandener Intake erweitert den gesperrten Top-3-Fokus nicht und startet keine Jobs.</p>
-      <div id="candidateIntake"></div>
+      <details class="detail-drawer">
+        <summary>Neue Kandidaten · Intake-Queue und Validierung</summary>
+        <div class="detail-content">
+          <p class="muted small">Intake erweitert den gesperrten Top-3-Fokus nicht und startet keine Jobs.</p>
+          <div id="candidateIntake"></div>
+        </div>
+      </details>
     </article>
 
     <article class="card support-card">
-      <h2>S10 · technische Support-Kapazität</h2>
-      <div id="s10"></div>
+      <details class="detail-drawer">
+        <summary>S10 · technische Support-Kapazität</summary>
+        <div class="detail-content"><div id="s10"></div></div>
+      </details>
     </article>
 
     <article class="card handoff-card">
+      <details class="detail-drawer">
+        <summary>Chat-Handoff kopieren · für die nächste Sitzung</summary>
+        <div class="detail-content">
       <div class="section-heading">
         <div>
           <div class="section-kicker">Chat-Kontinuität · maschinenlesbarer Stand</div>
@@ -175,6 +224,8 @@
         </div>
       </div>
       <textarea id="chatHandoffText" class="handoff-text" aria-label="Kopierbarer Trading-Agent-Chat-Handoff" readonly rows="9"></textarea>
+        </div>
+      </details>
     </article>
   </section>
 

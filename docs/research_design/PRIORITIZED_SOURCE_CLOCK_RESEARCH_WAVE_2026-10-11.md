@@ -218,3 +218,36 @@ The distinction matters: the GitHub Actions job's conclusion was success because
 - Literature searches, model output and data-availability receipts are not return evidence. Strategy-success probabilities remain “Nicht schätzbar” without the required preregistration, valid PIT, independent out-of-sample testing, realistic costs, robustness and independent reproduction.
 
 Safety and authority remain unchanged: PAPER_ONLY=True; LIVE_TRADING_ENABLED=False; ORDERS_ENABLED=False; AUTOMATIC_PROMOTION=False. No dispatch, promotion, order, live execution or scientific gate is authorized by this document.
+
+
+
+## 6. Incremental source-provenance findings — 2026-10-11
+
+**Classification:** bounded data-quality and orchestration delta only. The [project-wide synthesis](PROJECT_WIDE_RESEARCH_SYNTHESIS_2026-10-11.md) already defines the general multi-clock/vintage principle; the [Q121 timing memo](Q121_SEC_BENEFICIAL_OWNERSHIP_TIMING_2026-10-03.md) already covers the 5:30 p.m. EDGAR rule and the distinction between acceptance and exact public availability; Q221's existing sections above already document the USAspending archive-vintage failure. This section records only the additional implementation-level findings.
+
+### 6.1 SEC 13F bulk-extract vintage versus accession-level filing
+
+The SEC's official [Form 13F Data Sets page](https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets) records that the March 12, 2024 refresh reformatted the quarterly sets and applied processing fixes, including missing information-table records. The [Form 13F readme](https://www.sec.gov/files/form_13f_readme.pdf) says the data are “as filed” but warns of inconsistencies versus earlier submissions and other publication formats; accession number is the submission key and amendments remain separate.
+
+This is **not evidence that any current Q104 row is wrong**. The incremental risk is that a quarterly ZIP is a derived extraction vintage, not the original accession document. A later extraction fix may change a bulk package without changing what was publicly present in the original filing. Keep accession-level content and each bulk package's generation/version/hash separate; do not infer a later public date from a later extraction refresh.
+
+After run [38168441086](https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086) is terminal and the existing six-shard/header reconciliation is complete, run a fixed, outcome-blind QA sample across predeclared early-, middle- and modern-format strata. Compare frozen target CUSIP/issuer/class rows in the bulk extract to the exact accession's official information-table document. Preserve source URLs, hashes, parser version, missingness and mismatches. This bounded sample is not proof of whole-archive completeness and does not replace or relax the frozen PIT gates.
+
+### 6.2 Concrete Research OS Evidence Bus validation gap
+
+The research_os_evidence_bus.py module records retrieved_at, available_at, release_id, registered source identity and raw/normalized fingerprints. Its validator checks timestamp timezone/order and provenance hashes, but available_at can be null and there is no required field explaining the evidence basis for the claimed availability boundary.
+
+This is a code-level gap against the existing source-clock design, not a reason to rewrite existing receipts. First inventory callers and receipt schemas; then design a backward-compatible, schema-versioned addition for availability basis/source URL, vintage identifier and correction parent. Missing bases must remain unknown, never be inferred from event/action date or retrieval time. No schema change or retroactive receipt mutation is included here.
+
+### 6.3 Verified dashboard freshness race
+
+The dashboard was deployed successfully from master 59f231db…, after which the status synchronizer published 62759435…. The live dashboard snapshot consequently lagged the then-current master. This PR adds a workflow_run completed trigger for the **Current Operational Status Synchronizer**, restricted to its master run, plus a regression test so the dashboard refresh follows the generated status snapshot rather than racing it.
+
+The unusual-source ideas in [PR #1257](https://github.com/DWR-debug/trading-agent-public/pull/1257) (port satellite/AIS, exact-version CISA KEV × NVD CPE, official FDA state transitions), as well as Q202/Q203, already exist in the project and are not new candidates or a reason to widen automatic dispatch.
+
+### Operational disposition
+
+- Active focus remains **Q104:I19, Q220 and Q221**; Q218 stays excluded from automatic dispatch.
+- Do not duplicate Q104. After it is terminal, reconcile the six receipts, apply the existing targeted .hdr.sgml recovery, then perform only the bounded source-consistency QA before the existing PIT compiler.
+- Q220 remains on its historical-prefix/PIT compiler gate; Q221 remains source-blocked pending immutable transaction-level vintages and presence/absence evidence.
+- No candidate contract, performance gate, holdout rule, ranking, tuning, promotion, paid service or live-execution boundary is changed.

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_type": "trading_agent_chat_decision_log",
   "purpose": "Durable operational continuity for future Trading Agent OS chats. Entries are operational notes, not scientific evidence, performance authorization, ranking, or live-trading permission.",
-  "updated_at_utc": "2026-10-11T20:42:00Z",
+  "updated_at_utc": "2026-10-11T21:05:56Z",
   "safety": {
     "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
@@ -11,6 +11,17 @@
     "paid_usage_usd": 0
   },
   "entries": [
+    {
+      "date_utc": "2026-10-11T21:05:56Z",
+      "candidate": "SOURCE CLOCK AUDIT",
+      "status": "NON-AUTHORIZING SOURCE-CLOCK REVIEW",
+      "title": "Cross-candidate SEC and procurement clock reconciliation",
+      "decision": "Primary-source review distinguishes 13F accession content from quarterly bulk-extract vintage, SEC acceptance from the legally assigned filing date and actual dissemination, and USAspending batch publication from transaction-level first public observation. The 2026 5:30 Filing Cliff item is an SSRN working paper specific to 13D/G and is not evidence that the Q104 13F rule is invalid. The review recommends a fixed, outcome-blind accession-vs-bulk source-consistency diagnostic after the current Q104 run and existing header recovery; no candidate contract or gate changes.",
+      "next_action": "Keep Q104:I19, Q220 and Q221 as the only active focus. Do not duplicate Q104. After run 38168441086 is terminal, reconcile the six shard receipts and run only bounded source/identity diagnostics before existing PIT compilation. Preserve Q221's source block until immutable transaction-level vintages and presence/absence evidence are established.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/blob/master/docs/research_design/PRIORITIZED_SOURCE_CLOCK_RESEARCH_WAVE_2026-10-11.md",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086",
+      "scientific_evidence": false
+    },
     {
       "date_utc": "2026-10-11T20:42:00Z",
       "candidate": "Q104:I19",

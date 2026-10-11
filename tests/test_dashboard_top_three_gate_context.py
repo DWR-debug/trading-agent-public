@@ -216,6 +216,7 @@ def test_dashboard_decision_log_is_visible_current_and_non_authorizing():
         "paid_usage_usd": 0,
     }
     assert all(entry["scientific_evidence"] is False for entry in log["entries"])
+    assert "SOURCE CLOCK AUDIT" in [entry["candidate"] for entry in log["entries"]]
     focus = next(entry for entry in log["entries"] if entry["candidate"] == "PORTFOLIO")
     assert all(code in focus["decision"] for code in ("Q104:I19", "Q220", "Q221"))
     assert "Q218" in focus["decision"] and "excluded" in focus["decision"].lower()
@@ -224,3 +225,40 @@ def test_dashboard_decision_log_is_visible_current_and_non_authorizing():
     assert "status_priority" in generator
     assert "wait behind the active run" in generator
     assert "q220_population_focus_sentence" in status_sync
+
+
+
+def test_dashboard_refreshes_after_operational_status_sync_completion():
+    workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    workflow_run = workflow.split("  workflow_run:", 1)[1].split("  push:", 1)[0]
+
+    # GITHUB_TOKEN status-sync commits do not reliably trigger another push workflow.
+    # Refresh after the synchronizer completes so the dashboard reads its latest
+    # CURRENT_STATUS / operational-state / handoff snapshot.
+    assert '- "Current Operational Status Synchronizer"' in workflow_run
+    assert "types: [completed]" in workflow_run
+    assert "branches: [master]" in workflow_run
+    assert "github.event.workflow_run.head_branch == 'master'" in workflow
+
+
+
+
+def test_dashboard_defaults_to_concise_operations_overview_and_progressively_discloses_detail():
+    html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    css = (ROOT / "docs/dashboard/research-control-board.css").read_text(encoding="utf-8")
+
+    assert 'id="opsNowTable"' in html
+    assert 'id="opsNextTable"' in html
+    assert 'id="opsKpis"' in html
+    assert "function renderOperationsOverview(data,work,pipeline,planned,queue)" in js
+    for field in ("x.resource", "x.worker", "x.elapsed_seconds", "x.expected_duration_seconds", "remainingRunLabel(x)"):
+        assert field in js
+    for field in ("p.task", "rec.resource", "nextDurationLabel(p,data,code)"):
+        assert field in js
+    assert 'summary>Ausführliche Kandidatenanalyse, Gate-Begründungen und Handoff</summary>' in html
+    assert 'summary>Aktive Jobs · vollständige Laufzeit- und Actions-Tabelle</summary>' in html
+    assert 'summary>Vollständiges Kandidaten-Portfolio' in html
+    assert ".ops-overview" in css and ".detail-drawer>summary" in css
+    assert "Fehlende Daten werden nicht geschätzt." in html
+
