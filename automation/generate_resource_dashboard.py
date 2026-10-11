@@ -376,9 +376,12 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "started_at": run.get("run_started_at") or run.get("created_at"),
                 "run_started_at": run.get("run_started_at"),
                 "queued_at": run.get("created_at"),
-                "job_status": job.get("status"),
-                "job_started_at": job.get("started_at"),
-                "job_completed_at": job.get("completed_at"),
+                # A queued/in-progress run can be visible before GitHub exposes
+                # any job records. Do not read the loop-local `job` here: it is
+                # undefined when the jobs endpoint returns an empty list.
+                "job_status": run.get("status"),
+                "job_started_at": None,
+                "job_completed_at": None,
                 "run_status": run.get("status"),
                 "actor": (run.get("actor") or {}).get("login"),
                 "run_id": run.get("id"),
