@@ -107,14 +107,64 @@ def test_planned_capacity_keeps_one_step_lookahead_while_resource_is_active():
     assert by_resource["Windows self-hosted A"]["planned_assignments"][0]["scheduled"] is True
 
 
-def test_planned_research_backlog_is_locked_to_three_focus_candidates():
+def test_planned_research_backlog_is_locked_to_three_focus_candidates_and_receipt_state():
     from automation.generate_resource_dashboard import planned_research_backlog
-    board = [{"code": code, "lane":"FRONTIER DISCOVERY", "next_gate":"gate"} for code in ("Q104:I19","Q218","Q219","Q220","Q221","Q224","Q229")]
-    queue = planned_research_backlog(board)
-    assert len(queue) == 3
-    assert [x["candidate"] for x in queue] == ["Q104:I19","Q220","Q221"]
-    assert all(x["planned_status"] == "READY_NEXT_GATE" for x in queue)
-    assert all(x["execution_workflow"] for x in queue)
+
+    pipeline = [
+        {"code": "Q104:I19", "lane": "FORMAL READINESS", "next_gate": "historical 13F completeness"},
+        {"code": "Q218", "lane": "FRONTIER DISCOVERY", "next_gate": "must remain excluded"},
+        {"code": "Q220", "lane": "FRONTIER DISCOVERY", "next_gate": "bounded adversarial robustness review and formal trial-governance reconciliation; no performance authorization", "next_workpack_required": True},
+        {"code": "Q221", "lane": "FRONTIER DISCOVERY", "next_gate": "award-level public-observation boundary + exact transaction-class applicability + recipient-to-issuer mapping"},
+        {"code": "Q219", "lane": "FRONTIER DISCOVERY", "next_gate": "must remain paused"},
+    ]
+    work = [
+        {
+            "task": "Q104 I19 Historical 13F Identity Census",
+            "job": "census shard A",
+            "lane": "FORMAL READINESS",
+            "status": "in_progress",
+            "job_status": "in_progress",
+            "run_id": 900,
+            "resource": "Windows self-hosted A",
+        },
+        {
+            "task": "Q220 As-Filed SEC-XBRL Population Repair",
+            "job": "population",
+            "lane": "FRONTIER DISCOVERY",
+            "status": "queued",
+            "job_status": "queued",
+            "run_id": 901,
+            "resource": "GitHub-hosted Ubuntu x64",
+        },
+    ]
+    planned_capacity = [{
+        "resource": "GitHub-hosted ARM64",
+        "planned_assignments": [{
+            "candidate": "Q221",
+            "task": "historical USAspending policy vintage probe",
+            "scheduled": True,
+            "dispatchable": False,
+            "dispatch_condition": "ADVISORY_ONLY",
+            "readiness": "COMPLETE_POLICY_VINTAGES_NEXT_GATE_NEEDS_NEW_WORKPACK",
+            "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+        }],
+    }]
+
+    queue = planned_research_backlog(pipeline, work=work, planned_capacity=planned_capacity)
+    assert [x["candidate"] for x in queue] == ["Q104:I19", "Q220", "Q221"]
+    by_code = {x["candidate"]: x for x in queue}
+    assert by_code["Q104:I19"]["planned_status"] == "ACTIVE_SINGLE_FLIGHT"
+    assert by_code["Q104:I19"]["execution_workflow"] is None
+    assert "no second" in by_code["Q104:I19"]["resource_hint"].lower() or "keine zweite instanz" in by_code["Q104:I19"]["resource_hint"].lower()
+    assert by_code["Q220"]["planned_status"] == "WORKPACK_REQUIRED"
+    assert by_code["Q220"]["execution_workflow"] is None
+    assert by_code["Q220"]["waiting_job_count"] == 1
+    assert by_code["Q220"]["expected_duration_seconds"] is None
+    assert by_code["Q221"]["planned_status"] == "WORKPACK_REQUIRED"
+    assert by_code["Q221"]["execution_workflow"] is None
+    assert by_code["Q221"]["expected_duration_seconds"] is None
+
+
 
 
 def test_dashboard_filters_platform_work_from_research_capacity():
@@ -215,22 +265,25 @@ def test_chat_handoff_snapshot_uses_persisted_next_chat_decisions_and_safety():
     assert handoff["safety"]["AUTOMATIC_PROMOTION"] is False
 
 
-def test_dashboard_focused_backlog_is_three_candidates():
+def test_dashboard_focused_backlog_uses_current_receipt_gate_not_historical_resource_hint():
     from automation.generate_resource_dashboard import planned_research_backlog
+
     rows = planned_research_backlog([
-        {"code":"Q104:I19","lane":"FORMAL READINESS","next_gate":"13F completeness"},
-        {"code":"Q218","lane":"FRONTIER DISCOVERY","next_gate":"archived SEC source/PIT"},
-        {"code":"Q220","lane":"FRONTIER DISCOVERY","next_gate":"historical as-filed XBRL PIT compiler"},
-        {"code":"Q221","lane":"FRONTIER DISCOVERY","next_gate":"historical USAspending public clock + issuer mapping"},
-        {"code":"Q219","lane":"FRONTIER DISCOVERY","next_gate":"options PIT"},
+        {"code": "Q104:I19", "lane": "FORMAL READINESS", "next_gate": "historical 13F archive/security completeness"},
+        {"code": "Q220", "lane": "FRONTIER DISCOVERY", "next_gate": "bounded adversarial robustness review and formal trial-governance reconciliation; no performance authorization", "next_workpack_required": True},
+        {"code": "Q221", "lane": "FRONTIER DISCOVERY", "next_gate": "award-level public-observation boundary + exact transaction-class applicability + recipient-to-issuer mapping"},
     ])
-    assert [x["candidate"] for x in rows] == ["Q104:I19","Q220","Q221"]
-    assert [x["planned_status"] for x in rows] == [
-        "READY_NEXT_GATE",
-        "READY_NEXT_GATE",
-        "READY_NEXT_GATE",
-    ]
-    assert "historical USAspending" in rows[2]["next_gate"]
+    by_code = {x["candidate"]: x for x in rows}
+    assert "bounded adversarial robustness" in by_code["Q220"]["next_gate"]
+    assert by_code["Q220"]["planned_status"] == "WORKPACK_REQUIRED"
+    assert by_code["Q220"]["resource_hint"].startswith("Workpack zuerst")
+    assert "Windows self-hosted B / historical XBRL PIT" not in by_code["Q220"]["resource_hint"]
+    assert "award-level public-observation" in by_code["Q221"]["next_gate"]
+    assert by_code["Q221"]["planned_status"] == "NO_EXECUTABLE_ROUTE"
+    assert by_code["Q221"]["execution_workflow"] is None
+    assert by_code["Q104:I19"]["execution_workflow"] is None
+
+
 
 
 def test_dashboard_s10_support_is_non_authorizing():
@@ -676,4 +729,71 @@ def test_candidate_job_duration_benchmark_ignores_failed_runs_and_jobs(monkeypat
     benchmark = generator.job_duration_benchmarks(runs)
     assert benchmark["Q220"]["p50_seconds"] == 300
     assert benchmark["Q220"]["sample_count"] == 1
+
+
+
+def test_queued_jobs_do_not_occupy_research_slots_or_count_as_active():
+    from automation.generate_resource_dashboard import candidate_pipeline, enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    queued_work = [{
+        "resource": "Windows self-hosted A",
+        "lane": "FRONTIER DISCOVERY",
+        "task": "Q220 As-Filed SEC-XBRL Population Repair",
+        "job": "population",
+        "status": "queued",
+        "job_status": "queued",
+        "run_id": 901,
+    }]
+    enriched = enrich_resources(
+        [resource],
+        [{"name": "runner-a", "status": "online", "busy": False, "labels": []}],
+        queued_work,
+    )[0]
+    assert enriched["capacity_state"] == "available"
+    assert enriched["current_assignments"] == 0
+    assert enriched["queued_assignments"] == 1
+    assert enriched["research_slots_free"] == 1
+
+    pipeline = candidate_pipeline(
+        [{"code": code, "next_gate": "gate"} for code in ("Q104:I19", "Q220", "Q221")],
+        queued_work,
+        {},
+        {},
+    )
+    q220 = next(item for item in pipeline if item["code"] == "Q220")
+    assert q220["active"] is False
+    assert q220["active_jobs"] == 0
+    assert q220["waiting_jobs"] == 1
+    assert q220["active_capacity_count"] == 0
+    assert q220["waiting_capacity_count"] == 1
+
+
+def test_running_workflow_does_not_give_queued_child_job_a_job_eta():
+    from automation.generate_resource_dashboard import enrich_work_durations
+
+    payload = enrich_work_durations(
+        [{
+            "task": "Demo workflow",
+            "status": "in_progress",
+            "run_status": "in_progress",
+            "job_status": "queued",
+            "run_started_at": "2026-10-12T10:00:00Z",
+            "queued_at": "2026-10-12T10:00:00Z",
+        }],
+        {"Demo workflow": {"p50_seconds": 300, "p90_seconds": 600, "sample_count": 4, "source": "test"}},
+        {},
+    )[0]
+    assert payload["elapsed_seconds"] >= 0
+    assert payload["queue_elapsed_seconds"] >= 0
+    assert payload["remaining_seconds"] is None
+    assert payload["expected_finish_at"] is None
+    assert "upper_bound" in payload["queue_elapsed_basis"]
+
 
