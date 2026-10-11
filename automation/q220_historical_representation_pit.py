@@ -62,12 +62,28 @@ def attributes(raw: str) -> dict[str, str]:
 
 
 def continuation_map(document: str) -> dict[str, tuple[dict[str, str], str]]:
+    """Index continuation fragments with balanced nesting.
+
+    Inline XBRL continuations can contain nested continuation elements. A lazy
+    first-close regex truncates an outer continuation at the nested element's
+    closing tag, which can silently erase text and make a valid continuedAt chain
+    look incomplete. Parse each start tag and use the same balanced-tag scanner
+    as TextBlock facts so outer and inner continuation IDs retain their own body.
+    """
     found: dict[str, tuple[dict[str, str], str]] = {}
-    for match in re.finditer(r"(?is)<ix:continuation\b([^>]*)>(.*?)</ix:continuation\s*>", document):
+    for match in re.finditer(r"(?is)<ix:continuation\b([^>]*)>", document):
         attrs = attributes(match.group(1))
         identifier = attrs.get("id")
-        if identifier:
-            found[identifier] = (attrs, match.group(2))
+        if not identifier:
+            continue
+        if match.group(0).rstrip().endswith("/>"):
+            fragment = ""
+        else:
+            fragment = matching_element_content(document, match.end(), "continuation")
+            # Missing closing markup must not be presented as an empty fragment.
+            if fragment is None:
+                continue
+        found[identifier] = (attrs, fragment)
     return found
 
 
