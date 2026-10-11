@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "1781b74f865ddf68e028a21b50a18cdf2fea805d2c97cf3c63c8be76b0105cbb",
-  "context_fingerprint": "f4c68cfda2c935b93490d48573dd1b8c6fccd0fa79a281ee818515327a7ecfd8",
-  "observed_at_utc": "2026-10-10T17:14:41.328014Z",
+  "context_fingerprint": "48bdcf8a05771745c25e4131e51387192b265d441e0a94b844627cbb50056aab",
+  "observed_at_utc": "2026-10-11T16:33:02.131412Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 36.867,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 2.714,
+  "stdout": "User Safety: safe",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791736382-fvUodtdqnFRjMJh1BNrG",
+  "usage": {
+    "prompt_tokens": 5323,
+    "completion_tokens": 173,
+    "total_tokens": 5496,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 187,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
