@@ -336,3 +336,24 @@ def test_dashboard_q220_status_comes_from_population_compiler_and_independent_re
     assert 'owner="Workpack zuerst spezifizieren · kein Runner zuordnen";' in js
     assert "Neues begrenztes Robustheits-/Governance-Workpack definieren" in js
     assert 'if(x.next_workpack_required)return {label:"WORKPACK OFFEN",cls:"blocked-badge"};' in js
+
+
+def test_dashboard_distinguishes_running_jobs_from_waiting_runs_and_workpack_required_queue():
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+
+    assert "function dashboardWorkIsRunning(item)" in js
+    assert "function dashboardWorkIsWaiting(item)" in js
+    assert "var running=rows.filter(dashboardWorkIsRunning)" in js
+    assert "var waiting=rows.filter(dashboardWorkIsWaiting)" in js
+    assert "&& dashboardWorkIsRunning(x)" in js
+    assert 'var ready=x.planned_status==="READY_NEXT_GATE"' in js
+    assert "WORKPACK_REQUIRED:\"Neues Workpack erforderlich · kein Runner\"" in js
+    assert "Vorhandene wartende Jobs:" in js
+    assert '"job_status": job.get("status")' in generator
+    assert "run_eta_applicable = status == \"in_progress\" and job_status == \"in_progress\"" in generator
+    assert "planned_research_backlog(\n        pipeline, work=work, planned_capacity=planned_capacity" in generator
+    assert 'if(item.get("next_workpack_required"))' not in generator  # backlog must receive the actual pipeline row
+    assert 'resource_hint = "Workpack zuerst spezifizieren; keine Ressource disponieren"' in generator
+
+
