@@ -436,6 +436,8 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
         owner="Aktiver Run zuerst · danach Ressource neu disponieren";
       }else if(p&&p.dispatchable&&p.scheduled&&rec.resource){
         owner=String(rec.resource);
+      }else if(pipe.next_workpack_required){
+        owner="Workpack zuerst spezifizieren · kein Runner zuordnen";
       }else if(p&&(!p.dispatchable||p.scheduled===false)){
         owner="Nicht disponieren · neues Workpack / Voraussetzung offen";
       }else{
