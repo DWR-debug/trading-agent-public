@@ -25,6 +25,7 @@ try:
 except ModuleNotFoundError:
     # Direct script execution puts automation/ on sys.path.
     from planned_capacity_fast_dispatch import ai_task_completed_with_current_context, TOP4_CANDIDATES, completed_slot_scopes
+from automation.q220_receipt_chain import evaluate_q220_receipt_chain
 OUT = ROOT / "docs" / "dashboard" / "dashboard_data.json"
 BOOTSTRAP = ROOT / "docs" / "dashboard" / "dashboard_bootstrap.js"
 REPO = os.environ.get("GITHUB_REPOSITORY", "DWR-debug/trading-agent-public")
@@ -1048,6 +1049,29 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
 
     q104_compiler = q104_historical_compilation_status()
     q220_population = q220_as_filed_population_status(runs)
+    q220_chain = evaluate_q220_receipt_chain(ROOT)
+    if q220_chain["population_positive"]:
+        q220_population = {
+            "state": "complete",
+            "progress_percent": 100,
+            "detail": "Current pinned Q220 population receipt is positive.",
+            "next_gate": q220_chain["next_gate"],
+            "receipt_fingerprint": q220_chain["population_receipt_fingerprint"],
+        }
+    elif q220_population.get("state") == "running":
+        q220_chain["current_milestone_status"] = "running"
+        q220_chain["current_milestone_detail"] = q220_population["detail"]
+        q220_chain["next_gate"] = "positive current-code fixed-population receipt"
+        q220_chain["milestones"][1]["status"] = "running"
+        q220_chain["milestones"][1]["detail"] = q220_population["detail"]
+    else:
+        q220_population = {
+            "state": "blocked",
+            "progress_percent": 0,
+            "detail": q220_chain["current_milestone_detail"],
+            "next_gate": q220_chain["next_gate"],
+            "receipt_fingerprint": q220_chain["population_receipt_fingerprint"],
+        }
     q104_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Exact-XBRL-Kontrakt eingefroren"},
         {"label": "Source feasibility", "status": "complete", "progress": 100, "detail": "Q104 source feasibility receipt vorhanden"},
@@ -1089,14 +1113,7 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
         score = completed_units + partial_units
         return int(round(100 * score / total)), completed_units, total
 
-    q220_state = q220_population["state"]
-    q220_milestones = [
-        {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Fixed eight-issuer universe and as-filed SEC/XBRL representation contract"},
-        {"label": "As-filed population + TextBlock/XSD/presentation mapping", "status": q220_state, "progress": q220_population["progress_percent"], "detail": q220_population["detail"]},
-        {"label": "Historical prefix / representation-gap PIT compiler", "status": "ready" if q220_state == "complete" else "blocked", "progress": 0, "detail": "opens only after a positive fixed-population receipt with stable mapping"},
-        {"label": "Independent PIT reproduction", "status": "blocked", "progress": 0, "detail": "requires frozen historical compiler inputs and an independent source route"},
-        {"label": "Pre-performance robustness", "status": "blocked", "progress": 0, "detail": "length/readability controls, future-text exclusion, taxonomy drift and disjoint OOS remain required"},
-    ]
+    q220_milestones = q220_chain["milestones"]
     q221_clock = q221_public_clock_status()
     q221_milestones = [
         {"label": "Design contract", "status": "complete", "progress": 100, "detail": "Frozen R&D-to-procurement option-value mechanism and non-overlap contract"},
@@ -1146,11 +1163,12 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 "overall_progress_percent": q220_overall,
                 "completed_milestones": q220_complete,
                 "total_milestones": q220_total,
-                "current_milestone": "Historical prefix / representation-gap PIT compiler" if q220_state == "complete" else "As-filed population + TextBlock/XSD/presentation mapping",
-                "current_milestone_progress_percent": 0 if q220_state == "complete" else q220_population["progress_percent"],
-                "current_milestone_status": "ready" if q220_state == "complete" else q220_state,
-                "current_milestone_detail": q220_population["detail"],
-                "next_gate": q220_population["next_gate"],
+                "current_milestone": q220_chain["current_milestone"],
+                "current_milestone_progress_percent": q220_chain["current_milestone_progress_percent"],
+                "current_milestone_status": q220_chain["current_milestone_status"],
+                "current_milestone_detail": q220_chain["current_milestone_detail"],
+                "next_gate": q220_chain["next_gate"],
+                "next_milestone_progress_basis": q220_chain["current_milestone_detail"],
                 "milestones": q220_milestones,
                 "performance_authorization_allowed": False,
             },
