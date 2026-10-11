@@ -1,5 +1,5 @@
 from pathlib import Path
-from automation.q220_as_filed_xbrl_population_gate import TARGET_ISSUERS,WINDOW_START,WINDOW_END,ROUTE_QUARTERS,choose_presentation_source,concept_spec,ix_textblocks,xsd_metadata,presentation_metadata,console_summary,primary_document_from_index,choose_primary
+from automation.q220_as_filed_xbrl_population_gate import TARGET_ISSUERS,WINDOW_START,WINDOW_END,ROUTE_QUARTERS,choose_presentation_source,concept_spec,ix_textblocks,xsd_metadata,presentation_metadata,console_summary,primary_document_from_index,choose_primary,parse_acceptance
 ROOT=Path(__file__).parents[1]
 
 def test_q220_population_window_and_identity_are_frozen():
@@ -182,3 +182,10 @@ def test_q220_historical_primary_document_uses_sec_form_typed_filing_index():
 def test_q220_form_index_parser_fails_closed_without_matching_form_row():
     index_html = b'''<table><tr><td>1</td><td>EXHIBIT 10.11</td><td><a href="/Archives/edgar/data/1/2/R1.htm">R1.htm</a></td><td>EX-10.11</td><td>100</td></tr></table>'''
     assert primary_document_from_index(index_html, "10-K") is None
+
+def test_q220_sec_acceptance_header_is_eastern_wall_clock_normalized_to_utc():
+    # SEC EDGAR headers specify acceptance time in Eastern local time, not a UTC
+    # wall clock. Verify both DST offsets and prevent a misleading literal Z.
+    assert parse_acceptance(b"<ACCEPTANCE-DATETIME>20260730163028") == "2026-07-30T20:30:28Z"
+    assert parse_acceptance(b"<ACCEPTANCE-DATETIME>20260115163028") == "2026-01-15T21:30:28Z"
+    assert parse_acceptance(b"<SEC-HEADER>NO ACCEPTANCE DATETIME") is None
