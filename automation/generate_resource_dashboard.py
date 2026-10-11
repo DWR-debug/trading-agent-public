@@ -1511,21 +1511,35 @@ def expanded_candidate_board(
     return board
 
 
-def capacity_state(resource: dict[str, Any], runner: dict[str, Any] | None, assignments: list[dict[str, Any]]) -> str:
-    """Report research occupancy only; runner busy-state is exposed separately.
+def assignment_is_running(item: dict[str, Any]) -> bool:
+    """True only when the GitHub job itself is running, not merely queued."""
+    status = str(
+        item.get("job_status") or item.get("status") or item.get("run_status") or ""
+    ).strip().lower()
+    return status in {"in_progress", "running"}
 
-    A busy self-hosted runner can be executing non-research/platform work or a
-    research job that the current work snapshot did not classify. It must never
-    inflate the visible research-job count or turn a zero-job resource into
-    "ARBEITET".
+
+def assignment_is_queued(item: dict[str, Any]) -> bool:
+    """Queued work is visible as backlog, not as physical runner occupancy."""
+    status = str(
+        item.get("job_status") or item.get("status") or item.get("run_status") or ""
+    ).strip().lower()
+    return status in {"queued", "waiting", "pending", "requested"}
+
+
+def capacity_state(resource: dict[str, Any], runner: dict[str, Any] | None, assignments: list[dict[str, Any]]) -> str:
+    """Report observed research execution without treating queued jobs as running.
+
+    Runner inventory can be absent when the dashboard token lacks
+    Administration:read. In that case only an explicitly running workflow job
+    proves that the assigned resource is occupied; absence of a runner record is
+    unknown, never proof of idle capacity.
     """
-    if assignments:
+    if any(assignment_is_running(item) for item in assignments):
         return "operating"
     if runner and str(runner.get("status")).lower() == "online":
         return "available"
-    if resource["type"] == "cloud":
-        return "available"
-    if resource["type"] == "service":
+    if resource["type"] in {"cloud", "service"}:
         return "available"
     return "unknown"
 
@@ -1539,28 +1553,32 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             w for w in assignments
             if str(w.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"}
         ]
+        executing_research_assignments = [
+            w for w in research_assignments if assignment_is_running(w)
+        ]
+        queued_research_assignments = [
+            w for w in research_assignments if assignment_is_queued(w)
+        ]
         runner = runner_by_name.get(resource["configured_runner"])
         state = capacity_state(resource, runner, research_assignments)
-        if runner is not None and isinstance(runner.get("busy"), bool):
-            runner_busy: bool | None = runner["busy"]
-            runner_busy_basis = "GITHUB_RUNNER_INVENTORY"
-        elif any(
-            str(item.get("status") or item.get("run_status") or "").lower()
-            in {"in_progress", "running"}
-            for item in research_assignments
-        ):
-            # A live workflow assignment proves that the assigned runner is
-            # executing, even when the separate Administration:read inventory
-            # endpoint is unavailable to this dashboard token.
-            runner_busy = True
+        if executing_research_assignments:
+            # An explicitly running job assigned to this runner is stronger
+            # evidence of occupancy than a missing or stale runner snapshot.
+            runner_busy: bool | None = True
             runner_busy_basis = "ACTIVE_WORKFLOW_ASSIGNMENT"
+        elif runner is not None and isinstance(runner.get("busy"), bool):
+            runner_busy = runner["busy"]
+            runner_busy_basis = "GITHUB_RUNNER_INVENTORY"
         else:
-            # Missing runner inventory is not evidence that a PC is idle.
+            # Missing inventory is not evidence that a PC is idle. A queued
+            # job is waiting for capacity, not proof that this runner is busy.
             runner_busy = None
             runner_busy_basis = "UNKNOWN_NO_RUNNER_INVENTORY"
         capacity_slots = max(1, int(resource.get("research_capacity_slots", 1) or 1))
         physical_in_use = 1 if resource.get("type") == "physical" and runner_busy is True else 0
-        research_slots_in_use = min(capacity_slots, max(len(research_assignments), physical_in_use))
+        research_slots_in_use = min(
+            capacity_slots, max(len(executing_research_assignments), physical_in_use)
+        )
         research_slots_free = (
             max(0, capacity_slots - research_slots_in_use)
             if state in {"available", "operating"}
@@ -1581,12 +1599,13 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "runner_busy_basis": runner_busy_basis,
             "runner_status": runner.get("status") if runner else None,
             "labels": runner.get("labels", []) if runner else [],
-            "current_assignments": len(research_assignments),
+            "current_assignments": len(executing_research_assignments),
+            "queued_assignments": len(queued_research_assignments),
             "total_active_assignments": len(assignments),
             "research_capacity_slots": capacity_slots,
             "research_slots_in_use": research_slots_in_use,
             "research_slots_free": research_slots_free,
-            "current_tasks": [w.get("task") for w in assignments[:4]],
+            "current_tasks": [w.get("task") for w in executing_research_assignments[:4]],
         })
     return out
 
