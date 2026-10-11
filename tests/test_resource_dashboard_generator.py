@@ -534,3 +534,110 @@ def test_q221_open_vintage_gate_can_use_free_slot_despite_old_successful_run(mon
     assert item["scheduled"] is True
     assert item["dispatchable"] is True
     assert item["dispatch_state"] == "READY_FOR_FAST_DISPATCH"
+
+
+def test_enrich_work_durations_keeps_run_eta_separate_from_queue_time():
+    from datetime import datetime, timedelta, timezone
+    from automation.generate_resource_dashboard import enrich_work_durations
+
+    now = datetime.now(timezone.utc)
+    started = now - timedelta(seconds=110)
+    row = {
+        "task": "Demo workflow",
+        "job": "compile",
+        "status": "in_progress",
+        "run_status": "in_progress",
+        "job_status": "in_progress",
+        "run_started_at": started.isoformat(),
+        "queued_at": (now - timedelta(seconds=130)).isoformat(),
+        "started_at": started.isoformat(),
+    }
+    result = enrich_work_durations(
+        [row],
+        {"Demo workflow": {"p50_seconds": 60, "p90_seconds": 240, "sample_count": 4, "source": "fixture"}},
+        {},
+    )[0]
+
+    assert result["expected_duration_seconds"] == 60
+    assert result["expected_duration_p90_seconds"] == 240
+    assert result["elapsed_seconds"] >= 110
+    assert result["queue_elapsed_seconds"] == 0
+    assert result["p50_elapsed_exceeded"] is True
+    assert result["p90_elapsed_exceeded"] is False
+    assert result["remaining_seconds"] == 0
+    assert 100 <= result["remaining_p90_seconds"] <= 130
+    assert result["expected_finish_at"] is not None
+
+
+def test_enrich_work_durations_does_not_call_queue_age_run_elapsed():
+    from datetime import datetime, timedelta, timezone
+    from automation.generate_resource_dashboard import enrich_work_durations
+
+    now = datetime.now(timezone.utc)
+    created = now - timedelta(seconds=180)
+    row = {
+        "task": "Demo workflow",
+        "job": "compile",
+        "status": "queued",
+        "run_status": "queued",
+        "job_status": "queued",
+        "run_started_at": None,
+        "queued_at": created.isoformat(),
+        "started_at": created.isoformat(),
+    }
+    result = enrich_work_durations(
+        [row],
+        {"Demo workflow": {"p50_seconds": 60, "p90_seconds": 240, "sample_count": 4, "source": "fixture"}},
+        {},
+    )[0]
+
+    assert result["elapsed_seconds"] == 0
+    assert result["queue_elapsed_seconds"] >= 180
+    assert result["remaining_seconds"] is None
+    assert result["expected_finish_at"] is None
+
+
+def test_candidate_job_benchmarks_include_candidate_slot_runs(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    monkeypatch.setattr(dashboard, "jobs_for_run", lambda _run_id: [{
+        "name": "Top-4 slot Windows Q220",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-11T10:00:00Z",
+        "completed_at": "2026-10-11T10:05:00Z",
+    }])
+    result = dashboard.job_duration_benchmarks([{
+        "id": 123,
+        "name": "Top-4 Candidate Slot Research",
+        "status": "completed",
+        "conclusion": "success",
+    }])
+    assert result["Q220"]["p50_seconds"] == 300
+    assert result["Q220"]["p90_seconds"] == 300
+    assert result["Q220"]["sample_count"] == 1
+
+
+def test_planned_capacity_exposes_candidate_job_duration_p50_p90():
+    from automation.generate_resource_dashboard import planned_capacity_plan
+
+    resources = [
+        {"name":"Windows self-hosted A","capacity_state":"available","current_assignments":0,"research_slots_free":1,"research_capacity_slots":1},
+        {"name":"Windows self-hosted B","capacity_state":"available","current_assignments":0,"research_slots_free":1,"research_capacity_slots":1},
+        {"name":"Windows self-hosted C","capacity_state":"available","current_assignments":0,"research_slots_free":1,"research_capacity_slots":1},
+        {"name":"GitHub-hosted Ubuntu x64","capacity_state":"available","current_assignments":0,"research_slots_free":1,"research_capacity_slots":1},
+        {"name":"GitHub-hosted ARM64","capacity_state":"available","current_assignments":0,"research_slots_free":1,"research_capacity_slots":2},
+        {"name":"Free AI pool","capacity_state":"available","current_assignments":0,"research_slots_free":1,"research_capacity_slots":1},
+    ]
+    focused = [{"code": c, "next_gate": "gate"} for c in ("Q104:I19", "Q220", "Q221")]
+    plan = planned_capacity_plan(resources, [], focused, {
+        "Q220": {"p50_seconds": 600, "p90_seconds": 1200, "sample_count": 3, "source": "fixture history"},
+    }, {})
+    q220 = next(
+        item for row in plan for item in row["planned_assignments"]
+        if item.get("candidate") == "Q220"
+    )
+    assert q220["expected_duration_seconds"] == 600
+    assert q220["expected_duration_p90_seconds"] == 1200
+    assert q220["duration_sample_count"] == 3
+    assert q220["duration_source"] == "fixture history"
