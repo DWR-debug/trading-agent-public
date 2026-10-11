@@ -50,7 +50,7 @@ He, Lv, Manela and Wu, **“Chronologically Consistent Large Language Models”*
 
 Chen and Dim, **“High-Throughput Asset Pricing”** (2023), describe empirical-Bayes methods for large collections of trading strategies and discuss the weakness of naive selection on maximum Sharpe ratios. Harvey, Liu and Zhu's factor-zoo work similarly emphasizes the multiple-testing burden in empirical asset pricing. McLean and Pontiff's replication research is a further reminder that published predictability may attenuate after discovery.
 
-- Chen & Dim record: https://consensus.app/papers/details/8b8e0a9d1d5e5b18b4f2c8d8e9f4a4b2/ (verify the exact bibliographic record before formal citation; do not use this placeholder URL as a canonical reference)
+- Chen & Dim, **“High-Throughput Asset Pricing”** (2023) was returned by the literature search, but a publisher/author canonical record was not independently resolved in this pass; treat it as a search lead, not a formally verified citation.
 - Harvey, Liu & Zhu, **“…and the Cross-Section of Expected Returns”**: https://doi.org/10.1093/rfs/hhv059
 - McLean & Pontiff, **“Does Academic Research Destroy Stock Return Predictability?”**: https://doi.org/10.1111/jofi.12365
 - Practical consequence: discovery metadata must be separated from outcome tests; keep an immutable ledger of all candidate concepts, source tests, failed hypotheses and decision rules. Do not select the best-looking candidate or horizon from the same data used to invent it.
@@ -126,7 +126,7 @@ Before any expensive validation, each candidate should pass these controls:
 ## 5. Current execution implications
 
 - **Q104:I19:** allow the existing historical 13F census to terminate. Reconcile all shard receipts, then recover only accession headers demonstrably missing from the frozen failure set. Do not restart the full census blindly.
-- **Q220:** the current operational handoff says its population receipt is stale relative to current gate code and frozen contract. A GitHub evidence commit alone does not clear this gate. Verify the actual receipt content, exact `gate_code_sha256`, `contract_sha256`, row/record counts, zero-failure requirement and receipt fingerprint. No historical prefix/PIT compiler until all are positive and current.
+- **Q220:** the old operational handoff still says its population receipt is stale, but a fresh check of run `38155914188` found the `population` job completed successfully: 55 rows / 55 records across the frozen eight-issuer universe, zero record failures, and receipt fingerprint `158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543`. The gate-code and contract files have identical Git blob SHAs at the run's source commit and current master, so their bytes are unchanged. The run's overall status remains `pending` because `route_probe` is still `pending`. Treat the population subgate as positive from the job log; do not mark the whole workflow or downstream PIT gate complete until the route probe and current receipt provenance are reconciled.
 - **Q221:** the user will manually dispatch the bounded archive inventory probe. This synthesis does not dispatch or duplicate it. An inventory of archive files is only a prerequisite; it is not proof of first public observation or issuer mapping.
 - **Q218:** excluded from active execution and successor selection. Historical artifacts remain preserved; no new Q218 job is authorized by this document.
 - **No performance authorization:** this note creates no trial, result, ranking, tuning, holdout choice, promotion or live-execution permission.
