@@ -328,6 +328,8 @@ function operationStatusClass(status){
   return "blocked-badge";
 }
 function nextDurationLabel(item,data,code){
+  var pipelineRow=(data.pipeline||[]).filter(function(x){return x.code===code;})[0]||{};
+  if(pipelineRow.next_workpack_required)return "Keine ETA · neues Workpack offen";
   if(item&&item.scheduled===false)return "Keine ETA · Voraussetzung blockiert";
   if(item&&item.dispatchable===false)return "Keine ETA · nicht auto-dispatchierbar";
   if(item&&item.expected_duration_seconds!=null&&Number(item.duration_sample_count)>0){
