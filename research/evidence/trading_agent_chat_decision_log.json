@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_type": "trading_agent_chat_decision_log",
   "purpose": "Durable operational continuity for future Trading Agent OS chats. Entries are operational notes, not scientific evidence, performance authorization, ranking, or live-trading permission.",
-  "updated_at_utc": "2026-10-11T21:05:56Z",
+  "updated_at_utc": "2026-10-11T21:24:53Z",
   "safety": {
     "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
@@ -11,6 +11,28 @@
     "paid_usage_usd": 0
   },
   "entries": [
+    {
+      "date_utc": "2026-10-11T21:24:53Z",
+      "candidate": "RESEARCH OS EVIDENCE BUS",
+      "status": "SCHEMA V2 IMPLEMENTED",
+      "title": "Receipt digest integrity and explicit availability-basis fields",
+      "decision": "The Evidence Bus gap noted in the earlier source-clock audit has been fixed in PR #1325: receipt fingerprints are recomputed against canonical contents, and opt-in v2 requires explicit availability basis/evidence URL, vintage ID and revision-parent fingerprint fields. V1 receipts remain compatible and are not rewritten. The reachability-only endpoint probe deliberately remains v1 because it has no historical first-public availability evidence.",
+      "next_action": "No new schema mutation is needed. Only migrate a source-specific producer to v2 when it can provide a defensible timestamp and supporting HTTPS evidence; preserve UNKNOWN rather than imputing an availability clock.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/blob/master/docs/research_design/RESEARCH_OS_EVIDENCE_BUS_SCHEMA_V2_2026-10-11.md",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/pull/1325",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-11T21:24:53Z",
+      "candidate": "OPERATIONS DASHBOARD",
+      "status": "LIVE · OPERATIONS-FIRST VIEW",
+      "title": "Dashboard simplified to Now / Next / Duration",
+      "decision": "The live dashboard now leads with a compact operations overview showing active focus jobs, candidate, workflow/job, runner/resource, status, start/elapsed time, historical P50/P90 when a comparable sample exists, and a separate next-step table with resource and calibrated duration. Long candidate/gate details, full job tables, portfolio, capacity inventory and chat handoff are collapsed behind details. Live snapshot master_sha matched current master 520469003840a2478d76a1c932d0821863942c6c at 2026-10-11T21:20:25Z.",
+      "next_action": "Keep runtime estimates evidence-based: Q104's active census has six live shard jobs and elapsed time is shown, but no comparable historical duration was present in the live snapshot, so ETA remains explicitly unknown. Do not restart/duplicate the census. Reassess ETA calibration from completed comparable runs only.",
+      "url": "https://dwr-debug.github.io/trading-agent-public/dashboard/",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38175911250",
+      "scientific_evidence": false
+    },
     {
       "date_utc": "2026-10-11T21:05:56Z",
       "candidate": "SOURCE CLOCK AUDIT",

@@ -233,11 +233,11 @@ This is **not evidence that any current Q104 row is wrong**. The incremental ris
 
 After run [38168441086](https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086) is terminal and the existing six-shard/header reconciliation is complete, run a fixed, outcome-blind QA sample across predeclared early-, middle- and modern-format strata. Compare frozen target CUSIP/issuer/class rows in the bulk extract to the exact accession's official information-table document. Preserve source URLs, hashes, parser version, missingness and mismatches. This bounded sample is not proof of whole-archive completeness and does not replace or relax the frozen PIT gates.
 
-### 6.2 Concrete Research OS Evidence Bus validation gap
+### 6.2 Evidence Bus v2 correction — implemented
 
-The research_os_evidence_bus.py module records retrieved_at, available_at, release_id, registered source identity and raw/normalized fingerprints. Its validator checks timestamp timezone/order and provenance hashes, but available_at can be null and there is no required field explaining the evidence basis for the claimed availability boundary.
+The gap identified during this audit was closed by [PR #1325](https://github.com/DWR-debug/trading-agent-public/pull/1325), merged at 2026-10-11 21:18:35 UTC. Current `master` recomputes the canonical receipt digest (excluding only `receipt_fingerprint`) and fails closed on payload mutation. Opt-in schema v2 adds `availability_basis`, `availability_evidence_url`, `vintage_id` and `revision_parent_fingerprint`; a claimed non-null availability time requires HTTPS evidence, while unknown availability must remain explicitly `UNKNOWN`. Schema-v1 shape remains compatible and existing receipts are not rewritten.
 
-This is a code-level gap against the existing source-clock design, not a reason to rewrite existing receipts. First inventory callers and receipt schemas; then design a backward-compatible, schema-versioned addition for availability basis/source URL, vintage identifier and correction parent. Missing bases must remain unknown, never be inferred from event/action date or retrieval time. No schema change or retroactive receipt mutation is included here.
+The production caller inventory confirmed that `research_os_source_probe.py` is the only production caller of `build_receipt`; it remains on v1 because HTTP reachability does not establish the historical first-public time of a dataset. This is intentional rather than an unresolved defect. Future source-specific producers should opt into v2 only when they have evidence for the chosen clock; no availability time may be imputed from event/action time or retrieval time.
 
 ### 6.3 Verified dashboard freshness race
 
