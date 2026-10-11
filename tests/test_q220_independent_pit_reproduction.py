@@ -259,6 +259,7 @@ def _make_tiny_inputs():
         "source_population_receipt_fingerprint": population["receipt_fingerprint"],
         "source_population_contract_sha256": population["contract_sha256"],
         "source_population_gate_code_sha256": population["gate_code_sha256"],
+        "compiler_code_sha256": sha256((__import__("pathlib").Path(__file__).resolve().parents[1] / "automation/q220_historical_representation_pit.py").read_bytes()),
         "fixed_universe": population["fixed_universe"],
         "window": population["window"],
         "exact_numeric_qnames": list(NUMERIC_QNAMES),
