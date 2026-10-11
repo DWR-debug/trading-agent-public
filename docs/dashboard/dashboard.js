@@ -140,6 +140,7 @@ function candidateInfo(code){
 }
 function candidateStatus(x){
   var status=String(x.current_milestone_status||"").toLowerCase();
+  if(x.next_workpack_required)return {label:"WORKPACK OFFEN",cls:"blocked-badge"};
   // Scientific gate outcome outranks ancillary job activity. A route probe can
   // remain queued while the fixed population it supports is already blocked.
   if(status==="blocked"||status.indexOf("blocked")>=0){
