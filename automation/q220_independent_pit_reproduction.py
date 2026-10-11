@@ -131,7 +131,7 @@ def _render(child: Any) -> str:
     if isinstance(child, str):
         return child
     if child.tag in SCRIPTS_AND_STYLES:
-        return ""
+        return " "
     # HTML tags and comments are boundaries, matching their visible-text role.
     return " " + "".join(_render(grandchild) for grandchild in child.children) + " "
 
