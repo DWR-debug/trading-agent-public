@@ -3,6 +3,19 @@ name: Resource Dashboard Update
 on:
   schedule:
     - cron: "*/5 * * * *"
+  workflow_run:
+    workflows:
+      - "Q104 I19 Historical 13F Identity Census"
+      - "Q104 I19 Historical PIT Compilation"
+      - "Q104 I19 Independent PIT Reproduction"
+      - "Q220 As-Filed SEC-XBRL Population Repair"
+      - "Q220 Historical Representation PIT Compiler"
+      - "Q220 Independent Historical PIT Reproduction"
+      - "Q220 TextBlock Differential Diagnostic"
+      - "Q221 Monthly Archive Inventory Probe"
+      - "Q221 Historical Award Public Boundary Falsification"
+    types: [completed]
+    branches: [master]
   push:
     branches: [master]
     paths:
@@ -15,6 +28,11 @@ on:
       - "docs/dashboard/dashboard.js"
       - "docs/dashboard/research-control-board.css"
       - "ops/trading_agent_os_state.json"
+      - "research/evidence/current_operational_state.json"
+      - "docs/CURRENT_STATUS.md"
+      - "research/evidence/trading_agent_chat_handoff.json"
+      - "research/evidence/q220_historical_representation_pit_latest.json"
+      - "research/evidence/q220_independent_pit_reproduction_latest.json"
       - "research/evidence/q104_i19_13f_historical_identity_census_latest.json"
       - "research/evidence/q104_i19_historical_pit_compilation_latest.json"
       - "research/evidence/q104_i19_independent_pit_reproduction_latest.json"
@@ -43,7 +61,10 @@ concurrency:
 
 jobs:
   update_and_deploy:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (github.event_name != 'workflow_run' ||
+       github.event.workflow_run.head_branch == 'master')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     environment:
