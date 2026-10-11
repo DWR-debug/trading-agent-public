@@ -246,6 +246,7 @@ ACTIVE_WORKFLOWS = {
     "q220-as-filed-xbrl-population.yml",
     "q220-historical-representation-pit.yml",
     "q221-historical-award-public-boundary.yml",
+    "q221-monthly-archive-inventory-probe.yml",
     "groq-free-adversarial-worker.yml",
     "groq-api-key-smoke-test.yml",
     "github-pages-dashboard.yml",
