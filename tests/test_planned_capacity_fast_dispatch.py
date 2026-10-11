@@ -957,6 +957,46 @@ def test_i19_census_failure_blocks_automatic_full_census_retry():
     )
 
 
+def test_i19_census_active_run_blocks_automatic_full_redispatch():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    workflow = ".github/workflows/q104-i19-13f-historical-identity-census.yml"
+    snapshot = {
+        "focus_candidates": ["Q104:I19"],
+        "work_assignments": [],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted A",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q104-I19-CENSUS",
+                "candidate": "Q104:I19",
+                "scheduled": True,
+                "dispatchable": True,
+                "exclusive_dispatch": True,
+                "execution_workflow": workflow,
+            }],
+        }],
+    }
+    active_run = {
+        "id": 38145062319,
+        "status": "in_progress",
+        "conclusion": None,
+        "name": "Q104 I19 Historical 13F Identity Census",
+        "path": workflow,
+    }
+
+    plan = dispatch_candidates(snapshot, [active_run], max_dispatches=1)
+
+    assert plan["dispatches"] == []
+    blocked = next(
+        item for item in plan["decisions"]
+        if item["decision"] == "SKIP_I19_CENSUS_AUTOMATIC_FULL_RETRY_REQUIRES_TARGETED_RECOVERY"
+    )
+    assert blocked["active_run_ids"] == [38145062319]
+    assert blocked["failed_run_ids"] == []
+
+
 def test_i19_census_dispatch_is_allowed_when_no_prior_census_failure_exists():
     from automation.planned_capacity_fast_dispatch import dispatch_candidates
     workflow = ".github/workflows/q104-i19-13f-historical-identity-census.yml"

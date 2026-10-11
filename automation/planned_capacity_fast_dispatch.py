@@ -662,19 +662,30 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         # receipt-gated workflow that retries only unresolved acceptance headers.
         if candidate == "Q104:I19" and workflow.endswith(I19_CENSUS_WORKFLOW):
             prior_i19_census_failures = []
+            active_i19_census_runs = []
             for prior in runs:
-                if not isinstance(prior, dict) or prior.get("status") != "completed":
-                    continue
-                if prior.get("conclusion") not in {"failure", "startup_failure", "timed_out", "cancelled"}:
+                if not isinstance(prior, dict):
                     continue
                 title = " ".join(str(prior.get(key) or "") for key in ("name", "display_title", "run_name"))
                 path = str(prior.get("path") or prior.get("workflow_path") or "")
-                if "Q104 I19 Historical 13F Identity Census" in title or path.endswith(I19_CENSUS_WORKFLOW):
+                if "Q104 I19 Historical 13F Identity Census" not in title and not path.endswith(I19_CENSUS_WORKFLOW):
+                    continue
+
+                # A dispatched census can still be transitioning to terminal failure
+                # when the capacity pulse snapshots Actions. Treat in-progress and
+                # queued runs as an active lock; otherwise a stale/early snapshot can
+                # enqueue another six-shard census before this failure guard sees it.
+                if prior.get("status") != "completed":
+                    active_i19_census_runs.append(prior)
+                    continue
+                if prior.get("conclusion") in {"failure", "startup_failure", "timed_out", "cancelled"}:
                     prior_i19_census_failures.append(prior)
-            if prior_i19_census_failures:
+
+            if active_i19_census_runs or prior_i19_census_failures:
                 decisions.append({
                     "plan_id": item.get("plan_id"),
                     "decision": "SKIP_I19_CENSUS_AUTOMATIC_FULL_RETRY_REQUIRES_TARGETED_RECOVERY",
+                    "active_run_ids": sorted(int(x.get("id")) for x in active_i19_census_runs if str(x.get("id", "")).isdigit()),
                     "failed_run_ids": sorted(int(x.get("id")) for x in prior_i19_census_failures if str(x.get("id", "")).isdigit()),
                 })
                 continue
