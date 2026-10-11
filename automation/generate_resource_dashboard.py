@@ -457,11 +457,16 @@ def enrich_work_durations(
             run_started = parse_dt(entry.get("started_at"))
         queued_at = parse_dt(entry.get("queued_at"))
         elapsed = max(0, int((now - run_started).total_seconds())) if run_started and status == "in_progress" else 0
+        job_started = parse_dt(entry.get("job_started_at"))
+        if job_started is None and job_status == "in_progress":
+            job_started = run_started
+        job_elapsed = max(0, int((now - job_started).total_seconds())) if job_started and job_status == "in_progress" else 0
         queued_elapsed = (
             max(0, int((now - queued_at).total_seconds()))
             if queued_at and job_status in WAITING_JOB_STATUSES else 0
         )
         entry["elapsed_seconds"] = elapsed
+        entry["job_elapsed_seconds"] = job_elapsed
         entry["queue_elapsed_seconds"] = queued_elapsed
         entry["queue_elapsed_basis"] = (
             entry.get("queue_elapsed_basis")
