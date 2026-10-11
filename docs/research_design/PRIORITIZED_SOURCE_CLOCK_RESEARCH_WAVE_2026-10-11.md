@@ -266,5 +266,5 @@ No candidate is added, no active-focus lock is widened, and no performance, hold
 
 - Active focus remains **Q104:I19, Q220 and Q221**; Q218 stays excluded from automatic dispatch.
 - Do not duplicate Q104. After it is terminal, reconcile the six receipts, apply the existing targeted .hdr.sgml recovery, then perform only the bounded source-consistency QA before the existing PIT compiler.
-- Q220 remains on its historical-prefix/PIT compiler gate; Q221 remains source-blocked pending immutable transaction-level vintages and presence/absence evidence.
+- Q220's frozen 55-record population, historical-prefix compiler and independent PIT reproduction are now positive and receipt-linked; the next gate is a bounded adversarial robustness review plus formal trial-governance reconciliation, with no performance authorization. Q221 remains source-blocked at the award-level public-observation boundary until a separate transaction-level workpack proves historical presence/absence and correction lineage.
 - No candidate contract, performance gate, holdout rule, ranking, tuning, promotion, paid service or live-execution boundary is changed.
