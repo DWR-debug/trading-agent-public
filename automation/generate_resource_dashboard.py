@@ -205,7 +205,8 @@ def job_duration_benchmarks(
     recent_runs: int = 6,
 ) -> dict[str, dict[str, int | str]]:
     samples: dict[str, list[int]] = {}
-    selected = [r for r in runs if isinstance(r, dict) and r.get("name") == workflow_name and r.get("status") == "completed"]
+    comparable_workflows = {workflow_name, "Top-4 Candidate Slot Research"}
+    selected = [r for r in runs if isinstance(r, dict) and r.get("name") in comparable_workflows and r.get("status") == "completed"]
     for run in selected[:recent_runs]:
         for job in jobs_for_run(int(run["id"])) if run.get("id") else []:
             if job.get("status") != "completed" or job.get("conclusion") == "cancelled":
@@ -225,7 +226,7 @@ def job_duration_benchmarks(
             "p50_seconds": median(values) or 0,
             "p90_seconds": percentile(values, 0.90) or 0,
             "sample_count": len(values),
-            "source": "Top-4 candidate job history; cancelled jobs excluded",
+            "source": "completed Top-4 candidate capacity/slot job history; cancelled jobs excluded",
         }
         for candidate, values in samples.items()
     }
@@ -373,6 +374,12 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "task": workflow,
                 "status": run.get("status"),
                 "started_at": run.get("run_started_at") or run.get("created_at"),
+                "run_started_at": run.get("run_started_at"),
+                "queued_at": run.get("created_at"),
+                "job_status": job.get("status"),
+                "job_started_at": job.get("started_at"),
+                "job_completed_at": job.get("completed_at"),
+                "run_status": run.get("status"),
                 "actor": (run.get("actor") or {}).get("login"),
                 "run_id": run.get("id"),
                 "run_url": run.get("html_url"),
@@ -387,25 +394,40 @@ def enrich_work_durations(
     workflow_benchmarks: dict[str, dict[str, int | str]],
     job_benchmarks: dict[str, dict[str, int | str]],
 ) -> list[dict[str, Any]]:
+    """Attach a run-level P50/P90 ETA without confusing queue time with runtime.
+
+    Pipeline-job duration estimates are attached separately by planned_capacity_plan
+    using the candidate-specific job benchmark. Missing samples stay explicitly unknown.
+    """
     now = datetime.now(timezone.utc)
     out = []
     for item in work:
         workflow = str(item.get("task") or "")
-        candidate = next((c for c in FOCUS_CANDIDATES if c in f"{workflow} {item.get('job', '')}"), None)
-        benchmark = job_benchmarks.get(candidate) if workflow == "Top-4 Candidate Research Capacity" else workflow_benchmarks.get(workflow)
+        benchmark = workflow_benchmarks.get(workflow)
         entry = dict(item)
         expected = int(benchmark["p50_seconds"]) if benchmark and benchmark.get("p50_seconds") else None
+        expected_p90 = int(benchmark["p90_seconds"]) if benchmark and benchmark.get("p90_seconds") else None
         entry["expected_duration_seconds"] = expected
+        entry["expected_duration_p90_seconds"] = expected_p90
         entry["duration_sample_count"] = int(benchmark["sample_count"]) if benchmark else 0
-        entry["duration_source"] = str(benchmark["source"]) if benchmark else "no benchmark available"
-        started = parse_dt(entry.get("started_at"))
-        elapsed = max(0, int((now - started).total_seconds())) if started else 0
+        entry["duration_source"] = str(benchmark["source"]) if benchmark else "no completed comparable workflow run available"
+        status = str(entry.get("status") or "")
+        run_started = parse_dt(entry.get("run_started_at"))
+        if run_started is None and status == "in_progress":
+            run_started = parse_dt(entry.get("started_at"))
+        queued_at = parse_dt(entry.get("queued_at"))
+        elapsed = max(0, int((now - run_started).total_seconds())) if run_started and status == "in_progress" else 0
+        queued_elapsed = max(0, int((now - queued_at).total_seconds())) if queued_at and status != "in_progress" else 0
         entry["elapsed_seconds"] = elapsed
-        entry["remaining_seconds"] = max(0, expected - elapsed) if expected is not None and item.get("status") == "in_progress" else expected
-        entry["expected_finish_at"] = (now + timedelta(seconds=entry["remaining_seconds"])).isoformat() if entry["remaining_seconds"] is not None else None
+        entry["queue_elapsed_seconds"] = queued_elapsed
+        entry["p50_elapsed_exceeded"] = bool(expected is not None and status == "in_progress" and elapsed >= expected)
+        entry["p90_elapsed_exceeded"] = bool(expected_p90 is not None and status == "in_progress" and elapsed >= expected_p90)
+        entry["remaining_seconds"] = max(0, expected - elapsed) if expected is not None and status == "in_progress" else None
+        entry["remaining_p90_seconds"] = max(0, expected_p90 - elapsed) if expected_p90 is not None and status == "in_progress" else None
+        entry["expected_finish_at"] = (run_started + timedelta(seconds=expected)).isoformat() if expected is not None and run_started and status == "in_progress" else None
+        entry["expected_p90_finish_at"] = (run_started + timedelta(seconds=expected_p90)).isoformat() if expected_p90 is not None and run_started and status == "in_progress" else None
         out.append(entry)
     return out
-
 
 CANDIDATE_DEVELOPMENT_MILESTONES = (
     "DESIGN CONTRACT",
@@ -1908,8 +1930,10 @@ def planned_capacity_plan(
                 "exclusive_dispatch": bool(item.get("exclusive_dispatch", False)),
                 "resource_leases": list(item.get("resource_leases") or []),
                 "allow_parallel_with_candidate": bool(item.get("allow_parallel_with_candidate", False)),
-                "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
+                "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark and benchmark.get("p50_seconds") else None,
+                "expected_duration_p90_seconds": int(benchmark["p90_seconds"]) if benchmark and benchmark.get("p90_seconds") else None,
                 "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
+                "duration_source": str(benchmark.get("source") or "no completed comparable candidate job available") if benchmark else "no completed comparable candidate job available",
             })
             assigned_candidates.add(candidate)
             placed = True
