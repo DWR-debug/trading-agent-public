@@ -39,7 +39,8 @@ function durationBenchmarkLabel(p50,p90,count){
   return "P50 "+fmtDuration(p50)+(p90!=null&&Number.isFinite(Number(p90))?" · P90 "+fmtDuration(p90):"")+" · n="+String(count||0);
 }
 function remainingRunLabel(item){
-  if(String(item.status||"")!=="in_progress")return "Run noch nicht gestartet";
+  if(String(item.status||item.run_status||"")!=="in_progress")return "Run noch nicht gestartet";
+  if(item.job_status&&String(item.job_status).toLowerCase()!=="in_progress")return "Keine Job-ETA · Job wartet";
   if(item.expected_duration_seconds==null)return "Keine historische Laufzeitbasis";
   if(!item.p50_elapsed_exceeded)return "ca. "+fmtDuration(item.remaining_seconds)+" bis P50";
   if(item.expected_duration_p90_seconds!=null&&!item.p90_elapsed_exceeded)return "P50 überschritten · ca. "+fmtDuration(item.remaining_p90_seconds)+" bis P90";
@@ -342,12 +343,21 @@ function nextDurationLabel(item,data,code){
   }
   return "Nicht kalibriert";
 }
+function dashboardWorkStatus(item){
+  return String((item&&item.job_status)||((item&&item.status)||((item&&item.run_status)||""))).toLowerCase();
+}
+function dashboardWorkIsRunning(item){
+  return dashboardWorkStatus(item)==="in_progress";
+}
+function dashboardWorkIsWaiting(item){
+  return ["queued","pending","waiting","requested"].indexOf(dashboardWorkStatus(item))>=0;
+}
 function renderOperationsOverview(data,work,pipeline,planned,queue){
   var kpis=$("opsKpis"), nowTable=$("opsNowTable"), nextTable=$("opsNextTable");
   if(!kpis||!nowTable||!nextTable)return;
   var rows=Array.isArray(work)?work.slice():[];
-  var running=rows.filter(function(x){return String(x.status||x.run_status||"")==="in_progress";});
-  var waiting=rows.filter(function(x){return ["queued","waiting","pending"].indexOf(String(x.status||x.run_status||""))>=0;});
+  var running=rows.filter(dashboardWorkIsRunning);
+  var waiting=rows.filter(dashboardWorkIsWaiting);
   var calibrated=rows.filter(function(x){return Number(x.duration_sample_count||0)>0&&x.expected_duration_seconds!=null;});
   kpis.innerHTML=
     "<div class='ops-kpi'><span>JETZT AKTIV</span><strong>"+running.length+"</strong><small>sichtbare Fokus-Jobs</small></div>"+
@@ -416,7 +426,9 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
   nextTable.innerHTML="<table class='ops-table ops-compact ops-next-table'><thead><tr><th>Reihenfolge</th><th>Status</th><th>Was kommt als Nächstes?</th><th>Wer / Ressource</th><th>Zeitbedarf</th></tr></thead><tbody>"+
     FOCUS.map(function(code,index){
       var pipe=byCode[code]||{};
-      var activeRows=rows.filter(function(x){return candidateFrom((x.task||"")+" "+(x.job||""))===code;});
+      var activeRows=rows.filter(function(x){
+        return candidateFrom((x.task||"")+" "+(x.job||""))===code && dashboardWorkIsRunning(x);
+      });
       var rec=plannedFor(code), q=queuedByCode[code]||{};
       var gate=String(pipe.next_gate||pipe.current_milestone||q.next_gate||"Nächstes Gate nicht dokumentiert");
       var p=rec?rec.item:null;
@@ -658,8 +670,24 @@ function render(data){
   $("plannedQueue").innerHTML=queue.length?
     "<div class='queue-grid'>"+queue.map(function(x){
       var b=(data.job_duration_benchmarks||{})[x.candidate]||null;
-      var estimate=durationBenchmarkLabel(b&&b.p50_seconds,b&&b.p90_seconds,b&&b.sample_count);
-      return "<div class='queue-item'><span class='queue-rank'>"+esc(x.queue_rank)+"</span><div><strong>"+esc(x.candidate)+"</strong><div class='small'>"+esc(x.next_gate)+"</div><div class='small muted'>Kapazitätsziel: "+esc(x.resource_hint||"noch nicht zugeordnet")+"</div><div class='small muted'>Geschätzte Jobdauer: "+esc(estimate)+"</div><div class='small muted'>"+esc(x.execution_workflow)+"</div></div></div>";
+      var ready=x.planned_status==="READY_NEXT_GATE";
+      var p50=x.expected_duration_seconds!=null?x.expected_duration_seconds:(b&&b.p50_seconds);
+      var p90=x.expected_duration_p90_seconds!=null?x.expected_duration_p90_seconds:(b&&b.p90_seconds);
+      var samples=Number(x.duration_sample_count||((b&&b.sample_count)||0));
+      var estimate=ready?durationBenchmarkLabel(p50,p90,samples):"Keine ETA · "+String(x.planned_status||"nicht disponiert").replace(/_/g," ").toLowerCase();
+      var queueStatus={
+        ACTIVE_SINGLE_FLIGHT:"Aktiver Lauf · keine zweite Instanz",
+        WORKPACK_REQUIRED:"Neues Workpack erforderlich · kein Runner",
+        WAITING_EXISTING_RUNS:"Bereits eingereiht · kein Duplikat",
+        PREREQUISITE_BLOCKED:"Voraussetzung offen · kein Runner",
+        NO_EXECUTABLE_ROUTE:"Kein ausführbarer Workpack/Runner"
+      };
+      var label=queueStatus[x.planned_status]||String(x.planned_status||"Status unbekannt").replace(/_/g," ");
+      var status=operationStatusClass(x.planned_status||"blocked");
+      var waitingNote=Number(x.waiting_job_count||0)>0
+        ?"<div class='small muted'>Vorhandene wartende Jobs: "+esc(x.waiting_job_count)+" · "+esc((x.waiting_run_ids||[]).map(function(id){return "#"+id;}).join(", "))+"</div>"
+        :"";
+      return "<div class='queue-item'><span class='queue-rank'>"+esc(x.queue_rank)+"</span><div><strong>"+esc(x.candidate)+"</strong><div class='small'>"+esc(x.next_gate)+"</div><div><span class='badge "+status+"'>"+esc(label)+"</span></div><div class='small muted'>Ressource: "+esc(x.resource_hint||"noch nicht zugeordnet")+"</div>"+waitingNote+"<div class='small muted'>Zeitbedarf: "+esc(estimate)+"</div><div class='small muted'>"+esc(x.execution_workflow||"Kein Workflow zur Ausführung freigegeben")+"</div></div></div>";
     }).join("")+"</div>":"<div class='empty'>Kein bounded Next-Gate für den Fokus bereitgestellt.</div>";
 
   $("planned").innerHTML=planned.length?
