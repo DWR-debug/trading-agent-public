@@ -1327,17 +1327,15 @@ def candidate_development_roadmap(
         ]
     if candidate == "Q220":
         q220_progress = progress["candidates"]["Q220"]
-        q220_gate = next(
-            item for item in q220_progress["milestones"]
-            if item["label"] == "As-filed population + TextBlock/XSD/presentation mapping"
-        )
-        complete = q220_gate["status"] == "complete"
+        stage_ids = ["Q220-CONTRACT", "Q220-POPULATION", "Q220-PIT", "Q220-REPRO", "Q220-ROBUST"]
         return [
-            {"id": "Q220-CONTRACT", "label": "Frozen as-filed representation-gap contract", "status": "completed", "next": "fixed eight-issuer filing universe"},
-            {"id": "Q220-POPULATION", "label": "SEC as-filed population + TextBlock/XSD/presentation mapping", "status": q220_gate["status"], "next": q220_progress["next_gate"]},
-            {"id": "Q220-PIT", "label": "Historical prefix / representation-gap PIT compiler", "status": "ready" if complete else "blocked", "next": "positive population receipt"},
-            {"id": "Q220-REPRO", "label": "Independent PIT reproduction", "status": "blocked", "next": "positive historical PIT compiler receipt"},
-            {"id": "Q220-ROBUST", "label": "Cheap falsifiers: length/readability, future text, taxonomy drift", "status": "blocked", "next": "frozen PIT inputs and independent reproduction"},
+            {
+                "id": stage_ids[index],
+                "label": milestone["label"],
+                "status": "COMPLETED" if milestone.get("status") == "complete" else str(milestone.get("status") or "blocked").upper(),
+                "next": str(milestone.get("detail") or q220_progress["next_gate"]),
+            }
+            for index, milestone in enumerate(q220_progress["milestones"])
         ]
     if candidate == "Q221":
         q221_gate = q221_public_clock_status()
@@ -1416,9 +1414,14 @@ def candidate_pipeline(
     for candidate in FOCUS_CANDIDATES:
         p = progress["candidates"][candidate]
         capacity = candidate_capacity_snapshot(candidate, work, planned_capacity)
+        stage = (
+            "FRONTIER DISCOVERY · " + str(p["current_milestone"]).upper()
+            if candidate == "Q220"
+            else state_by_candidate[candidate]
+        )
         result.append({
             "code": candidate,
-            "stage": state_by_candidate[candidate],
+            "stage": stage,
             "next_gate": p["next_gate"],
             "active": bool(active_by_candidate[candidate]),
             "active_jobs": len(active_by_candidate[candidate]),
