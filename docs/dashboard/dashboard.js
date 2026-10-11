@@ -447,6 +447,7 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
       var estimate=nextDurationLabel(p,data,code);
       var basis=p?String(p.readiness||p.basis||""):String(pipe.next_milestone_progress_basis||pipe.current_milestone_status||"");
       if(activeRows.length)basis="Keinen Parallel-Run starten; aktiven Lauf abschließen und erst danach Receipts prüfen.";
+      if(pipe.next_workpack_required)basis="PIT-Quittungskette positiv; der nächste Robustheits-/Governance-Workpack ist noch nicht definiert.";
       var cls=operationStatusClass(status);
       return "<tr><td><strong>"+(index+1)+". "+esc(code)+"</strong></td>"+
         "<td><span class='badge "+cls+"'>"+esc(status)+"</span></td>"+
