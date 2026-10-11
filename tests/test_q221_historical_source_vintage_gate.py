@@ -1,3 +1,6 @@
+import gzip
+import hashlib
+import io
 import json
 from pathlib import Path
 
@@ -45,6 +48,7 @@ def test_q221_historical_vintage_gate_reconstructs_bounded_archived_policy_witho
     assert len(result["capture_rows"]) == len(gate.TARGETS)
     assert path.is_file()
     assert len(result["receipt_fingerprint"]) == 64
+    assert result["gate_code_sha256"] == hashlib.sha256(Path(gate.__file__).read_bytes()).hexdigest()
 
 
 def test_q221_historical_vintage_gate_fails_closed_when_a_target_window_is_missing(tmp_path, monkeypatch):
@@ -78,3 +82,67 @@ def test_q221_cdx_parser_ignores_malformed_rows():
         ["20261001000000", "https://example.invalid/file.pdf", "application/pdf", "200", "D3", "100"],
     ]
     assert len(gate.parse_cdx(json.dumps(rows).encode("utf-8"))) == 1
+
+
+class _FakeHTTPResponse(io.BytesIO):
+    def __init__(self, body: bytes, headers: dict[str, str]):
+        super().__init__(body)
+        self.headers = headers
+        self.status = 200
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+
+
+def test_q221_fetch_decompresses_gzip_content_encoding_with_bounded_decoded_bytes(monkeypatch):
+    decoded = b"%PDF-1.7\nQ221 archive vintage"
+    response = _FakeHTTPResponse(gzip.compress(decoded), {
+        "Content-Type": "application/pdf",
+        "Content-Encoding": "gzip",
+    })
+    captured = {}
+
+    def fake_urlopen(request, timeout):
+        captured["request"] = request
+        captured["timeout"] = timeout
+        return response
+
+    monkeypatch.setattr(gate.urllib.request, "urlopen", fake_urlopen)
+    status, content_type, body = gate.fetch("https://example.invalid/archive.pdf", 1024)
+
+    assert status == 200
+    assert content_type == "application/pdf"
+    assert body == decoded
+    assert captured["request"].get_header("Accept-encoding") == "identity"
+    assert captured["timeout"] == 35
+
+
+def test_q221_fetch_detects_gzip_magic_even_when_content_encoding_is_missing(monkeypatch):
+    decoded = b"%PDF-1.7\narchive replay"
+    response = _FakeHTTPResponse(gzip.compress(decoded), {
+        "Content-Type": "application/pdf",
+    })
+    monkeypatch.setattr(gate.urllib.request, "urlopen", lambda request, timeout: response)
+
+    _, content_type, body = gate.fetch("https://example.invalid/archive.pdf", 1024)
+
+    assert content_type == "application/pdf"
+    assert body == decoded
+
+
+def test_q221_fetch_rejects_gzip_expansion_beyond_bounded_size(monkeypatch):
+    response = _FakeHTTPResponse(gzip.compress(b"x" * 2048), {
+        "Content-Type": "application/pdf",
+        "Content-Encoding": "gzip",
+    })
+    monkeypatch.setattr(gate.urllib.request, "urlopen", lambda request, timeout: response)
+
+    try:
+        gate.fetch("https://example.invalid/archive.pdf", 128)
+    except ValueError as exc:
+        assert "decompressed response exceeded bounded byte limit" in str(exc)
+    else:
+        raise AssertionError("gzip expansion beyond the configured bound must fail closed")
