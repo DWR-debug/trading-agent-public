@@ -5,6 +5,7 @@ from automation.evidence_graph_stage4_stage5 import (
     jaccard,
     novelty_analysis,
     bridge_proposals,
+    candidate_inventory,
 )
 
 def test_signature_is_deterministic():
@@ -56,3 +57,39 @@ def test_live_contract_relations_are_materialized():
     assert any(edge["type"] == "shares_clock_and_filing_substrate" for edge in graph["edges"])
     assert len(novelty) == len(candidates)
     assert isinstance(negatives, list)
+
+def test_overlap_inventory_includes_legacy_waves_and_discovery_seeds():
+    inventory = candidate_inventory()
+    # Q157 lives in a legacy wave; Q233 lives in the discovery seed pack.
+    # Q227/Q231 are in the current candidate contract. All must be compared.
+    assert {"Q157", "Q227", "Q231", "Q233"}.issubset(inventory)
+    assert inventory["Q157"]["inventory_source"].endswith(
+        "q152_q165_candidate_wave_2026_10_03.json"
+    )
+    assert inventory["Q233"]["inventory_source"].endswith(
+        "orthogonal_discovery_seed_pack_2026_10_06.json"
+    )
+    # Current canonical contracts take precedence over copies in older waves.
+    assert inventory["Q227"]["inventory_source"] == (
+        "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
+    )
+
+
+def test_legacy_overlap_comparison_is_review_only_and_deterministic():
+    inventory_a = candidate_inventory()
+    inventory_b = candidate_inventory()
+    assert list(inventory_a) == list(inventory_b)
+    signatures = {
+        cid: candidate_signature(spec, {})
+        for cid, spec in inventory_a.items()
+    }
+    rows = novelty_analysis(signatures)
+    ids = {row["candidate"] for row in rows}
+    assert {"Q157", "Q227", "Q231", "Q233"}.issubset(ids)
+    assert len(rows) == len(signatures)
+    assert all(
+        "POTENTIAL_CONVERGENCE" in row["overlap_class"]
+        or "AMBIGUOUS" in row["overlap_class"]
+        or "LIKELY_ORTHOGONAL" in row["overlap_class"]
+        for row in rows
+    )
