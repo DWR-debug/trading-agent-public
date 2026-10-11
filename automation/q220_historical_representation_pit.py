@@ -340,7 +340,36 @@ def compile_receipt(population: dict[str, Any], contract: dict[str, Any], root: 
         row.get("kind") in {"UNMAPPED_TEXTBLOCK_CONCEPTS", "TEXTBLOCK_QNAME_RECONCILIATION_MISMATCH"}
         for row in mapping_gap_rows
     )
-    positive = source_complete and textblock_mapping_complete and len(events) == record_count
+    # Independently reconcile each emitted prefix against the complete compiled
+    # event sequence. Equal acceptance timestamps are never ordered by accession.
+    strict_prefix_valid = source_complete and len(events) == record_count
+    if strict_prefix_valid:
+        for event in events:
+            current_ts = datetime.fromisoformat(event["acceptance_datetime_utc"])
+            eligible = [
+                candidate for candidate in events
+                if candidate["cik"] == event["cik"]
+                and datetime.fromisoformat(candidate["acceptance_datetime_utc"]) < current_ts
+            ]
+            prior_originals = [candidate for candidate in eligible if candidate["form"] == "10-K"]
+            latest = max(
+                prior_originals,
+                key=lambda candidate: (
+                    datetime.fromisoformat(candidate["acceptance_datetime_utc"]),
+                    candidate["record_key"],
+                ),
+            ) if prior_originals else None
+            if (
+                event["prior_same_issuer_filing_count"] != len(eligible)
+                or event["prior_same_issuer_original_10k_count"] != len(prior_originals)
+                or event["latest_prior_original_10k"] != (latest["record_key"] if latest else None)
+            ):
+                strict_prefix_valid = False
+                break
+            if latest and datetime.fromisoformat(latest["acceptance_datetime_utc"]) >= current_ts:
+                strict_prefix_valid = False
+                break
+    positive = source_complete and textblock_mapping_complete and strict_prefix_valid and len(events) == record_count
     receipt: dict[str, Any] = {
         "schema_version": 1,
         "record_type": "q220_historical_representation_pit_compilation",
@@ -366,10 +395,7 @@ def compile_receipt(population: dict[str, Any], contract: dict[str, Any], root: 
         "structured_fact_rule": "Only the five exact frozen us-gaap QNames are extracted; no fallback or concept substitution is permitted.",
         "source_complete": source_complete,
         "textblock_mapping_complete": textblock_mapping_complete,
-        "historical_prefix_order_valid": all(
-            datetime.fromisoformat(e["acceptance_datetime_utc"]) == datetime.fromisoformat(e["acceptance_datetime_utc"])
-            for e in events
-        ),
+        "historical_prefix_order_valid": strict_prefix_valid,
         "status": "Q220_HISTORICAL_REPRESENTATION_PIT_COMPILED" if positive else "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
         "gate_positive": positive,
         "next_gate": "independent PIT reproduction on an independent retrieval/parse path" if positive else "repair source hash mismatches or reconcile TextBlock/presentation mapping gaps before independent reproduction",
