@@ -1541,10 +1541,31 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         ]
         runner = runner_by_name.get(resource["configured_runner"])
         state = capacity_state(resource, runner, research_assignments)
-        runner_busy = bool(runner and runner.get("busy"))
+        if runner is not None and isinstance(runner.get("busy"), bool):
+            runner_busy: bool | None = runner["busy"]
+            runner_busy_basis = "GITHUB_RUNNER_INVENTORY"
+        elif any(
+            str(item.get("status") or item.get("run_status") or "").lower()
+            in {"in_progress", "running"}
+            for item in research_assignments
+        ):
+            # A live workflow assignment proves that the assigned runner is
+            # executing, even when the separate Administration:read inventory
+            # endpoint is unavailable to this dashboard token.
+            runner_busy = True
+            runner_busy_basis = "ACTIVE_WORKFLOW_ASSIGNMENT"
+        else:
+            # Missing runner inventory is not evidence that a PC is idle.
+            runner_busy = None
+            runner_busy_basis = "UNKNOWN_NO_RUNNER_INVENTORY"
         capacity_slots = max(1, int(resource.get("research_capacity_slots", 1) or 1))
-        physical_in_use = 1 if resource.get("type") == "physical" and runner_busy else 0
+        physical_in_use = 1 if resource.get("type") == "physical" and runner_busy is True else 0
         research_slots_in_use = min(capacity_slots, max(len(research_assignments), physical_in_use))
+        research_slots_free = (
+            max(0, capacity_slots - research_slots_in_use)
+            if state in {"available", "operating"}
+            else None
+        )
         if state == "operating":
             live_status = "operating"
         elif state == "available":
@@ -1557,13 +1578,14 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "live_status": live_status,
             "busy": state == "operating",
             "runner_busy": runner_busy,
+            "runner_busy_basis": runner_busy_basis,
             "runner_status": runner.get("status") if runner else None,
             "labels": runner.get("labels", []) if runner else [],
             "current_assignments": len(research_assignments),
             "total_active_assignments": len(assignments),
             "research_capacity_slots": capacity_slots,
             "research_slots_in_use": research_slots_in_use,
-            "research_slots_free": max(0, capacity_slots - research_slots_in_use),
+            "research_slots_free": research_slots_free,
             "current_tasks": [w.get("task") for w in assignments[:4]],
         })
     return out
