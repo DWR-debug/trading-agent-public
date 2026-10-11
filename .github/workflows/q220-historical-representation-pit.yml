@@ -1,0 +1,83 @@
+name: Q220 Historical Representation PIT Compiler
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q220_historical_representation_pit.py"
+      - "tests/test_q220_historical_representation_pit.py"
+      - "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json"
+      - "research/evidence/q220_as_filed_xbrl_population_latest.json"
+      - ".github/workflows/q220-historical-representation-pit.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q220-historical-representation-pit
+  cancel-in-progress: false
+
+jobs:
+  compile:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Test frozen PIT compiler contract
+        run: python -m pytest -q tests/test_q220_historical_representation_pit.py tests/test_q220_as_filed_xbrl_population_gate.py
+
+      - name: Compile historical acceptance-time prefixes
+        id: compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q220_historical_representation_pit \
+            --population research/evidence/q220_as_filed_xbrl_population_latest.json \
+            --contract research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json \
+            --output research/evidence/q220_historical_representation_pit_latest.json
+
+      - name: Publish compiler receipt
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt="research/evidence/q220_historical_representation_pit_latest.json"
+          test -s "$receipt"
+          current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          test -n "$current_sha"
+          python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha "$current_sha" \
+            --file "$receipt=$receipt"
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: q220-historical-representation-pit-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/evidence/q220_historical_representation_pit_latest.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce positive compiler gate
+        if: always()
+        run: |
+          python - <<'PY'
+          import json,sys
+          p="research/evidence/q220_historical_representation_pit_latest.json"
+          r=json.load(open(p,encoding="utf-8"))
+          print("Q220_HISTORICAL_PIT_GATE_POSITIVE="+str(r.get("gate_positive") is True).lower())
+          raise SystemExit(0 if r.get("gate_positive") is True else 2)
+          PY
