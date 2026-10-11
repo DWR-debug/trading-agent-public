@@ -216,6 +216,7 @@ def test_dashboard_decision_log_is_visible_current_and_non_authorizing():
         "paid_usage_usd": 0,
     }
     assert all(entry["scientific_evidence"] is False for entry in log["entries"])
+    assert "SOURCE CLOCK AUDIT" in [entry["candidate"] for entry in log["entries"]]
     focus = next(entry for entry in log["entries"] if entry["candidate"] == "PORTFOLIO")
     assert all(code in focus["decision"] for code in ("Q104:I19", "Q220", "Q221"))
     assert "Q218" in focus["decision"] and "excluded" in focus["decision"].lower()
@@ -224,3 +225,19 @@ def test_dashboard_decision_log_is_visible_current_and_non_authorizing():
     assert "status_priority" in generator
     assert "wait behind the active run" in generator
     assert "q220_population_focus_sentence" in status_sync
+
+
+
+def test_dashboard_refreshes_after_operational_status_sync_completion():
+    workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    workflow_run = workflow.split("  workflow_run:", 1)[1].split("  push:", 1)[0]
+
+    # GITHUB_TOKEN status-sync commits do not reliably trigger another push workflow.
+    # Refresh after the synchronizer completes so the dashboard reads its latest
+    # CURRENT_STATUS / operational-state / handoff snapshot.
+    assert '- "Current Operational Status Synchronizer"' in workflow_run
+    assert "types: [completed]" in workflow_run
+    assert "branches: [master]" in workflow_run
+    assert "github.event.workflow_run.head_branch == 'master'" in workflow
+
+

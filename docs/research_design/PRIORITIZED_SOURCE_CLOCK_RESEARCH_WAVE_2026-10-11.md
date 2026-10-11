@@ -218,3 +218,52 @@ The distinction matters: the GitHub Actions job's conclusion was success because
 - Literature searches, model output and data-availability receipts are not return evidence. Strategy-success probabilities remain “Nicht schätzbar” without the required preregistration, valid PIT, independent out-of-sample testing, realistic costs, robustness and independent reproduction.
 
 Safety and authority remain unchanged: PAPER_ONLY=True; LIVE_TRADING_ENABLED=False; ORDERS_ENABLED=False; AUTOMATIC_PROMOTION=False. No dispatch, promotion, order, live execution or scientific gate is authorized by this document.
+
+
+## 6. Cross-candidate public-clock reconciliation — 2026-10-11
+
+**Classification:** source semantics / PIT engineering review only. This addendum does not change any preregistration, frozen candidate contract, dispatch allow-list, performance gate, holdout rule or safety control.
+
+### 6.1 SEC 13F: an accession, its public filing and a quarterly bulk extract are different objects
+
+The SEC's official [Form 13F Data Sets page](https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets) describes quarterly structured extracts taken from EDGAR filings. Its March 12, 2024 refresh both reformatted the sets to match the 2023 layout and applied processing fixes that included missing information-table records and certain address codes. The official [Form 13F readme](https://www.sec.gov/files/form_13f_readme.pdf) says the data are “as filed,” but also warns that redundancies, inconsistencies and discrepancies can exist relative to earlier submissions and other publication formats; accession number is the submission key and amendments are represented separately.
+
+This does **not** prove that any particular row used by Q104 is wrong. It does mean a current quarterly bulk extract is not, by itself, proof of what an earlier *bulk-file vintage* contained. The underlying accession-level information table is the relevant public filing object for the holding row, while the quarterly ZIP is a derived enumeration/extraction. Keep their hashes, generation/vintage and roles separate. Do not equate a later extractor repair with a later public date for information that was already present in the original SEC filing; equally, do not assume an extracted row is correct without source identity and accession lineage.
+
+**Bounded next check:** after active Q104 run [38168441086](https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086) becomes terminal and the existing failed-header recovery has reconciled all six receipts, run a fixed, outcome-blind source-consistency diagnostic across predeclared early-, middle- and modern-format archive strata. For each selected accession, compare the frozen target CUSIP/issuer/class rows in the bulk extract with the exact accession's official information-table document; preserve raw URLs, bytes and SHA-256 values, parser version, missingness and mismatches. This is a data-integrity diagnostic before the PIT compiler, not a candidate expansion or performance test. A sample cannot prove whole-archive completeness; any discovered mismatch must stay explicit and be dispositioned before claiming broader completeness.
+
+### 6.2 SEC acceptance time, legal filing date and dissemination are related—but not interchangeable concepts
+
+The SEC's [EDGAR Filer Manual, Volume 2](https://www.sec.gov/files/edgar/filermanual/efmvol2-c10.pdf) and [17 CFR 232.13](https://www.ecfr.gov/current/title-17/chapter-II/part-232/section-232.13) specify the 5:30 p.m. ET rule for assigning the official filing date to a submission whose transmission begins after that cut-off. The [EDGAR Public Dissemination Service technical specification](https://www.sec.gov/info/edgar/specifications/pds-dissemination-spec022315.pdf) separately describes accepted public submissions being disseminated through PDS, as well as later post-acceptance correction/deletion events. Therefore “acceptance timestamp,” legally assigned filing date, actual public dissemination, and later correction are separate fields even when they are usually close in time.
+
+The 2026 SSRN working paper [*The 5:30 Filing Cliff: Administrative Deadlines, Disclosure Timing, and Event-Time Measurement*](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7264259) is a useful warning, but not an established result for this candidate. It studies the February 2024 deadline change for Schedules 13D/13G in a pilot sample; it is a working paper, and its reported result is sensitive to the February observations and does not survive its multiple-comparison adjustment. It does **not** establish that a 13F or 10-K acceptance timestamp is invalid as a daily point-in-time anchor. The official dissemination specification and the paper address related but not identical mechanics; do not resolve that distinction by assumption.
+
+Q104's frozen design currently maps accepted information to the first eligible XNYS session after the acceptance date. Preserve that conservative daily boundary. Do not replace it with report period, quarterly bulk-posting date, or the legally assigned filing date. Before the historical PIT compiler is treated as complete, verify the form-specific boundary on a fixed set of after-5:30 and quarter-end examples; if precise same-day dissemination is not proven, keep the already specified next-session rule. The current identity census preregistration remains identity/source-only and explicitly does not claim an acceptance-time conclusion.
+
+### 6.3 USAspending: batch publication clocks can bound—but cannot prove—transaction-level first public observation
+
+USAspending's official [data sources documentation](https://www.usaspending.gov/data-sources) describes a multi-stage procurement feed: agencies generally submit award transactions to FPDS within three days; transactions become available to USAspending after FPDS submission and are published after that; DoD/USACE records have a separate 90-day delay. USAspending's [submission statistics](https://www.usaspending.gov/submission-statistics/data-sources) expose data-source submission/publication and certification dates at the batch/period level.
+
+These are valuable independent bounds and useful audit strata for Q221. They are not, on their own, the first-public timestamp for a specific transaction, nor proof that an earlier transaction version was present or absent at a historical cutoff. Keep the existing Q221 rule: action date, contract start date, last-modified date, current listing date and agency batch publication date must not be silently substituted for the transaction's historical public-observation boundary. Q221 stays source-blocked until an immutable, versioned transaction history supports exact fixed-key presence **and absence** tests and correction/deletion lineage.
+
+### 6.4 Reusable clock ledger: a shared engineering opportunity, not a shared economic hypothesis
+
+For every cross-domain candidate, record separately where applicable:
+
+1. **Event/period/action time** — when the economic or administrative event occurred, or the reporting period covered.
+2. **Legal/official date** — the date assigned under the governing filing or administrative rule.
+3. **Source acceptance/release time** — what the official system records as accepted, posted or released.
+4. **First public-observation boundary** — the earliest defensible time at which the exact information was public, together with the evidence and clock basis.
+5. **Collection vintage and revision lineage** — when a bulk extract was generated/retrieved, its immutable hash, and any amendment, correction or deletion parent.
+
+The Research OS Evidence Bus already records `retrieved_at`, `available_at`, `release_id`, source registry binding and raw/normalized fingerprints. Its current validator checks timestamp timezone/order, but `available_at` may be null and is not required to carry a separate source-backed explanation of *why that field represents public availability*. A future schema-versioned improvement should inventory callers first, then consider an explicit availability basis/source URL, vintage identifier and revision-parent field. This review does not silently change that shared schema or invalidate existing receipts.
+
+The same clock ledger applies to existing designs, not only the active three: Q220's as-filed XBRL and TextBlock representation state; the already defined Q202 ClinicalTrials.gov first-posted/correction lineage; and Q203 procurement × ex-ante financing. The existing unusual-source audit in [PR #1257](https://github.com/DWR-debug/trading-agent-public/pull/1257) also contains port satellite/AIS divergence, CISA KEV × NVD CPE and official FDA action-state ideas. Those are already documented discovery work, not a reason to widen automatic dispatch.
+
+### Operational disposition
+
+- Active focus remains exactly **Q104:I19, Q220 and Q221**; Q218 remains excluded from active dispatch.
+- Let Q104 run [38168441086](https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086) finish. Use the existing six-receipt reconciliation and targeted `.hdr.sgml` repair; never restart the whole census while it is useful.
+- Treat the source-consistency check above as bounded non-outcome-bearing QA before PIT compilation. Do not change the frozen concepts, dates, universe, acceptance policy or performance/authorization gates based on this literature review alone.
+- Keep Q220 on its existing historical-prefix/acceptance-time compiler gate; keep Q221 blocked until transaction-level public-clock and immutable-vintage evidence is positive.
+- No performance run, holdout selection, ranking, tuning, promotion, paid service or live execution is authorized by this addendum.
