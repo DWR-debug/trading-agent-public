@@ -797,3 +797,40 @@ def test_running_workflow_does_not_give_queued_child_job_a_job_eta():
     assert "upper_bound" in payload["queue_elapsed_basis"]
 
 
+
+
+def test_enrich_work_durations_exposes_child_job_runtime_and_waiting_bound_separately():
+    from automation.generate_resource_dashboard import enrich_work_durations
+
+    now_started = "2026-10-12T10:00:00Z"
+    rows = enrich_work_durations(
+        [
+            {
+                "task": "Demo",
+                "status": "in_progress",
+                "run_status": "in_progress",
+                "job_status": "queued",
+                "run_started_at": now_started,
+                "queued_at": now_started,
+                "job_started_at": None,
+                "queue_elapsed_basis": "workflow_created_at_upper_bound; exact child-job queued_at unavailable",
+            },
+            {
+                "task": "Demo",
+                "status": "in_progress",
+                "run_status": "in_progress",
+                "job_status": "in_progress",
+                "run_started_at": now_started,
+                "job_started_at": now_started,
+            },
+        ],
+        {"Demo": {"p50_seconds": 300, "p90_seconds": 600, "sample_count": 4, "source": "test"}},
+        {},
+    )
+    waiting, active = rows
+    assert waiting["job_elapsed_seconds"] == 0
+    assert waiting["remaining_seconds"] is None
+    assert waiting["expected_finish_at"] is None
+    assert "upper_bound" in waiting["queue_elapsed_basis"]
+    assert active["job_elapsed_seconds"] >= 0
+    assert active["remaining_seconds"] is not None
