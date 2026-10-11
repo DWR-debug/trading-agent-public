@@ -335,4 +335,4 @@ def test_dashboard_q220_status_comes_from_population_compiler_and_independent_re
     assert 'if((pipe||{}).next_workpack_required)return "WORKPACK OFFEN · NICHT AUTO-DISPATCH";' in js
     assert 'owner="Workpack zuerst spezifizieren · kein Runner zuordnen";' in js
     assert "Neues begrenztes Robustheits-/Governance-Workpack definieren" in js
-    assert `if(x.next_workpack_required)return {label:"WORKPACK OFFEN",cls:"blocked-badge"};` in js
+    assert 'if(x.next_workpack_required)return {label:"WORKPACK OFFEN",cls:"blocked-badge"};' in js
