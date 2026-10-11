@@ -59,7 +59,9 @@ def test_dashboard_capacity_state_is_explicit():
     physical = {"type":"physical"}
     cloud = {"type":"cloud"}
     assert capacity_state(physical, {"status":"online","busy":True}, []) == "available"
-    assert capacity_state(physical, {"status":"online","busy":True}, [{"lane":"FRONTIER DISCOVERY"}]) == "operating"
+    assert capacity_state(physical, {"status":"online","busy":True}, [{"lane":"FRONTIER DISCOVERY","status":"in_progress"}]) == "operating"
+    assert capacity_state(physical, {"status":"online","busy":False}, [{"lane":"FRONTIER DISCOVERY","status":"queued"}]) == "available"
+    assert capacity_state(physical, None, [{"lane":"FRONTIER DISCOVERY","status":"queued"}]) == "unknown"
     assert capacity_state(physical, {"status":"online","busy":False}, []) == "available"
     assert capacity_state(physical, None, []) == "unknown"
     assert capacity_state(cloud, None, []) == "available"
@@ -103,6 +105,8 @@ def test_dashboard_does_not_report_missing_runner_inventory_as_idle():
     assert unknown["runner_busy_basis"] == "UNKNOWN_NO_RUNNER_INVENTORY"
     assert unknown["runner_status"] is None
     assert unknown["research_slots_free"] is None
+    assert unknown["current_assignments"] == 0
+    assert unknown["queued_assignments"] == 0
 
 
 def test_dashboard_infers_runner_busy_from_a_live_assigned_workflow_only():
@@ -741,3 +745,29 @@ def test_candidate_job_duration_benchmark_ignores_failed_runs_and_jobs(monkeypat
     assert benchmark["Q220"]["p50_seconds"] == 300
     assert benchmark["Q220"]["sample_count"] == 1
 
+
+
+def test_dashboard_keeps_queued_research_work_out_of_runner_occupancy():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    queued = {
+        "resource": "Windows self-hosted A",
+        "lane": "FORMAL READINESS",
+        "status": "queued",
+        "task": "Q220 population",
+        "worker": "pending runner assignment",
+    }
+    enriched = enrich_resources([resource], [], [queued])[0]
+    assert enriched["capacity_state"] == "unknown"
+    assert enriched["runner_busy"] is None
+    assert enriched["runner_busy_basis"] == "UNKNOWN_NO_RUNNER_INVENTORY"
+    assert enriched["current_assignments"] == 0
+    assert enriched["queued_assignments"] == 1
+    assert enriched["research_slots_free"] is None
