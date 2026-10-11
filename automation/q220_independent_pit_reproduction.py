@@ -245,7 +245,7 @@ def parse_structured_states(document: str) -> dict[str, list[dict[str, Any]]]:
     for node in walk_nodes(root):
         attrs = node.attrs
         qname = attrs.get("name", "")
-        if local_tag(node) != "nonfraction" or node.self_closing or qname not in wanted:
+        if local_tag(node) != "nonfraction" or qname not in wanted:
             continue
         raw_text = visible_text(node)
         parsed_value, parse_status = parse_numeric(raw_text, attrs)
