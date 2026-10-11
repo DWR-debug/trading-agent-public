@@ -27,3 +27,25 @@ def test_q104_terminal_recovery_is_triggered_only_from_a_completed_census():
     assert "targeted_header_repair:" in recovery
     assert "q104-i19-targeted-acceptance-repair.yml" in recovery
     assert "github.event.workflow_run.conclusion != 'success'" in recovery
+
+
+def test_q104_push_events_require_changed_explicit_recovery_trigger():
+    census = CENSUS_WORKFLOW.read_text(encoding="utf-8")
+
+    assert "Q104_CENSUS_PUSH_SUPPRESSED=RECOVERY_TRIGGER_UNCHANGED" in census
+    assert 'git diff --name-only "$before_sha" "$GITHUB_SHA" -- "$trigger_path"' in census
+    assert "research/run_requests/q104_i19_census_recovery.trigger" in census
+    assert 'RUN_Q104_I19_CENSUS_RECOVERY=true' in census
+    for flag in (
+        "SOURCE_RECEIPT_REUSE=false",
+        "PERFORMANCE=false",
+        "HOLDOUT_SELECTION=false",
+        "RANKING=false",
+        "TUNING=false",
+        "PROMOTION=false",
+        "LIVE_EXECUTION=false",
+    ):
+        assert flag in census
+    assert "fetch-depth: 2" in census
+
+
