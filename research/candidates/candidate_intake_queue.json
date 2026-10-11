@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "record_type": "candidate_intake_queue",
+  "purpose": "Single intake point for new public-information research hypotheses. FIFO only; no performance/selection authority.",
+  "instructions": [
+    "Append a candidate object to candidates in queue order.",
+    "Each candidate needs id, name, hypothesis, construction, sources, next_gate, cheap_falsifiers, and gates.",
+    "Construction must encode a fixed or frozen deterministic/public-observation/PIT boundary.",
+    "Sources are provenance leads, not project evidence. Each candidate remains quarantined.",
+    "Never add returns, drawdowns, winner labels, selection/ranking, tuned parameters, or promotion fields.",
+    "The current three-candidate focus is not widened automatically; passing intake does not dispatch a workflow."
+  ],
+  "candidates": []
+}

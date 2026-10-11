@@ -120,8 +120,9 @@ def test_focused_q218_slot_mode_is_explicit_and_non_authorizing():
     assert "SLOT_RESEARCH_BOUNDARY=PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION" in text
 
 
-def test_dashboard_capacity_plan_includes_only_focused_receipt_defined_candidate_work():
+def test_dashboard_capacity_plan_includes_only_focused_receipt_defined_candidate_work(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
+    monkeypatch.setattr(dashboard, "q221_public_clock_status", lambda: {"state": "ready", "progress_percent": 0, "next_gate": "historical USAspending policy vintages"})
 
     resources = [
         {"name": "Windows self-hosted A", "current_assignments": 1, "capacity_state": "operating"},

@@ -30,8 +30,10 @@ def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backsto
 
 
 
-def test_q221_public_clock_workpack_dispatches_when_capacity_is_free():
-    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+def test_q221_public_clock_workpack_dispatches_when_capacity_is_free(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
+    monkeypatch.setattr(dispatcher, "q221_vintage_auto_dispatch_block_reason", lambda: None)
+    dispatch_candidates = dispatcher.dispatch_candidates
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
@@ -99,6 +101,7 @@ def test_archived_q218_workpack_is_blocked_even_if_legacy_authorization_guard_pa
     )
 def test_fast_dispatch_uses_resource_capacity_metadata_for_q221_clock_gate(monkeypatch):
     from automation import planned_capacity_fast_dispatch as dispatcher
+    monkeypatch.setattr(dispatcher, "q221_vintage_auto_dispatch_block_reason", lambda: None)
 
     workflow = ".github/workflows/top4-candidate-slot-research.yml"
     snapshot = {
@@ -339,7 +342,9 @@ def test_fast_dispatch_ai_success_is_deduped_by_current_context(tmp_path, monkey
 
 def test_fast_dispatch_zero_active_starts_q221_clock_workpack_and_skips_completed_free_ai_review(monkeypatch):
     from automation import planned_capacity_fast_dispatch as dispatcher
+    monkeypatch.setattr(dispatcher, "q221_vintage_auto_dispatch_block_reason", lambda: None)
 
+    # Explicitly model an open/absent historical vintage receipt in this dispatch test.
     # The current-context Q221 AI receipt has already succeeded; assert it is
     # not duplicated while the useful Windows workpack still dispatches.
     monkeypatch.setattr(
