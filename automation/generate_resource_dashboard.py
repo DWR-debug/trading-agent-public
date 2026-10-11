@@ -117,7 +117,13 @@ def run_cmd_json(args: list[str], token: str | None = None) -> dict[str, Any] | 
 
 
 def fresh_action_runs() -> list[dict[str, Any]]:
-    """Merge a recent run window with independently fetched active runs."""
+    """Merge recent/active runs with deeper history for duration calibration.
+
+    A busy repository can push long-running research workflows outside the first
+    100 repository-wide runs. Fetch bounded workflow-specific completion history
+    for the active scientific tracks so missing comparison samples remain a real
+    absence, not an artifact of the global recent-run window.
+    """
     endpoints = [
         f"/repos/{REPO}/actions/runs?per_page=100",
         f"/repos/{REPO}/actions/runs?status=in_progress&per_page=100",
@@ -125,6 +131,17 @@ def fresh_action_runs() -> list[dict[str, Any]]:
         f"/repos/{REPO}/actions/runs?status=waiting&per_page=100",
         f"/repos/{REPO}/actions/runs?status=pending&per_page=100",
     ]
+    duration_history_workflows = (
+        "q104-i19-13f-historical-identity-census.yml",
+        "q220-historical-representation-pit.yml",
+        "q221-historical-award-public-boundary.yml",
+        "top4-candidate-slot-research.yml",
+        "top4-candidate-research-capacity.yml",
+    )
+    endpoints.extend(
+        f"/repos/{REPO}/actions/workflows/{workflow}/runs?status=completed&per_page=100"
+        for workflow in duration_history_workflows
+    )
     by_id: dict[int, dict[str, Any]] = {}
     for endpoint in endpoints:
         payload = run_cmd_json([endpoint])
@@ -178,7 +195,9 @@ def duration_benchmarks(runs: list[dict[str, Any]], max_samples_per_workflow: in
     for run in runs:
         if not isinstance(run, dict) or run.get("status") != "completed":
             continue
-        if run.get("conclusion") == "cancelled":
+        # Runtime ETA should be calibrated on completed successful runs, not
+        # early failures that systematically understate normal execution time.
+        if run.get("conclusion") != "success":
             continue
         name = str(run.get("name") or "")
         duration = run_duration_seconds(run)
@@ -194,7 +213,7 @@ def duration_benchmarks(runs: list[dict[str, Any]], max_samples_per_workflow: in
             "p50_seconds": median(values) or 0,
             "p90_seconds": percentile(values, 0.90) or 0,
             "sample_count": len(values),
-            "source": "recent completed runs; cancelled runs excluded",
+            "source": "recent successful completed runs; failures and cancellations excluded",
         }
     return out
 
@@ -206,10 +225,16 @@ def job_duration_benchmarks(
 ) -> dict[str, dict[str, int | str]]:
     samples: dict[str, list[int]] = {}
     comparable_workflows = {workflow_name, "Top-4 Candidate Slot Research"}
-    selected = [r for r in runs if isinstance(r, dict) and r.get("name") in comparable_workflows and r.get("status") == "completed"]
+    selected = [
+        r for r in runs
+        if isinstance(r, dict)
+        and r.get("name") in comparable_workflows
+        and r.get("status") == "completed"
+        and r.get("conclusion") == "success"
+    ]
     for run in selected[:recent_runs]:
         for job in jobs_for_run(int(run["id"])) if run.get("id") else []:
-            if job.get("status") != "completed" or job.get("conclusion") == "cancelled":
+            if job.get("status") != "completed" or job.get("conclusion") != "success":
                 continue
             started = parse_dt(job.get("started_at"))
             finished = parse_dt(job.get("completed_at"))
@@ -226,7 +251,7 @@ def job_duration_benchmarks(
             "p50_seconds": median(values) or 0,
             "p90_seconds": percentile(values, 0.90) or 0,
             "sample_count": len(values),
-            "source": "completed Top-4 candidate capacity/slot job history; cancelled jobs excluded",
+            "source": "successful Top-4 capacity/slot runs and successful jobs only",
         }
         for candidate, values in samples.items()
     }

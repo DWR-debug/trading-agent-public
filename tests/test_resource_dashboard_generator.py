@@ -39,13 +39,14 @@ def test_dashboard_research_board_exposes_q202_to_q205_without_duplicates():
 
 
 
-def test_dashboard_duration_benchmark_excludes_cancelled_and_uses_median():
+def test_dashboard_duration_benchmark_uses_successful_runs_only_and_median():
     from automation.generate_resource_dashboard import duration_benchmarks
 
     runs = [
         {"name":"Demo","status":"completed","conclusion":"success","run_started_at":"2026-10-06T10:00:00Z","completed_at":"2026-10-06T10:01:00Z"},
         {"name":"Demo","status":"completed","conclusion":"success","run_started_at":"2026-10-06T10:00:00Z","completed_at":"2026-10-06T10:02:00Z"},
         {"name":"Demo","status":"completed","conclusion":"cancelled","run_started_at":"2026-10-06T10:00:00Z","completed_at":"2026-10-06T10:20:00Z"},
+        {"name":"Demo","status":"completed","conclusion":"failure","run_started_at":"2026-10-06T10:00:00Z","completed_at":"2026-10-06T10:00:05Z"},
     ]
     bench = duration_benchmarks(runs)
     assert bench["Demo"]["p50_seconds"] == 90
@@ -641,3 +642,38 @@ def test_planned_capacity_exposes_candidate_job_duration_p50_p90():
     assert q220["expected_duration_p90_seconds"] == 1200
     assert q220["duration_sample_count"] == 3
     assert q220["duration_source"] == "fixture history"
+
+
+def test_candidate_job_duration_benchmark_ignores_failed_runs_and_jobs(monkeypatch):
+    from automation import generate_resource_dashboard as generator
+
+    runs = [
+        {
+            "id": 1, "name": "Top-4 Candidate Slot Research",
+            "status": "completed", "conclusion": "success",
+        },
+        {
+            "id": 2, "name": "Top-4 Candidate Slot Research",
+            "status": "completed", "conclusion": "failure",
+        },
+    ]
+    jobs = {
+        1: [{
+            "name": "Q220 historical PIT compile",
+            "status": "completed", "conclusion": "success",
+            "started_at": "2026-10-06T10:00:00Z",
+            "completed_at": "2026-10-06T10:05:00Z",
+        }],
+        2: [{
+            "name": "Q220 historical PIT compile",
+            "status": "completed", "conclusion": "failure",
+            "started_at": "2026-10-06T10:00:00Z",
+            "completed_at": "2026-10-06T10:00:05Z",
+        }],
+    }
+    monkeypatch.setattr(generator, "jobs_for_run", lambda run_id: jobs[run_id])
+
+    benchmark = generator.job_duration_benchmarks(runs)
+    assert benchmark["Q220"]["p50_seconds"] == 300
+    assert benchmark["Q220"]["sample_count"] == 1
+

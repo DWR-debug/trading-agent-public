@@ -328,7 +328,8 @@ function operationStatusClass(status){
   return "blocked-badge";
 }
 function nextDurationLabel(item,data,code){
-  if(item&&item.scheduled===false)return "Nicht disponiert · keine Laufzeitprognose";
+  if(item&&item.scheduled===false)return "Keine ETA · Voraussetzung blockiert";
+  if(item&&item.dispatchable===false)return "Keine ETA · nicht auto-dispatchierbar";
   if(item&&item.expected_duration_seconds!=null&&Number(item.duration_sample_count)>0){
     return durationBenchmarkLabel(item.expected_duration_seconds,item.expected_duration_p90_seconds,item.duration_sample_count);
   }
@@ -391,12 +392,15 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
     return assignments.filter(function(rec){return rec.item.candidate===code;}).sort(function(a,b){return assignmentScore(b)-assignmentScore(a);})[0]||null;
   }
   function statusFor(code,pipe,rec,activeRows){
-    if(activeRows.length)return "AKTIVE ARBEIT ZUERST";
+    if(activeRows.length)return "AKTIVER RUN LÄUFT · NICHT DUPLIZIEREN";
     if(rec){
       var p=rec.item;
-      if(p.scheduled===false)return "VORAUSSETZUNG OFFEN";
+      var readiness=String(p.readiness||"").toUpperCase();
+      if(p.scheduled===false||p.dispatch_condition==="ADVISORY_ONLY"||readiness.indexOf("NEEDS_NEW_WORKPACK")>=0||p.dispatchable===false){
+        return "VORAUSSETZUNG OFFEN · NICHT AUTO-DISPATCH";
+      }
       if(p.dispatchable)return p.dispatch_condition==="FREE_SLOT"?"BEREIT ZU STARTEN":"BEREIT · SLOT PRÜFEN";
-      return "GEPLANT · NICHT DISPATCHABLE";
+      return "GEPLANT · STATUS NICHT BESTÄTIGT";
     }
     var s=String((pipe||{}).current_milestone_status||"").toLowerCase();
     if(s.indexOf("block")>=0)return "BLOCKIERT";
@@ -411,14 +415,31 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
       var activeRows=rows.filter(function(x){return candidateFrom((x.task||"")+" "+(x.job||""))===code;});
       var rec=plannedFor(code), q=queuedByCode[code]||{};
       var gate=String(pipe.next_gate||pipe.current_milestone||q.next_gate||"Nächstes Gate nicht dokumentiert");
-      var task=rec&&rec.item.task?String(rec.item.task):(q.next_gate?String(q.next_gate):gate);
-      if(activeRows.length&&!rec)task="Nach Abschluss: "+gate;
-      var owner=rec&&rec.resource?String(rec.resource):(q.resource_hint?String(q.resource_hint):(activeRows.length?"Nach Abschluss neu disponieren":"Noch nicht zugeordnet"));
       var p=rec?rec.item:null;
+      var task;
+      if(activeRows.length&&code==="Q104:I19"){
+        task="Nach terminalem Census: sechs Shard-Receipts abgleichen → nur belegte Header-Lücken gezielt reparieren → PIT-Compiler.";
+      }else if(activeRows.length){
+        task="Nach Abschluss des aktiven Runs: "+gate;
+      }else if(p&&p.dispatchable&&p.scheduled){
+        task=String(p.task||gate);
+      }else{
+        task=String(pipe.next_gate||(p&&p.task)||q.next_gate||gate);
+      }
+      var owner;
+      if(activeRows.length){
+        owner="Aktiver Run zuerst · danach Ressource neu disponieren";
+      }else if(p&&p.dispatchable&&p.scheduled&&rec.resource){
+        owner=String(rec.resource);
+      }else if(p&&(!p.dispatchable||p.scheduled===false)){
+        owner="Nicht disponieren · neues Workpack / Voraussetzung offen";
+      }else{
+        owner=String(q.resource_hint||"Noch nicht zugeordnet");
+      }
       var status=statusFor(code,pipe,rec,activeRows);
       var estimate=nextDurationLabel(p,data,code);
-      var basis=p?String(p.readiness||p.basis||""):String(pipe.current_milestone_status||"");
-      if(activeRows.length&&!rec)basis="Keinen Parallel-Run starten; den aktiven Lauf zuerst abschließen.";
+      var basis=p?String(p.readiness||p.basis||""):String(pipe.next_milestone_progress_basis||pipe.current_milestone_status||"");
+      if(activeRows.length)basis="Keinen Parallel-Run starten; aktiven Lauf abschließen und erst danach Receipts prüfen.";
       var cls=operationStatusClass(status);
       return "<tr><td><strong>"+(index+1)+". "+esc(code)+"</strong></td>"+
         "<td><span class='badge "+cls+"'>"+esc(status)+"</span></td>"+
