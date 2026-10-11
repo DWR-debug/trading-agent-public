@@ -237,19 +237,3 @@ jobs:
     uses: ./.github/workflows/research-completion-relay.yml
     with:
       source_workflow: "Q104 I19 Historical 13F Identity Census"
-
-  retry_failed:
-    # Rerun only failed jobs once; the second attempt is deliberately terminal.
-    # The active matrix remains single-flight and receipt merging stays fail-closed.
-    needs: [census, merge]
-    if: ${{ always() && github.run_attempt == 1 && (needs.census.result != 'success' || needs.merge.result != 'success') }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    steps:
-      - name: Rerun only failed jobs from this census attempt
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh run rerun "$GITHUB_RUN_ID" --failed --repo "$GITHUB_REPOSITORY"
