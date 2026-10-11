@@ -279,3 +279,25 @@ The NBER working paper [*The Government Patent Register: A New Resource for Meas
 **PIT restriction:** the consolidated register was compiled retrospectively. Its current appearance in a register cannot be treated as contemporaneous public information at a historical award cutoff. Any future use must locate the exact patent record and use its own original publication/grant/publication-vintage evidence, while separately verifying the availability of the government-rights/licensing field. Do not infer award causality or transaction timing from the current register alone.
 
 **Disposition:** reserve for a later Q221 identity/capability workpack only after the award-level source clock, fixed transaction classes and recipient-to-issuer map have a defensible contract. Active focus stays Q104:I19, Q220 and Q221; no candidate expansion or dispatch is authorized by this source lead.
+
+
+## 8. FDA recall lifecycle clocks: firm notice, FDA visibility, classification and revisions (reserve only) — 2026-10-12
+
+**Classification:** source-clock / data-feasibility lead for the already documented official FDA state-transition frontier. This is not a new candidate, not scientific evidence, and does not change the active execution focus.
+
+The official [FDA Enforcement Report API Definitions](https://www.fda.gov/safety/enforcement-reports/enforcement-report-api-definitions) expose several distinct dates with different semantics:
+
+- `recallinitiationdt`: when the firm first began notifying the public or its consignees;
+- `postedinternetdt`: when the recall was first posted to the FDA Enforcement Report (the FDA documents that this can be blank for older recalls before 2022-10-25);
+- `pressreleaseissuedt`: a press-release publication date;
+- `centerclassificationdt`: when FDA assigned the recall's Class I/II/III risk classification;
+- `enforcementreportdt`: issuance date of the weekly report;
+- `eventlmd`: when the recall event was last posted/modified; history endpoints use it for the date a new field value was posted.
+
+FDA's [Enforcement Report History Feature](https://www.fda.gov/safety/enforcement-reports/enforcement-report-history-feature) states that field-change history for product description, recall reason, classification and code information is tracked for recalls posted or updated from 2018-07-24 onward. FDA's [general Enforcement Reports guidance](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/enforcement-reports) also warns that firms often make voluntary public statements before FDA completes hazard assessment and classifies the recall. Thus FDA classification time is not a proxy for the earliest public warning, and a latest-state API row is not by itself a historical first-public observation.
+
+**Why this may matter:** this provides a clean *state-transition decomposition* for a future reserve source-feasibility audit: (1) firm/public initiation, (2) first observed FDA report posting, (3) FDA classification, and (4) later corrections. Those clocks might support research into regulatory information processing only if each field can be pinned to a contemporaneously available source vintage. They must not be substituted for one another or used to infer an equity-return effect from recall severity alone.
+
+**Bounded reserve-only checks, if the existing FDA frontier is later selected:** use a fixed outcome-blind sample stratified by pre/post-2022-10-25 and pre/post-2018-07-24 coverage; verify missingness and semantics of `postedinternetdt`, link field history through event/recall identifiers, compare API values with archived weekly report or dated press release where available, and preserve raw response, retrieval timestamp, response hash and parser version. Treat `eventlmd` as a revision clock, not necessarily the first public clock. The historical field-history cutoff is a documented coverage bound, not proof that every earlier public statement can be reconstructed. A latest/current record without dated public evidence must remain UNKNOWN for PIT purposes.
+
+**Disposition:** reserve only. Active focus stays **Q104:I19, Q220, Q221**. Do not enqueue FDA work, create an additional candidate, or assign a runner from this source lead. No change to PAPER_ONLY, performance, holdout, ranking, tuning, promotion or live-execution gates.
