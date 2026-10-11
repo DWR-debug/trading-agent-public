@@ -423,8 +423,9 @@ def test_q221_dashboard_does_not_treat_live_source_smoke_as_historical_clock_pro
 
 
 
-def test_capacity_planner_ignores_candidate_names_in_active_maintenance_run_titles():
+def test_capacity_planner_ignores_candidate_names_in_active_maintenance_run_titles(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
+    monkeypatch.setattr(dashboard, "q221_public_clock_status", lambda: {"state": "ready", "progress_percent": 0, "next_gate": "historical USAspending policy vintages"})
 
     resources = [
         {"name": "Windows self-hosted A", "capacity_state": "available", "current_assignments": 0},

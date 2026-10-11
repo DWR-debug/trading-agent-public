@@ -10,13 +10,16 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from automation.candidate_robustness_gate import DEFAULT_INVENTORIES
 from automation.research_hypothesis_compiler import _validate_candidate, fingerprint
-
-ROOT = Path(__file__).resolve().parents[1]
 QUEUE_RELATIVE_PATH = "research/candidates/candidate_intake_queue.json"
 PROJECT_INVENTORY = "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
 ACTIVE_REGISTRY = "research/governance/active_research_registry.json"
