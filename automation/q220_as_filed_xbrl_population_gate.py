@@ -68,9 +68,21 @@ def load_quarters(quarters):
     return rows,receipts
 
 def parse_acceptance(header:bytes)->str|None:
+    """Parse EDGAR's acceptance header as an America/New_York wall clock, then emit UTC.
+
+    The raw ACCEPTANCE-DATETIME header is Eastern local time (SEC EDGAR PDS
+    specification). Appending Z directly mislabels the wall clock as UTC and
+    can move an event across the market close. Use the IANA zone to preserve
+    daylight-saving transitions; do not infer a fixed offset.
+    """
     m=re.search(rb"ACCEPTANCE-DATETIME\s*[:=>]?\s*(\d{14})",header,re.I)
     if not m: return None
-    raw=m.group(1).decode(); return f"{raw[:4]}-{raw[4:6]}-{raw[6:8]}T{raw[8:10]}:{raw[10:12]}:{raw[12:14]}Z"
+    raw=m.group(1).decode()
+    try:
+        local=datetime.strptime(raw,"%Y%m%d%H%M%S").replace(tzinfo=__import__("zoneinfo").ZoneInfo("America/New_York"))
+    except ValueError:
+        return None
+    return local.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00","Z")
 
 def parse_items(body:bytes)->list[str]:
     obj=json.loads(body.decode("utf-8",errors="replace"))
