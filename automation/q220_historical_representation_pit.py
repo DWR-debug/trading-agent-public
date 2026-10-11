@@ -438,6 +438,7 @@ def compile_receipt(
         "source_population_receipt_fingerprint": stored_fp,
         "source_population_contract_sha256": population.get("contract_sha256"),
         "source_population_gate_code_sha256": population.get("gate_code_sha256"),
+        "compiler_code_sha256": sha256(Path(__file__).read_bytes()),
         "fixed_universe": population.get("fixed_universe"),
         "window": population.get("window"),
         "exact_numeric_qnames": list(NUMERIC_QNAMES),
