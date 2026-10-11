@@ -159,8 +159,15 @@ def _normalise_items(
             continue
 
         parsed_url = urlparse(url)
-        if parsed_url.scheme != "https" or not parsed_url.hostname:
-            errors.append(f"archive URL is not a valid HTTPS URL for {name}")
+        host = (parsed_url.hostname or "").lower()
+        if (
+            parsed_url.scheme != "https"
+            or not host
+            or not (host == "usaspending.gov" or host.endswith(".usaspending.gov"))
+            or parsed_url.username is not None
+            or parsed_url.password is not None
+        ):
+            errors.append(f"archive URL is not a trusted HTTPS USAspending URL for {name}")
             continue
         items.append({
             "file_name": name,
