@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_type": "trading_agent_chat_decision_log",
   "purpose": "Durable operational continuity for future Trading Agent OS chats. Entries are operational notes, not scientific evidence, performance authorization, ranking, or live-trading permission.",
-  "updated_at_utc": "2026-10-11T21:56:43Z",
+  "updated_at_utc": "2026-10-11T22:29:48Z",
   "safety": {
     "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
@@ -11,6 +11,39 @@
     "paid_usage_usd": 0
   },
   "entries": [
+    {
+      "date_utc": "2026-10-11T22:29:48Z",
+      "candidate": "FDA SOURCE-CLOCK LEAD",
+      "status": "RESERVE ONLY · NOT DISPATCHABLE",
+      "title": "FDA recall data expose distinct firm-notice, FDA-posting, classification and revision clocks",
+      "decision": "Official FDA API documentation distinguishes recallinitiationdt (firm first notified the public/consignees), postedinternetdt (first FDA Enforcement Report posting, blank for some older records before 2022-10-25), centerclassificationdt (later hazard classification), enforcementreportdt (weekly report date) and eventlmd (last modification). FDA's field history is tracked for recalls posted or updated since 2018-07-24, and the agency notes that voluntary firm warnings often predate FDA classification. This is a potential clock-decomposition lead for the already documented FDA frontier, not a new candidate or a market-return hypothesis.",
+      "next_action": "Keep this in reserve. If the existing FDA frontier is selected later, use a fixed outcome-blind coverage sample, preserve dated original notices/weekly report vintages and field-level revision history, and keep unknown first-public clocks unknown. Do not expand active focus or assign a runner.",
+      "url": "https://www.fda.gov/safety/enforcement-reports/enforcement-report-api-definitions",
+      "related_run_url": "https://www.fda.gov/safety/enforcement-reports/enforcement-report-history-feature",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-11T22:29:48Z",
+      "candidate": "RUNNER CAPACITY",
+      "status": "FOURTH RUNNER DEFERRED",
+      "title": "Do not register a fourth Windows runner until workload isolation is implemented",
+      "decision": "The active Q104 matrix already has three Windows shards plus hosted shards; the next Q220 gate needs a bounded adversarial/governance workpack and Q221 needs a new award-level public-clock workpack. A fourth Windows runner does not accelerate the current hosted ARM64 gates and, if given the shared self-hosted/trading-agent-research labels, could accept waiting off-focus jobs such as H06, Q089, Q185-Q186 or an older Q220 population-repair run. GitHub routes queued jobs to online idle runners matching their run labels. For a future machine, require a dedicated label/group, explicit workflow allow-list, least privilege and workplace IT/security approval before registration.",
+      "next_action": "Do not install/register Runner D now. Reconsider only when an approved, frozen workpack has a measured Windows-specific bottleneck and a dedicated isolated label such as trading-agent-research-d can route only approved work. Prefer a dedicated isolated/ephemeral environment over a persistent runner on a credential-bearing work PC.",
+      "url": "https://docs.github.com/en/actions/reference/runners/self-hosted-runners",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-11T22:29:48Z",
+      "candidate": "DASHBOARD ORCHESTRATION",
+      "status": "RECEIPT-AWARE QUEUE CORRECTION",
+      "title": "Separate actual running jobs from queued jobs and make next gates receipt-driven",
+      "decision": "The operations-first dashboard's Next Queue was still a separate static list with stale Windows runner/workflow hints and READY_NEXT_GATE status even when the receipt-backed Q220 chain required a new workpack and Q221's policy-vintage slot was advisory-only. A pending Q220 population-repair run was also visible while the Q220 55-record compiler+independent PIT chain was already positive. The correction builds the queue from the current receipt-backed pipeline, tracks job-level status separately from parent workflow status, displays waiting runs without calling them active work, removes stale workflow/runner/ETA routes for unapproved workpacks and keeps an active Q104 census single-flight.",
+      "next_action": "After CI/Full Suite pass, verify the deployed dashboard against current master and check that Q220 is WORKPACK_REQUIRED, Q221 is not auto-dispatchable without its new award-level workpack, the old Q220 queued run is shown as waiting rather than running, and Q104 remains active without a duplicate.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/blob/master/automation/generate_resource_dashboard.py",
+      "related_run_url": "https://dwr-debug.github.io/trading-agent-public/dashboard/",
+      "scientific_evidence": false
+    },
     {
       "date_utc": "2026-10-11T21:56:43Z",
       "candidate": "Q220 PIT RECEIPT RECONCILIATION",
