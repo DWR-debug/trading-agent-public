@@ -182,3 +182,49 @@ def test_q220_historical_primary_document_uses_sec_form_typed_filing_index():
 def test_q220_form_index_parser_fails_closed_without_matching_form_row():
     index_html = b'''<table><tr><td>1</td><td>EXHIBIT 10.11</td><td><a href="/Archives/edgar/data/1/2/R1.htm">R1.htm</a></td><td>EX-10.11</td><td>100</td></tr></table>'''
     assert primary_document_from_index(index_html, "10-K") is None
+
+
+def test_q220_resolves_presentation_from_embedded_extension_schema():
+    items = [
+        "dvn-20231231.htm",
+        "dvn-20231231.xsd",
+        "dvn-20231231_htm.xml",
+        "FilingSummary.xml",
+    ]
+    # Representative SEC schema appinfo layout: the filer has no separate
+    # *_pre.xml, so the presentation relationships reside in the archived XSD.
+    xsd = b"""
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      xmlns:link="http://www.xbrl.org/2003/linkbase"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      targetNamespace="http://www.dvn.com/20231231">
+      <xsd:annotation>
+        <xsd:appinfo>
+          <link:linkbase>
+            <link:presentationLink xlink:role="http://example.invalid/role">
+              <link:loc xlink:label="root" xlink:href="dvn-20231231.xsd#dvn_Root"/>
+              <link:loc xlink:label="risk" xlink:href="dvn-20231231.xsd#dvn_LeasesDisclosureTextBlock"/>
+              <link:loc xlink:label="assets" xlink:href="https://fasb.example/us-gaap.xsd#us-gaap_Assets"/>
+              <link:presentationArc xlink:from="root" xlink:to="risk"/>
+              <link:presentationArc xlink:from="root" xlink:to="assets"/>
+            </link:presentationLink>
+          </link:linkbase>
+        </xsd:appinfo>
+      </xsd:annotation>
+    </xsd:schema>
+    """
+    source = choose_presentation_source(items, xsd_body=xsd)
+    assert source == ("dvn-20231231.xsd", "schema_embedded_presentation_linkbase")
+    pm = presentation_metadata(xsd)
+    assert pm["presentation_arc_count"] == 2
+    assert "dvn_LeasesDisclosureTextBlock" in pm["loc_concepts"]
+    assert "us-gaap_Assets" in pm["loc_concepts"]
+
+
+def test_q220_prefers_dedicated_pre_xml_over_embedded_schema_when_both_exist():
+    items = ["dvn-20231231.xsd", "dvn-20231231_pre.xml", "dvn-20231231_htm.xml"]
+    xsd = b'<xsd:schema xmlns:link="http://www.xbrl.org/2003/linkbase"><link:presentationLink><link:loc xlink:href="custom.xsd#custom_RiskTextBlock"/><link:presentationArc xlink:from="a" xlink:to="b"/></link:presentationLink></xsd:schema>'
+    assert choose_presentation_source(items, xsd_body=xsd) == (
+        "dvn-20231231_pre.xml",
+        "dedicated_presentation_linkbase",
+    )
