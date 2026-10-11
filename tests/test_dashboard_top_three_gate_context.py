@@ -31,9 +31,11 @@ def test_dashboard_candidate_work_matching_ignores_identifier_punctuation():
 
 def test_top_three_queue_layout_has_responsive_breakpoints():
     html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
-    assert ".queue-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}" in html
-    assert ".queue-grid{grid-template-columns:repeat(2,minmax(0,1fr))}" in html
-    assert ".queue-grid{grid-template-columns:1fr}" in html
+    css = (ROOT / "docs/dashboard/research-control-board.css").read_text(encoding="utf-8")
+    assert 'href="research-control-board.css"' in html
+    assert ".queue-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}" in css
+    assert ".queue-grid{grid-template-columns:repeat(2,minmax(0,1fr))}" in css
+    assert ".queue-grid{grid-template-columns:1fr}" in css
 
 
 
@@ -159,4 +161,28 @@ def test_dashboard_hides_queued_q104_census_retry_when_census_is_running(monkeyp
     ])
 
     assert {row["run_id"] for row in rows} == {100}
+
+
+def test_dashboard_pending_run_without_job_records_has_no_unbound_job_reference(monkeypatch):
+    from automation import generate_resource_dashboard as generator
+
+    monkeypatch.setattr(generator, "jobs_for_run", lambda _run_id: [])
+    monkeypatch.setattr(generator, "infer_lane", lambda *args: "FORMAL READINESS")
+    monkeypatch.setattr(generator, "infer_resource", lambda *args: "GitHub-hosted Ubuntu x64")
+
+    rows = generator.current_work_from_runs([
+        {
+            "id": 200,
+            "name": "Q104 I19 Historical 13F Identity Census",
+            "status": "queued",
+            "created_at": "2026-10-11T20:00:00Z",
+            "event": "workflow_dispatch",
+        }
+    ])
+
+    assert len(rows) == 1
+    assert rows[0]["run_id"] == 200
+    assert rows[0]["job_status"] == "queued"
+    assert rows[0]["job_started_at"] is None
+    assert rows[0]["job_completed_at"] is None
 
