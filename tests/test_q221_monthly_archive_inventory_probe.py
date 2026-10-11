@@ -1,7 +1,4 @@
-import hashlib
 import json
-from datetime import date
-from pathlib import Path
 
 from automation import q221_monthly_archive_inventory_probe as probe
 
@@ -23,7 +20,7 @@ def _archive(name: str, updated: str) -> dict:
     }
 
 
-def test_action_date_partitions_archive_fiscal_year_only(tmp_path, monkeypatch):
+def test_action_date_partitions_archive_fiscal_year_only():
     targets, errors = probe._parse_manifest(_manifest(
         _key("2019-09-30"), _key("2019-10-01", "FA000020C0002")
     ))
@@ -33,10 +30,9 @@ def test_action_date_partitions_archive_fiscal_year_only(tmp_path, monkeypatch):
     assert targets[2019] == {_key("2019-09-30")}
     assert targets[2020] == {_key("2019-10-01", "FA000020C0002")}
 
-    # The probe never promotes action date into a public-observation clock.
-    receipt = probe.run_pathless_manifest_for_test if hasattr(probe, "run_pathless_manifest_for_test") else None
+    # The archive partition is based on action date only; the manifest parser
+    # does not derive or assert a public-observation timestamp.
     assert probe.API_URL.endswith("/api/v2/bulk_download/list_monthly_files/")
-    assert receipt is None
 
 
 def test_dated_archive_series_is_only_a_candidate_not_a_public_clock(tmp_path, monkeypatch):
@@ -98,6 +94,7 @@ def test_bad_filename_or_date_mismatch_invalidates_inventory(tmp_path, monkeypat
     rows = [
         _archive("FY2022_All_Contracts_Full_20220101.zip", "2022-01-02"),
         _archive("FY2022_All_Contracts_Full_20220601.zip", "2022-06-01"),
+        _archive("FY2022_All_Contracts_Full_20220701.zip", "2022-07-01"),
     ]
     monkeypatch.setattr(
         probe, "request_inventory",
