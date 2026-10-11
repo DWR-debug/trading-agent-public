@@ -48,6 +48,55 @@ def files():
         if p.exists(): out.extend(x for x in p.rglob("*.json") if x.is_file())
     return sorted(out)
 
+def candidate_inventory():
+    """Load a deterministic union of current contracts, legacy waves and discovery seeds.
+
+    The current canonical contract wins on duplicate IDs. Older inventories remain
+    visible for overlap analysis but never gain dispatch or authorization status.
+    """
+    primary = ROOT / "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
+    roots = [ROOT / "research/candidates", ROOT / "research/frontier"]
+    paths = ([primary] if primary.is_file() else [])
+    paths.extend(
+        p for root in roots if root.exists()
+        for p in sorted(root.rglob("*.json"))
+        if p != primary
+    )
+    inventory = {}
+    for path in paths:
+        obj = load_json(path)
+        if not isinstance(obj, dict):
+            continue
+        records = []
+        for key in ("candidates", "candidate_seeds"):
+            value = obj.get(key)
+            if isinstance(value, list):
+                records.extend(value)
+        for row in records:
+            if not isinstance(row, dict):
+                continue
+            cid = str(row.get("id") or row.get("code") or "").strip()
+            if not cid or not any(row.get(k) for k in ("name", "mechanism", "hypothesis")):
+                continue
+            sources = row.get("sources") or row.get("source_evidence") or row.get("information_channel") or []
+            if isinstance(sources, (dict, list, tuple)):
+                sources = json.dumps(sources, sort_keys=True, ensure_ascii=False)
+            inventory.setdefault(cid, {
+                "id": cid,
+                "name": row.get("name", ""),
+                "mechanism": row.get("mechanism") or row.get("hypothesis") or row.get("name", ""),
+                "economic_relation": row.get("economic_relation") or row.get("construction") or row.get("purpose", ""),
+                "information_channel": str(sources),
+                "event_clock": row.get("event_clock") or row.get("clock") or "",
+                "state_transition": row.get("state_transition") or row.get("next_gate") or "",
+                "identity_basis": row.get("identity_basis") or row.get("exposure_mapping") or "",
+                "description": row.get("description") or row.get("why_distinct") or row.get("name", ""),
+                "purpose": row.get("purpose", ""),
+                "inventory_source": path.relative_to(ROOT).as_posix(),
+            })
+    return inventory
+
+
 def sig(spec,components):
     fields=[spec.get(k) for k in ("mechanism","economic_relation","information_channel","event_clock","state_transition","identity_basis","description","purpose") if isinstance(spec.get(k),str)]
     nt=set()
@@ -116,11 +165,9 @@ def build():
         if isinstance(x,dict) and x.get("candidate") and x.get("component"):
             components[str(x["candidate"])].add(str(x["component"]))
 
-    specs=load_json(ROOT/"research/candidates/orthogonal_candidate_specs_2026-10-05.json") or {}
     candidates={}
-    for s in specs.get("candidates",[]) if isinstance(specs,dict) else []:
-        cid=str(s.get("id") or "")
-        if cid:candidates[cid]=sig(s,components)
+    for cid, spec in candidate_inventory().items():
+        candidates[cid]=sig(spec,components)
 
     def add_node(nid,typ,**kw):
         row={"id":nid,"type":typ};row.update(kw)
