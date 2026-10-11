@@ -74,13 +74,25 @@ def continuation_map(document: str) -> dict[str, tuple[dict[str, str], str]]:
 def textblock_states(document: str) -> dict[str, list[dict[str, Any]]]:
     continuations = continuation_map(document)
     states: dict[str, list[dict[str, Any]]] = {}
-    for match in re.finditer(r"(?is)<ix:nonNumeric\b([^>]*)>(.*?)</ix:nonNumeric\s*>", document):
+    # Iterate opening tags independently of their content. SEC Inline XBRL filings
+    # include self-closing ix:nonNumeric TextBlock facts; a regex that searches for a
+    # later closing tag can swallow subsequent facts after a self-closing element.
+    for match in re.finditer(r"(?is)<ix:nonNumeric\\b([^>]*)>", document):
         attrs = attributes(match.group(1))
         qname = attrs.get("name", "")
         if not qname or not qname.rsplit(":", 1)[-1].lower().endswith("textblock"):
             continue
         context_ref = attrs.get("contextref")
-        fragment = match.group(2)
+        opening_is_self_closing = match.group(0).rstrip().endswith("/>")
+        if opening_is_self_closing:
+            fragment = ""
+        else:
+            closing = re.search(r"</ix:nonNumeric\\s*>", document[match.end():], re.I)
+            # A missing closure is not converted into an empty fact. It remains visible
+            # as a QName reconciliation gap against the immutable population receipt.
+            if closing is None:
+                continue
+            fragment = document[match.end():match.end() + closing.start()]
         chain_ids: list[str] = []
         next_id = attrs.get("continuedat")
         visited: set[str] = set()
