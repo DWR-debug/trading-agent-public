@@ -424,6 +424,8 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
         task="Nach terminalem Census: sechs Shard-Receipts abgleichen → nur belegte Header-Lücken gezielt reparieren → PIT-Compiler.";
       }else if(activeRows.length){
         task="Nach Abschluss des aktiven Runs: "+gate;
+      }else if(pipe.next_workpack_required){
+        task="Neues begrenztes Workpack definieren: "+gate;
       }else if(p&&p.dispatchable&&p.scheduled){
         task=String(p.task||gate);
       }else{
