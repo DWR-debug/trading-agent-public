@@ -1,0 +1,121 @@
+name: Q220 Independent Historical PIT Reproduction
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q220_independent_pit_reproduction.py"
+      - "tests/test_q220_independent_pit_reproduction.py"
+      - ".github/workflows/q220-independent-pit-reproduction.yml"
+      - "research/evidence/q220_as_filed_xbrl_population_latest.json"
+      - "research/evidence/q220_historical_representation_pit_latest.json"
+      - "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: trading-agent-q220-independent-pit-reproduction
+  cancel-in-progress: false
+
+jobs:
+  reproduce:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install focused test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Test independent parser and fail-closed invariants
+        run: >-
+          python -m pytest -q
+          tests/test_q220_independent_pit_reproduction.py
+          tests/test_q220_historical_representation_pit.py
+          tests/test_q220_as_filed_xbrl_population_gate.py
+
+      - name: Independently retrieve, parse and reproduce all frozen filings
+        id: reproduce
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q220_independent_pit_reproduction \
+            --population research/evidence/q220_as_filed_xbrl_population_latest.json \
+            --contract research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json \
+            --compiler-receipt research/evidence/q220_historical_representation_pit_latest.json \
+            --output research/evidence/q220_independent_pit_reproduction_latest.json
+
+      - name: Publish independent reproduction receipt, including fail-closed results
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt="research/evidence/q220_independent_pit_reproduction_latest.json"
+          test -s "$receipt"
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python automation/github_contents_publish.py \
+              --repository "$GITHUB_REPOSITORY" \
+              --branch master \
+              --base-sha "$current_sha" \
+              --file "$receipt=$receipt"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+
+      - name: Upload immutable independent-reproduction artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-independent-pit-reproduction-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/evidence/q220_independent_pit_reproduction_latest.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce independent PIT reproduction gate
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("research/evidence/q220_independent_pit_reproduction_latest.json")
+          if not path.is_file():
+              raise SystemExit("Q220_INDEPENDENT_RECEIPT_MISSING")
+          receipt = json.loads(path.read_text(encoding="utf-8"))
+          print("Q220_INDEPENDENT_PIT_GATE_POSITIVE=" + str(receipt.get("gate_positive") is True).lower())
+          print("Q220_INDEPENDENT_DOCUMENTS=" + str(receipt.get("independently_retrieved_documents", 0)))
+          safety = receipt.get("safety", {})
+          if safety.get("paper_only") is not True:
+              raise SystemExit("Q220_PAPER_ONLY_INVARIANT_FAILED")
+          if safety.get("live_trading_enabled") is not False:
+              raise SystemExit("Q220_LIVE_TRADING_INVARIANT_FAILED")
+          if safety.get("orders_enabled") is not False:
+              raise SystemExit("Q220_ORDERS_INVARIANT_FAILED")
+          if safety.get("automatic_promotion") is not False:
+              raise SystemExit("Q220_AUTOMATIC_PROMOTION_INVARIANT_FAILED")
+          if receipt.get("performance_authorization") is not False:
+              raise SystemExit("Q220_PERFORMANCE_AUTHORIZATION_INVARIANT_FAILED")
+          if receipt.get("scientific_evidence") is not False:
+              raise SystemExit("Q220_SCIENTIFIC_BOUNDARY_INVARIANT_FAILED")
+          if receipt.get("gate_positive") is not True:
+              raise SystemExit("Q220_INDEPENDENT_PIT_REPRODUCTION_NOT_PROVEN")
+          if not isinstance(receipt.get("checks"), dict) or not all(receipt["checks"].values()):
+              raise SystemExit("Q220_INDEPENDENT_CHECK_MATRIX_INCOMPLETE")
+          PY
