@@ -162,3 +162,28 @@ def test_request_inventory_has_strict_timeout_and_response_limit(monkeypatch):
     assert json.loads(captured["request"].data.decode()) == {
         "agency": "all", "fiscal_year": 2019, "type": "contracts"
     }
+
+
+def test_untrusted_archive_host_invalidates_inventory(tmp_path, monkeypatch):
+    source = tmp_path / "input.json"
+    output = tmp_path / "out.json"
+    source.write_text(json.dumps(_manifest(_key("2020-02-11"))), encoding="utf-8")
+    rows = [
+        _archive("FY2020_All_Contracts_Full_20210101.zip", "2021-01-01"),
+        {
+            **_archive("FY2020_All_Contracts_Full_20210601.zip", "2021-06-01"),
+            "url": "https://example.invalid/archive.zip",
+        },
+    ]
+    monkeypatch.setattr(
+        probe, "request_inventory",
+        lambda _fy: (200, "application/json", json.dumps({"monthly_files": rows}).encode(),
+                     {"monthly_files": rows}),
+    )
+
+    receipt = probe.run(source, output)
+
+    assert receipt["status"] == "ARCHIVE_LISTING_INCOMPLETE"
+    assert receipt["fiscal_year_results"][0]["invalid_item_count"] == 1
+    assert receipt["historical_first_public_observation_proven"] is False
+    assert receipt["performance_authorization"] is False
