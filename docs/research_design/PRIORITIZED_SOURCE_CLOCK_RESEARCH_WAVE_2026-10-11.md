@@ -1,7 +1,7 @@
 # Prioritized source-clock research wave: Q221 disposition, Q224 and Q228 preflight
 
 **Date:** 2026-10-11 UTC  
-**Repository basis:** master commit 22ab0e28913b717d638302837b2b912d1833225b  
+**Source baseline:** merge commit 22ab0e28913b717d638302837b2b912d1833225b; latest verified master during preparation includes subsequent ops status-sync commit e22921a829ddfa2ab71489dc44002f80cff9e0d8  
 **Classification:** research operations / source feasibility / no performance authorization  
 **Purpose:** preserve the Q221 archive inventory result and sequence the next highest-information source/PIT checks without changing candidate contracts, dispatch allow-lists or scientific gates.
 
