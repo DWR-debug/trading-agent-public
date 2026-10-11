@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `2cc468fce4aea286f8694ee47a44c813e5f94b65`
+**Current operational snapshot:** `22ab0e28913b717d638302837b2b912d1833225b`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-11T17:26:22.429043+00:00`
+**Generated (UTC):** `2026-10-11T18:29:20.050685+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -161,7 +161,7 @@
 ### Q169 R4 Independent NOAA Reproduction
 
 - Independent reproduction status: **Q169_R4_INDEPENDENT_REPRODUCTION_COMPLETED**.
-- Persistent receipt fingerprint: `b1503e18ac1b9c198677fa251a786e179071f8d60e8275c0396bc0ddf30c6699`.
+- Persistent receipt fingerprint: `806d7255b61bcd4b386dac238a1adc372c49a0e2f5f12757d50312a582158969`.
 - All fixed R3 archive samples reproduced = **True**.
 - Candidate-specific exposure map frozen = **False**; revision lineage reconstructed = **False**.
 - This strengthens NOAA source/archive provenance only; candidate PIT validation and performance remain closed.
