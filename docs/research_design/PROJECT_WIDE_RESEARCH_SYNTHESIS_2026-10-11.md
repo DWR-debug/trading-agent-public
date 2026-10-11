@@ -74,7 +74,24 @@ Q220's proposed mechanism is not merely “text differs from numbers.” It is a
 - Practical consequence: preserve original filing bytes, accession/acceptance clock, taxonomy and context versions, the resolver hash, and a mapping receipt for each issuer/document. The population receipt must match the current gate-code and frozen-contract hashes before any historical prefix/PIT compiler can open.
 - Limitation: taxonomy correctness is a prerequisite for measuring the construct, not evidence of predictive value.
 
-## 3. Orthogonal ideas worth cheap falsification — design only
+## 3. Comparable agent architectures: what to borrow and what not to infer
+
+The closest public reference systems are useful primarily as architecture comparisons. Their reported trading/backtest results are not directly comparable to this repository unless data versions, point-in-time constraints, transaction costs, universes, risk limits, and evaluation periods are aligned.
+
+| System | Published design emphasis | Potentially useful transfer | Important non-transfer |
+|---|---|---|---|
+| **TradingAgents** (Xiao et al., arXiv:2412.20138, 2024/2025) | Role-specialized fundamental, sentiment and technical analysts; bull/bear debate; risk-management roles; trader synthesis | Structured adversarial review, explicit dissent, risk-focused handoffs, role-specific evidence requests | Do not treat a multi-agent debate or paper-reported backtest improvement as source/PIT validation, independent reproduction, or permission to trade |
+| **FinRobot** (Yang et al., arXiv:2405.14767, 2024) | Layered platform spanning financial agents, LLM algorithms, LLMOps/DataOps and foundation models | Keep model orchestration replaceable; make deterministic tools and data contracts first-class; record model/tool versions | An agent platform does not itself guarantee immutable historical data, first-public timestamps, or statistically valid candidate selection |
+| **FinMem** (Yu et al., arXiv:2311.13743, 2023) | Profiling, layered memory and decision modules | Persistent research memory, compact handoff state, provenance-linked retrieval, explicit separation of old observations from new evidence | Claims about improved simulated returns do not validate the current project’s data clocks or generalize across universes |
+
+Primary references:
+- TradingAgents paper: https://arxiv.org/abs/2412.20138 ; project page: https://TradingAgents-AI.github.io
+- FinRobot paper: https://arxiv.org/abs/2405.14767 ; official repository: https://github.com/AI4Finance-Foundation/FinRobot
+- FinMem paper: https://arxiv.org/abs/2311.13743
+
+**Project-level synthesis:** the best differentiator is not adding more agent personas. It is combining (a) a deterministic, versioned evidence plane, (b) bounded specialist workers, (c) an adversarial reviewer whose findings must cite immutable artifacts, and (d) a fail-closed authority layer that cannot be overridden by model consensus. The existing two-lane Formal Readiness / Frontier Discovery structure is directionally consistent with this separation. The highest-value incremental test is to verify that every agent-generated claim is typed as *literature lead*, *source-feasibility result*, *PIT evidence*, *performance evidence*, or *authorization* and cannot silently cross those boundaries.
+
+## 4. Orthogonal ideas worth cheap falsification — design only
 
 These are research directions, not new active candidates or authorization.
 
