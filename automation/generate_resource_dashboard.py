@@ -541,8 +541,8 @@ Q104_EXPECTED_CENSUS_SHARDS = {
 }
 
 
-def q104_census_clock_complete(receipt: dict[str, Any]) -> bool:
-    """Lightweight dashboard gate aligned to the canonical Census/PIT receipt."""
+def q104_census_clock_only_complete(receipt: dict[str, Any]) -> bool:
+    """Check archive and acceptance-clock closure, excluding issuer-name review."""
     join = receipt.get("acceptance_time_join", {})
     return (
         receipt.get("candidate_id") == "Q104:I19"
@@ -567,14 +567,48 @@ def q104_census_clock_complete(receipt: dict[str, Any]) -> bool:
     )
 
 
+def q104_census_clock_complete(receipt: dict[str, Any]) -> bool:
+    """Only show Q104 as complete when issuer-name variants are also reviewed."""
+    if not q104_census_clock_only_complete(receipt):
+        return False
+    frozen = receipt.get("frozen_cusips", {})
+    audit = receipt.get("issuer_name_cusip_audit")
+    review = receipt.get("identity_review", {})
+    return (
+        isinstance(frozen, dict)
+        and isinstance(audit, dict)
+        and set(audit) == set(frozen)
+        and receipt.get("identity_resolution_proven") is False
+        and receipt.get("unresolved_issuer_name_cusips") == []
+        and isinstance(review, dict)
+        and review.get("status") == "NO_VARIANT_OBSERVED_NOT_PROOF"
+        and review.get("unresolved_pair_count") == 0
+        and review.get("identity_resolution_proven") is False
+    )
+
+
 def q104_census_status(runs: list[dict[str, Any]]) -> dict[str, Any]:
     receipt = read_json_file("research/evidence/q104_i19_13f_historical_identity_census_latest.json")
     if q104_census_clock_complete(receipt):
         return {
             "progress_percent": 100,
             "state": "completed",
-            "detail": "6/6 Shards abgeschlossen · Acceptance-Time-Join vollständig · Receipt-Fingerprint vorhanden",
+            "detail": "6/6 Shards abgeschlossen · Acceptance-Time-Join vollständig · Issuer-Name/CUSIP-Audit ohne offene Varianten · Receipt-Fingerprint vorhanden",
             "next_gate": "concept-specific PIT compiler + independent reproduction",
+        }
+
+    if q104_census_clock_only_complete(receipt):
+        review = receipt.get("identity_review", {})
+        unresolved = receipt.get("unresolved_issuer_name_cusips")
+        return {
+            "progress_percent": 85,
+            "state": "blocked",
+            "detail": "Archive und Acceptance-Time-Join geschlossen; Issuer-Name/CUSIP-Audit fehlt oder enthält ungeklärte historische Varianten. PIT-Compiler bleibt gesperrt; CUSIP-Zieluniversum unverändert.",
+            "next_gate": (
+                "resolve frozen-CUSIP issuer-name variants with row-level source evidence"
+                if review.get("status") == "UNRESOLVED_CUSIP_ISSUER_NAME_VARIANTS_PRESENT" or unresolved
+                else "regenerate census receipt with the required issuer-name/CUSIP audit before PIT compilation"
+            ),
         }
 
     matching = [
