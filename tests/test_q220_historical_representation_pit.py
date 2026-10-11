@@ -5,6 +5,7 @@ from pathlib import Path
 from automation.q220_historical_representation_pit import (
     canonical_fingerprint,
     compile_receipt,
+    continuation_map,
     sha256,
     structured_states,
     textblock_states,
@@ -237,3 +238,30 @@ def test_q220_self_closing_numeric_fact_does_not_swallow_following_fact():
     assert by_context["EMPTY"]["raw_value_sha256"] == sha256(b"")
     assert by_context["VALUED"]["normalized_value"] == "100"
     assert by_context["VALUED"]["parse_status"] == "PARSED"
+
+def test_q220_nested_continuation_is_balanced_and_parent_chain_remains_complete():
+    document = """
+    <html xmlns:ix="http://www.xbrl.org/2013/inlineXBRL">
+      <ix:nonNumeric name="custom:RiskTextBlock" contextRef="C1" id="risk" continuedAt="c1">Headline</ix:nonNumeric>
+      <ix:continuation id="c1" continuedAt="c3">
+        Alpha <span>beta</span>
+        <ix:continuation id="c2">Nested continuation text</ix:continuation>
+        omega
+      </ix:continuation>
+      <ix:continuation id="c3">Tail text</ix:continuation>
+    </html>
+    """
+    states = textblock_states(document)["custom:RiskTextBlock"][0]
+    expected = "Headline Alpha beta Nested continuation text omega Tail text"
+
+    assert states["continued_chain_length"] == 2
+    assert states["continued_chain_complete"] is True
+    assert states["normalized_character_count"] == len(expected)
+    assert states["content_sha256"] == sha256(expected.encode("utf-8"))
+
+    indexed = continuation_map(document)
+    assert set(indexed) == {"c1", "c2", "c3"}
+    assert "Nested continuation text" in indexed["c1"][1]
+    assert "omega" in indexed["c1"][1]
+    assert indexed["c1"][0]["continuedat"] == "c3"
+
