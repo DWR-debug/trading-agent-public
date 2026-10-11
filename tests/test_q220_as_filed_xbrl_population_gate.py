@@ -239,3 +239,15 @@ def test_q220_route_probe_is_skipped_when_current_positive_population_receipt_ex
     assert "concurrency:" in route_probe
     assert "runs-on: ubuntu-24.04" in route_probe
 
+
+
+def test_q220_stale_run_retirement_job_is_one_shot_push_and_positive_receipt_gated():
+    workflow = (ROOT / ".github/workflows/q220-as-filed-xbrl-population.yml").read_text(encoding="utf-8")
+    job = workflow.split("  retire_stale_queued_runs:", 1)[1].split("  population:", 1)[0]
+    assert "github.event_name == 'push'" in job
+    assert "needs.receipt_gate.result == 'success'" in job
+    assert "needs.receipt_gate.outputs.run_population == 'false'" in job
+    assert "actions: write" in job
+    assert "python -m automation.q220_stale_run_retirement" in job
+
+
