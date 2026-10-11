@@ -601,7 +601,8 @@ function render(data){
     var st=capacityState(x,data);
     var role=esc(x.role||"");
     var active=Number(x.current_assignments||0);
-    var free=Number(x.research_slots_free||0);
+    var freeLabel=x.research_slots_free==null?"?":String(x.research_slots_free);
+    var slotsInUseLabel=x.research_slots_in_use==null?"?":String(x.research_slots_in_use);
     var currentRows=work.filter(function(w){return w.resource===x.name;});
     var currentText=currentRows.slice(0,2).map(function(w){
       return candidateFrom((w.task||"")+" "+(w.job||""))+" · "+(w.job||w.task||"Research-Job")+" ["+(w.job_status||w.status||"—")+"]";
@@ -618,8 +619,8 @@ function render(data){
       "<div class='name'>"+esc(x.name)+"</div>"+
       "<div class='state'>"+st.label+"</div>"+
       "<div class='role'>"+role+"</div>"+
-      "<div class='capacity-numbers'><strong>"+active+"</strong> aktiv <span>·</span> <strong>"+free+"</strong> frei</div>"+
-      "<div class='small muted'>Slots "+esc(x.research_slots_in_use||0)+"/"+esc(x.research_capacity_slots||1)+" · Runner "+esc(x.runner_status||"nicht sichtbar")+"</div>"+
+      "<div class='capacity-numbers'><strong>"+active+"</strong> aktiv <span>·</span> <strong>"+esc(freeLabel)+"</strong> frei</div>"+
+      "<div class='small muted'>Slots "+esc(slotsInUseLabel)+"/"+esc(x.research_capacity_slots||1)+" · Runner "+esc(x.runner_status||"nicht sichtbar")+" · Busy-Basis "+esc(x.runner_busy_basis||"unbekannt")+"</div>"+
       "<div class='capacity-assignments'><div class='capacity-current'><strong>Arbeitet an</strong>"+(currentText.length?currentText.map(function(v){return "<div>"+esc(v)+"</div>";}).join(""):"<div class='muted'>Keine sichtbare aktive Top-3-Zuordnung</div>")+"</div>"+
       "<div class='capacity-next'><strong>Nächster Pipeline-Schritt</strong>"+(nextText.length?nextText.map(function(v){return "<div>"+esc(v)+"</div>";}).join(""):"<div class='muted'>Kein separater Schritt disponiert</div>")+"</div></div>"+
       "</div>";
