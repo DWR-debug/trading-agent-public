@@ -25,7 +25,10 @@ MAX_HEADER_RETRIES = 3
 RETRYABLE_REASON = re.compile(
     r"(SEC_HEADER_HTTP_(408|425|429|500|502|503|504)|"
     r"timeout|timed out|urlerror|connection reset|connection aborted|"
-    r"remote disconnected|temporary failure|network is unreachable)",
+    r"remote disconnected|temporary failure|network is unreachable|"
+    r"getaddrinfo failed|name or service not known|failed to resolve|"
+    r"host (?:is|was) unreachable|winerror\s*(10054|10065)|"
+    r"errno\s*(11001|11002|11003))",
     re.IGNORECASE,
 )
 
