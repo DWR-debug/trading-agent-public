@@ -322,9 +322,9 @@ function renderCandidateIntake(data){
 
 function operationStatusClass(status){
   var s=String(status||"").toLowerCase();
-  if(s==="in_progress"||s==="running")return "active-badge";
-  if(s==="queued"||s==="pending"||s==="waiting"||s==="ready")return "planned-badge";
-  if(s.indexOf("block")>=0||s.indexOf("fail")>=0||s.indexOf("unknown")>=0)return "blocked-badge";
+  if(s==="in_progress"||s==="running"||s.indexOf("aktiv")>=0||s.indexOf("läuft")>=0)return "active-badge";
+  if(s==="queued"||s==="pending"||s==="waiting"||s==="ready"||s.indexOf("bereit")>=0||s.indexOf("geplant")>=0||s.indexOf("nächstes")>=0||s.indexOf("erreicht")>=0)return "planned-badge";
+  if(s.indexOf("block")>=0||s.indexOf("voraussetzung")>=0||s.indexOf("fail")>=0||s.indexOf("unknown")>=0)return "blocked-badge";
   return "blocked-badge";
 }
 function nextDurationLabel(item,data,code){
