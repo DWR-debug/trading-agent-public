@@ -77,3 +77,19 @@ def test_dashboard_top_three_remain_in_the_existing_candidate_focus_order():
     js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
     assert 'var FOCUS=["Q104:I19","Q220","Q221"];' in js
     assert 'Q104:I19 · Q220 · Q221' in js
+
+
+def test_active_top_three_decision_board_is_receipt_first():
+    html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+
+    assert 'var FOCUS=["Q104:I19","Q220","Q221"]' in js
+    assert 'id="candidateDecisionRules"' in html
+    assert html.index('id="candidateFocus"') < html.index('id="candidateDecisionRules"')
+    assert html.index('id="candidateDecisionRules"') < html.index('class="progress-overview"')
+    assert "function renderCandidateDecisionRules(pipeline)" in js
+    for code in ("Q104:I19", "Q220", "Q221"):
+        assert 'code:"' + code + '"' in js
+    assert "DoD/USACE-90-Tage- und FAR-Ausnahmen" in js
+    assert "Q218 ist aus aktivem Fokus und automatischem Dispatch entfernt" in js
+    assert "Q219 bleibt pausiert" in js
