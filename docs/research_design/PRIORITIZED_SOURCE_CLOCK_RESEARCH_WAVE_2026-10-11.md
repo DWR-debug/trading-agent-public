@@ -268,3 +268,14 @@ No candidate is added, no active-focus lock is widened, and no performance, hold
 - Do not duplicate Q104. After it is terminal, reconcile the six receipts, apply the existing targeted .hdr.sgml recovery, then perform only the bounded source-consistency QA before the existing PIT compiler.
 - Q220's frozen 55-record population, historical-prefix compiler and independent PIT reproduction are now positive and receipt-linked; the next gate is a bounded adversarial robustness review plus formal trial-governance reconciliation, with no performance authorization. Q221 remains source-blocked at the award-level public-observation boundary until a separate transaction-level workpack proves historical presence/absence and correction lineage.
 - No candidate contract, performance gate, holdout rule, ranking, tuning, promotion, paid service or live-execution boundary is changed.
+
+
+## 7. Unusual-source lead: Government Patent Register (reserve only)
+
+The NBER working paper [*The Government Patent Register: A New Resource for Measuring U.S. Government-Funded Patenting*](https://www.nber.org/papers/w32136) by Daniel P. Gross and Bhaven N. Sampat describes a historical register of U.S. government rights in patents. The published version appeared in *Research Policy* in 2025 ([journal record](https://www.sciencedirect.com/science/article/abs/pii/S0048733324001914)). Its useful distinction is between government-title patents and government-funded inventions licensed to private organizations; some license relationships cannot reliably be recovered from patent-text acknowledgements alone.
+
+**Potential connection to the existing Q221 mechanism:** as a later, independent entity/capability cross-check, patent-level government-rights evidence could help distinguish recipients that perform technical work from recipients that hold or license inventions, and might support post-award capability outcome audits. This is a lead to screen against Q221's already frozen mechanism—not a new candidate and not a replacement for the award-level public-clock gate.
+
+**PIT restriction:** the consolidated register was compiled retrospectively. Its current appearance in a register cannot be treated as contemporaneous public information at a historical award cutoff. Any future use must locate the exact patent record and use its own original publication/grant/publication-vintage evidence, while separately verifying the availability of the government-rights/licensing field. Do not infer award causality or transaction timing from the current register alone.
+
+**Disposition:** reserve for a later Q221 identity/capability workpack only after the award-level source clock, fixed transaction classes and recipient-to-issuer map have a defensible contract. Active focus stays Q104:I19, Q220 and Q221; no candidate expansion or dispatch is authorized by this source lead.
