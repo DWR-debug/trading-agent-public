@@ -81,19 +81,24 @@ def candidate_inventory():
             sources = row.get("sources") or row.get("source_evidence") or row.get("information_channel") or []
             if isinstance(sources, (dict, list, tuple)):
                 sources = json.dumps(sources, sort_keys=True, ensure_ascii=False)
-            inventory.setdefault(cid, {
-                "id": cid,
-                "name": row.get("name", ""),
-                "mechanism": row.get("mechanism") or row.get("hypothesis") or row.get("name", ""),
-                "economic_relation": row.get("economic_relation") or row.get("construction") or row.get("purpose", ""),
-                "information_channel": str(sources),
-                "event_clock": row.get("event_clock") or row.get("clock") or "",
-                "state_transition": row.get("state_transition") or row.get("next_gate") or "",
-                "identity_basis": row.get("identity_basis") or row.get("exposure_mapping") or "",
-                "description": row.get("description") or row.get("why_distinct") or row.get("name", ""),
-                "purpose": row.get("purpose", ""),
-                "inventory_source": path.relative_to(ROOT).as_posix(),
-            })
+            source = path.relative_to(ROOT).as_posix()
+            if cid not in inventory:
+                inventory[cid] = {
+                    "id": cid,
+                    "name": row.get("name", ""),
+                    "mechanism": row.get("mechanism") or row.get("hypothesis") or row.get("name", ""),
+                    "economic_relation": row.get("economic_relation") or row.get("construction") or row.get("purpose", ""),
+                    "information_channel": str(sources),
+                    "event_clock": row.get("event_clock") or row.get("clock") or "",
+                    "state_transition": row.get("state_transition") or row.get("next_gate") or "",
+                    "identity_basis": row.get("identity_basis") or row.get("exposure_mapping") or "",
+                    "description": row.get("description") or row.get("why_distinct") or row.get("name", ""),
+                    "purpose": row.get("purpose", ""),
+                    "inventory_source": source,
+                    "inventory_sources": [source],
+                }
+            elif source not in inventory[cid]["inventory_sources"]:
+                inventory[cid]["inventory_sources"].append(source)
     return inventory
 
 
