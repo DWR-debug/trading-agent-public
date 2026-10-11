@@ -2225,6 +2225,9 @@ def main() -> None:
     candidate_progress = candidate_progress_snapshot(recent_runs)
     candidate_portfolio = build_candidate_portfolio(ROOT, evidence, candidate_progress)
     candidate_intake_plan = build_candidate_intake_plan(ROOT, active_focus=list(FOCUS_CANDIDATES))
+    handoff_decision_log = read_json_file("research/evidence/trading_agent_chat_decision_log.json")
+    if not isinstance(handoff_decision_log, dict) or not isinstance(handoff_decision_log.get("entries"), list):
+        handoff_decision_log = {"schema_version": 1, "record_type": "trading_agent_chat_decision_log", "updated_at_utc": "", "entries": []}
 
     configured_resources = [
         {"name": "Windows self-hosted A", "type": "physical", "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
@@ -2270,6 +2273,7 @@ def main() -> None:
         "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json + ops/trading_agent_os_state.json",
         "scientific_boundary": os_state.get("permanent_safety", {}),
         "chat_handoff": chat_handoff_snapshot(evidence, os_state),
+        "handoff_decision_log": handoff_decision_log,
         "dashboard_summary": {
             "active_work_items": len(work),
             # A lane is a distinct resource currently occupied by research, not a raw job count.

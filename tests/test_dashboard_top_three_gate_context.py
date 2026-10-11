@@ -188,3 +188,39 @@ def test_dashboard_pending_run_without_job_records_has_no_unbound_job_reference(
     assert rows[0]["job_started_at"] is None
     assert rows[0]["job_completed_at"] is None
 
+
+
+
+def test_dashboard_decision_log_is_visible_current_and_non_authorizing():
+    import json
+
+    js = (ROOT / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    html = (ROOT / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    generator = (ROOT / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    status_sync = (ROOT / "automation/sync_current_operational_status.py").read_text(encoding="utf-8")
+    log_path = ROOT / "research/evidence/trading_agent_chat_decision_log.json"
+    log = json.loads(log_path.read_text(encoding="utf-8"))
+
+    assert 'id="handoffPanel"' in html
+    assert "data.handoff_decision_log" in js
+    assert "safeHttpsUrl" in js
+    assert '"handoff_decision_log": handoff_decision_log' in generator
+    assert '"research/evidence/trading_agent_chat_decision_log.json"' in workflow
+    assert log["record_type"] == "trading_agent_chat_decision_log"
+    assert log["safety"] == {
+        "PAPER_ONLY": True,
+        "LIVE_TRADING_ENABLED": False,
+        "ORDERS_ENABLED": False,
+        "AUTOMATIC_PROMOTION": False,
+        "paid_usage_usd": 0,
+    }
+    assert all(entry["scientific_evidence"] is False for entry in log["entries"])
+    focus = next(entry for entry in log["entries"] if entry["candidate"] == "PORTFOLIO")
+    assert all(code in focus["decision"] for code in ("Q104:I19", "Q220", "Q221"))
+    assert "Q218" in focus["decision"] and "excluded" in focus["decision"].lower()
+
+    # Dashboard continuity work must preserve the existing single-flight and receipt-driven guards.
+    assert "status_priority" in generator
+    assert "wait behind the active run" in generator
+    assert "q220_population_focus_sentence" in status_sync

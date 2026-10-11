@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "record_type": "trading_agent_chat_decision_log",
+  "purpose": "Durable operational continuity for future Trading Agent OS chats. Entries are operational notes, not scientific evidence, performance authorization, ranking, or live-trading permission.",
+  "updated_at_utc": "2026-10-11T20:42:00Z",
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false,
+    "paid_usage_usd": 0
+  },
+  "entries": [
+    {
+      "date_utc": "2026-10-11T20:42:00Z",
+      "candidate": "Q104:I19",
+      "status": "CENSUS RUNNING — NOT TERMINAL",
+      "title": "Resume the existing historical 13F identity census",
+      "decision": "Run 38168441086 is the active six-shard census. The frozen SEC source snapshot succeeded; the three Windows shards and three hosted Ubuntu/ARM64 shards were still in progress at the latest inspection. The prior run produced shard receipts but failed at historical acceptance-time joins; it is not a merged positive census receipt.",
+      "next_action": "Do not cancel or duplicate the active run. After terminal status, reconcile every shard receipt and repair only proven unresolved acceptance-time/header/security-identity gaps. Compile the frozen PIT state and require independent reproduction only after a positive census/compiler receipt.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-11T20:41:00Z",
+      "candidate": "PORTFOLIO",
+      "status": "ACTIVE FOCUS LOCK",
+      "title": "Three active research lanes",
+      "decision": "The verified operating focus is exactly Q104:I19, Q220 and Q221. Q218 is excluded from active execution and automatic dispatch. Research priority is resource allocation only, not expected-return ranking, performance authorization or promotion.",
+      "next_action": "Keep the focus allow-list unchanged. Avoid duplicate work while Q104 is active; keep Q220 on its historical-prefix/acceptance-time PIT gate and Q221 source-blocked pending immutable vintage evidence.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/blob/1f293470e010c178a5b6c59b419644bd1a3c276c/research/evidence/trading_agent_chat_handoff.json",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-11T20:40:00Z",
+      "candidate": "Q220",
+      "status": "POPULATION RECEIPT POSITIVE; PIT GATE STILL OPEN",
+      "title": "As-filed SEC XBRL historical representation",
+      "decision": "Run 38155914188 produced a verified fixed-population receipt for 55 filing records across the frozen eight-issuer universe with zero record failures. Five original 10-K records without observed TextBlock facts remain explicit missing states. This closes only the population subgate, not the historical PIT compiler or independent reproduction.",
+      "next_action": "Use the current fingerprinted population receipt for the existing historical prefix/acceptance-time compiler; preserve the frozen population, five missing states and fail-closed checks. No market-outcome test or promotion follows from the population receipt.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38155914188",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-11T20:39:00Z",
+      "candidate": "Q221",
+      "status": "SOURCE-BLOCKED",
+      "title": "Historical USAspending public-clock feasibility",
+      "decision": "Run 38161449892 completed fail-closed after finding 14 catalogue rows but no dated multi-version series. This is a negative source-feasibility result for the queried endpoint, not transaction-level historical absence evidence.",
+      "next_action": "Do not repeat the same current-listing query. Proceed only with bounded alternate-source research capable of proving immutable historical vintages, transaction-level presence/absence at cutoffs, correction lineage and an admissible public clock.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38161449892",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-11T20:38:00Z",
+      "candidate": "Q218",
+      "status": "EXCLUDED FROM ACTIVE FOCUS",
+      "title": "Preserve Q218 as descriptive evidence only",
+      "decision": "The consumed paper-only one-shot and the existing eight-event-pair replication remain archived descriptive evidence. They do not establish a validated tradable strategy and do not authorize a repeated outcome-bearing run.",
+      "next_action": "Do not dispatch Q218, repeat the consumed one-shot, select holdout, tune, rank or promote. Revisit only through a separately authorized non-outcome-bearing gate.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/pull/1287",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-10T15:36:00Z",
+      "candidate": "AI / RESOURCE POLICY",
+      "status": "FREE-ONLY; PRIOR REVIEW OUTPUT UNUSABLE",
+      "title": "AI review supports engineering, not evidence",
+      "decision": "The prior OpenRouter-Free Q220 taxonomy review cost USD 0 but returned repeated generic boilerplate without substantive adversarial findings. Treat it as transport-success/content-unusable, not as a methods review or scientific evidence. No paid fallback is permitted.",
+      "next_action": "Only use a fresh free-only preflight for a material new question; require content-quality validation and do not repeat the unchanged prompt.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38064047684",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-11T20:42:00Z",
+      "candidate": "DASHBOARD",
+      "status": "HANDOFF PANEL UPDATE IN REVIEW",
+      "title": "Durable handoff and recent decisions on the live dashboard",
+      "decision": "PR #1289 is being refreshed from the verified current master so the visible decision log is additive and the existing Q104 single-flight status selection and Q220 receipt-based status logic are preserved.",
+      "next_action": "Require CI and Full Suite checks before merge; after merge verify a fresh dashboard deployment timestamp, current dashboard master SHA, visible Q104/Q220/Q221 focus and unchanged paper-only safety flags.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/pull/1289",
+      "scientific_evidence": false
+    }
+  ]
+}
