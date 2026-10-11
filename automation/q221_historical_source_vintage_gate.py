@@ -10,7 +10,9 @@ transaction applicability, entity mapping, and performance gates remain closed.
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
+import io
 import json
 import urllib.parse
 import urllib.request
@@ -42,14 +44,34 @@ MARKERS = {
 }
 
 
+def _bounded_gzip_decode(body: bytes, limit: int) -> bytes:
+    """Decode a gzip-wrapped replay with a strict post-decompression byte limit."""
+    with gzip.GzipFile(fileobj=io.BytesIO(body), mode="rb") as stream:
+        decoded = stream.read(limit + 1)
+    if len(decoded) > limit:
+        raise ValueError(f"decompressed response exceeded bounded byte limit ({limit})")
+    return decoded
+
+
 def fetch(url: str, limit: int) -> tuple[int, str, bytes]:
     request = urllib.request.Request(
         url,
-        headers={"User-Agent": "TradingAgent-Public-Q221-Historical-Clock/1.0"},
+        headers={
+            "User-Agent": "TradingAgent-Public-Q221-Historical-Clock/1.0",
+            # Archive replays have returned gzip-wrapped bytes while declaring a
+            # PDF content type. Ask for identity, but still verify the body below.
+            "Accept-Encoding": "identity",
+        },
     )
     with urllib.request.urlopen(request, timeout=35) as response:
         body = response.read(limit + 1)
         if len(body) > limit:
+            raise ValueError(f"compressed/raw response exceeded bounded byte limit ({limit})")
+        encoding = str(response.headers.get("Content-Encoding", "")).lower()
+        is_gzip = body.startswith(b"\\x1f\\x8b")
+        if "gzip" in encoding or is_gzip:
+            body = _bounded_gzip_decode(body, limit)
+        elif len(body) > limit:
             raise ValueError(f"response exceeded bounded byte limit ({limit})")
         return int(getattr(response, "status", 200)), response.headers.get("Content-Type", ""), body
 
@@ -113,6 +135,7 @@ def run(output: Path) -> dict[str, Any]:
         "record_type": "q221_historical_source_vintage_gate",
         "candidate_id": "Q221",
         "generated_at_utc": started,
+        "gate_code_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "official_source_url": ORIGINAL_URL,
         "archive_index_url": CDX_ENDPOINT,
         "fixed_target_windows": [x[0] for x in TARGETS],
