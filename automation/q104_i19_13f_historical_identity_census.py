@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse,csv,hashlib,html.parser,io,json,re,threading,time,urllib.error,urllib.request,zipfile
 import http.client
 from concurrent.futures import ThreadPoolExecutor,as_completed
+from automation.q111_security_identity_contract import normalize_text
 from datetime import date,datetime,timezone
 from pathlib import Path
 
@@ -262,6 +263,7 @@ def scan_archive(blob,archive,targets,**_ignored):
                 "accessions":set(),
                 "filing_dates":set(),
                 "periods":set(),
+                "_issuer_name_observations_by_cusip":{},
             }
             for s in targets
         }
@@ -280,7 +282,16 @@ def scan_archive(blob,archive,targets,**_ignored):
             h=hits[sym]
             h["row_count"]+=1
             h["cusips"].add(c)
-            h["issuer_names"].add(field(row,"NAMEOFISSUER"))
+            raw_issuer_name=field(row,"NAMEOFISSUER").strip()
+            h["issuer_names"].add(raw_issuer_name)
+            normalized_issuer_name=normalize_text(raw_issuer_name)
+            variants=h["_issuer_name_observations_by_cusip"].setdefault(c,{})
+            observation=variants.setdefault(normalized_issuer_name,{"row_count":0,"raw_examples":set(),"accessions":set(),"filing_dates":set(),"row_samples":set()})
+            observation["row_count"]+=1
+            observation["raw_examples"].add(raw_issuer_name)
+            observation["accessions"].add(acc)
+            observation["filing_dates"].add(eligible[acc]["filing_date"])
+            observation["row_samples"].add((acc,eligible[acc]["filing_date"],raw_issuer_name))
             h["class_names"].add(field(row,"TITLEOFCLASS"))
             h["accessions"].add(acc)
             h["filing_dates"].add(eligible[acc]["filing_date"])
@@ -289,6 +300,52 @@ def scan_archive(blob,archive,targets,**_ignored):
     for h in hits.values():
         for k in ("cusips","issuer_names","class_names","accessions","filing_dates","periods"):
             h[k]=sorted(x for x in h[k] if x)
+
+    issuer_name_cusip_audit={}
+    unresolved_issuer_name_cusips=[]
+    for symbol,h in hits.items():
+        by_cusip={}
+        raw_by_cusip=h.pop("_issuer_name_observations_by_cusip",{})
+        for cusip,by_name in sorted(raw_by_cusip.items()):
+            observations=[]
+            for normalized_name,details in sorted(by_name.items()):
+                accession_order=sorted(details["accessions"],key=lambda acc:(eligible.get(acc,{}).get("filing_date",""),acc))
+                filing_dates=sorted(details["filing_dates"])
+                observations.append({
+                    "normalized_name":normalized_name or None,
+                    "row_count":int(details["row_count"]),
+                    "distinct_accession_count":len(details["accessions"]),
+                    "accession_samples":accession_order[:5],
+                    "filing_date_min":filing_dates[0] if filing_dates else None,
+                    "filing_date_max":filing_dates[-1] if filing_dates else None,
+                    "raw_variant_count":len(details["raw_examples"]),
+                    "raw_examples":sorted(x for x in details["raw_examples"] if x)[:5],
+                    "row_samples":[{"accession":acc,"filing_date":filing_date,"raw_name":raw_name} for acc,filing_date,raw_name in sorted(details["row_samples"])[:8]],
+                })
+            normalized_names=sorted({x for x in by_name if x})
+            missing_name_rows=int(by_name.get("",{}).get("row_count",0))
+            if missing_name_rows:
+                name_status="UNRESOLVED_MISSING_ISSUER_NAME"
+            elif len(normalized_names)>1:
+                name_status="UNRESOLVED_ISSUER_NAME_VARIANTS"
+            else:
+                name_status="SINGLE_NORMALIZED_NAME_OBSERVED_NOT_IDENTITY_PROOF"
+            by_cusip[cusip]={
+                "status":name_status,
+                "identity_resolution_proven":False,
+                "normalized_name_count":len(normalized_names),
+                "missing_name_rows":missing_name_rows,
+                "observed_row_count":sum(int(x["row_count"]) for x in observations),
+                "observations":observations,
+            }
+            if name_status.startswith("UNRESOLVED_"):
+                unresolved_issuer_name_cusips.append({
+                    "symbol":symbol,"cusip":cusip,"status":name_status,
+                    "normalized_name_count":len(normalized_names),
+                    "missing_name_rows":missing_name_rows,
+                    "observed_row_count":sum(int(x["row_count"]) for x in observations),
+                })
+        issuer_name_cusip_audit[symbol]=by_cusip
 
     target_accession_meta={
         accession:eligible[accession]
@@ -313,6 +370,9 @@ def scan_archive(blob,archive,targets,**_ignored):
         "archive_sha256":hashlib.sha256(blob).hexdigest(),
         "archive_bytes":len(blob),
         "target_hits":hits,
+        "issuer_name_cusip_audit":issuer_name_cusip_audit,
+        "unresolved_issuer_name_cusips":sorted(unresolved_issuer_name_cusips,key=lambda x:(x["symbol"],x["cusip"])),
+        "identity_resolution_proven":False,
         "target_accession_meta":target_accession_meta,
         "security_identity_conflicts":sorted(conflicts),
         "acceptance_failures":{},
@@ -333,6 +393,78 @@ def synthetic_contract():
     r=scan_archive(b.getvalue(),{"url":"synthetic://q104","label":"synthetic","period_start":"2017-07-01"},{"SPGI":{"78409V104"}})
     h=r["target_hits"]["SPGI"]
     return {"hash":len(r["archive_sha256"])==64,"matched":h["row_count"]==1,"future_excluded":"Future Name Corp" not in h["issuer_names"],"no_identity_conflict":not r["security_identity_conflicts"]}
+
+def aggregate_issuer_name_cusip_audit(archive_records,symbols):
+    """Aggregate normalized NAMEOFISSUER observations under frozen CUSIP keys.
+
+    Variants are diagnostics only: they never rewrite the frozen CUSIP universe
+    or remove rows. Even one observed normalized name is not identity proof.
+    """
+    combined={symbol:{} for symbol in symbols}
+    for record in archive_records:
+        archive=record.get("archive") or {}
+        label=str(archive.get("label") or archive.get("url") or "UNKNOWN_ARCHIVE")
+        for symbol,by_cusip in (record.get("issuer_name_cusip_audit") or {}).items():
+            if symbol not in combined:
+                combined[symbol]={}
+            for cusip,audit in by_cusip.items():
+                item=combined[symbol].setdefault(cusip,{"archive_labels":set(),"observations":{}})
+                item["archive_labels"].add(label)
+                for observation in audit.get("observations",[]):
+                    name=observation.get("normalized_name") or ""
+                    target=item["observations"].setdefault(name,{
+                        "row_count":0,"distinct_accession_count":0,"raw_examples":set(),
+                        "accession_samples":set(),"filing_date_min":None,"filing_date_max":None,
+                        "archive_labels":set(), "row_samples":set(),
+                    })
+                    target["row_count"]+=int(observation.get("row_count",0) or 0)
+                    target["distinct_accession_count"]+=int(observation.get("distinct_accession_count",0) or 0)
+                    target["raw_examples"].update(observation.get("raw_examples",[]))
+                    target["accession_samples"].update(observation.get("accession_samples",[]))
+                    target["archive_labels"].add(label)
+                    target["row_samples"].update(
+                        (str(sample.get("accession") or ""),str(sample.get("filing_date") or ""),str(sample.get("raw_name") or ""),label)
+                        for sample in observation.get("row_samples",[]) if isinstance(sample,dict)
+                    )
+                    first=observation.get("filing_date_min")
+                    last=observation.get("filing_date_max")
+                    if first and (target["filing_date_min"] is None or first<target["filing_date_min"]): target["filing_date_min"]=first
+                    if last and (target["filing_date_max"] is None or last>target["filing_date_max"]): target["filing_date_max"]=last
+    result={symbol:{} for symbol in symbols}
+    for symbol,by_cusip in sorted(combined.items()):
+        for cusip,item in sorted(by_cusip.items()):
+            observations=[]
+            for normalized_name,details in sorted(item["observations"].items()):
+                observations.append({
+                    "normalized_name":normalized_name or None,
+                    "row_count":details["row_count"],
+                    "distinct_accession_count":details["distinct_accession_count"],
+                    "filing_date_min":details["filing_date_min"],
+                    "filing_date_max":details["filing_date_max"],
+                    "archive_labels":sorted(details["archive_labels"]),
+                    "raw_examples":sorted(x for x in details["raw_examples"] if x)[:5],
+                    "accession_samples":sorted(details["accession_samples"])[:8],
+                    "row_samples":[{"accession":acc,"filing_date":filing_date,"raw_name":raw_name,"archive_label":archive_label} for acc,filing_date,raw_name,archive_label in sorted(details["row_samples"])[:8]],
+                })
+            normalized_names=[x for x in item["observations"] if x]
+            missing_name_rows=int(item["observations"].get("",{}).get("row_count",0))
+            if missing_name_rows:
+                status="UNRESOLVED_MISSING_ISSUER_NAME"
+            elif len(normalized_names)>1:
+                status="UNRESOLVED_ISSUER_NAME_VARIANTS"
+            else:
+                status="SINGLE_NORMALIZED_NAME_OBSERVED_NOT_IDENTITY_PROOF"
+            result[symbol][cusip]={
+                "status":status,
+                "identity_resolution_proven":False,
+                "normalized_name_count":len(normalized_names),
+                "missing_name_rows":missing_name_rows,
+                "observed_row_count":sum(int(x["row_count"]) for x in observations),
+                "archive_labels":sorted(item["archive_labels"]),
+                "observations":observations,
+            }
+    return result
+
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--shard",choices=sorted(SHARDS),required=True); ap.add_argument("--output",type=Path,required=True); ap.add_argument("--page-file",type=Path); a=ap.parse_args()
@@ -436,6 +568,25 @@ def main():
             else: misses[s].append(q["archive"]["label"] or q["archive"]["url"])
         conflicts.update(q["security_identity_conflicts"])
     receipt["coverage_summary"]={s:{"archives_with_match":counts[s],"archives_without_match":len(selected)-counts[s],"historical_issuer_names_discovered":sorted(names[s]),"missed_archives":misses[s]} for s in targets}
+    receipt["issuer_name_cusip_audit"]=aggregate_issuer_name_cusip_audit(receipt["archives"],targets)
+    receipt["unresolved_issuer_name_cusips"]=[
+        {"symbol":symbol,"cusip":cusip,"status":audit["status"],"normalized_name_count":audit["normalized_name_count"],"missing_name_rows":audit["missing_name_rows"],"observed_row_count":audit["observed_row_count"],"archive_labels":audit["archive_labels"],"normalized_names":[x["normalized_name"] for x in audit["observations"] if x["normalized_name"] is not None]}
+        for symbol,by_cusip in receipt["issuer_name_cusip_audit"].items()
+        for cusip,audit in by_cusip.items() if audit["status"].startswith("UNRESOLVED_")
+    ]
+    for symbol in targets:
+        unresolved=[x["cusip"] for x in receipt["unresolved_issuer_name_cusips"] if x["symbol"]==symbol]
+        receipt["coverage_summary"][symbol]["issuer_name_cusips_with_unresolved_variants"]=sorted(unresolved)
+        receipt["coverage_summary"][symbol]["issuer_name_identity_status"]=(
+            "UNRESOLVED_CUSIP_ISSUER_NAME_VARIANTS_PRESENT" if unresolved else "NO_VARIANT_OBSERVED_NOT_IDENTITY_PROOF"
+        )
+        receipt["coverage_summary"][symbol]["identity_resolution_proven"]=False
+    receipt["identity_review"]={
+        "status":"UNRESOLVED_CUSIP_ISSUER_NAME_VARIANTS_PRESENT" if receipt["unresolved_issuer_name_cusips"] else "NO_VARIANT_OBSERVED_NOT_PROOF",
+        "unresolved_pair_count":len(receipt["unresolved_issuer_name_cusips"]),
+        "identity_resolution_proven":False,
+        "interpretation":"Issuer labels are descriptive fields. Variants under one frozen CUSIP are retained for review and do not rewrite the frozen universe or drop rows; a single observed normalized name is not proof of correct identity.",
+    }
     receipt["identity_conflicts"]=sorted(conflicts)
     receipt["acceptance_failures"]={}
     for q in receipt["archives"]:
@@ -446,7 +597,7 @@ def main():
     receipt["archive_completeness_for_shard"]=len(selected)>0 and len(receipt["archives"])==len(selected)
     receipt["receipt_fingerprint"]=hashlib.sha256(json.dumps(receipt,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode()).hexdigest()
     a.output.parent.mkdir(parents=True,exist_ok=True); a.output.write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
-    print(json.dumps({"shard":a.shard,"archive_count":len(selected),"coverage_summary":receipt["coverage_summary"],"fingerprint":receipt["receipt_fingerprint"]},ensure_ascii=False,sort_keys=True))
+    print(json.dumps({"shard":a.shard,"archive_count":len(selected),"coverage_summary":receipt["coverage_summary"],"identity_review":receipt["identity_review"],"unresolved_issuer_name_cusips":receipt["unresolved_issuer_name_cusips"],"fingerprint":receipt["receipt_fingerprint"]},ensure_ascii=False,sort_keys=True))
     return 0 if all(receipt["synthetic"].values()) and not receipt["identity_conflicts"] and receipt["archive_completeness_for_shard"] and receipt["acceptance_time_join"]["complete"] else 2
 
 if __name__=="__main__": raise SystemExit(main())
