@@ -228,3 +228,14 @@ def test_q220_prefers_dedicated_pre_xml_over_embedded_schema_when_both_exist():
         "dvn-20231231_pre.xml",
         "dedicated_presentation_linkbase",
     )
+
+
+def test_q220_route_probe_is_skipped_when_current_positive_population_receipt_exists():
+    workflow = (ROOT / ".github/workflows/q220-as-filed-xbrl-population.yml").read_text(encoding="utf-8")
+    route_probe = workflow.split("  route_probe:", 1)[1].split("  population:", 1)[0]
+    assert "needs: [receipt_gate]" in route_probe
+    assert "needs.receipt_gate.result == 'success'" in route_probe
+    assert "needs.receipt_gate.outputs.run_population == 'true'" in route_probe
+    assert "concurrency:" in route_probe
+    assert "runs-on: ubuntu-24.04" in route_probe
+
