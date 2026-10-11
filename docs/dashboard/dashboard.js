@@ -544,6 +544,7 @@ function render(data){
     var overall=pct(x.overall_progress_percent), next=pct(x.next_milestone_progress_percent);
     var info=candidateInfo(x.code);
     var status=candidateStatus(x);
+    if(x.next_workpack_required)status={label:"WORKPACK OFFEN",cls:"blocked-badge"};
     return "<article class='candidate-card "+esc(info.cardClass)+"' data-candidate='"+esc(x.code)+"'>"+
       "<div class='candidate-head'><div><div class='candidate-code'>"+esc(x.code)+"</div><div class='candidate-name'>"+esc(info.name)+"</div><div class='candidate-stage'>"+esc(x.stage)+"</div></div><span class='badge "+status.cls+"'>"+status.label+"</span></div>"+
       "<p class='candidate-mechanism'>"+esc(info.mechanism)+"</p>"+
