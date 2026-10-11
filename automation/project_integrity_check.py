@@ -245,6 +245,7 @@ ACTIVE_WORKFLOWS = {
     "top4-candidate-slot-research.yml",
     "q220-as-filed-xbrl-population.yml",
     "q220-historical-representation-pit.yml",
+    "q220-independent-pit-reproduction.yml",
     "q221-historical-award-public-boundary.yml",
     "q221-monthly-archive-inventory-probe.yml",
     "groq-free-adversarial-worker.yml",
