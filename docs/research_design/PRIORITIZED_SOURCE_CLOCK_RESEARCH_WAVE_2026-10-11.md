@@ -84,10 +84,28 @@ For this preflight, use only the explicitly documented modern range **2020-05-19
 
 Official source: https://www.sec.gov/data-research/sec-markets-data/edgar-log-file-data-sets
 
+### Existing Q224 source-gate receipt: useful but deliberately incomplete
+
+The repository already ran the fixed-control gate on 2026-10-11:
+
+- Run: https://github.com/DWR-debug/trading-agent-public/actions/runs/38160521620
+- Status: SOURCE_ARCHIVE_INTEGRITY_COMPLETED_NO_PERFORMANCE
+- Receipt fingerprint: 0aa0c2ecd38f2f39d0cf4cbf8d391d0e08a1eb38631424b004499c6404e20865
+- Latest evidence path on master: research/evidence/q224_edgar_modern_source_gate_latest.json
+
+All three fixed controls returned HTTP 200, were valid ZIPs and included both request-time and URI columns. The probe read at most 250 rows from each archive; request-time parsing was 100% for the 25 retained sample rows. The URI pattern matched 215/250 rows (0.860) for 2020-05-19, 193/250 (0.772) for 2022-12-30, and 226/250 (0.904) for 2025-06-30. Download sizes were 3,887,187 bytes, 294,991,286 bytes and 1,159,445,743 bytes respectively. Thus the late-window archive is large; scale-out must be bounded and avoid redundant full downloads.
+
+The check also established two important blockers:
+
+- The request-time column changes from _time in the 2020 control to time in the 2022 and 2025 controls. A deterministic alias normalizer is required.
+- The modern schema exposes only time and uri_path in these controls; legacy crawler/IP/status fields are absent. The receipt explicitly says traffic contamination is not fully resolvable from this schema. The filing acceptance/public-boundary join is not complete, and same-session use remains false.
+
+So this success is **a three-date archive-integrity smoke test**, not evidence that every daily file in the declared window exists, not a full traffic-quality solution, and not a positive historical PIT gate.
+
 ### Ordered gate sequence
 
 **Q224-A — archive and schema census**
-- Enumerate every expected file/vintage in the modern published range and record file name, period, byte size and SHA-256.
+- Build an inventory from the SEC's actual published object/listing conventions for the entire modern range; distinguish observed missing objects from weekends, holidays or undocumented naming exceptions rather than assuming every calendar date has a file. Record URL, date/period, byte size, ETag and SHA-256 for each observed object.
 - Record missing months, unexpected schema/header changes, failed downloads, damaged files and SEC-documented traffic limitations.
 - Do not call the archive complete merely because all currently linked files downloaded.
 - Emit a machine-readable receipt with exact ranges, source URLs, counts, gaps, header variants and hashes.
