@@ -11,6 +11,9 @@ on:
       - "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json"
       - "docs/research_design/Q220_AS_FILED_XBRL_REPAIR_2026-10-06.md"
       - ".github/workflows/q220-as-filed-xbrl-population.yml"
+      - "automation/q220_stale_run_retirement.py"
+      - "research/run_requests/q220_stale_run_retirement_2026_10_12.json"
+      - "tests/test_q220_stale_run_retirement.py"
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
@@ -78,6 +81,33 @@ jobs:
           path: research/runs/q220/as_filed_route/${{ github.run_id }}/
           if-no-files-found: error
           retention-days: 30
+
+  retire_stale_queued_runs:
+    needs: [receipt_gate]
+    if: >-
+      github.event_name == 'push' &&
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      needs.receipt_gate.result == 'success' &&
+      needs.receipt_gate.outputs.run_population == 'false'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Retire only the two receipt-stale queued Q220 jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python -m automation.q220_stale_run_retirement
 
   population:
     needs: [receipt_gate]
