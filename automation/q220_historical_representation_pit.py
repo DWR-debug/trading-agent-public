@@ -23,6 +23,8 @@ ROOT = Path(__file__).resolve().parents[1]
 POPULATION = ROOT / "research/evidence/q220_as_filed_xbrl_population_latest.json"
 CONTRACT = ROOT / "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json"
 OUTPUT_DEFAULT = ROOT / "research/evidence/q220_historical_representation_pit_latest.json"
+EXPECTED_POPULATION_RECEIPT_FINGERPRINT = "0d2e179928cc8f158da9892cde8cd222fa70db95a0b03972c6b1f7bd859950e9"
+EXPECTED_POPULATION_RECORD_COUNT = 55
 SEC_ROOT = "https://www.sec.gov/Archives/edgar/data"
 UA = "DWR-debug/trading-agent-public Q220 historical representation PIT/1.0 research@example.invalid"
 NUMERIC_QNAMES = (
@@ -193,8 +195,15 @@ def record_key(record: dict[str, Any]) -> str:
     return "|".join(str(key[x]) for x in ("cik", "accession", "form", "filed_date"))
 
 
-def compile_receipt(population: dict[str, Any], contract: dict[str, Any], root: Path = ROOT,
-                    fetcher=fetch_primary, sleep_seconds: float = 0.22) -> dict[str, Any]:
+def compile_receipt(
+    population: dict[str, Any],
+    contract: dict[str, Any],
+    root: Path = ROOT,
+    fetcher=fetch_primary,
+    sleep_seconds: float = 0.22,
+    expected_population_fingerprint: str = EXPECTED_POPULATION_RECEIPT_FINGERPRINT,
+    expected_record_count: int = EXPECTED_POPULATION_RECORD_COUNT,
+) -> dict[str, Any]:
     if population.get("candidate_id") != "Q220" or population.get("mode") != "population":
         raise ValueError("Q220_POPULATION_RECEIPT_IDENTITY_MISMATCH")
     if population.get("status") != "Q220_AS_FILED_XBRL_POPULATION_COMPLETED":
@@ -202,13 +211,17 @@ def compile_receipt(population: dict[str, Any], contract: dict[str, Any], root: 
     if int(population.get("failure_count", -1)) != 0:
         raise ValueError("Q220_POPULATION_RECEIPT_HAS_FAILURES")
     stored_fp = str(population.get("receipt_fingerprint") or "")
+    if stored_fp != expected_population_fingerprint:
+        raise ValueError("Q220_POPULATION_RECEIPT_VERSION_MISMATCH")
     if len(stored_fp) != 64 or canonical_fingerprint(population) != stored_fp:
         raise ValueError("Q220_POPULATION_RECEIPT_FINGERPRINT_MISMATCH")
     contract_bytes = (root / "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json").read_bytes()
     if population.get("contract_sha256") != sha256(contract_bytes):
         raise ValueError("Q220_CONTRACT_FINGERPRINT_MISMATCH")
     records = population.get("records")
-    if not isinstance(records, list) or len(records) != int(population.get("record_count", -1)):
+    if int(population.get("record_count", -1)) != expected_record_count:
+        raise ValueError("Q220_FROZEN_POPULATION_RECORD_COUNT_MISMATCH")
+    if not isinstance(records, list) or len(records) != expected_record_count:
         raise ValueError("Q220_POPULATION_RECORD_COUNT_MISMATCH")
     qspec = contract.get("concept_spec", population.get("concept_spec", {}))
     numeric_qnames = tuple(qspec.get("structured_side", {}).get("exact_numeric_qnames", NUMERIC_QNAMES))
