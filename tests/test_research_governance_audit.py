@@ -291,3 +291,22 @@ def test_superseded_pre_execution_authorization_is_historical(tmp_path):
     })
     result = audit(tmp_path)
     assert result["status"] == "PASS"
+
+
+def test_consumed_q218_replication_authorization_is_retired_not_reactivated():
+    root = Path(__file__).parents[1]
+    register = json.loads(
+        (root / "research/governance/retired_authorizations.json").read_text(encoding="utf-8")
+    )
+    auth_path = "research/authorizations/q218_independent_replication_2026_10_08.json"
+    entry = next(item for item in register["entries"] if item["path"] == auth_path)
+    assert entry["trial_id"] == "T-2026-10-08-Q218-REPLICATION-01"
+    assert entry["authorization_id"] == "AUTH-Q218-REPLICATION-2026-10-09-ONE-SHOT-01"
+    assert entry["status"] == "RETIRED_HISTORICAL_AUTHORIZATION"
+    assert "no longer eligible for execution" in entry["reason"]
+    # Historical authorization stays intact; only the retirement register changes.
+    authorization = json.loads((root / auth_path).read_text(encoding="utf-8"))
+    assert authorization["authorized"] is True
+    assert authorization["performance_execution_authorized"] is True
+    assert authorization["one_shot"] is True
+

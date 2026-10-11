@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_type": "trading_agent_chat_decision_log",
   "purpose": "Durable operational continuity for future Trading Agent OS chats. Entries are operational notes, not scientific evidence, performance authorization, ranking, or live-trading permission.",
-  "updated_at_utc": "2026-10-11T21:24:53Z",
+  "updated_at_utc": "2026-10-11T21:31:01Z",
   "safety": {
     "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
@@ -11,6 +11,17 @@
     "paid_usage_usd": 0
   },
   "entries": [
+    {
+      "date_utc": "2026-10-11T21:31:01Z",
+      "candidate": "Q218 GOVERNANCE",
+      "status": "CONSUMED ONE-SHOT AUTHORIZATION RETIRED",
+      "title": "Register completed replication authorization as historical and non-reusable",
+      "decision": "The Windows governance audit correctly blocked a consumed Q218 replication authorization because its one-shot replication trial ID was not in the active registry. The matching eight-event independent-replication result is already persisted. The authorization file remains unchanged and is now registered as RETIRED_HISTORICAL_AUTHORIZATION; Q218 is not reactivated, re-dispatched or re-authorized.",
+      "next_action": "Keep Q218 outside the active focus and automatic dispatch. The original authorization is immutable historical provenance and may not be reused. Continue only the active Q104:I19, Q220 and Q221 work.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/blob/master/research/authorizations/q218_independent_replication_2026_10_08.json",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38176385803",
+      "scientific_evidence": false
+    },
     {
       "date_utc": "2026-10-11T21:24:53Z",
       "candidate": "RESEARCH OS EVIDENCE BUS",
