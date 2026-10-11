@@ -286,11 +286,12 @@ def scan_archive(blob,archive,targets,**_ignored):
             h["issuer_names"].add(raw_issuer_name)
             normalized_issuer_name=normalize_text(raw_issuer_name)
             variants=h["_issuer_name_observations_by_cusip"].setdefault(c,{})
-            observation=variants.setdefault(normalized_issuer_name,{"row_count":0,"raw_examples":set(),"accessions":set(),"filing_dates":set()})
+            observation=variants.setdefault(normalized_issuer_name,{"row_count":0,"raw_examples":set(),"accessions":set(),"filing_dates":set(),"row_samples":set()})
             observation["row_count"]+=1
             observation["raw_examples"].add(raw_issuer_name)
             observation["accessions"].add(acc)
             observation["filing_dates"].add(eligible[acc]["filing_date"])
+            observation["row_samples"].add((acc,eligible[acc]["filing_date"],raw_issuer_name))
             h["class_names"].add(field(row,"TITLEOFCLASS"))
             h["accessions"].add(acc)
             h["filing_dates"].add(eligible[acc]["filing_date"])
@@ -319,6 +320,7 @@ def scan_archive(blob,archive,targets,**_ignored):
                     "filing_date_max":filing_dates[-1] if filing_dates else None,
                     "raw_variant_count":len(details["raw_examples"]),
                     "raw_examples":sorted(x for x in details["raw_examples"] if x)[:5],
+                    "row_samples":[{"accession":acc,"filing_date":filing_date,"raw_name":raw_name} for acc,filing_date,raw_name in sorted(details["row_samples"])[:8]],
                 })
             normalized_names=sorted({x for x in by_name if x})
             missing_name_rows=int(by_name.get("",{}).get("row_count",0))
@@ -413,13 +415,17 @@ def aggregate_issuer_name_cusip_audit(archive_records,symbols):
                     target=item["observations"].setdefault(name,{
                         "row_count":0,"distinct_accession_count":0,"raw_examples":set(),
                         "accession_samples":set(),"filing_date_min":None,"filing_date_max":None,
-                        "archive_labels":set(),
+                        "archive_labels":set(), "row_samples":set(),
                     })
                     target["row_count"]+=int(observation.get("row_count",0) or 0)
                     target["distinct_accession_count"]+=int(observation.get("distinct_accession_count",0) or 0)
                     target["raw_examples"].update(observation.get("raw_examples",[]))
                     target["accession_samples"].update(observation.get("accession_samples",[]))
                     target["archive_labels"].add(label)
+                    target["row_samples"].update(
+                        (str(sample.get("accession") or ""),str(sample.get("filing_date") or ""),str(sample.get("raw_name") or ""),label)
+                        for sample in observation.get("row_samples",[]) if isinstance(sample,dict)
+                    )
                     first=observation.get("filing_date_min")
                     last=observation.get("filing_date_max")
                     if first and (target["filing_date_min"] is None or first<target["filing_date_min"]): target["filing_date_min"]=first
@@ -438,6 +444,7 @@ def aggregate_issuer_name_cusip_audit(archive_records,symbols):
                     "archive_labels":sorted(details["archive_labels"]),
                     "raw_examples":sorted(x for x in details["raw_examples"] if x)[:5],
                     "accession_samples":sorted(details["accession_samples"])[:8],
+                    "row_samples":[{"accession":acc,"filing_date":filing_date,"raw_name":raw_name,"archive_label":archive_label} for acc,filing_date,raw_name,archive_label in sorted(details["row_samples"])[:8]],
                 })
             normalized_names=[x for x in item["observations"] if x]
             missing_name_rows=int(item["observations"].get("",{}).get("row_count",0))
