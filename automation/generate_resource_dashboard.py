@@ -1583,7 +1583,7 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         )
         research_slots_free = (
             max(0, capacity_slots - research_slots_in_use)
-            if state in {"available", "operating"}
+            if state in {"available", "operating"} or runner_busy is True
             else None
         )
         if state == "operating":
