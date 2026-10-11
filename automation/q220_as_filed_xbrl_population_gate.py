@@ -172,10 +172,22 @@ def choose_primary(items:list[str],preferred:str|None)->str|None:
     """Accept a known primary only; unresolved cases must use SEC form-index evidence."""
     return preferred if preferred and preferred in items else None
 
-def choose_presentation_source(items:list[str])->tuple[str,str]|None:
+def choose_presentation_source(items:list[str], xsd_body:bytes|None=None)->tuple[str,str]|None:
+    """Choose a historical presentation source, including filer schemas with embedded linkbases.
+
+    Modern SEC filing packages may expose no separate *_pre.xml. In that case,
+    inspect the actual archived extension schema before treating the extracted
+    *_htm.xml instance as a presentation source.
+    """
     dedicated=sorted(n for n in items if n.lower().endswith(("_pre.xml","-pre.xml")))
     if dedicated:
         return dedicated[0],"dedicated_presentation_linkbase"
+    if xsd_body is not None:
+        embedded=presentation_metadata(xsd_body)
+        if embedded["presentation_arc_count"]>0 and embedded["loc_concepts"]:
+            xsd_names=sorted(n for n in items if n.lower().endswith(".xsd"))
+            if xsd_names:
+                return xsd_names[0],"schema_embedded_presentation_linkbase"
     inline=sorted(n for n in items if n.lower().endswith(("_htm.xml","-htm.xml")))
     if inline:
         return inline[0],"xbrl_instance_embedded_presentation"
@@ -202,13 +214,20 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
         primary_source="sec_filing_index_form_row"
     sp,p=fetch(f"{base}/{primary}")
     if sp!=200: raise RuntimeError(f"PRIMARY_HTTP_{sp}:{acc}")
-    xsd_names=sorted(n for n in items if n.lower().endswith(".xsd")); presentation_source=choose_presentation_source(items); pre_names=[presentation_source[0]] if presentation_source else []
+    xsd_names=sorted(n for n in items if n.lower().endswith(".xsd"))
     xml_names=sorted(n for n in items if n.lower().endswith(".xml") and not any(n.lower().endswith(s) for s in ("_pre.xml","-pre.xml","_cal.xml","-cal.xml","_def.xml","-def.xml","_lab.xml","-lab.xml","_ref.xml","-ref.xml")))
     if not xsd_names: raise RuntimeError(f"XSD_NOT_FOUND:{acc}")
-    if not pre_names: raise RuntimeError(f"PRESENTATION_NOT_FOUND:{acc}")
-    sx,xsd=fetch(f"{base}/{xsd_names[0]}"); sp2,pre=fetch(f"{base}/{pre_names[0]}")
+    sx,xsd=fetch(f"{base}/{xsd_names[0]}")
     if sx!=200: raise RuntimeError(f"XSD_HTTP_{sx}:{acc}")
-    if sp2!=200: raise RuntimeError(f"PRE_HTTP_{sp2}:{acc}")
+    presentation_source=choose_presentation_source(items,xsd_body=xsd)
+    if not presentation_source: raise RuntimeError(f"PRESENTATION_NOT_FOUND:{acc}")
+    presentation_name,presentation_source_type=presentation_source
+    if presentation_source_type=="schema_embedded_presentation_linkbase":
+        pre=xsd
+        sp2=200
+    else:
+        sp2,pre=fetch(f"{base}/{presentation_name}")
+        if sp2!=200: raise RuntimeError(f"PRE_HTTP_{sp2}:{acc}")
     instance_name=xml_names[0] if xml_names and fetch(f"{base}/{xml_names[0]}")[0]==200 else None
     tb=ix_textblocks(p); xm=xsd_metadata(xsd); pm=presentation_metadata(pre); qnames=sorted(set(x["qname"] for x in tb))
     loc_concepts=set(pm["loc_concepts"])
@@ -247,7 +266,7 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
     complete=bool(tb) and len(hits)>=len(qnames) and all(x["status"]==200 for x in taxonomy_presentations)
     return {"canonical_key":{"cik":row["cik"],"form":row["form"],"filed_date":row["filed_date"],"accession":acc},"acceptance_datetime":accepted,
             "header_sha256":sha256(h),"directory_index_sha256":sha256(d),"primary_document":primary,"primary_document_source":primary_source,"primary_document_sha256":sha256(p),
-            "primary_document_bytes":len(p),"xsd":xsd_names[0],"xsd_metadata":xm,"presentation_linkbase":pre_names[0],"presentation_source_type":presentation_source[1],"presentation_metadata":pm,
+            "primary_document_bytes":len(p),"xsd":xsd_names[0],"xsd_metadata":xm,"presentation_linkbase":presentation_name,"presentation_source_type":presentation_source_type,"presentation_metadata":pm,
             "standard_taxonomy_presentation_sources":taxonomy_presentations,
             "instance_document":instance_name,"instance_available":bool(instance_name),"textblock_fact_count":len(tb),
             "textblock_concepts":sorted(set(x["qname"] for x in tb)),"presentation_mapped_textblock_concepts":sorted(hits),
