@@ -366,12 +366,14 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
   nowTable.innerHTML=rows.length?
     "<table class='ops-table ops-compact'><thead><tr><th>Was / Kandidat</th><th>Wer / Runner</th><th>Status · Start</th><th>Bereits</th><th>Historische Dauer</th><th>Restlaufzeit</th><th>Run</th></tr></thead><tbody>"+
     rows.map(function(x){
-      var runStatus=String(x.status||x.run_status||"unknown");
+      var runStatus=String(x.run_status||x.status||"unknown");
       var jobStatus=String(x.job_status||runStatus);
-      var isRunning=runStatus==="in_progress";
+      var isRunning=dashboardWorkIsRunning(x);
       var candidate=candidateFrom((x.task||"")+" "+(x.job||""));
-      var started=x.run_started_at||(isRunning?x.started_at:(x.queued_at||x.started_at));
-      var elapsed=isRunning?fmtDuration(x.elapsed_seconds):"Queue "+fmtDuration(x.queue_elapsed_seconds);
+      var started=isRunning?(x.job_started_at||x.run_started_at||x.started_at):(x.queued_at||x.started_at);
+      var elapsed=isRunning
+        ?"Jobzeit "+fmtDuration(x.job_elapsed_seconds)
+        :"Wartezeit "+fmtDuration(x.queue_elapsed_seconds)+(runStatus==="in_progress"?" · Workflow läuft seit "+fmtDuration(x.elapsed_seconds):"");
       var benchmark=(Number(x.duration_sample_count||0)>0&&x.expected_duration_seconds!=null)
         ?durationBenchmarkLabel(x.expected_duration_seconds,x.expected_duration_p90_seconds,x.duration_sample_count)
         :"Nicht kalibriert";
