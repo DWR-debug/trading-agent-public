@@ -53,6 +53,8 @@ def validate_census_receipt(r:dict[str,Any])->dict[str,Any]:
     from automation.q104_i19_13f_historical_identity_census_merge import (
         EXPECTED_SHARDS, canonical_fingerprint,
     )
+    from automation.q104_i19_13f_historical_identity_census import aggregate_issuer_name_cusip_audit
+    from automation.q111_security_identity_contract import normalize_text
     expected_safety={
         "paper_only":True,
         "live_trading_enabled":False,
@@ -80,6 +82,42 @@ def validate_census_receipt(r:dict[str,Any])->dict[str,Any]:
         raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_COUNT_INVALID")
     if r.get("identity_conflicts"):
         raise RuntimeError("Q104_I19_CENSUS_IDENTITY_CONFLICTS")
+    frozen=r.get("frozen_cusips",{})
+    name_audit=r.get("issuer_name_cusip_audit")
+    if not isinstance(name_audit,dict) or set(name_audit)!=set(frozen):
+        raise RuntimeError("Q104_I19_CENSUS_ISSUER_NAME_CUSIP_AUDIT_MISSING")
+    if r.get("identity_resolution_proven") is not False:
+        raise RuntimeError("Q104_I19_CENSUS_IDENTITY_RESOLUTION_CLAIM_INVALID")
+    unresolved=r.get("unresolved_issuer_name_cusips")
+    identity_review=r.get("identity_review",{})
+    if not isinstance(unresolved,list) or not isinstance(identity_review,dict):
+        raise RuntimeError("Q104_I19_CENSUS_ISSUER_NAME_CUSIP_AUDIT_MISSING")
+    expected_name_audit=aggregate_issuer_name_cusip_audit(archives,sorted(frozen))
+    if name_audit!=expected_name_audit:
+        raise RuntimeError("Q104_I19_CENSUS_ISSUER_NAME_CUSIP_AUDIT_MISMATCH")
+    expected_unresolved=[]
+    for symbol,by_cusip in sorted(expected_name_audit.items()):
+        for cusip,item in sorted(by_cusip.items()):
+            if str(item.get("status") or "").startswith("UNRESOLVED_"):
+                normalized_names=sorted({str(row.get("normalized_name")) for row in item.get("observations",[]) if isinstance(row,dict) and row.get("normalized_name")})
+                expected_unresolved.append({
+                    "symbol":str(symbol),"cusip":str(cusip),"status":str(item["status"]),
+                    "normalized_name_count":int(item.get("normalized_name_count",0) or 0),
+                    "missing_name_rows":int(item.get("missing_name_rows",0) or 0),
+                    "observed_row_count":int(item.get("observed_row_count",0) or 0),
+                    "archive_labels":list(item.get("archive_labels",[])),
+                    "normalized_names":normalized_names,
+                })
+    if unresolved!=expected_unresolved:
+        raise RuntimeError("Q104_I19_CENSUS_ISSUER_NAME_CUSIP_VARIANT_LIST_MISMATCH")
+    if (
+        identity_review.get("identity_resolution_proven") is not False
+        or int(identity_review.get("unresolved_pair_count",-1))!=len(expected_unresolved)
+        or identity_review.get("status")!=("UNRESOLVED_CUSIP_ISSUER_NAME_VARIANTS_PRESENT" if expected_unresolved else "NO_VARIANT_OBSERVED_NOT_PROOF")
+    ):
+        raise RuntimeError("Q104_I19_CENSUS_ISSUER_NAME_CUSIP_REVIEW_INVALID")
+    if expected_unresolved:
+        raise RuntimeError("Q104_I19_CENSUS_ISSUER_NAME_CUSIP_VARIANTS_UNRESOLVED:"+",".join(x["symbol"]+"/"+x["cusip"] for x in expected_unresolved[:20]))
     source_hash=str(r.get("source_page_sha256",""))
     if not re.fullmatch(r"[0-9a-f]{64}",source_hash):
         raise RuntimeError("Q104_I19_CENSUS_SOURCE_PAGE_HASH_INVALID")
@@ -124,6 +162,19 @@ def validate_census_receipt(r:dict[str,Any])->dict[str,Any]:
         hits=archive.get("target_hits",{})
         if set(hits)!=set(r.get("frozen_cusips",{})):
             raise RuntimeError("Q104_I19_CENSUS_TARGET_UNIVERSE_INVALID")
+        archive_name_audit=archive.get("issuer_name_cusip_audit")
+        if not isinstance(archive_name_audit,dict) or set(archive_name_audit)!=set(hits):
+            raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_ISSUER_NAME_CUSIP_AUDIT_MISSING")
+        for name_symbol,hit in hits.items():
+            by_cusip=archive_name_audit.get(name_symbol)
+            if not isinstance(by_cusip,dict) or set(by_cusip)!=set(str(x) for x in hit.get("cusips",[])):
+                raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_ISSUER_NAME_CUSIP_CLOSURE_FAILED:"+str(name_symbol))
+            if sum(int(item.get("observed_row_count",0) or 0) for item in by_cusip.values())!=int(hit.get("row_count",0) or 0):
+                raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_ISSUER_NAME_ROW_COUNT_MISMATCH:"+str(name_symbol))
+            target_names={normalize_text(str(x)) for x in hit.get("issuer_names",[])}
+            audit_names={str(row.get("normalized_name") or "") for item in by_cusip.values() for row in item.get("observations",[]) if isinstance(row,dict)}
+            if target_names!={name for name in audit_names if name}:
+                raise RuntimeError("Q104_I19_CENSUS_ARCHIVE_ISSUER_NAME_VARIANT_CLOSURE_FAILED:"+str(name_symbol))
         archive_records={}
         for symbol,hit in hits.items():
             accessions=set(str(x) for x in hit.get("accessions",[]))
