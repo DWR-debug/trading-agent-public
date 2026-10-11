@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_type": "q221_historical_source_vintage_gate",
   "candidate_id": "Q221",
-  "generated_at_utc": "2026-10-11T02:02:47.439595+00:00",
+  "generated_at_utc": "2026-10-11T02:04:47.126609+00:00",
   "official_source_url": "https://www.usaspending.gov/data/about-the-data-download.pdf",
   "archive_index_url": "https://web.archive.org/cdx/search/cdx",
   "fixed_target_windows": [
@@ -21,7 +21,68 @@
     "dod_usace_90_day_exception": "90 DAYS",
     "far_30_day_exception": "WITHIN 30 DAYS"
   },
-  "capture_rows": [],
+  "capture_rows": [
+    {
+      "target_window": "2025-01-01",
+      "capture_timestamp_utc": "2024-12-11T19:35:19+00:00",
+      "capture_age_days": 20,
+      "archive_digest": "IAC74WD73RHIKVDOJ6HEJBD5FCZPGYQ2",
+      "archive_length": "352029",
+      "archive_original_url": "https://www.usaspending.gov/data/about-the-data-download.pdf",
+      "replay_url": "https://web.archive.org/web/20241211193519id_/https://www.usaspending.gov/data/about-the-data-download.pdf",
+      "status": "CAPTURE_FETCH_OR_PARSE_FAILED",
+      "marker_results": {},
+      "error": "PdfStreamError: Stream has ended unexpectedly"
+    },
+    {
+      "target_window": "2025-07-01",
+      "capture_timestamp_utc": "2025-06-19T16:03:55+00:00",
+      "capture_age_days": 11,
+      "archive_digest": "EVBDUZV6HG25VUAZLK37QURPFJR6HW5Y",
+      "archive_length": "349761",
+      "archive_original_url": "https://www.usaspending.gov/data/about-the-data-download.pdf",
+      "replay_url": "https://web.archive.org/web/20250619160355id_/https://www.usaspending.gov/data/about-the-data-download.pdf",
+      "status": "CAPTURE_FETCH_OR_PARSE_FAILED",
+      "marker_results": {},
+      "error": "PdfStreamError: Stream has ended unexpectedly"
+    },
+    {
+      "target_window": "2026-01-01",
+      "capture_timestamp_utc": "2025-12-16T22:13:46+00:00",
+      "capture_age_days": 15,
+      "archive_digest": "6WWCQHAO3RCNBGQZO3DA3BCEJ5KPQGZA",
+      "archive_length": "388484",
+      "archive_original_url": "https://www.usaspending.gov/data/about-the-data-download.pdf",
+      "replay_url": "https://web.archive.org/web/20251216221346id_/https://www.usaspending.gov/data/about-the-data-download.pdf",
+      "status": "CAPTURE_FETCH_OR_PARSE_FAILED",
+      "marker_results": {},
+      "error": "PdfStreamError: Stream has ended unexpectedly"
+    },
+    {
+      "target_window": "2026-07-01",
+      "capture_timestamp_utc": "2026-05-30T04:19:27+00:00",
+      "capture_age_days": 31,
+      "archive_digest": "K5PK4LF6HSSAQJ34O5YI3G46SQEGF2B5",
+      "archive_length": "388661",
+      "archive_original_url": "https://www.usaspending.gov/data/about-the-data-download.pdf",
+      "replay_url": "https://web.archive.org/web/20260530041927id_/https://www.usaspending.gov/data/about-the-data-download.pdf",
+      "status": "CAPTURE_FETCH_OR_PARSE_FAILED",
+      "marker_results": {},
+      "error": "PdfStreamError: Stream has ended unexpectedly"
+    },
+    {
+      "target_window": "2026-10-05",
+      "capture_timestamp_utc": "2026-09-14T16:13:08+00:00",
+      "capture_age_days": 20,
+      "archive_digest": "5NFYS7ZKLY4TPFCHO5B7EVYBUBEW3MIZ",
+      "archive_length": "388747",
+      "archive_original_url": "https://www.usaspending.gov/data/about-the-data-download.pdf",
+      "replay_url": "https://web.archive.org/web/20260914161308id_/https://www.usaspending.gov/data/about-the-data-download.pdf",
+      "status": "CAPTURE_FETCH_OR_PARSE_FAILED",
+      "marker_results": {},
+      "error": "PdfStreamError: Stream has ended unexpectedly"
+    }
+  ],
   "all_target_windows_covered": false,
   "policy_markers_consistent_across_vintages": false,
   "historical_policy_vintages_reconstructed": false,
@@ -38,8 +99,13 @@
   "tuning": false,
   "promotion": false,
   "live_execution": false,
-  "status": "Q221_CDX_ARCHIVE_INDEX_UNAVAILABLE",
-  "error": "TimeoutError: The read operation timed out",
-  "next_gate": "retry the bounded source-history lookup only after diagnosing archive transport; do not infer historical clock readiness",
-  "receipt_fingerprint": "2c9a9affb7aaa81c7446ebf3dbe1a53f0b137004e43f14df716bba23cdf4c4b3"
+  "cdx_status": 200,
+  "cdx_content_type": "application/json",
+  "cdx_sha256": "00fa428a6fdf1ad989b6fe6a0dda708fdc8424e84ba06b294d81c41fa65691b5",
+  "cdx_capture_count": 105,
+  "unique_parsed_capture_count": 0,
+  "captured_vintage_years": [],
+  "status": "Q221_HISTORICAL_POLICY_VINTAGE_COVERAGE_INCOMPLETE_OR_SEMANTICS_DRIFT",
+  "next_gate": "obtain bounded historical captures for missing target windows and inspect the clock/exceptions for semantic drift",
+  "receipt_fingerprint": "110136b8e0e89ea056190ab01763b7fa10438c2dadd7495a7931e16d7221f098"
 }
