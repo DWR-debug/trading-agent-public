@@ -138,5 +138,6 @@ def evaluate_q220_receipt_chain(root: Path = ROOT) -> dict[str, Any]:
         "no_textblock_observed_count": 5 if ind_ok else None, "current_milestone": stage,
         "current_milestone_status": status, "current_milestone_progress_percent": 0,
         "current_milestone_detail": detail, "next_gate": gate, "milestones": milestones,
+        "next_workpack_required": bool(ind_ok),
         "scientific_evidence": False, "performance_authorization_allowed": False,
     }
