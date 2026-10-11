@@ -643,8 +643,8 @@ def generate(
             "Q104:I19 next: finish the existing historical 13F census or its currently useful successor run; after a terminal result, recover only unresolved shard/header evidence and never restart the full census blindly. "
             "Then compile the frozen concept-specific PIT state and require independent reproduction. "
             + q220_population_sentence +
-            "Q221 next: run the bounded USAspending public-clock workpack in parallel with Q220 when Windows capacity allows. "
-            "The current live-source marker check is not historical proof: reconstruct the publication vintage and transaction classes, classify the DoD/USACE 90-day and FAR exceptions, and freeze recipient-to-issuer mapping before PIT validation. "
+            "Q221 next: prepare a new bounded award-level public-observation workpack; the five archived USAspending policy vintages do not prove first-public time for an individual award or modification. "
+            "Freeze transaction classes and recipient-to-issuer mapping, classify the DoD/USACE 90-day and FAR exceptions, and preserve correction lineage. Do not dispatch until the new workpack and prerequisites are explicit. "
             "Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run. "
             + q218_sentence +
             "Q219 remains paused; its prior evidence is preserved. "
