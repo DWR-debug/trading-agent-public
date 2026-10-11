@@ -1,6 +1,11 @@
 (function(){
 "use strict";
 var lastSnapshotIso=null;
+var lastFetchIso=null;
+var refreshInFlight=false;
+var hasRenderedSnapshot=false;
+var refreshIntervalMs=180000;
+var lastRenderedSnapshotKey=null;
 var FOCUS=["Q104:I19","Q220","Q221"];
 
 function $(id){return document.getElementById(id);}
@@ -51,10 +56,32 @@ function fmtSnapshotAge(sec){
   return "Alter: "+h+" h "+m+" min";
 }
 function updateSnapshotAge(){
-  if(!lastSnapshotIso)return;
-  var t=Date.parse(lastSnapshotIso);
-  if(!Number.isFinite(t))return;
-  $("snapshotAge").textContent=fmtSnapshotAge(Math.max(0,(Date.now()-t)/1000));
+  if(lastSnapshotIso){
+    var t=Date.parse(lastSnapshotIso);
+    if(Number.isFinite(t))$("snapshotAge").textContent=fmtSnapshotAge(Math.max(0,(Date.now()-t)/1000));
+  }
+}
+function snapshotKey(data){
+  return [data.master_sha||"",data.generated_at_utc||"",data.operational_snapshot_sha||""].join("|");
+}
+function setRefreshStatus(mode,message){
+  var el=$("refreshStatus");
+  if(!el)return;
+  el.className="refresh-status muted "+mode;
+  el.textContent=message;
+}
+function refreshStatusMessage(mode,error){
+  var snapshot=lastSnapshotIso?ts(lastSnapshotIso):"Zeitstempel nicht verfügbar";
+  var fetched=lastFetchIso?ts(lastFetchIso):"noch kein erfolgreicher Browser-Abruf";
+  if(mode==="loading"){
+    return lastFetchIso
+      ? "Prüfe auf einen neueren veröffentlichten Snapshot. Letzter erfolgreicher Browser-Abruf: "+fetched+". Der vorhandene Stand bleibt sichtbar."
+      : "Lade den zuletzt veröffentlichten Snapshot. Der Browser fragt alle 3 Minuten ab; der Server-Snapshot wird planmäßig etwa alle 5 Minuten neu erzeugt. Dieser Vorgang startet keinen Workflow.";
+  }
+  if(mode==="success"){
+    return "Snapshot verfügbar · Datenstand "+snapshot+" · letzter erfolgreicher Browser-Abruf "+fetched+". Browser-Abruf alle 3 Minuten; neue Server-Snapshots ungefähr alle 5 Minuten.";
+  }
+  return "Snapshot-Abruf fehlgeschlagen ("+(error||"Netzwerkfehler")+") · letzter sichtbarer Datenstand "+snapshot+" · letzter erfolgreicher Browser-Abruf "+fetched+". Vorhandene Ansicht bleibt erhalten; neuer Versuch folgt automatisch.";
 }
 function updateClock(){
   var now=new Date();
@@ -289,6 +316,7 @@ function renderCandidateIntake(data){
 }
 
 function render(data){
+  lastRenderedSnapshotKey=snapshotKey(data);
   var s=data.dashboard_summary||{};
   var resources=(data.resources||[]).filter(function(x){
     return ["Windows self-hosted A","Windows self-hosted B","Windows self-hosted C","GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Free AI pool"].indexOf(x.name)>=0;
@@ -508,24 +536,66 @@ function renderEmbedded(){
   return false;
 }
 // Forschungsressourcen aktiv = distinct research resources, not raw job count.
-function load(){
+function load(manual){
+  if(refreshInFlight){
+    if(manual)setRefreshStatus("loading","Ein Snapshot-Abruf läuft bereits; kein paralleler Abruf wird gestartet.");
+    return;
+  }
+  refreshInFlight=true;
+  var button=$("refresh");
+  if(manual&&button){
+    button.disabled=true;
+    button.setAttribute("aria-busy","true");
+    button.textContent="Snapshot wird geladen…";
+  }
   $("error").hidden=true;
-  var rendered=renderEmbedded();
+  setRefreshStatus("loading",refreshStatusMessage("loading"));
+  if(!hasRenderedSnapshot)hasRenderedSnapshot=renderEmbedded();
+
   var url=new URL("dashboard_data.json",document.baseURI);
   url.searchParams.set("ts",String(Date.now()));
   var controller=typeof AbortController==="function"?new AbortController():null;
   var timeoutId=controller?setTimeout(function(){controller.abort();},6000):null;
-  var opts={cache:"no-store"}; if(controller)opts.signal=controller.signal;
-  fetch(url.toString(),opts).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(render).catch(function(e){
-    if(!rendered){$("error").textContent="Snapshot konnte nicht geladen werden: "+(e&&e.message||String(e));$("error").hidden=false;}
-    else{$("meta").insertAdjacentHTML("beforeend"," · <span class='unknown'>Netzwerk-Refresh nicht verfügbar; eingebetteter Snapshot bleibt sichtbar.</span>");}
-  }).then(function(){if(timeoutId!==null)clearTimeout(timeoutId);});
+  var opts={cache:"no-store"};
+  if(controller)opts.signal=controller.signal;
+  fetch(url.toString(),opts)
+    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();})
+    .then(function(data){
+      if(!hasRenderedSnapshot||snapshotKey(data)!==lastRenderedSnapshotKey)render(data);
+      hasRenderedSnapshot=true;
+      lastFetchIso=new Date().toISOString();
+      setRefreshStatus("success",refreshStatusMessage("success"));
+    })
+    .catch(function(e){
+      var msg=e&&e.message||String(e);
+      if(!hasRenderedSnapshot){
+        hasRenderedSnapshot=renderEmbedded();
+        if(!hasRenderedSnapshot){
+          $("error").textContent="Snapshot konnte nicht geladen werden: "+msg;
+          $("error").hidden=false;
+        }
+      }
+      setRefreshStatus("warning",refreshStatusMessage("warning",msg));
+    })
+    .then(function(){
+      if(timeoutId!==null)clearTimeout(timeoutId);
+      refreshInFlight=false;
+      if(manual&&button){
+        button.disabled=false;
+        button.removeAttribute("aria-busy");
+        button.textContent="Snapshot aktualisieren";
+      }
+      updateSnapshotAge();
+    });
 }
 document.addEventListener("DOMContentLoaded",function(){
   updateClock();
   setInterval(updateClock,1000);
   setInterval(updateSnapshotAge,1000);
-  $("refresh").addEventListener("click",load);
+  $("refresh").addEventListener("click",function(){load(true);});
+  document.addEventListener("visibilitychange",function(){
+    if(document.visibilityState==="visible")load(false);
+  });
   $("copyHandoff").addEventListener("click",function(){
     var field=$("chatHandoffText");
     var status=$("copyHandoffStatus");
@@ -547,7 +617,7 @@ document.addEventListener("DOMContentLoaded",function(){
       if(status)status.textContent=copied?"Übergabe kopiert.":"Text markiert — bitte manuell kopieren.";
     }
   });
-  load();
-  setInterval(load,180000);
+  load(false);
+  setInterval(function(){load(false);},refreshIntervalMs);
 });
 })();
