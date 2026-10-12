@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "fca22e97174fa0dd40fa39fc32008874634bbf1ba71fb19e2e9e0c18592fd46d",
-  "observed_at_utc": "2026-10-12T05:46:22.820181Z",
+  "observed_at_utc": "2026-10-12T15:12:35.580943Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 2.633,
-  "stdout": "**Worker Handoff – Q221 USAspending Clock Gate Review**\n\n| Section | Summary |\n|---------|---------|\n| **Findings** | • The `run()` routine only checks a handful of textual cues in the *About‑the‑Data* PDF and the API docs; it does **not** verify actual publication timestamps, nor does it confirm that the data set was made public on the claimed “next‑morning” boundary. <br>• Award‑vs‑modification semantics are inferred solely from the presence of the words “AWARD” or “MODIFICATION” in the PDF; no cross‑validation against the award/award‑modification API endpoints or the transaction class hierarchy is performed. <br>• Transaction history validation is absent: the script never pulls the `/API/V2/TRANSACTIONS/` endpoint to confirm that the transaction classes (e.g., `AWARD`, `MODIFICATION`, `RENEWAL`) are present and that their timestamps fall within the claimed window. <br>• R&D classification, competition fields, and PSC stability are not checked against the official R&D/PSC taxonomy or the `CONTRACT`/`MODIFICATION` transaction class definitions. <br>• Recipient‑to‑issuer mapping is never verified; the script assumes the mapping is static and does not account for parent/subsidiary changes that could alter the mapping after the publication date. <br>• No audit trail is captured for the “future‑production‑contract‑leak” risk: the script does not examine whether any contract that was awarded after the historical prefix period is mistakenly included in the historical data set. <br>• The `source_clock_contract_ready` flag is computed from a subset of boolean checks; many of those checks are incomplete (e.g., `fpds_three_business_days_foun` is truncated). |\n| **Counter‑Arguments** | • The presence of the phrase “WITHIN FIVE DAYS” in the PDF does **not** guarantee that the data set was actually updated within five days of the contract award; the PDF may be a generic statement. <br>• “FOLLOWING MORNING” may refer to a *publication* event that is not the same as the *dissemination* event used by the API; the script conflates the two. <br>• The API may expose a different set of transaction classes than those described in the PDF; without pulling the `/TRANSACTIONS/` endpoint, the script cannot confirm that the award or modification classes exist or that they are correctly timestamped. <br>• PSC codes and R&D classifications can change over time; the script does not check the current PSC list or the R&D taxonomy against the data set, so it cannot confirm stability. <br>• Recipient‑to‑issuer mapping can be invalidated by corporate restructurings; the script does not cross‑reference the `CONTRACT`/`MODIFICATION` endpoints with the latest corporate hierarchy. <br>• The risk of future contracts leaking into the historical prefix is real if the data set is refreshed after the historical period; the script does not capture the refresh schedule or the contract‑date filter applied. |\n| **Minimal Deterministic Falsifiers** | 1. **Shift Event Availability** – Move the “publication” timestamp forward by 1–5 trading days while keeping the calendar fixed; if the script still reports `source_clock_contract_ready=True`, the clock discipline is invalid. <br>2. **Shuffle Mapping** – Randomly permute the recipient‑to‑issuer mapping within the frozen universe and re‑run the gate; any change in the boolean flags indicates a dependency on the mapping. <br>3. **Replace Public‑Observation with Occurrence Time** – Use the actual award timestamp (from the API) instead of the PDF‑derived “next‑morning” timestamp; if the gate passes, the clock discipline is too permissive. <br>4. **Future‑Mutation Test** – Append a contract awarded after the historical prefix to the data set and re‑run the gate; a passing result would expose a leakage risk. |\n| **Exact Missing Artifacts** | • **Official Publication Timestamps** – A machine‑readable record of the exact UTC time each award/ modification was published on the USAspending site. <br>• **API Transaction Class Definitions** – A JSON/YAML schema listing all transaction classes (`AWARD`, `MODIFICATION`, `RENEWAL`, etc.) with their allowed date ranges and required fields. <br>• **R&D Classification Mapping** – The current R&D taxonomy (e.g., `R&D`, `Non‑R&D`) and its mapping to transaction classes. <br>• **PSC Code List** – The authoritative list of PSC codes with validity periods and any known changes. <br>• **Recipient‑to‑Issuer Mapping Log** – A dated snapshot of the mapping, including parent/subsidiary relationships, for the period covered by the historical prefix. <br>• **Refresh Schedule & Filter Log** – Documentation of how often the data set is refreshed and the exact filter applied to exclude contracts outside the historical prefix. <br>• **Audit Trail of Award vs Modification Semantics** – A cross‑reference table showing how each award or modification is represented in the API and in the PDF. |\n| **Concrete Next Actions** | 1. **Pull the `/API/V2/TRANSACTIONS/` endpoint** for a representative sample of contracts in the historical prefix; extract timestamps, transaction classes, and PSC codes. <br>2. **Download the official *About‑the‑Data* PDF** and parse it with a robust PDF‑to‑text library; extract all date‑related statements and verify against the API timestamps. <br>3. **Obtain the current PSC and R&D classification lists** from the USAspending data portal; compare against the data set to confirm stability. <br>4. **Retrieve the recipient‑to‑issuer mapping** for the historical period from the USAspending API or the `CONTRACT` endpoint; document any parent/subsidiary changes. <br>5. **Document the data‑set refresh schedule** (e.g., weekly, monthly) and the filter logic that excludes post‑prefix contracts; confirm that no future contracts are present in the historical data set. <br>6. **Implement the falsifiers** listed above in a deterministic test harness; record the outcomes. |\n| **Uncertainty** | • The exact semantics of “publication” vs “dissemination” in the USAspending documentation are ambiguous; the PDF may not reflect the API’s actual behavior. <br>• The mapping between award and modification transaction classes may have evolved; without the full API schema, it is unclear whether the current classes align with the PDF’s wording. <br>• PSC and R&D classifications can be updated without notice; the current lists may differ from those used at the time of the historical prefix. <br>• Corporate restructurings may have altered recipient‑to‑issuer relationships after the historical period; the impact on the data set is unknown without a dated mapping log. <br>• The risk of future contract leakage depends on the refresh policy, which is not publicly documented; the current gate does not capture this risk. |\n\n*End of handoff.*",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.388,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5518, Requested 5474. Please try again in 22.44s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-e42ed9c3-cef7-4c90-81ef-5c94df8e477a",
-  "usage": {
-    "queue_time": 0.003599934,
-    "prompt_tokens": 4989,
-    "prompt_time": 0.277012376,
-    "completion_tokens": 1873,
-    "completion_time": 2.021968284,
-    "total_tokens": 6862,
-    "total_time": 2.29898066,
-    "completion_tokens_details": {
-      "reasoning_tokens": 344
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-12T15:12:35.968995Z",
+    "blocked_until_utc": "2026-10-12T16:12:35.968995Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5518, Requested 5474. Please try again in 22.44s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
