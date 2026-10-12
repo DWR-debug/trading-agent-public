@@ -23,6 +23,7 @@ jobs:
       source_run_id: ${{ steps.request.outputs.source_run_id }}
       shard_recovery_run_id: ${{ steps.request.outputs.shard_recovery_run_id }}
       recovered_shards: ${{ steps.request.outputs.recovered_shards }}
+      prior_repair_run_id: ${{ steps.request.outputs.prior_repair_run_id }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -45,7 +46,7 @@ jobs:
             }
             key="${line%%=*}"
             case "$key" in
-              RUN_Q104_I19_TARGETED_REPAIR|REASON|SOURCE_RUN_ID|SHARD_RECOVERY_RUN_ID|RECOVERED_SHARDS|CENSUS_RESTART|SOURCE_SNAPSHOT_REUSE|PERFORMANCE|HOLDOUT_SELECTION|RANKING|TUNING|PROMOTION|LIVE_EXECUTION|REQUEST_SEQUENCE) ;;
+              RUN_Q104_I19_TARGETED_REPAIR|REASON|SOURCE_RUN_ID|SHARD_RECOVERY_RUN_ID|RECOVERED_SHARDS|PRIOR_REPAIR_RUN_ID|CENSUS_RESTART|SOURCE_SNAPSHOT_REUSE|PERFORMANCE|HOLDOUT_SELECTION|RANKING|TUNING|PROMOTION|LIVE_EXECUTION|REQUEST_SEQUENCE) ;;
               *) echo "Q104_I19_REPAIR_REQUEST_UNKNOWN_KEY:$key"; exit 2 ;;
             esac
           done < "$request"
@@ -77,8 +78,10 @@ jobs:
           recovery_run_id="$(value SHARD_RECOVERY_RUN_ID)"
           recovered_shards="$(value RECOVERED_SHARDS)"
           request_sequence="$(value REQUEST_SEQUENCE)"
+          prior_repair_run_id="$(value PRIOR_REPAIR_RUN_ID)"
           [[ "$source_run_id" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SOURCE_RUN_ID"; exit 2; }
           [[ "$recovery_run_id" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_RECOVERY_RUN_ID"; exit 2; }
+          [[ -z "$prior_repair_run_id" || "$prior_repair_run_id" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_PRIOR_REPAIR_RUN_ID"; exit 2; }
           [[ "$request_sequence" =~ ^20[0-9]{2}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$ ]] || {
             echo "Q104_I19_REQUEST_SEQUENCE_INVALID"; exit 2;
           }
@@ -107,6 +110,13 @@ jobs:
 
           gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/i19-source-artifacts.json"
           gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$recovery_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/i19-recovery-artifacts.json"
+          if [[ -n "$prior_repair_run_id" ]]; then
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$prior_repair_run_id" > "$RUNNER_TEMP/i19-prior-repair-run.json"
+            jq -e '.name == "Q104 I19 Receipt-Gated Targeted Acceptance Repair Request" and .status == "completed" and .conclusion == "failure" and .head_branch == "master"' "$RUNNER_TEMP/i19-prior-repair-run.json" >/dev/null || { echo "Q104_I19_PRIOR_REPAIR_RUN_INVALID"; exit 2; }
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$prior_repair_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/i19-prior-repair-artifacts.json"
+            prior_prefix="q104-i19-targeted-acceptance-repair-$source_run_id-$prior_repair_run_id-"
+            jq -e --arg prefix "$prior_prefix" '[.artifacts[]? | select((.name | startswith($prefix)) and .expired == false)] | length == 1' "$RUNNER_TEMP/i19-prior-repair-artifacts.json" >/dev/null || { echo "Q104_I19_PRIOR_REPAIR_ARTIFACT_MISSING_OR_EXPIRED"; exit 2; }
+          fi
           jq -e --arg n "q104-i19-sec-source-snapshot-$source_run_id" \
             '[.artifacts[]? | select(.name == $n and .expired == false)] | length == 1' \
             "$RUNNER_TEMP/i19-source-artifacts.json" >/dev/null || {
@@ -137,6 +147,7 @@ jobs:
             echo "source_run_id=$source_run_id"
             echo "shard_recovery_run_id=$recovery_run_id"
             echo "recovered_shards=$recovered_shards"
+            echo "prior_repair_run_id=$prior_repair_run_id"
           } >> "$GITHUB_OUTPUT"
           echo "Q104_I19_TARGETED_REPAIR_REQUEST_VALIDATED=true"
           echo "Q104_I19_SOURCE_RUN_ID=$source_run_id"
@@ -153,3 +164,4 @@ jobs:
       source_run_id: ${{ needs.validate.outputs.source_run_id }}
       shard_recovery_run_id: ${{ needs.validate.outputs.shard_recovery_run_id }}
       recovered_shards: ${{ needs.validate.outputs.recovered_shards }}
+      prior_repair_run_id: ${{ needs.validate.outputs.prior_repair_run_id }}
