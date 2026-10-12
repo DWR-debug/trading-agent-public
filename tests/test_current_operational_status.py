@@ -125,7 +125,7 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "348/348" in doc and "247/247" in doc
     assert "one captured exact URL and six no-hit responses" in focus
     assert "no-hit is not proof of historical absence" in focus
-    assert "do not expand this exact-page route across the 348-key sample" in focus
+    assert "do not expand the exact-page route across all 348 keys" in focus
     assert "publicDeltaDate is documented as a filter over Last Modified Date or Reveal Date" in focus
     assert "not a dispatch-ready source contract" in focus
     assert "Q220: original SEC daily Feed forensic run #38233685159" in focus
