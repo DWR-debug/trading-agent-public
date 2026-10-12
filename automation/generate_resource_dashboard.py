@@ -610,6 +610,7 @@ CANDIDATE_DEVELOPMENT_MILESTONES = (
 )
 
 FOCUS_CANDIDATES = ("Q104:I19", "Q220", "Q221")
+DISPLAY_CANDIDATES = (*FOCUS_CANDIDATES, "Q104:I22")
 
 
 
@@ -1272,6 +1273,30 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
     q220_overall, q220_complete, q220_total = overall(q220_milestones)
     q221_overall, q221_complete, q221_total = overall(q221_milestones)
 
+    i22_receipt = read_json_file("research/evidence/q104_i22_independent_pit_reproduction_latest.json")
+    i22_overlap = i22_receipt.get("mechanism_non_overlap", {}) if isinstance(i22_receipt.get("mechanism_non_overlap"), dict) else {}
+    i22_safety = i22_receipt.get("safety", {}) if isinstance(i22_receipt.get("safety"), dict) else {}
+    i22_valid = (
+        i22_receipt.get("record_type") == "q104_i22_independent_pit_reproduction"
+        and i22_receipt.get("candidate_id") == "Q104:I22"
+        and i22_receipt.get("status") == "Q104_I22_INDEPENDENT_PIT_REPRODUCED_NON_OVERLAP_REVIEW_REQUIRED"
+        and len(str(i22_receipt.get("receipt_fingerprint") or "")) == 64
+        and i22_safety.get("paper_only") is True
+        and i22_safety.get("live_trading_enabled") is False
+        and i22_safety.get("orders_enabled") is False
+        and i22_safety.get("automatic_promotion") is False
+    )
+    i22_complete_comparisons = int(i22_overlap.get("complete_comparison_count") or 0)
+    i22_peer_comparisons = int(i22_overlap.get("peer_comparison_count") or 0)
+    i22_milestones = [
+        {"label": "Frozen candidate contract", "status": "complete" if i22_valid else "blocked", "progress": 100 if i22_valid else 0, "detail": "Receipt-bound filing-arrival contract" if i22_valid else "Valid current I22 receipt missing or safety validation failed"},
+        {"label": "Independent PIT reproduction", "status": "complete" if i22_valid and i22_receipt.get("compiler_reproduction", {}).get("x64_arm64_semantic_equality") is True and i22_receipt.get("compiler_reproduction", {}).get("independent_source_refetch_semantic_equality") is True else "blocked", "progress": 100 if i22_valid else 0, "detail": "X64/ARM64 and independent source-refetch semantic equality" if i22_valid else "Independent reproduction receipt not validated"},
+        {"label": "Mechanism signature completeness", "status": "blocked", "progress": 0, "detail": f"{i22_complete_comparisons}/{i22_peer_comparisons} peer comparisons complete; component and source-domain signatures remain missing"},
+        {"label": "Non-overlap review", "status": "blocked", "progress": 0, "detail": "No orthogonality claim until all required signatures and peer comparisons are complete"},
+        {"label": "Performance authorization", "status": "closed", "progress": 0, "detail": "No performance, holdout, ranking, tuning, promotion or live-execution authorization"},
+    ]
+    i22_overall, i22_complete, i22_total = overall(i22_milestones)
+
     return {
         "method": "receipt_and_contract_based_development_index",
         "note": "Entwicklungsfortschritt, keine Erfolgswahrscheinlichkeit, Renditeprognose oder Autorisierung.",
@@ -1357,6 +1382,18 @@ def candidate_progress_snapshot(runs: list[dict[str, Any]]) -> dict[str, Any]:
                           else ("independent architecture PIT reproduction" if q218_receipts["source_complete"] and q218_receipts["event_pair_complete"] else ("event-pair gate" if q218_receipts["source_complete"] else "source gate"))))
                 ),
                 "milestones": q218_milestones,
+                "performance_authorization_allowed": False,
+            },
+            "Q104:I22": {
+                "overall_progress_percent": i22_overall,
+                "completed_milestones": i22_complete,
+                "total_milestones": i22_total,
+                "current_milestone": "Mechanism signature completeness / non-overlap review",
+                "current_milestone_progress_percent": 0,
+                "current_milestone_status": "blocked",
+                "current_milestone_detail": i22_milestones[2]["detail"],
+                "next_gate": "Complete mechanism-token, source-component and source-domain signatures for all 121 peers; review overlap without performance authorization",
+                "milestones": i22_milestones,
                 "performance_authorization_allowed": False,
             },
             "Q221": {
@@ -1478,6 +1515,17 @@ def candidate_development_roadmap(
             }
             for index, milestone in enumerate(q220_progress["milestones"])
         ]
+    if candidate == "Q104:I22":
+        receipt = read_json_file("research/evidence/q104_i22_independent_pit_reproduction_latest.json")
+        overlap = receipt.get("mechanism_non_overlap", {}) if isinstance(receipt.get("mechanism_non_overlap"), dict) else {}
+        complete = int(overlap.get("complete_comparison_count") or 0)
+        peers = int(overlap.get("peer_comparison_count") or 0)
+        return [
+            {"id": "Q104-I22-PIT", "label": "Independent filing-arrival PIT reproduction", "status": "completed" if receipt.get("status") == "Q104_I22_INDEPENDENT_PIT_REPRODUCED_NON_OVERLAP_REVIEW_REQUIRED" else "blocked", "next": "X64/ARM64 and independent SEC source-refetch semantics reproduced"},
+            {"id": "Q104-I22-SIGNATURES", "label": "Complete candidate and peer mechanism signatures", "status": "blocked" if complete < peers else "ready", "next": f"{complete}/{peers} peer comparisons complete; component and source-domain signatures are required"},
+            {"id": "Q104-I22-OVERLAP", "label": "Review non-overlap across tokens, components and source domains", "status": "blocked", "next": "Do not claim orthogonality until every required signature is present and reviewed"},
+            {"id": "Q104-I22-AUTH", "label": "Performance / holdout authorization", "status": "closed", "next": "No authorization from source/PIT or metadata work"},
+        ]
     if candidate == "Q221":
         q221_gate = q221_public_clock_status()
         complete = q221_gate["state"] == "complete"
@@ -1529,7 +1577,7 @@ def candidate_pipeline(
     q218_prereg = q218_prereg_status()
     q218_replication_complete = q218_fresh_symbol_replication_complete()
     result = []
-    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in FOCUS_CANDIDATES}
+    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in DISPLAY_CANDIDATES}
     for item in work:
         if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
             continue
@@ -1542,6 +1590,7 @@ def candidate_pipeline(
         "Q104:I19": "FORMAL READINESS · HISTORICAL 13F CENSUS",
         "Q220": "FRONTIER DISCOVERY · AS-FILED SEC/XBRL POPULATION + REPRESENTATION GAP",
         "Q221": "FRONTIER DISCOVERY · HISTORICAL USASPENDING PUBLIC CLOCK + ENTITY MAPPING",
+        "Q104:I22": "FORMAL READINESS · INDEPENDENT PIT PASSED; MECHANISM OVERLAP REVIEW REQUIRED",
         "Q218": (
             "FRONTIER DISCOVERY · COST-AWARE OOS GATE BLOCKED"
             if q218_prereg.get("performance_executed") and q218_replication_complete
@@ -1552,7 +1601,7 @@ def candidate_pipeline(
             )
         ),
     }
-    for candidate in FOCUS_CANDIDATES:
+    for candidate in DISPLAY_CANDIDATES:
         p = progress["candidates"][candidate]
         capacity = candidate_capacity_snapshot(candidate, work, planned_capacity)
         stage = (

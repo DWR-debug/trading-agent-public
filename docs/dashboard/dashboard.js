@@ -7,6 +7,7 @@ var hasRenderedSnapshot=false;
 var refreshIntervalMs=180000;
 var lastRenderedSnapshotKey=null;
 var FOCUS=["Q104:I19","Q220","Q221"];
+var DISPLAY=FOCUS.concat(["Q104:I22"]);
 
 function $(id){return document.getElementById(id);}
 function esc(v){
@@ -129,6 +130,12 @@ function candidateInfo(code){
       lane:"FRONTIER DISCOVERY",
       cardClass:"candidate-q221"
     },
+    "Q104:I22":{
+      name:"SEC filing-arrival state",
+      mechanism:"SEC acceptance-time filing state; independent PIT reproduced, mechanism non-overlap remains unproven",
+      lane:"FORMAL READINESS · OVERLAP REVIEW",
+      cardClass:"candidate-q104-i22"
+    },
     "Q218":{
       name:"SEC disclosure event pairing (archived / outside active focus)",
       mechanism:"Historical evidence retained; no active Top-3 dispatch",
@@ -214,7 +221,10 @@ function renderCandidateDecisionRules(pipeline){
      stop:"Fail-closed, wenn die historische öffentliche Zeitgrenze nicht rekonstruierbar ist, Schema-/Taxonomie-Drift die Zuordnung mehrdeutig macht oder der narrative/strukturierte Gap nicht deterministisch messbar ist. Der Free-AI-CYD-Output war inhaltlich unbrauchbar, keine wissenschaftliche Evidenz."},
     {code:"Q221",cls:"decision-q221",mode:"Weiter · Public clock",title:"USAspending-Veröffentlichungsuhr rekonstruieren",
      advance:"Den begrenzten USAspending-Workpack parallel zu Q220 starten, sobald unabhängige Kapazität frei ist: historische Veröffentlichungsvintages und Transaktionsklassen sichern, DoD/USACE-90-Tage- und FAR-Ausnahmen klassifizieren und Recipient-to-Issuer-Mapping einfrieren. PIT-Validierung folgt erst danach.",
-     stop:"Der aktuelle Live-Source-Marker ist kein historischer Nachweis. Fail-closed, wenn Veröffentlichungs-Vintage/Public-Clock, Ausnahmeklassen, Transaktionszustände oder das vorab fixierte Empfänger-zu-Emittent-Mapping nicht belastbar rekonstruierbar sind."}
+     stop:"Der aktuelle Live-Source-Marker ist kein historischer Nachweis. Fail-closed, wenn Veröffentlichungs-Vintage/Public-Clock, Ausnahmeklassen, Transaktionszustände oder das vorab fixierte Empfänger-zu-Emittent-Mapping nicht belastbar rekonstruierbar sind."},
+    {code:"Q104:I22",cls:"decision-q104-i22",mode:"Weiter · Signatur-Vollständigkeit",title:"Mechanismus-Überlappung entscheidbar machen",
+     advance:"Die unabhängige PIT-Reproduktion ist positiv. Jetzt die fehlenden Komponenten- und Quelldomänen-Signaturen für Kandidat und 121 Peers aus exakten Quellen/Contracts ergänzen und die bestehende Überlappungsprüfung erneut ausführen; keine Scores aus unvollständigen Signaturen ableiten.",
+     stop:"Bei fehlender Provenienz, mehrdeutiger Mechanismusdefinition oder unvollständigen Peer-Signaturen bleibt der Kandidat im Review-Status. Keine Orthogonalitätsbehauptung, Performance, Holdout, Ranking, Tuning oder Promotion."}
   ];
   var host=$("candidateDecisionRules");
   if(!host)return;
@@ -466,7 +476,7 @@ function render(data){
   var resources=(data.resources||[]).filter(function(x){
     return ["Windows self-hosted A","Windows self-hosted B","Windows self-hosted C","GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Free AI pool"].indexOf(x.name)>=0;
   });
-  var pipeline=(data.pipeline||[]).filter(function(x){return FOCUS.indexOf(x.code)>=0;});
+  var pipeline=(data.pipeline||[]).filter(function(x){return DISPLAY.indexOf(x.code)>=0;});
   var work=(data.work_assignments||[]).filter(function(x){return FOCUS.indexOf(candidateFrom((x.task||"")+" "+(x.job||"")))>=0;});
   var planned=(data.planned_capacity||[]).filter(function(x){
     return (x.planned_assignments||[]).some(function(p){return FOCUS.indexOf(p.candidate)>=0;});
@@ -513,8 +523,8 @@ function render(data){
   renderProgressCharts(data,pipeline);
 
   $("focusSummary").innerHTML=
-    "<div class='focus-kpi'><span class='eyebrow'>Aktive Top-3</span><strong>Q104:I19 · Q220 · Q221</strong><span>Drei getrennte Forschungsaufträge; weitere Kandidaten bleiben pausiert.</span></div>"+
-    "<div class='focus-kpi'><span class='eyebrow'>Entwicklungsindex</span><strong>"+overallAvg+"%</strong><span>arithmetischer Index der drei Tracks, keine Erfolgswahrscheinlichkeit</span></div>"+
+    "<div class='focus-kpi'><span class='eyebrow'>Ausführung + Review</span><strong>Q104:I19 · Q220 · Q221</strong><span>3 aktive Ausführungsaufträge; Q104:I22 ist ein separater, nicht disponierter Überlappungsreview.</span></div>"+
+    "<div class='focus-kpi'><span class='eyebrow'>Entwicklungsindex</span><strong>"+overallAvg+"%</strong><span>Index der vier dargestellten Tracks; keine Erfolgswahrscheinlichkeit</span></div>"+
     "<div class='focus-kpi'><span class='eyebrow'>Aktive Candidate-Jobs</span><strong>"+activeCount+"</strong><span>sichtbar in der aktuellen Actions-Telemetrie</span></div>";
 
   var decisionLog=data.handoff_decision_log||{};

@@ -364,10 +364,17 @@ def test_dashboard_pipeline_is_locked_to_focus_candidates():
         {"code":"Q218","state":"DESIGN_ONLY_ACTIVE"},
         {"code":"Q220","state":"DESIGN_ONLY_ACTIVE"},
         {"code":"Q221","state":"DESIGN_ONLY_ACTIVE"},
+        {"code":"Q104:I22","state":"PIT_REPRODUCED_OVERLAP_REVIEW_REQUIRED"},
         {"code":"Q219","state":"DESIGN_ONLY_ACTIVE"},
     ]
     rows = candidate_pipeline(top4, [], {}, {})
-    assert [x["code"] for x in rows] == ["Q104:I19","Q220","Q221"]
+    assert [x["code"] for x in rows] == ["Q104:I19","Q220","Q221","Q104:I22"]
+    from automation.generate_resource_dashboard import FOCUS_CANDIDATES
+    assert list(FOCUS_CANDIDATES) == ["Q104:I19","Q220","Q221"]
+    i22 = next(x for x in rows if x["code"] == "Q104:I22")
+    assert i22["current_milestone_status"] == "blocked"
+    assert i22["performance_authorization_allowed"] is False
+    assert "121" in i22["next_gate"]
 
 
 def test_dashboard_generator_bootstraps_repo_root_for_file_execution():
