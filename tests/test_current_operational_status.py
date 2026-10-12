@@ -138,6 +138,9 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "both CI architectures and full-suite verification passed" in focus
     assert "launched run #38252169610" in focus
     assert "three preselected sample keys" in focus
+    assert "FORENSIC_COMPARISON_INCOMPLETE (0/3; 2,114,995,390 bytes downloaded" in focus
+    assert "the second original submission member exceeded the 30 MB primary-member limit" in focus
+    assert "separate the outer submission-member bound from the primary-document bound" in focus
     assert "cannot by itself clear all 55 source-hash failures" in focus
     assert "do not repeat an outcome-bearing run" in focus
     assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY") == 1
