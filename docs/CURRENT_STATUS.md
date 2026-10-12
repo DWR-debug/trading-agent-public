@@ -1,16 +1,25 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `324e7399e18ced11e9e4e28a5ac04ca6bb224d73`
+**Current operational snapshot:** `0300f685bcf7f57b1f121afe014dda0945fb87f1`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-12T10:01:48.199084+00:00`
+**Generated (UTC):** `2026-10-12T10:30:26.500679+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
 > This file is the canonical current operational status. `PROJECT_STATUS.md` is historical reconstruction and must not override it for current operational facts. Scientific evidence remains governed by the trial ledger, immutable evidence/checkpoints and workflow artifacts.
 
 ## Current state
+
+### Persistent research handoff — verified snapshot 2026-10-12T10:17Z
+
+This dated checkpoint preserves the current three-candidate workstream across chats. It is a snapshot, not a substitute for checking live Actions and current receipts when resuming.
+
+- **Q104:I19:** PR [#1351](https://github.com/DWR-debug/trading-agent-public/pull/1351) merged the strict raw SEC SGML header parsing fix (merge commit `87b6b547009ecd1f64ff4b03d20ffcd625268754`). Both CI architectures and full-suite verification passed on the tested revision. The existing targeted repair request run [#38231636160](https://github.com/DWR-debug/trading-agent-public/actions/runs/38231636160) was still in `Repair only unresolved frozen acceptance accessions` at the last check; **no terminal repair result was verified**. Follow the current run to its terminal immutable receipt; never restart the full census blindly.
+- **Q220:** The canonical PIT/compiler receipt remains `Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED`, with **55/55 primary-document hash failures**, zero verified primary documents, fingerprint `c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075`. Independent reproduction from 2026-10-11 is tied to a different compiler fingerprint and cannot reopen this gate. Forensic run [#38233685159](https://github.com/DWR-debug/trading-agent-public/actions/runs/38233685159) failed closed with `FORENSIC_COMPARISON_INCOMPLETE`: 0/3 comparisons after 2,829,769,099 bytes downloaded. The run did not establish source vintage. The latest code review distinguishes PDS `.dissem` names from daily Feed TAR members `{accession}.nc`; the exact-member resolver and fixture were corrected in a bounded follow-up. Its first CI run found a literal-placeholder NameError in five status-generator tests (2,464 passed); the f-string escaping and regression assertion are now committed. Merge only after the newest two-platform CI and full-suite checks pass, then deliberately trigger a versioned three-accession rerun; do not change frozen hashes, population, concepts, or gates to force a pass.
+- **Q221:** The bounded public-boundary source sample contains 348 rows across seven fixed windows and has no query failures; it is not a complete population census (`has_next=true` in each response). Historical publication boundary is unproven for **348/348** transactions, and **247/247** distinct recipient identity candidates remain unmapped to an issuer. The current API sample and five archived policy-document vintages do not prove an individual award/modification’s first public-observation time. A fixed exploratory Wayback CDX spot check of seven award-page URLs found one exact-URL capture and six no-hit responses; the captured HTML responses were 2,171–2,696 bytes and no row-level transaction payload was verified. No-hit is not proof of historical absence. The official GSA/SAM Contract Awards API is only a desk-check lead at present: it requires an API key, and `publicDeltaDate` filters by Last Modified Date or Reveal Date; the reviewed documentation does not establish a reproducible record-level first-public timestamp or historical-version retrieval. Unrevealed DoD data has additional access restrictions, and no authenticated request was made. Do not expand the Wayback route across all 348 keys; seek a timestamped transaction-level archive and retain the event-clock, applicability, agency-exception, correction-lineage and pre-event issuer-mapping gates.
+- **Permanent safety boundary:** this checkpoint authorizes only source/PIT and engineering work. `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, `AUTOMATIC_PROMOTION=False`. No performance, holdout selection, ranking, tuning, promotion, or live execution is authorized.
 
 ### Engineering
 
