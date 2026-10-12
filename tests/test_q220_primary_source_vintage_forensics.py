@@ -74,6 +74,53 @@ def test_parse_submission_header_requires_exact_accession_form_date_and_cik_fiel
     assert parsed["acceptance_datetime_iso"] == "2019-02-20T17:23:00"
 
 
+
+def test_parse_submission_header_accepts_raw_sec_sgml_and_scopes_cik_to_filer():
+    header = (
+        b"<SEC-HEADER>\n"
+        b"<ACCEPTANCE-DATETIME>20190213110253\n"
+        b"<ACCESSION-NUMBER>0000064040-19-000059\n"
+        b"<TYPE>10-K\n"
+        b"<FILING-DATE>20190213\n"
+        b"<FILER>\n"
+        b"<COMPANY-DATA>\n"
+        b"<CIK>0000064040\n"
+        b"</COMPANY-DATA>\n"
+        b"</FILER>\n"
+        b"<ISSUER>\n"
+        b"<COMPANY-DATA>\n"
+        b"<CIK>0009999999\n"
+        b"</COMPANY-DATA>\n"
+        b"</ISSUER>\n"
+        b"</SEC-HEADER>\n"
+        b"<DOCUMENT>\n<TYPE>EX-99.1\n"
+    )
+    parsed = forensic.parse_submission_header(header)
+
+    assert parsed["header_format"] == "sec_sgml_tags"
+    assert parsed["accession"] == "0000064040-19-000059"
+    assert parsed["filer_cik"] == "0000064040"
+    assert parsed["form"] == "10-K"
+    assert parsed["filed_date_iso"] == "2019-02-13"
+    assert parsed["acceptance_datetime_iso"] == "2019-02-13T11:02:53"
+
+
+def test_parse_submission_header_never_reads_document_type_as_header_form():
+    body = (
+        b"<SEC-HEADER>\n"
+        b"<ACCESSION-NUMBER>0000064040-19-000059\n"
+        b"<FILING-DATE>20190213\n"
+        b"</SEC-HEADER>\n"
+        b"<DOCUMENT>\n"
+        b"<TYPE>10-K\n"
+        b"</DOCUMENT>\n"
+    )
+    parsed = forensic.parse_submission_header(body)
+
+    assert parsed["form"] is None
+    assert parsed["header_format"] == "legacy_text_labels"
+
+
 def test_daily_feed_url_uses_official_year_quarter_directory():
     assert forensic.daily_feed_url("2019-02-13") == (
         "https://www.sec.gov/Archives/edgar/Feed/2019/QTR1/20190213.nc.tar.gz"
