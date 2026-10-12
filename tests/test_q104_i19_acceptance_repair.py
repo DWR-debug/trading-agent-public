@@ -396,6 +396,9 @@ def test_q104_targeted_repair_request_is_receipt_gated_and_paper_only():
     for flag in ("PERFORMANCE=false", "HOLDOUT_SELECTION=false", "RANKING=false", "TUNING=false", "PROMOTION=false", "LIVE_EXECUTION=false"):
         assert flag in request
     assert '.conclusion == "failure"' in wrapper
+    assert 'key="${line%%=*}"' in wrapper
+    assert 'grep -c "^${key}="' in wrapper
+    assert 'for shard in "${recovered[@]}";' in wrapper
     assert 'Q104 I19 Historical 13F Identity Census' in wrapper
     assert 'q104-i19-sec-source-snapshot-$source_run_id' in wrapper
     for shard in ("2013-2016", "2017-2018", "2019-2020", "2021-2022", "2023", "2024-2025-09"):
