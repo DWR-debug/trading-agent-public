@@ -7,12 +7,9 @@ on:
       - "automation/q104_i22_independent_pit_reproduction.py"
       - "tests/test_q104_i22_independent_pit_reproduction.py"
       - ".github/workflows/q104-i22-independent-pit-reproduction.yml"
-  push:
-    branches: [master]
-    paths:
-      - "automation/q104_i22_independent_pit_reproduction.py"
-      - "tests/test_q104_i22_independent_pit_reproduction.py"
-      - ".github/workflows/q104-i22-independent-pit-reproduction.yml"
+  workflow_run:
+    workflows: ["Full Suite Verification"]
+    types: [completed]
   workflow_dispatch: {}
 
 permissions:
@@ -50,7 +47,12 @@ jobs:
         run: python -m pytest -q tests/test_q104_i22_independent_pit_reproduction.py
 
   independent_pit:
-    if: github.event_name != 'pull_request'
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.name == 'Full Suite Verification' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'master')
     needs: [contracts]
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 60
@@ -124,7 +126,10 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
       - name: Publish successful non-authorizing receipt
-        if: success() && github.ref == 'refs/heads/master'
+        if: >-
+          success() &&
+          ((github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master') ||
+           (github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'master'))
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
