@@ -258,27 +258,156 @@ def job_duration_benchmarks(
     }
 
 
-def runner_snapshot() -> list[dict[str, Any]]:
-    # Repository runner inventory requires a token with Administration: read.
-    # Prefer an explicitly provisioned read-only token; otherwise retain the
-    # existing GITHUB_TOKEN fallback and fail closed to "unverified".
+SELF_HOSTED_RUNNER_NAMES = {
+    "lht-n133732": "Windows self-hosted A",
+    "lht-n133732-2": "Windows self-hosted B",
+    "lht-n133732-3": "Windows self-hosted C",
+}
+SELF_HOSTED_JOB_WORKFLOW_PATHS = frozenset({
+    ".github/workflows/temporal-identity-state-spine-waves.yml",
+    ".github/workflows/windows-independent-capacity-pulse.yml",
+    ".github/workflows/windows-candidate-gate-regression.yml",
+    ".github/workflows/permanent-pc-research-loop.yml",
+    ".github/workflows/top4-candidate-slot-research.yml",
+    ".github/workflows/top4-candidate-research-capacity.yml",
+    ".github/workflows/self-hosted-capacity-autostart.yml",
+    ".github/workflows/windows-runner-c-long-research.yml",
+    ".github/workflows/q230-windows-trace-connectivity.yml",
+    ".github/workflows/self-hosted-runner-probe.yml",
+    ".github/workflows/q121r6-windows-independent-reproduction.yml",
+    ".github/workflows/q185-q186-windows-reproduction.yml",
+})
+RUNNER_RECENT_JOB_TTL_SECONDS = 30 * 60
+RUNNER_RECENT_JOB_SCAN_LIMIT = 16
+
+
+def inferred_runner_snapshot(
+    recent_runs: list[dict[str, Any]],
+    *,
+    now: datetime | None = None,
+) -> list[dict[str, Any]]:
+    """Infer bounded runner state from actual jobs; this is not live inventory."""
+    observed_at = now or datetime.now(timezone.utc)
+    if observed_at.tzinfo is None:
+        observed_at = observed_at.replace(tzinfo=timezone.utc)
+
+    def epoch(value: Any) -> float:
+        parsed = parse_dt(value)
+        if parsed is None:
+            return 0.0
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed.timestamp()
+
+    candidate_runs = [
+        run for run in recent_runs
+        if isinstance(run, dict)
+        and str(run.get("head_branch") or "") == "master"
+        and str(run.get("path") or "") in SELF_HOSTED_JOB_WORKFLOW_PATHS
+        and run.get("id") is not None
+    ]
+    candidate_runs.sort(
+        key=lambda run: epoch(run.get("run_started_at") or run.get("created_at")),
+        reverse=True,
+    )
+
+    latest_by_runner: dict[str, dict[str, Any]] = {}
+    for run in candidate_runs[:RUNNER_RECENT_JOB_SCAN_LIMIT]:
+        try:
+            jobs = jobs_for_run(int(run["id"]))
+        except (TypeError, ValueError, OSError):
+            continue
+        for job in jobs:
+            if not isinstance(job, dict):
+                continue
+            runner_name = str(job.get("runner_name") or "").strip()
+            canonical = runner_name.lower()
+            if canonical not in SELF_HOSTED_RUNNER_NAMES:
+                continue
+
+            job_status = str(job.get("status") or "").strip().lower()
+            active = job_status in {"in_progress", "running"}
+            if not active and job_status != "completed":
+                # Queued jobs have not established which physical runner received them.
+                continue
+
+            completed_at = parse_dt(job.get("completed_at") or run.get("completed_at"))
+            started_at = parse_dt(job.get("started_at") or run.get("run_started_at"))
+            if active:
+                event_at = observed_at
+                job_age_seconds = (
+                    max(0, int((observed_at - started_at).total_seconds()))
+                    if started_at is not None else None
+                )
+            else:
+                event_at = completed_at
+                if event_at is None:
+                    continue
+                if event_at.tzinfo is None:
+                    event_at = event_at.replace(tzinfo=timezone.utc)
+                job_age_seconds = max(0, int((observed_at - event_at).total_seconds()))
+                if job_age_seconds > RUNNER_RECENT_JOB_TTL_SECONDS:
+                    continue
+
+            previous = latest_by_runner.get(canonical)
+            if previous and float(previous["_event_epoch"]) >= event_at.timestamp():
+                continue
+            labels = job.get("labels")
+            latest_by_runner[canonical] = {
+                "id": job.get("runner_id"),
+                "name": runner_name,
+                "status": "online",
+                "busy": active,
+                "labels": labels if isinstance(labels, list) else [],
+                "os": "Windows",
+                "architecture": None,
+                "status_basis": "RECENT_SELF_HOSTED_JOB_INFERENCE",
+                "inventory_verified": False,
+                "observed_at_utc": observed_at.isoformat(),
+                "last_job_name": str(job.get("name") or ""),
+                "last_job_status": job_status,
+                "last_job_conclusion": job.get("conclusion"),
+                "last_job_run_id": run.get("id"),
+                "last_job_url": job.get("html_url") or run.get("html_url"),
+                "last_job_event_at_utc": event_at.isoformat(),
+                "last_job_age_seconds": job_age_seconds,
+                "_event_epoch": event_at.timestamp(),
+            }
+
+    return [
+        {key: value for key, value in latest_by_runner[name].items() if key != "_event_epoch"}
+        for name in ("lht-n133732", "lht-n133732-2", "lht-n133732-3")
+        if name in latest_by_runner
+    ]
+
+
+def runner_snapshot(
+    recent_runs: list[dict[str, Any]] | None = None,
+    *,
+    now: datetime | None = None,
+) -> list[dict[str, Any]]:
+    """Prefer true runner inventory, then use a short-lived real-job inference."""
     runner_token = os.environ.get("RUNNER_STATUS_TOKEN") or None
     data = run_cmd_json([f"/repos/{REPO}/actions/runners?per_page=100"], token=runner_token)
-    if not isinstance(data, dict):
-        return []
-    return [
-        {
-            "id": r.get("id"),
-            "name": r.get("name"),
-            "status": r.get("status"),
-            "busy": bool(r.get("busy", False)),
-            "labels": [x.get("name") for x in r.get("labels", []) if isinstance(x, dict) and x.get("name")],
-            "os": r.get("os"),
-            "architecture": r.get("architecture"),
-        }
-        for r in data.get("runners", [])
-        if isinstance(r, dict)
-    ]
+    observed_at = now or datetime.now(timezone.utc)
+    if isinstance(data, dict) and isinstance(data.get("runners"), list) and data["runners"]:
+        return [
+            {
+                "id": runner.get("id"),
+                "name": runner.get("name"),
+                "status": runner.get("status"),
+                "busy": bool(runner.get("busy", False)),
+                "labels": [label.get("name") for label in runner.get("labels", []) if isinstance(label, dict) and label.get("name")],
+                "os": runner.get("os"),
+                "architecture": runner.get("architecture"),
+                "status_basis": "GITHUB_RUNNER_INVENTORY",
+                "inventory_verified": True,
+                "observed_at_utc": observed_at.isoformat(),
+            }
+            for runner in data["runners"]
+            if isinstance(runner, dict)
+        ]
+    return inferred_runner_snapshot(recent_runs or [], now=observed_at)
 
 
 def jobs_for_run(run_id: int) -> list[dict[str, Any]]:
@@ -1570,7 +1699,7 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             runner_busy_basis = "ACTIVE_WORKFLOW_ASSIGNMENT"
         elif runner is not None and isinstance(runner.get("busy"), bool):
             runner_busy = runner["busy"]
-            runner_busy_basis = "GITHUB_RUNNER_INVENTORY"
+            runner_busy_basis = str(runner.get("status_basis") or "GITHUB_RUNNER_INVENTORY")
         else:
             # Missing inventory is not evidence that a PC is idle. A queued
             # job is waiting for capacity, not proof that this runner is busy.
@@ -1600,6 +1729,13 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "runner_busy": runner_busy,
             "runner_busy_basis": runner_busy_basis,
             "runner_status": runner.get("status") if runner else None,
+            "runner_status_basis": runner.get("status_basis") if runner else None,
+            "runner_inventory_verified": bool(runner.get("inventory_verified", False)) if runner else False,
+            "runner_observed_at_utc": runner.get("observed_at_utc") if runner else None,
+            "runner_last_job_name": runner.get("last_job_name") if runner else None,
+            "runner_last_job_run_id": runner.get("last_job_run_id") if runner else None,
+            "runner_last_job_url": runner.get("last_job_url") if runner else None,
+            "runner_last_job_age_seconds": runner.get("last_job_age_seconds") if runner else None,
             "labels": runner.get("labels", []) if runner else [],
             "current_assignments": len(executing_research_assignments),
             "queued_assignments": len(queued_research_assignments),
@@ -2309,7 +2445,7 @@ def main() -> None:
         workflow_benchmarks,
         job_benchmarks,
     )
-    runners = runner_snapshot()
+    runners = runner_snapshot(recent_runs)
     ai = ai_provider_state()
     s10_support = s10_support_snapshot(work, os_state)
     milestones_12h = milestone_history_12h()
@@ -2354,6 +2490,15 @@ def main() -> None:
     )
     planned_research_queue = planned_research_backlog(state_board)
 
+    verified_runner_inventory = [
+        runner for runner in runners
+        if runner.get("status_basis") == "GITHUB_RUNNER_INVENTORY"
+    ]
+    inferred_runner_rows = [
+        runner for runner in runners
+        if runner.get("status_basis") == "RECENT_SELF_HOSTED_JOB_INFERENCE"
+    ]
+
     payload = {
         "schema_version": 2,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -2373,10 +2518,12 @@ def main() -> None:
             "active_research_lanes_target_met": len({str(x.get("resource") or "") for x in work if str(x.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"} and x.get("resource")}) >= 6,
             "active_research_lanes_shortfall": max(0, 6 - len({str(x.get("resource") or "") for x in work if str(x.get("lane") or "") in {"FORMAL READINESS", "FRONTIER DISCOVERY"} and x.get("resource")})),
             "configured_resources": len(configured_resources),
-            "runner_api_visible": len(runners) if runners else None,
-            "busy_runners": sum(1 for r in runners if r.get("busy") is True) if runners else None,
-            "runner_api_status": "available" if runners else "unavailable_or_empty",
-            "runner_api_note": "Unavailable runner inventory is shown as unverified, not as zero/offline.",
+            "runner_api_visible": len(verified_runner_inventory) if verified_runner_inventory else None,
+            "busy_runners": sum(1 for r in verified_runner_inventory if r.get("busy") is True) if verified_runner_inventory else None,
+            "runner_api_status": "available" if verified_runner_inventory else ("recent_job_inference" if inferred_runner_rows else "unavailable_or_empty"),
+            "runner_recent_job_inference_count": len(inferred_runner_rows),
+            "runner_recent_job_inferred_busy": sum(1 for r in inferred_runner_rows if r.get("busy") is True),
+            "runner_api_note": "Runner inventory is authoritative when returned; otherwise only exact recent self-hosted job records infer a lane online for at most 30 minutes. Inference is unverified; stale or missing records remain unknown.",
             "runner_status_ui_url": f"https://github.com/{REPO}/settings/actions/runners",
             "runner_status_api_url": f"https://api.github.com/repos/{REPO}/actions/runners",
             "runner_status_auth_mode": "dedicated_read_only_token" if os.environ.get("RUNNER_STATUS_TOKEN") else "GITHUB_TOKEN_fallback",
