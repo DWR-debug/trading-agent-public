@@ -1,0 +1,58 @@
+name: Q220 Original SEC Feed Primary-Hash Forensics
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q220_primary_source_vintage_forensics.trigger"
+      - "automation/q220_primary_source_vintage_forensics.py"
+      - "tests/test_q220_primary_source_vintage_forensics.py"
+      - ".github/workflows/q220-primary-source-vintage-forensics.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q220-original-feed-forensics
+  cancel-in-progress: false
+
+jobs:
+  forensics:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Compare frozen primary hashes to original SEC daily Feed submissions
+        id: probe
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          out="research/runs/q220-primary-source-vintage-forensics/\${GITHUB_RUN_ID}/receipt.json"
+          python -m automation.q220_primary_source_vintage_forensics \
+            --request research/run_requests/q220_primary_source_vintage_forensics.trigger \
+            --receipt research/evidence/q220_historical_representation_pit_latest.json \
+            --output "$out"
+      - name: Upload immutable forensic receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-primary-source-vintage-forensics
+          path: research/runs/q220-primary-source-vintage-forensics/*/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+      - name: Fail closed on incomplete forensic inputs or downloads
+        if: steps.probe.outcome != 'success'
+        run: |
+          echo "Q220 original-source forensic comparison was incomplete; retain blocked gate."
+          exit 1
