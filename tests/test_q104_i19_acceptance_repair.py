@@ -389,7 +389,9 @@ def test_q104_targeted_repair_request_is_receipt_gated_and_paper_only():
     assert 'branches: [master]' in wrapper
     assert 'paths:' in wrapper
     assert '- "research/run_requests/q104_i19_targeted_acceptance_repair.trigger"' in wrapper
-    assert '^[A-Z0-9_]+=[A-Za-z0-9._,:-]*    assert "permissions:\n  actions: write\n  contents: write" in wrapper.split("jobs:", 1)[0]
+    assert r"^[A-Z0-9_]+=[A-Za-z0-9._,:-]*$" in wrapper
+    assert "RUN_Q104_I19_TARGETED_REPAIR|REASON|SOURCE_RUN_ID|SHARD_RECOVERY_RUN_ID|RECOVERED_SHARDS" in wrapper
+    assert "permissions:\n  actions: write\n  contents: write" in wrapper.split("jobs:", 1)[0]
     repair_job = wrapper.split("  repair:\n", 1)[1].split("    uses: ./.github/workflows/q104-i19-targeted-acceptance-repair.yml", 1)[0]
     assert "actions: write" in repair_job
     assert "permissions:\n  actions: write\n  contents: write" in repair.split("jobs:", 1)[0]
