@@ -118,7 +118,11 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "Q218 has been removed from active focus and automatic dispatch" in focus
     assert "Q219 remains paused; its prior evidence is preserved." in focus
     assert "never restart the full census blindly" in focus
-    assert "### Persistent research handoff — verified snapshot 2026-10-12T10:17Z" in doc
+    assert "53 unique unresolved accession keys" in focus
+    assert "zero new attempts and zero repairs" in focus
+    assert "PR #1363 is merged" in focus
+    assert "bounded source-lineage triage is next" in focus
+    assert "### Historical research handoff checkpoint — 2026-10-12T10:17Z" in doc
     assert "Q104:I19" in doc and "#38231636160" in doc
     assert "FORENSIC_COMPARISON_INCOMPLETE" in doc and "#38233685159" in doc
     assert "2,829,769,099 bytes downloaded" in doc
@@ -132,7 +136,12 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "daily .nc.tar.gz tar member is accession.nc" in focus
     assert "daily Feed TAR members `{accession}.nc`" in doc
     assert "both CI architectures and full-suite verification passed" in focus
-    assert "no terminal repair result was verified" in focus
+    assert "launched run #38252169610" in focus
+    assert "three preselected sample keys" in focus
+    assert "FORENSIC_COMPARISON_INCOMPLETE (0/3; 2,114,995,390 bytes downloaded" in focus
+    assert "the second original submission member exceeded the 30 MB primary-member limit" in focus
+    assert "separate the outer submission-member bound from the primary-document bound" in focus
+    assert "cannot by itself clear all 55 source-hash failures" in focus
     assert "do not repeat an outcome-bearing run" in focus
     assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY") == 1
     # This status sync must fail closed when the population source code changed
