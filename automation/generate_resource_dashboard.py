@@ -609,7 +609,8 @@ CANDIDATE_DEVELOPMENT_MILESTONES = (
     "ONE-SHOT PERFORMANCE",
 )
 
-FOCUS_CANDIDATES = ("Q104:I19", "Q220", "Q221", "Q104:I22")
+FOCUS_CANDIDATES = ("Q104:I19", "Q220", "Q221")
+DISPLAY_CANDIDATES = (*FOCUS_CANDIDATES, "Q104:I22")
 
 
 
@@ -1576,7 +1577,7 @@ def candidate_pipeline(
     q218_prereg = q218_prereg_status()
     q218_replication_complete = q218_fresh_symbol_replication_complete()
     result = []
-    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in FOCUS_CANDIDATES}
+    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in DISPLAY_CANDIDATES}
     for item in work:
         if str(item.get("lane") or "") not in {"FORMAL READINESS", "FRONTIER DISCOVERY"}:
             continue
@@ -1600,7 +1601,7 @@ def candidate_pipeline(
             )
         ),
     }
-    for candidate in FOCUS_CANDIDATES:
+    for candidate in DISPLAY_CANDIDATES:
         p = progress["candidates"][candidate]
         capacity = candidate_capacity_snapshot(candidate, work, planned_capacity)
         stage = (
