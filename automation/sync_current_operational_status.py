@@ -656,7 +656,7 @@ def generate(
         recorded_next_research_focus = (
             "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. "
             "Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and full-suite verification passed on its tested revision. "
-            "Existing targeted receipt-gated repair request run #38231636160 was still in the repair step as of the 2026-10-12T10:02Z handoff; check its terminal result and immutable receipt before any next step, never restart the full census blindly. "
+            "Existing targeted receipt-gated repair request run #38231636160 was still in the repair step as of the 2026-10-12T10:02Z handoff; no terminal repair result was verified at that checkpoint. Check its terminal result and immutable receipt before any next step, never restart the full census blindly. "
             "After a terminal repair receipt, compile the frozen concept-specific PIT state and require independent reproduction. "
             + q220_population_sentence +
             " Q220: original SEC daily Feed forensic run #38233685159 ended fail-closed with FORENSIC_COMPARISON_INCOMPLETE: 0/3 comparisons, 2,829,769,099 bytes downloaded, and no original submission member found. "
