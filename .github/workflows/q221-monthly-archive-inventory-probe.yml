@@ -1,6 +1,15 @@
 name: Q221 Monthly Archive Inventory Probe
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q221_monthly_archive_inventory.trigger"
+      - "research/evidence/q221_historical_public_boundary_latest.json"
+      - "research/preregistrations/q221_transaction_archive_presence_workpack_2026_10_12.json"
+      - "automation/q221_monthly_archive_inventory_probe.py"
+      - "tests/test_q221_monthly_archive_inventory_probe.py"
+      - ".github/workflows/q221-monthly-archive-inventory-probe.yml"
   workflow_dispatch:
 
 permissions:
@@ -27,6 +36,22 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Validate frozen request before any API access
+        id: request_guard
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          from automation.q221_monthly_archive_inventory_probe import validate_request
+          result = validate_request(
+              Path("research/run_requests/q221_monthly_archive_inventory.trigger"),
+              Path("research/evidence/q221_historical_public_boundary_latest.json"),
+          )
+          print("Q221_FROZEN_REQUEST_VALID=true")
+          print(result)
+          PY
+
       - name: Inventory dated contract archives
         id: probe
         continue-on-error: true
@@ -34,7 +59,8 @@ jobs:
           set -euo pipefail
           python3 automation/q221_monthly_archive_inventory_probe.py \
             --input research/evidence/q221_historical_public_boundary_latest.json \
-            --output "${RUNNER_TEMP}/q221-monthly-archive-inventory.json"
+            --output "${RUNNER_TEMP}/q221-monthly-archive-inventory.json" \
+            --request research/run_requests/q221_monthly_archive_inventory.trigger
 
       - name: Upload inventory receipt (including fail-closed outcomes)
         if: always()
@@ -44,6 +70,12 @@ jobs:
           path: ${{ runner.temp }}/q221-monthly-archive-inventory.json
           if-no-files-found: error
           retention-days: 14
+
+      - name: Keep invalid request fail-closed
+        if: ${{ steps.request_guard.outcome != 'success' }}
+        run: |
+          echo "Frozen request validation failed; no API result may be used."
+          exit 1
 
       - name: Keep unsuccessful inventory fail-closed
         if: ${{ steps.probe.outcome != 'success' }}
