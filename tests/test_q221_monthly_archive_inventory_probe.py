@@ -250,3 +250,97 @@ def test_preregistered_negative_inventory_is_success_but_incomplete_results_fail
         "",
     ):
         assert probe.exit_code_for_status(status) == 2
+
+def test_request_inventory_retries_one_transient_500_then_preserves_attempt_history(monkeypatch):
+    import io
+    import urllib.error
+
+    calls = []
+    sleeps = []
+
+    def fake_request(fiscal_year):
+        calls.append(fiscal_year)
+        if len(calls) == 1:
+            raise urllib.error.HTTPError(
+                probe.API_URL, 500, "server error", {}, io.BytesIO(b"temporary failure")
+            )
+        body = b'{"monthly_files":[]}'
+        return 200, "application/json", body, {"monthly_files": []}
+
+    result, attempts = probe.request_inventory_with_retry(
+        2019, request_fn=fake_request, sleep_fn=sleeps.append
+    )
+
+    assert calls == [2019, 2019]
+    assert sleeps == [probe.REQUEST_RETRY_BACKOFF_SECONDS]
+    assert result[0] == 200
+    assert [item["status"] for item in attempts] == ["FAILED", "SUCCESS"]
+    assert attempts[0]["http_status"] == 500
+    assert attempts[0]["transient"] is True
+    assert attempts[1]["http_status"] == 200
+
+
+def test_request_inventory_does_not_retry_malformed_or_permanent_http_failures():
+    import io
+    import urllib.error
+
+    calls = []
+
+    def bad_request(_fiscal_year):
+        calls.append(1)
+        raise urllib.error.HTTPError(
+            probe.API_URL, 400, "bad request", {}, io.BytesIO(b"bad request")
+        )
+
+    with pytest.raises(probe._InventoryRequestFailure) as raised:
+        probe.request_inventory_with_retry(
+            2019, request_fn=bad_request, sleep_fn=lambda _delay: None
+        )
+
+    assert len(calls) == 1
+    assert raised.value.http_status == 400
+    assert raised.value.transient is False
+    assert len(raised.value.attempts) == 1
+
+
+def test_run_opens_source_circuit_after_three_consecutive_transient_year_failures(
+    tmp_path, monkeypatch
+):
+    import io
+    import urllib.error
+
+    source = tmp_path / "input.json"
+    output = tmp_path / "out.json"
+    keys = [
+        _key(f"{year - 1}-11-01", f"FA{year:08d}C0001")
+        for year in range(2019, 2026)
+    ]
+    source.write_text(json.dumps(_manifest(*keys)), encoding="utf-8")
+    calls = []
+
+    def always_500(fiscal_year):
+        calls.append(fiscal_year)
+        raise urllib.error.HTTPError(
+            probe.API_URL, 500, "server error", {}, io.BytesIO(b"temporary failure")
+        )
+
+    monkeypatch.setattr(probe, "request_inventory", always_500)
+    monkeypatch.setattr(probe.time, "sleep", lambda _delay: None)
+
+    receipt = probe.run(source, output)
+
+    assert receipt["status"] == "ARCHIVE_LISTING_INCOMPLETE"
+    assert receipt["source_circuit_breaker_open"] is True
+    assert receipt["api_request_count"] == 6
+    assert receipt["api_requests_skipped_after_circuit_breaker"] == 4
+    assert calls == [2019, 2019, 2020, 2020, 2021, 2021]
+    rows = receipt["fiscal_year_results"]
+    assert len(rows) == 7
+    assert [row["fiscal_year"] for row in rows] == list(range(2019, 2026))
+    assert all(row["status"] == "REQUEST_OR_JSON_PARSE_FAILED" for row in rows[:3])
+    assert all(row["status"] == "SKIPPED_AFTER_TRANSIENT_SOURCE_ERRORS" for row in rows[3:])
+    assert receipt["archive_transaction_presence_tested"] is False
+    assert receipt["historical_first_public_observation_proven"] is False
+    assert receipt["performance_authorization"] is False
+    assert receipt["live_execution"] is False
+
