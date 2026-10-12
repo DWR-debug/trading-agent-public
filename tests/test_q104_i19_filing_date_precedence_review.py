@@ -18,12 +18,14 @@ def test_analysis_keeps_date_change_separate_from_filed_date():
         date=f"202{i//2}-02-14"; change=date if i in {2,3} else f"202{i//2}-02-20"
         accept=f"202{i//2}-02-14T18:00:00"
         common={"accession":f"0000950123-{15+i:02d}-003104","filer_cik":"0001226779","form":"13F-HR","filing_date":date,"date_of_filing_date_change":change,"acceptance_datetime":accept}
-        samples.append({"accession":common["accession"],"bulk_filing_date":f"202{i//2}-02-15","probes":[
-          {"route":"index_headers","observed_fields":dict(common)},{"route":"raw_sgml_header","observed_fields":dict(common)},
+        samples.append({"accession":common["accession"],"form":"13F-HR","bulk_filing_date":f"202{i//2}-02-15","probes":[
+          {"route":"index_headers","observed_fields":dict(common)},{"route":"raw_sgml_header","observed_fields":{**common,"form":None}},
           {"route":"complete_submission_header_prefix","observed_fields":{**common,"date_of_filing_date_change":None}}]})
     out=review.analyze({"samples":samples})
     assert out["status"]=="FIELD_PRECEDENCE_REVIEW_PROPOSAL_READY_NOT_APPLIED"
     assert out["counts"]["bulk_date_differs"]==8
     assert out["counts"]["acceptance_routes_agree"]==8
+    assert out["counts"]["form_agreement_index_prefix_source"]==8
+    assert out["counts"]["raw_sgml_form_missing"]==8
     assert out["counts"]["date_change_equals_filing_date"]==2
     assert out["counts"]["date_change_differs_from_filing_date"]==6
