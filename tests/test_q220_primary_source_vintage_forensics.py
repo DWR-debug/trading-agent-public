@@ -545,3 +545,101 @@ def test_parse_submission_header_reads_metadata_outside_sec_header_but_before_do
     assert parsed["filed_date_iso"] == "2025-02-11"
     assert parsed["acceptance_datetime"] == "20250211170704"
     assert parsed["acceptance_datetime_iso"] == "2025-02-11T17:07:04"
+
+
+def test_bounded_get_with_retry_recovers_after_one_truncated_response(monkeypatch):
+    first = {
+        "status": "INCOMPLETE_CONTENT_LENGTH",
+        "http_status": 200,
+        "response_bytes": 600,
+        "error": "CONTENT_LENGTH_MISMATCH:declared=1000:received=600",
+        "body": b"",
+    }
+    second = {
+        "status": "FETCHED",
+        "http_status": 200,
+        "response_bytes": 1000,
+        "response_sha256": "a" * 64,
+        "body": b"x" * 1000,
+    }
+    responses = iter([first, second])
+    calls = []
+
+    def fake_get(url, max_bytes, budget):
+        calls.append((url, max_bytes, budget))
+        return next(responses)
+
+    monkeypatch.setattr(forensic, "_bounded_get", fake_get)
+    budget = forensic.DownloadBudget(5000)
+    result = forensic._bounded_get_with_retry(
+        "https://www.sec.gov/daily-feed.nc.tar.gz",
+        2000,
+        budget,
+    )
+
+    assert result["status"] == "FETCHED"
+    assert result["body"] == b"x" * 1000
+    assert result["fetch_attempt_count"] == 2
+    assert result["retry_history"] == [{
+        "attempt": 1,
+        "status": "INCOMPLETE_CONTENT_LENGTH",
+        "http_status": 200,
+        "response_bytes": 600,
+        "error": "CONTENT_LENGTH_MISMATCH:declared=1000:received=600",
+    }]
+    assert len(calls) == 2
+    assert all(call[1] == 2000 for call in calls)
+
+
+def test_bounded_get_with_retry_does_not_retry_permanent_http_4xx(monkeypatch):
+    calls = []
+
+    def fake_get(url, max_bytes, budget):
+        calls.append(url)
+        return {
+            "status": "HTTP_ERROR",
+            "http_status": 404,
+            "response_bytes": 0,
+            "error": "HTTP_404",
+            "body": b"",
+        }
+
+    monkeypatch.setattr(forensic, "_bounded_get", fake_get)
+    result = forensic._bounded_get_with_retry(
+        "https://www.sec.gov/Archives/edgar/data/missing.txt",
+        1000,
+        forensic.DownloadBudget(2000),
+    )
+
+    assert result["status"] == "HTTP_ERROR"
+    assert result["http_status"] == 404
+    assert result["fetch_attempt_count"] == 1
+    assert result["retry_history"] == []
+    assert calls == ["https://www.sec.gov/Archives/edgar/data/missing.txt"]
+
+
+def test_bounded_get_with_retry_stops_after_bounded_attempts(monkeypatch):
+    calls = []
+
+    def fake_get(url, max_bytes, budget):
+        calls.append(url)
+        return {
+            "status": "INCOMPLETE_CONTENT_LENGTH",
+            "http_status": 200,
+            "response_bytes": 100,
+            "error": "CONTENT_LENGTH_MISMATCH:declared=1000:received=100",
+            "body": b"",
+        }
+
+    monkeypatch.setattr(forensic, "_bounded_get", fake_get)
+    result = forensic._bounded_get_with_retry(
+        "https://www.sec.gov/daily-feed.nc.tar.gz",
+        2000,
+        forensic.DownloadBudget(5000),
+    )
+
+    assert result["status"] == "INCOMPLETE_CONTENT_LENGTH"
+    assert result["fetch_attempt_count"] == 2
+    assert len(result["retry_history"]) == 1
+    assert len(calls) == 2
+
