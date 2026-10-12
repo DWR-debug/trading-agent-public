@@ -55,9 +55,10 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Validate source/recovery run identities
+      - name: Validate terminal run identities and frozen artifact completeness
         id: select
         env:
+          GH_TOKEN: ${{ github.token }}
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
           SHARD_RECOVERY_RUN_ID: ${{ inputs.shard_recovery_run_id }}
           RECOVERED_SHARDS: ${{ inputs.recovered_shards }}
@@ -66,11 +67,61 @@ jobs:
           set -euo pipefail
           [[ "$SOURCE_RUN_ID" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SOURCE_RUN_ID"; exit 2; }
           [[ "$SHARD_RECOVERY_RUN_ID" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SHARD_RECOVERY_RUN_ID"; exit 2; }
+          IFS=',' read -r -a recovered <<< "$RECOVERED_SHARDS"
+          allowed=",2013-2016,2017-2018,2019-2020,2021-2022,2023,2024-2025-09,"
+          for shard in "${recovered[@]}"; do
+            [[ -z "$shard" ]] && continue
+            case "$allowed" in *,"$shard",*) ;; *) echo "INVALID_I19_RECOVERED_SHARD:$shard"; exit 2 ;; esac
+          done
+
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID" > "$RUNNER_TEMP/i19-source-run.json"
+          jq -e '
+            .name == "Q104 I19 Historical 13F Identity Census"
+            and .status == "completed"
+            and .head_branch == "master"
+            and (.conclusion == "failure" or .conclusion == "cancelled")
+          ' "$RUNNER_TEMP/i19-source-run.json" >/dev/null || {
+            echo "I19_SOURCE_RUN_NOT_A_COMPLETED_FAILED_MASTER_CENSUS"; exit 2;
+          }
+
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$SHARD_RECOVERY_RUN_ID" > "$RUNNER_TEMP/i19-recovery-run.json"
+          jq -e '
+            .status == "completed"
+            and .head_branch == "master"
+            and (
+              .name == "Q104 I19 Historical 13F Identity Census"
+              or .name == "Q104 I19 Missing Shard Receipt Recovery"
+            )
+          ' "$RUNNER_TEMP/i19-recovery-run.json" >/dev/null || {
+            echo "I19_RECOVERY_RUN_NOT_A_TERMINAL_ALLOWED_MASTER_RUN"; exit 2;
+          }
+
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-source-artifacts.json"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$SHARD_RECOVERY_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-recovery-artifacts.json"
+          snapshot="q104-i19-sec-source-snapshot-$SOURCE_RUN_ID"
+          jq -e --arg n "$snapshot" '[.artifacts[]? | select(.name == $n and .expired == false)] | length == 1' \
+            "$RUNNER_TEMP/i19-source-artifacts.json" >/dev/null || {
+              echo "I19_FROZEN_SOURCE_SNAPSHOT_ARTIFACT_MISSING_OR_EXPIRED"; exit 2;
+            }
+
+          for shard in 2013-2016 2017-2018 2019-2020 2021-2022 2023 2024-2025-09; do
+            artifact="q104-i19-census-$shard-$SOURCE_RUN_ID"
+            artifact_json="$RUNNER_TEMP/i19-source-artifacts.json"
+            case ",$RECOVERED_SHARDS," in
+              *,"$shard",*) artifact="q104-i19-census-$shard-$SHARD_RECOVERY_RUN_ID"; artifact_json="$RUNNER_TEMP/i19-recovery-artifacts.json" ;;
+            esac
+            jq -e --arg n "$artifact" '[.artifacts[]? | select(.name == $n and .expired == false)] | length == 1' \
+              "$artifact_json" >/dev/null || {
+                echo "I19_REQUIRED_SHARD_ARTIFACT_MISSING_OR_EXPIRED:$artifact"; exit 2;
+              }
+          done
+
           {
             echo "source_run_id=$SOURCE_RUN_ID"
             echo "shard_recovery_run_id=$SHARD_RECOVERY_RUN_ID"
             echo "recovered_shards=$RECOVERED_SHARDS"
           } >> "$GITHUB_OUTPUT"
+          echo "I19_TARGETED_REPAIR_INPUTS_VALIDATED=true"
 
       - name: Download the frozen source snapshot and six receipts
         env:
