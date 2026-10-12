@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `fc930d78368baf4d1d0bbc4216e3536b0ffe13eb`
+**Current operational snapshot:** `c09514247908cde2e7fd690322929dfa47d6ce9d`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-12T12:56:03.095493+00:00`
+**Generated (UTC):** `2026-10-12T13:10:15.060969+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -12,9 +12,9 @@
 
 ## Current state
 
-### Persistent research handoff — verified snapshot 2026-10-12T10:17Z
+### Historical research handoff checkpoint — 2026-10-12T10:17Z (superseded by live Actions and receipts)
 
-This dated checkpoint preserves the current three-candidate workstream across chats. It is a snapshot, not a substitute for checking live Actions and current receipts when resuming.
+This checkpoint preserves what was known at that time. It is historical context, not current status; the generated next-research focus, live Actions, and immutable receipts take precedence.
 
 - **Q104:I19:** PR [#1351](https://github.com/DWR-debug/trading-agent-public/pull/1351) merged the strict raw SEC SGML header parsing fix (merge commit `87b6b547009ecd1f64ff4b03d20ffcd625268754`). Both CI architectures and full-suite verification passed on the tested revision. The existing targeted repair request run [#38231636160](https://github.com/DWR-debug/trading-agent-public/actions/runs/38231636160) was still in `Repair only unresolved frozen acceptance accessions` at the last check; **no terminal repair result was verified**. Follow the current run to its terminal immutable receipt; never restart the full census blindly.
 - **Q220:** The canonical PIT/compiler receipt remains `Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED`, with **55/55 primary-document hash failures**, zero verified primary documents, fingerprint `c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075`. Independent reproduction from 2026-10-11 is tied to a different compiler fingerprint and cannot reopen this gate. Forensic run [#38233685159](https://github.com/DWR-debug/trading-agent-public/actions/runs/38233685159) failed closed with `FORENSIC_COMPARISON_INCOMPLETE`: 0/3 comparisons after 2,829,769,099 bytes downloaded. The run did not establish source vintage. The latest code review distinguishes PDS `.dissem` names from daily Feed TAR members `{accession}.nc`; the exact-member resolver and fixture were corrected in a bounded follow-up. Its first CI run found a literal-placeholder NameError in five status-generator tests (2,464 passed); the f-string escaping and regression assertion are now committed. Merge only after the newest two-platform CI and full-suite checks pass, then deliberately trigger a versioned three-accession rerun; do not change frozen hashes, population, concepts, or gates to force a pass.
