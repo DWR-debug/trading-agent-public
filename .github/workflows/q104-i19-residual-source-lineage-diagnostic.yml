@@ -1,0 +1,113 @@
+name: Q104 I19 Residual Source-Lineage Diagnostic
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q104_i19_residual_source_lineage_diagnostic.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q104-i19-residual-source-lineage-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  lineage:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Validate source run and frozen artifact availability
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          request="research/run_requests/q104_i19_residual_source_lineage_diagnostic.trigger"
+          test -s "$request" || { echo "Q104_LINEAGE_REQUEST_FILE_MISSING"; exit 2; }
+          source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' "$request")"
+          [[ "$source_run_id" =~ ^[0-9]+$ ]] || { echo "Q104_LINEAGE_SOURCE_RUN_ID_INVALID"; exit 2; }
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id" > "$RUNNER_TEMP/q104-lineage-source-run.json"
+          jq -e '
+            .name == "Q104 I19 Historical 13F Identity Census"
+            and .status == "completed"
+            and .head_branch == "master"
+            and (.conclusion == "failure" or .conclusion == "cancelled")
+          ' "$RUNNER_TEMP/q104-lineage-source-run.json" >/dev/null || {
+            echo "Q104_LINEAGE_SOURCE_RUN_NOT_A_TERMINAL_FAILED_MASTER_CENSUS"; exit 2;
+          }
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/q104-lineage-artifacts.json"
+          for artifact in \
+            "q104-i19-sec-source-snapshot-$source_run_id" \
+            "q104-i19-census-2013-2016-$source_run_id" \
+            "q104-i19-census-2019-2020-$source_run_id"; do
+            jq -e --arg n "$artifact" \
+              '[.artifacts[]? | select(.name == $n and .expired == false)] | length == 1' \
+              "$RUNNER_TEMP/q104-lineage-artifacts.json" >/dev/null || {
+                echo "Q104_LINEAGE_PINNED_ARTIFACT_MISSING_OR_EXPIRED:$artifact"; exit 2;
+              }
+          done
+          echo "Q104_LINEAGE_SOURCE_RUN_ID=$source_run_id"
+
+      - name: Download the exact source snapshot and two frozen shard receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' research/run_requests/q104_i19_residual_source_lineage_diagnostic.trigger)"
+          root="research/runs/q104_i19_residual_source_lineage_diagnostic/$GITHUB_RUN_ID"
+          mkdir -p "$root/source_snapshot" "$root/input/2013-2016" "$root/input/2019-2020"
+          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
+            --name "q104-i19-sec-source-snapshot-$source_run_id" --dir "$root/source_snapshot"
+          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
+            --name "q104-i19-census-2013-2016-$source_run_id" --dir "$root/input/2013-2016"
+          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
+            --name "q104-i19-census-2019-2020-$source_run_id" --dir "$root/input/2019-2020"
+          {
+            echo "Q104_LINEAGE_RUN_ROOT=$root"
+            echo "Q104_LINEAGE_SOURCE_RUN_ID=$source_run_id"
+          } >> "$GITHUB_ENV"
+
+      - name: Capture bounded source-lineage observations
+        id: probe
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q104_i19_residual_source_lineage_diagnostic \
+            --request research/run_requests/q104_i19_residual_source_lineage_diagnostic.trigger \
+            --source-snapshot-dir "$Q104_LINEAGE_RUN_ROOT/source_snapshot" \
+            --input-dir "$Q104_LINEAGE_RUN_ROOT/input" \
+            --output "$Q104_LINEAGE_RUN_ROOT/receipt.json"
+
+      - name: Upload immutable lineage diagnostic receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-residual-lineage-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q104_i19_residual_source_lineage_diagnostic/*/receipt.json
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+
+      - name: Fail closed when source lineage cannot be fully observed
+        if: steps.probe.outcome != 'success'
+        run: |
+          echo "Q104 residual source-lineage observations are incomplete; all acceptance-time and research gates remain closed."
+          exit 1
