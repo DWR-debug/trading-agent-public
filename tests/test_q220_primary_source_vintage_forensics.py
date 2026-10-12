@@ -261,14 +261,14 @@ def test_bounded_get_rejects_truncated_body_when_content_length_is_known(monkeyp
 
 def test_parse_submission_header_reads_metadata_outside_sec_header_but_before_document():
     body = (
-        b"<SEC-HEADER>\\n"
-        b"<ACCESSION-NUMBER>0000064040-25-000052\\n"
-        b"<FILER>\\n<COMPANY-DATA>\\n<CIK>0000064040\\n</COMPANY-DATA>\\n</FILER>\\n"
-        b"</SEC-HEADER>\\n"
-        b"<TYPE>10-K\\n"
-        b"<FILING-DATE>20250211\\n"
-        b"<ACCEPTANCE-DATETIME>20250211170704\\n"
-        b"<DOCUMENT>\\n<TYPE>EX-99.1\\n"
+        b"<SEC-HEADER>\n"
+        b"<ACCESSION-NUMBER>0000064040-25-000052\n"
+        b"<FILER>\n<COMPANY-DATA>\n<CIK>0000064040\n</COMPANY-DATA>\n</FILER>\n"
+        b"</SEC-HEADER>\n"
+        b"<TYPE>10-K\n"
+        b"<FILING-DATE>20250211\n"
+        b"<ACCEPTANCE-DATETIME>20250211170704\n"
+        b"<DOCUMENT>\n<TYPE>EX-99.1\n"
     )
     parsed = forensic.parse_submission_header(body)
 
