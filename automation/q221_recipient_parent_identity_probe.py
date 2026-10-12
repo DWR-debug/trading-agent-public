@@ -135,7 +135,7 @@ def read_request(path: Path) -> dict[str, str]:
     for key, expected in FROZEN_REQUEST_VALUES.items():
         if values[key] != expected:
             raise ProbeError("Q221_RECIPIENT_REQUEST_VALUE_MISMATCH:" + key)
-    if not re.fullmatch(r"20\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z", values["REQUEST_SEQUENCE"]):
+    if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", values["REQUEST_SEQUENCE"]):
         raise ProbeError("Q221_RECIPIENT_REQUEST_SEQUENCE_INVALID")
     return values
 
