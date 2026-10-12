@@ -44,6 +44,8 @@ class Response:
 
     def __init__(self, body: bytes):
         self.body = body
+        self._stream = io.BytesIO(body)
+        self.bytes_read = 0
 
     def __enter__(self):
         return self
@@ -52,7 +54,9 @@ class Response:
         return False
 
     def read(self, size: int = -1):
-        return self.body if size < 0 else self.body[:size]
+        chunk = self._stream.read(size)
+        self.bytes_read += len(chunk)
+        return chunk
 
 
 def make_archive():
@@ -393,8 +397,9 @@ def test_header_resolver_falls_back_to_bounded_complete_submission_text_after_sg
     assert attempts == 2
     assert calls == [accession_hdr_sgml_url(CIK, ACCESSION), complete_submission_text_url(CIK, ACCESSION)]
     assert record["header_source_type"] == "sec_complete_submission_text"
-    assert record["source_response_prefix_truncated"] is True
-    assert record["source_response_bytes_read"] == 2_000_000
+    assert record["source_response_prefix_truncated"] is False
+    assert record["source_response_bytes_read"] <= 8_192
+    assert record["source_response_bytes_read"] < len(large_body)
     assert record["header_bytes"] == len(make_header())
     assert record["acceptance_datetime"] == "2025-01-15T16:15:42"
 
