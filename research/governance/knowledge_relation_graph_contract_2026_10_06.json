@@ -86,6 +86,14 @@
       "reuse_rule": "Mappings must remain deterministic; free-form post-outcome semantic reassignment is prohibited."
     },
     {
+      "id": "YAHOO_CHART_OHLCV",
+      "type": "source_component",
+      "status": "FROZEN_DATASET_SOURCE_IDENTIFIED_VINTAGE_UNVERIFIED",
+      "description": "Frozen daily OHLCV input datasets acquired through Yahoo Chart. The Q107 snapshot manifest pins eight dataset fingerprints and records source yahoo_chart; historical vendor-vintage/revision semantics are not independently proven.",
+      "evidence": "research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE/snapshot_manifest.json",
+      "reuse_rule": "Reuse only the exact frozen CSV fingerprints for structural reproduction; do not infer vendor-side historical vintages or source independence from the current endpoint."
+    },
+    {
       "id": "Q129_OPTIONS_EOD_PIT",
       "type": "source_component",
       "status": "PIT_CHAIN_REPRODUCED_SAME_DAY_DISABLED",
@@ -215,6 +223,12 @@
       "component": "SEC_ISSUER_IDENTITY_MAP",
       "role": "issuer_to_filing_identity",
       "evidence": "research/evidence/q104_i22_independent_pit_reproduction_latest.json"
+    },
+    {
+      "candidate": "Q104:I22",
+      "component": "YAHOO_CHART_OHLCV",
+      "role": "frozen_market_data_input",
+      "evidence": "research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE/snapshot_manifest.json"
     }
   ],
   "candidate_relations": [
