@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_type": "trading_agent_chat_decision_log",
   "purpose": "Durable operational continuity for future Trading Agent OS chats. Entries are operational notes, not scientific evidence, performance authorization, ranking, or live-trading permission.",
-  "updated_at_utc": "2026-10-11T23:00:24Z",
+  "updated_at_utc": "2026-10-12T05:47:48Z",
   "safety": {
     "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
@@ -11,6 +11,17 @@
     "paid_usage_usd": 0
   },
   "entries": [
+    {
+      "date_utc": "2026-10-12T05:47:48Z",
+      "candidate": "Q104:I19 TARGETED ACCEPTANCE REPAIR",
+      "status": "ONE-SHOT RECEIPT-GATED REQUEST ADDED · AWAITING MERGE",
+      "title": "Repair the failed acceptance-time joins without rerunning the census",
+      "decision": "Q104 census run 38168441086 is terminal failure, with six shard artifacts plus its frozen SEC source snapshot present. All six strict acceptance-time joins fail (7,505 unresolved target accession joins across 136,941 targets). The new path-triggered request validates the exact terminal master run, non-authorizing safety flags, frozen source snapshot and all six artifacts, then calls only the existing targeted acceptance-header repair. It does not rescan archives or start a new census. This does not constitute a positive Q104 receipt or PIT result.",
+      "next_action": "After required CI passes and the request PR is merged, inspect the wrapper run and immutable targeted-repair receipt. If the targeted .hdr.sgml route leaves confirmed unresolved accessions, consider a predeclared, rate-limited SEC Oldloads fallback for only their filing days; preserve raw archive hashes and accession/CIK/date validation. Do not launch a new full census while these receipts remain repairable.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/blob/master/.github/workflows/q104-i19-targeted-acceptance-repair-request.yml",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38168441086",
+      "scientific_evidence": false
+    },
     {
       "date_utc": "2026-10-11T23:00:24Z",
       "candidate": "Q220 QUEUE GATE",
