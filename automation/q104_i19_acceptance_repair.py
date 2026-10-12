@@ -400,18 +400,31 @@ def repair_shard_payload(
         if not set(failures).issubset(all_accessions):
             raise ValueError("Q104_I19_REPAIR_FAILURE_SET_NOT_IN_ARCHIVE_TARGETS:" + str(archive_record.get("archive", {}).get("url", "")))
 
-        retryable = {accession for accession, reason in failures.items() if is_repairable_failure(reason)}
+        retryable = {
+            accession: reason
+            for accession, reason in failures.items()
+            if is_repairable_failure(reason)
+        }
+        non_retryable = {
+            accession: reason
+            for accession, reason in failures.items()
+            if not is_repairable_failure(reason)
+        }
+        # Report every residual accession even when this archive also has
+        # retryable failures. Previously hard identity/availability failures
+        # were omitted from the recovery receipt whenever retryable was non-empty,
+        # although they remained in the repaired shard payload.
+        for accession, reason in sorted(non_retryable.items()):
+            entries.append({
+                "shard": receipt.get("shard"),
+                "accession": accession,
+                "source_archive": archive_record.get("archive", {}).get("url"),
+                "original_failure": reason,
+                "attempts": 0,
+                "status": "NOT_RETRIED_NONTRANSIENT",
+                "final_error": reason,
+            })
         if not retryable:
-            for accession, reason in failures.items():
-                entries.append({
-                    "shard": receipt.get("shard"),
-                    "accession": accession,
-                    "source_archive": archive_record.get("archive", {}).get("url"),
-                    "original_failure": reason,
-                    "attempts": 0,
-                    "status": "NOT_RETRIED_NONTRANSIENT",
-                    "final_error": reason,
-                })
             continue
 
         archive_meta = archive_record.get("archive", {})
