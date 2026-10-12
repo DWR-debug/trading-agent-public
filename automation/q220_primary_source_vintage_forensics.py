@@ -211,17 +211,68 @@ def _bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, 
 
 
 def parse_submission_header(body: bytes) -> dict[str, str | None]:
-    patterns = {
-        "accession": rb"ACCESSION NUMBER:\s*([0-9]{10}-[0-9]{2}-[0-9]{6})",
-        "filer_cik": rb"CENTRAL INDEX KEY:\s*([0-9]{10})",
-        "form": rb"CONFORMED SUBMISSION TYPE:\s*([^\r\n<]+)",
-        "filed_date": rb"FILED AS OF DATE:\s*([0-9]{8})",
-        "acceptance_datetime": rb"<ACCEPTANCE-DATETIME>\s*([0-9]{14})",
+    """Read SEC submission identity from the SEC-HEADER, not document bodies.
+
+    Daily Feed .nc members contain the raw SGML header form (ACCESSION-NUMBER,
+    TYPE, FILING-DATE and CIK inside the FILER block). Older complete-submission
+    fixtures also use human-readable labels. Keep both formats bounded to the
+    header and never obtain the filer CIK from a later ISSUER/document block.
+    """
+    bounded = body[:2_000_000]
+    header_match = re.search(
+        rb"<SEC-HEADER\b[^>]*>(.*?)(?=</SEC-HEADER>|<DOCUMENT>)",
+        bounded,
+        re.I | re.S,
+    )
+    if header_match:
+        header = header_match.group(1)
+    else:
+        # Fail closed on absent tags; this prefix is used only for legacy header
+        # text and ends before the first document whenever one is present.
+        header = bounded.split(b"<DOCUMENT>", 1)[0]
+
+    def capture(
+        patterns: tuple[bytes, ...],
+        source: bytes = header,
+    ) -> str | None:
+        for pattern in patterns:
+            match = re.search(pattern, source, re.I | re.M)
+            if match:
+                return match.group(1).decode("ascii", "replace").strip()
+        return None
+
+    filer_match = re.search(
+        rb"<FILER>(.*?)(?=</FILER>|<ISSUER>|$)",
+        header,
+        re.I | re.S,
+    )
+    filer_scope = filer_match.group(1) if filer_match else header
+    result: dict[str, str | None] = {
+        "accession": capture((
+            rb"<ACCESSION-NUMBER>\s*([0-9]{10}-[0-9]{2}-[0-9]{6})",
+            rb"ACCESSION NUMBER:\s*([0-9]{10}-[0-9]{2}-[0-9]{6})",
+        )),
+        "filer_cik": capture((
+            rb"<CIK>\s*([0-9]{10})",
+            rb"CENTRAL INDEX KEY:\s*([0-9]{10})",
+        ), filer_scope),
+        "form": capture((
+            rb"(?m)^\s*<TYPE>\s*([^\r\n<]+)",
+            rb"CONFORMED SUBMISSION TYPE:\s*([^\r\n<]+)",
+        )),
+        "filed_date": capture((
+            rb"<FILING-DATE>\s*([0-9]{8})",
+            rb"FILED AS OF DATE:\s*([0-9]{8})",
+        )),
+        "acceptance_datetime": capture((
+            rb"<ACCEPTANCE-DATETIME>\s*([0-9]{14})",
+        )),
+        "header_format": (
+            "sec_sgml_tags"
+            if b"<ACCESSION-NUMBER>" in header.upper() or b"<FILER>" in header.upper()
+            else "legacy_text_labels"
+        ),
     }
-    result: dict[str, str | None] = {}
-    for key, pattern in patterns.items():
-        match = re.search(pattern, body[:2_000_000], re.I)
-        result[key] = match.group(1).decode("ascii", "replace").strip() if match else None
     if result["filed_date"]:
         raw = str(result["filed_date"])
         result["filed_date_iso"] = f"{raw[:4]}-{raw[4:6]}-{raw[6:8]}"
