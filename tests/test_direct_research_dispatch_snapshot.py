@@ -188,3 +188,14 @@ def test_unidentified_active_job_on_windows_label_fails_closed(monkeypatch):
         direct.fetch_active_jobs("DWR-debug/trading-agent-public", [{
             "id": 101, "name": "Some Windows Workflow", "status": "in_progress",
         }])
+
+
+def test_fast_dispatch_workflow_uses_direct_snapshot_not_dashboard():
+    from pathlib import Path
+
+    workflow = Path(".github/workflows/planned-capacity-fast-dispatch.yml").read_text(encoding="utf-8")
+
+    assert "automation.build_direct_dispatch_snapshot" in workflow
+    assert '--snapshot "$RUNNER_TEMP/direct_dispatch_snapshot.json"' in workflow
+    assert "automation/generate_resource_dashboard.py" not in workflow
+    assert "--snapshot docs/dashboard/dashboard_data.json" not in workflow
