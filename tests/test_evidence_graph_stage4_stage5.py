@@ -95,3 +95,67 @@ def test_legacy_overlap_comparison_is_review_only_and_deterministic():
         or "LIKELY_ORTHOGONAL" in row["overlap_class"]
         for row in rows
     )
+
+
+def test_missing_signature_dimensions_fail_closed_as_ambiguous():
+    signatures = {
+        "Q104:I22": {
+            "tokens": ["filing", "arrival", "density"],
+            "components": [],
+            "source_domains": [],
+            "mechanism_text": "filing arrival density",
+        },
+        "Q231": {
+            "tokens": ["filing", "foia", "acquisition"],
+            "components": [],
+            "source_domains": [],
+            "mechanism_text": "filing foia acquisition",
+        },
+    }
+
+    result = next(
+        row for row in novelty_analysis(signatures)
+        if row["candidate"] == "Q104:I22"
+    )
+
+    # Missing metadata is not evidence of equality and is not evidence of
+    # orthogonality. Only one of the three frozen dimensions is observable.
+    assert result["overlap_class"] == "AMBIGUOUS"
+    assert result["max_convergence_score"] is None
+    assert result["novelty_score"] is None
+    assert result["signature_coverage"] == {
+        "required_dimensions": 3,
+        "complete_peer_comparisons": 0,
+        "incomplete_peer_comparisons": 1,
+        "peer_comparison_count": 1,
+        "complete": False,
+    }
+    peer = result["top_peers"][0]
+    assert peer["score"] is None
+    assert peer["token_jaccard"] is not None
+    assert peer["component_jaccard"] is None
+    assert peer["domain_jaccard"] is None
+    assert peer["signature_coverage_complete"] is False
+
+
+def test_empty_component_and_domain_sets_are_not_similarity_evidence():
+    # Public helper retains its historical numeric contract, but Stage 5 must
+    # not interpret two absent dimensions as perfect convergence.
+    assert jaccard(set(), set()) == 1.0
+    signatures = {
+        "A": {
+            "tokens": ["filing", "arrival"],
+            "components": [],
+            "source_domains": [],
+            "mechanism_text": "",
+        },
+        "B": {
+            "tokens": ["award", "release"],
+            "components": [],
+            "source_domains": [],
+            "mechanism_text": "",
+        },
+    }
+    rows = novelty_analysis(signatures)
+    assert all(row["overlap_class"] == "AMBIGUOUS" for row in rows)
+    assert all(row["signature_coverage"]["complete"] is False for row in rows)
