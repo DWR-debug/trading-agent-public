@@ -99,6 +99,8 @@ def validate_source(path: Path) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     if source.get("receipt_fingerprint") != SOURCE_RECEIPT_FINGERPRINT or canonical_fingerprint(source) != SOURCE_RECEIPT_FINGERPRINT:
         raise ProbeError("Q221_PARENT_MAP_SOURCE_FINGERPRINT_MISMATCH")
     candidates = source.get("recipient_identity_candidates", [])
+    if source.get("unique_recipient_identity_count") != 247 or source.get("historical_first_public_observation_proven") is not False or source.get("recipient_to_issuer_mapping_frozen") is not False:
+        raise ProbeError("Q221_PARENT_MAP_SOURCE_GATE_STATE_CHANGED")
     if len(candidates) != 247 or len({x.get("recipient_id") for x in candidates}) != 247:
         raise ProbeError("Q221_PARENT_MAP_CANDIDATE_COUNT_OR_IDENTITY_INVALID")
     for candidate in candidates:
@@ -119,6 +121,8 @@ def validate_feasibility(path: Path) -> dict[str, Any]:
         raise ProbeError("Q221_PARENT_MAP_FEASIBILITY_FINGERPRINT_MISMATCH")
     if receipt.get("sample_count") != 7 or receipt.get("query_count") != 14:
         raise ProbeError("Q221_PARENT_MAP_FEASIBILITY_COUNTS_MISMATCH")
+    if receipt.get("source_receipt_git_blob_sha") != SOURCE_RECEIPT_GIT_BLOB_SHA or receipt.get("source_receipt_fingerprint") != SOURCE_RECEIPT_FINGERPRINT:
+        raise ProbeError("Q221_PARENT_MAP_FEASIBILITY_SOURCE_MISMATCH")
     if receipt.get("historical_parent_lineage_proven") is not False or receipt.get("recipient_to_issuer_mapping_frozen") is not False:
         raise ProbeError("Q221_PARENT_MAP_FEASIBILITY_OVERCLAIM")
     return receipt
