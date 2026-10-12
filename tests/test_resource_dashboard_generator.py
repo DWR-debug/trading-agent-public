@@ -906,7 +906,8 @@ def test_dashboard_infers_physical_runner_busy_from_running_nonresearch_job():
         "job": "test",
     }
     enriched = enrich_resources([resource], [], [running_ci])[0]
-    assert enriched["capacity_state"] == "unknown"
+    assert enriched["capacity_state"] == "operating"
+    assert enriched["live_status"] == "operating"
     assert enriched["current_assignments"] == 0
     assert enriched["runner_busy"] is True
     assert enriched["runner_busy_basis"] == "ACTIVE_WORKFLOW_ASSIGNMENT"
