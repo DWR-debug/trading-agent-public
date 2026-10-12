@@ -295,7 +295,7 @@ def fetch_header(
                 return {**meta, "status": "SKIPPED_DECLARED_LENGTH_OVER_LIMIT", "response_bytes": 0, "response_sha256": None, "_body": b""}
             while len(body) < max_bytes + (1 if prefix_marker is None else 0):
                 wanted = max_bytes + (1 if prefix_marker is None else 0) - len(body)
-                amount = min(32_768 if prefix_marker is None else 8192, wanted)
+                amount = min(32_768 if prefix_marker is None else 1024, wanted)
                 try:
                     chunk = response.read(amount)
                 except (http.client.HTTPException, urllib.error.URLError, TimeoutError, OSError) as exc:
@@ -317,14 +317,17 @@ def fetch_header(
             raw = bytes(body)
             digest = sha256(raw) if raw else None
             if prefix_marker is not None:
-                marker_found = prefix_marker.lower() in raw.lower()
+                marker_index = raw.lower().find(prefix_marker.lower())
+                marker_found = marker_index >= 0
+                header_only = raw[:marker_index + len(prefix_marker)] if marker_found else b""
                 return {
                     **meta,
                     "status": "FETCHED_PREFIX" if marker_found else "HEADER_PREFIX_LIMIT_OR_EOF",
                     "prefix_marker_found": marker_found,
                     "response_bytes": len(raw),
                     "response_sha256": digest,
-                    "_body": raw if marker_found else b"",
+                    # Parse only through </SEC-HEADER>; any small chunk over-read is not retained as evidence.
+                    "_body": header_only,
                 }
             if len(raw) > max_bytes:
                 return {**meta, "status": "SKIPPED_ACTUAL_LENGTH_OVER_LIMIT", "response_bytes": len(raw), "response_sha256": digest, "_body": b""}
