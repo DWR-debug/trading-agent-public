@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "candidate_id": "Q221",
+  "record_type": "q221_frozen_transaction_archive_inventory_preregistration",
+  "title": "Q221 read-only versioned archive catalogue inventory",
+  "registered_at_utc": "2026-10-12T07:25:00Z",
+  "status": "FROZEN_SOURCE_FEASIBILITY_REQUEST",
+  "source_manifest": {
+    "path": "research/evidence/q221_historical_public_boundary_latest.json",
+    "git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+    "target_key_count": 348,
+    "unique_key_count": 348,
+    "target_fiscal_years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "target_key_counts_by_fiscal_year": {
+      "2019": 49,
+      "2020": 50,
+      "2021": 50,
+      "2022": 50,
+      "2023": 50,
+      "2024": 49,
+      "2025": 50
+    }
+  },
+  "method": {
+    "endpoint": "https://api.usaspending.gov/api/v2/bulk_download/list_monthly_files/",
+    "source_implementation_url": "https://github.com/fedspendingtransparency/usaspending-api/blob/03b9e2554837998c4c261c65e2947dc79f23855a/usaspending_api/download/v2/list_monthly_downloads.py",
+    "source_contract_url": "https://github.com/fedspendingtransparency/usaspending-api/blob/03b9e2554837998c4c261c65e2947dc79f23855a/usaspending_api/api_contracts/contracts/v2/bulk_download/list_monthly_files.md",
+    "requests": "Exactly one read-only metadata POST per frozen target fiscal year; agency=all; type=contracts",
+    "maximum_requests": 7,
+    "maximum_response_bytes_each": 5000000,
+    "timeout_seconds_each": 30,
+    "archive_payload_downloads": 0,
+    "request_body_fingerprint_required": true,
+    "raw_response_sha256_required": true
+  },
+  "hypotheses": {
+    "H1": "The current monthly catalog lists at least two distinct dated full archive versions or two distinct dated delta archive versions in at least one target fiscal year.",
+    "H0": "No target fiscal year exposes a multi-date archive series in the returned catalog."
+  },
+  "outcomes": {
+    "DATED_ARCHIVE_SERIES_FOUND": "Only permission to design a separately reviewed small row-presence experiment. Not proof of historical first-public time.",
+    "ARCHIVE_LISTING_OK_NO_VERSION_SERIES_FOUND": "Stop this archive-vintage route; do not expand scope or download broad archives.",
+    "ARCHIVE_LISTING_EMPTY": "Stop and diagnose source availability; no public-clock conclusion.",
+    "ARCHIVE_LISTING_INCOMPLETE": "Preserve the failure receipt; do not infer from partial catalog results.",
+    "REQUEST_REJECTED": "No API call is authorized or made."
+  },
+  "prohibitions": [
+    "Do not treat Action Date, Issued Date, Last Modified Date, file name, or updated_date as first-publication time.",
+    "Do not infer public absence from absence in a historical archive.",
+    "Do not download any ZIP payload in this inventory phase.",
+    "Do not change the 348 frozen transaction keys or their fiscal-year distribution.",
+    "Do not infer recipient-to-issuer mapping, scientific evidence, performance authority, holdout selection, ranking, tuning, promotion, orders, or live execution."
+  ],
+  "next_gate": "Only after DATED_ARCHIVE_SERIES_FOUND may a separate reviewed workpack select the smallest eligible dated archives and a deterministic subset of frozen keys for row-presence testing; even then, only verified known-available-by-snapshot bounds are permitted until public availability timestamps are independently established.",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  }
+}
