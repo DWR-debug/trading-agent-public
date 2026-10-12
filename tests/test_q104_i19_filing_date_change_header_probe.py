@@ -21,7 +21,7 @@ def test_header_parser_captures_date_of_filing_date_change_without_inference():
     )
     parsed = probe.parse_header_fields(raw, "raw_sgml_header")
     assert parsed["accession"] == "0000950123-17-002537"
-    assert parsed["filer_cik"] == "00001276144"
+    assert parsed["filer_cik"] == "0001276144"
     assert parsed["form"] == "13F-HR"
     assert parsed["filing_date"] == "2017-02-14"
     assert parsed["date_of_filing_date_change"] == "2017-02-15"
