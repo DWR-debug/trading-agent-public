@@ -40,7 +40,7 @@ jobs:
           test -s "$request" || { echo "Q104_I19_REPAIR_REQUEST_FILE_MISSING"; exit 2; }
 
           while IFS= read -r line; do
-            [[ "$line" =~ ^[A-Z_]+=[A-Za-z0-9._,:-]*$ ]] || {
+            [[ "$line" =~ ^[A-Z0-9_]+=[A-Za-z0-9._,:-]*$ ]] || {
               echo "Q104_I19_REPAIR_REQUEST_INVALID_LINE"; exit 2;
             }
             key="${line%%=*}"
