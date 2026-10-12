@@ -73,8 +73,8 @@ def test_archive_metadata_does_not_confuse_accession_prefix_with_filer_cik():
     accession = "0000950123-13-005205"
     filer_cik = "0000728618"
     submission = (
-        "ACCESSION_NUMBER\\tFILING_DATE\\tPERIODOFREPORT\\tCIK\\tSUBMISSIONTYPE\\n"
-        f"{accession}\\t31-JUL-2013\\t30-JUN-2013\\t728618\\t13F-HR\\n"
+        "ACCESSION_NUMBER\tFILING_DATE\tPERIODOFREPORT\tCIK\tSUBMISSIONTYPE\n"
+        f"{accession}\t31-JUL-2013\t2013-06-30\t728618\t13F-HR\n"
     )
     raw = io.BytesIO()
     with zipfile.ZipFile(raw, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -83,7 +83,7 @@ def test_archive_metadata_does_not_confuse_accession_prefix_with_filer_cik():
         "target_hits": {
             "SPGI": {
                 "filing_dates": ["2013-07-31"],
-                "periods": ["30-JUN-2013"],
+                "periods": ["2013-06-30"],
             }
         }
     }
@@ -92,7 +92,7 @@ def test_archive_metadata_does_not_confuse_accession_prefix_with_filer_cik():
 
     assert metadata[accession] == {
         "filing_date": "2013-07-31",
-        "period": "30-JUN-2013",
+        "period": "2013-06-30",
         "filer_cik": filer_cik,
         "submission_type": "13F-HR",
     }
@@ -102,18 +102,18 @@ def test_header_identity_still_rejects_cik_that_conflicts_with_archive_metadata(
     accession = "0000950123-13-005205"
     filer_cik = "0000728618"
     header = (
-        "<SEC-HEADER>\\n"
-        f"ACCESSION NUMBER: {accession}\\n"
-        "CONFORMED SUBMISSION TYPE: 13F-HR\\n"
-        "FILED AS OF DATE: 20130731\\n"
-        "CENTRAL INDEX KEY: 0000950123\\n"
-        "<ACCEPTANCE-DATETIME>20130731170611\\n"
+        "<SEC-HEADER>\n"
+        f"ACCESSION NUMBER: {accession}\n"
+        "CONFORMED SUBMISSION TYPE: 13F-HR\n"
+        "FILED AS OF DATE: 20130731\n"
+        "CENTRAL INDEX KEY: 0000950123\n"
+        "<ACCEPTANCE-DATETIME>20130731170611\n"
         "</SEC-HEADER>"
     )
     meta = {
         "filer_cik": filer_cik,
         "filing_date": "2013-07-31",
-        "period": "30-JUN-2013",
+        "period": "2013-06-30",
         "submission_type": "13F-HR",
     }
 
@@ -128,7 +128,6 @@ def test_header_identity_still_rejects_cik_that_conflicts_with_archive_metadata(
     assert record is None
     assert error == "HEADER_VALIDATION:FILER_CIK_MISMATCH"
     assert attempts == 1
-
 
 def make_header():
     return (
