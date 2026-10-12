@@ -601,7 +601,7 @@ def scan_daily_feed(
             sgml_acceptance = header.get("acceptance_datetime")
             control_acceptance = control["acceptance_datetime"]
             if sgml_acceptance and sgml_acceptance != control_acceptance:
-                header["pds_control_block_matches_sgml"] = False
+                header["sgml_acceptance_datetime_comparison"] = "MISMATCH"
                 scan["scan_error"] = "SGML_CONTROL_BLOCK_ACCEPTANCE_DATETIME_MISMATCH"
             else:
                 header["acceptance_datetime"] = sgml_acceptance or control_acceptance
@@ -615,7 +615,9 @@ def scan_daily_feed(
                     if sgml_acceptance
                     else "pds_control_block"
                 )
-                header["pds_control_block_matches_sgml"] = True
+                header["sgml_acceptance_datetime_comparison"] = (
+                    "MATCH" if sgml_acceptance else "NOT_PRESENT_CONTROL_BLOCK_USED"
+                )
 
         scan["primary"] = extract_primary_document(
             original_payload,
@@ -787,7 +789,7 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
             "pds_control_block_valid": control.get("status") == "PDS_CONTROL_BLOCK_VALID",
             "pds_control_block_accession_matches": control.get("accession_matches") is True,
             "pds_control_block_submission_type_matches_sgml": control.get("submission_type_matches_sgml") is True,
-            "pds_control_block_matches_sgml": header.get("pds_control_block_matches_sgml") is True,
+            "sgml_control_block_conflict_absent": header.get("sgml_acceptance_datetime_comparison") != "MISMATCH",
             "acceptance_datetime_present": bool(header.get("acceptance_datetime")),
         }
         sample["daily_feed"]["submission_header_checks"] = header_checks
