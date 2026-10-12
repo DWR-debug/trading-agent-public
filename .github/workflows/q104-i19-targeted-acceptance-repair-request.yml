@@ -43,7 +43,7 @@ jobs:
             [[ "$line" =~ ^[A-Z_]+=[A-Za-z0-9._,:-]*$ ]] || {
               echo "Q104_I19_REPAIR_REQUEST_INVALID_LINE"; exit 2;
             }
-            key="\${line%%=*}"
+            key="${line%%=*}"
             case "$key" in
               RUN_Q104_I19_TARGETED_REPAIR|REASON|SOURCE_RUN_ID|SHARD_RECOVERY_RUN_ID|RECOVERED_SHARDS|CENSUS_RESTART|SOURCE_SNAPSHOT_REUSE|PERFORMANCE|HOLDOUT_SELECTION|RANKING|TUNING|PROMOTION|LIVE_EXECUTION|REQUEST_SEQUENCE) ;;
               *) echo "Q104_I19_REPAIR_REQUEST_UNKNOWN_KEY:$key"; exit 2 ;;
@@ -53,9 +53,9 @@ jobs:
           value() {
             local key="$1"
             local count
-            count="$(grep -c "^\${key}=" "$request" || true)"
+            count="$(grep -c "^${key}=" "$request" || true)"
             [[ "$count" == "1" ]] || { echo "Q104_I19_REPAIR_REQUEST_KEY_COUNT:$key" >&2; return 2; }
-            sed -n "s/^\${key}=//p" "$request"
+            sed -n "s/^${key}=//p" "$request"
           }
 
           grep -Fxq "RUN_Q104_I19_TARGETED_REPAIR=true" "$request"
@@ -115,7 +115,7 @@ jobs:
 
           IFS=',' read -r -a recovered <<< "$recovered_shards"
           allowed=",2013-2016,2017-2018,2019-2020,2021-2022,2023,2024-2025-09,"
-          for shard in "\${recovered[@]}"; do
+          for shard in "${recovered[@]}"; do
             [[ -z "$shard" ]] && continue
             case "$allowed" in *,"$shard",*) ;; *) echo "INVALID_I19_RECOVERED_SHARD:$shard"; exit 2 ;; esac
           done
