@@ -41,7 +41,7 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Snapshot current bounded plan
+      - name: Snapshot current Actions run history and duplicate-protection state
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
