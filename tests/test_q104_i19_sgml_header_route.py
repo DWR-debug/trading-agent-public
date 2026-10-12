@@ -37,14 +37,19 @@ class Response:
         return self.body if size < 0 else self.body[:size]
 
 
-def sgml_header(accession: str = ACCESSION) -> bytes:
+def sgml_header(accession: str = ACCESSION, cik: str = CIK, form: str = FORM) -> bytes:
     return (
         "<SEC-HEADER>\n"
-        f"<ACCESSION-NUMBER>{accession}\n"
-        f"<CONFORMED-SUBMISSION-TYPE>{FORM}\n"
-        f"<FILED-AS-OF-DATE>20250115\n"
-        f"<CENTRAL-INDEX-KEY>{CIK}\n"
         "<ACCEPTANCE-DATETIME>20250115161542\n"
+        f"<ACCESSION-NUMBER>{accession}\n"
+        f"<TYPE>{form}\n"
+        "<PUBLIC-DOCUMENT-COUNT>1\n"
+        "<FILING-DATE>20250115\n"
+        "<FILER>\n"
+        "<COMPANY-DATA>\n"
+        f"<CIK>{cik}\n"
+        "</COMPANY-DATA>\n"
+        "</FILER>\n"
         "</SEC-HEADER>\n"
     ).encode("ascii")
 
