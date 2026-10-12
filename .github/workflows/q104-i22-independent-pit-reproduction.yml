@@ -65,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
@@ -101,7 +101,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: master
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 1
       - uses: actions/setup-python@v6
         with:
@@ -127,20 +127,27 @@ jobs:
       - name: Independently reproduce SEC filing-arrival states
         env:
           PYTHONPATH: ${{ github.workspace }}
+          REPRODUCTION_CODE_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
         run: |
           set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$REPRODUCTION_CODE_SHA"
           python -m automation.q104_i22_independent_pit_reproduction \
             --x64-result /tmp/q104-i22-frozen/x64/result.json \
             --arm64-result /tmp/q104-i22-frozen/arm64/result.json \
-            --output research/runs/q104_i22/independent_pit/result.json
+            --output research/runs/q104_i22/independent_pit/result.json \
+            --reproduction-code-sha "$REPRODUCTION_CODE_SHA"
       - name: Validate fail-closed non-authorizing receipt
         if: success()
+        env:
+          EXPECTED_REPRODUCTION_CODE_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           p=Path("research/runs/q104_i22/independent_pit/result.json")
           d=json.loads(p.read_text(encoding="utf-8"))
+          import os
+          assert d["reproduction_code_sha"] == os.environ["EXPECTED_REPRODUCTION_CODE_SHA"]
           assert d["validation_outcome"] == "INDEPENDENT_PIT_REPRODUCED"
           assert d["status"] in {
               "Q104_I22_INDEPENDENT_PIT_REPRODUCED_NON_OVERLAP_REVIEW_REQUIRED",

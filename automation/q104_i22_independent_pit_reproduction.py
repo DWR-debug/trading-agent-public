@@ -12,6 +12,7 @@ import argparse
 import csv
 import hashlib
 import json
+import re
 import urllib.error
 import urllib.request
 from copy import deepcopy
@@ -54,6 +55,17 @@ MAX_REQUESTS = 40
 MAX_RESPONSE_BYTES = 25 * 1024 * 1024
 MAX_TOTAL_BYTES = 250 * 1024 * 1024
 TIMEOUT_SECONDS = 45
+
+
+def validate_reproduction_code_sha(value: str) -> str:
+    """Require the full immutable commit SHA of the code being audited."""
+    if not re.fullmatch(r"[0-9a-f]{40}", value):
+        raise argparse.ArgumentTypeError(
+            "reproduction code SHA must be a full lowercase 40-character Git commit SHA"
+        )
+    return value
+
+
 USER_AGENT = "trading-agent-public/Q104-I22-independent-PIT-reproduction"
 CAL = xcals.get_calendar("XNYS")
 
@@ -554,7 +566,12 @@ def compare_architectures(x64: dict[str, Any], arm64: dict[str, Any]) -> None:
         raise RuntimeError("I22_ARM64_SOURCE_FP_MISMATCH")
 
 
-def run_reproduction(x64_path: Path, arm64_path: Path, budget: dict[str, Any]) -> dict[str, Any]:
+def run_reproduction(
+    x64_path: Path,
+    arm64_path: Path,
+    budget: dict[str, Any],
+    reproduction_code_sha: str,
+) -> dict[str, Any]:
     frozen = verify_frozen_contracts()
     market_data = verify_frozen_market_data(frozen["q107"], frozen["manifest"])
     registered = audit_registered_universe()
@@ -620,6 +637,7 @@ def run_reproduction(x64_path: Path, arm64_path: Path, budget: dict[str, Any]) -
         "record_type": "q104_i22_independent_pit_reproduction",
         "task_id": "Q-2026-10-12-104-I22-INDEPENDENT-PIT",
         "candidate_id": "Q104:I22",
+        "reproduction_code_sha": reproduction_code_sha,
         "status": "Q104_I22_INDEPENDENT_PIT_REPRODUCED_NON_OVERLAP_REVIEW_REQUIRED" if not mechanism_overlap["non_overlap_proven"] else "Q104_I22_INDEPENDENT_PIT_REPRODUCED_REVIEW_ONLY",
         "validation_outcome": "INDEPENDENT_PIT_REPRODUCED",
         "upstream_inputs": {
@@ -678,16 +696,25 @@ def main() -> int:
     parser.add_argument("--x64-result", type=Path, required=True)
     parser.add_argument("--arm64-result", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--reproduction-code-sha",
+        type=validate_reproduction_code_sha,
+        required=True,
+        help="Full commit SHA of the exact checked-out reproduction code.",
+    )
     args = parser.parse_args()
     budget: dict[str, Any] = {"request_count": 0, "total_bytes": 0, "responses": []}
     try:
-        result, code = run_reproduction(args.x64_result, args.arm64_result, budget), 0
+        result, code = run_reproduction(
+            args.x64_result, args.arm64_result, budget, args.reproduction_code_sha
+        ), 0
     except Exception as exc:
         result, code = {
             "schema_version": "1.0",
             "record_type": "q104_i22_independent_pit_reproduction",
             "task_id": "Q-2026-10-12-104-I22-INDEPENDENT-PIT",
             "candidate_id": "Q104:I22",
+            "reproduction_code_sha": args.reproduction_code_sha,
             "status": "Q104_I22_INDEPENDENT_PIT_BLOCKED",
             "validation_outcome": "BLOCKED_FAIL_CLOSED",
             "block_reason": f"{type(exc).__name__}:{str(exc)[:1200]}",
