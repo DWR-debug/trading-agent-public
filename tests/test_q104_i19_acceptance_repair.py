@@ -147,6 +147,25 @@ def make_header():
     ).encode()
 
 
+
+
+def make_sgml_header():
+    return (
+        "<SEC-HEADER>0001045810-25-000001.hdr.sgml : 20250115\n"
+        "<ACCEPTANCE-DATETIME>20250115161542\n"
+        f"<ACCESSION-NUMBER>{ACCESSION}\n"
+        f"<TYPE>{FORM}\n"
+        "<PUBLIC-DOCUMENT-COUNT>1\n"
+        "<FILING-DATE>20250115\n"
+        "<FILER>\n"
+        "<COMPANY-DATA>\n"
+        f"<CIK>{CIK}\n"
+        "</COMPANY-DATA>\n"
+        "</FILER>\n"
+        "</SEC-HEADER>"
+    ).encode()
+
+
 def make_shard_receipt(blob: bytes):
     meta = {
         "url": "https://www.sec.gov/files/structureddata/data/form-13f-data-sets/2025q1_form13f.zip",
@@ -352,7 +371,7 @@ def test_header_resolver_falls_back_to_exact_accession_hdr_sgml_after_index_404(
         if req.full_url.endswith("-index-headers.html"):
             raise urllib.error.HTTPError(req.full_url, 404, "not found", hdrs={}, fp=None)
         assert req.full_url == accession_hdr_sgml_url(CIK, ACCESSION)
-        return Response(make_header())
+        return Response(make_sgml_header())
 
     meta = {"filer_cik": CIK, "filing_date": FILING_DATE, "period": PERIOD, "submission_type": FORM}
     record, error, attempts = resolve_accession_header(
@@ -409,7 +428,7 @@ def test_known_legacy_404_skips_the_missing_html_endpoint():
     def opener(req, timeout):
         calls.append(req.full_url)
         assert req.full_url == accession_hdr_sgml_url(CIK, ACCESSION)
-        return Response(make_header())
+        return Response(make_sgml_header())
 
     meta = {"filer_cik": CIK, "filing_date": FILING_DATE, "period": PERIOD, "submission_type": FORM}
     record, error, attempts = resolve_accession_header(
@@ -435,7 +454,7 @@ def test_targeted_repair_routes_frozen_header_404s_to_hdr_sgml(monkeypatch):
     def opener(req, timeout):
         calls.append(req.full_url)
         assert req.full_url == accession_hdr_sgml_url(CIK, ACCESSION)
-        return Response(make_header())
+        return Response(make_sgml_header())
 
     monkeypatch.setattr(repair.urllib.request, "urlopen", opener)
     fixed, entries = repair_shard_payload(
