@@ -1,0 +1,95 @@
+name: Q104 I19 Frozen CIK-Role Lineage Diagnostic
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q104_i19_cik_role_diagnostic.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q104-i19-cik-role-lineage-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  lineage:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Validate pinned source run and original shard artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          request="research/run_requests/q104_i19_cik_role_diagnostic.trigger"
+          test -s "$request"
+          source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' "$request")"
+          [[ "$source_run_id" == "38168441086" ]]
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id" > "$RUNNER_TEMP/q104-cik-role-source-run.json"
+          jq -e '
+            .name == "Q104 I19 Historical 13F Identity Census"
+            and .status == "completed"
+            and .head_branch == "master"
+            and (.conclusion == "failure" or .conclusion == "cancelled")
+          ' "$RUNNER_TEMP/q104-cik-role-source-run.json" >/dev/null
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/q104-cik-role-artifacts.json"
+          artifact="q104-i19-census-2024-2025-09-$source_run_id"
+          jq -e --arg n "$artifact" '[.artifacts[]? | select(.name == $n and .expired == false)] | length == 1' \
+            "$RUNNER_TEMP/q104-cik-role-artifacts.json" >/dev/null
+          root="research/runs/q104_i19_cik_role_diagnostic/$GITHUB_RUN_ID"
+          mkdir -p "$root/input"
+          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" --name "$artifact" --dir "$root/input"
+          test -s "$root/input/shard_receipt.json"
+          {
+            echo "Q104_CIK_ROLE_RUN_ROOT=$root"
+            echo "Q104_CIK_ROLE_SOURCE_RUN_ID=$source_run_id"
+          } >> "$GITHUB_ENV"
+
+      - name: Install bounded diagnostic dependencies
+        run: python -m pip install --disable-pip-version-check pandas exchange-calendars pypdf tzdata==2026.5
+
+      - name: Test frozen CIK-role parser and fail-closed contracts
+        run: python -m pytest -q tests/test_q104_i19_cik_role_diagnostic.py
+
+      - name: Capture one pinned CIK-role lineage trace
+        id: probe
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q104_i19_cik_role_diagnostic \
+            --request research/run_requests/q104_i19_cik_role_diagnostic.trigger \
+            --input-shard-receipt "$Q104_CIK_ROLE_RUN_ROOT/input/shard_receipt.json" \
+            --output "$Q104_CIK_ROLE_RUN_ROOT/receipt.json"
+
+      - name: Upload immutable bounded CIK-role receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-cik-role-lineage-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q104_i19_cik_role_diagnostic/*/receipt.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Fail closed when pinned role lineage is incomplete
+        if: steps.probe.outcome != 'success'
+        run: |
+          echo "Q104 CIK-role evidence is incomplete; original identity and PIT gates remain closed."
+          exit 1
