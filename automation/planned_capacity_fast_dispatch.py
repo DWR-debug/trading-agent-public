@@ -1,8 +1,9 @@
-"""Fast-path dispatch for executable dashboard capacity plans.
+"""Fast-path dispatch for executable receipt-gated capacity plans.
 
-This is orchestration only: it dispatches already-defined workflows from the
-current bounded dashboard plan, never creates new research hypotheses and never
-authorizes performance, ranking, tuning, promotion or live execution.
+This is orchestration only: it dispatches already-defined workflows from a
+fresh direct controller snapshot, never creates new research hypotheses and
+never authorizes performance, ranking, tuning, promotion or live execution.
+The published dashboard is display-only and is not a dispatch input.
 """
 from __future__ import annotations
 
@@ -484,8 +485,9 @@ def resource_capacity_for_plan(snapshot: dict[str, Any], row: dict[str, Any]) ->
         explicit_state = resource_meta.get("capacity_state")
     state = str(explicit_state or "").strip().lower()
 
-    # Do not let a stale/planned slot count override the live dashboard's
-    # explicit unknown state (missing runner inventory is not proof of idleness).
+    # An unexpected unknown state still fails closed. The direct controller
+    # emits operator-assumed Windows routability only after inspecting current
+    # in-progress jobs; it never takes this decision from the dashboard artifact.
     if state == "unknown":
         resource_free = False
     elif reported_free is not None:
