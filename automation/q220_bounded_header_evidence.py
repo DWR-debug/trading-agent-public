@@ -169,7 +169,14 @@ def load_frozen_run_receipt(path: Path) -> dict[str, Any]:
             raise HeaderEvidenceError("Q220_HEADER_SOURCE_RECEIPT_VALUE_MISMATCH:" + key)
     if receipt.get("source_download_bytes") != 2_829_769_099:
         raise HeaderEvidenceError("Q220_HEADER_SOURCE_FEED_DOWNLOAD_COUNT_MISMATCH")
-    if receipt.get("live_execution") is not False or receipt.get("orders_enabled") is not False:
+    safety = receipt.get("safety", {})
+    if (
+        receipt.get("live_execution") is not False
+        or safety.get("paper_only") is not True
+        or safety.get("live_trading_enabled") is not False
+        or safety.get("orders_enabled") is not False
+        or safety.get("automatic_promotion") is not False
+    ):
         raise HeaderEvidenceError("Q220_HEADER_SOURCE_SAFETY_MISMATCH")
     samples = receipt.get("samples")
     if not isinstance(samples, list) or len(samples) != len(SAMPLE_PINS):
