@@ -11,6 +11,41 @@ def test_dashboard_lane_mapping_is_deterministic():
     assert infer_lane("T052 Exact Master CI Gate") == "PLATFORM / GOVERNANCE"
 
 
+def test_master_push_windows_candidate_regressions_are_validation_not_active_research(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+    from automation.planned_capacity_fast_dispatch import active_research_items
+
+    run = {
+        "id": 123,
+        "name": "Windows Candidate Gate Regression Wave",
+        "event": "push",
+        "status": "in_progress",
+        "created_at": "2026-10-12T12:26:59Z",
+        "html_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/123",
+    }
+    jobs = [
+        {"name": f"Windows bounded regression {candidate}", "status": "in_progress", "runner_name": runner}
+        for candidate, runner in (
+            ("q104", "LHT-N133732"),
+            ("q220", "LHT-N133732-2"),
+            ("q221", "LHT-N133732-3"),
+        )
+    ]
+    monkeypatch.setattr(dashboard, "jobs_for_run", lambda _run_id: jobs)
+
+    assignments = dashboard.current_work_from_runs([run])
+
+    assert len(assignments) == 3
+    assert {item["lane"] for item in assignments} == {"VALIDATION / CI"}
+    assert {item["resource"] for item in assignments} == {
+        "Windows self-hosted A",
+        "Windows self-hosted B",
+        "Windows self-hosted C",
+    }
+    # Validation work does not block the candidate's independent hosted slots.
+    assert active_research_items({"work_assignments": assignments}) == []
+
+
 def test_dashboard_resource_mapping_is_deterministic():
     assert infer_resource("Any", "job", "LHT-N133732") == "Windows self-hosted A"
     assert infer_resource("Any", "job", "LHT-N133732-2") == "Windows self-hosted B"
