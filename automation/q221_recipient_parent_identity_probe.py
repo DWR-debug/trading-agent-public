@@ -205,6 +205,9 @@ def fetch_profile(recipient_id: str, year: str, budget: Budget) -> dict[str, Any
             except (UnicodeDecodeError, json.JSONDecodeError):
                 result["status"] = "JSON_INVALID"
                 return result
+            if not isinstance(payload, dict):
+                result["status"] = "JSON_INVALID"
+                return result
             result["status"] = "PROFILE_CAPTURED"
             result["profile"] = {
                 "recipient_id": payload.get("recipient_id"),
@@ -266,6 +269,7 @@ def run_probe(request: dict[str, str], source_path: Path, output: Path) -> dict[
             }
         else:
             sample_result["parent_metadata_comparison"] = None
+        rows.append(sample_result)
     receipt = {
         "schema_version": 1,
         "record_type": "q221_recipient_parent_identity_probe",
