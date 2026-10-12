@@ -10,7 +10,7 @@ The SEC EDGAR PDS Technical Specification (https://www.sec.gov/info/edgar/pdsdis
 
 Eight preselected accessions from 2015, 2017, 2020, and 2025 were checked through three SEC header routes each:
 - bulk Form 13F FILING_DATE differs from EDGAR header filing date in 8/8;
-- accession, filer CIK and form agree across routes in 8/8;
+- accession and filer CIK agree across all three routes in 8/8; form agrees between the index, complete-submission prefix, and frozen source row in 8/8. The probe did not parse the raw SGML `<TYPE>` tag, so no three-route form claim is made;
 - EDGAR header filing date and ACCEPTANCE-DATETIME agree across routes in 8/8;
 - DATE-OF-FILING-DATE-CHANGE agrees between index headers and raw SGML header in 8/8;
 - the change date equals header filing date in 2/8 and differs in 6/8.
