@@ -226,7 +226,7 @@ def structured_states(document: str) -> dict[str, list[dict[str, Any]]]:
     return states
 
 
-def fetch_primary(cik: str, accession: str, filename: str) -> tuple[bytes, int]:
+def fetch_primary(cik: str, accession: str, filename: str) -> tuple[bytes, int, dict[str, str]]:
     accession_compact = accession.replace("-", "")
     url = f"{SEC_ROOT}/{int(cik)}/{accession_compact}/{quote(filename, safe='-._')}"
     last = "unknown"
@@ -240,7 +240,17 @@ def fetch_primary(cik: str, accession: str, filename: str) -> tuple[bytes, int]:
                 body = response.read(MAX_PRIMARY_BYTES + 1)
                 if len(body) > MAX_PRIMARY_BYTES:
                     raise ValueError("PRIMARY_DOCUMENT_EXCEEDS_BYTE_LIMIT")
-                return body, int(getattr(response, "status", 200))
+                headers = getattr(response, "headers", {})
+                metadata = {
+                    "requested_url": url,
+                    "final_url": str(response.geturl()),
+                    "content_type": str(headers.get("Content-Type", "")),
+                    "content_length_header": str(headers.get("Content-Length", "")),
+                    "content_encoding": str(headers.get("Content-Encoding", "")),
+                    "last_modified": str(headers.get("Last-Modified", "")),
+                    "etag": str(headers.get("ETag", "")),
+                }
+                return body, int(getattr(response, "status", 200)), metadata
         except urllib.error.HTTPError as exc:
             last = f"HTTP_{exc.code}"
             if exc.code not in {429, 500, 502, 503, 504} or attempt == 3:
@@ -323,11 +333,28 @@ def compile_receipt(
         if sleep_seconds > 0:
             time.sleep(sleep_seconds)
         try:
-            body, http_status = fetcher(cik, accession, primary)
+            fetched = fetcher(cik, accession, primary)
+            if len(fetched) == 2:
+                body, http_status = fetched
+                response_metadata: dict[str, Any] = {}
+            elif len(fetched) == 3:
+                body, http_status, response_metadata = fetched
+            else:
+                raise ValueError("Q220_PRIMARY_FETCH_RETURN_SHAPE_INVALID")
             actual_sha = sha256(body)
             expected_sha = str(record.get("primary_document_sha256") or "")
+            expected_bytes = record.get("primary_document_bytes")
             if http_status != 200 or actual_sha != expected_sha:
-                raise ValueError(f"PRIMARY_HASH_MISMATCH:status={http_status}:expected={expected_sha}:actual={actual_sha}")
+                response_detail = ":".join(
+                    f"{name}={str(response_metadata.get(name, '')).replace(':', '_')}"
+                    for name in ("content_type", "content_length_header", "content_encoding", "last_modified", "etag", "final_url")
+                    if response_metadata.get(name)
+                )
+                raise ValueError(
+                    f"PRIMARY_HASH_MISMATCH:status={http_status}:expected={expected_sha}:actual={actual_sha}:"
+                    f"expected_bytes={expected_bytes}:actual_bytes={len(body)}:primary={primary}:"
+                    f"{response_detail}"
+                )
             decoded = body.decode("utf-8", errors="replace")
             textblocks = textblock_states(decoded)
             structured = structured_states(decoded)

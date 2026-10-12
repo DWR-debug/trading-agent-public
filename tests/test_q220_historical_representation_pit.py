@@ -140,6 +140,10 @@ def test_q220_refuses_changed_primary_document_hash(tmp_path):
     assert result["source_hash_failure_count"] == 1
     assert result["gate_positive"] is False
     assert result["status"] == "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED"
+    diagnostic = result["source_hash_failures"][0]["error"]
+    assert "PRIMARY_HASH_MISMATCH" in diagnostic
+    assert "expected_bytes=" in diagnostic
+    assert "actual_bytes=" in diagnostic
     assert result["historical_prefix_order_valid"] is False
 
 
