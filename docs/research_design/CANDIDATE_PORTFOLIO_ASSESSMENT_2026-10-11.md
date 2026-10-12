@@ -62,3 +62,16 @@ This operational addendum supersedes older “next gate” statements above wher
 - **Q220:** the frozen population receipt (fingerprint `158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543`), historical PIT compiler (fingerprint `dc0ba88133fec8a362cd2a135e452fb8ea24a45349bedf4398113c37bc0fed61`), and independent PIT reproduction (fingerprint `4cdbcac030dced54d52a25235e7fd39426065fe1f5b50b1952314ae9a92d41d4`) are linked and positive across the frozen 55 records. Independent verification reports zero source-hash, identity, acceptance-prefix, structured-fact, TextBlock or change-state mismatches. Five no-TextBlock originals remain explicit missing states. **Next:** define a bounded adversarial robustness and formal trial-governance reconciliation workpack. No performance or promotion authorization; no ETA or auto-dispatch until that workpack is frozen.
 - **Q221:** the latest policy-vintage receipt covers the five fixed boundary windows but sets award-level public observation and historical applicability to false. The next workpack must identify exact fixed transaction classes, first-observation evidence, recipient-to-issuer mapping, DoD/USACE and FAR exceptions, and amendment/correction lineage. Policy document publication dates do not prove a given award's first public observation.
 - The active execution lock remains **Q104:I19, Q220, Q221**. Q218 remains excluded. Safety remains PAPER_ONLY=True; LIVE_TRADING_ENABLED=False; ORDERS_ENABLED=False; AUTOMATIC_PROMOTION=False.
+
+
+## Operational reconciliation — 2026-10-12 (supersedes prior Q220-positive-chain addendum)
+
+A fresh read of the current public `master` evidence files found a material provenance mismatch that must take precedence over the earlier addendum above:
+
+- Current `research/evidence/q220_historical_representation_pit_latest.json`: status `Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED`, receipt fingerprint `64b75209923593aaf931f8a6728c19c69d7f97bdf8b8b0e4e4b7229a8d39c62c`, 55 records in the fixed population but **0 compiled events and 55 primary-document hash failures**.
+- Current `research/evidence/q220_independent_pit_reproduction_latest.json`: status `Q220_INDEPENDENT_PIT_REPRODUCED`, fingerprint `64198d5df1451c1a1aab7b9a57e8604dc3fc13fbfb25f2244b8782928d3274c7`, but its upstream compiler fingerprint is `1b34b3ac2f3a6fc3ff90fa42cd8ea1c7b73297b5cbd71414a0877bb25d9b203c`, which **does not match** the current compiler receipt fingerprint above.
+- Therefore the independent reproduction is historical evidence for a different compiler revision, not a valid current-chain gate pass. The shared receipt-chain validator must remain fail-closed.
+
+**Revised next step:** reconcile the frozen expected-versus-observed primary-document hash/source-vintage lineage against the current compiler inputs without changing the frozen 55-record population, expected hashes, concept mapping, or gates. Do not run the adversarial robustness pack as though the current compiler/PIT chain were positive; first obtain a new positive current-code compiler receipt and independent reproduction linked to that exact receipt.
+
+This is a provenance correction, not a performance result. No performance evaluation, holdout selection, tuning, ranking, promotion, orders, or live execution is authorized. Paper-only invariants remain unchanged.
