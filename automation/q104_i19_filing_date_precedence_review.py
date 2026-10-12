@@ -60,8 +60,9 @@ def analyze(r):
         if set(p)!={"index_headers","raw_sgml_header","complete_submission_header_prefix"}:
             raise ReviewError("ROUTE_SET_INCOMPLETE:"+str(s.get("accession")))
         a,b,c=(p["index_headers"],p["raw_sgml_header"],p["complete_submission_header_prefix"])
-        ident=("accession","filer_cik","form")
+        ident=("accession","filer_cik")
         identity=all(a.get(k) and a.get(k)==b.get(k)==c.get(k) for k in ident)
+        form_agreement=bool(a.get("form")) and a.get("form")==c.get("form")==s.get("form")
         filed=bool(a.get("filing_date")) and a.get("filing_date")==b.get("filing_date")==c.get("filing_date")
         accept=bool(a.get("acceptance_datetime")) and a.get("acceptance_datetime")==b.get("acceptance_datetime")==c.get("acceptance_datetime")
         change=bool(a.get("date_of_filing_date_change")) and a.get("date_of_filing_date_change")==b.get("date_of_filing_date_change")
@@ -69,18 +70,20 @@ def analyze(r):
         out.append({"accession":s.get("accession"),"bulk_filing_date":bulk,"edgar_header_filing_date":header,
           "date_of_filing_date_change":changed,"acceptance_datetime":a.get("acceptance_datetime"),
           "bulk_date_differs":bool(bulk and header and bulk!=header),"identity_routes_agree":identity,
-          "filed_date_routes_agree":filed,"acceptance_routes_agree":accept,"date_change_index_sgml_agree":change,
+          "filed_date_routes_agree":filed,"form_agreement_index_prefix_source":form_agreement,"raw_sgml_form_missing":not bool(b.get("form")),"acceptance_routes_agree":accept,"date_change_index_sgml_agree":change,
           "date_change_equals_filing_date":(changed==header) if changed else None,
           "prefix_contains_date_change":bool(c.get("date_of_filing_date_change"))})
     n=len(out)
     counts={"sample_count":n,"bulk_date_differs":sum(x["bulk_date_differs"] for x in out),
       "identity_routes_agree":sum(x["identity_routes_agree"] for x in out),
       "filed_date_routes_agree":sum(x["filed_date_routes_agree"] for x in out),
+      "form_agreement_index_prefix_source":sum(x["form_agreement_index_prefix_source"] for x in out),
+      "raw_sgml_form_missing":sum(x["raw_sgml_form_missing"] for x in out),
       "acceptance_routes_agree":sum(x["acceptance_routes_agree"] for x in out),
       "date_change_index_sgml_agree":sum(x["date_change_index_sgml_agree"] for x in out),
       "date_change_equals_filing_date":sum(x["date_change_equals_filing_date"] is True for x in out),
       "date_change_differs_from_filing_date":sum(x["date_change_equals_filing_date"] is False for x in out)}
-    ok=n==8 and all(counts[k]==8 for k in ("bulk_date_differs","identity_routes_agree","filed_date_routes_agree","acceptance_routes_agree","date_change_index_sgml_agree"))
+    ok=n==8 and all(counts[k]==8 for k in ("bulk_date_differs","identity_routes_agree","filed_date_routes_agree","form_agreement_index_prefix_source","acceptance_routes_agree","date_change_index_sgml_agree"))
     return {"status":"FIELD_PRECEDENCE_REVIEW_PROPOSAL_READY_NOT_APPLIED" if ok else "FIELD_PRECEDENCE_REVIEW_PATTERN_INCOMPLETE",
       "counts":counts,"samples":out,"proposal":{
        "acceptance_event_clock":"Use EDGAR ACCEPTANCE-DATETIME after exact accession/CIK/form validation and cross-route agreement.",
