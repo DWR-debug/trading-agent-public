@@ -390,6 +390,8 @@ def test_q104_targeted_repair_request_is_receipt_gated_and_paper_only():
     assert 'paths:' in wrapper
     assert '- "research/run_requests/q104_i19_targeted_acceptance_repair.trigger"' in wrapper
     assert "permissions:\n  actions: write\n  contents: write" in wrapper.split("jobs:", 1)[0]
+    repair_job = wrapper.split("  repair:\n", 1)[1].split("    uses: ./.github/workflows/q104-i19-targeted-acceptance-repair.yml", 1)[0]
+    assert "actions: write" in repair_job
     assert "permissions:\n  actions: write\n  contents: write" in repair.split("jobs:", 1)[0]
     relay = (root / ".github/workflows/research-completion-relay.yml").read_text(encoding="utf-8")
     assert "actions: write" in relay.split("jobs:", 1)[0]
