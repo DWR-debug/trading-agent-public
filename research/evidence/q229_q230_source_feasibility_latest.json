@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-05-Q229-Q230-SOURCE-FEASIBILITY",
   "status": "SOURCE_FEASIBILITY_ONLY",
-  "generated_at_utc": "2026-10-12T11:27:57.074248+00:00",
+  "generated_at_utc": "2026-10-12T13:28:21.480829+00:00",
   "candidates": {
     "Q229": {
       "source_status": "PASS",
-      "live_api_probe_status": null,
+      "live_api_probe_status": 200,
       "historical_pit_validated": false,
       "notes": [
         "CFPB publication is conditional on company response or 15-day rule; this probe does not backdate a public signal.",
@@ -85,10 +85,10 @@
     {
       "name": "Q229_CFPB_API_LIVE",
       "url": "https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/?size=1",
-      "reachable": false,
-      "http_status": null,
-      "content_sha256": null,
-      "content_bytes": 0,
+      "reachable": true,
+      "http_status": 200,
+      "content_sha256": "54910307fc43b97dbabeecde59931ed956780c206f09798bbc964b5de7f0f318",
+      "content_bytes": 400447,
       "missing_markers": [],
       "scientific_boundary": {
         "performance": false,
@@ -97,8 +97,7 @@
         "holdout_selection": false,
         "promotion": false,
         "live_execution": false
-      },
-      "error": "TimeoutError:The read operation timed out"
+      }
     },
     {
       "name": "Q230_FINRA_API_SPEC",
@@ -124,7 +123,7 @@
       "url": "https://www.finra.org/filing-reporting/trace",
       "reachable": true,
       "http_status": 200,
-      "content_sha256": "acdfa8b8ef3557e125a4c435b84966a7ebf25f0e665201a6c9cbb5c574bc7e04",
+      "content_sha256": "4ab6ace0fcfea29573d569bc5ba57bd93e54d4dc5fc7d5233cc03429e489bab0",
       "content_bytes": 159414,
       "missing_markers": [],
       "scientific_boundary": {
@@ -169,5 +168,5 @@
     "Q229": "historical_public_release_batch_and_company_to_issuer_mapping_census",
     "Q230": "free_TRACE_historical_panel_security_master_and_issuer_mapping_census"
   },
-  "bundle_fingerprint": "961164b8ffc192a8b73f1388e074d3ee19e289863e432da3f4d2587b4191ac5a"
+  "bundle_fingerprint": "dccc2450fdb78a95b905df03e2edd64e9d3401e0542678eaf25929c2ace285fa"
 }
