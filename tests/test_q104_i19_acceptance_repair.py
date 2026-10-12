@@ -377,3 +377,35 @@ def test_localized_windows_and_dns_transport_errors_are_repairable(reason):
 )
 def test_repair_keeps_identity_and_irrecoverable_header_errors_fail_closed(reason):
     assert not is_repairable_failure(reason)
+
+
+def test_q104_targeted_repair_request_is_receipt_gated_and_paper_only():
+    root = Path(__file__).resolve().parents[1]
+    wrapper = (root / ".github/workflows/q104-i19-targeted-acceptance-repair-request.yml").read_text(encoding="utf-8")
+    repair = (root / ".github/workflows/q104-i19-targeted-acceptance-repair.yml").read_text(encoding="utf-8")
+    request = (root / "research/run_requests/q104_i19_targeted_acceptance_repair.trigger").read_text(encoding="utf-8")
+    census = (root / ".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
+
+    assert 'branches: [master]' in wrapper
+    assert 'paths:' in wrapper
+    assert '- "research/run_requests/q104_i19_targeted_acceptance_repair.trigger"' in wrapper
+    assert 'SOURCE_RUN_ID=38168441086' in request
+    assert 'SHARD_RECOVERY_RUN_ID=38168441086' in request
+    assert 'CENSUS_RESTART=false' in request
+    assert 'SOURCE_SNAPSHOT_REUSE=true' in request
+    for flag in ("PERFORMANCE=false", "HOLDOUT_SELECTION=false", "RANKING=false", "TUNING=false", "PROMOTION=false", "LIVE_EXECUTION=false"):
+        assert flag in request
+    assert '.conclusion == "failure"' in wrapper
+    assert 'key="${line%%=*}"' in wrapper
+    assert 'grep -c "^${key}="' in wrapper
+    assert 'for shard in "${recovered[@]}";' in wrapper
+    assert 'Q104 I19 Historical 13F Identity Census' in wrapper
+    assert 'q104-i19-sec-source-snapshot-$source_run_id' in wrapper
+    for shard in ("2013-2016", "2017-2018", "2019-2020", "2021-2022", "2023", "2024-2025-09"):
+        assert f"q104-i19-census-$shard-$source_run_id" in wrapper
+    assert "Q104_I19_REQUIRED_SHARD_RECEIPT_MISSING_OR_EXPIRED" in wrapper
+    assert "gh api \"/repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID/artifacts?per_page=100\"" in repair
+    assert "q104-i19-census-$shard-$source_run_id" in repair
+    assert "gh run rerun \"$GITHUB_RUN_ID\"" not in census
+
+
