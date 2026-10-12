@@ -116,6 +116,39 @@ def jac(a,b):
     u=a|b
     return len(a&b)/len(u) if u else 1.0
 
+
+def observed_jaccard(a,b):
+    """Return a similarity only when both candidates provide this dimension.
+
+    Empty metadata is missing evidence, not proof that two candidates match or
+    are disjoint. Stage 5 must fail closed when a comparison dimension is absent.
+    """
+    if not a or not b:
+        return None
+    return len(a & b) / len(a | b)
+
+
+def compare_signatures(sa,sb):
+    weights={"tokens":.60,"components":.25,"source_domains":.15}
+    similarities={
+        "tokens":observed_jaccard(set(sa.get("tokens") or []),set(sb.get("tokens") or [])),
+        "components":observed_jaccard(set(sa.get("components") or []),set(sb.get("components") or [])),
+        "source_domains":observed_jaccard(set(sa.get("source_domains") or []),set(sb.get("source_domains") or [])),
+    }
+    observed={k:v for k,v in similarities.items() if v is not None}
+    complete=len(observed)==len(weights)
+    denominator=sum(weights[k] for k in observed)
+    # The partial value is a diagnostic only. It can never classify an
+    # incompletely observed pair as orthogonal or fully convergent.
+    score=(sum(weights[k]*v for k,v in observed.items())/denominator) if denominator else None
+    return {
+        "score":score,
+        "similarities":similarities,
+        "observed_dimensions":sorted(observed),
+        "signature_coverage_complete":complete,
+    }
+
+
 def candidate_signature(spec,links):
     """Stable public helper used by Stage 5 unit tests and external diagnostics."""
     normalized=defaultdict(set)
@@ -132,19 +165,61 @@ def novelty_analysis(candidates):
     rows=[]
     ids=sorted(candidates)
     for a in ids:
-        best=0;peer=None;top=[]
+        pair_rows=[]
         for b in ids:
-            if a==b: continue
-            sa,sb=candidates[a],candidates[b]
-            tj=jaccard(sa["tokens"],sb["tokens"]); cj=jaccard(sa["components"],sb["components"]); dj=jaccard(sa["source_domains"],sb["source_domains"])
-            score=.60*tj+.25*cj+.15*dj
-            top.append((b,score,tj,cj,dj))
-            if score>best: best=score;peer=b
-        cls="POTENTIAL_CONVERGENCE" if best>=.78 else "AMBIGUOUS" if best>=.45 else "LIKELY_ORTHOGONAL"
-        rows.append({"candidate":a,"max_convergence_score":round(best,6),"most_overlapping_peer":peer,
-                     "novelty_score":round(1-best,6),"overlap_class":cls,
-                     "top_peers":[{"candidate":b,"score":round(s,6),"token_jaccard":round(t,6),"component_jaccard":round(c,6),"domain_jaccard":round(d,6)}
-                                  for b,s,t,c,d in sorted(top,key=lambda x:-x[1])[:5]]})
+            if a==b:
+                continue
+            comparison=compare_signatures(candidates[a],candidates[b])
+            sims=comparison["similarities"]
+            pair_rows.append({
+                "candidate":b,
+                "score":round(comparison["score"],6) if comparison["signature_coverage_complete"] else None,
+                "token_jaccard":round(sims["tokens"],6) if sims["tokens"] is not None else None,
+                "component_jaccard":round(sims["components"],6) if sims["components"] is not None else None,
+                "domain_jaccard":round(sims["source_domains"],6) if sims["source_domains"] is not None else None,
+                "observed_dimensions":comparison["observed_dimensions"],
+                "signature_coverage_complete":comparison["signature_coverage_complete"],
+                "_partial_score":comparison["score"],
+            })
+        complete=[r for r in pair_rows if r["signature_coverage_complete"]]
+        incomplete=[r for r in pair_rows if not r["signature_coverage_complete"]]
+        best_row=max(complete,key=lambda r:r["score"]) if complete else None
+        best=best_row["score"] if best_row else None
+        # One observed high-overlap pair is sufficient to raise a convergence
+        # warning. Orthogonality requires complete metadata for every peer.
+        if any(r["score"]>=.78 for r in complete):
+            cls="POTENTIAL_CONVERGENCE"
+        elif incomplete or best is None:
+            cls="AMBIGUOUS"
+        elif best>=.45:
+            cls="AMBIGUOUS"
+        else:
+            cls="LIKELY_ORTHOGONAL"
+        for row in pair_rows:
+            row.pop("_partial_score",None)
+        ordered=sorted(
+            pair_rows,
+            key=lambda r:(
+                not r["signature_coverage_complete"],
+                -(r["score"] if r["score"] is not None else (r["token_jaccard"] if r["token_jaccard"] is not None else -1)),
+                r["candidate"],
+            ),
+        )
+        rows.append({
+            "candidate":a,
+            "max_convergence_score":round(best,6) if best is not None else None,
+            "most_overlapping_peer":best_row["candidate"] if best_row else None,
+            "novelty_score":round(1-best,6) if best is not None and not incomplete else None,
+            "overlap_class":cls,
+            "signature_coverage":{
+                "required_dimensions":3,
+                "complete_peer_comparisons":len(complete),
+                "incomplete_peer_comparisons":len(incomplete),
+                "peer_comparison_count":len(pair_rows),
+                "complete":len(incomplete)==0 and best is not None,
+            },
+            "top_peers":ordered[:5],
+        })
     return rows
 
 
@@ -252,21 +327,8 @@ def build():
            "content_fingerprint":sha({"nodes":node_map,"edges":edges}),
            "scientific_boundary":{k:False for k in ("performance_authorized","holdout_selection_allowed","ranking_allowed","parameter_search_allowed","threshold_search_allowed","horizon_search_allowed","promotion_allowed","live_execution_allowed")}}
 
-    nov=[]
+    nov=novelty_analysis(candidates)
     ids=sorted(candidates)
-    for a in ids:
-        best=0;peer=None;top=[]
-        for b in ids:
-            if a==b:continue
-            sa,sb=candidates[a],candidates[b]
-            tj=jac(set(sa["tokens"]),set(sb["tokens"])); cj=jac(set(sa["components"]),set(sb["components"])); dj=jac(set(sa["source_domains"]),set(sb["source_domains"]))
-            score=.60*tj+.25*cj+.15*dj;top.append((b,score,tj,cj,dj))
-            if score>best:best=score;peer=b
-        cls="POTENTIAL_CONVERGENCE" if best>=.78 else "AMBIGUOUS" if best>=.45 else "LIKELY_ORTHOGONAL"
-        nov.append({"candidate":a,"max_convergence_score":round(best,6),"most_overlapping_peer":peer,"novelty_score":round(1-best,6),
-                    "overlap_class":cls,"top_peers":[{"candidate":b,"score":round(s,6),"token_jaccard":round(t,6),"component_jaccard":round(c,6),"domain_jaccard":round(d,6)}
-                                                     for b,s,t,c,d in sorted(top,key=lambda x:-x[1])[:5]]})
-
     bridges=[]
     for i,a in enumerate(ids):
         for b in ids[i+1:]:
