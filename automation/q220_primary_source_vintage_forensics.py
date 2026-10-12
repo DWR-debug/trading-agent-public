@@ -273,6 +273,16 @@ def extract_primary_document(submission: bytes, expected_filename: str) -> dict[
     return {"found": True, **matches[0]}
 
 
+def daily_feed_url(filing_date: str) -> str:
+    """Return the SEC daily Feed URL using the official year/quarter directory."""
+    filed = date.fromisoformat(filing_date)
+    quarter = (filed.month - 1) // 3 + 1
+    return (
+        f"https://www.sec.gov/Archives/edgar/Feed/{filed.year}/QTR{quarter}/"
+        f"{filed.strftime('%Y%m%d')}.nc.tar.gz"
+    )
+
+
 def scan_daily_feed(
     feed_blob: bytes,
     accession: str,
@@ -471,8 +481,7 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
         sample["current_primary"]["matches_frozen_receipt_actual_sha256"] = current_sha == sample["frozen_actual_sha256"]
         sample["current_primary"]["matches_frozen_receipt_actual_bytes"] = current["response_bytes"] == sample["frozen_actual_bytes"]
 
-        feed_day = date.fromisoformat(filed_date).strftime("%Y%m%d")
-        feed_url = f"https://www.sec.gov/Archives/edgar/Feed/{feed_day}.nc.tar.gz"
+        feed_url = daily_feed_url(filed_date)
         feed = _bounded_get(feed_url, MAX_FEED_ARCHIVE_BYTES, budget)
         sample["daily_feed"] = {k: v for k, v in feed.items() if k != "body"}
         if feed.get("status") != "FETCHED" or feed.get("http_status") != 200:
