@@ -37,6 +37,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          source automation/gh_api_retry.sh
           request="research/run_requests/q104_i19_targeted_acceptance_repair.trigger"
           test -s "$request" || { echo "Q104_I19_REPAIR_REQUEST_FILE_MISSING"; exit 2; }
 
@@ -86,7 +87,7 @@ jobs:
             echo "Q104_I19_REQUEST_SEQUENCE_INVALID"; exit 2;
           }
 
-          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id" > "$RUNNER_TEMP/i19-source-run.json"
+          gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id" > "$RUNNER_TEMP/i19-source-run.json"
           jq -e '
             .name == "Q104 I19 Historical 13F Identity Census"
             and .status == "completed"
@@ -96,7 +97,7 @@ jobs:
             echo "Q104_I19_SOURCE_RUN_NOT_COMPLETED_FAILED_MASTER_CENSUS"; exit 2;
           }
 
-          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$recovery_run_id" > "$RUNNER_TEMP/i19-recovery-run.json"
+          gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$recovery_run_id" > "$RUNNER_TEMP/i19-recovery-run.json"
           jq -e '
             .status == "completed"
             and .head_branch == "master"
@@ -108,12 +109,12 @@ jobs:
             echo "Q104_I19_RECOVERY_RUN_NOT_COMPLETED_ALLOWED_MASTER_RUN"; exit 2;
           }
 
-          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/i19-source-artifacts.json"
-          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$recovery_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/i19-recovery-artifacts.json"
+          gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/i19-source-artifacts.json"
+          gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$recovery_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/i19-recovery-artifacts.json"
           if [[ -n "$prior_repair_run_id" ]]; then
-            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$prior_repair_run_id" > "$RUNNER_TEMP/i19-prior-repair-run.json"
+            gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$prior_repair_run_id" > "$RUNNER_TEMP/i19-prior-repair-run.json"
             jq -e '.name == "Q104 I19 Receipt-Gated Targeted Acceptance Repair Request" and .status == "completed" and .conclusion == "failure" and .head_branch == "master"' "$RUNNER_TEMP/i19-prior-repair-run.json" >/dev/null || { echo "Q104_I19_PRIOR_REPAIR_RUN_INVALID"; exit 2; }
-            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$prior_repair_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/i19-prior-repair-artifacts.json"
+            gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$prior_repair_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/i19-prior-repair-artifacts.json"
             prior_prefix="q104-i19-targeted-acceptance-repair-$source_run_id-$prior_repair_run_id-"
             jq -e --arg prefix "$prior_prefix" '[.artifacts[]? | select((.name | startswith($prefix)) and .expired == false)] | length == 1' "$RUNNER_TEMP/i19-prior-repair-artifacts.json" >/dev/null || { echo "Q104_I19_PRIOR_REPAIR_ARTIFACT_MISSING_OR_EXPIRED"; exit 2; }
           fi
