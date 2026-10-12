@@ -46,3 +46,10 @@ def test_frozen_source_receipt_really_has_247_unmapped_candidates():
     source, candidates = probe.validate_source(root / "research" / "evidence" / "q221_historical_public_boundary_latest.json")
     assert len(candidates) == 247
     assert all(x["mapping_status"] == "UNMAPPED" and x["issuer_symbol"] is None for x in candidates)
+
+
+def test_workflow_uses_exact_feasibility_artifact_filename():
+    workflow = Path(__file__).parents[1] / ".github" / "workflows" / "q221-current-parent-identity-map.yml"
+    content = workflow.read_text(encoding="utf-8")
+    assert 'rglob("q221-recipient-parent-identity-receipt.json")' in content
+    assert 'rglob("receipt.json")' not in content
