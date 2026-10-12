@@ -389,6 +389,11 @@ def test_q104_targeted_repair_request_is_receipt_gated_and_paper_only():
     assert 'branches: [master]' in wrapper
     assert 'paths:' in wrapper
     assert '- "research/run_requests/q104_i19_targeted_acceptance_repair.trigger"' in wrapper
+    assert "permissions:\n  actions: write\n  contents: write" in wrapper.split("jobs:", 1)[0]
+    assert "permissions:\n  actions: write\n  contents: write" in repair.split("jobs:", 1)[0]
+    relay = (root / ".github/workflows/research-completion-relay.yml").read_text(encoding="utf-8")
+    assert "actions: write" in relay.split("jobs:", 1)[0]
+
     assert 'SOURCE_RUN_ID=38168441086' in request
     assert 'SHARD_RECOVERY_RUN_ID=38168441086' in request
     assert 'CENSUS_RESTART=false' in request
