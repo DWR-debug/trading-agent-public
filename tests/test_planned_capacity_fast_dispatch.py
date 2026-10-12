@@ -698,11 +698,17 @@ def test_pull_request_validation_does_not_mark_candidate_active():
     assert dashboard.infer_lane(run["name"], "", run["event"]) == "VALIDATION / CI"
 
 
-def test_fast_dispatch_loads_paginated_top4_slot_history_for_retry_circuit_breaker():
+def test_fast_dispatch_loads_paginated_top4_and_q104_census_history_with_bounded_api_retries():
     dispatcher = (ROOT / ".github/workflows/planned-capacity-fast-dispatch.yml").read_text(encoding="utf-8")
-    assert 'gh api --paginate "/repos/$GITHUB_REPOSITORY/actions/workflows/top4-candidate-slot-research.yml/runs?per_page=100"' in dispatcher
-    assert dispatcher.count('"$slot_history"') >= 1
-    assert '<(printf' in dispatcher
+    assert 'gh_api_paginate_retry "/repos/$GITHUB_REPOSITORY/actions/workflows/top4-candidate-slot-research.yml/runs?per_page=100"' in dispatcher
+    assert 'gh_api_paginate_retry "/repos/$GITHUB_REPOSITORY/actions/workflows/q104-i19-13f-historical-identity-census.yml/runs?per_page=100"' in dispatcher
+    assert 'q104_census_history' in dispatcher
+    assert 'unique_by(.id)' in dispatcher
+    assert 'while (( attempt <= 3 )); do' in dispatcher
+    assert 'GH_API_PAGINATED_FAILED endpoint=$endpoint attempts=$attempt' in dispatcher
+    assert 'FAILED_CLOSED_NO_VALID_DECISION' in dispatcher
+    assert 'Ensure a fail-closed dispatch receipt exists' in dispatcher
+    assert 'if: always()' in dispatcher
 
 
 
