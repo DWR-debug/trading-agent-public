@@ -242,7 +242,7 @@ def test_scan_daily_feed_finds_exact_original_and_records_correction_names():
     assert scan["pds_control_block"]["status"] == "PDS_CONTROL_BLOCK_VALID"
     assert scan["submission_header"]["acceptance_datetime"] == "20190213110253"
     assert scan["submission_header"]["acceptance_datetime_source"] == "sgml_header_and_pds_control_block"
-    assert scan["submission_header"]["pds_control_block_matches_sgml"] is True
+    assert scan["submission_header"]["sgml_acceptance_datetime_comparison"] == "MATCH"
     assert scan["primary"]["found"] is True
     assert scan["primary"]["body_hash_variants"]["raw_text_block"]["sha256"] == forensic.sha256(b"\n" + primary + b"\n")
 
@@ -316,7 +316,7 @@ def test_scan_daily_feed_separates_submission_wrapper_cap_from_primary_document_
     assert scan["primary"]["raw_text_block_bytes"] <= 100
     assert scan["submission_header"]["acceptance_datetime"] == "20250211170704"
     assert scan["submission_header"]["acceptance_datetime_source"] == "pds_control_block"
-    assert scan["submission_header"]["pds_control_block_matches_sgml"] is True
+    assert scan["submission_header"]["sgml_acceptance_datetime_comparison"] == "NOT_PRESENT_CONTROL_BLOCK_USED"
 
 
 def test_scan_daily_feed_records_size_when_submission_wrapper_exceeds_its_own_cap():
