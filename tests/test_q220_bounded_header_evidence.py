@@ -144,9 +144,8 @@ def test_fetch_header_stops_at_header_marker_and_retains_no_document_body(monkey
     assert result["status"] == "FETCHED_PREFIX"
     assert result["prefix_marker_found"] is True
     assert result["_body"] == header
-    assert result["response_bytes"] >= len(header)
-    assert result["response_bytes"] <= 1024
-    assert budget.used == result["response_bytes"]
+    assert result["response_bytes"] == len(header)
+    assert budget.used == len(header)
 
 
 def test_load_frozen_run_receipt_rejects_any_unpinned_payload(tmp_path):
