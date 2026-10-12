@@ -229,6 +229,7 @@ ACTIVE_WORKFLOWS = {
     "s10-stale-run-recovery.yml",
     "s10-throughput-probe.yml",
     "q104-i22-filing-arrival.yml",
+    "q104-i22-independent-pit-reproduction.yml",
     "android-phone-fleet-worker.yml",
     "android-phone-fleet-receipt-sync.yml",
     "post-pass-independent-replication.yml",
