@@ -39,6 +39,7 @@ ACTIVE_WORKFLOWS = {
     "q104-i19-targeted-acceptance-repair.yml",
     "q104-i19-targeted-acceptance-repair-request.yml",
     "q104-i19-residual-source-lineage-diagnostic.yml",
+    "q104-i19-residual-source-lineage-diagnostic-r2.yml",
     "q104-i19-cik-role-lineage-diagnostic.yml",
     "q104-i19-missing-shard-recovery.yml",
     "q104-i19-historical-pit-compilation.yml",
