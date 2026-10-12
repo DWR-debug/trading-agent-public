@@ -94,6 +94,44 @@ def _failure_description(exc: BaseException) -> str:
     return f"{type(exc).__name__}:{exc}"
 
 
+def _parse_sgml_acceptance_header(
+    text: str,
+    expected_cik: str,
+    expected_accession: str,
+    expected_form: str,
+    expected_filing_date: str,
+) -> str:
+    """Parse raw SEC .hdr.sgml tags without weakening identity checks.
+
+    The legacy index-headers HTML parser expects labels such as ACCESSION NUMBER:.
+    The SGML fallback instead uses tags such as <ACCESSION-NUMBER>. Keep these
+    formats separate so a route change cannot turn an identity mismatch into a
+    tolerated result.
+    """
+    accepted = re.search(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})", text, re.I)
+    accession_m = re.search(
+        r"<ACCESSION-NUMBER>\s*([0-9]{10}-[0-9]{2}-[0-9]{6})", text, re.I
+    )
+    cik_m = re.search(r"<CENTRAL-INDEX-KEY>\s*([0-9]{10})", text, re.I)
+    form_m = re.search(r"<CONFORMED-SUBMISSION-TYPE>\s*([^\s<]+)", text, re.I)
+    filed_m = re.search(r"<FILED-AS-OF-DATE>\s*([0-9]{8})", text, re.I)
+    if not accepted:
+        raise ValueError("MISSING_ACCEPTANCE_DATETIME")
+    if not accession_m or accession_m.group(1) != expected_accession:
+        raise ValueError("ACCESSION_MISMATCH")
+    if not cik_m or cik_m.group(1) != str(expected_cik).zfill(10):
+        raise ValueError("FILER_CIK_MISMATCH")
+    if not form_m or form_m.group(1).upper() != expected_form.upper():
+        raise ValueError("FORM_MISMATCH")
+    if filed_m:
+        filed_raw = filed_m.group(1)
+        filed = f"{filed_raw[:4]}-{filed_raw[4:6]}-{filed_raw[6:8]}"
+        if filed != expected_filing_date:
+            raise ValueError("FILING_DATE_MISMATCH")
+    raw = accepted.group(1)
+    return f"{raw[:4]}-{raw[4:6]}-{raw[6:8]}T{raw[8:10]}:{raw[10:12]}:{raw[12:14]}"
+
+
 def resolve_accession_header(
     accession: str,
     meta: dict[str, str],
@@ -206,13 +244,23 @@ def resolve_accession_header(
                 header_material = body
 
             try:
-                accepted = census.parse_acceptance_header(
-                    body.decode("utf-8", "replace"),
-                    meta["filer_cik"],
-                    accession,
-                    meta["submission_type"],
-                    meta["filing_date"],
-                )
+                body_text = body.decode("utf-8", "replace")
+                if source_type == "sec_hdr_sgml_fallback":
+                    accepted = _parse_sgml_acceptance_header(
+                        body_text,
+                        meta["filer_cik"],
+                        accession,
+                        meta["submission_type"],
+                        meta["filing_date"],
+                    )
+                else:
+                    accepted = census.parse_acceptance_header(
+                        body_text,
+                        meta["filer_cik"],
+                        accession,
+                        meta["submission_type"],
+                        meta["filing_date"],
+                    )
             except (ValueError, KeyError) as exc:
                 validation_error = str(exc)
                 if (
