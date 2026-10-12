@@ -117,7 +117,7 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221." in focus
     assert "Q218 has been removed from active focus and automatic dispatch" in focus
     assert "Q219 remains paused; its prior evidence is preserved." in focus
-    assert "never restart the full census blindly" in focus
+    assert "do not repair the receipts or restart the census" in focus
     assert "53 unique unresolved accession keys" in focus
     assert "zero new attempts and zero repairs" in focus
     assert "PR #1363 is merged" in focus
