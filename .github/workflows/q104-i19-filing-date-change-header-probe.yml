@@ -1,0 +1,82 @@
+name: Q104 I19 Filing-Date-Change Header Probe
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q104_i19_filing_date_change_header_probe.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q104-i19-filing-date-change-header-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Validate source runs and exact immutable artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for item in "38255701998|Q104 I19 Residual Source-Lineage Diagnostic" "38301876992|Q104 I19 Residual Source-Lineage Diagnostic R2"; do
+            run_id="${item%%|*}"
+            expected_name="${item#*|}"
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$run_id" > "$RUNNER_TEMP/q104-date-change-run-$run_id.json"
+            jq -e --arg n "$expected_name" '.name == $n and .status == "completed" and .conclusion == "success" and .head_branch == "master"' "$RUNNER_TEMP/q104-date-change-run-$run_id.json" >/dev/null
+          done
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38255701998/artifacts?per_page=100" > "$RUNNER_TEMP/q104-date-change-r1-artifacts.json"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38301876992/artifacts?per_page=100" > "$RUNNER_TEMP/q104-date-change-r2-artifacts.json"
+          jq -e '[.artifacts[]? | select(.name == "q104-i19-residual-lineage-diagnostic-38255701998-1" and .expired == false)] | length == 1' "$RUNNER_TEMP/q104-date-change-r1-artifacts.json" >/dev/null
+          jq -e '[.artifacts[]? | select(.name == "q104-i19-residual-lineage-r2-38301876992-1" and .expired == false)] | length == 1' "$RUNNER_TEMP/q104-date-change-r2-artifacts.json" >/dev/null
+      - name: Download exact R1 and R2 receipts only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/q104-date-change-r1" "$RUNNER_TEMP/q104-date-change-r2"
+          gh run download 38255701998 --repo "$GITHUB_REPOSITORY" --name "q104-i19-residual-lineage-diagnostic-38255701998-1" --dir "$RUNNER_TEMP/q104-date-change-r1"
+          gh run download 38301876992 --repo "$GITHUB_REPOSITORY" --name "q104-i19-residual-lineage-r2-38301876992-1" --dir "$RUNNER_TEMP/q104-date-change-r2"
+      - name: Capture bounded header field observations
+        id: probe
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q104_i19_filing_date_change_header_probe \
+            --request research/run_requests/q104_i19_filing_date_change_header_probe.trigger \
+            --r1 "$RUNNER_TEMP/q104-date-change-r1" \
+            --r2 "$RUNNER_TEMP/q104-date-change-r2" \
+            --output "$RUNNER_TEMP/q104-date-change-receipt.json"
+      - name: Upload immutable header probe receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-filing-date-change-header-probe-${{ github.run_id }}-${{ github.run_attempt }}
+          path: "$RUNNER_TEMP/q104-date-change-receipt.json"
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+      - name: Fail closed on incomplete observations
+        if: steps.probe.outcome != 'success'
+        run: |
+          echo "Q104 date-change header probe incomplete; no source precedence or gate changes."
+          exit 1
