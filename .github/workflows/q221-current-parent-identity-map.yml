@@ -59,7 +59,7 @@ jobs:
           from automation.q221_current_parent_identity_map_probe import read_request, validate_source, validate_feasibility
           read_request(Path("research/run_requests/q221_current_parent_identity_map_probe.trigger"))
           validate_source(Path("research/evidence/q221_historical_public_boundary_latest.json"))
-          roots = sorted((Path(os.environ["RUNNER_TEMP"]) / "q221-parent-map-feasibility").rglob("receipt.json"))
+          roots = sorted((Path(os.environ["RUNNER_TEMP"]) / "q221-parent-map-feasibility").rglob("q221-recipient-parent-identity-receipt.json"))
           if len(roots) != 1:
               raise SystemExit("Q221_PARENT_MAP_FEASIBILITY_RECEIPT_COUNT_INVALID")
           validate_feasibility(roots[0])
