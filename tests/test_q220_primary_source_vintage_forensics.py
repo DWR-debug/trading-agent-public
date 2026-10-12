@@ -247,6 +247,47 @@ def test_scan_daily_feed_finds_exact_original_and_records_correction_names():
     assert scan["primary"]["body_hash_variants"]["raw_text_block"]["sha256"] == forensic.sha256(b"\n" + primary + b"\n")
 
 
+def test_scan_daily_feed_sgml_wrapper_does_not_require_pds_control_block():
+    accession = "0000064040-19-000059"
+    filename = "spgi-20181231x10k.htm"
+    primary = b"<HTML><BODY>Frozen historical source bytes</BODY></HTML>"
+    submission = (
+        b"<SUBMISSION>\n"
+        + f"<ACCESSION-NUMBER>{accession}\n".encode()
+        + b"<TYPE>10-K\n"
+        + b"<FILING-DATE>20190213\n"
+        + b"<FILER>\n<COMPANY-DATA>\n<CIK>0000064040\n</COMPANY-DATA>\n</FILER>\n"
+        + b"</SUBMISSION>\n"
+        + b"<DOCUMENT>\n<TYPE>10-K\n<FILENAME>" + filename.encode()
+        + b"\n<TEXT>\n" + primary + b"\n</TEXT>\n</DOCUMENT>\n"
+    )
+    archive_bytes = io.BytesIO()
+    with tarfile.open(fileobj=archive_bytes, mode="w:gz") as archive:
+        member = tarfile.TarInfo(accession + ".nc")
+        member.size = len(submission)
+        archive.addfile(member, io.BytesIO(submission))
+
+    scan = forensic.scan_daily_feed(
+        archive_bytes.getvalue(),
+        accession,
+        filename,
+        max_scan_bytes=1_000_000,
+        max_member_bytes=100_000,
+    )
+    assert scan["scan_complete"] is True
+    assert scan["scan_error"] is None
+    assert scan["submission_header"]["accession"] == accession
+    assert scan["submission_header"]["filer_cik"] == "0000064040"
+    assert scan["submission_header"]["form"] == "10-K"
+    assert scan["submission_header"]["filed_date_iso"] == "2019-02-13"
+    assert scan["submission_header"]["acceptance_datetime"] is None
+    assert scan["submission_header"]["acceptance_datetime_source"] == "not_present_in_daily_feed_member"
+    assert scan["pds_control_block"]["status"] == "PDS_CONTROL_BLOCK_NOT_PRESENT_IN_DAILY_FEED_MEMBER"
+    assert scan["pds_control_block"]["required_for_identity_validation"] is False
+    assert scan["primary"]["found"] is True
+    assert scan["primary"]["body_hash_variants"]["raw_text_block"]["sha256"] == forensic.sha256(b"\n" + primary + b"\n")
+
+
 def test_scan_daily_feed_does_not_confuse_pds_dissem_name_with_internal_nc_member():
     accession = "0000064040-19-000059"
     archive_bytes = io.BytesIO()
