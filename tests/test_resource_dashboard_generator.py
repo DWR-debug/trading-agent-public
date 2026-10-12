@@ -797,3 +797,125 @@ def test_dashboard_infers_physical_runner_busy_from_running_nonresearch_job():
     assert enriched["runner_busy_basis"] == "ACTIVE_WORKFLOW_ASSIGNMENT"
     assert enriched["research_slots_in_use"] == 1
     assert enriched["research_slots_free"] == 0
+
+
+def test_runner_snapshot_infers_only_recent_real_configured_self_hosted_jobs(monkeypatch):
+    from datetime import datetime, timedelta, timezone
+    from automation import generate_resource_dashboard as dashboard
+
+    now = datetime(2026, 10, 12, 12, 0, tzinfo=timezone.utc)
+    completed_at = (now - timedelta(minutes=4)).isoformat()
+    jobs = [
+        {
+            "runner_name": name,
+            "name": job_name,
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": (now - timedelta(minutes=5)).isoformat(),
+            "completed_at": completed_at,
+            "labels": ["self-hosted", "trading-agent-research"],
+        }
+        for name, job_name in (
+            ("LHT-N133732", "windows (W-STATE)"),
+            ("LHT-N133732-2", "windows (W-IDENTITY)"),
+            ("LHT-N133732-3", "windows (W-TEMPORAL)"),
+        )
+    ]
+    monkeypatch.setattr(dashboard, "run_cmd_json", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(dashboard, "jobs_for_run", lambda _run_id: jobs)
+    recent_runs = [{
+        "id": 77,
+        "path": ".github/workflows/temporal-identity-state-spine-waves.yml",
+        "head_branch": "master",
+        "status": "completed",
+        "created_at": (now - timedelta(minutes=5)).isoformat(),
+        "completed_at": completed_at,
+        "html_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/77",
+    }]
+
+    runners = dashboard.runner_snapshot(recent_runs, now=now)
+
+    assert [item["name"] for item in runners] == [
+        "LHT-N133732", "LHT-N133732-2", "LHT-N133732-3"
+    ]
+    assert all(item["status"] == "online" for item in runners)
+    assert all(item["busy"] is False for item in runners)
+    assert all(item["inventory_verified"] is False for item in runners)
+    assert all(item["status_basis"] == "RECENT_SELF_HOSTED_JOB_INFERENCE" for item in runners)
+    assert all(item["last_job_age_seconds"] == 240 for item in runners)
+
+    configured = [
+        {"name": "Windows self-hosted A", "configured_runner": "LHT-N133732", "type": "physical", "research_capacity_slots": 1},
+        {"name": "Windows self-hosted B", "configured_runner": "LHT-N133732-2", "type": "physical", "research_capacity_slots": 1},
+        {"name": "Windows self-hosted C", "configured_runner": "LHT-N133732-3", "type": "physical", "research_capacity_slots": 1},
+    ]
+    resources = dashboard.enrich_resources(configured, runners, [])
+    assert [item["capacity_state"] for item in resources] == ["available", "available", "available"]
+    assert [item["research_slots_free"] for item in resources] == [1, 1, 1]
+    assert all(item["runner_status_basis"] == "RECENT_SELF_HOSTED_JOB_INFERENCE" for item in resources)
+
+
+def test_runner_snapshot_does_not_infer_availability_from_stale_or_unrelated_jobs(monkeypatch):
+    from datetime import datetime, timedelta, timezone
+    from automation import generate_resource_dashboard as dashboard
+
+    now = datetime(2026, 10, 12, 12, 0, tzinfo=timezone.utc)
+    jobs = [
+        {
+            "runner_name": "LHT-N133732",
+            "name": "windows (W-STATE)",
+            "status": "completed",
+            "conclusion": "success",
+            "completed_at": (now - timedelta(minutes=31)).isoformat(),
+        },
+        {
+            "runner_name": "ubuntu-24.04",
+            "name": "Windows bounded regression q221",
+            "status": "completed",
+            "conclusion": "success",
+            "completed_at": (now - timedelta(minutes=1)).isoformat(),
+        },
+    ]
+    monkeypatch.setattr(dashboard, "run_cmd_json", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(dashboard, "jobs_for_run", lambda _run_id: jobs)
+    recent_runs = [{
+        "id": 78,
+        "path": ".github/workflows/temporal-identity-state-spine-waves.yml",
+        "head_branch": "master",
+        "status": "completed",
+        "created_at": now.isoformat(),
+    }]
+
+    assert dashboard.runner_snapshot(recent_runs, now=now) == []
+
+
+def test_runner_snapshot_marks_an_in_progress_real_job_as_busy(monkeypatch):
+    from datetime import datetime, timedelta, timezone
+    from automation import generate_resource_dashboard as dashboard
+
+    now = datetime(2026, 10, 12, 12, 0, tzinfo=timezone.utc)
+    jobs = [{
+        "runner_name": "LHT-N133732-3",
+        "name": "Windows bounded regression q220",
+        "status": "in_progress",
+        "started_at": (now - timedelta(minutes=45)).isoformat(),
+        "labels": ["self-hosted", "trading-agent-research"],
+    }]
+    monkeypatch.setattr(dashboard, "run_cmd_json", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(dashboard, "jobs_for_run", lambda _run_id: jobs)
+    recent_runs = [{
+        "id": 79,
+        "path": ".github/workflows/windows-candidate-gate-regression.yml",
+        "head_branch": "master",
+        "status": "in_progress",
+        "run_started_at": (now - timedelta(minutes=45)).isoformat(),
+        "html_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/79",
+    }]
+
+    result = dashboard.runner_snapshot(recent_runs, now=now)
+
+    assert len(result) == 1
+    assert result[0]["name"] == "LHT-N133732-3"
+    assert result[0]["status"] == "online"
+    assert result[0]["busy"] is True
+    assert result[0]["last_job_age_seconds"] == 2700
