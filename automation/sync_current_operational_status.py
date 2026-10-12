@@ -655,7 +655,7 @@ def generate(
             q218_sentence = " Q218 remains non-authorized for performance. "
         recorded_next_research_focus = (
             "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. "
-            "Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and the full suite passed on its tested revision. "
+            "Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and full-suite verification passed on its tested revision. "
             "Existing targeted receipt-gated repair request run #38231636160 was still in the repair step as of the 2026-10-12T10:02Z handoff; check its terminal result and immutable receipt before any next step, never restart the full census blindly. "
             "After a terminal repair receipt, compile the frozen concept-specific PIT state and require independent reproduction. "
             + q220_population_sentence +
