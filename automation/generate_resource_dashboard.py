@@ -1657,21 +1657,32 @@ def assignment_is_queued(item: dict[str, Any]) -> bool:
 
 
 def capacity_state(resource: dict[str, Any], runner: dict[str, Any] | None, assignments: list[dict[str, Any]]) -> str:
-    """Report observed research execution without treating queued jobs as running.
-
-    Runner inventory can be absent when the dashboard token lacks
-    Administration:read. In that case only an explicitly running workflow job
-    proves that the assigned resource is occupied; absence of a runner record is
-    unknown, never proof of idle capacity.
-    """
+    """Report research capacity without confusing operator assumptions with live inventory."""
     if any(assignment_is_running(item) for item in assignments):
         return "operating"
-    if runner and str(runner.get("status")).lower() == "online":
+
+    # A successfully queried runner inventory is authoritative, including an
+    # offline result. Never override an explicit offline inventory with policy.
+    if runner is not None and (
+        runner.get("status_basis") == "GITHUB_RUNNER_INVENTORY"
+        or runner.get("inventory_verified") is True
+    ):
+        return "available" if str(runner.get("status") or "").lower() == "online" else "unknown"
+
+    if runner and str(runner.get("status") or "").lower() == "online":
         return "available"
     if resource["type"] in {"cloud", "service"}:
         return "available"
+    if (
+        resource["type"] == "physical"
+        and str(resource.get("availability_policy") or "").strip()
+        == "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR"
+    ):
+        # The resource remains explicitly unverified in the dashboard. This
+        # policy allows useful bounded work to queue when GitHub exposes no
+        # runner inventory; it is not a claim that the PC is live or idle.
+        return "assumed_available"
     return "unknown"
-
 
 def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, Any]], work: list[dict[str, Any]]) -> list[dict[str, Any]]:
     out = []
@@ -1691,6 +1702,10 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         ]
         runner = runner_by_name.get(resource["configured_runner"])
         state = capacity_state(resource, runner, research_assignments)
+        if state == "assumed_available" and executing_assignments:
+            # The PC may be running non-research work; physical occupancy wins
+            # over the operator's idle-capacity assumption.
+            state = "operating"
         if executing_assignments:
             # An explicitly running job assigned to this runner is stronger
             # evidence of occupancy than a missing or stale runner snapshot,
@@ -1700,6 +1715,9 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         elif runner is not None and isinstance(runner.get("busy"), bool):
             runner_busy = runner["busy"]
             runner_busy_basis = str(runner.get("status_basis") or "GITHUB_RUNNER_INVENTORY")
+        elif runner is None and state == "assumed_available":
+            runner_busy = None
+            runner_busy_basis = "OPERATOR_AVAILABILITY_ASSUMPTION"
         else:
             # Missing inventory is not evidence that a PC is idle. A queued
             # job is waiting for capacity, not proof that this runner is busy.
@@ -1712,13 +1730,15 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         )
         research_slots_free = (
             max(0, capacity_slots - research_slots_in_use)
-            if state in {"available", "operating"} or runner_busy is True
+            if state in {"available", "operating", "assumed_available"} or runner_busy is True
             else None
         )
         if state == "operating":
             live_status = "operating"
         elif state == "available":
             live_status = "available"
+        elif state == "assumed_available":
+            live_status = "assumed available (operator policy; not live-verified)"
         else:
             live_status = "unverified / not visible"
         out.append({
@@ -2427,6 +2447,11 @@ def ai_provider_state() -> list[dict[str, Any]]:
     return out
 
 
+def configured_windows_availability_policy(os_state: dict[str, Any]) -> str:
+    """Read the canonical operator availability assertion without making it a live receipt."""
+    return str(os_state.get("self_hosted_windows_availability") or "").strip()
+
+
 def main() -> None:
     status_text = (ROOT / "docs" / "CURRENT_STATUS.md").read_text(encoding="utf-8")
     evidence = json.loads((ROOT / "research" / "evidence" / "current_operational_state.json").read_text(encoding="utf-8"))
@@ -2456,10 +2481,11 @@ def main() -> None:
     if not isinstance(handoff_decision_log, dict) or not isinstance(handoff_decision_log.get("entries"), list):
         handoff_decision_log = {"schema_version": 1, "record_type": "trading_agent_chat_decision_log", "updated_at_utc": "", "entries": []}
 
+    windows_availability_policy = configured_windows_availability_policy(os_state)
     configured_resources = [
-        {"name": "Windows self-hosted A", "type": "physical", "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
-        {"name": "Windows self-hosted B", "type": "physical", "research_capacity_slots": 1, "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
-        {"name": "Windows self-hosted C", "type": "physical", "research_capacity_slots": 1, "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "Windows self-hosted A", "type": "physical", "availability_policy": windows_availability_policy, "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "Windows self-hosted B", "type": "physical", "availability_policy": windows_availability_policy, "research_capacity_slots": 1, "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "Windows self-hosted C", "type": "physical", "availability_policy": windows_availability_policy, "research_capacity_slots": 1, "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
         {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "research_capacity_slots": 2, "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing operational capacity"},
         {"name": "GitHub-hosted ARM64", "type": "cloud", "research_capacity_slots": 2, "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
         {"name": "Free AI pool", "type": "cloud", "research_capacity_slots": 1, "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
@@ -2537,13 +2563,13 @@ def main() -> None:
             "active_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "operating"),
             "research_capacity_slots_total": sum(int(r.get("research_capacity_slots", 1) or 1) for r in configured_resources),
             "research_capacity_slots_free": sum(int(r.get("research_slots_free", 0) or 0) for r in enrich_resources(configured_resources, runners, work)),
-            "available_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "available"),
+            "available_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") in {"available", "assumed_available"}),
             "planned_capacity_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if item.get("scheduled")),
             "planned_research_queue_items": len(planned_research_queue),
             "planned_research_queue_target": 3,
             "candidate_focus_lock": list(FOCUS_CANDIDATES),
             "blocked_planned_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if not item.get("scheduled")),
-            "unallocated_routable_items": sum(1 for row in planned_capacity if row.get("capacity_state") == "available" and not row.get("planned_assignments")),
+            "unallocated_routable_items": sum(1 for row in planned_capacity if row.get("capacity_state") in {"available", "assumed_available"} and not row.get("planned_assignments")),
             "planned_capacity_note": "bounded plan; only entries marked dispatchable have an executable workflow route. This plan never creates scientific authorization.",
             "milestones_12h": len(milestones_12h),
         },
