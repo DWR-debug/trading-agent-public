@@ -129,4 +129,4 @@ def test_original_feed_hash_comparison_never_changes_scientific_gate():
         "FROZEN_HASH_MATCHES_NEITHER_OBSERVED_BODY"
     )
     assert forensic.SOURCE_RECEIPT_FINGERPRINT == "c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075"
-    assert forensic.SOURCE_HASH_FAILURE_COUNT if hasattr(forensic, "SOURCE_HASH_FAILURE_COUNT") else forensic.EXPECTED_SOURCE_HASH_FAILURE_COUNT == 55
+    assert forensic.EXPECTED_SOURCE_HASH_FAILURE_COUNT == 55
