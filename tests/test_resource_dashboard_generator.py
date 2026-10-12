@@ -97,7 +97,7 @@ def test_dashboard_capacity_state_is_explicit():
         "type": "physical",
         "availability_policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
     }
-    assert capacity_state(physical, {"status":"online","busy":True}, []) == "available"
+    assert capacity_state(physical, {"status":"online","busy":True}, []) == "operating"
     assert capacity_state(physical, {"status":"online","busy":True}, [{"lane":"FRONTIER DISCOVERY","status":"in_progress"}]) == "operating"
     assert capacity_state(physical, {"status":"online","busy":False}, [{"lane":"FRONTIER DISCOVERY","status":"queued"}]) == "available"
     assert capacity_state(physical, None, [{"lane":"FRONTIER DISCOVERY","status":"queued"}]) == "unknown"
@@ -108,7 +108,7 @@ def test_dashboard_capacity_state_is_explicit():
         assumed_physical,
         {"status": "offline", "busy": False, "status_basis": "GITHUB_RUNNER_INVENTORY", "inventory_verified": True},
         [],
-    ) == "unknown"
+    ) == "assumed_available"
     assert capacity_state(cloud, None, []) == "available"
 
 
@@ -117,6 +117,11 @@ def test_dashboard_reads_canonical_windows_operator_availability_policy():
 
     assert configured_windows_availability_policy({
         "self_hosted_windows_availability": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
+    }) == "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR"
+    assert configured_windows_availability_policy({
+        "resource_routing": {
+            "self_hosted_windows_availability": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
+        },
     }) == "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR"
     assert configured_windows_availability_policy({}) == ""
 
@@ -136,7 +141,8 @@ def test_dashboard_runner_busy_does_not_inflate_research_work():
         [{"name": "runner-a", "status": "online", "busy": True, "labels": []}],
         [],
     )[0]
-    assert enriched["capacity_state"] == "available"
+    assert enriched["capacity_state"] == "operating"
+    assert enriched["live_status"] == "operating"
     assert enriched["current_assignments"] == 0
     assert enriched["runner_busy"] is True
     assert enriched["research_slots_in_use"] == 1
@@ -182,6 +188,39 @@ def test_dashboard_uses_operator_availability_assumption_without_calling_it_live
     assert enriched["runner_busy_basis"] == "OPERATOR_AVAILABILITY_ASSUMPTION"
     assert enriched["runner_status"] is None
     assert enriched["runner_inventory_verified"] is False
+    assert enriched["research_slots_free"] == 1
+
+
+
+
+def test_dashboard_keeps_windows_slot_routable_when_verified_inventory_reports_offline():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "availability_policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    enriched = enrich_resources(
+        [resource],
+        [{
+            "name": "runner-a",
+            "status": "offline",
+            "busy": False,
+            "status_basis": "GITHUB_RUNNER_INVENTORY",
+            "inventory_verified": True,
+        }],
+        [],
+    )[0]
+
+    assert enriched["capacity_state"] == "assumed_available"
+    assert enriched["live_status"] == "assumed routable (operator policy; GitHub inventory reports offline; not live-online)"
+    assert enriched["runner_status"] == "offline"
+    assert enriched["runner_inventory_verified"] is True
+    assert enriched["runner_busy"] is False
     assert enriched["research_slots_free"] == 1
 
 
