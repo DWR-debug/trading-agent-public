@@ -237,7 +237,6 @@ def test_bounded_get_rejects_truncated_body_when_content_length_is_known(monkeyp
         def read(self, _size):
             return b"x" * 50
 
-    monkeypatch.setattr(forensic.time, "monotonic", lambda: 100.0)
     monkeypatch.setattr(
         forensic.urllib.request,
         "urlopen",
