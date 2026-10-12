@@ -1669,30 +1669,36 @@ def assignment_is_queued(item: dict[str, Any]) -> bool:
 
 
 def capacity_state(resource: dict[str, Any], runner: dict[str, Any] | None, assignments: list[dict[str, Any]]) -> str:
-    """Report research capacity without confusing operator assumptions with live inventory."""
+    """Report occupied slots from active jobs; separate routing policy from live telemetry."""
     if any(assignment_is_running(item) for item in assignments):
         return "operating"
 
-    # A successfully queried runner inventory is authoritative, including an
-    # offline result. Never override an explicit offline inventory with policy.
-    if runner is not None and (
-        runner.get("status_basis") == "GITHUB_RUNNER_INVENTORY"
-        or runner.get("inventory_verified") is True
-    ):
-        return "available" if str(runner.get("status") or "").lower() == "online" else "unknown"
-
-    if runner and str(runner.get("status") or "").lower() == "online":
-        return "available"
-    if resource["type"] in {"cloud", "service"}:
-        return "available"
-    if (
+    windows_policy = (
         resource["type"] == "physical"
         and str(resource.get("availability_policy") or "").strip()
         == "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR"
-    ):
-        # The resource remains explicitly unverified in the dashboard. This
-        # policy allows useful bounded work to queue when GitHub exposes no
-        # runner inventory; it is not a claim that the PC is live or idle.
+    )
+    if runner is not None and runner.get("busy") is True:
+        return "operating"
+
+    inventory_verified = runner is not None and (
+        runner.get("status_basis") == "GITHUB_RUNNER_INVENTORY"
+        or runner.get("inventory_verified") is True
+    )
+    observed_status = str((runner or {}).get("status") or "").lower()
+    if inventory_verified:
+        if observed_status == "online":
+            return "available"
+        # The confirmed Windows policy permits routing even if GitHub's
+        # volatile inventory is missing, stale, or reports the runner offline.
+        # Keep the observation intact; never relabel it as live-online.
+        return "assumed_available" if windows_policy else "unknown"
+
+    if observed_status == "online":
+        return "available"
+    if resource["type"] in {"cloud", "service"}:
+        return "available"
+    if windows_policy:
         return "assumed_available"
     return "unknown"
 
@@ -1714,9 +1720,9 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         ]
         runner = runner_by_name.get(resource["configured_runner"])
         state = capacity_state(resource, runner, research_assignments)
-        if state == "assumed_available" and executing_assignments:
-            # The PC may be running non-research work; physical occupancy wins
-            # over the operator's idle-capacity assumption.
+        if executing_assignments:
+            # Any job actually running on this resource occupies it, regardless
+            # of whether the task belongs to a research or platform lane.
             state = "operating"
         if executing_assignments:
             # An explicitly running job assigned to this runner is stronger
@@ -1750,7 +1756,17 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         elif state == "available":
             live_status = "available"
         elif state == "assumed_available":
-            live_status = "assumed available (operator policy; not live-verified)"
+            inventory_verified = bool(
+                runner
+                and (
+                    runner.get("status_basis") == "GITHUB_RUNNER_INVENTORY"
+                    or runner.get("inventory_verified") is True
+                )
+            )
+            if inventory_verified and str(runner.get("status") or "").lower() != "online":
+                live_status = "assumed routable (operator policy; GitHub inventory reports offline; not live-online)"
+            else:
+                live_status = "assumed available (operator policy; not live-verified)"
         else:
             live_status = "unverified / not visible"
         out.append({
@@ -2460,8 +2476,10 @@ def ai_provider_state() -> list[dict[str, Any]]:
 
 
 def configured_windows_availability_policy(os_state: dict[str, Any]) -> str:
-    """Read the canonical operator availability assertion without making it a live receipt."""
-    return str(os_state.get("self_hosted_windows_availability") or "").strip()
+    """Read the persistent Windows routing assertion, separately from live runner telemetry."""
+    nested = os_state.get("resource_routing")
+    nested_policy = nested.get("self_hosted_windows_availability") if isinstance(nested, dict) else None
+    return str(os_state.get("self_hosted_windows_availability") or nested_policy or "").strip()
 
 
 def main() -> None:

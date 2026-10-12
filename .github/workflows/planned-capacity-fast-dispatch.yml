@@ -41,7 +41,7 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Snapshot current bounded plan
+      - name: Snapshot current Actions run history and duplicate-protection state
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -82,7 +82,6 @@ jobs:
             done
           }
 
-          python3 automation/generate_resource_dashboard.py
           recent="$(gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=200")"
           in_progress="$(gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs?status=in_progress&per_page=100")"
           queued="$(gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs?status=queued&per_page=100")"
@@ -99,13 +98,30 @@ jobs:
             | unique_by(.id)
           ' <(printf '%s\n' "$recent") <(printf '%s\n' "$in_progress") <(printf '%s\n' "$queued") <(printf '%s\n' "$waiting") <(printf '%s\n' "$pending") <(printf '%s\n' "$slot_history") <(printf '%s\n' "$q104_census_history") > "$RUNNER_TEMP/current_runs.json"
 
+      - name: Build direct runner dispatch snapshot from active GitHub jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m automation.build_direct_dispatch_snapshot \
+            --runs "$RUNNER_TEMP/current_runs.json" \
+            --repo "$GITHUB_REPOSITORY" \
+            --output "$RUNNER_TEMP/direct_dispatch_snapshot.json"
+          cat "$RUNNER_TEMP/direct_dispatch_snapshot.json" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Dispatch executable ready capacity
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m automation.planned_capacity_fast_dispatch             --snapshot docs/dashboard/dashboard_data.json             --runs "$RUNNER_TEMP/current_runs.json"             --output "$RUNNER_TEMP/planned_capacity_fast_dispatch.json"             --repo "$GITHUB_REPOSITORY"             --max-dispatches 6
+          python3 -m automation.planned_capacity_fast_dispatch \
+            --snapshot "$RUNNER_TEMP/direct_dispatch_snapshot.json" \
+            --runs "$RUNNER_TEMP/current_runs.json" \
+            --output "$RUNNER_TEMP/planned_capacity_fast_dispatch.json" \
+            --repo "$GITHUB_REPOSITORY" \
+            --max-dispatches 6
 
           cat "$RUNNER_TEMP/planned_capacity_fast_dispatch.json" >> "$GITHUB_STEP_SUMMARY"
 
@@ -154,6 +170,8 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: planned-capacity-fast-dispatch-${{ github.run_id }}-${{ github.run_attempt }}
-          path: "${{ runner.temp }}/planned_capacity_fast_dispatch.json"
+          path: |
+            ${{ runner.temp }}/direct_dispatch_snapshot.json
+            ${{ runner.temp }}/planned_capacity_fast_dispatch.json
           if-no-files-found: error
           retention-days: 14
