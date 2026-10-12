@@ -1,7 +1,7 @@
 import json
 from datetime import date
 
-from automation.q104_i22_filing_arrival_compiler import compile_rows, mutation_tests
+from automation.q104_i22_filing_arrival_compiler import compile_rows, mutation_tests, target_cik_mapping
 
 def rows():
     return [
@@ -42,3 +42,28 @@ def test_i22_density_uses_actual_xnys_sessions_not_event_sessions():
     )
     assert late_density["arrival_count_20"] == 1
     assert late_density["window_session_count"] == 20
+
+
+def test_i22_target_cik_mapping_ignores_unrelated_catalog_order():
+    target_rows = [
+        {"ticker":"SPGI","cik_str":64040},
+        {"ticker":"NDAQ","cik_str":1120193},
+        {"ticker":"AMP","cik_str":820027},
+        {"ticker":"RJF","cik_str":720005},
+        {"ticker":"WMB","cik_str":107263},
+        {"ticker":"VLO","cik_str":1035002},
+        {"ticker":"DVN","cik_str":1090012},
+        {"ticker":"EMN","cik_str":915389},
+    ]
+    first = {str(i): row for i, row in enumerate(target_rows)}
+    second_rows = list(reversed(target_rows)) + [
+        {"ticker":"UNRELATED","cik_str":9999999}
+    ]
+    second = {str(i): row for i, row in enumerate(second_rows)}
+
+    expected = {
+        "SPGI":64040, "NDAQ":1120193, "AMP":820027, "RJF":720005,
+        "WMB":107263, "VLO":1035002, "DVN":1090012, "EMN":915389,
+    }
+    assert target_cik_mapping(first) == expected
+    assert target_cik_mapping(second) == expected

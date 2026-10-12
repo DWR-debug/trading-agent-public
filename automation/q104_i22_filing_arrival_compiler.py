@@ -154,17 +154,29 @@ def mutation_tests(compiled:list[dict])->dict:
         "amendment_accession_separation":accession_ok
     }
 
+def target_cik_mapping(payload:dict)->dict[str,int]:
+    """Return only the frozen target ticker-to-CIK mapping.
+
+    The SEC company_tickers.json response contains a much larger, mutable
+    catalogue. Its raw-byte digest can change because unrelated entries or
+    serialization order change. The compiler's effective identity input is
+    this canonical eight-issuer mapping, which is recorded and compared
+    separately from the raw response digest.
+    """
+    mapping={}
+    for row in payload.values():
+        t=str(row.get("ticker","")).upper(); cik=row.get("cik_str")
+        if t in SYMBOLS and isinstance(cik,int): mapping[t]=cik
+    if set(mapping)!=set(SYMBOLS): raise RuntimeError("MISSING_CIK_MAPPING")
+    return {symbol:mapping[symbol] for symbol in SYMBOLS}
+
 def main()->int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--output",type=Path,required=True)
     args=ap.parse_args()
     st,body,payload=get_json("https://www.sec.gov/files/company_tickers.json")
     if st!=200 or not isinstance(payload,dict): raise RuntimeError("SEC_TICKERS_HTTP")
-    mapping={}
-    for row in payload.values():
-        t=str(row.get("ticker","")).upper(); cik=row.get("cik_str")
-        if t in SYMBOLS and isinstance(cik,int): mapping[t]=cik
-    if set(mapping)!=set(SYMBOLS): raise RuntimeError("MISSING_CIK_MAPPING")
+    mapping=target_cik_mapping(payload)
     issuers=[fetch_issuer(s,mapping[s]) for s in SYMBOLS]
     compiled=[]
     for item in issuers:
@@ -180,6 +192,7 @@ def main()->int:
         "eligible_session_rule":"first XNYS session whose session_date is strictly after the acceptanceDateTime calendar date",
         "arrival_density_window":WINDOW,
         "symbols":list(SYMBOLS),
+        "issuer_ciks":{symbol:f"{mapping[symbol]:010d}" for symbol in SYMBOLS},
         "issuer_results":{x["symbol"]:x["compiled"] for x in compiled},
         "summary":{"filings":sum(x["compiled"]["filing_count"] for x in compiled),"eligible_sessions":sum(x["compiled"]["eligible_session_count"] for x in compiled)},
         "mutation_tests":mutation,

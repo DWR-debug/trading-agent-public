@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: "5 */6 * * *"
   push:
+    branches: [master]
     paths:
       - "automation/q104_i22_filing_arrival_compiler.py"
       - "tests/test_q104_i22_filing_arrival_compiler.py"
@@ -50,7 +51,13 @@ jobs:
           import json,sys,hashlib
           a=json.load(open(sys.argv[1],encoding="utf-8"))
           b=json.load(open(sys.argv[2],encoding="utf-8"))
-          assert a == b, "Q104_I22_ARCHITECTURE_REPRODUCTION_MISMATCH"
+          # The raw company_tickers.json body hash is provenance metadata and
+          # can vary with unrelated catalog records/order. Compare its effective
+          # target mapping and all substantive compiler output exactly instead.
+          assert a.get("issuer_ciks") == b.get("issuer_ciks"), "Q104_I22_TARGET_CIK_MAPPING_MISMATCH"
+          stable_a = {k:v for k,v in a.items() if k not in {"source_response_fingerprint","receipt_fingerprint"}}
+          stable_b = {k:v for k,v in b.items() if k not in {"source_response_fingerprint","receipt_fingerprint"}}
+          assert stable_a == stable_b, "Q104_I22_ARCHITECTURE_REPRODUCTION_MISMATCH"
           assert a["status"] == "I22_PIT_COMPILER_COMPLETED"
           assert all(a["mutation_tests"].values())
           assert a["governance"]["performance_authorized"] is False
@@ -65,7 +72,10 @@ jobs:
             "source_master_sha":__import__("os").environ["GITHUB_SHA"],
             "x64_receipt_fingerprint":a["receipt_fingerprint"],
             "arm64_receipt_fingerprint":b["receipt_fingerprint"],
-            "source_response_fingerprint":a["source_response_fingerprint"],
+            "x64_source_response_fingerprint":a["source_response_fingerprint"],
+            "arm64_source_response_fingerprint":b["source_response_fingerprint"],
+            "source_response_fingerprint_equal":a["source_response_fingerprint"] == b["source_response_fingerprint"],
+            "architecture_equality_rule":"Exact equality after excluding raw response-body and receipt fingerprints; target CIK mapping and all substantive compiler outputs must match.",
             "summary":a["summary"],
             "mutation_tests":a["mutation_tests"],
             "architecture_equality":True,
@@ -85,6 +95,7 @@ jobs:
           print(json.dumps(payload,sort_keys=True))
           PY
       - name: Publish immutable reconciliation receipt
+        if: github.ref == 'refs/heads/master'
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
