@@ -160,7 +160,8 @@ def parse_header_fields(raw: bytes, route: str) -> dict[str, str | None]:
         match = re.search(pattern, text, re.IGNORECASE | re.MULTILINE)
         return match.group(1).strip() if match else None
     accession = first(r"<ACCESSION-NUMBER>\s*([0-9-]{18,25})") or first(r"ACCESSION NUMBER:\s*([0-9-]{18,25})")
-    cik = first(r"<CIK>\s*(\d{1,10})") or first(r"CENTRAL INDEX KEY:\s*(\d{1,10})")
+    filer_block = re.search(r"<FILER>.*?<CIK>\s*(\d{1,10})", text, re.IGNORECASE | re.DOTALL)
+    cik = filer_block.group(1) if filer_block else (first(r"<CIK>\s*(\d{1,10})") or first(r"CENTRAL INDEX KEY:\s*(\d{1,10})"))
     form = first(r"<CONFORMED-SUBMISSION-TYPE>\s*([A-Z0-9/-]+)") or first(r"CONFORMED SUBMISSION TYPE:\s*([A-Z0-9/-]+)")
     filing = first(r"<FILING-DATE>\s*(\d{8})") or first(r"FILED AS OF DATE:\s*(\d{8})") or first(r"FILING DATE:\s*(\d{4}-\d{2}-\d{2})")
     change = first(r"<DATE-OF-FILING-DATE-CHANGE>\s*(\d{8})")
