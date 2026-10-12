@@ -118,11 +118,14 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "Q218 has been removed from active focus and automatic dispatch" in focus
     assert "Q219 remains paused; its prior evidence is preserved." in focus
     assert "never restart the full census blindly" in focus
-    assert "### Persistent research handoff — verified snapshot 2026-10-12T10:02Z" in doc
+    assert "### Persistent research handoff — verified snapshot 2026-10-12T10:14Z" in doc
     assert "Q104:I19" in doc and "#38231636160" in doc
     assert "FORENSIC_COMPARISON_INCOMPLETE" in doc and "#38233685159" in doc
     assert "2,829,769,099 bytes downloaded" in doc
     assert "348/348" in doc and "247/247" in doc
+    assert "one captured exact URL and six no-hit responses" in focus
+    assert "no-hit is not proof of historical absence" in focus
+    assert "do not expand this exact-page route across the 348-key sample" in focus
     assert "Q220: original SEC daily Feed forensic run #38233685159" in focus
     assert "daily .nc.tar.gz tar member is accession.nc" in focus
     assert "daily Feed TAR members `{accession}.nc`" in doc
