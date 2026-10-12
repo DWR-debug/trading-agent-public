@@ -1,7 +1,10 @@
 from datetime import date
 
+import pytest
+
 from automation.q104_i22_independent_pit_reproduction import (
     END, FORMS, START, WINDOW, compile_population, receipt_fingerprint, reference_prefix, columnar_rows,
+    validate_q107_policy_flags,
 )
 
 
@@ -59,3 +62,62 @@ def test_fixed_contract_constants_are_not_performance_authority():
     assert START == date(2011, 1, 1)
     assert END == date(2025, 9, 24)
     assert WINDOW == 20
+
+
+def q107_policy_objects():
+    false_receipt_flags = {
+        "performance_evaluation": False,
+        "oos_evaluation": False,
+        "holdout_evaluation": False,
+        "selection_used": False,
+        "holdout_used_for_selection": False,
+    }
+    safety = {
+        "paper_only": True,
+        "live_trading_enabled": False,
+        "orders_enabled": False,
+        "automatic_promotion": False,
+    }
+    q107 = {
+        **false_receipt_flags,
+        "scientific_outcome": "COVERAGE_PASSED_NO_PERFORMANCE_EVIDENCE",
+        "safety": dict(safety),
+    }
+    manifest = {
+        "governance": {
+            **false_receipt_flags,
+            "performance_trial_authorized": False,
+            "automatic_promotion": False,
+        },
+        "safety": dict(safety),
+    }
+    return q107, manifest
+
+
+def test_q107_policy_flags_are_read_from_their_actual_schema_locations():
+    q107, manifest = q107_policy_objects()
+    # q107_coverage_result.json has top-level policy flags, while the canonical
+    # snapshot manifest nests the matching flags under governance.
+    assert "governance" not in q107
+    validate_q107_policy_flags(q107, manifest)
+
+
+def test_q107_receipt_policy_gate_fails_closed_when_top_level_flag_is_true():
+    q107, manifest = q107_policy_objects()
+    q107["holdout_evaluation"] = True
+    with pytest.raises(RuntimeError, match="Q107_GOVERNANCE_GATE_MISMATCH"):
+        validate_q107_policy_flags(q107, manifest)
+
+
+def test_q107_manifest_policy_gate_fails_closed_when_promotion_is_enabled():
+    q107, manifest = q107_policy_objects()
+    manifest["governance"]["automatic_promotion"] = True
+    with pytest.raises(RuntimeError, match="Q107_MANIFEST_GOVERNANCE_GATE_MISMATCH"):
+        validate_q107_policy_flags(q107, manifest)
+
+
+def test_q107_safety_gates_fail_closed_for_either_frozen_input():
+    q107, manifest = q107_policy_objects()
+    manifest["safety"]["live_trading_enabled"] = True
+    with pytest.raises(RuntimeError, match="Q107_MANIFEST_SAFETY_GATE_MISMATCH"):
+        validate_q107_policy_flags(q107, manifest)
