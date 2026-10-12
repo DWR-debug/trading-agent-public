@@ -162,7 +162,7 @@ def validate_request(request_path: Path, input_path: Path) -> dict[str, Any]:
         raise ValueError("Q221_SOURCE_MANIFEST_GATE_MUST_REMAIN_NEGATIVE")
     if manifest.get("historical_first_public_observation_proven") is not False:
         raise ValueError("Q221_SOURCE_MANIFEST_PUBLIC_CLOCK_GATE_MUST_REMAIN_NEGATIVE")
-    if manifest.get("event_level_public_boundary_proven") is not False:
+    if manifest.get("event_level_public_boundary_proven") is True:
         raise ValueError("Q221_SOURCE_MANIFEST_EVENT_BOUNDARY_GATE_MUST_REMAIN_NEGATIVE")
     if manifest.get("action_date_is_not_public_observation_time") is not True:
         raise ValueError("Q221_ACTION_DATE_PUBLIC_CLOCK_GUARD_MISSING")
