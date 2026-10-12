@@ -421,6 +421,18 @@ def infer_lane(workflow: str, job: str = "", event: str | None = None) -> str:
     if str(event or "").lower() == "pull_request":
         return "VALIDATION / CI"
     text = f"{workflow} {job}".lower()
+    # Regression matrices often include the candidate identifier in the job
+    # name (Q104/Q220/Q221), but they are verification work, not active
+    # scientific work on those candidates. Keep the physical runner occupied
+    # through its assignment record while allowing independent hosted research
+    # for the candidate to proceed in parallel.
+    if any(k in text for k in (
+        "windows candidate gate regression",
+        "windows bounded regression",
+        "candidate gate regression wave",
+        "bounded regression pack",
+    )):
+        return "VALIDATION / CI"
     if any(k in text for k in ("q104", "q121", "formal readiness", "authorization readiness")):
         return "FORMAL READINESS"
     if any(k in text for k in (
