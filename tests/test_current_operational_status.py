@@ -124,7 +124,7 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "Read-only residual lineage run #38255701998 completed LINEAGE_DIAGNOSTIC_COMPLETE" in focus
     assert "4/4 frozen accessions, 12/12 SEC header probes" in focus
     assert "unresolved cross-publication source-field conflict" in focus
-    assert "do not restart the census" in focus
+    assert "or restart the census" in focus
     assert "### Historical research handoff checkpoint — 2026-10-12T10:17Z" in doc
     assert "Q104:I19" in doc and "#38231636160" in doc
     assert "FORENSIC_COMPARISON_INCOMPLETE" in doc and "#38233685159" in doc
