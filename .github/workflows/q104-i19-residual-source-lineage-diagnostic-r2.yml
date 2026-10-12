@@ -1,0 +1,105 @@
+name: Q104 I19 Residual Source-Lineage Diagnostic R2
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q104_i19_residual_source_lineage_r2.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q104-i19-residual-source-lineage-r2
+  cancel-in-progress: false
+
+jobs:
+  lineage:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Validate terminal census and exact source artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          request="research/run_requests/q104_i19_residual_source_lineage_r2.trigger"
+          test -s "$request"
+          source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' "$request")"
+          [[ "$source_run_id" =~ ^[0-9]+$ ]]
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id" > "$RUNNER_TEMP/q104-lineage-r2-source-run.json"
+          jq -e '
+            .name == "Q104 I19 Historical 13F Identity Census"
+            and .status == "completed"
+            and .head_branch == "master"
+            and (.conclusion == "failure" or .conclusion == "cancelled")
+          ' "$RUNNER_TEMP/q104-lineage-r2-source-run.json" >/dev/null
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/q104-lineage-r2-artifacts.json"
+          for artifact in \
+            "q104-i19-sec-source-snapshot-$source_run_id" \
+            "q104-i19-census-2017-2018-$source_run_id" \
+            "q104-i19-census-2024-2025-09-$source_run_id"; do
+            jq -e --arg n "$artifact" '[.artifacts[]? | select(.name == $n and .expired == false)] | length == 1' \
+              "$RUNNER_TEMP/q104-lineage-r2-artifacts.json" >/dev/null
+          done
+          echo "Q104_LINEAGE_R2_SOURCE_RUN_ID=$source_run_id"
+
+      - name: Download exact source snapshot and pinned shard receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' research/run_requests/q104_i19_residual_source_lineage_r2.trigger)"
+          root="research/runs/q104_i19_residual_source_lineage_r2/$GITHUB_RUN_ID"
+          mkdir -p "$root/source_snapshot" "$root/input/2017-2018" "$root/input/2024-2025-09"
+          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
+            --name "q104-i19-sec-source-snapshot-$source_run_id" --dir "$root/source_snapshot"
+          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
+            --name "q104-i19-census-2017-2018-$source_run_id" --dir "$root/input/2017-2018"
+          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
+            --name "q104-i19-census-2024-2025-09-$source_run_id" --dir "$root/input/2024-2025-09"
+          echo "Q104_LINEAGE_R2_ROOT=$root" >> "$GITHUB_ENV"
+
+      - name: Capture bounded cross-vintage source-lineage observations
+        id: probe
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q104_i19_residual_source_lineage_diagnostic_r2 \
+            --request research/run_requests/q104_i19_residual_source_lineage_r2.trigger \
+            --source-snapshot-dir "$Q104_LINEAGE_R2_ROOT/source_snapshot" \
+            --input-dir "$Q104_LINEAGE_R2_ROOT/input" \
+            --output "$Q104_LINEAGE_R2_ROOT/receipt.json"
+
+      - name: Upload immutable R2 diagnostic receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-residual-lineage-r2-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q104_i19_residual_source_lineage_r2/*/receipt.json
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+
+      - name: Fail closed when observations are incomplete
+        if: steps.probe.outcome != 'success'
+        run: |
+          echo "Q104 R2 observations incomplete; all acceptance-time and research gates remain closed."
+          exit 1
