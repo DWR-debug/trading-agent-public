@@ -46,9 +46,12 @@ jobs:
         shell: bash
         continue-on-error: true
         run: |
+          set +e
           set -o pipefail
           python -m pytest -q 2>&1 | tee "$RUNNER_TEMP/pytest.log"
-          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          pytest_exit_code=${PIPESTATUS[0]}
+          set -e
+          echo "exit_code=$pytest_exit_code" >> "$GITHUB_OUTPUT"
 
       - name: Diagnose pytest result
         if: always()
