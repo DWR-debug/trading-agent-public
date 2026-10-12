@@ -1248,3 +1248,125 @@ def test_dispatcher_fails_closed_when_live_capacity_state_is_unknown_even_if_slo
     assert plan["paper_only"] is True
     assert plan["performance_authorization"] is False
     assert plan["live_execution"] is False
+
+
+def test_dispatcher_accepts_operator_assumed_available_windows_capacity_when_no_runner_inventory():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "master_sha": "current-master",
+        "focus_candidates": ["Q220"],
+        "work_assignments": [],
+        "resources": [{
+            "name": "Windows self-hosted A",
+            "capacity_state": "assumed_available",
+            "research_capacity_slots": 1,
+            "research_slots_in_use": 0,
+            "research_slots_free": 1,
+        }],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted A",
+            "capacity_state": "assumed_available",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q220-AS-FILED-REPRESENTATION",
+                "candidate": "Q220",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": workflow,
+                "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+            }],
+        }],
+    }
+
+    plan = dispatch_candidates(snapshot, [], max_dispatches=2)
+
+    assert [item["candidate"] for item in plan["dispatches"]] == ["Q220"]
+    assert plan["dispatches"][0]["inputs"]["resource"] == "windows"
+    assert plan["paper_only"] is True
+    assert plan["performance_authorization"] is False
+    assert plan["live_execution"] is False
+
+
+def test_dispatcher_fills_an_independent_slot_when_same_slot_workflow_is_active(monkeypatch):
+    from automation import planned_capacity_fast_dispatch as dispatcher
+
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    monkeypatch.setattr(dispatcher, "q221_vintage_auto_dispatch_block_reason", lambda: None)
+    snapshot = {
+        "master_sha": "current-master",
+        "focus_candidates": ["Q220", "Q221"],
+        "work_assignments": [],
+        "resources": [
+            {
+                "name": "Windows self-hosted B",
+                "capacity_state": "assumed_available",
+                "research_capacity_slots": 1,
+                "research_slots_in_use": 0,
+                "research_slots_free": 1,
+            },
+            {
+                "name": "GitHub-hosted Ubuntu x64",
+                "capacity_state": "available",
+                "research_capacity_slots": 2,
+                "research_slots_in_use": 0,
+                "research_slots_free": 2,
+            },
+        ],
+        "planned_capacity": [
+            {
+                "resource": "GitHub-hosted Ubuntu x64",
+                "capacity_state": "available",
+                "current_assignments": 0,
+                "research_capacity_slots": 2,
+                "planned_assignments": [{
+                    "plan_id": "Q220-AS-FILED-REPRESENTATION",
+                    "candidate": "Q220",
+                    "scheduled": True,
+                    "dispatchable": True,
+                    "execution_workflow": workflow,
+                    "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+                }],
+            },
+            {
+                "resource": "Windows self-hosted B",
+                "capacity_state": "assumed_available",
+                "current_assignments": 0,
+                "research_capacity_slots": 1,
+                "planned_assignments": [{
+                    "plan_id": "Q221-USASPENDING-PUBLIC-CLOCK",
+                    "candidate": "Q221",
+                    "scheduled": True,
+                    "dispatchable": True,
+                    "execution_workflow": workflow,
+                    "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+                }],
+            },
+        ],
+    }
+    active_q220 = {
+        "id": 100,
+        "name": "Top-4 Candidate Slot Research",
+        "display_title": "Top-4 Slot ubuntu_x64 Q220 all",
+        "run_name": "Top-4 Slot ubuntu_x64 Q220 all",
+        "path": workflow,
+        "status": "in_progress",
+        "conclusion": None,
+        "head_sha": "current-master",
+    }
+
+    plan = dispatcher.dispatch_candidates(snapshot, [active_q220], max_dispatches=3)
+
+    assert [item["candidate"] for item in plan["dispatches"]] == ["Q221"]
+    assert plan["dispatches"][0]["inputs"]["resource"] == "windows"
+    assert any(
+        item.get("plan_id") == "Q220-AS-FILED-REPRESENTATION"
+        and item.get("decision") == "SKIP_SLOT_SCOPE_ACTIVE"
+        for item in plan["decisions"]
+    )
+    assert plan["paper_only"] is True
+    assert plan["performance_authorization"] is False
+    assert plan["live_execution"] is False
+

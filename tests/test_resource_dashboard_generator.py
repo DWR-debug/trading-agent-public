@@ -58,13 +58,32 @@ def test_dashboard_capacity_state_is_explicit():
 
     physical = {"type":"physical"}
     cloud = {"type":"cloud"}
+    assumed_physical = {
+        "type": "physical",
+        "availability_policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
+    }
     assert capacity_state(physical, {"status":"online","busy":True}, []) == "available"
     assert capacity_state(physical, {"status":"online","busy":True}, [{"lane":"FRONTIER DISCOVERY","status":"in_progress"}]) == "operating"
     assert capacity_state(physical, {"status":"online","busy":False}, [{"lane":"FRONTIER DISCOVERY","status":"queued"}]) == "available"
     assert capacity_state(physical, None, [{"lane":"FRONTIER DISCOVERY","status":"queued"}]) == "unknown"
     assert capacity_state(physical, {"status":"online","busy":False}, []) == "available"
     assert capacity_state(physical, None, []) == "unknown"
+    assert capacity_state(assumed_physical, None, []) == "assumed_available"
+    assert capacity_state(
+        assumed_physical,
+        {"status": "offline", "busy": False, "status_basis": "GITHUB_RUNNER_INVENTORY", "inventory_verified": True},
+        [],
+    ) == "unknown"
     assert capacity_state(cloud, None, []) == "available"
+
+
+def test_dashboard_reads_canonical_windows_operator_availability_policy():
+    from automation.generate_resource_dashboard import configured_windows_availability_policy
+
+    assert configured_windows_availability_policy({
+        "self_hosted_windows_availability": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
+    }) == "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR"
+    assert configured_windows_availability_policy({}) == ""
 
 
 def test_dashboard_runner_busy_does_not_inflate_research_work():
@@ -107,6 +126,28 @@ def test_dashboard_does_not_report_missing_runner_inventory_as_idle():
     assert unknown["research_slots_free"] is None
     assert unknown["current_assignments"] == 0
     assert unknown["queued_assignments"] == 0
+
+
+def test_dashboard_uses_operator_availability_assumption_without_calling_it_live_inventory():
+    from automation.generate_resource_dashboard import enrich_resources
+
+    resource = {
+        "name": "Windows self-hosted A",
+        "type": "physical",
+        "availability_policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
+        "research_capacity_slots": 1,
+        "configured_runner": "runner-a",
+        "role": "test",
+    }
+    enriched = enrich_resources([resource], [], [])[0]
+
+    assert enriched["capacity_state"] == "assumed_available"
+    assert enriched["live_status"] == "assumed available (operator policy; not live-verified)"
+    assert enriched["runner_busy"] is None
+    assert enriched["runner_busy_basis"] == "OPERATOR_AVAILABILITY_ASSUMPTION"
+    assert enriched["runner_status"] is None
+    assert enriched["runner_inventory_verified"] is False
+    assert enriched["research_slots_free"] == 1
 
 
 def test_dashboard_infers_runner_busy_from_a_live_assigned_workflow_only():

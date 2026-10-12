@@ -753,6 +753,16 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         if workflow == SLOT_SCOPED_WORKFLOW:
             resource_input = {"Windows self-hosted A":"windows","Windows self-hosted B":"windows","Windows self-hosted C":"windows","GitHub-hosted Ubuntu x64":"ubuntu_x64","GitHub-hosted ARM64":"ubuntu_arm64"}.get(resource)
             scope = (resource_input, candidate) if resource_input else None
+            active_scope = (resource_input, candidate, gate) if resource_input else None
+            if active_scope and active_scope in active_slot_scopes:
+                decisions.append({
+                    "plan_id": item.get("plan_id"),
+                    "decision": "SKIP_SLOT_SCOPE_ACTIVE",
+                    "resource_scope": resource_input,
+                    "candidate": candidate,
+                    "gate": gate,
+                })
+                continue
             focus_wave = bool((item.get("execution_workflow_inputs") or {}).get("focus_wave"))
             q218_completed_gates = completed_q218_gates_for_current_context(runs) if candidate == "Q218" and focus_wave else set()
             if candidate == "Q218" and focus_wave and gate in q218_completed_gates:
@@ -879,7 +889,10 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_DISPATCH_SCOPE_ALREADY_SELECTED"})
             continue
 
-        if workflow_is_active(workflow, active_paths, runs):
+        # The Top-4 slot workflow is intentionally multi-resource. Its exact
+        # resource/candidate/gate scope is guarded above; a different active
+        # slot run must not block useful parallel work on another free resource.
+        if workflow != SLOT_SCOPED_WORKFLOW and workflow_is_active(workflow, active_paths, runs):
             decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_WORKFLOW_ACTIVE"})
             continue
 
