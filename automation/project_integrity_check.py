@@ -242,6 +242,7 @@ ACTIVE_WORKFLOWS = {
     "q188-q192-pit-census-r2.yml",
     "q121r6-windows-independent-reproduction.yml",
     "windows-local-ai-worker.yml",
+    "windows-candidate-gate-regression.yml",
     "resource-dashboard-update.yml",
     "top4-candidate-research-capacity.yml",
     "top4-candidate-slot-research.yml",
