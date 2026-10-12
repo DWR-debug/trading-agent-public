@@ -22,7 +22,8 @@ from automation.q104_i19_13f_historical_identity_census_merge import (
 
 TRANSIENT_HTTP_CODES = {408, 425, 429, 500, 502, 503, 504}
 MAX_HEADER_RETRIES = 3
-MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES = 2_000_000
+MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES = 256_000
+SUBMISSION_HEADER_READ_CHUNK_BYTES = 8_192
 RETRYABLE_REASON = re.compile(
     r"(SEC_HEADER_HTTP_(408|425|429|500|502|503|504)|"
     r"timeout|timed out|urlerror|connection reset|connection aborted|"
@@ -74,7 +75,7 @@ def complete_submission_text_url(cik: str, accession: str) -> str:
     """Canonical SEC complete-submission text URL, keyed by filer CIK."""
     cik10 = str(cik).strip().zfill(10)
     acc = str(accession).strip()
-    if not re.fullmatch(r"\\d{10}-\\d{2}-\\d{6}", acc):
+    if not re.fullmatch(r"\d{10}-\d{2}-\d{6}", acc):
         raise ValueError("SEC_ACCESSION_UNPARSEABLE:" + acc)
     normalized = acc.replace("-", "")
     return (
@@ -144,9 +145,20 @@ def resolve_accession_header(
             try:
                 with opener(req, timeout=45) as response:
                     if source_type == "sec_complete_submission_text":
-                        response_prefix = response.read(MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES + 1)
-                        prefix_truncated = len(response_prefix) > MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES
-                        body = response_prefix[:MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES]
+                        response_buffer = bytearray()
+                        closing_tag = b"</SEC-HEADER>"
+                        while len(response_buffer) < MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES:
+                            remaining = MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES - len(response_buffer)
+                            chunk = response.read(min(SUBMISSION_HEADER_READ_CHUNK_BYTES, remaining))
+                            if not chunk:
+                                break
+                            response_buffer.extend(chunk)
+                            if closing_tag in response_buffer.upper():
+                                break
+                        prefix_truncated = False
+                        if closing_tag not in response_buffer.upper() and len(response_buffer) >= MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES:
+                            prefix_truncated = bool(response.read(1))
+                        body = bytes(response_buffer)
                     else:
                         prefix_truncated = False
                         body = response.read()
