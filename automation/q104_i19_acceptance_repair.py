@@ -101,20 +101,24 @@ def _parse_sgml_acceptance_header(
     expected_form: str,
     expected_filing_date: str,
 ) -> str:
-    """Parse raw SEC .hdr.sgml tags without weakening identity checks.
+    """Parse raw SEC .hdr.sgml tags and verify submission identity.
 
-    The legacy index-headers HTML parser expects labels such as ACCESSION NUMBER:.
-    The SGML fallback instead uses tags such as <ACCESSION-NUMBER>. Keep these
-    formats separate so a route change cannot turn an identity mismatch into a
-    tolerated result.
+    The raw header's top-level form and date tags are TYPE and FILING-DATE.
+    CIK must be read from the FILER block, not from another company role in
+    the same submission. The acceptance timestamp is SEC's explicit tag.
     """
-    accepted = re.search(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})", text, re.I)
+    accepted = re.search(r"<ACCEPTANCE-DATETIME>\\s*([0-9]{14})", text, re.I)
     accession_m = re.search(
-        r"<ACCESSION-NUMBER>\s*([0-9]{10}-[0-9]{2}-[0-9]{6})", text, re.I
+        r"<ACCESSION-NUMBER>\\s*([0-9]{10}-[0-9]{2}-[0-9]{6})", text, re.I
     )
-    cik_m = re.search(r"<CENTRAL-INDEX-KEY>\s*([0-9]{10})", text, re.I)
-    form_m = re.search(r"<CONFORMED-SUBMISSION-TYPE>\s*([^\s<]+)", text, re.I)
-    filed_m = re.search(r"<FILED-AS-OF-DATE>\s*([0-9]{8})", text, re.I)
+    form_m = re.search(r"(?m)^<TYPE>\\s*([^\\s<]+)", text, re.I)
+    filed_m = re.search(r"(?m)^<FILING-DATE>\\s*([0-9]{8})", text, re.I)
+    filer_m = re.search(r"<FILER>\\s*(.*?)</FILER>", text, re.I | re.S)
+    cik_m = (
+        re.search(r"(?m)^<CIK>\\s*([0-9]{10})\\s*$", filer_m.group(1), re.I)
+        if filer_m
+        else None
+    )
     if not accepted:
         raise ValueError("MISSING_ACCEPTANCE_DATETIME")
     if not accession_m or accession_m.group(1) != expected_accession:
