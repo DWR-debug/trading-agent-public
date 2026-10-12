@@ -124,7 +124,8 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "2,829,769,099 bytes downloaded" in doc
     assert "348/348" in doc and "247/247" in doc
     assert "Q220: original SEC daily Feed forensic run #38233685159" in focus
-    assert "daily .nc.tar.gz tar member is accession.nc" in focus and "{accession}.nc" in focus
+    assert "daily .nc.tar.gz tar member is accession.nc" in focus
+    assert "daily Feed TAR members `{accession}.nc`" in doc
     assert "both CI architectures and full-suite verification passed" in focus
     assert "no terminal repair result was verified" in focus
     assert "do not repeat an outcome-bearing run" in focus
