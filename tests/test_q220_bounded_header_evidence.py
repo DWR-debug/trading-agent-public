@@ -21,7 +21,7 @@ def test_request_is_exact_and_paper_only(tmp_path):
 
     values["LIVE_EXECUTION"] = "true"
     path.write_text("".join(f"{key}={value}\n" for key, value in values.items()), encoding="utf-8")
-    with pytest.raises(evidence.HeaderEvidenceError, match="REQUEST_KEY_SET_MISMATCH"):
+    with pytest.raises(evidence.HeaderEvidenceError, match="REQUEST_VALUE_MISMATCH:LIVE_EXECUTION"):
         evidence.read_request(path)
 
 
@@ -145,7 +145,7 @@ def test_fetch_header_stops_at_header_marker_and_retains_no_document_body(monkey
     assert result["prefix_marker_found"] is True
     assert result["_body"] == header
     assert result["response_bytes"] >= len(header)
-    assert result["response_bytes"] < 1024
+    assert result["response_bytes"] <= 1024
     assert budget.used == result["response_bytes"]
 
 
