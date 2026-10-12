@@ -37,7 +37,7 @@ jobs:
         continue-on-error: true
         run: |
           set -euo pipefail
-          out="research/runs/q220-primary-source-vintage-forensics/\${GITHUB_RUN_ID}/receipt.json"
+          out="research/runs/q220-primary-source-vintage-forensics/${GITHUB_RUN_ID}/receipt.json"
           python -m automation.q220_primary_source_vintage_forensics \
             --request research/run_requests/q220_primary_source_vintage_forensics.trigger \
             --receipt research/evidence/q220_historical_representation_pit_latest.json \
