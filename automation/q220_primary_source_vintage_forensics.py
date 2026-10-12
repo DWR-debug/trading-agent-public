@@ -304,7 +304,7 @@ def scan_daily_feed(
         "scan_error": None,
     }
     original_payload: bytes | None = None
-    expected_names = {accession, accession + ".txt", accession + ".dissem"}
+    expected_names = {accession + ".nc", accession, accession + ".txt"}
     correction_re = re.compile(re.escape(accession) + r"\.corr[0-9]+", re.I)
     try:
         with tarfile.open(fileobj=io.BytesIO(feed_blob), mode="r|gz") as archive:
