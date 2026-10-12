@@ -302,7 +302,7 @@ def fetch_header(
                 return {**meta, "status": "SKIPPED_DECLARED_LENGTH_OVER_LIMIT", "response_bytes": 0, "response_sha256": None, "_body": b""}
             while len(body) < max_bytes + (1 if prefix_marker is None else 0):
                 wanted = max_bytes + (1 if prefix_marker is None else 0) - len(body)
-                amount = min(32_768 if prefix_marker is None else 1024, wanted)
+                amount = min(32_768 if prefix_marker is None else 1, wanted)
                 try:
                     chunk = response.read(amount)
                 except (http.client.HTTPException, urllib.error.URLError, TimeoutError, OSError) as exc:
