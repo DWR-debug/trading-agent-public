@@ -5,6 +5,7 @@ import pytest
 from automation.q104_i22_independent_pit_reproduction import (
     END, FORMS, START, WINDOW, compile_population, receipt_fingerprint, reference_prefix, columnar_rows,
     validate_q107_policy_flags,
+    validate_reproduction_code_sha,
 )
 
 
@@ -121,3 +122,11 @@ def test_q107_safety_gates_fail_closed_for_either_frozen_input():
     manifest["safety"]["live_trading_enabled"] = True
     with pytest.raises(RuntimeError, match="Q107_MANIFEST_SAFETY_GATE_MISMATCH"):
         validate_q107_policy_flags(q107, manifest)
+
+
+
+def test_reproduction_code_sha_requires_full_immutable_commit():
+    assert validate_reproduction_code_sha("a" * 40) == "a" * 40
+    with pytest.raises(ValueError):
+        # argparse's argument type raises ArgumentTypeError, a ValueError subclass.
+        validate_reproduction_code_sha("main")
