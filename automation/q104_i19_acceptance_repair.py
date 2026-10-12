@@ -22,6 +22,8 @@ from automation.q104_i19_13f_historical_identity_census_merge import (
 
 TRANSIENT_HTTP_CODES = {408, 425, 429, 500, 502, 503, 504}
 MAX_HEADER_RETRIES = 3
+MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES = 256_000
+SUBMISSION_HEADER_READ_CHUNK_BYTES = 8_192
 RETRYABLE_REASON = re.compile(
     r"(SEC_HEADER_HTTP_(408|425|429|500|502|503|504)|"
     r"timeout|timed out|urlerror|connection reset|connection aborted|"
@@ -47,8 +49,9 @@ def is_repairable_failure(reason: str) -> bool:
     value = str(reason or "").strip()
     return (
         is_transient_failure(value)
-        or value == "SEC_HEADER_HTTP_404"
         or value in {
+            "SEC_HEADER_HTTP_404",
+            "SEC_HEADER_FALLBACK_HTTP_404",
             "MISSING_ACCEPTANCE_DATETIME",
             "HEADER_VALIDATION:MISSING_ACCEPTANCE_DATETIME",
         }
@@ -65,6 +68,19 @@ def accession_hdr_sgml_url(cik: str, accession: str) -> str:
     return (
         f"https://www.sec.gov/Archives/edgar/data/{int(cik10)}/"
         f"{normalized}/{acc}.hdr.sgml"
+    )
+
+
+def complete_submission_text_url(cik: str, accession: str) -> str:
+    """Canonical SEC complete-submission text URL, keyed by filer CIK."""
+    cik10 = str(cik).strip().zfill(10)
+    acc = str(accession).strip()
+    if not re.fullmatch(r"\d{10}-\d{2}-\d{6}", acc):
+        raise ValueError("SEC_ACCESSION_UNPARSEABLE:" + acc)
+    normalized = acc.replace("-", "")
+    return (
+        f"https://www.sec.gov/Archives/edgar/data/{int(cik10)}/"
+        f"{normalized}/{acc}.txt"
     )
 
 
@@ -93,12 +109,21 @@ def resolve_accession_header(
         raise ValueError("Q104_I19_REPAIR_RETRIES_MUST_BE_POSITIVE")
     opener = urlopen or urllib.request.urlopen
     sleeper = sleep or time.sleep
-    index_url = census.accession_header_url(meta.get("filer_cik", ""), accession)
-    sgml_url = accession_hdr_sgml_url(meta.get("filer_cik", ""), accession)
+    filer_cik = meta.get("filer_cik", "")
+    index_url = census.accession_header_url(filer_cik, accession)
+    sgml_url = accession_hdr_sgml_url(filer_cik, accession)
+    submission_url = complete_submission_text_url(filer_cik, accession)
     routes = (
-        [("sec_hdr_sgml_fallback", sgml_url)]
+        [
+            ("sec_hdr_sgml_fallback", sgml_url),
+            ("sec_complete_submission_text", submission_url),
+        ]
         if prefer_sgml
-        else [("sec_index_headers", index_url), ("sec_hdr_sgml_fallback", sgml_url)]
+        else [
+            ("sec_index_headers", index_url),
+            ("sec_hdr_sgml_fallback", sgml_url),
+            ("sec_complete_submission_text", submission_url),
+        ]
     )
     attempts_total = 0
     last_error = "Q104_I19_REPAIR_NO_ATTEMPT"
@@ -119,15 +144,32 @@ def resolve_accession_header(
             )
             try:
                 with opener(req, timeout=45) as response:
-                    body = response.read()
+                    if source_type == "sec_complete_submission_text":
+                        response_buffer = bytearray()
+                        closing_tag = b"</SEC-HEADER>"
+                        while len(response_buffer) < MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES:
+                            remaining = MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES - len(response_buffer)
+                            chunk = response.read(min(SUBMISSION_HEADER_READ_CHUNK_BYTES, remaining))
+                            if not chunk:
+                                break
+                            response_buffer.extend(chunk)
+                            if closing_tag in response_buffer.upper():
+                                break
+                        prefix_truncated = False
+                        if closing_tag not in response_buffer.upper() and len(response_buffer) >= MAX_COMPLETE_SUBMISSION_HEADER_PREFIX_BYTES:
+                            prefix_truncated = bool(response.read(1))
+                        body = bytes(response_buffer)
+                    else:
+                        prefix_truncated = False
+                        body = response.read()
                     status = int(getattr(response, "status", 200))
             except urllib.error.HTTPError as exc:
                 last_error = _failure_description(exc)
-                if exc.code == 404 and source_type == "sec_index_headers":
+                if exc.code == 404 and source_type in {"sec_index_headers", "sec_hdr_sgml_fallback"}:
                     missing_route = True
                     break
-                if exc.code == 404 and source_type == "sec_hdr_sgml_fallback":
-                    return None, "SEC_HEADER_FALLBACK_HTTP_404", attempts_total
+                if exc.code == 404 and source_type == "sec_complete_submission_text":
+                    return None, "SEC_COMPLETE_SUBMISSION_HTTP_404", attempts_total
                 if exc.code not in TRANSIENT_HTTP_CODES or attempt == retries:
                     return None, last_error, attempts_total
                 try:
@@ -145,15 +187,23 @@ def resolve_accession_header(
 
             if status != 200:
                 last_error = f"SEC_HEADER_HTTP_{status}"
-                if status == 404 and source_type == "sec_index_headers":
+                if status == 404 and source_type in {"sec_index_headers", "sec_hdr_sgml_fallback"}:
                     missing_route = True
                     break
-                if status == 404 and source_type == "sec_hdr_sgml_fallback":
-                    return None, "SEC_HEADER_FALLBACK_HTTP_404", attempts_total
+                if status == 404 and source_type == "sec_complete_submission_text":
+                    return None, "SEC_COMPLETE_SUBMISSION_HTTP_404", attempts_total
                 if status not in TRANSIENT_HTTP_CODES or attempt == retries:
                     return None, last_error, attempts_total
                 sleeper(min(15.0, float(2 ** attempt)))
                 continue
+
+            if source_type == "sec_complete_submission_text":
+                header_match = re.search(rb"<SEC-HEADER>.*?</SEC-HEADER>", body, re.I | re.S)
+                if header_match is None:
+                    return None, "SEC_SUBMISSION_HEADER_PREFIX_OVER_LIMIT" if prefix_truncated else "SEC_SUBMISSION_HEADER_BLOCK_MISSING", attempts_total
+                header_material = header_match.group(0)
+            else:
+                header_material = body
 
             try:
                 accepted = census.parse_acceptance_header(
@@ -187,13 +237,15 @@ def resolve_accession_header(
                 "acceptance_clock_basis": "SEC_EDGAR_SGML_ACCEPTANCE_DATETIME",
                 "source_url": url,
                 "header_source_type": source_type,
-                "header_sha256": hashlib.sha256(body).hexdigest(),
-                "header_bytes": len(body),
+                "header_sha256": hashlib.sha256(header_material).hexdigest(),
+                "header_bytes": len(header_material),
+                "source_response_bytes_read": len(body),
+                "source_response_prefix_truncated": bool(prefix_truncated),
             }
             return record, None, attempts_total
 
         if missing_route:
-            if source_type == "sec_index_headers":
+            if source_type in {"sec_index_headers", "sec_hdr_sgml_fallback"}:
                 continue
             break
         # A transient failure that exhausts its bounded retries is final. Do not
@@ -345,7 +397,7 @@ def repair_shard_payload(
 
             if header_resolver is None:
                 prefer_sgml = (
-                    original_error == "SEC_HEADER_HTTP_404"
+                    original_error in {"SEC_HEADER_HTTP_404", "SEC_HEADER_FALLBACK_HTTP_404"}
                     or original_error in {
                         "MISSING_ACCEPTANCE_DATETIME",
                         "HEADER_VALIDATION:MISSING_ACCEPTANCE_DATETIME",
@@ -422,6 +474,32 @@ def repair_shard_payload(
     return receipt, entries
 
 
+def validate_prior_recovery_payloads(
+    prior_receipt: dict[str, Any],
+    payloads: list[dict[str, Any]],
+    source_run_id: str,
+) -> dict[str, str]:
+    """Verify an incremental recovery consumes exactly the prior repaired receipts."""
+    if prior_receipt.get("record_type") != "q104_i19_targeted_acceptance_header_recovery":
+        raise ValueError("Q104_I19_PRIOR_RECOVERY_RECEIPT_TYPE_INVALID")
+    if str(prior_receipt.get("source_run_id")) != str(source_run_id):
+        raise ValueError("Q104_I19_PRIOR_RECOVERY_SOURCE_RUN_MISMATCH")
+    if prior_receipt.get("status") != "RECOVERY_INCOMPLETE":
+        raise ValueError("Q104_I19_PRIOR_RECOVERY_STATUS_NOT_INCOMPLETE")
+    expected_original = prior_receipt.get("original_shard_receipt_fingerprints")
+    expected_repaired = prior_receipt.get("repaired_shard_receipt_fingerprints")
+    if not isinstance(expected_original, dict) or set(expected_original) != EXPECTED_SHARDS:
+        raise ValueError("Q104_I19_PRIOR_ORIGINAL_SHARD_FINGERPRINT_SET_INVALID")
+    if not isinstance(expected_repaired, dict) or set(expected_repaired) != EXPECTED_SHARDS:
+        raise ValueError("Q104_I19_PRIOR_REPAIRED_SHARD_FINGERPRINT_SET_INVALID")
+    input_fingerprints = {str(payload.get("shard")): str(payload.get("receipt_fingerprint")) for payload in payloads}
+    if len(input_fingerprints) != len(payloads) or set(input_fingerprints) != EXPECTED_SHARDS:
+        raise ValueError("Q104_I19_PRIOR_INPUT_SHARD_SET_INVALID")
+    if input_fingerprints != {str(k): str(v) for k, v in expected_repaired.items()}:
+        raise ValueError("Q104_I19_PRIOR_REPAIRED_RECEIPT_FINGERPRINT_MISMATCH")
+    return {str(k): str(v) for k, v in expected_original.items()}
+
+
 def _locate(root: Path, filename: str) -> Path:
     matches = sorted(root.rglob(filename))
     if len(matches) != 1:
@@ -437,6 +515,8 @@ def main() -> int:
     parser.add_argument("--receipt-output", type=Path, required=True)
     parser.add_argument("--source-run-id", required=True)
     parser.add_argument("--shard-recovery-run-id", required=True)
+    parser.add_argument("--prior-recovery-run-id", default="")
+    parser.add_argument("--prior-recovery-receipt", type=Path)
     args = parser.parse_args()
 
     try:
@@ -455,13 +535,30 @@ def main() -> int:
         if any(payload.get("source_page_sha256") != source_page_hash for payload in payloads):
             raise ValueError("Q104_I19_REPAIR_SOURCE_PAGE_LINEAGE_MISMATCH")
 
+        if bool(args.prior_recovery_run_id) != bool(args.prior_recovery_receipt):
+            raise ValueError("Q104_I19_PRIOR_RECOVERY_RUN_AND_RECEIPT_MUST_BE_PAIRED")
+        prior_receipt = None
+        prior_receipt_sha256 = None
+        if args.prior_recovery_receipt is not None:
+            prior_raw = args.prior_recovery_receipt.read_bytes()
+            prior_receipt_sha256 = hashlib.sha256(prior_raw).hexdigest()
+            prior_receipt = json.loads(prior_raw.decode("utf-8"))
+            original_fingerprints = validate_prior_recovery_payloads(
+                prior_receipt, payloads, str(args.source_run_id)
+            )
+        else:
+            original_fingerprints = {
+                str(payload["shard"]): str(payload["receipt_fingerprint"])
+                for payload in payloads
+            }
+
         args.output_dir.mkdir(parents=True, exist_ok=True)
         all_entries: list[dict[str, Any]] = []
-        original_fingerprints: dict[str, str] = {}
+        input_fingerprints: dict[str, str] = {}
         repaired_fingerprints: dict[str, str] = {}
         for payload in sorted(payloads, key=lambda item: str(item["shard"])):
             shard = str(payload["shard"])
-            original_fingerprints[shard] = str(payload["receipt_fingerprint"])
+            input_fingerprints[shard] = str(payload["receipt_fingerprint"])
             fixed, entries = repair_shard_payload(payload)
             repaired_fingerprints[shard] = str(fixed["receipt_fingerprint"])
             all_entries.extend(entries)
@@ -478,6 +575,9 @@ def main() -> int:
             "shard_recovery_run_id": str(args.shard_recovery_run_id),
             "official_source": census.PAGE,
             "source_page_sha256": source_page_hash,
+            "prior_recovery_run_id": str(args.prior_recovery_run_id) if args.prior_recovery_run_id else None,
+            "prior_recovery_receipt_sha256": prior_receipt_sha256,
+            "input_shard_receipt_fingerprints": input_fingerprints,
             "original_shard_receipt_fingerprints": original_fingerprints,
             "repaired_shard_receipt_fingerprints": repaired_fingerprints,
             "failed_accession_set": sorted(

@@ -16,6 +16,11 @@ on:
         required: false
         default: ""
         type: string
+      prior_repair_run_id:
+        description: "Completed bounded Q104 repair run whose repaired receipts are reused; empty means original receipts"
+        required: false
+        default: ""
+        type: string
 
   workflow_call:
     inputs:
@@ -29,6 +34,11 @@ on:
         type: string
       recovered_shards:
         description: "Comma-separated shard IDs whose receipts must be downloaded from shard_recovery_run_id"
+        required: false
+        default: ""
+        type: string
+      prior_repair_run_id:
+        description: "Completed bounded Q104 repair run whose repaired receipts are reused; empty means original receipts"
         required: false
         default: ""
         type: string
@@ -62,11 +72,13 @@ jobs:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
           SHARD_RECOVERY_RUN_ID: ${{ inputs.shard_recovery_run_id }}
           RECOVERED_SHARDS: ${{ inputs.recovered_shards }}
+          PRIOR_REPAIR_RUN_ID: ${{ inputs.prior_repair_run_id }}
         shell: bash
         run: |
           set -euo pipefail
           [[ "$SOURCE_RUN_ID" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SOURCE_RUN_ID"; exit 2; }
           [[ "$SHARD_RECOVERY_RUN_ID" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SHARD_RECOVERY_RUN_ID"; exit 2; }
+          [[ -z "$PRIOR_REPAIR_RUN_ID" || "$PRIOR_REPAIR_RUN_ID" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_PRIOR_REPAIR_RUN_ID"; exit 2; }
           IFS=',' read -r -a recovered <<< "$RECOVERED_SHARDS"
           allowed=",2013-2016,2017-2018,2019-2020,2021-2022,2023,2024-2025-09,"
           for shard in "${recovered[@]}"; do
@@ -98,6 +110,13 @@ jobs:
 
           gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-source-artifacts.json"
           gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$SHARD_RECOVERY_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-recovery-artifacts.json"
+          if [[ -n "$PRIOR_REPAIR_RUN_ID" ]]; then
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$PRIOR_REPAIR_RUN_ID" > "$RUNNER_TEMP/i19-prior-repair-run.json"
+            jq -e '.name == "Q104 I19 Receipt-Gated Targeted Acceptance Repair Request" and .status == "completed" and .conclusion == "failure" and .head_branch == "master"' "$RUNNER_TEMP/i19-prior-repair-run.json" >/dev/null || { echo "I19_PRIOR_REPAIR_RUN_INVALID"; exit 2; }
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$PRIOR_REPAIR_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-prior-repair-artifacts.json"
+            prior_prefix="q104-i19-targeted-acceptance-repair-$SOURCE_RUN_ID-$PRIOR_REPAIR_RUN_ID-"
+            jq -e --arg prefix "$prior_prefix" '[.artifacts[]? | select((.name | startswith($prefix)) and .expired == false)] | length == 1' "$RUNNER_TEMP/i19-prior-repair-artifacts.json" >/dev/null || { echo "I19_PRIOR_REPAIR_ARTIFACT_MISSING_OR_EXPIRED"; exit 2; }
+          fi
           snapshot="q104-i19-sec-source-snapshot-$SOURCE_RUN_ID"
           jq -e --arg n "$snapshot" '[.artifacts[]? | select(.name == $n and .expired == false)] | length == 1' \
             "$RUNNER_TEMP/i19-source-artifacts.json" >/dev/null || {
@@ -124,8 +143,10 @@ jobs:
           echo "I19_TARGETED_REPAIR_INPUTS_VALIDATED=true"
 
       - name: Download the frozen source snapshot and six receipts
+        id: download
         env:
           GH_TOKEN: ${{ github.token }}
+          PRIOR_REPAIR_RUN_ID: ${{ inputs.prior_repair_run_id }}
         shell: bash
         run: |
           set -euo pipefail
@@ -149,21 +170,52 @@ jobs:
           echo "I19_SOURCE_RUN_ID=$source_run_id"
           echo "I19_SHARD_RECOVERY_RUN_ID=$recovery_run_id"
           echo "I19_RECOVERED_SHARDS=${{ steps.select.outputs.recovered_shards }}"
+          repair_input_dir="$root/input"
+          prior_recovery_receipt=""
+          if [[ -n "$PRIOR_REPAIR_RUN_ID" ]]; then
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$PRIOR_REPAIR_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-prior-repair-artifacts.json"
+            prior_prefix="q104-i19-targeted-acceptance-repair-$source_run_id-$PRIOR_REPAIR_RUN_ID-"
+            prior_artifact="$(jq -r --arg prefix "$prior_prefix" '[.artifacts[]? | select((.name | startswith($prefix)) and .expired == false)][0].name' "$RUNNER_TEMP/i19-prior-repair-artifacts.json")"
+            mkdir -p "$RUNNER_TEMP/i19-prior-repair"
+            gh run download "$PRIOR_REPAIR_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$prior_artifact" --dir "$RUNNER_TEMP/i19-prior-repair"
+            mapfile -t prior_receipts < <(find "$RUNNER_TEMP/i19-prior-repair" -type f -name targeted_recovery_receipt.json)
+            [[ "${#prior_receipts[@]}" == "1" ]] || { echo "I19_PRIOR_RECOVERY_RECEIPT_COUNT_INVALID"; exit 2; }
+            prior_recovery_receipt="${prior_receipts[0]}"
+            prior_root="$(dirname "$prior_recovery_receipt")"
+            jq -e --arg source "$source_run_id" '.record_type == "q104_i19_targeted_acceptance_header_recovery" and .source_run_id == $source and .status == "RECOVERY_INCOMPLETE" and .safety.paper_only == true and .safety.live_trading_enabled == false and .scientific_boundary.performance_authorized == false and .scientific_boundary.live_execution_allowed == false' "$prior_recovery_receipt" >/dev/null || { echo "I19_PRIOR_RECOVERY_RECEIPT_LINEAGE_OR_SAFETY_INVALID"; exit 2; }
+            repair_input_dir="$prior_root/repaired"
+            [[ -d "$repair_input_dir" ]] || { echo "I19_PRIOR_REPAIRED_SHARD_DIR_MISSING"; exit 2; }
+            shard_receipt_count="$(find "$repair_input_dir" -type f -name shard_receipt.json | wc -l | tr -d ' ')"
+            [[ "$shard_receipt_count" == "6" ]] || { echo "I19_PRIOR_REPAIRED_SHARD_COUNT_INVALID:$shard_receipt_count"; exit 2; }
+          fi
+          {
+            echo "repair_input_dir=$repair_input_dir"
+            echo "prior_recovery_receipt=$prior_recovery_receipt"
+          } >> "$GITHUB_OUTPUT"
 
-      - name: Repair only frozen failed acceptance accessions
+      - name: Repair only unresolved frozen acceptance accessions
+        env:
+          PRIOR_REPAIR_RUN_ID: ${{ inputs.prior_repair_run_id }}
         shell: bash
         run: |
           set -euo pipefail
           source_run_id="${{ steps.select.outputs.source_run_id }}"
           recovery_run_id="${{ steps.select.outputs.shard_recovery_run_id }}"
+          repair_input_dir="${{ steps.download.outputs.repair_input_dir }}"
+          prior_recovery_receipt="${{ steps.download.outputs.prior_recovery_receipt }}"
           root="research/runs/q104_i19_acceptance_repair/$source_run_id"
-          python -m automation.q104_i19_acceptance_repair \
-            --input-dir "$root/input" \
-            --source-snapshot-dir "$root/source_snapshot" \
-            --output-dir "$root/repaired" \
-            --receipt-output "$root/targeted_recovery_receipt.json" \
-            --source-run-id "$source_run_id" \
+          args=(
+            --input-dir "$repair_input_dir"
+            --source-snapshot-dir "$root/source_snapshot"
+            --output-dir "$root/repaired"
+            --receipt-output "$root/targeted_recovery_receipt.json"
+            --source-run-id "$source_run_id"
             --shard-recovery-run-id "$recovery_run_id"
+          )
+          if [[ -n "$PRIOR_REPAIR_RUN_ID" ]]; then
+            args+=(--prior-recovery-run-id "$PRIOR_REPAIR_RUN_ID" --prior-recovery-receipt "$prior_recovery_receipt")
+          fi
+          python -m automation.q104_i19_acceptance_repair "${args[@]}"
 
       - name: Strict six-shard merge
         shell: bash
