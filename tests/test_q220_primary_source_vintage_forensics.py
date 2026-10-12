@@ -59,7 +59,7 @@ def test_extract_primary_document_preserves_bytes_and_reports_edge_variants():
 def test_parse_submission_header_requires_exact_accession_form_date_and_cik_fields():
     header = (
         b"<SEC-HEADER>\n"
-        b"ACCESSION NUMBER: 0000950123-13-005205\n"
+        b"ACCESSION NUMBER: 0001564590-19-003382\n"
         b"CONFORMED SUBMISSION TYPE: 10-K\n"
         b"FILED AS OF DATE: 20190220\n"
         b"CENTRAL INDEX KEY: 0001090012\n"
@@ -67,11 +67,26 @@ def test_parse_submission_header_requires_exact_accession_form_date_and_cik_fiel
         b"</SEC-HEADER>"
     )
     parsed = forensic.parse_submission_header(header)
-    assert parsed["accession"] == "0000950123-13-005205"
+    assert parsed["accession"] == "0001564590-19-003382"
     assert parsed["filer_cik"] == "0001090012"
     assert parsed["form"] == "10-K"
     assert parsed["filed_date_iso"] == "2019-02-20"
     assert parsed["acceptance_datetime_iso"] == "2019-02-20T17:23:00"
+
+
+def test_daily_feed_url_uses_official_year_quarter_directory():
+    assert forensic.daily_feed_url("2019-02-13") == (
+        "https://www.sec.gov/Archives/edgar/Feed/2019/QTR1/20190213.nc.tar.gz"
+    )
+    assert forensic.daily_feed_url("2019-02-20") == (
+        "https://www.sec.gov/Archives/edgar/Feed/2019/QTR1/20190220.nc.tar.gz"
+    )
+    assert forensic.daily_feed_url("2025-02-11") == (
+        "https://www.sec.gov/Archives/edgar/Feed/2025/QTR1/20250211.nc.tar.gz"
+    )
+    assert forensic.daily_feed_url("2019-10-01") == (
+        "https://www.sec.gov/Archives/edgar/Feed/2019/QTR4/20191001.nc.tar.gz"
+    )
 
 
 def test_scan_daily_feed_finds_exact_original_and_records_correction_names():
