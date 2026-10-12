@@ -76,6 +76,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          source automation/gh_api_retry.sh
           [[ "$SOURCE_RUN_ID" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SOURCE_RUN_ID"; exit 2; }
           [[ "$SHARD_RECOVERY_RUN_ID" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_SHARD_RECOVERY_RUN_ID"; exit 2; }
           [[ -z "$PRIOR_REPAIR_RUN_ID" || "$PRIOR_REPAIR_RUN_ID" =~ ^[0-9]+$ ]] || { echo "INVALID_I19_PRIOR_REPAIR_RUN_ID"; exit 2; }
@@ -86,7 +87,7 @@ jobs:
             case "$allowed" in *,"$shard",*) ;; *) echo "INVALID_I19_RECOVERED_SHARD:$shard"; exit 2 ;; esac
           done
 
-          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID" > "$RUNNER_TEMP/i19-source-run.json"
+          gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID" > "$RUNNER_TEMP/i19-source-run.json"
           jq -e '
             .name == "Q104 I19 Historical 13F Identity Census"
             and .status == "completed"
@@ -96,7 +97,7 @@ jobs:
             echo "I19_SOURCE_RUN_NOT_A_COMPLETED_FAILED_MASTER_CENSUS"; exit 2;
           }
 
-          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$SHARD_RECOVERY_RUN_ID" > "$RUNNER_TEMP/i19-recovery-run.json"
+          gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$SHARD_RECOVERY_RUN_ID" > "$RUNNER_TEMP/i19-recovery-run.json"
           jq -e '
             .status == "completed"
             and .head_branch == "master"
@@ -108,12 +109,12 @@ jobs:
             echo "I19_RECOVERY_RUN_NOT_A_TERMINAL_ALLOWED_MASTER_RUN"; exit 2;
           }
 
-          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-source-artifacts.json"
-          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$SHARD_RECOVERY_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-recovery-artifacts.json"
+          gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-source-artifacts.json"
+          gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$SHARD_RECOVERY_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-recovery-artifacts.json"
           if [[ -n "$PRIOR_REPAIR_RUN_ID" ]]; then
-            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$PRIOR_REPAIR_RUN_ID" > "$RUNNER_TEMP/i19-prior-repair-run.json"
+            gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$PRIOR_REPAIR_RUN_ID" > "$RUNNER_TEMP/i19-prior-repair-run.json"
             jq -e '.name == "Q104 I19 Receipt-Gated Targeted Acceptance Repair Request" and .status == "completed" and .conclusion == "failure" and .head_branch == "master"' "$RUNNER_TEMP/i19-prior-repair-run.json" >/dev/null || { echo "I19_PRIOR_REPAIR_RUN_INVALID"; exit 2; }
-            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$PRIOR_REPAIR_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-prior-repair-artifacts.json"
+            gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$PRIOR_REPAIR_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-prior-repair-artifacts.json"
             prior_prefix="q104-i19-targeted-acceptance-repair-$SOURCE_RUN_ID-$PRIOR_REPAIR_RUN_ID-"
             jq -e --arg prefix "$prior_prefix" '[.artifacts[]? | select((.name | startswith($prefix)) and .expired == false)] | length == 1' "$RUNNER_TEMP/i19-prior-repair-artifacts.json" >/dev/null || { echo "I19_PRIOR_REPAIR_ARTIFACT_MISSING_OR_EXPIRED"; exit 2; }
           fi
@@ -173,7 +174,7 @@ jobs:
           repair_input_dir="$root/input"
           prior_recovery_receipt=""
           if [[ -n "$PRIOR_REPAIR_RUN_ID" ]]; then
-            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$PRIOR_REPAIR_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-prior-repair-artifacts.json"
+            gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs/$PRIOR_REPAIR_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/i19-prior-repair-artifacts.json"
             prior_prefix="q104-i19-targeted-acceptance-repair-$source_run_id-$PRIOR_REPAIR_RUN_ID-"
             prior_artifact="$(jq -r --arg prefix "$prior_prefix" '[.artifacts[]? | select((.name | startswith($prefix)) and .expired == false)][0].name' "$RUNNER_TEMP/i19-prior-repair-artifacts.json")"
             mkdir -p "$RUNNER_TEMP/i19-prior-repair"
@@ -237,7 +238,7 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in 1 2 3 4 5; do
-            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            current_sha="$(gh_api_retry "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
             if python3 automation/github_contents_publish.py \
               --repository "$GITHUB_REPOSITORY" \
               --branch master \
