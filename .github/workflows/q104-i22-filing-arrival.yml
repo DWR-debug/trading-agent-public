@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: "5 */6 * * *"
   push:
+    branches: [master]
     paths:
       - "automation/q104_i22_filing_arrival_compiler.py"
       - "tests/test_q104_i22_filing_arrival_compiler.py"
@@ -94,6 +95,7 @@ jobs:
           print(json.dumps(payload,sort_keys=True))
           PY
       - name: Publish immutable reconciliation receipt
+        if: github.ref == 'refs/heads/master'
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
