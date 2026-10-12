@@ -13,10 +13,12 @@ from automation import q104_i19_13f_historical_identity_census as census
 from automation.q104_i19_acceptance_repair import (
     _archive_accession_metadata,
     accession_hdr_sgml_url,
+    complete_submission_text_url,
     is_repairable_failure,
     is_transient_failure,
     repair_shard_payload,
     resolve_accession_header,
+    validate_prior_recovery_payloads,
 )
 from automation.q104_i19_13f_historical_identity_census_merge import canonical_fingerprint
 
@@ -49,8 +51,8 @@ class Response:
     def __exit__(self, *args):
         return False
 
-    def read(self):
-        return self.body
+    def read(self, size: int = -1):
+        return self.body if size < 0 else self.body[:size]
 
 
 def make_archive():
@@ -333,7 +335,7 @@ def test_legacy_header_404_is_repairable_only_via_same_accession_sgml_fallback()
     assert is_repairable_failure("SEC_HEADER_HTTP_404")
     assert is_repairable_failure("MISSING_ACCEPTANCE_DATETIME")
     assert is_repairable_failure("HEADER_VALIDATION:MISSING_ACCEPTANCE_DATETIME")
-    assert not is_repairable_failure("SEC_HEADER_FALLBACK_HTTP_404")
+    assert is_repairable_failure("SEC_HEADER_FALLBACK_HTTP_404")
     assert not is_repairable_failure("HEADER_VALIDATION:FILER_CIK_MISMATCH")
     assert not is_repairable_failure("HEADER_VALIDATION:FILING_DATE_MISMATCH")
 
@@ -363,6 +365,38 @@ def test_header_resolver_falls_back_to_exact_accession_hdr_sgml_after_index_404(
     assert record["source_url"] == accession_hdr_sgml_url(CIK, ACCESSION)
     assert record["acceptance_datetime"] == "2025-01-15T16:15:42"
 
+
+def test_complete_submission_url_uses_filer_cik_and_accession_directory():
+    assert complete_submission_text_url("0001090012", "0001564590-19-003382") == (
+        "https://www.sec.gov/Archives/edgar/data/1090012/"
+        "000156459019003382/0001564590-19-003382.txt"
+    )
+
+
+def test_header_resolver_falls_back_to_bounded_complete_submission_text_after_sgml_404():
+    calls = []
+    large_body = make_header() + b"X" * (2_000_100)
+
+    def opener(req, timeout):
+        calls.append(req.full_url)
+        if req.full_url == accession_hdr_sgml_url(CIK, ACCESSION):
+            raise urllib.error.HTTPError(req.full_url, 404, "not found", hdrs={}, fp=None)
+        assert req.full_url == complete_submission_text_url(CIK, ACCESSION)
+        return Response(large_body)
+
+    meta = {"filer_cik": CIK, "filing_date": FILING_DATE, "period": PERIOD, "submission_type": FORM}
+    record, error, attempts = resolve_accession_header(
+        ACCESSION, meta, NoopLimiter(), retries=3, urlopen=opener, sleep=lambda _: None, prefer_sgml=True
+    )
+
+    assert error is None
+    assert attempts == 2
+    assert calls == [accession_hdr_sgml_url(CIK, ACCESSION), complete_submission_text_url(CIK, ACCESSION)]
+    assert record["header_source_type"] == "sec_complete_submission_text"
+    assert record["source_response_prefix_truncated"] is True
+    assert record["source_response_bytes_read"] == 2_000_000
+    assert record["header_bytes"] == len(make_header())
+    assert record["acceptance_datetime"] == "2025-01-15T16:15:42"
 
 def test_known_legacy_404_skips_the_missing_html_endpoint():
     calls = []
@@ -433,12 +467,43 @@ def test_localized_windows_and_dns_transport_errors_are_repairable(reason):
         "FILING_DATE_MISMATCH",
         "HEADER_VALIDATION:FILER_CIK_MISMATCH",
         "HEADER_VALIDATION:ACCESSION_MISMATCH",
-        "SEC_HEADER_FALLBACK_HTTP_404",
+        "SEC_COMPLETE_SUBMISSION_HTTP_404",
     ],
 )
 def test_repair_keeps_identity_and_irrecoverable_header_errors_fail_closed(reason):
     assert not is_repairable_failure(reason)
 
+
+def test_prior_recovery_validator_preserves_original_fingerprints_and_fails_closed():
+    from automation.q104_i19_acceptance_repair import validate_prior_recovery_payloads
+    from automation.q104_i19_13f_historical_identity_census_merge import EXPECTED_SHARDS
+
+    payloads = []
+    original_fingerprints = {shard: "a" * 64 for shard in EXPECTED_SHARDS}
+    repaired_fingerprints = {}
+    for shard in sorted(EXPECTED_SHARDS):
+        payload = make_shard_receipt(make_archive())
+        payload["shard"] = shard
+        payload["receipt_fingerprint"] = canonical_fingerprint(payload)
+        payloads.append(payload)
+        repaired_fingerprints[shard] = payload["receipt_fingerprint"]
+    prior = {
+        "record_type": "q104_i19_targeted_acceptance_header_recovery",
+        "status": "RECOVERY_INCOMPLETE",
+        "source_run_id": "38168441086",
+        "original_shard_receipt_fingerprints": original_fingerprints,
+        "repaired_shard_receipt_fingerprints": repaired_fingerprints,
+    }
+
+    assert validate_prior_recovery_payloads(prior, payloads, "38168441086") == original_fingerprints
+
+    mutated = list(payloads)
+    mutated[0] = dict(mutated[0])
+    mutated[0]["receipt_fingerprint"] = "b" * 64
+    with pytest.raises(ValueError, match="PRIOR_REPAIRED_RECEIPT_FINGERPRINT_MISMATCH"):
+        validate_prior_recovery_payloads(prior, mutated, "38168441086")
+    with pytest.raises(ValueError, match="PRIOR_RECOVERY_SOURCE_RUN_MISMATCH"):
+        validate_prior_recovery_payloads(prior, payloads, "999")
 
 def test_q104_targeted_repair_request_is_receipt_gated_and_paper_only():
     root = Path(__file__).resolve().parents[1]
@@ -452,6 +517,8 @@ def test_q104_targeted_repair_request_is_receipt_gated_and_paper_only():
     assert '- "research/run_requests/q104_i19_targeted_acceptance_repair.trigger"' in wrapper
     assert r"^[A-Z0-9_]+=[A-Za-z0-9._,:-]*$" in wrapper
     assert "RUN_Q104_I19_TARGETED_REPAIR|REASON|SOURCE_RUN_ID|SHARD_RECOVERY_RUN_ID|RECOVERED_SHARDS" in wrapper
+    assert "PRIOR_REPAIR_RUN_ID" in wrapper
+    assert "prior_repair_run_id" in repair
     wrapper_global_permissions = wrapper.split("permissions:", 1)[1].split("concurrency:", 1)[0]
     assert "actions: write" in wrapper_global_permissions
     repair_job = wrapper.split("  repair:", 1)[1].split("    uses: ./.github/workflows/q104-i19-targeted-acceptance-repair.yml", 1)[0]
@@ -463,6 +530,7 @@ def test_q104_targeted_repair_request_is_receipt_gated_and_paper_only():
 
     assert 'SOURCE_RUN_ID=38168441086' in request
     assert 'SHARD_RECOVERY_RUN_ID=38168441086' in request
+    assert "PRIOR_REPAIR_RUN_ID=38215450138" in request
     assert 'CENSUS_RESTART=false' in request
     assert 'SOURCE_SNAPSHOT_REUSE=true' in request
     for flag in ("PERFORMANCE=false", "HOLDOUT_SELECTION=false", "RANKING=false", "TUNING=false", "PROMOTION=false", "LIVE_EXECUTION=false"):
