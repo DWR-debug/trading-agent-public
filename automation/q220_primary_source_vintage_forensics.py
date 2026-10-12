@@ -582,43 +582,84 @@ def scan_daily_feed(
         scan["scan_error"] = f"{type(exc).__name__}: {exc}"[:500]
     if original_payload is not None:
         header = parse_submission_header(original_payload)
-        control = parse_pds_control_block(original_payload)
-        scan["pds_control_block"] = control
-        scan["submission_header"] = header
+        marker = b"<SUBMISSION>"
+        has_pds_control_block = (
+            len(original_payload) >= PDS_CONTROL_BLOCK_BYTES + len(marker)
+            and original_payload[
+                PDS_CONTROL_BLOCK_BYTES:PDS_CONTROL_BLOCK_BYTES + len(marker)
+            ] == marker
+        )
 
-        if control.get("status") != "PDS_CONTROL_BLOCK_VALID":
-            scan["scan_error"] = str(control.get("error") or "PDS_CONTROL_BLOCK_INVALID")
-        elif control.get("accession") != accession:
-            control["accession_matches"] = False
-            scan["scan_error"] = "PDS_CONTROL_BLOCK_ACCESSION_MISMATCH"
-        elif str(control.get("submission_type") or "").upper() != str(header.get("form") or "").upper():
-            control["accession_matches"] = True
-            control["submission_type_matches_sgml"] = False
-            scan["scan_error"] = "PDS_CONTROL_BLOCK_SUBMISSION_TYPE_MISMATCH"
-        else:
-            control["accession_matches"] = True
-            control["submission_type_matches_sgml"] = True
-            sgml_acceptance = header.get("acceptance_datetime")
-            control_acceptance = control["acceptance_datetime"]
-            if sgml_acceptance and sgml_acceptance != control_acceptance:
-                header["sgml_acceptance_datetime_comparison"] = "MISMATCH"
-                scan["scan_error"] = "SGML_CONTROL_BLOCK_ACCEPTANCE_DATETIME_MISMATCH"
+        if has_pds_control_block:
+            # A PDS .dissem-style record has a 256-byte binary/fixed-width
+            # control block followed by <SUBMISSION>. Do not infer this layout
+            # merely because a daily Feed .nc member contains that XML tag.
+            control = parse_pds_control_block(original_payload)
+            scan["pds_control_block"] = control
+
+            if control.get("status") != "PDS_CONTROL_BLOCK_VALID":
+                scan["scan_error"] = str(control.get("error") or "PDS_CONTROL_BLOCK_INVALID")
+            elif control.get("accession") != accession:
+                control["accession_matches"] = False
+                scan["scan_error"] = "PDS_CONTROL_BLOCK_ACCESSION_MISMATCH"
+            elif str(control.get("submission_type") or "").upper() != str(header.get("form") or "").upper():
+                control["accession_matches"] = True
+                control["submission_type_matches_sgml"] = False
+                scan["scan_error"] = "PDS_CONTROL_BLOCK_SUBMISSION_TYPE_MISMATCH"
             else:
-                header["acceptance_datetime"] = sgml_acceptance or control_acceptance
-                header["acceptance_datetime_iso"] = (
-                    header.get("acceptance_datetime_iso")
-                    if sgml_acceptance
-                    else control.get("acceptance_datetime_iso")
-                )
-                header["acceptance_datetime_source"] = (
-                    "sgml_header_and_pds_control_block"
-                    if sgml_acceptance
-                    else "pds_control_block"
-                )
-                header["sgml_acceptance_datetime_comparison"] = (
-                    "MATCH" if sgml_acceptance else "NOT_PRESENT_CONTROL_BLOCK_USED"
-                )
+                control["accession_matches"] = True
+                control["submission_type_matches_sgml"] = True
+                sgml_acceptance = header.get("acceptance_datetime")
+                control_acceptance = control["acceptance_datetime"]
+                if sgml_acceptance and sgml_acceptance != control_acceptance:
+                    header["sgml_acceptance_datetime_comparison"] = "MISMATCH"
+                    scan["scan_error"] = "SGML_CONTROL_BLOCK_ACCEPTANCE_DATETIME_MISMATCH"
+                else:
+                    header["acceptance_datetime"] = sgml_acceptance or control_acceptance
+                    header["acceptance_datetime_iso"] = (
+                        header.get("acceptance_datetime_iso")
+                        if sgml_acceptance
+                        else control.get("acceptance_datetime_iso")
+                    )
+                    header["acceptance_datetime_source"] = (
+                        "sgml_header_and_pds_control_block"
+                        if sgml_acceptance
+                        else "pds_control_block"
+                    )
+                    header["sgml_acceptance_datetime_comparison"] = (
+                        "MATCH" if sgml_acceptance else "NOT_PRESENT_CONTROL_BLOCK_USED"
+                    )
+        elif original_payload.startswith((b"<SUBMISSION>", b"<SEC-HEADER>")):
+            # SEC daily Feed .nc members can be SGML submission envelopes
+            # without the PDS dissemination control block. The PDS clock
+            # parser is not applicable to this byte layout. Keep any acceptance
+            # clock absent here absent; bounded SEC header-route evidence is a
+            # separate observation and cannot authorize a source-hash pass.
+            control = {
+                "status": "PDS_CONTROL_BLOCK_NOT_PRESENT_IN_DAILY_FEED_MEMBER",
+                "required_for_identity_validation": False,
+                "accession_matches": None,
+                "submission_type_matches_sgml": None,
+                "error": None,
+            }
+            header["acceptance_datetime_source"] = (
+                "daily_feed_sgml_header"
+                if header.get("acceptance_datetime")
+                else "not_present_in_daily_feed_member"
+            )
+            scan["pds_control_block"] = control
+        else:
+            control = {
+                "status": "PDS_CONTROL_BLOCK_NOT_FOUND",
+                "required_for_identity_validation": True,
+                "accession_matches": False,
+                "submission_type_matches_sgml": False,
+                "error": "PDS_CONTROL_BLOCK_MARKER_NOT_FOUND",
+            }
+            scan["pds_control_block"] = control
+            scan["scan_error"] = "DAILY_FEED_MEMBER_FORMAT_UNRECOGNIZED"
 
+        scan["submission_header"] = header
         scan["primary"] = extract_primary_document(
             original_payload,
             primary_filename,
@@ -781,15 +822,19 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
         sample["daily_feed"]["primary"] = scan.get("primary")
         header = scan.get("submission_header") or {}
         control = scan.get("pds_control_block") or {}
+        pds_control_block_required = control.get("required_for_identity_validation", True) is not False
         header_checks = {
             "accession_matches": header.get("accession") == accession,
             "filer_cik_matches_company_cik": header.get("filer_cik") == cik,
             "form_matches": str(header.get("form") or "").upper() == form,
             "filing_date_matches": header.get("filed_date_iso") == filed_date,
-            "pds_control_block_valid": control.get("status") == "PDS_CONTROL_BLOCK_VALID",
-            "pds_control_block_accession_matches": control.get("accession_matches") is True,
-            "pds_control_block_submission_type_matches_sgml": control.get("submission_type_matches_sgml") is True,
+            "pds_control_block_valid": (not pds_control_block_required) or control.get("status") == "PDS_CONTROL_BLOCK_VALID",
+            "pds_control_block_accession_matches": (not pds_control_block_required) or control.get("accession_matches") is True,
+            "pds_control_block_submission_type_matches_sgml": (not pds_control_block_required) or control.get("submission_type_matches_sgml") is True,
             "sgml_control_block_conflict_absent": header.get("sgml_acceptance_datetime_comparison") != "MISMATCH",
+            # Record separately. Acceptance timestamps from the bounded SEC
+            # header routes are independent evidence; they are not a prerequisite
+            # for comparing primary bytes in this original-feed container.
             "acceptance_datetime_present": bool(header.get("acceptance_datetime")),
         }
         sample["daily_feed"]["submission_header_checks"] = header_checks
@@ -797,7 +842,8 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
             scan.get("original_member_name")
             and scan.get("primary", {}).get("found") is True
             and scan.get("scan_complete") is True
-            and all(header_checks.values())
+            and scan.get("scan_error") is None
+            and all(passed for key, passed in header_checks.items() if key != "acceptance_datetime_present")
         )
         primary_result = scan.get("primary") or {}
         variants = primary_result.get("body_hash_variants") if primary_result.get("found") else None
@@ -818,6 +864,7 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
             and feed["http_status"] == 200
             and scan.get("primary", {}).get("found") is True
             and scan.get("scan_complete") is True
+            and scan.get("scan_error") is None
         )
         if not sample["comparison_complete"]:
             sample["sample_error"] = (
@@ -825,7 +872,7 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
                 or (primary_result.get("error") if isinstance(primary_result, dict) else None)
                 or (
                     "SUBMISSION_HEADER_VALIDATION_FAILED:"
-                    + ",".join(key for key, passed in header_checks.items() if not passed)
+                    + ",".join(key for key, passed in header_checks.items() if not passed and key != "acceptance_datetime_present")
                     if not all(header_checks.values())
                     else "ORIGINAL_FEED_COMPARISON_INCOMPLETE"
                 )
