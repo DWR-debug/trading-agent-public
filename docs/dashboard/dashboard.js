@@ -481,7 +481,7 @@ function render(data){
   var planned=(data.planned_capacity||[]).filter(function(x){
     return (x.planned_assignments||[]).some(function(p){return FOCUS.indexOf(p.candidate)>=0;});
   });
-  var queue=(data.planned_research_queue||[]).filter(function(x){return FOCUS.indexOf(x.candidate)>=0;}).slice(0,4);
+  var queue=(data.planned_research_queue||[]).filter(function(x){return FOCUS.indexOf(x.candidate)>=0;}).slice(0,3);
   var cr=data.current_research||{};
   lastSnapshotIso=data.generated_at_utc||null;
   renderOperationsOverview(data,work,pipeline,planned,queue);
