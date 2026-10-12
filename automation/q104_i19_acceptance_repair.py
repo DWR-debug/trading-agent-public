@@ -385,7 +385,7 @@ def repair_shard_payload(
 
             if header_resolver is None:
                 prefer_sgml = (
-                    original_error == "SEC_HEADER_HTTP_404"
+                    original_error in {"SEC_HEADER_HTTP_404", "SEC_HEADER_FALLBACK_HTTP_404"}
                     or original_error in {
                         "MISSING_ACCEPTANCE_DATETIME",
                         "HEADER_VALIDATION:MISSING_ACCEPTANCE_DATETIME",
@@ -462,6 +462,32 @@ def repair_shard_payload(
     return receipt, entries
 
 
+def validate_prior_recovery_payloads(
+    prior_receipt: dict[str, Any],
+    payloads: list[dict[str, Any]],
+    source_run_id: str,
+) -> dict[str, str]:
+    """Verify an incremental recovery consumes exactly the prior repaired receipts."""
+    if prior_receipt.get("record_type") != "q104_i19_targeted_acceptance_header_recovery":
+        raise ValueError("Q104_I19_PRIOR_RECOVERY_RECEIPT_TYPE_INVALID")
+    if str(prior_receipt.get("source_run_id")) != str(source_run_id):
+        raise ValueError("Q104_I19_PRIOR_RECOVERY_SOURCE_RUN_MISMATCH")
+    if prior_receipt.get("status") != "RECOVERY_INCOMPLETE":
+        raise ValueError("Q104_I19_PRIOR_RECOVERY_STATUS_NOT_INCOMPLETE")
+    expected_original = prior_receipt.get("original_shard_receipt_fingerprints")
+    expected_repaired = prior_receipt.get("repaired_shard_receipt_fingerprints")
+    if not isinstance(expected_original, dict) or set(expected_original) != EXPECTED_SHARDS:
+        raise ValueError("Q104_I19_PRIOR_ORIGINAL_SHARD_FINGERPRINT_SET_INVALID")
+    if not isinstance(expected_repaired, dict) or set(expected_repaired) != EXPECTED_SHARDS:
+        raise ValueError("Q104_I19_PRIOR_REPAIRED_SHARD_FINGERPRINT_SET_INVALID")
+    input_fingerprints = {str(payload.get("shard")): str(payload.get("receipt_fingerprint")) for payload in payloads}
+    if len(input_fingerprints) != len(payloads) or set(input_fingerprints) != EXPECTED_SHARDS:
+        raise ValueError("Q104_I19_PRIOR_INPUT_SHARD_SET_INVALID")
+    if input_fingerprints != {str(k): str(v) for k, v in expected_repaired.items()}:
+        raise ValueError("Q104_I19_PRIOR_REPAIRED_RECEIPT_FINGERPRINT_MISMATCH")
+    return {str(k): str(v) for k, v in expected_original.items()}
+
+
 def _locate(root: Path, filename: str) -> Path:
     matches = sorted(root.rglob(filename))
     if len(matches) != 1:
@@ -477,6 +503,8 @@ def main() -> int:
     parser.add_argument("--receipt-output", type=Path, required=True)
     parser.add_argument("--source-run-id", required=True)
     parser.add_argument("--shard-recovery-run-id", required=True)
+    parser.add_argument("--prior-recovery-run-id", default="")
+    parser.add_argument("--prior-recovery-receipt", type=Path)
     args = parser.parse_args()
 
     try:
@@ -495,13 +523,30 @@ def main() -> int:
         if any(payload.get("source_page_sha256") != source_page_hash for payload in payloads):
             raise ValueError("Q104_I19_REPAIR_SOURCE_PAGE_LINEAGE_MISMATCH")
 
+        if bool(args.prior_recovery_run_id) != bool(args.prior_recovery_receipt):
+            raise ValueError("Q104_I19_PRIOR_RECOVERY_RUN_AND_RECEIPT_MUST_BE_PAIRED")
+        prior_receipt = None
+        prior_receipt_sha256 = None
+        if args.prior_recovery_receipt is not None:
+            prior_raw = args.prior_recovery_receipt.read_bytes()
+            prior_receipt_sha256 = hashlib.sha256(prior_raw).hexdigest()
+            prior_receipt = json.loads(prior_raw.decode("utf-8"))
+            original_fingerprints = validate_prior_recovery_payloads(
+                prior_receipt, payloads, str(args.source_run_id)
+            )
+        else:
+            original_fingerprints = {
+                str(payload["shard"]): str(payload["receipt_fingerprint"])
+                for payload in payloads
+            }
+
         args.output_dir.mkdir(parents=True, exist_ok=True)
         all_entries: list[dict[str, Any]] = []
-        original_fingerprints: dict[str, str] = {}
+        input_fingerprints: dict[str, str] = {}
         repaired_fingerprints: dict[str, str] = {}
         for payload in sorted(payloads, key=lambda item: str(item["shard"])):
             shard = str(payload["shard"])
-            original_fingerprints[shard] = str(payload["receipt_fingerprint"])
+            input_fingerprints[shard] = str(payload["receipt_fingerprint"])
             fixed, entries = repair_shard_payload(payload)
             repaired_fingerprints[shard] = str(fixed["receipt_fingerprint"])
             all_entries.extend(entries)
@@ -518,6 +563,9 @@ def main() -> int:
             "shard_recovery_run_id": str(args.shard_recovery_run_id),
             "official_source": census.PAGE,
             "source_page_sha256": source_page_hash,
+            "prior_recovery_run_id": str(args.prior_recovery_run_id) if args.prior_recovery_run_id else None,
+            "prior_recovery_receipt_sha256": prior_receipt_sha256,
+            "input_shard_receipt_fingerprints": input_fingerprints,
             "original_shard_receipt_fingerprints": original_fingerprints,
             "repaired_shard_receipt_fingerprints": repaired_fingerprints,
             "failed_accession_set": sorted(
