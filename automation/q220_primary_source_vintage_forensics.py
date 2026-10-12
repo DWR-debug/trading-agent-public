@@ -44,6 +44,7 @@ MAX_PRIMARY_MEMBER_BYTES = 30_000_000
 # The daily Feed .nc member is a whole submission wrapper, not the primary document.
 # Keep its explicit envelope separate from the 30 MB cap on the extracted primary document.
 MAX_ORIGINAL_SUBMISSION_MEMBER_BYTES = 150_000_000
+PDS_CONTROL_BLOCK_BYTES = 256
 MAX_TAR_SCAN_BYTES = 12_000_000_000
 MAX_TOTAL_DOWNLOAD_BYTES = 4_600_000_000
 REQUEST_TIMEOUT_SECONDS = 600
@@ -108,6 +109,77 @@ def git_blob_sha1(body: bytes) -> str:
     header = b"blob " + str(len(body)).encode("ascii") + b"\0"
     return hashlib.sha1(header + body).hexdigest()
 
+
+
+def parse_pds_control_block(submission: bytes) -> dict[str, Any]:
+    """Parse the fixed-width 256-byte EDGAR PDS control block.
+
+    Per the SEC PDS technical specification, the acceptance date occupies bytes
+    158:166 and acceptance time bytes 166:172 (zero-based, end-exclusive).
+    The source body must still pass the independent SGML identity checks.
+    """
+    block = submission[:PDS_CONTROL_BLOCK_BYTES]
+    result: dict[str, Any] = {
+        "status": "PDS_CONTROL_BLOCK_INVALID",
+        "control_block_bytes": len(block),
+        "control_block_sha256": sha256(block) if len(block) == 256 else None,
+        "accession": None,
+        "submission_type": None,
+        "receipt_date": None,
+        "acceptance_date": None,
+        "acceptance_time": None,
+        "acceptance_datetime": None,
+        "acceptance_datetime_iso": None,
+        "submission_marker_matches": submission[PDS_CONTROL_BLOCK_BYTES:PDS_CONTROL_BLOCK_BYTES + 12] == b"<SUBMISSION>",
+        "acceptance_date_offset": 158,
+        "acceptance_time_offset": 166,
+        "error": None,
+    }
+    if len(block) != PDS_CONTROL_BLOCK_BYTES:
+        result["error"] = "PDS_CONTROL_BLOCK_LENGTH_INVALID"
+        return result
+
+    def field(start: int, end: int) -> str:
+        return block[start:end].decode("ascii", "replace").strip()
+
+    accession = field(0, 20)
+    submission_type = field(20, 30)
+    receipt_date = field(150, 158)
+    acceptance_date = field(158, 166)
+    acceptance_time = field(166, 172)
+    result.update({
+        "accession": accession,
+        "submission_type": submission_type,
+        "receipt_date": receipt_date,
+        "acceptance_date": acceptance_date,
+        "acceptance_time": acceptance_time,
+    })
+
+    if not re.fullmatch(r"[0-9]{10}-[0-9]{2}-[0-9]{6}", accession):
+        result["error"] = "PDS_CONTROL_BLOCK_ACCESSION_INVALID"
+        return result
+    if not submission_type:
+        result["error"] = "PDS_CONTROL_BLOCK_SUBMISSION_TYPE_EMPTY"
+        return result
+    if not re.fullmatch(r"[0-9]{8}", receipt_date):
+        result["error"] = "PDS_CONTROL_BLOCK_RECEIPT_DATE_INVALID"
+        return result
+    if not re.fullmatch(r"[0-9]{8}", acceptance_date) or not re.fullmatch(r"[0-9]{6}", acceptance_time):
+        result["error"] = "PDS_CONTROL_BLOCK_ACCEPTANCE_DATE_TIME_INVALID"
+        return result
+    try:
+        datetime.strptime(receipt_date, "%Y%m%d")
+        accepted = datetime.strptime(acceptance_date + acceptance_time, "%Y%m%d%H%M%S")
+    except ValueError:
+        result["error"] = "PDS_CONTROL_BLOCK_DATE_TIME_OUT_OF_RANGE"
+        return result
+
+    result.update({
+        "status": "PDS_CONTROL_BLOCK_VALID",
+        "acceptance_datetime": acceptance_date + acceptance_time,
+        "acceptance_datetime_iso": accepted.strftime("%Y-%m-%dT%H:%M:%S"),
+    })
+    return result
 
 def read_request(request_path: Path) -> dict[str, str]:
     values: dict[str, str] = {}
@@ -456,6 +528,7 @@ def scan_daily_feed(
         "original_member_declared_bytes": None,
         "original_submission_member_limit_bytes": max_submission_bytes,
         "primary_document_limit_bytes": max_member_bytes,
+        "pds_control_block": None,
         "primary": None,
         "correction_members": [],
         "total_uncompressed_member_bytes_scanned": 0,
@@ -508,7 +581,42 @@ def scan_daily_feed(
     except (tarfile.TarError, OSError, EOFError) as exc:
         scan["scan_error"] = f"{type(exc).__name__}: {exc}"[:500]
     if original_payload is not None:
-        scan["submission_header"] = parse_submission_header(original_payload)
+        header = parse_submission_header(original_payload)
+        control = parse_pds_control_block(original_payload)
+        scan["pds_control_block"] = control
+        scan["submission_header"] = header
+
+        if control.get("status") != "PDS_CONTROL_BLOCK_VALID":
+            scan["scan_error"] = str(control.get("error") or "PDS_CONTROL_BLOCK_INVALID")
+        elif control.get("accession") != accession:
+            control["accession_matches"] = False
+            scan["scan_error"] = "PDS_CONTROL_BLOCK_ACCESSION_MISMATCH"
+        elif str(control.get("submission_type") or "").upper() != str(header.get("form") or "").upper():
+            control["accession_matches"] = True
+            control["submission_type_matches_sgml"] = False
+            scan["scan_error"] = "PDS_CONTROL_BLOCK_SUBMISSION_TYPE_MISMATCH"
+        else:
+            control["accession_matches"] = True
+            control["submission_type_matches_sgml"] = True
+            sgml_acceptance = header.get("acceptance_datetime")
+            control_acceptance = control["acceptance_datetime"]
+            if sgml_acceptance and sgml_acceptance != control_acceptance:
+                header["pds_control_block_matches_sgml"] = False
+                scan["scan_error"] = "SGML_CONTROL_BLOCK_ACCEPTANCE_DATETIME_MISMATCH"
+            else:
+                header["acceptance_datetime"] = sgml_acceptance or control_acceptance
+                header["acceptance_datetime_iso"] = (
+                    header.get("acceptance_datetime_iso")
+                    if sgml_acceptance
+                    else control.get("acceptance_datetime_iso")
+                )
+                header["acceptance_datetime_source"] = (
+                    "sgml_header_and_pds_control_block"
+                    if sgml_acceptance
+                    else "pds_control_block"
+                )
+                header["pds_control_block_matches_sgml"] = True
+
         scan["primary"] = extract_primary_document(
             original_payload,
             primary_filename,
@@ -670,11 +778,16 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
         sample["daily_feed"].update({k: v for k, v in scan.items() if k != "primary"})
         sample["daily_feed"]["primary"] = scan.get("primary")
         header = scan.get("submission_header") or {}
+        control = scan.get("pds_control_block") or {}
         header_checks = {
             "accession_matches": header.get("accession") == accession,
             "filer_cik_matches_company_cik": header.get("filer_cik") == cik,
             "form_matches": str(header.get("form") or "").upper() == form,
             "filing_date_matches": header.get("filed_date_iso") == filed_date,
+            "pds_control_block_valid": control.get("status") == "PDS_CONTROL_BLOCK_VALID",
+            "pds_control_block_accession_matches": control.get("accession_matches") is True,
+            "pds_control_block_submission_type_matches_sgml": control.get("submission_type_matches_sgml") is True,
+            "pds_control_block_matches_sgml": header.get("pds_control_block_matches_sgml") is True,
             "acceptance_datetime_present": bool(header.get("acceptance_datetime")),
         }
         sample["daily_feed"]["submission_header_checks"] = header_checks
