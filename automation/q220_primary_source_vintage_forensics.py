@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import http.client
 import io
 import json
 import re
@@ -40,6 +41,9 @@ MAX_SAMPLE_COUNT = 3
 MAX_FEED_ARCHIVE_BYTES = 1_500_000_000
 MAX_CURRENT_PRIMARY_BYTES = 15_000_000
 MAX_PRIMARY_MEMBER_BYTES = 30_000_000
+# The daily Feed .nc member is a whole submission wrapper, not the primary document.
+# Keep its explicit envelope separate from the 30 MB cap on the extracted primary document.
+MAX_ORIGINAL_SUBMISSION_MEMBER_BYTES = 150_000_000
 MAX_TAR_SCAN_BYTES = 12_000_000_000
 MAX_TOTAL_DOWNLOAD_BYTES = 4_600_000_000
 REQUEST_TIMEOUT_SECONDS = 600
@@ -59,6 +63,7 @@ FROZEN_REQUEST_VALUES = {
     "MAX_FEED_ARCHIVE_BYTES": str(MAX_FEED_ARCHIVE_BYTES),
     "MAX_CURRENT_PRIMARY_BYTES": str(MAX_CURRENT_PRIMARY_BYTES),
     "MAX_PRIMARY_MEMBER_BYTES": str(MAX_PRIMARY_MEMBER_BYTES),
+    "MAX_ORIGINAL_SUBMISSION_MEMBER_BYTES": str(MAX_ORIGINAL_SUBMISSION_MEMBER_BYTES),
     "MAX_TAR_SCAN_BYTES": str(MAX_TAR_SCAN_BYTES),
     "MAX_TOTAL_DOWNLOAD_BYTES": str(MAX_TOTAL_DOWNLOAD_BYTES),
     "CENSUS_RESTART": "false",
@@ -161,7 +166,7 @@ def validate_frozen_source(request_path: Path, receipt_path: Path) -> tuple[dict
 
 
 def _bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, Any]:
-    """Fetch a bounded response and reject a truncated body when Content-Length is known."""
+    """Fetch a bounded response using repeated reads; never treat a short read as EOF."""
     budget.wait()
     request = urllib.request.Request(
         url,
@@ -172,14 +177,26 @@ def _bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, 
             "Connection": "close",
         },
     )
+    meta: dict[str, Any] = {
+        "requested_url": url,
+        "final_url": url,
+        "http_status": None,
+        "content_type": "",
+        "content_encoding": "",
+        "content_length_header": None,
+        "last_modified": "",
+        "etag": "",
+    }
+    body_parts: list[bytes] = []
+    received = 0
+    budget_exhausted_before_eof = False
     try:
         with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
             status = int(getattr(response, "status", 200))
             headers = response.headers
             length_header = headers.get("Content-Length")
             declared_length = int(length_header) if length_header and str(length_header).isdigit() else None
-            meta = {
-                "requested_url": url,
+            meta.update({
                 "final_url": str(response.geturl()),
                 "http_status": status,
                 "content_type": str(headers.get("Content-Type", "")),
@@ -187,43 +204,78 @@ def _bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, 
                 "content_length_header": declared_length,
                 "last_modified": str(headers.get("Last-Modified", "")),
                 "etag": str(headers.get("ETag", "")),
-            }
-            # A declared object that is already too large is rejected without
-            # downloading it. This is a bound, not evidence of a complete source.
+            })
             if declared_length is not None and declared_length > max_bytes:
                 return {**meta, "status": "SKIPPED_DECLARED_LENGTH_OVER_LIMIT", "body": b"", "response_bytes": 0}
-            body = response.read(max_bytes + 1)
-            # Count bytes actually received even when a size ceiling rejects the response.
-            budget.add(len(body))
-            if len(body) > max_bytes:
+
+            while received < max_bytes + 1:
+                remaining_response = max_bytes + 1 - received
+                remaining_budget = budget.maximum - budget.used
+                if remaining_budget <= 0:
+                    budget_exhausted_before_eof = True
+                    break
+                request_size = min(1_048_576, remaining_response, remaining_budget)
+                try:
+                    chunk = response.read(request_size)
+                except (http.client.HTTPException, urllib.error.URLError, TimeoutError, OSError) as exc:
+                    partial = b"".join(body_parts)
+                    return {
+                        **meta,
+                        "status": "INCOMPLETE_READ",
+                        "body": b"",
+                        "response_bytes": received,
+                        "response_sha256": sha256(partial),
+                        "error": f"{type(exc).__name__}:{exc}"[:500],
+                    }
+                if not chunk:
+                    break
+                budget.add(len(chunk))
+                body_parts.append(chunk)
+                received += len(chunk)
+                if received > max_bytes:
+                    break
+                if budget.used >= budget.maximum and declared_length != received:
+                    budget_exhausted_before_eof = True
+                    break
+
+            body = b"".join(body_parts)
+            if received > max_bytes:
                 return {
                     **meta,
                     "status": "SKIPPED_ACTUAL_LENGTH_OVER_LIMIT",
                     "body": b"",
-                    "response_bytes": len(body),
+                    "response_bytes": received,
                     "response_sha256": sha256(body),
                 }
-            # urllib may return a short read without raising when the peer closes
-            # early. Never label that partial object FETCHED when the HTTP contract
-            # supplied a Content-Length. Preserve only its bounded fingerprint.
-            if declared_length is not None and len(body) != declared_length:
+            if budget_exhausted_before_eof and not (
+                declared_length is not None and received == declared_length
+            ):
+                return {
+                    **meta,
+                    "status": "TOTAL_DOWNLOAD_BUDGET_EXHAUSTED",
+                    "body": b"",
+                    "response_bytes": received,
+                    "response_sha256": sha256(body),
+                    "error": "Q220_FORENSICS_TOTAL_DOWNLOAD_BUDGET_EXHAUSTED",
+                }
+            if declared_length is not None and received != declared_length:
                 return {
                     **meta,
                     "status": "INCOMPLETE_CONTENT_LENGTH",
                     "body": b"",
-                    "response_bytes": len(body),
+                    "response_bytes": received,
                     "response_sha256": sha256(body),
-                    "error": f"CONTENT_LENGTH_MISMATCH:declared={declared_length}:received={len(body)}",
+                    "error": f"CONTENT_LENGTH_MISMATCH:declared={declared_length}:received={received}",
                 }
             return {
                 **meta,
                 "status": "FETCHED",
                 "body": body,
-                "response_bytes": len(body),
+                "response_bytes": received,
                 "response_sha256": sha256(body),
             }
     except urllib.error.HTTPError as exc:
-        meta = {
+        error_meta = {
             "requested_url": url,
             "final_url": str(getattr(exc, "url", url)),
             "http_status": int(exc.code),
@@ -233,10 +285,15 @@ def _bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, 
             "last_modified": str((exc.headers or {}).get("Last-Modified", "")),
             "etag": str((exc.headers or {}).get("ETag", "")),
         }
-        return {**meta, "status": "HTTP_ERROR", "response_bytes": 0, "body": b"", "error": f"HTTP_{exc.code}"}
+        return {**error_meta, "status": "HTTP_ERROR", "response_bytes": 0, "body": b"", "error": f"HTTP_{exc.code}"}
     except (urllib.error.URLError, TimeoutError, OSError, BoundedSourceError) as exc:
-        return {"requested_url": url, "status": "FETCH_ERROR", "response_bytes": 0, "body": b"", "error": f"{type(exc).__name__}: {exc}"[:500]}
-
+        return {
+            **meta,
+            "status": "FETCH_ERROR",
+            "response_bytes": received,
+            "body": b"",
+            "error": f"{type(exc).__name__}: {exc}"[:500],
+        }
 
 def parse_submission_header(body: bytes) -> dict[str, str | None]:
     """Parse submission metadata before the first document, with filer-scoped identity.
@@ -288,7 +345,7 @@ def parse_submission_header(body: bytes) -> dict[str, str | None]:
             rb"CENTRAL INDEX KEY:\s*([0-9]{10})",
         ), filer_scope),
         "form": capture((
-            rb"(?m)^\s*<TYPE>\s*([^\r\n<]+)",
+            rb"<TYPE>\s*([^\r\n<]+)",
             rb"CONFORMED SUBMISSION TYPE:\s*([^\r\n<]+)",
         )),
         "filed_date": capture((
@@ -317,7 +374,12 @@ def parse_submission_header(body: bytes) -> dict[str, str | None]:
     return result
 
 
-def extract_primary_document(submission: bytes, expected_filename: str) -> dict[str, Any]:
+def extract_primary_document(
+    submission: bytes,
+    expected_filename: str,
+    *,
+    max_primary_bytes: int = MAX_PRIMARY_MEMBER_BYTES,
+) -> dict[str, Any]:
     matches = []
     for document_match in re.finditer(rb"<DOCUMENT>\s*(.*?)</DOCUMENT>", submission, re.I | re.S):
         block = document_match.group(1)
@@ -332,6 +394,14 @@ def extract_primary_document(submission: bytes, expected_filename: str) -> dict[
             matches.append({"filename": filename, "error": "PRIMARY_DOCUMENT_TEXT_BLOCK_MISSING"})
             continue
         raw_body = text_match.group(1)
+        if len(raw_body) > max_primary_bytes:
+            matches.append({
+                "filename": filename,
+                "error": "PRIMARY_DOCUMENT_OVER_LIMIT",
+                "primary_document_bytes": len(raw_body),
+                "primary_document_limit_bytes": max_primary_bytes,
+            })
+            continue
         candidates = {
             "raw_text_block": raw_body,
             "drop_one_leading_linebreak": raw_body[2:] if raw_body.startswith(b"\r\n") else raw_body[1:] if raw_body.startswith(b"\n") else raw_body,
@@ -352,6 +422,8 @@ def extract_primary_document(submission: bytes, expected_filename: str) -> dict[
         return {"found": False, "error": "FROZEN_PRIMARY_FILENAME_NOT_FOUND_IN_ORIGINAL_SUBMISSION"}
     if len(matches) != 1:
         return {"found": False, "error": "DUPLICATE_PRIMARY_FILENAME_IN_ORIGINAL_SUBMISSION", "match_count": len(matches)}
+    if matches[0].get("error"):
+        return {"found": False, **matches[0]}
     return {"found": True, **matches[0]}
 
 
@@ -372,13 +444,18 @@ def scan_daily_feed(
     *,
     max_scan_bytes: int,
     max_member_bytes: int,
+    max_submission_bytes: int = MAX_ORIGINAL_SUBMISSION_MEMBER_BYTES,
 ) -> dict[str, Any]:
+    """Find the exact .nc submission and enforce separate wrapper/document limits."""
     scan: dict[str, Any] = {
         "feed_archive_sha256": sha256(feed_blob),
         "feed_archive_bytes": len(feed_blob),
         "original_member_name": None,
         "original_member_sha256": None,
         "original_member_bytes": None,
+        "original_member_declared_bytes": None,
+        "original_submission_member_limit_bytes": max_submission_bytes,
+        "primary_document_limit_bytes": max_member_bytes,
         "primary": None,
         "correction_members": [],
         "total_uncompressed_member_bytes_scanned": 0,
@@ -399,24 +476,31 @@ def scan_daily_feed(
                     break
                 basename = PurePosixPath(member.name).name
                 if basename in expected_names:
-                    if member.size > max_member_bytes:
+                    scan["original_member_name"] = member.name
+                    scan["original_member_declared_bytes"] = int(member.size)
+                    if member.size > max_submission_bytes:
                         scan["scan_error"] = "ORIGINAL_SUBMISSION_MEMBER_OVER_LIMIT"
                         break
                     fh = archive.extractfile(member)
                     if fh is None:
                         scan["scan_error"] = "ORIGINAL_SUBMISSION_MEMBER_UNREADABLE"
                         break
-                    payload = fh.read(max_member_bytes + 1)
-                    if len(payload) > max_member_bytes:
+                    payload = fh.read(max_submission_bytes + 1)
+                    if len(payload) > max_submission_bytes:
                         scan["scan_error"] = "ORIGINAL_SUBMISSION_MEMBER_ACTUAL_BYTES_OVER_LIMIT"
+                        break
+                    if len(payload) != int(member.size):
+                        scan["scan_error"] = (
+                            f"ORIGINAL_SUBMISSION_MEMBER_LENGTH_MISMATCH:"
+                            f"declared={int(member.size)}:received={len(payload)}"
+                        )
                         break
                     if original_payload is not None:
                         scan["scan_error"] = "DUPLICATE_ORIGINAL_SUBMISSION_MEMBER"
                         break
                     original_payload = payload
-                    scan["original_member_name"] = member.name
-                    scan["original_member_sha256"] = sha256(payload)
                     scan["original_member_bytes"] = len(payload)
+                    scan["original_member_sha256"] = sha256(payload)
                 elif correction_re.fullmatch(basename):
                     scan["correction_members"].append({"name": member.name, "declared_bytes": int(member.size)})
             else:
@@ -425,11 +509,14 @@ def scan_daily_feed(
         scan["scan_error"] = f"{type(exc).__name__}: {exc}"[:500]
     if original_payload is not None:
         scan["submission_header"] = parse_submission_header(original_payload)
-        scan["primary"] = extract_primary_document(original_payload, primary_filename)
+        scan["primary"] = extract_primary_document(
+            original_payload,
+            primary_filename,
+            max_primary_bytes=max_member_bytes,
+        )
     elif scan["scan_error"] is None:
         scan["scan_error"] = "ORIGINAL_SUBMISSION_MEMBER_NOT_FOUND_IN_FILING_DAY_FEED"
     return scan
-
 
 def compare_hash_origin(expected_sha: str, current_sha: str | None, primary_variants: dict[str, Any] | None) -> str:
     matches = []
@@ -491,6 +578,7 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
             "maximum_feed_archive_bytes": MAX_FEED_ARCHIVE_BYTES,
             "maximum_current_primary_bytes": MAX_CURRENT_PRIMARY_BYTES,
             "maximum_primary_member_bytes": MAX_PRIMARY_MEMBER_BYTES,
+            "maximum_original_submission_member_bytes": MAX_ORIGINAL_SUBMISSION_MEMBER_BYTES,
             "maximum_tar_scan_bytes": MAX_TAR_SCAN_BYTES,
             "maximum_total_download_bytes": MAX_TOTAL_DOWNLOAD_BYTES,
             "request_timeout_seconds": REQUEST_TIMEOUT_SECONDS,
@@ -577,6 +665,7 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
             primary,
             max_scan_bytes=MAX_TAR_SCAN_BYTES,
             max_member_bytes=MAX_PRIMARY_MEMBER_BYTES,
+            max_submission_bytes=MAX_ORIGINAL_SUBMISSION_MEMBER_BYTES,
         )
         sample["daily_feed"].update({k: v for k, v in scan.items() if k != "primary"})
         sample["daily_feed"]["primary"] = scan.get("primary")
@@ -616,7 +705,16 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
             and scan.get("scan_complete") is True
         )
         if not sample["comparison_complete"]:
-            sample["sample_error"] = scan.get("scan_error") or "ORIGINAL_FEED_COMPARISON_INCOMPLETE"
+            sample["sample_error"] = (
+                scan.get("scan_error")
+                or (primary_result.get("error") if isinstance(primary_result, dict) else None)
+                or (
+                    "SUBMISSION_HEADER_VALIDATION_FAILED:"
+                    + ",".join(key for key, passed in header_checks.items() if not passed)
+                    if not all(header_checks.values())
+                    else "ORIGINAL_FEED_COMPARISON_INCOMPLETE"
+                )
+            )
             completed = False
         result["samples"].append(sample)
 

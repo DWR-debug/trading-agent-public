@@ -202,6 +202,91 @@ def test_scan_daily_feed_does_not_confuse_pds_dissem_name_with_internal_nc_membe
     assert scan["scan_error"] == "ORIGINAL_SUBMISSION_MEMBER_NOT_FOUND_IN_FILING_DAY_FEED"
 
 
+
+def test_scan_daily_feed_separates_submission_wrapper_cap_from_primary_document_cap():
+    accession = "0000064040-25-000052"
+    filename = "spgi-20241231.htm"
+    primary = b"<html>small primary</html>"
+    exhibit = b"EXHIBIT-" + (b"x" * 2048)
+    submission = (
+        b"<SEC-HEADER>\n"
+        + f"ACCESSION NUMBER: {accession}\n".encode()
+        + b"CONFORMED SUBMISSION TYPE: 10-K\n"
+        + b"FILED AS OF DATE: 20250211\n"
+        + b"CENTRAL INDEX KEY: 0000064040\n"
+        + b"</SEC-HEADER>\n"
+        + b"<DOCUMENT>\n<TYPE>10-K\n<FILENAME>" + filename.encode()
+        + b"\n<TEXT>\n" + primary + b"\n</TEXT>\n</DOCUMENT>\n"
+        + b"<DOCUMENT>\n<TYPE>EX-99.1\n<FILENAME>exhibit.txt\n<TEXT>\n"
+        + exhibit + b"\n</TEXT>\n</DOCUMENT>\n"
+    )
+    assert len(submission) > 100
+    archive_bytes = io.BytesIO()
+    with tarfile.open(fileobj=archive_bytes, mode="w:gz") as archive:
+        member = tarfile.TarInfo(accession + ".nc")
+        member.size = len(submission)
+        archive.addfile(member, io.BytesIO(submission))
+
+    scan = forensic.scan_daily_feed(
+        archive_bytes.getvalue(),
+        accession,
+        filename,
+        max_scan_bytes=10_000,
+        max_member_bytes=100,
+        max_submission_bytes=10_000,
+    )
+
+    assert scan["scan_complete"] is True
+    assert scan["original_member_declared_bytes"] == len(submission)
+    assert scan["original_member_bytes"] == len(submission)
+    assert scan["original_submission_member_limit_bytes"] == 10_000
+    assert scan["primary_document_limit_bytes"] == 100
+    assert scan["primary"]["found"] is True
+    assert scan["primary"]["raw_text_block_bytes"] <= 100
+
+
+def test_scan_daily_feed_records_size_when_submission_wrapper_exceeds_its_own_cap():
+    accession = "0000064040-25-000052"
+    payload = b"wrapper" * 100
+    archive_bytes = io.BytesIO()
+    with tarfile.open(fileobj=archive_bytes, mode="w:gz") as archive:
+        member = tarfile.TarInfo(accession + ".nc")
+        member.size = len(payload)
+        archive.addfile(member, io.BytesIO(payload))
+
+    scan = forensic.scan_daily_feed(
+        archive_bytes.getvalue(),
+        accession,
+        "spgi-20241231.htm",
+        max_scan_bytes=10_000,
+        max_member_bytes=100,
+        max_submission_bytes=500,
+    )
+
+    assert scan["scan_complete"] is False
+    assert scan["original_member_name"] == accession + ".nc"
+    assert scan["original_member_declared_bytes"] == len(payload)
+    assert scan["original_submission_member_limit_bytes"] == 500
+    assert scan["scan_error"] == "ORIGINAL_SUBMISSION_MEMBER_OVER_LIMIT"
+    assert scan["primary"] is None
+
+
+def test_extract_primary_document_fails_closed_when_primary_exceeds_its_own_cap():
+    filename = "primary.htm"
+    body = b"x" * 40
+    submission = (
+        b"<DOCUMENT>\n<TYPE>10-K\n<FILENAME>" + filename.encode()
+        + b"\n<TEXT>\n" + body + b"\n</TEXT>\n</DOCUMENT>\n"
+    )
+    parsed = forensic.extract_primary_document(
+        submission,
+        filename,
+        max_primary_bytes=10,
+    )
+    assert parsed["found"] is False
+    assert parsed["error"] == "PRIMARY_DOCUMENT_OVER_LIMIT"
+    assert parsed["primary_document_bytes"] > parsed["primary_document_limit_bytes"]
+
 def test_original_feed_hash_comparison_never_changes_scientific_gate():
     expected = "a" * 64
     assert forensic.compare_hash_origin(expected, "b" * 64, {"raw": {"sha256": expected}}) == (
@@ -225,6 +310,9 @@ def test_bounded_get_rejects_truncated_body_when_content_length_is_known(monkeyp
             "Content-Length": "100",
         }
 
+        def __init__(self):
+            self.calls = 0
+
         def __enter__(self):
             return self
 
@@ -235,7 +323,8 @@ def test_bounded_get_rejects_truncated_body_when_content_length_is_known(monkeyp
             return "https://www.sec.gov/truncated.nc.tar.gz"
 
         def read(self, _size):
-            return b"x" * 50
+            self.calls += 1
+            return b"x" * 50 if self.calls == 1 else b""
 
     monkeypatch.setattr(
         forensic.urllib.request,
@@ -256,6 +345,70 @@ def test_bounded_get_rejects_truncated_body_when_content_length_is_known(monkeyp
     assert result["error"] == "CONTENT_LENGTH_MISMATCH:declared=100:received=50"
     assert result["body"] == b""
     assert budget.used == 50
+
+
+def test_bounded_get_completes_a_response_from_repeated_short_reads(monkeypatch):
+    payload = b"SEC Feed compressed data" * 8
+
+    class Response:
+        status = 200
+        headers = {
+            "Content-Type": "application/gzip",
+            "Content-Length": str(len(payload)),
+        }
+
+        def __init__(self):
+            self.offset = 0
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def geturl(self):
+            return "https://www.sec.gov/chunked.nc.tar.gz"
+
+        def read(self, size):
+            amount = min(size, 25, len(payload) - self.offset)
+            chunk = payload[self.offset:self.offset + amount]
+            self.offset += amount
+            return chunk
+
+    monkeypatch.setattr(
+        forensic.urllib.request,
+        "urlopen",
+        lambda _request, timeout: Response(),
+    )
+    budget = forensic.DownloadBudget(1000)
+    result = forensic._bounded_get(
+        "https://www.sec.gov/chunked.nc.tar.gz",
+        max_bytes=1000,
+        budget=budget,
+    )
+
+    assert result["status"] == "FETCHED"
+    assert result["response_bytes"] == len(payload)
+    assert result["body"] == payload
+    assert result["response_sha256"] == forensic.sha256(payload)
+    assert budget.used == len(payload)
+
+
+def test_parse_submission_header_reads_type_tag_without_line_start_anchor():
+    body = (
+        b"<SEC-HEADER>\n"
+        b"<ACCESSION-NUMBER>0000064040-25-000052\n"
+        b"<FILER>\n<COMPANY-DATA>\n<CIK>0000064040\n</COMPANY-DATA>\n</FILER>\n"
+        b"</SEC-HEADER><TYPE>10-K\n"
+        b"<FILING-DATE>20250211\n"
+        b"<ACCEPTANCE-DATETIME>20250211170704\n"
+        b"<DOCUMENT>\n<TYPE>EX-99.1\n"
+    )
+    parsed = forensic.parse_submission_header(body)
+    assert parsed["form"] == "10-K"
+    assert parsed["filer_cik"] == "0000064040"
+    assert parsed["filed_date_iso"] == "2025-02-11"
+    assert parsed["acceptance_datetime_iso"] == "2025-02-11T17:07:04"
 
 
 def test_parse_submission_header_reads_metadata_outside_sec_header_but_before_document():
