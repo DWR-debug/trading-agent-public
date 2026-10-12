@@ -235,3 +235,18 @@ def test_frozen_inventory_request_rejects_safety_flag_or_unknown_key(tmp_path):
     changed.write_text(original + "UNEXPECTED_KEY=false\n", encoding="utf-8")
     with pytest.raises(ValueError, match="Q221_REQUEST_KEY_SET_MISMATCH"):
         probe.validate_request(changed, source_manifest)
+
+
+
+def test_preregistered_negative_inventory_is_success_but_incomplete_results_fail_closed():
+    assert probe.exit_code_for_status("DATED_ARCHIVE_SERIES_FOUND") == 0
+    # This is the frozen H0 decision: work completed, route stops, no PIT gate opens.
+    assert probe.exit_code_for_status("ARCHIVE_LISTING_OK_NO_VERSION_SERIES_FOUND") == 0
+    for status in (
+        "ARCHIVE_LISTING_EMPTY",
+        "ARCHIVE_LISTING_INCOMPLETE",
+        "REQUEST_REJECTED",
+        "FIXED_TRANSACTION_MANIFEST_INVALID",
+        "",
+    ):
+        assert probe.exit_code_for_status(status) == 2
