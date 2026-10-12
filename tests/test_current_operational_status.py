@@ -128,7 +128,8 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     q220_population_positive = "Q220 historical as-filed population gate is positive and version-bound" in focus
     q220_stale = "Q220 population receipt is STALE:" in focus
     q220_blocked = "Q220 current-code population gate is BLOCKED:" in focus
-    assert q220_chain_positive or q220_compiler_positive or q220_population_positive or q220_stale or q220_blocked
+    q220_compiler_blocked = "Q220 historical prefix/PIT compiler is BLOCKED:" in focus
+    assert q220_chain_positive or q220_compiler_positive or q220_population_positive or q220_stale or q220_blocked or q220_compiler_blocked
     if q220_chain_positive:
         assert "bounded adversarial robustness review and formal trial-governance reconciliation" in focus
         assert "performance authorization remains closed" in focus
@@ -136,8 +137,14 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
         assert "Next gate: independent PIT reproduction" in focus
     elif q220_population_positive:
         assert "Next gate: historical prefix/acceptance-time PIT representation-state compiler" in focus
+    elif q220_compiler_blocked:
+        assert "55 primary-document hash mismatches" in focus
+        assert "different compiler fingerprint and is not current" in focus
+        assert "repair source hash mismatches" in focus
+        assert "performance authorization remains closed" in focus
     else:
         assert "historical prefix/PIT compiler" in focus
+
     assert "transport-success/content-unusable" in focus
     assert "not a methods review or scientific evidence" in focus
 
