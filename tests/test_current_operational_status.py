@@ -136,7 +136,7 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "publicDeltaDate is documented as a filter over Last Modified Date or Reveal Date" in focus
     assert "not a dispatch-ready source contract" in focus
     assert "Q220: original SEC daily Feed forensic run #38233685159" in focus
-    assert "daily .nc.tar.gz tar member is accession.nc" in focus
+    assert "daily .nc.tar.gz member is accession.nc" in focus
     assert "daily Feed TAR members `{accession}.nc`" in doc
     assert "both CI architectures and full-suite verification passed" in focus
     assert "Post-fix run #38254139755 is terminal FORENSIC_COMPARISON_INCOMPLETE" in focus
