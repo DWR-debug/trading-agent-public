@@ -86,3 +86,15 @@ def test_run_probe_records_all_frozen_samples_and_both_query_results(tmp_path, m
     assert all(len(x["queries"]) == 2 for x in receipt["samples"])
     assert all(x["parent_metadata_comparison"]["all_vs_fiscal_year_parent_uei_equal"] for x in receipt["samples"])
     assert json.loads(output.read_text(encoding="utf-8"))["receipt_fingerprint"] == receipt["receipt_fingerprint"]
+
+
+def test_request_sequence_requires_exact_utc_timestamp(tmp_path):
+    values = dict(probe.FROZEN_REQUEST_VALUES)
+    values["REQUEST_SEQUENCE"] = "2026-10-12T19:50:00Z"
+    request = tmp_path / "request.trigger"
+    request.write_text("".join(f"{k}={v}\\n" for k, v in values.items()), encoding="utf-8")
+    assert probe.read_request(request)["REQUEST_SEQUENCE"] == "2026-10-12T19:50:00Z"
+    values["REQUEST_SEQUENCE"] = "yesterdayZ"
+    request.write_text("".join(f"{k}={v}\\n" for k, v in values.items()), encoding="utf-8")
+    with pytest.raises(probe.ProbeError, match="REQUEST_SEQUENCE_INVALID"):
+        probe.read_request(request)
