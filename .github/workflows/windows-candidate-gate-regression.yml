@@ -1,0 +1,85 @@
+name: Windows Candidate Gate Regression Wave
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q220_primary_source_vintage_forensics.py"
+      - "tests/test_q220_primary_source_vintage_forensics.py"
+      - "automation/planned_capacity_fast_dispatch.py"
+      - "tests/test_planned_capacity_fast_dispatch.py"
+      - "tests/test_q104_i19_13f_historical_identity_census.py"
+      - "tests/test_q104_i19_historical_identity_census.py"
+      - "tests/test_q104_candidate_wave_contract.py"
+      - "tests/test_q221_historical_source_vintage_gate.py"
+      - "tests/test_q221_usaspending_public_clock_gate.py"
+      - "tests/test_q221_historical_award_public_boundary.py"
+      - "tests/test_q221_monthly_archive_inventory_probe.py"
+      - ".github/workflows/windows-candidate-gate-regression.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    name: Windows bounded regression ${{ matrix.pack }}
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        pack: [q220, q104, q221]
+    concurrency:
+      group: trading-agent-windows-candidate-regression-${{ matrix.pack }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Bootstrap pinned Python 3.13 and test dependencies
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-windows-regression"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-windows-regression.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check pytest pandas exchange-calendars pypdf tzdata==2026.5 || exit /b 1
+          endlocal
+      - name: Run offline/mocked candidate and orchestrator regression tests
+        shell: cmd
+        env:
+          REGRESSION_PACK: ${{ matrix.pack }}
+        run: |
+          @echo off
+          setlocal
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-windows-regression\tools\python.exe"
+          cd /d "%GITHUB_WORKSPACE%" || exit /b 1
+          set "PYTHONPATH=%GITHUB_WORKSPACE%"
+          if /I "%REGRESSION_PACK%"=="q220" (
+            "%PY_EXE%" -m pytest -q tests/test_q220_primary_source_vintage_forensics.py tests/test_planned_capacity_fast_dispatch.py
+            if errorlevel 1 exit /b 1
+          ) else if /I "%REGRESSION_PACK%"=="q104" (
+            "%PY_EXE%" -m pytest -q tests/test_q104_i19_13f_historical_identity_census.py tests/test_q104_i19_historical_identity_census.py tests/test_q104_candidate_wave_contract.py
+            if errorlevel 1 exit /b 1
+          ) else if /I "%REGRESSION_PACK%"=="q221" (
+            "%PY_EXE%" -m pytest -q tests/test_q221_historical_source_vintage_gate.py tests/test_q221_usaspending_public_clock_gate.py tests/test_q221_historical_award_public_boundary.py tests/test_q221_monthly_archive_inventory_probe.py
+            if errorlevel 1 exit /b 1
+          ) else (
+            echo Unknown regression pack: %REGRESSION_PACK%
+            exit /b 2
+          )
+          echo WINDOWS_REGRESSION_PAPER_ONLY_NO_PERFORMANCE_NO_HOLDOUT_NO_RANKING_NO_TUNING_NO_PROMOTION_NO_LIVE_EXECUTION
+          endlocal

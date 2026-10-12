@@ -161,6 +161,7 @@ def validate_frozen_source(request_path: Path, receipt_path: Path) -> tuple[dict
 
 
 def _bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, Any]:
+    """Fetch a bounded response and reject a truncated body when Content-Length is known."""
     budget.wait()
     request = urllib.request.Request(
         url,
@@ -187,13 +188,40 @@ def _bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, 
                 "last_modified": str(headers.get("Last-Modified", "")),
                 "etag": str(headers.get("ETag", "")),
             }
+            # A declared object that is already too large is rejected without
+            # downloading it. This is a bound, not evidence of a complete source.
             if declared_length is not None and declared_length > max_bytes:
                 return {**meta, "status": "SKIPPED_DECLARED_LENGTH_OVER_LIMIT", "body": b"", "response_bytes": 0}
             body = response.read(max_bytes + 1)
-            if len(body) > max_bytes:
-                return {**meta, "status": "SKIPPED_ACTUAL_LENGTH_OVER_LIMIT", "body": b"", "response_bytes": len(body)}
+            # Count bytes actually received even when a size ceiling rejects the response.
             budget.add(len(body))
-            return {**meta, "status": "FETCHED", "body": body, "response_bytes": len(body), "response_sha256": sha256(body)}
+            if len(body) > max_bytes:
+                return {
+                    **meta,
+                    "status": "SKIPPED_ACTUAL_LENGTH_OVER_LIMIT",
+                    "body": b"",
+                    "response_bytes": len(body),
+                    "response_sha256": sha256(body),
+                }
+            # urllib may return a short read without raising when the peer closes
+            # early. Never label that partial object FETCHED when the HTTP contract
+            # supplied a Content-Length. Preserve only its bounded fingerprint.
+            if declared_length is not None and len(body) != declared_length:
+                return {
+                    **meta,
+                    "status": "INCOMPLETE_CONTENT_LENGTH",
+                    "body": b"",
+                    "response_bytes": len(body),
+                    "response_sha256": sha256(body),
+                    "error": f"CONTENT_LENGTH_MISMATCH:declared={declared_length}:received={len(body)}",
+                }
+            return {
+                **meta,
+                "status": "FETCHED",
+                "body": body,
+                "response_bytes": len(body),
+                "response_sha256": sha256(body),
+            }
     except urllib.error.HTTPError as exc:
         meta = {
             "requested_url": url,
@@ -211,29 +239,26 @@ def _bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, 
 
 
 def parse_submission_header(body: bytes) -> dict[str, str | None]:
-    """Read SEC submission identity from the SEC-HEADER, not document bodies.
+    """Parse submission metadata before the first document, with filer-scoped identity.
 
-    Daily Feed .nc members contain the raw SGML header form (ACCESSION-NUMBER,
-    TYPE, FILING-DATE and CIK inside the FILER block). Older complete-submission
-    fixtures also use human-readable labels. Keep both formats bounded to the
-    header and never obtain the filer CIK from a later ISSUER/document block.
+    SEC daily Feed members contain an SEC-HEADER with SGML tags. Some historical
+    member variants place TYPE/FILING-DATE/ACCEPTANCE-DATETIME in the pre-document
+    header area but outside the SEC-HEADER block, so metadata falls back only to
+    bytes preceding the first <DOCUMENT>. Form values from exhibit/document bodies
+    are therefore never accepted as submission identity.
     """
     bounded = body[:2_000_000]
+    pre_document = bounded.split(b"<DOCUMENT>", 1)[0]
     header_match = re.search(
         rb"<SEC-HEADER\b[^>]*>(.*?)(?=</SEC-HEADER>|<DOCUMENT>)",
         bounded,
         re.I | re.S,
     )
-    if header_match:
-        header = header_match.group(1)
-    else:
-        # Fail closed on absent tags; this prefix is used only for legacy header
-        # text and ends before the first document whenever one is present.
-        header = bounded.split(b"<DOCUMENT>", 1)[0]
+    header = header_match.group(1) if header_match else pre_document
 
     def capture(
         patterns: tuple[bytes, ...],
-        source: bytes = header,
+        source: bytes = pre_document,
     ) -> str | None:
         for pattern in patterns:
             match = re.search(pattern, source, re.I | re.M)
@@ -243,10 +268,16 @@ def parse_submission_header(body: bytes) -> dict[str, str | None]:
 
     filer_match = re.search(
         rb"<FILER>(.*?)(?=</FILER>|<ISSUER>|$)",
-        header,
+        pre_document,
         re.I | re.S,
     )
-    filer_scope = filer_match.group(1) if filer_match else header
+    # When a tagged FILER block exists, its CIK is authoritative. If it does
+    # not, retain the legacy label parser but stop before a possible ISSUER block.
+    filer_scope = (
+        filer_match.group(1)
+        if filer_match
+        else pre_document.split(b"<ISSUER>", 1)[0]
+    )
     result: dict[str, str | None] = {
         "accession": capture((
             rb"<ACCESSION-NUMBER>\s*([0-9]{10}-[0-9]{2}-[0-9]{6})",
@@ -269,7 +300,7 @@ def parse_submission_header(body: bytes) -> dict[str, str | None]:
         )),
         "header_format": (
             "sec_sgml_tags"
-            if b"<ACCESSION-NUMBER>" in header.upper() or b"<FILER>" in header.upper()
+            if b"<ACCESSION-NUMBER>" in pre_document.upper() or b"<FILER>" in pre_document.upper()
             else "legacy_text_labels"
         ),
     }

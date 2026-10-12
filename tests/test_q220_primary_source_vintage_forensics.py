@@ -215,3 +215,66 @@ def test_original_feed_hash_comparison_never_changes_scientific_gate():
     )
     assert forensic.SOURCE_RECEIPT_FINGERPRINT == "c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075"
     assert forensic.EXPECTED_SOURCE_HASH_FAILURE_COUNT == 55
+
+
+def test_bounded_get_rejects_truncated_body_when_content_length_is_known(monkeypatch):
+    class Response:
+        status = 200
+        headers = {
+            "Content-Type": "application/gzip",
+            "Content-Length": "100",
+        }
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def geturl(self):
+            return "https://www.sec.gov/truncated.nc.tar.gz"
+
+        def read(self, _size):
+            return b"x" * 50
+
+    monkeypatch.setattr(forensic.time, "monotonic", lambda: 100.0)
+    monkeypatch.setattr(
+        forensic.urllib.request,
+        "urlopen",
+        lambda _request, timeout: Response(),
+    )
+    budget = forensic.DownloadBudget(1000)
+    result = forensic._bounded_get(
+        "https://www.sec.gov/truncated.nc.tar.gz",
+        max_bytes=200,
+        budget=budget,
+    )
+
+    assert result["http_status"] == 200
+    assert result["content_length_header"] == 100
+    assert result["status"] == "INCOMPLETE_CONTENT_LENGTH"
+    assert result["response_bytes"] == 50
+    assert result["error"] == "CONTENT_LENGTH_MISMATCH:declared=100:received=50"
+    assert result["body"] == b""
+    assert budget.used == 50
+
+
+def test_parse_submission_header_reads_metadata_outside_sec_header_but_before_document():
+    body = (
+        b"<SEC-HEADER>\\n"
+        b"<ACCESSION-NUMBER>0000064040-25-000052\\n"
+        b"<FILER>\\n<COMPANY-DATA>\\n<CIK>0000064040\\n</COMPANY-DATA>\\n</FILER>\\n"
+        b"</SEC-HEADER>\\n"
+        b"<TYPE>10-K\\n"
+        b"<FILING-DATE>20250211\\n"
+        b"<ACCEPTANCE-DATETIME>20250211170704\\n"
+        b"<DOCUMENT>\\n<TYPE>EX-99.1\\n"
+    )
+    parsed = forensic.parse_submission_header(body)
+
+    assert parsed["accession"] == "0000064040-25-000052"
+    assert parsed["filer_cik"] == "0000064040"
+    assert parsed["form"] == "10-K"
+    assert parsed["filed_date_iso"] == "2025-02-11"
+    assert parsed["acceptance_datetime"] == "20250211170704"
+    assert parsed["acceptance_datetime_iso"] == "2025-02-11T17:07:04"

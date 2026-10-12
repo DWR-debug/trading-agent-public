@@ -457,7 +457,7 @@ def ai_task_completed_with_current_context(task_id: str, *, root: Path = Path(".
 
 
 def resource_capacity_for_plan(snapshot: dict[str, Any], row: dict[str, Any]) -> tuple[int, int, bool]:
-    """Resolve occupancy/capacity from the plan row, falling back to resource metadata."""
+    """Resolve occupancy conservatively; an explicitly unknown physical runner is not free."""
     resource_name = str(row.get("resource") or "")
     resource_meta = next(
         (
@@ -479,7 +479,21 @@ def resource_capacity_for_plan(snapshot: dict[str, Any], row: dict[str, Any]) ->
     reported_free = row.get("research_slots_free")
     if reported_free is None:
         reported_free = resource_meta.get("research_slots_free")
-    resource_free = int(reported_free) > 0 if reported_free is not None else current < slots
+    explicit_state = row.get("capacity_state")
+    if explicit_state is None:
+        explicit_state = resource_meta.get("capacity_state")
+    state = str(explicit_state or "").strip().lower()
+
+    # Do not let a stale/planned slot count override the live dashboard's
+    # explicit unknown state (missing runner inventory is not proof of idleness).
+    if state == "unknown":
+        resource_free = False
+    elif reported_free is not None:
+        resource_free = int(reported_free) > 0
+    else:
+        # Backward-compatible fallback for legacy/test snapshots without a
+        # capacity state. Production snapshots are expected to report a state.
+        resource_free = current < slots
     return current, slots, resource_free
 
 
@@ -507,10 +521,22 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
             workflow = item.get("execution_workflow")
             if not workflow:
                 continue
+            resource_meta = next(
+                (
+                    resource_row for resource_row in snapshot.get("resources", [])
+                    if isinstance(resource_row, dict)
+                    and str(resource_row.get("name") or "") == resource
+                ),
+                {},
+            )
+            state_value = row.get("capacity_state")
+            if state_value is None:
+                state_value = resource_meta.get("capacity_state")
             planned.append({
+                **item,
                 "resource": resource,
                 "resource_free": resource_free,
-                **item,
+                "resource_capacity_state": str(state_value or "").strip().lower(),
             })
 
     # Prefer the canonical Top-4 cohort, then direct next-gate workflows,
@@ -585,7 +611,16 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
                 })
                 continue
         if not item["resource_free"]:
-            decisions.append({"plan_id": item.get("plan_id"), "decision": "SKIP_RESOURCE_BUSY"})
+            decision = (
+                "SKIP_RESOURCE_CAPACITY_UNKNOWN"
+                if item.get("resource_capacity_state") == "unknown"
+                else "SKIP_RESOURCE_BUSY"
+            )
+            decisions.append({
+                "plan_id": item.get("plan_id"),
+                "decision": decision,
+                "capacity_state": item.get("resource_capacity_state") or "unreported",
+            })
             continue
 
         dispatch_gate = str((item.get("execution_workflow_inputs") or {}).get("gate") or "all")

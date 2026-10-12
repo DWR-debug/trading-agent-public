@@ -1205,3 +1205,46 @@ def test_fast_dispatch_allows_one_q221_attempt_when_negative_receipt_is_from_old
     plan = dispatcher.dispatch_candidates(_q221_vintage_dispatch_snapshot(), [], max_dispatches=2)
 
     assert [x["plan_id"] for x in plan["dispatches"]] == ["Q221-USASPENDING-PUBLIC-CLOCK"]
+
+
+def test_dispatcher_fails_closed_when_live_capacity_state_is_unknown_even_if_slot_count_looks_free():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates
+
+    workflow = ".github/workflows/top4-candidate-slot-research.yml"
+    snapshot = {
+        "master_sha": "current-master",
+        "work_assignments": [],
+        "resources": [{
+            "name": "Windows self-hosted A",
+            "capacity_state": "unknown",
+            "research_capacity_slots": 1,
+            "research_slots_in_use": 0,
+            # This value may be stale/planned while the runner API is unavailable.
+            "research_slots_free": 1,
+        }],
+        "planned_capacity": [{
+            "resource": "Windows self-hosted A",
+            "capacity_state": "unknown",
+            "current_assignments": 0,
+            "research_capacity_slots": 1,
+            "planned_assignments": [{
+                "plan_id": "Q220-AS-FILED-REPRESENTATION",
+                "candidate": "Q220",
+                "scheduled": True,
+                "dispatchable": True,
+                "execution_workflow": workflow,
+                "execution_workflow_inputs": {"focus_wave": False, "gate": "all"},
+            }],
+        }],
+    }
+
+    plan = dispatch_candidates(snapshot, [], max_dispatches=2)
+
+    assert plan["dispatches"] == []
+    assert any(
+        row.get("decision") == "SKIP_RESOURCE_CAPACITY_UNKNOWN"
+        for row in plan["decisions"]
+    )
+    assert plan["paper_only"] is True
+    assert plan["performance_authorization"] is False
+    assert plan["live_execution"] is False
