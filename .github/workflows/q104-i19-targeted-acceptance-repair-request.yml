@@ -146,7 +146,7 @@ jobs:
     needs: [validate]
     if: github.repository == 'DWR-debug/trading-agent-public'
     permissions:
-      actions: read
+      actions: write
       contents: write
     uses: ./.github/workflows/q104-i19-targeted-acceptance-repair.yml
     with:
