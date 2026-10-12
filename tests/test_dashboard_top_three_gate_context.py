@@ -336,3 +336,9 @@ def test_dashboard_q220_status_comes_from_population_compiler_and_independent_re
     assert 'owner="Workpack zuerst spezifizieren · kein Runner zuordnen";' in js
     assert "Neues begrenztes Robustheits-/Governance-Workpack definieren" in js
     assert 'if(x.next_workpack_required)return {label:"WORKPACK OFFEN",cls:"blocked-badge"};' in js
+
+
+def test_dashboard_refresh_trigger_tracks_s10_runtime_status():
+    workflow = (ROOT / ".github/workflows/resource-dashboard-update.yml").read_text(encoding="utf-8")
+    assert '- "ops/s10_runtime_status.json"' in workflow
+    assert 'cron: "*/5 * * * *"' in workflow
