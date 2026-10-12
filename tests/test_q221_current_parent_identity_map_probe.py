@@ -39,3 +39,10 @@ def test_profile_map_is_current_state_only_and_has_no_issuer_mapping_fields():
     assert "issuer_symbol" not in probe.FROZEN_REQUEST_VALUES
     assert probe.FEASIBILITY_RUN_ID == "38303469112"
     assert probe.FEASIBILITY_RECEIPT_FINGERPRINT == "d4f5819f51849d7ba037ec0fa610f5e6e47b74b9353a0c534b6e2e666842509e"
+
+
+def test_frozen_source_receipt_really_has_247_unmapped_candidates():
+    root = Path(__file__).parents[1]
+    source, candidates = probe.validate_source(root / "research" / "evidence" / "q221_historical_public_boundary_latest.json")
+    assert len(candidates) == 247
+    assert all(x["mapping_status"] == "UNMAPPED" and x["issuer_symbol"] is None for x in candidates)
