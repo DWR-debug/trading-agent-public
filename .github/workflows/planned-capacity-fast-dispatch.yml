@@ -47,20 +47,57 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Retry transient GitHub API failures a bounded number of times. A
+          # failed snapshot must never fall back to a partial/empty history and
+          # accidentally authorize duplicate or full-census work.
+          gh_api_retry() {
+            local endpoint="$1" attempt=1 output
+            while (( attempt <= 3 )); do
+              if output="$(gh api "$endpoint")"; then
+                printf '%s' "$output"
+                return 0
+              fi
+              if (( attempt == 3 )); then
+                echo "GH_API_FAILED endpoint=$endpoint attempts=$attempt" >&2
+                return 1
+              fi
+              sleep "$attempt"
+              attempt=$((attempt + 1))
+            done
+          }
+
+          gh_api_paginate_retry() {
+            local endpoint="$1" attempt=1 output
+            while (( attempt <= 3 )); do
+              if output="$(gh api --paginate "$endpoint")"; then
+                printf '%s\n' "$output"
+                return 0
+              fi
+              if (( attempt == 3 )); then
+                echo "GH_API_PAGINATED_FAILED endpoint=$endpoint attempts=$attempt" >&2
+                return 1
+              fi
+              sleep "$attempt"
+              attempt=$((attempt + 1))
+            done
+          }
+
           python3 automation/generate_resource_dashboard.py
-          recent="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=200")"
-          in_progress="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=in_progress&per_page=100")"
-          queued="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=queued&per_page=100")"
-          waiting="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=waiting&per_page=100")"
-          pending="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?status=pending&per_page=100")"
-          # Keep the general snapshot bounded, but fetch complete Top-4 slot
-          # history so old technical failures cannot age out of the retry budget.
-          slot_history="$(gh api --paginate "/repos/$GITHUB_REPOSITORY/actions/workflows/top4-candidate-slot-research.yml/runs?per_page=100")"
+          recent="$(gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=200")"
+          in_progress="$(gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs?status=in_progress&per_page=100")"
+          queued="$(gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs?status=queued&per_page=100")"
+          waiting="$(gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs?status=waiting&per_page=100")"
+          pending="$(gh_api_retry "/repos/$GITHUB_REPOSITORY/actions/runs?status=pending&per_page=100")"
+          # Keep full history for both retry-sensitive lanes. General recent runs
+          # are dominated by dashboard/ops churn and cannot reliably retain an
+          # older failed I19 census, whose full retry must remain prohibited.
+          slot_history="$(gh_api_paginate_retry "/repos/$GITHUB_REPOSITORY/actions/workflows/top4-candidate-slot-research.yml/runs?per_page=100")"
+          q104_census_history="$(gh_api_paginate_retry "/repos/$GITHUB_REPOSITORY/actions/workflows/q104-i19-13f-historical-identity-census.yml/runs?per_page=100")"
           jq -s '
             [ .[] | .workflow_runs[]? ]
             | map(select(.id != null))
             | unique_by(.id)
-          ' <(printf '%s\n' "$recent") <(printf '%s\n' "$in_progress") <(printf '%s\n' "$queued") <(printf '%s\n' "$waiting") <(printf '%s\n' "$pending") <(printf '%s\n' "$slot_history") > "$RUNNER_TEMP/current_runs.json"
+          ' <(printf '%s\n' "$recent") <(printf '%s\n' "$in_progress") <(printf '%s\n' "$queued") <(printf '%s\n' "$waiting") <(printf '%s\n' "$pending") <(printf '%s\n' "$slot_history") <(printf '%s\n' "$q104_census_history") > "$RUNNER_TEMP/current_runs.json"
 
       - name: Dispatch executable ready capacity
         env:
@@ -71,6 +108,46 @@ jobs:
           python3 -m automation.planned_capacity_fast_dispatch             --snapshot docs/dashboard/dashboard_data.json             --runs "$RUNNER_TEMP/current_runs.json"             --output "$RUNNER_TEMP/planned_capacity_fast_dispatch.json"             --repo "$GITHUB_REPOSITORY"             --max-dispatches 6
 
           cat "$RUNNER_TEMP/planned_capacity_fast_dispatch.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Ensure a fail-closed dispatch receipt exists
+        if: always()
+        env:
+          OUTPUT_PATH: ${{ runner.temp }}/planned_capacity_fast_dispatch.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["OUTPUT_PATH"])
+          if not path.exists():
+              path.write_text(
+                  json.dumps(
+                      {
+                          "schema_version": 1,
+                          "record_type": "planned_capacity_fast_dispatch",
+                          "status": "FAILED_CLOSED_NO_VALID_DECISION",
+                          "reason": "Snapshot or dispatch failed before a valid decision artifact was produced; no implicit dispatch is authorized.",
+                          "dispatches": [],
+                          "dispatch_results": [],
+                          "paper_only": True,
+                          "performance_authorization": False,
+                          "holdout_selection": False,
+                          "ranking": False,
+                          "tuning": False,
+                          "promotion": False,
+                          "live_execution": False,
+                      },
+                      ensure_ascii=False,
+                      indent=2,
+                  )
+                  + "\\n",
+                  encoding="utf-8",
+              )
+              print("DISPATCH_RECEIPT_SYNTHESIZED_FAIL_CLOSED=true")
+          PY
 
       - name: Upload dispatch decision
         if: always()
