@@ -29,3 +29,9 @@ All scientific, performance, holdout, ranking, tuning, promotion, orders, and li
 
 
 The compiler input is copied to an immutable fixture rather than reading `latest`, which automated status/evidence refreshes may overwrite. Its embedded receipt fingerprint and the three exact expected-hash pins remain unchanged.
+
+## Post-run diagnosis — 2026-10-12
+
+The first run completed its archive scans but did not locate any original submission member in the three Feed TARs. Its status is therefore **incomplete**, not evidence that the daily Feed lacks those filings. The parser searched only for the bare accession and `.txt`; the SEC's [EDGAR Public Dissemination Service specification](https://www.sec.gov/files/edgar/pds_dissemination_spec.pdf) describes electronically accepted submissions as `[ACCESSION-NUMBER].dissem`. The corresponding local test now uses that documented member suffix.
+
+This is an extraction-path correction only. It does not change the pinned accession sample, accepted-submission identity checks, maximum feed/member/scan/download limits, frozen expected hashes, or any Q220 gate. The Q220 feed comparison must remain incomplete until a new, explicitly triggered run proves the exact member and header identities. The workflow's push trigger is consequently narrowed to the explicit request file; edits to the parser, tests or workflow do not automatically re-download multi-gigabyte SEC Feed archives.
