@@ -1,0 +1,55 @@
+name: Q220 Bounded Original SEC Feed Forensics Follow-up
+
+on:
+  push:
+    branches: [master]
+    paths:
+      # Expensive Feed archives run only on this separately frozen request.
+      - "research/run_requests/q220_primary_source_vintage_forensics_followup.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q220-original-feed-forensics-followup
+  cancel-in-progress: false
+
+jobs:
+  forensics:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Compare follow-up frozen hashes to original SEC Feed submissions
+        id: probe
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          out="research/runs/q220-primary-source-vintage-followup/${GITHUB_RUN_ID}/receipt.json"
+          python -m automation.q220_primary_source_vintage_forensics_followup \
+            --request research/run_requests/q220_primary_source_vintage_forensics_followup.trigger \
+            --receipt research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json \
+            --output "$out"
+      - name: Upload immutable follow-up receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-primary-source-vintage-followup-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q220-primary-source-vintage-followup/*/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Fail closed on incomplete follow-up inputs or downloads
+        if: steps.probe.outcome != 'success'
+        run: |
+          echo "Q220 follow-up is incomplete; canonical PIT/compiler gate remains blocked."
+          exit 1

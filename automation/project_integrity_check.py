@@ -44,6 +44,7 @@ ACTIVE_WORKFLOWS = {
     "q104-i19-asfiled-xbrl-source-probe.yml",
     "q218-independent-architecture-pit-reproduction.yml",
     "q220-primary-source-vintage-forensics.yml",
+    "q220-primary-source-vintage-forensics-followup.yml",
     "q218-prereg-authorization-reconcile.yml",
     "q218-performance-authorization-once.yml",
     "q218-performance-prep.yml",
