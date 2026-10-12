@@ -118,6 +118,15 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "Q218 has been removed from active focus and automatic dispatch" in focus
     assert "Q219 remains paused; its prior evidence is preserved." in focus
     assert "never restart the full census blindly" in focus
+    assert "### Persistent research handoff — verified snapshot 2026-10-12T10:02Z" in doc
+    assert "Q104:I19" in doc and "#38231636160" in doc
+    assert "FORENSIC_COMPARISON_INCOMPLETE" in doc and "#38233685159" in doc
+    assert "2,829,769,099 bytes downloaded" in doc
+    assert "348/348" in doc and "247/247" in doc
+    assert "Q220: original SEC daily Feed forensic run #38233685159" in focus
+    assert "daily Feed TAR members" in focus and "{accession}.nc" in focus
+    assert "both CI architectures and the full suite passed" in focus
+    assert "no terminal repair result was verified" in focus
     assert "do not repeat an outcome-bearing run" in focus
     assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY") == 1
     # This status sync must fail closed when the population source code changed
