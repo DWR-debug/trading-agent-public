@@ -1,0 +1,111 @@
+name: Q220 Bounded Header-Only Acceptance Evidence
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q220_bounded_header_evidence.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q220-bounded-header-evidence
+  cancel-in-progress: false
+
+jobs:
+  headers:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Validate fixed Q220 source run and immutable receipt artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          request="research/run_requests/q220_bounded_header_evidence.trigger"
+          test -s "$request" || { echo "Q220_HEADER_REQUEST_FILE_MISSING"; exit 2; }
+          source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' "$request")"
+          artifact_id="$(sed -n 's/^SOURCE_ARTIFACT_ID=//p' "$request")"
+          artifact_name="$(sed -n 's/^SOURCE_ARTIFACT_NAME=//p' "$request")"
+          [[ "$source_run_id" =~ ^[0-9]+$ && "$artifact_id" =~ ^[0-9]+$ ]] || {
+            echo "Q220_HEADER_SOURCE_IDS_INVALID"; exit 2;
+          }
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id" > "$RUNNER_TEMP/q220-header-source-run.json"
+          jq -e '
+            .name == "Q220 Original SEC Feed Primary-Hash Forensics"
+            and .id == 38254139755
+            and .status == "completed"
+            and .conclusion == "failure"
+            and .head_branch == "master"
+            and .head_sha == "f67f7b3cf91b25d09f899bd00587fd5868c54c1f"
+          ' "$RUNNER_TEMP/q220-header-source-run.json" >/dev/null || {
+            echo "Q220_HEADER_SOURCE_RUN_NOT_THE_FROZEN_TERMINAL_RUN"; exit 2;
+          }
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/q220-header-artifacts.json"
+          jq -e --argjson id "$artifact_id" --arg name "$artifact_name" \
+            '[.artifacts[]? | select(.id == $id and .name == $name and .expired == false)] | length == 1' \
+            "$RUNNER_TEMP/q220-header-artifacts.json" >/dev/null || {
+              echo "Q220_HEADER_SOURCE_ARTIFACT_MISSING_OR_EXPIRED"; exit 2;
+            }
+
+      - name: Download only the fixed forensic receipt, never a Feed archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' research/run_requests/q220_bounded_header_evidence.trigger)"
+          artifact_name="$(sed -n 's/^SOURCE_ARTIFACT_NAME=//p' research/run_requests/q220_bounded_header_evidence.trigger)"
+          root="research/runs/q220_bounded_header_evidence/${GITHUB_RUN_ID}"
+          mkdir -p "$root/source"
+          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
+            --name "$artifact_name" --dir "$root/source"
+          mapfile -t receipts < <(find "$root/source" -type f -name receipt.json -print)
+          [[ "${#receipts[@]}" == "1" ]] || { echo "Q220_HEADER_SOURCE_RECEIPT_COUNT_INVALID"; exit 2; }
+          {
+            echo "Q220_HEADER_RUN_ROOT=$root"
+            echo "Q220_HEADER_SOURCE_RECEIPT=${receipts[0]}"
+          } >> "${GITHUB_ENV}"
+
+      - name: Capture up to nine bounded official EDGAR header responses
+        id: probe
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q220_bounded_header_evidence \
+            --request research/run_requests/q220_bounded_header_evidence.trigger \
+            --source-receipt "$Q220_HEADER_SOURCE_RECEIPT" \
+            --output "$Q220_HEADER_RUN_ROOT/receipt.json"
+
+      - name: Upload immutable header evidence receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-bounded-header-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q220_bounded_header_evidence/*/receipt.json
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+
+      - name: Fail closed if any frozen header evidence is incomplete
+        if: steps.probe.outcome != 'success'
+        run: |
+          echo "Q220 header-only evidence is incomplete; source-hash and research gates remain closed."
+          exit 1
