@@ -11,6 +11,8 @@ import argparse
 import hashlib
 import json
 import re
+import time
+import urllib.error
 import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -33,6 +35,10 @@ SOURCE_CONTRACT_URL = (
 MAX_RESPONSE_BYTES = 5_000_000
 MAX_FISCAL_YEARS = 10
 REQUEST_TIMEOUT_SECONDS = 30
+MAX_REQUEST_ATTEMPTS = 2
+REQUEST_RETRY_BACKOFF_SECONDS = 2
+MAX_CONSECUTIVE_TRANSIENT_YEAR_FAILURES = 3
+TRANSIENT_HTTP_STATUSES = {408, 425, 429, 500, 502, 503, 504}
 
 FULL_RE = re.compile(r"^FY(?P<year>\d{4})_All_Contracts_Full_(?P<stamp>\d{8})\.zip$")
 DELTA_RE = re.compile(r"^FY\(All\)_All_Contracts_Delta_(?P<stamp>\d{8})\.zip$")
@@ -199,6 +205,44 @@ def validate_request(request_path: Path, input_path: Path) -> dict[str, Any]:
     }
 
 
+class _InventoryHTTPStatusError(RuntimeError):
+    def __init__(self, status: int):
+        self.http_status = int(status)
+        super().__init__(f"HTTP {status} from USAspending monthly archive catalog")
+
+
+class _InventoryRequestFailure(RuntimeError):
+    def __init__(
+        self,
+        message: str,
+        *,
+        attempts: list[dict[str, Any]],
+        transient: bool,
+        http_status: int | None,
+    ):
+        self.attempts = attempts
+        self.transient = transient
+        self.http_status = http_status
+        super().__init__(message)
+
+
+def _exception_http_status(exc: BaseException) -> int | None:
+    if isinstance(exc, urllib.error.HTTPError):
+        return int(exc.code)
+    value = getattr(exc, "http_status", None)
+    try:
+        return int(value) if value is not None else None
+    except (TypeError, ValueError):
+        return None
+
+
+def _is_transient_inventory_failure(exc: BaseException) -> bool:
+    status = _exception_http_status(exc)
+    if status is not None:
+        return status in TRANSIENT_HTTP_STATUSES
+    return isinstance(exc, (urllib.error.URLError, TimeoutError, ConnectionError))
+
+
 def request_inventory(fiscal_year: int) -> tuple[int, str, bytes, dict[str, Any]]:
     """Make one bounded read-only catalog POST; never fetch an archive payload."""
     payload = json.dumps({
@@ -217,15 +261,63 @@ def request_inventory(fiscal_year: int) -> tuple[int, str, bytes, dict[str, Any]
         method="POST",
     )
     with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+        status = int(getattr(response, "status", 200))
+        content_type = str(response.headers.get("Content-Type", ""))
         body = response.read(MAX_RESPONSE_BYTES + 1)
         if len(body) > MAX_RESPONSE_BYTES:
             raise ValueError(f"inventory response exceeded {MAX_RESPONSE_BYTES} bytes")
-        status = int(getattr(response, "status", 200))
-        content_type = str(response.headers.get("Content-Type", ""))
+    if status != 200:
+        # Some URL handlers return a non-200 response instead of raising
+        # HTTPError. Keep the status class available to the bounded retry policy.
+        raise _InventoryHTTPStatusError(status)
     decoded = json.loads(body.decode("utf-8"))
     if not isinstance(decoded, dict):
         raise ValueError("inventory response is not a JSON object")
     return status, content_type, body, decoded
+
+
+def request_inventory_with_retry(
+    fiscal_year: int,
+    *,
+    request_fn=None,
+    sleep_fn=None,
+) -> tuple[tuple[int, str, bytes, dict[str, Any]], list[dict[str, Any]]]:
+    """Retry transient source failures twice at most; never retry schema or identity errors."""
+    requester = request_fn or request_inventory
+    sleeper = sleep_fn or time.sleep
+    attempts: list[dict[str, Any]] = []
+    for attempt in range(1, MAX_REQUEST_ATTEMPTS + 1):
+        try:
+            result = requester(fiscal_year)
+            status = int(result[0])
+            if status != 200:
+                raise _InventoryHTTPStatusError(status)
+            attempts.append({
+                "attempt": attempt,
+                "status": "SUCCESS",
+                "http_status": status,
+                "response_bytes": len(result[2]),
+            })
+            return result, attempts
+        except Exception as exc:
+            status = _exception_http_status(exc)
+            transient = _is_transient_inventory_failure(exc)
+            attempts.append({
+                "attempt": attempt,
+                "status": "FAILED",
+                "http_status": status,
+                "transient": transient,
+                "error": f"{type(exc).__name__}: {exc}"[:300],
+            })
+            if not transient or attempt >= MAX_REQUEST_ATTEMPTS:
+                raise _InventoryRequestFailure(
+                    f"{type(exc).__name__}: {exc}"[:500],
+                    attempts=attempts,
+                    transient=transient,
+                    http_status=status,
+                ) from exc
+            sleeper(REQUEST_RETRY_BACKOFF_SECONDS * attempt)
+    raise AssertionError("bounded inventory retry loop exited unexpectedly")
 
 
 def _normalise_items(
@@ -317,6 +409,9 @@ def run(input_path: Path, output_path: Path, request_path: Path | None = None) -
         "max_response_bytes": MAX_RESPONSE_BYTES,
         "max_fiscal_years": MAX_FISCAL_YEARS,
         "request_timeout_seconds": REQUEST_TIMEOUT_SECONDS,
+        "max_request_attempts_per_fiscal_year": MAX_REQUEST_ATTEMPTS,
+        "retryable_http_statuses": sorted(TRANSIENT_HTTP_STATUSES),
+        "max_consecutive_transient_year_failures": MAX_CONSECUTIVE_TRANSIENT_YEAR_FAILURES,
         "request_mode": "READ_ONLY_METADATA_POST; NO_ARCHIVE_PAYLOADS_DOWNLOADED",
         "input_manifest_path": input_path.as_posix(),
         "request_validation_required": request_path is not None,
@@ -404,6 +499,8 @@ def run(input_path: Path, output_path: Path, request_path: Path | None = None) -
     year_results: list[dict[str, Any]] = []
     any_request_error = False
     any_shape_error = False
+    consecutive_transient_year_failures = 0
+    source_circuit_open = False
     for fiscal_year in sorted(targets):
         year_receipt: dict[str, Any] = {
             "fiscal_year": fiscal_year,
@@ -417,16 +514,33 @@ def run(input_path: Path, output_path: Path, request_path: Path | None = None) -
             "full_archive_dates": [],
             "delta_archive_dates": [],
             "archive_items": [],
+            "request_attempt_count": 0,
+            "request_attempts": [],
             "status": "NOT_QUERIED",
         }
+        if source_circuit_open:
+            any_request_error = True
+            year_receipt.update({
+                "status": "SKIPPED_AFTER_TRANSIENT_SOURCE_ERRORS",
+                "error": (
+                    "not queried after "
+                    f"{MAX_CONSECUTIVE_TRANSIENT_YEAR_FAILURES} consecutive fiscal-year "
+                    "requests exhausted their transient-error retry budget"
+                ),
+            })
+            year_results.append(year_receipt)
+            continue
         try:
-            status, content_type, body, decoded = request_inventory(fiscal_year)
+            (status, content_type, body, decoded), attempts = request_inventory_with_retry(fiscal_year)
             year_receipt.update({
                 "http_status": status,
                 "content_type": content_type,
                 "response_sha256": _sha256(body),
                 "response_bytes": len(body),
+                "request_attempt_count": len(attempts),
+                "request_attempts": attempts,
             })
+            consecutive_transient_year_failures = 0
             rows = decoded.get("monthly_files")
             if status != 200 or not isinstance(rows, list):
                 any_shape_error = True
@@ -451,15 +565,45 @@ def run(input_path: Path, output_path: Path, request_path: Path | None = None) -
                 "invalid_item_examples": item_errors[:20],
                 "status": "CATALOG_PARSED" if not item_errors else "CATALOG_HAS_INVALID_ITEMS",
             })
-        except Exception as exc:
+        except _InventoryRequestFailure as exc:
             any_request_error = True
             year_receipt.update({
                 "status": "REQUEST_OR_JSON_PARSE_FAILED",
+                "http_status": exc.http_status,
+                "request_attempt_count": len(exc.attempts),
+                "request_attempts": exc.attempts,
+                "retry_exhausted_transient": exc.transient,
+                "error": str(exc)[:500],
+            })
+            if exc.transient:
+                consecutive_transient_year_failures += 1
+                if consecutive_transient_year_failures >= MAX_CONSECUTIVE_TRANSIENT_YEAR_FAILURES:
+                    source_circuit_open = True
+            else:
+                consecutive_transient_year_failures = 0
+        except Exception as exc:
+            any_request_error = True
+            consecutive_transient_year_failures = 0
+            year_receipt.update({
+                "status": "REQUEST_OR_JSON_PARSE_FAILED",
+                "request_attempt_count": 1,
+                "request_attempts": [{
+                    "attempt": 1,
+                    "status": "FAILED",
+                    "http_status": _exception_http_status(exc),
+                    "transient": False,
+                    "error": f"{type(exc).__name__}: {exc}"[:300],
+                }],
                 "error": f"{type(exc).__name__}: {exc}"[:500],
             })
         year_results.append(year_receipt)
 
     receipt["fiscal_year_results"] = year_results
+    receipt["api_request_count"] = sum(int(row.get("request_attempt_count", 0)) for row in year_results)
+    receipt["api_requests_skipped_after_circuit_breaker"] = sum(
+        1 for row in year_results if row.get("status") == "SKIPPED_AFTER_TRANSIENT_SOURCE_ERRORS"
+    )
+    receipt["source_circuit_breaker_open"] = source_circuit_open
     all_items = [item for row in year_results for item in row.get("archive_items", [])]
     receipt["archive_item_count"] = len(all_items)
     receipt["full_archive_count"] = sum(row.get("full_archive_count", 0) for row in year_results)
@@ -473,7 +617,12 @@ def run(input_path: Path, output_path: Path, request_path: Path | None = None) -
 
     if any_request_error or any_shape_error or not every_year_parsed:
         status = "ARCHIVE_LISTING_INCOMPLETE"
-        next_gate = "diagnose the bounded catalog/API errors; do not treat partial archive inventory as evidence"
+        next_gate = (
+            "bounded transient retries/circuit breaker exhausted; re-check source availability before a new "
+            "versioned request; never treat skipped fiscal years or partial archive inventory as evidence"
+            if source_circuit_open
+            else "diagnose the bounded catalog/API errors; do not treat partial archive inventory as evidence"
+        )
     elif not all_items:
         status = "ARCHIVE_LISTING_EMPTY"
         next_gate = "no matching contract archive metadata was listed; investigate source availability before any transaction-clock inference"
