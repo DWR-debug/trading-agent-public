@@ -136,7 +136,7 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "daily .nc.tar.gz tar member is accession.nc" in focus
     assert "daily Feed TAR members `{accession}.nc`" in doc
     assert "both CI architectures and full-suite verification passed" in focus
-    assert "follow-up run #38252169610" in focus
+    assert "launched run #38252169610" in focus
     assert "three preselected sample keys" in focus
     assert "cannot by itself clear all 55 source-hash failures" in focus
     assert "do not repeat an outcome-bearing run" in focus
