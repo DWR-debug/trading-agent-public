@@ -338,6 +338,40 @@ def test_repair_fails_closed_if_top_level_failure_set_differs_from_archive_failu
         repair_shard_payload(receipt, rate_limiter=NoopLimiter())
 
 
+def test_mixed_retryable_and_nonretryable_failures_are_all_reported():
+    blob = make_archive()
+    receipt = make_shard_receipt(blob)
+    bad_accession = "0001045810-25-000002"
+    archive_record = receipt["archives"][0]
+    hit = archive_record["target_hits"]["SPGI"]
+    hit["accessions"].append(bad_accession)
+    hit["filing_dates"].append(FILING_DATE)
+    hit["periods"].append(PERIOD)
+    archive_record["acceptance_failures"][bad_accession] = "FILER_CIK_MISMATCH"
+    archive_record["target_unique_accession_count"] = 2
+    receipt["acceptance_failures"][bad_accession] = "FILER_CIK_MISMATCH"
+    receipt["acceptance_time_join"]["target_unique_accessions"] = 2
+    receipt["acceptance_time_join"]["failures"] = 2
+    receipt["receipt_fingerprint"] = canonical_fingerprint(receipt)
+
+    fixed, entries = repair_shard_payload(
+        receipt,
+        rate_limiter=NoopLimiter(),
+        archive_fetcher=lambda _url, _limiter: blob,
+        header_resolver=lambda _accession, meta, _limiter: (fake_record(meta), None, 1),
+    )
+
+    by_accession = {entry["accession"]: entry for entry in entries}
+    assert set(by_accession) == {ACCESSION, bad_accession}
+    assert by_accession[ACCESSION]["status"] == "REPAIRED"
+    assert by_accession[bad_accession]["status"] == "NOT_RETRIED_NONTRANSIENT"
+    assert by_accession[bad_accession]["final_error"] == "FILER_CIK_MISMATCH"
+    assert fixed["acceptance_failures"] == {bad_accession: "FILER_CIK_MISMATCH"}
+    assert fixed["acceptance_time_join"]["complete"] is False
+    assert set(fixed["archives"][0]["acceptance_failures"]) == {bad_accession}
+    assert fixed["receipt_fingerprint"] == canonical_fingerprint(fixed)
+
+
 def test_repair_does_not_retry_identity_mismatch():
     receipt = make_shard_receipt(make_archive())
     receipt["acceptance_failures"][ACCESSION] = "ACCESSION_MISMATCH"
