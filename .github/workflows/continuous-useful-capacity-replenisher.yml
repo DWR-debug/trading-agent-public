@@ -29,47 +29,77 @@ jobs:
           ref: master
           fetch-depth: 1
 
-      - name: Replenish successful useful capacity
+      - name: Replenish bounded useful capacity after success or recoverable failure
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+          EVENT_WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+          EVENT_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
         shell: bash
         run: |
           set -euo pipefail
 
-          runs="$(gh api "/repos/$REPO/actions/runs?per_page=200")"
-
-          active_permanent="$(printf '%s' "$runs" | jq '[.workflow_runs[] | select(.name=="Permanent Windows Local Research Loop") | select(.status != "completed")] | length')"
-          if (( active_permanent == 0 )); then
-            should_dispatch=0
-            if [[ "$GITHUB_EVENT_NAME" == "workflow_run" ]]; then
-              if [[ "${{ github.event.workflow_run.name }}" == "Permanent Windows Local Research Loop" &&
-                    "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
-                should_dispatch=1
-              fi
-            else
-              latest="$(printf '%s' "$runs" | jq -r '[.workflow_runs[] | select(.name=="Permanent Windows Local Research Loop") | select(.status=="completed")] | sort_by(.created_at) | last // empty')"
-              if [[ -z "$latest" ]]; then
-                should_dispatch=1
-              else
-                latest_completed="$(printf '%s' "$latest" | jq -r '.completed_at // .updated_at')"
-                latest_epoch="$(date -d "$latest_completed" +%s)"
-                now_epoch="$(date +%s)"
-                age=$((now_epoch-latest_epoch))
-                latest_conclusion="$(printf '%s' "$latest" | jq -r '.conclusion // ""')"
-                if (( age >= 600 )) && [[ "$latest_conclusion" == "success" ]]; then
-                  should_dispatch=1
-                fi
-              fi
-            fi
-            if (( should_dispatch == 1 )); then
-              echo "REPLENISH permanent-pc-research-loop"
-              gh workflow run permanent-pc-research-loop.yml --repo "$REPO" --ref master
-            else
-              echo "NO_REPLENISH permanent-pc-research-loop"
-            fi
-          else
+          # Query this workflow's history instead of the newest 200 repository
+          # runs, which may be dominated by dispatch/status churn.
+          runs="$(gh api "/repos/$REPO/actions/workflows/permanent-pc-research-loop.yml/runs?per_page=100")"
+          active_permanent="$(printf '%s' "$runs" | jq '[.workflow_runs[] | select(.status != "completed")] | length')"
+          if (( active_permanent > 0 )); then
             echo "SKIP permanent-pc-research-loop active=$active_permanent"
+            echo "Scientific boundary unchanged: replenishment only dispatches bounded non-authorizing workflows."
+            exit 0
           fi
 
-          echo "Scientific boundary unchanged: replenishment only dispatches bounded non-authorizing workflows."
+          latest="$(printf '%s' "$runs" | jq -c '[.workflow_runs[] | select(.status == "completed")] | sort_by((.run_started_at // .created_at) | fromdateiso8601) | last // empty')"
+          should_dispatch=0
+          MAX_FAILURES_PER_HOUR=2
+          MIN_REPLENISH_AGE_SECONDS=600
+          now_epoch="$(date +%s)"
+
+          if [[ -z "$latest" ]]; then
+            echo "NO_PRIOR_PERMANENT_RUN=dispatch_initial_bounded_loop"
+            should_dispatch=1
+          else
+            latest_start="$(printf '%s' "$latest" | jq -r '.run_started_at // .created_at')"
+            latest_start_epoch="$(date -d "$latest_start" +%s)"
+            age_since_start=$((now_epoch-latest_start_epoch))
+            latest_conclusion="$(printf '%s' "$latest" | jq -r '.conclusion // ""')"
+            recent_failure_cutoff=$((now_epoch-3600))
+            recent_failures="$(printf '%s' "$runs" | jq --argjson cutoff "$recent_failure_cutoff" '[.workflow_runs[] | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled") | select(((.run_started_at // .created_at) | fromdateiso8601) >= $cutoff)] | length')"
+
+            if [[ "$GITHUB_EVENT_NAME" == "workflow_run" ]]; then
+              # Replenish immediately after a sufficiently useful successful
+              # run; a short pass waits for the scheduled cooldown.
+              if [[ "$EVENT_WORKFLOW_NAME" == "Permanent Windows Local Research Loop" &&
+                    "$EVENT_CONCLUSION" == "success" &&
+                    "$latest_conclusion" == "success" ]] &&
+                 (( age_since_start >= MIN_REPLENISH_AGE_SECONDS )); then
+                should_dispatch=1
+              fi
+            elif (( age_since_start >= MIN_REPLENISH_AGE_SECONDS )); then
+              if [[ "$latest_conclusion" == "success" ]]; then
+                should_dispatch=1
+              elif [[ "$latest_conclusion" == "failure" ||
+                      "$latest_conclusion" == "timed_out" ||
+                      "$latest_conclusion" == "cancelled" ]]; then
+                if (( recent_failures < MAX_FAILURES_PER_HOUR )); then
+                  echo "RECOVERABLE_FAILURE retry_budget=$((MAX_FAILURES_PER_HOUR-recent_failures))"
+                  should_dispatch=1
+                else
+                  echo "STOP_FAILURE_RETRY_BUDGET recent_failures=$recent_failures limit=$MAX_FAILURES_PER_HOUR"
+                fi
+              else
+                echo "NO_REPLENISH unsupported_latest_conclusion=$latest_conclusion"
+              fi
+            else
+              echo "COOLDOWN age_since_start=${age_since_start}s minimum=${MIN_REPLENISH_AGE_SECONDS}s"
+            fi
+          fi
+
+          if (( should_dispatch == 1 )); then
+            echo "REPLENISH permanent-pc-research-loop"
+            gh workflow run permanent-pc-research-loop.yml --repo "$REPO" --ref master
+          else
+            echo "NO_REPLENISH permanent-pc-research-loop"
+          fi
+
+          echo "Safety: no padding; no duplicate active workflow; bounded failure retries; paper-only; no performance authorization or live execution."
