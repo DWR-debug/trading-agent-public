@@ -151,14 +151,21 @@ def make_header():
 
 def make_sgml_header():
     return (
-        "<SEC-HEADER>\\n"
-        f"<ACCESSION-NUMBER>{ACCESSION}\\n"
-        f"<CONFORMED-SUBMISSION-TYPE>{FORM}\\n"
-        "<FILED-AS-OF-DATE>20250115\\n"
-        f"<CENTRAL-INDEX-KEY>{CIK}\\n"
-        "<ACCEPTANCE-DATETIME>20250115161542\\n"
+        "<SEC-HEADER>0001045810-25-000001.hdr.sgml : 20250115\n"
+        "<ACCEPTANCE-DATETIME>20250115161542\n"
+        f"<ACCESSION-NUMBER>{ACCESSION}\n"
+        f"<TYPE>{FORM}\n"
+        "<PUBLIC-DOCUMENT-COUNT>1\n"
+        "<FILING-DATE>20250115\n"
+        "<FILER>\n"
+        "<COMPANY-DATA>\n"
+        f"<CIK>{CIK}\n"
+        "</COMPANY-DATA>\n"
+        "</FILER>\n"
         "</SEC-HEADER>"
     ).encode()
+
+
 def make_shard_receipt(blob: bytes):
     meta = {
         "url": "https://www.sec.gov/files/structureddata/data/form-13f-data-sets/2025q1_form13f.zip",
