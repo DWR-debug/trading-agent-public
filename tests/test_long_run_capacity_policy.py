@@ -55,3 +55,17 @@ def test_runner_c_setup_is_secrets_safe_and_has_dedicated_label() -> None:
     doc = Path("docs/SELF_HOSTED_RESEARCH_RUNNER_C.md").read_text(encoding="utf-8")
     assert "third PowerShell window" in doc
     assert "non-authorizing" in doc.lower()
+
+def test_permanent_pc_data_qa_installs_pdf_parser_required_by_q218_q221_census() -> None:
+    permanent = Path(".github/workflows/permanent-pc-research-loop.yml").read_text(encoding="utf-8")
+    worker = Path("automation/self_hosted_research_worker.py").read_text(encoding="utf-8")
+    census = Path("automation/q218_q221_historical_source_census.py").read_text(encoding="utf-8")
+
+    # The data_qa worker invokes the historical USAspending PDF clock census.
+    # Keep its dependency installed on the physical Windows image as well as
+    # hosted runners; otherwise step 2 fails and the downstream compiler has
+    # no valid input artifact to consume.
+    assert "automation.q218_q221_historical_source_census" in worker
+    assert "from pypdf import PdfReader" in census
+    assert "exchange-calendars pypdf" in permanent
+
