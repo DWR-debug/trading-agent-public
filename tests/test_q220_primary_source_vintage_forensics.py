@@ -109,7 +109,7 @@ def test_scan_daily_feed_finds_exact_original_and_records_correction_names():
     )
     archive_bytes = io.BytesIO()
     with tarfile.open(fileobj=archive_bytes, mode="w:gz") as archive:
-        original = tarfile.TarInfo(accession)
+        original = tarfile.TarInfo(accession + ".dissem")
         original.size = len(submission)
         archive.addfile(original, io.BytesIO(submission))
         correction_payload = b"correction record; never applied by this probe"
@@ -125,7 +125,7 @@ def test_scan_daily_feed_finds_exact_original_and_records_correction_names():
         max_member_bytes=100_000,
     )
     assert scan["scan_complete"] is True
-    assert scan["original_member_name"] == accession
+    assert scan["original_member_name"] == accession + ".dissem"
     assert scan["correction_members"] == [{"name": accession + ".corr01", "declared_bytes": len(correction_payload)}]
     assert scan["submission_header"]["accession"] == accession
     assert scan["primary"]["found"] is True
