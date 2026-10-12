@@ -41,7 +41,7 @@
   ],
   "source": {
     "original_feed_directory": "https://www.sec.gov/Archives/edgar/Feed/",
-    "original_feed_pattern": "YYYYMMDD.nc.tar.gz, where YYYYMMDD is the filing date",
+    "original_feed_pattern": "https://www.sec.gov/Archives/edgar/Feed/{year}/QTR{quarter}/{YYYYMMDD}.nc.tar.gz; quarter = floor((month-1)/3)+1",
     "documentation": "https://www.sec.gov/Archives/edgar/README.txt",
     "official_accessing_data_doc": "https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data",
     "current_primary_url_pattern": "https://www.sec.gov/Archives/edgar/data/{company_cik}/{accession_without_dashes}/{primary_filename}"
@@ -88,7 +88,7 @@
     "promotion": false,
     "live_execution": false
   },
-  "revision_note": "Before the first run, the mutable latest receipt is copied to an immutable fixture; SEC's official Feed directory listings show two selected 2019 daily archives at 845477 KB and 814528 KB, so a 100 MB cap would deterministically skip the originals. The fixed three-sample request now allows 1.5 GB per Feed and 4.6 GB aggregate, with no sample expansion.",
+  "revision_note": "Before the first run, the mutable latest receipt is copied to an immutable fixture; SEC's official Feed directory listings show two selected 2019 daily archives at 845477 KB and 814528 KB, so a 100 MB cap would deterministically skip the originals. The fixed three-sample request now allows 1.5 GB per Feed and 4.6 GB aggregate, with no sample expansion. The first code review verified that SEC's directory listing uses Feed/YYYY/QTRn/YYYYMMDD.nc.tar.gz; the URL builder now mirrors this official layout and has exact path tests for all three frozen dates plus a Q4 boundary.",
   "bounds": {
     "max_feed_archive_bytes": 1500000000,
     "max_current_primary_bytes": 15000000,
