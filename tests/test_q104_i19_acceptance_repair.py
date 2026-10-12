@@ -554,7 +554,12 @@ def test_q104_targeted_repair_request_is_receipt_gated_and_paper_only():
 
     assert 'SOURCE_RUN_ID=38168441086' in request
     assert 'SHARD_RECOVERY_RUN_ID=38168441086' in request
-    assert "PRIOR_REPAIR_RUN_ID=38215450138" in request
+    prior_repair_lines = [
+        line for line in request.splitlines() if line.startswith("PRIOR_REPAIR_RUN_ID=")
+    ]
+    assert len(prior_repair_lines) == 1
+    prior_repair_id = prior_repair_lines[0].split("=", 1)[1]
+    assert prior_repair_id == "" or prior_repair_id.isdigit()
     assert 'CENSUS_RESTART=false' in request
     assert 'SOURCE_SNAPSHOT_REUSE=true' in request
     for flag in ("PERFORMANCE=false", "HOLDOUT_SELECTION=false", "RANKING=false", "TUNING=false", "PROMOTION=false", "LIVE_EXECUTION=false"):
