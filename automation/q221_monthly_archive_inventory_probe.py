@@ -509,6 +509,21 @@ def run(input_path: Path, output_path: Path, request_path: Path | None = None) -
     return receipt
 
 
+def exit_code_for_status(status: str) -> int:
+    """Treat a completed preregistered H0 inventory as success, not infrastructure failure.
+
+    A negative inventory result means the bounded source-feasibility experiment
+    completed and the archive-vintage route should stop. Empty, incomplete,
+    rejected, or otherwise unexpected outcomes remain fail-closed.
+    """
+    if status in {
+        "DATED_ARCHIVE_SERIES_FOUND",
+        "ARCHIVE_LISTING_OK_NO_VERSION_SERIES_FOUND",
+    }:
+        return 0
+    return 2
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -522,7 +537,7 @@ def main() -> int:
     args = parser.parse_args()
     receipt = run(args.input, args.output, request_path=args.request)
     print(json.dumps(receipt, sort_keys=True))
-    return 0 if receipt.get("status") == "DATED_ARCHIVE_SERIES_FOUND" else 2
+    return exit_code_for_status(str(receipt.get("status") or ""))
 
 
 if __name__ == "__main__":
