@@ -1720,9 +1720,9 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
         ]
         runner = runner_by_name.get(resource["configured_runner"])
         state = capacity_state(resource, runner, research_assignments)
-        if state == "assumed_available" and executing_assignments:
-            # The PC may be running non-research work; physical occupancy wins
-            # over the operator's idle-capacity assumption.
+        if executing_assignments:
+            # Any job actually running on this resource occupies it, regardless
+            # of whether the task belongs to a research or platform lane.
             state = "operating"
         if executing_assignments:
             # An explicitly running job assigned to this runner is stronger
