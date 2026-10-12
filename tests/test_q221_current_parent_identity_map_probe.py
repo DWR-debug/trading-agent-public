@@ -53,3 +53,10 @@ def test_workflow_uses_exact_feasibility_artifact_filename():
     content = workflow.read_text(encoding="utf-8")
     assert 'rglob("q221-recipient-parent-identity-receipt.json")' in content
     assert 'rglob("receipt.json")' not in content
+
+
+def test_workflow_finds_exact_receipt_filename_in_shell_step():
+    workflow = Path(__file__).parents[1] / ".github" / "workflows" / "q221-current-parent-identity-map.yml"
+    content = workflow.read_text(encoding="utf-8")
+    assert '-name q221-recipient-parent-identity-receipt.json -type f' in content
+    assert '-name receipt.json -type f' not in content

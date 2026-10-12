@@ -72,7 +72,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          feasibility_receipt="$(find "$RUNNER_TEMP/q221-parent-map-feasibility" -name receipt.json -type f -print -quit)"
+          feasibility_receipt="$(find "$RUNNER_TEMP/q221-parent-map-feasibility" -name q221-recipient-parent-identity-receipt.json -type f -print -quit)"
           python -m automation.q221_current_parent_identity_map_probe \
             --request research/run_requests/q221_current_parent_identity_map_probe.trigger \
             --source research/evidence/q221_historical_public_boundary_latest.json \
