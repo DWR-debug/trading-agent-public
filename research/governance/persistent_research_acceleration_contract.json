@@ -8,6 +8,7 @@
   "startup_logic": [
     "Verify current public master and current operational/evidence state before acting.",
     "Snapshot live runner, workflow, agent and bounded mobile capacity; never trust stale availability claims.",
+    "All three Windows self-hosted slots A/B/C are permanently operator-confirmed always-routable except while an actual job is executing on that exact slot. Only job status=in_progress assigned to that runner or verified busy=true occupies the slot; queued/waiting/pending runs do not. Missing/stale/offline inventory does not veto routing, and live telemetry remains separately reported.",
     "Route every meaningful task to the smallest suitable free resource and execute independent work in parallel.",
     "Treat Windows A and B as always-routable primary research capacity, not fallback. Keep both lanes moving in parallel whenever independent bounded work is available; do not wait for the other lane to finish.",
     "Do not leave a reachable configured research runner idle while a useful independent bounded backlog exists: after successful completion, replenish the lane immediately through deterministic completion chaining.",
@@ -72,6 +73,42 @@
         ],
         "duplicate_prevention": true,
         "padding_forbidden": true
+      },
+      "operator_confirmed_availability": {
+        "status": "PERMANENT",
+        "policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
+        "rule": "All three Windows self-hosted slots are always available/routable, except while a run is actually executing on that specific slot.",
+        "slots": [
+          {
+            "slot": "Windows self-hosted A",
+            "runner_name": "LHT-N133732",
+            "label": "trading-agent-research",
+            "role": "FORMAL_READINESS / local reproduction",
+            "max_concurrent_runs": 1,
+            "always_routable": true
+          },
+          {
+            "slot": "Windows self-hosted B",
+            "runner_name": "LHT-N133732-2",
+            "label": "trading-agent-research",
+            "role": "FRONTIER_DISCOVERY / data_qa",
+            "max_concurrent_runs": 1,
+            "always_routable": true
+          },
+          {
+            "slot": "Windows self-hosted C",
+            "runner_name": "LHT-N133732-3",
+            "label": "trading-agent-long",
+            "role": "LONG_DETERMINISTIC_RESEARCH / independent reproduction",
+            "max_concurrent_runs": 1,
+            "always_routable": true
+          }
+        ],
+        "occupancy_rule": "Only a job with status=in_progress assigned to the exact runner (or verified runner inventory busy=true) occupies the slot. A workflow run that is merely queued, waiting or pending does not occupy the physical runner.",
+        "telemetry_rule": "Keep observed online/offline/busy telemetry separate from operator-confirmed routability. Missing, stale or offline inventory alone does not veto routing and does not prove live-online status.",
+        "duplicate_prevention": true,
+        "no_artificial_work": true,
+        "performance_authorization_from_capacity": false
       }
     },
     "mobile": {
