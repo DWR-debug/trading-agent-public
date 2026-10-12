@@ -234,9 +234,14 @@ def _archive_accession_metadata(
             if not raw_filing_date or not cik or not form:
                 continue
             filing_date = census.parse_date(raw_filing_date).isoformat()
-            cik = str(cik).strip().zfill(10)
-            if accession.split("-", 1)[0] != cik:
-                raise ValueError("Q104_I19_REPAIR_ARCHIVE_CIK_MISMATCH:" + accession)
+            cik = str(cik).strip()
+            # The accession prefix is not a reliable substitute for filer CIK.
+            # For example, SEC accession 0000950123-13-005205 is filed by CIK
+            # 0000728618. Preserve the explicit submission.tsv CIK and let the
+            # exact SEC acceptance header verify CIK, accession, form and date.
+            if not re.fullmatch(r"\d{1,10}", cik):
+                raise ValueError("Q104_I19_REPAIR_ARCHIVE_CIK_INVALID:" + accession)
+            cik = cik.zfill(10)
             if filing_date not in expected_dates:
                 raise ValueError("Q104_I19_REPAIR_FILING_DATE_NOT_IN_FROZEN_TARGET_HITS:" + accession)
             if period and expected_periods and period not in expected_periods:

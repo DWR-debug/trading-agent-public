@@ -11,6 +11,7 @@ import pytest
 
 from automation import q104_i19_13f_historical_identity_census as census
 from automation.q104_i19_acceptance_repair import (
+    _archive_accession_metadata,
     accession_hdr_sgml_url,
     is_repairable_failure,
     is_transient_failure,
@@ -67,6 +68,66 @@ def make_archive():
         zf.writestr("INFOTABLE.tsv", infotable)
     return raw.getvalue()
 
+
+def test_archive_metadata_does_not_confuse_accession_prefix_with_filer_cik():
+    accession = "0000950123-13-005205"
+    filer_cik = "0000728618"
+    submission = (
+        "ACCESSION_NUMBER\tFILING_DATE\tPERIODOFREPORT\tCIK\tSUBMISSIONTYPE\n"
+        f"{accession}\t31-JUL-2013\t2013-06-30\t728618\t13F-HR\n"
+    )
+    raw = io.BytesIO()
+    with zipfile.ZipFile(raw, "w", zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr("SUBMISSION.tsv", submission)
+    archive_record = {
+        "target_hits": {
+            "SPGI": {
+                "filing_dates": ["2013-07-31"],
+                "periods": ["2013-06-30"],
+            }
+        }
+    }
+
+    metadata = _archive_accession_metadata(raw.getvalue(), {accession}, archive_record)
+
+    assert metadata[accession] == {
+        "filing_date": "2013-07-31",
+        "period": "2013-06-30",
+        "filer_cik": filer_cik,
+        "submission_type": "13F-HR",
+    }
+
+
+def test_header_identity_still_rejects_cik_that_conflicts_with_archive_metadata():
+    accession = "0000950123-13-005205"
+    filer_cik = "0000728618"
+    header = (
+        "<SEC-HEADER>\n"
+        f"ACCESSION NUMBER: {accession}\n"
+        "CONFORMED SUBMISSION TYPE: 13F-HR\n"
+        "FILED AS OF DATE: 20130731\n"
+        "CENTRAL INDEX KEY: 0000950123\n"
+        "<ACCEPTANCE-DATETIME>20130731170611\n"
+        "</SEC-HEADER>"
+    )
+    meta = {
+        "filer_cik": filer_cik,
+        "filing_date": "2013-07-31",
+        "period": "2013-06-30",
+        "submission_type": "13F-HR",
+    }
+
+    record, error, attempts = resolve_accession_header(
+        accession,
+        meta,
+        NoopLimiter(),
+        urlopen=lambda *_args, **_kwargs: Response(header.encode()),
+        sleep=lambda _: None,
+    )
+
+    assert record is None
+    assert error == "HEADER_VALIDATION:FILER_CIK_MISMATCH"
+    assert attempts == 1
 
 def make_header():
     return (
