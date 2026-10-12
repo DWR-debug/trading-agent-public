@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "1bcdfcf7eb7da953528ce0df9b65d39af546277c74e5a857cc04d4d0f1236112",
-  "context_fingerprint": "0b11967791f67efbaeadbc6adfcfc1ea5551bc2c755252c3947710e46cea0d29",
-  "observed_at_utc": "2026-10-06T07:09:47.561833Z",
+  "context_fingerprint": "292cac8c0e25445974f8aa9f88bf57a6d5e3a670e439913dadb57637f5ecc26e",
+  "observed_at_utc": "2026-10-12T11:59:56.574344Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 12.53,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 128.659,
+  "stdout": "# Independent Adversarial Orchestration Audit — Worker Handoff\n\n## Executive Summary\nThe orchestration layer shows disciplined gate design (forbidden keys, quarantined hypotheses, PIT-aware next_gates) but has **concrete reproducibility risks** in source versioning, lane authority, lease/state management, and cross-workflow concurrency. Several \"adversarial\" lanes lack the same structural guards as deterministic lanes. No evidence of performance leakage found in supplied files, but **stale-state and duplicate-work risks are live**.\n\n---\n\n## Findings\n\n### F1: Source IDs Unversioned — Drift Risk Across All Tracks\n**Mechanism**: `research_os_scheduler.py` tracks reference `source_ids` like `\"SRC-SEC-FTD\"`, `\"SRC-FRED-ALFRED\"`, `\"SRC-NDAQ-RETAIL10\"` with no commit hash, snapshot date, or content fingerprint. The `source_index` and `fingerprint` imports from `research_os_evidence_bus` suggest tooling exists but isn't enforced at track definition time.  \n**Why it matters**: A source schema change (e.g., SEC FTD field rename, FRED vintage revision) silently changes track semantics. Two runs of the same track at different times may process different data.  \n**Cheap falsification**: Add a CI step that computes `fingerprint(load_source(source_id))` for each `source_id` in `TRACKS` and fails if any fingerprint differs from a checked-in `source_fingerprints.json`. Run weekly.\n\n### F2: Track Scoring Metrics Have No Provenance — Potential Look-Ahead Contamination\n**Mechanism**: Fields `cheap_falsifiability`, `mechanism_novelty_distance`, `expected_reproducibility`, `resource_cost` are bare floats in `TRACKS`. No `scored_by`, `scored_at`, `scoring_method`, or `evidence_ref`.  \n**Why it matters**: If scores were assigned after seeing candidate performance (even informally), they encode look-ahead. The scheduler may prioritize tracks that \"look promising\" based on contaminated scores.  \n**Cheap falsification**: Require every track to carry a `score_provenance` object: `{scorer: \"human|agent\", timestamp: ISO8601, method: \"rubric_v1\", evidence_refs: [...]}`. Reject tracks missing this at scheduler load time.\n\n### F3: Lane Assignment Authority Unclear — \"Adversarial\" Lanes Weaker Guards\n**Mechanism**: Tracks have `\"lane\": \"deterministic_frontier\"` or `\"lane\": \"adversarial\"`. No gate validates lane assignment. `ROS-TRACK-F-AGENT-GOVERNANCE` and `ROS-TRACK-G-COMMUNITY-DISCOVERY` are `\"adversarial\"` but use `next_gate` values (`contract_and_sandbox_audit`, `provenance_license_version_pit_audit`) that sound like deterministic gates.  \n**Why it matters**: If \"adversarial\" lanes bypass reproducibility checks (e.g., no PIT enforcement, no independent reproduction), they become a backdoor for contaminated work.  \n**Cheap falsification**: Enumerate all gates reachable from each lane. Verify every lane passes through `source_and_release_schedule_probe` or `vintage_and_release_time_probe` before any candidate construction. Add a lint rule: `lane == \"adversarial\" => must_have_pit_gate == true`.\n\n### F4: S10_PRESENCE_MAX_AGE Hardcoded — Stale-State Risk\n**Mechanism**: `S10_PRESENCE_MAX_AGE = timedelta(hours=6)` with no documentation of what \"S10\" is. Used nowhere in supplied snippet but exported.  \n**Why it matters**: If S10 is a presence heartbeat (e.g., runner liveness), 6 hours allows a dead runner to hold a lease for 6h. If it's a data freshness threshold, 6h may be too long for high-cadence sources (e.g., NDAQ retail).  \n**Cheap falsification**: Search codebase for `S10_PRESENCE_MAX_AGE` usage. If unused, delete. If used, parameterize per-source and add a test that simulates a 7h gap and verifies correct rejection.\n\n### F5: Hypothesis Compiler Return Dict Truncated — Incomplete Validation\n**Mechanism**: `research_hypothesis_compiler.py` ends mid-statement: `\"asset_search_al` — the returned dict is incomplete. Fields `parameter_search_allowed`, `asset_search_allowed` (likely) are cut off.  \n**Why it matters**: If the compiler doesn't set these to `False` by default, downstream code may assume permission. The `FORBIDDEN_KEYS` check only catches explicit keys, not missing defaults.  \n**Cheap falsification**: Complete the return dict explicitly with all `*_allowed: False` flags. Add a unit test that deserializes a compiled candidate and asserts every `*_allowed` field is `False`.\n\n### F6: Dual Workflow Concurrency Groups — Race on Shared Lanes\n**Mechanism**: \n- `permanent-pc-research-loop.yml`: `concurrency_group: trading-agent-windows-research-capacity-v1` (local_reproduction) and `trading-agent-windows-research-data-qa-v1` (data_qa), `cancel-in-progress: false`\n- `hosted-research-failover.yml`: `concurrency_group: trading-agent-hosted-failover`, `cancel-in-progress: true`, but fallback job runs on `ubuntu-24.04-arm` with `lane: governance_reproduction`\n**Why it matters**: Three distinct concurrency groups. If `governance_reproduction` (failover) and `local_reproduction` (permanent) both write to `research/evidence/` or `research/preregistrations/`, they can clobber each other. `cancel-in-progress: false` on permanent loop means a stuck run blocks new runs but failover can still launch.  \n**Cheap falsification**: Map every lane → output paths. Verify disjointness. Add a `flock`-style file lock at lane entry (e.g., `.lane_locks/local_reproduction.lock`) with TTL. Fail fast if lock held by another run_id.\n\n### F7: Failover Guard Logic — False Positive/Negative Risk\n**Mechanism**: `hosted_fallback_guard.decide_fallback` examines last 10 runs of `permanent-pc-research-loop.yml` on `master`. Comment says \"Automatic heartbeat failover is intentionally disabled\" but code still implements it.  \n**Why it matters**: \n- False positive: Permanent loop runs but hangs (no completion) → guard sees \"no recent success\" → triggers failover → duplicate work.\n- False negative: Permanent loop fails silently (exit 0 but no output) → guard sees \"recent run\" → no failover → work lost.\n**Cheap falsification**: Add a `heartbeat_file` written every 5 min by permanent loop (e.g., `runner_temp/heartbeat_<lane>.json` with `run_id`, `timestamp`, `stage`). Guard checks file mtime + content, not just GH API run list. Unit test guard with mocked runs: hung, success, silent-fail.\n\n### F8: Operational State Shows Deep Parent-Code Chain — Circular/Duplicate Risk\n**Mechanism**: `current_operational_state.json` shows:\n- Q104 (code 104) → Q105 (code 105, parent_code: 104) → Q106 (code 106, parent_code: 105) → Q107 (code 107, parent_code: 104)\n- Q104 also has `candidate_contract",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791806396-Jh0egcDuwtB76wmNPXiQ",
+  "usage": {
+    "prompt_tokens": 5849,
+    "completion_tokens": 3200,
+    "total_tokens": 9049,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1515,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
