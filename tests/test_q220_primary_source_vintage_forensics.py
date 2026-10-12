@@ -13,6 +13,34 @@ from automation import q220_primary_source_vintage_forensics as forensic
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def make_pds_control_block(
+    accession: str,
+    form: str,
+    receipt_date: str,
+    acceptance_date: str,
+    acceptance_time: str,
+) -> bytes:
+    """Build a spec-shaped PDS control block for deterministic parser tests."""
+    block = (
+        accession.encode("ascii").ljust(20, b" ")
+        + form.encode("ascii").ljust(10, b" ")
+        + b"EXAMPLE COMPANY".ljust(60, b" ")
+        + b"".ljust(60, b" ")
+        + receipt_date.encode("ascii")
+        + acceptance_date.encode("ascii")
+        + acceptance_time.encode("ascii")
+        + b"000000"
+        + b"      "
+        + b"4"
+        + b"1"
+        + b"1"
+        + b"    "
+        + b" " * 65
+    )
+    assert len(block) == 256
+    return block + b"<SUBMISSION>\\n"
+
+
 def test_frozen_q220_request_matches_exact_current_blocked_receipt():
     request, receipt = forensic.validate_frozen_source(
         ROOT / "research/run_requests/q220_primary_source_vintage_forensics.trigger",
@@ -24,6 +52,39 @@ def test_frozen_q220_request_matches_exact_current_blocked_receipt():
     assert receipt["gate_positive"] is False
     assert request["SAMPLE_RECORD_KEYS"].split(";") == list(forensic.SAMPLE_KEYS)
 
+
+
+def test_parse_pds_control_block_reads_fixed_width_acceptance_clock():
+    accession = "0000064040-25-000052"
+    payload = make_pds_control_block(
+        accession, "10-K", "20250211", "20250211", "170704"
+    )
+    parsed = forensic.parse_pds_control_block(payload)
+
+    assert parsed["status"] == "PDS_CONTROL_BLOCK_VALID"
+    assert parsed["control_block_bytes"] == 256
+    assert parsed["accession"] == accession
+    assert parsed["submission_type"] == "10-K"
+    assert parsed["receipt_date"] == "20250211"
+    assert parsed["acceptance_date"] == "20250211"
+    assert parsed["acceptance_time"] == "170704"
+    assert parsed["acceptance_datetime"] == "20250211170704"
+    assert parsed["acceptance_datetime_iso"] == "2025-02-11T17:07:04"
+    assert parsed["submission_marker_matches"] is True
+
+
+def test_parse_pds_control_block_fails_closed_on_invalid_clock_and_accession():
+    bad_clock = make_pds_control_block(
+        "0000064040-25-000052", "10-K", "20250211", "20250230", "256199"
+    )
+    parsed_clock = forensic.parse_pds_control_block(bad_clock)
+    assert parsed_clock["status"] == "PDS_CONTROL_BLOCK_INVALID"
+    assert parsed_clock["error"] == "PDS_CONTROL_BLOCK_DATE_TIME_OUT_OF_RANGE"
+
+    bad_accession = b"not-an-accession".ljust(20, b" ") + bad_clock[20:]
+    parsed_accession = forensic.parse_pds_control_block(bad_accession)
+    assert parsed_accession["status"] == "PDS_CONTROL_BLOCK_INVALID"
+    assert parsed_accession["error"] == "PDS_CONTROL_BLOCK_ACCESSION_INVALID"
 
 def test_frozen_q220_request_rejects_changed_request_and_source_pins(tmp_path):
     request_path = ROOT / "research/run_requests/q220_primary_source_vintage_forensics.trigger"
@@ -154,6 +215,9 @@ def test_scan_daily_feed_finds_exact_original_and_records_correction_names():
         + primary
         + b"\n</TEXT>\n</DOCUMENT>\n"
     )
+    submission = make_pds_control_block(
+        accession, "10-K", "20190213", "20190213", "110253"
+    ) + submission
     archive_bytes = io.BytesIO()
     with tarfile.open(fileobj=archive_bytes, mode="w:gz") as archive:
         original = tarfile.TarInfo(accession + ".nc")
@@ -175,6 +239,10 @@ def test_scan_daily_feed_finds_exact_original_and_records_correction_names():
     assert scan["original_member_name"] == accession + ".nc"
     assert scan["correction_members"] == [{"name": accession + ".corr01", "declared_bytes": len(correction_payload)}]
     assert scan["submission_header"]["accession"] == accession
+    assert scan["pds_control_block"]["status"] == "PDS_CONTROL_BLOCK_VALID"
+    assert scan["submission_header"]["acceptance_datetime"] == "20190213110253"
+    assert scan["submission_header"]["acceptance_datetime_source"] == "sgml_header_and_pds_control_block"
+    assert scan["submission_header"]["sgml_acceptance_datetime_comparison"] == "MATCH"
     assert scan["primary"]["found"] is True
     assert scan["primary"]["body_hash_variants"]["raw_text_block"]["sha256"] == forensic.sha256(b"\n" + primary + b"\n")
 
@@ -220,6 +288,9 @@ def test_scan_daily_feed_separates_submission_wrapper_cap_from_primary_document_
         + b"<DOCUMENT>\n<TYPE>EX-99.1\n<FILENAME>exhibit.txt\n<TEXT>\n"
         + exhibit + b"\n</TEXT>\n</DOCUMENT>\n"
     )
+    submission = make_pds_control_block(
+        accession, "10-K", "20250211", "20250211", "170704"
+    ) + submission
     assert len(submission) > 100
     archive_bytes = io.BytesIO()
     with tarfile.open(fileobj=archive_bytes, mode="w:gz") as archive:
@@ -243,6 +314,9 @@ def test_scan_daily_feed_separates_submission_wrapper_cap_from_primary_document_
     assert scan["primary_document_limit_bytes"] == 100
     assert scan["primary"]["found"] is True
     assert scan["primary"]["raw_text_block_bytes"] <= 100
+    assert scan["submission_header"]["acceptance_datetime"] == "20250211170704"
+    assert scan["submission_header"]["acceptance_datetime_source"] == "pds_control_block"
+    assert scan["submission_header"]["sgml_acceptance_datetime_comparison"] == "NOT_PRESENT_CONTROL_BLOCK_USED"
 
 
 def test_scan_daily_feed_records_size_when_submission_wrapper_exceeds_its_own_cap():
