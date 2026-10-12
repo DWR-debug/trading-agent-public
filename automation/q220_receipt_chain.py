@@ -114,7 +114,7 @@ def evaluate_q220_receipt_chain(root: Path = ROOT) -> dict[str, Any]:
     elif not comp_ok:
         stage, status = "Historical prefix / representation-gap PIT compiler", ("blocked" if comp_present else "ready")
         detail = "Existing compiler receipt fails code, source-linkage, completeness, digest or safety validation." if comp_present else "Fixed population is positive; compile and validate historical prefixes and representation states."
-        gate = "historical prefix/acceptance-time PIT representation-state compiler"
+        gate = str(comp.get("next_gate") or ("historical prefix/acceptance-time PIT representation-state compiler" if not comp_present else "reconcile the current compiler receipt and frozen source linkage"))
     elif not ind_ok:
         stage, status = "Independent PIT reproduction", ("blocked" if ind_present else "ready")
         detail = "Independent receipt fails upstream linkage, mismatch, digest or safety validation." if ind_present else "Compiler is positive for all 55 records; independent retrieval/parse remains the next gate."
