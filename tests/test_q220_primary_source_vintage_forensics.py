@@ -109,7 +109,7 @@ def test_scan_daily_feed_finds_exact_original_and_records_correction_names():
     )
     archive_bytes = io.BytesIO()
     with tarfile.open(fileobj=archive_bytes, mode="w:gz") as archive:
-        original = tarfile.TarInfo(accession + ".dissem")
+        original = tarfile.TarInfo(accession + ".nc")
         original.size = len(submission)
         archive.addfile(original, io.BytesIO(submission))
         correction_payload = b"correction record; never applied by this probe"
@@ -125,11 +125,34 @@ def test_scan_daily_feed_finds_exact_original_and_records_correction_names():
         max_member_bytes=100_000,
     )
     assert scan["scan_complete"] is True
-    assert scan["original_member_name"] == accession + ".dissem"
+    assert scan["original_member_name"] == accession + ".nc"
     assert scan["correction_members"] == [{"name": accession + ".corr01", "declared_bytes": len(correction_payload)}]
     assert scan["submission_header"]["accession"] == accession
     assert scan["primary"]["found"] is True
     assert scan["primary"]["body_hash_variants"]["raw_text_block"]["sha256"] == forensic.sha256(b"\n" + primary + b"\n")
+
+
+def test_scan_daily_feed_does_not_confuse_pds_dissem_name_with_internal_nc_member():
+    accession = "0000064040-19-000059"
+    archive_bytes = io.BytesIO()
+    payload = b"PDS outer-layer name only; not a Feed .nc submission"
+    with tarfile.open(fileobj=archive_bytes, mode="w:gz") as archive:
+        pds_member = tarfile.TarInfo(accession + ".dissem")
+        pds_member.size = len(payload)
+        archive.addfile(pds_member, io.BytesIO(payload))
+
+    scan = forensic.scan_daily_feed(
+        archive_bytes.getvalue(),
+        accession,
+        "spgi-20181231x10k.htm",
+        max_scan_bytes=1_000_000,
+        max_member_bytes=100_000,
+    )
+
+    assert scan["scan_complete"] is True
+    assert scan["original_member_name"] is None
+    assert scan["primary"] is None
+    assert scan["scan_error"] == "ORIGINAL_SUBMISSION_MEMBER_NOT_FOUND_IN_FILING_DAY_FEED"
 
 
 def test_original_feed_hash_comparison_never_changes_scientific_gate():
