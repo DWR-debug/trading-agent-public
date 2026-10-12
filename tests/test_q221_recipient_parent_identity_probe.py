@@ -98,3 +98,12 @@ def test_request_sequence_requires_exact_utc_timestamp(tmp_path):
     request.write_text("".join(f"{k}={v}\n" for k, v in values.items()), encoding="utf-8")
     with pytest.raises(probe.ProbeError, match="REQUEST_SEQUENCE_INVALID"):
         probe.read_request(request)
+
+
+def test_workflow_upload_path_is_runner_resolved_and_fails_if_receipt_missing():
+    from pathlib import Path
+    workflow = Path(__file__).parents[1] / ".github" / "workflows" / "q221-recipient-parent-identity-probe.yml"
+    content = workflow.read_text(encoding="utf-8")
+    assert 'path: "${{ runner.temp }}/q221-recipient-parent-identity-receipt.json"' in content
+    assert "if-no-files-found: error" in content
+    assert 'path: "$RUNNER_TEMP/q221-recipient-parent-identity-receipt.json"' not in content
