@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "candidate_id": "Q220",
+  "record_type": "q220_original_sec_feed_primary_hash_forensics_preregistration",
+  "registered_at_utc": "2026-10-12T07:35:00Z",
+  "status": "FROZEN_DIAGNOSTIC_NO_GATE_CHANGE",
+  "question": "Do the frozen expected SHA-256 hashes for three primary filing documents match the corresponding primary document extracted from the original SEC daily Feed submission for the filing date, while today's public Archives file has a different hash?",
+  "source_receipt": {
+    "path": "research/evidence/q220_historical_representation_pit_latest.json",
+    "git_blob_sha1": "2a3abbff6c6950e4f11d85bda92cb9c57a5c7ee0",
+    "receipt_fingerprint": "c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075",
+    "source_population_receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+    "source_hash_failure_count": 55,
+    "gate_positive": false
+  },
+  "samples": [
+    {
+      "record_key": "0000064040|0000064040-19-000059|10-K|2019-02-13",
+      "expected_sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+      "current_sha256": "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+      "bytes": 4774458,
+      "primary": "spgi-20181231x10k.htm",
+      "role": "older_direct_company_cik"
+    },
+    {
+      "record_key": "0001090012|0001564590-19-003382|10-K|2019-02-20",
+      "expected_sha256": "b024964aa602547d102af1f9cd51c61a3d723ab25b21ef5686b02ac8d4f40dd1",
+      "current_sha256": "5dfdcb52a74efa233ca0c65bf58b2caad44d859f4ecd23e618142c71b2d25a59",
+      "bytes": 10558506,
+      "primary": "dvn-10k_20181231.htm",
+      "role": "older_filing_agent_accession_prefix"
+    },
+    {
+      "record_key": "0000064040|0000064040-25-000052|10-K|2025-02-11",
+      "expected_sha256": "afe05282d5d5af7f3068287cceaa679db962264d5d704d2d32ac19e2c4d3531d",
+      "current_sha256": "cb84c569cef0a88fffbe6114ad30607af4a99068b10a3d0f135ebdf7242b7a55",
+      "bytes": 4133816,
+      "primary": "spgi-20241231.htm",
+      "role": "recent_direct_company_cik"
+    }
+  ],
+  "source": {
+    "original_feed_directory": "https://www.sec.gov/Archives/edgar/Feed/",
+    "original_feed_pattern": "YYYYMMDD.nc.tar.gz, where YYYYMMDD is the filing date",
+    "documentation": "https://www.sec.gov/Archives/edgar/README.txt",
+    "official_accessing_data_doc": "https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data",
+    "current_primary_url_pattern": "https://www.sec.gov/Archives/edgar/data/{company_cik}/{accession_without_dashes}/{primary_filename}"
+  },
+  "procedure": {
+    "requests_per_sample": 2,
+    "samples": 3,
+    "maximum_feed_archives": 3,
+    "maximum_current_primary_docs": 3,
+    "max_feed_compressed_bytes_each": 100000000,
+    "max_current_primary_bytes_each": 15000000,
+    "max_primary_document_member_bytes": 30000000,
+    "max_cumulative_tar_member_bytes_scanned_per_feed": 1000000000,
+    "max_total_download_bytes": 350000000,
+    "request_timeout_seconds": 60,
+    "delay_between_requests_seconds": 1,
+    "downloads": "Only the three exact filing-day Feed archives and current primary document URLs; no annual or quarterly full SEC archive downloads"
+  },
+  "hypotheses": {
+    "H1": "At least one frozen expected hash equals the primary document bytes (allowing only outer SEC <TEXT> wrapper line-break variants) extracted from the exact original daily Feed submission, while current public Archives bytes differ.",
+    "H0": "None of the three frozen expected hashes matches the original Feed primary body variants."
+  },
+  "decision_rules": {
+    "FROZEN_HASH_MATCHES_ORIGINAL_FEED_BODY_CURRENT_ARCHIVE_DIFFERS": "This sample supports historical source-vintage drift for that exact accession; it does not authorize automatic hash replacement or unblocking Q220. Any source correction requires a separately reviewed patch and expanded pre-registered replication.",
+    "FROZEN_HASH_MATCHES_NEITHER_OBSERVED_BODY": "Expected-hash provenance or historical extraction remains unresolved; keep Q220 blocked.",
+    "FEED_NOT_FOUND_OR_BOUNDS_EXCEEDED": "Keep Q220 blocked; the probe is incomplete and no conclusion is allowed."
+  },
+  "prohibitions": [
+    "Do not rewrite the frozen population receipt expected hashes.",
+    "Do not allow this diagnostic to make Q220 gate_positive, source_complete, scientific_evidence, or performance_authorization true.",
+    "Do not infer absence of later-day correction from only the filing-day Feed.",
+    "Do not download yearly archives or expand beyond the three exact sample accessions.",
+    "Do not run performance tests, select holdout, rank, tune, promote, or execute live."
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  }
+}
