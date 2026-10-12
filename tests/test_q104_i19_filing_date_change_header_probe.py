@@ -52,3 +52,11 @@ def test_sample_population_and_download_budget_are_fixed():
     assert probe.MAX_RESPONSE_BYTES == 262_144
     assert probe.MAX_TOTAL_BYTES == 8_000_000
     assert all(x["bulk_filing_date"] for x in probe.EXPECTED.values())
+
+
+def test_workflow_requires_runner_resolved_receipt_artifact():
+    workflow = Path(__file__).parents[1] / ".github" / "workflows" / "q104-i19-filing-date-change-header-probe.yml"
+    content = workflow.read_text(encoding="utf-8")
+    assert 'path: "${{ runner.temp }}/q104-date-change-receipt.json"' in content
+    assert "if-no-files-found: error" in content
+    assert 'path: "$RUNNER_TEMP/q104-date-change-receipt.json"' not in content
