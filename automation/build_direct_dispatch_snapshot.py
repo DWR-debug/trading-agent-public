@@ -53,6 +53,7 @@ def fetch_one_run_jobs(repo: str, run: dict[str, Any]) -> list[dict[str, Any]]:
             capture_output=True,
             text=True,
             check=False,
+            timeout=30,
         )
         if proc.returncode == 0:
             try:
@@ -77,7 +78,11 @@ def fetch_one_run_jobs(repo: str, run: dict[str, Any]) -> list[dict[str, Any]]:
                             for label in job.get("labels", [])
                             if str(label).strip()
                         }
-                        if labels.intersection(WINDOWS_LABELS) and runner_name.lower() not in WINDOWS_RUNNERS:
+                        self_hosted_windows = (
+                            bool(labels.intersection(WINDOWS_LABELS))
+                            or ("self-hosted" in labels and "windows" in labels)
+                        )
+                        if self_hosted_windows and runner_name.lower() not in WINDOWS_RUNNERS:
                             raise RuntimeError(
                                 "ACTIVE_WINDOWS_JOB_RUNNER_IDENTITY_UNRESOLVED:"
                                 f"run={run_id}:job={job.get('id')}:runner={runner_name or 'missing'}"
@@ -225,11 +230,6 @@ def compile_direct_snapshot(
         os_state,
         recent_runs=runs,
     )
-    runner_map = {name: resource for resource, name in (
-        ("Windows self-hosted A", "LHT-N133732"),
-        ("Windows self-hosted B", "LHT-N133732-2"),
-        ("Windows self-hosted C", "LHT-N133732-3"),
-    )}
     running_by_runner = {
         str(job.get("runner_name") or "").lower(): {
             "job_id": job.get("id"),
