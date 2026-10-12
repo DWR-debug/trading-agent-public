@@ -31,10 +31,10 @@ def test_completion_replenisher_is_event_driven_and_fail_closed() -> None:
 def test_dashboard_never_maps_unavailable_runner_inventory_to_zero() -> None:
     root = Path(__file__).parents[1]
     text = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
-    assert '"runner_api_visible": len(runners) if runners else None' in text
+    assert '"runner_api_visible": len(verified_runner_inventory) if verified_runner_inventory else None' in text
     generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
-    assert '"runner_api_visible": len(runners) if runners else None' in generator
+    assert '"runner_api_visible": len(verified_runner_inventory) if verified_runner_inventory else None' in generator
     assert '"capacity_state"' in generator
     assert '"unverified / not visible"' in generator
     assert 'capacity_state' in script
@@ -251,3 +251,20 @@ def test_unrelated_research_waves_do_not_start_on_focused_pull_request():
         text = (root / path).read_text(encoding="utf-8")
         assert "\n  pull_request:" not in text, path
         assert "workflow_dispatch:" in text, path
+
+
+def test_permanent_windows_loop_installs_the_observed_data_qa_runtime_dependencies() -> None:
+    root = Path(__file__).parents[1]
+    workflow = (root / ".github/workflows/permanent-pc-research-loop.yml").read_text(encoding="utf-8")
+    assert "exchange-calendars pypdf tzdata==2026.5" in workflow
+    assert "Run autonomous bounded research/QA lane" in workflow
+
+
+def test_replenisher_uses_workflow_specific_history_and_bounded_failure_retries() -> None:
+    root = Path(__file__).parents[1]
+    workflow = (root / ".github/workflows/continuous-useful-capacity-replenisher.yml").read_text(encoding="utf-8")
+    assert "/actions/workflows/permanent-pc-research-loop.yml/runs?per_page=100" in workflow
+    assert "MIN_REPLENISH_AGE_SECONDS=600" in workflow
+    assert "MAX_FAILURES_PER_HOUR=2" in workflow
+    assert 'latest_conclusion" == "failure"' in workflow
+    assert "Scientific boundary unchanged" in workflow
