@@ -294,6 +294,15 @@ def main() -> int:
         raise RuntimeError("UNEXPECTED_REPOSITORY")
     run_payload = json.loads(args.runs.read_text(encoding="utf-8"))
     runs = normalize_runs(run_payload)
+    if not runs:
+        raise RuntimeError("WORKFLOW_RUN_SNAPSHOT_EMPTY")
+    current_run_id = os.environ.get("GITHUB_RUN_ID")
+    if current_run_id and not any(
+        str(run.get("id")) == current_run_id
+        and str(run.get("status") or "").lower() == "in_progress"
+        for run in runs
+    ):
+        raise RuntimeError("CURRENT_DISPATCH_RUN_NOT_PRESENT_IN_RUN_SNAPSHOT")
     active_jobs = fetch_active_jobs(args.repo, runs)
     snapshot = compile_direct_snapshot(runs, active_jobs)
     args.output.parent.mkdir(parents=True, exist_ok=True)
