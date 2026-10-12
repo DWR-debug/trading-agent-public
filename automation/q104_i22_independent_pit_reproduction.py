@@ -86,6 +86,49 @@ def verify_self_fingerprint(payload: dict[str, Any], expected: str, label: str) 
         raise RuntimeError(f"{label}_CONTENT_FINGERPRINT_MISMATCH")
 
 
+def validate_q107_policy_flags(q107: dict[str, Any], manifest: dict[str, Any]) -> None:
+    """Validate frozen Q107 policy flags at their actual schema locations.
+
+    The coverage receipt stores policy booleans at top level. The canonical
+    snapshot manifest stores policy booleans under governance. A missing flag
+    is still a hard failure; a schema mismatch must not skip a research gate.
+    """
+    receipt_false_flags = (
+        "performance_evaluation",
+        "oos_evaluation",
+        "holdout_evaluation",
+        "selection_used",
+        "holdout_used_for_selection",
+    )
+    if any(q107.get(key) is not False for key in receipt_false_flags):
+        raise RuntimeError("Q107_GOVERNANCE_GATE_MISMATCH")
+
+    manifest_governance = manifest.get("governance", {})
+    manifest_false_flags = (
+        "performance_evaluation",
+        "oos_evaluation",
+        "holdout_evaluation",
+        "selection_used",
+        "holdout_used_for_selection",
+        "performance_trial_authorized",
+        "automatic_promotion",
+    )
+    if any(manifest_governance.get(key) is not False for key in manifest_false_flags):
+        raise RuntimeError("Q107_MANIFEST_GOVERNANCE_GATE_MISMATCH")
+
+    for label, safety in (
+        ("receipt", q107.get("safety", {})),
+        ("manifest", manifest.get("safety", {})),
+    ):
+        if (
+            safety.get("paper_only") is not True
+            or safety.get("live_trading_enabled") is not False
+            or safety.get("orders_enabled") is not False
+            or safety.get("automatic_promotion") is not False
+        ):
+            raise RuntimeError(f"Q107_{label.upper()}_SAFETY_GATE_MISMATCH")
+
+
 def verify_frozen_contracts() -> dict[str, Any]:
     recon = read_json(RECONCILIATION_PATH)
     verify_self_fingerprint(recon, PINNED["reconciliation_fingerprint"], "I22_RECONCILIATION")
@@ -109,10 +152,6 @@ def verify_frozen_contracts() -> dict[str, Any]:
         raise RuntimeError("Q107_FROZEN_UNIVERSE_MISMATCH")
     if q107.get("scientific_outcome") != "COVERAGE_PASSED_NO_PERFORMANCE_EVIDENCE":
         raise RuntimeError("Q107_SCIENTIFIC_BOUNDARY_MISMATCH")
-    q107_gov = q107.get("governance", {})
-    if any(q107_gov.get(key) is not False for key in ("performance_evaluation", "oos_evaluation", "holdout_evaluation", "selection_used", "holdout_used_for_selection", "performance_trial_authorized", "automatic_promotion")):
-        raise RuntimeError("Q107_GOVERNANCE_GATE_MISMATCH")
-
     manifest = read_json(Q107_MANIFEST_PATH)
     if manifest.get("status") != "COVERAGE_PASSED" or manifest.get("snapshot_fingerprint") != PINNED["q107_snapshot_fingerprint"]:
         raise RuntimeError("Q107_MANIFEST_NOT_FROZEN_POSITIVE")
@@ -120,6 +159,7 @@ def verify_frozen_contracts() -> dict[str, Any]:
         raise RuntimeError("Q107_MANIFEST_UNIVERSE_MISMATCH")
     if manifest.get("data_snapshot") != q107.get("data_snapshot"):
         raise RuntimeError("Q107_MANIFEST_RECEIPT_SNAPSHOT_MISMATCH")
+    validate_q107_policy_flags(q107, manifest)
 
     q108 = read_json(Q108_PATH)
     verify_self_fingerprint(q108, PINNED["q108_receipt_fingerprint"], "Q108")
