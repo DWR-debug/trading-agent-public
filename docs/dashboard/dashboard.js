@@ -6,7 +6,8 @@ var refreshInFlight=false;
 var hasRenderedSnapshot=false;
 var refreshIntervalMs=180000;
 var lastRenderedSnapshotKey=null;
-var FOCUS=["Q104:I19","Q220","Q221","Q104:I22"];
+var FOCUS=["Q104:I19","Q220","Q221"];
+var DISPLAY=FOCUS.concat(["Q104:I22"]);
 
 function $(id){return document.getElementById(id);}
 function esc(v){
@@ -137,7 +138,7 @@ function candidateInfo(code){
     },
     "Q218":{
       name:"SEC disclosure event pairing (archived / outside active focus)",
-      mechanism:"Historical evidence retained; no active Top-4 dispatch",
+      mechanism:"Historical evidence retained; no active Top-3 dispatch",
       lane:"ARCHIVED · OUTSIDE ACTIVE FOCUS",
       cardClass:"candidate-q218"
     }
@@ -388,7 +389,7 @@ function renderOperationsOverview(data,work,pipeline,planned,queue){
         "<td>"+esc(remaining)+"</td>"+
         "<td>"+link+"</td></tr>";
     }).join("")+"</tbody></table>"
-    :"<div class='empty'>Im aktuellen Snapshot sind keine aktiven Top-4-Jobs sichtbar.</div>";
+    :"<div class='empty'>Im aktuellen Snapshot sind keine aktiven Top-3-Jobs sichtbar.</div>";
 
   var byCode={};(pipeline||[]).forEach(function(x){byCode[x.code]=x;});
   var queuedByCode={};(queue||[]).forEach(function(x){queuedByCode[x.candidate]=x;});
@@ -475,7 +476,7 @@ function render(data){
   var resources=(data.resources||[]).filter(function(x){
     return ["Windows self-hosted A","Windows self-hosted B","Windows self-hosted C","GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Free AI pool"].indexOf(x.name)>=0;
   });
-  var pipeline=(data.pipeline||[]).filter(function(x){return FOCUS.indexOf(x.code)>=0;});
+  var pipeline=(data.pipeline||[]).filter(function(x){return DISPLAY.indexOf(x.code)>=0;});
   var work=(data.work_assignments||[]).filter(function(x){return FOCUS.indexOf(candidateFrom((x.task||"")+" "+(x.job||"")))>=0;});
   var planned=(data.planned_capacity||[]).filter(function(x){
     return (x.planned_assignments||[]).some(function(p){return FOCUS.indexOf(p.candidate)>=0;});
@@ -522,8 +523,8 @@ function render(data){
   renderProgressCharts(data,pipeline);
 
   $("focusSummary").innerHTML=
-    "<div class='focus-kpi'><span class='eyebrow'>Aktive Top-4</span><strong>Q104:I19 · Q220 · Q221 · Q104:I22</strong><span>Vier getrennte Forschungsaufträge; weitere Kandidaten bleiben pausiert.</span></div>"+
-    "<div class='focus-kpi'><span class='eyebrow'>Entwicklungsindex</span><strong>"+overallAvg+"%</strong><span>arithmetischer Index der vier Tracks, keine Erfolgswahrscheinlichkeit</span></div>"+
+    "<div class='focus-kpi'><span class='eyebrow'>Ausführung + Review</span><strong>Q104:I19 · Q220 · Q221</strong><span>3 aktive Ausführungsaufträge; Q104:I22 ist ein separater, nicht disponierter Überlappungsreview.</span></div>"+
+    "<div class='focus-kpi'><span class='eyebrow'>Entwicklungsindex</span><strong>"+overallAvg+"%</strong><span>Index der vier dargestellten Tracks; keine Erfolgswahrscheinlichkeit</span></div>"+
     "<div class='focus-kpi'><span class='eyebrow'>Aktive Candidate-Jobs</span><strong>"+activeCount+"</strong><span>sichtbar in der aktuellen Actions-Telemetrie</span></div>";
 
   var decisionLog=data.handoff_decision_log||{};
@@ -636,7 +637,7 @@ function render(data){
       "<div class='role'>"+role+"</div>"+
       "<div class='capacity-numbers'><strong>"+active+"</strong> aktiv <span>·</span> <strong>"+esc(freeLabel)+"</strong> frei</div>"+
       "<div class='small muted'>Slots "+esc(slotsInUseLabel)+"/"+esc(x.research_capacity_slots||1)+" · Runner "+esc(x.runner_status||"nicht sichtbar")+" · Busy-Basis "+esc(x.runner_busy_basis||"unbekannt")+" · Queue "+queuedCount+"</div>"+
-      "<div class='capacity-assignments'><div class='capacity-current'><strong>Arbeitet an</strong>"+(currentText.length?currentText.map(function(v){return "<div>"+esc(v)+"</div>";}).join(""):"<div class='muted'>Keine sichtbare aktive Top-4-Zuordnung</div>")+"</div>"+
+      "<div class='capacity-assignments'><div class='capacity-current'><strong>Arbeitet an</strong>"+(currentText.length?currentText.map(function(v){return "<div>"+esc(v)+"</div>";}).join(""):"<div class='muted'>Keine sichtbare aktive Top-3-Zuordnung</div>")+"</div>"+
       "<div class='capacity-next'><strong>Nächster Pipeline-Schritt</strong>"+(nextText.length?nextText.map(function(v){return "<div>"+esc(v)+"</div>";}).join(""):"<div class='muted'>Kein separater Schritt disponiert</div>")+"</div></div>"+
       "</div>";
   }).join("")+"</div>";
