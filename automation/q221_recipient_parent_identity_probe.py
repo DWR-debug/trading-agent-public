@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import time
 import urllib.error
 import urllib.parse
@@ -134,7 +135,7 @@ def read_request(path: Path) -> dict[str, str]:
     for key, expected in FROZEN_REQUEST_VALUES.items():
         if values[key] != expected:
             raise ProbeError("Q221_RECIPIENT_REQUEST_VALUE_MISMATCH:" + key)
-    if len(values["REQUEST_SEQUENCE"]) != 20 or not values["REQUEST_SEQUENCE"].endswith("Z"):
+    if not re.fullmatch(r"20\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z", values["REQUEST_SEQUENCE"]):
         raise ProbeError("Q221_RECIPIENT_REQUEST_SEQUENCE_INVALID")
     return values
 
