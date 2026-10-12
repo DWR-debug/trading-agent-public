@@ -118,7 +118,7 @@ def test_parse_submission_header_never_reads_document_type_as_header_form():
     parsed = forensic.parse_submission_header(body)
 
     assert parsed["form"] is None
-    assert parsed["header_format"] == "legacy_text_labels"
+    assert parsed["header_format"] == "sec_sgml_tags"
 
 
 def test_daily_feed_url_uses_official_year_quarter_directory():
