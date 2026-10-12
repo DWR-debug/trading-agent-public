@@ -31,7 +31,7 @@ def test_completion_replenisher_is_event_driven_and_fail_closed() -> None:
 def test_dashboard_never_maps_unavailable_runner_inventory_to_zero() -> None:
     root = Path(__file__).parents[1]
     text = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
-    assert '"runner_api_visible": len(runners) if runners else None' in text
+    assert '"runner_api_visible": len(verified_runner_inventory) if verified_runner_inventory else None' in text
     generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
     assert '"runner_api_visible": len(verified_runner_inventory) if verified_runner_inventory else None' in generator
