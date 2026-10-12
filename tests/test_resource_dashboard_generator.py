@@ -369,6 +369,8 @@ def test_dashboard_pipeline_is_locked_to_focus_candidates():
     ]
     rows = candidate_pipeline(top4, [], {}, {})
     assert [x["code"] for x in rows] == ["Q104:I19","Q220","Q221","Q104:I22"]
+    from automation.generate_resource_dashboard import FOCUS_CANDIDATES
+    assert list(FOCUS_CANDIDATES) == ["Q104:I19","Q220","Q221"]
     i22 = next(x for x in rows if x["code"] == "Q104:I22")
     assert i22["current_milestone_status"] == "blocked"
     assert i22["performance_authorization_allowed"] is False
