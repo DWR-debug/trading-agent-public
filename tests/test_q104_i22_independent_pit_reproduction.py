@@ -1,3 +1,4 @@
+import argparse
 from datetime import date
 
 import pytest
@@ -124,9 +125,7 @@ def test_q107_safety_gates_fail_closed_for_either_frozen_input():
         validate_q107_policy_flags(q107, manifest)
 
 
-
 def test_reproduction_code_sha_requires_full_immutable_commit():
     assert validate_reproduction_code_sha("a" * 40) == "a" * 40
-    with pytest.raises(ValueError):
-        # argparse's argument type raises ArgumentTypeError, a ValueError subclass.
+    with pytest.raises(argparse.ArgumentTypeError, match="40-character"):
         validate_reproduction_code_sha("main")
