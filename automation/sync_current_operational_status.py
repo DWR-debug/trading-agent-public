@@ -50,6 +50,21 @@ def q220_population_focus_sentence(receipt: dict[str, Any]) -> str:
                 "Next gate: independent PIT reproduction; performance authorization remains closed. "
                 f"Compiler receipt fingerprint {chain['compiler_receipt_fingerprint']}. "
             )
+        compiler_receipt = _load_json(ROOT / "research/evidence/q220_historical_representation_pit_latest.json", {})
+        if not chain["compiler_positive"]:
+            compiler_fingerprint = str(compiler_receipt.get("receipt_fingerprint") or chain.get("compiler_receipt_fingerprint") or "UNKNOWN")
+            source_hash_failures = int(compiler_receipt.get("source_hash_failure_count") or 0)
+            independent_receipt = _load_json(ROOT / "research/evidence/q220_independent_pit_reproduction_latest.json", {})
+            previous_compiler_fingerprint = str(independent_receipt.get("upstream", {}).get("compiler_receipt_fingerprint") or "")
+            stale_independent = bool(previous_compiler_fingerprint and previous_compiler_fingerprint != compiler_fingerprint)
+            if source_hash_failures:
+                detail = f"Current compiler receipt reports {source_hash_failures} primary-document hash mismatches. "
+            else:
+                detail = "The latest compiler receipt fails strict validation. "
+            if stale_independent:
+                detail += "The independent reproduction references a different compiler fingerprint and is not current; it cannot reopen this gate. "
+            detail += f"Next gate: {compiler_receipt.get('next_gate') or chain['next_gate']}; performance authorization remains closed. "
+            return "Q220 historical prefix/PIT compiler is BLOCKED: " + detail + f"Current compiler receipt fingerprint {compiler_fingerprint}. "
         return (
             "Q220 population is positive and pinned to all 55 fixed filings. "
             "Next gate: historical prefix/acceptance-time PIT representation-state compiler; performance authorization remains closed. "
