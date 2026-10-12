@@ -117,11 +117,14 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221." in focus
     assert "Q218 has been removed from active focus and automatic dispatch" in focus
     assert "Q219 remains paused; its prior evidence is preserved." in focus
-    assert "never restart the full census blindly" in focus
+    assert "do not repair the receipts or restart the census" in focus
     assert "53 unique unresolved accession keys" in focus
     assert "zero new attempts and zero repairs" in focus
     assert "PR #1363 is merged" in focus
-    assert "bounded source-lineage triage is next" in focus
+    assert "Read-only residual lineage run #38255701998 completed LINEAGE_DIAGNOSTIC_COMPLETE" in focus
+    assert "4/4 frozen accessions, 12/12 SEC header probes" in focus
+    assert "unresolved cross-publication source-field conflict" in focus
+    assert "or restart the census" in focus
     assert "### Historical research handoff checkpoint — 2026-10-12T10:17Z" in doc
     assert "Q104:I19" in doc and "#38231636160" in doc
     assert "FORENSIC_COMPARISON_INCOMPLETE" in doc and "#38233685159" in doc
@@ -133,15 +136,21 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "publicDeltaDate is documented as a filter over Last Modified Date or Reveal Date" in focus
     assert "not a dispatch-ready source contract" in focus
     assert "Q220: original SEC daily Feed forensic run #38233685159" in focus
-    assert "daily .nc.tar.gz tar member is accession.nc" in focus
+    assert "daily .nc.tar.gz member is accession.nc" in focus
     assert "daily Feed TAR members `{accession}.nc`" in doc
     assert "both CI architectures and full-suite verification passed" in focus
-    assert "launched run #38252169610" in focus
+    assert "Post-fix run #38254139755 is terminal FORENSIC_COMPARISON_INCOMPLETE" in focus
     assert "three preselected sample keys" in focus
-    assert "FORENSIC_COMPARISON_INCOMPLETE (0/3; 2,114,995,390 bytes downloaded" in focus
-    assert "the second original submission member exceeded the 30 MB primary-member limit" in focus
-    assert "separate the outer submission-member bound from the primary-document bound" in focus
-    assert "cannot by itself clear all 55 source-hash failures" in focus
+    assert "2,829,769,099 bytes downloaded; receipt fingerprint 840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b" in focus
+    assert "each original Feed submission header lacks ACCEPTANCE-DATETIME" in focus
+    assert "Read-only header-only run #38258251764 completed HEADER_EVIDENCE_COMPLETE" in focus
+    assert "9/9 official EDGAR header routes" in focus
+    assert "101,547 bytes; no Feed or primary documents downloaded" in focus
+    assert "DATE-OF-FILING-DATE-CHANGE was also captured" in focus
+    assert "2019-02-12T18:15:22 before the EDGAR filing date 2019-02-13" in focus
+    assert "all 55 source-hash mismatches remain" in focus
+    assert "without redownloading multi-GB Feeds or fetching primary documents" in focus
+    assert "Do not redownload these multi-GB Feeds" in focus
     assert "do not repeat an outcome-bearing run" in focus
     assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY") == 1
     # This status sync must fail closed when the population source code changed
