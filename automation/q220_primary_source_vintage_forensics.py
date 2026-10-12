@@ -367,6 +367,55 @@ def _bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, 
             "error": f"{type(exc).__name__}: {exc}"[:500],
         }
 
+
+RETRYABLE_HTTP_STATUSES = {408, 425, 429, 500, 502, 503, 504}
+MAX_BOUNDED_FETCH_ATTEMPTS = 2
+
+
+def _bounded_get_with_retry(
+    url: str,
+    max_bytes: int,
+    budget: DownloadBudget,
+    *,
+    max_attempts: int = MAX_BOUNDED_FETCH_ATTEMPTS,
+) -> dict[str, Any]:
+    """Retry one transient transport/truncation failure without relaxing any byte caps.
+
+    Bytes read during a failed attempt stay charged to the aggregate budget. We
+    retry only short/incomplete reads, transport exceptions, or transient HTTP
+    status codes; permanent 4xx, over-limit responses and budget exhaustion are
+    never retried. Every attempt remains independently response-size bounded.
+    """
+    if not 1 <= max_attempts <= MAX_BOUNDED_FETCH_ATTEMPTS:
+        raise ValueError("Q220_FORENSICS_BOUNDED_FETCH_ATTEMPT_LIMIT_INVALID")
+    retry_history: list[dict[str, Any]] = []
+    for attempt in range(1, max_attempts + 1):
+        result = _bounded_get(url, max_bytes, budget)
+        status = str(result.get("status") or "")
+        error = str(result.get("error") or "")
+        transient_transport = status == "FETCH_ERROR" and error.split(":", 1)[0] in {
+            "URLError", "TimeoutError", "OSError"
+        }
+        transient_http = (
+            status == "HTTP_ERROR"
+            and result.get("http_status") in RETRYABLE_HTTP_STATUSES
+        )
+        transient_read = status in {"INCOMPLETE_READ", "INCOMPLETE_CONTENT_LENGTH"}
+        should_retry = transient_transport or transient_http or transient_read
+        if should_retry and attempt < max_attempts:
+            retry_history.append({
+                "attempt": attempt,
+                "status": status,
+                "http_status": result.get("http_status"),
+                "response_bytes": result.get("response_bytes", 0),
+                "error": error or None,
+            })
+            continue
+        result["fetch_attempt_count"] = attempt
+        result["retry_history"] = retry_history
+        return result
+    raise RuntimeError("Q220_FORENSICS_BOUNDED_FETCH_UNREACHABLE")
+
 def parse_submission_header(body: bytes) -> dict[str, str | None]:
     """Parse submission metadata before the first document, with filer-scoped identity.
 
@@ -791,7 +840,7 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
 
         accession_dir = accession.replace("-", "")
         base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accession_dir}"
-        current = _bounded_get(f"{base}/{primary}", MAX_CURRENT_PRIMARY_BYTES, budget)
+        current = _bounded_get_with_retry(f"{base}/{primary}", MAX_CURRENT_PRIMARY_BYTES, budget)
         sample["current_primary"] = {k: v for k, v in current.items() if k != "body"}
         if current.get("status") != "FETCHED" or current.get("http_status") != 200:
             sample["sample_error"] = "CURRENT_PRIMARY_FETCH_NOT_SUCCESSFUL"
@@ -803,7 +852,7 @@ def run(request_path: Path, receipt_path: Path, output_path: Path) -> dict[str, 
         sample["current_primary"]["matches_frozen_receipt_actual_bytes"] = current["response_bytes"] == sample["frozen_actual_bytes"]
 
         feed_url = daily_feed_url(filed_date)
-        feed = _bounded_get(feed_url, MAX_FEED_ARCHIVE_BYTES, budget)
+        feed = _bounded_get_with_retry(feed_url, MAX_FEED_ARCHIVE_BYTES, budget)
         sample["daily_feed"] = {k: v for k, v in feed.items() if k != "body"}
         if feed.get("status") != "FETCHED" or feed.get("http_status") != 200:
             sample["sample_error"] = "DAILY_FEED_FETCH_NOT_SUCCESSFUL_OR_OVER_LIMIT"
