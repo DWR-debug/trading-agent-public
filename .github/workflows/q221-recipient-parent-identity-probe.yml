@@ -56,8 +56,8 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: q221-recipient-parent-identity-probe-${{ github.run_id }}-${{ github.run_attempt }}
-          path: "$RUNNER_TEMP/q221-recipient-parent-identity-receipt.json"
-          if-no-files-found: warn
+          path: "${{ runner.temp }}/q221-recipient-parent-identity-receipt.json"
+          if-no-files-found: error
           retention-days: 30
           overwrite: true
       - name: Fail closed on incomplete profile observations
