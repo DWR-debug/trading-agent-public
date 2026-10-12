@@ -107,6 +107,22 @@ def test_bounded_get_caps_actual_bytes_and_propagates_budget(tmp_path, monkeypat
     assert budget.used == 11
 
 
+def test_bounded_get_never_opens_another_request_after_total_budget_is_consumed(monkeypatch):
+    url = "https://www.sec.gov/should-not-be-requested.txt"
+    monkeypatch.setattr(
+        triage.urllib.request,
+        "urlopen",
+        lambda *args, **kwargs: pytest.fail("network call must not occur after byte budget is consumed"),
+    )
+    budget = triage.DownloadBudget(10)
+    budget.add(10)
+
+    observed = triage.bounded_get(url, 15, budget)
+
+    assert observed["status"] == "TOTAL_DOWNLOAD_BUDGET_EXHAUSTED"
+    assert budget.used == 10
+
+
 def test_run_is_diagnostic_only_and_never_claims_vintage_or_pit(monkeypatch, tmp_path):
     def fake_bounded_get(url, max_bytes, budget):
         budget.wait()
