@@ -71,8 +71,8 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: q104-i19-filing-date-change-header-probe-${{ github.run_id }}-${{ github.run_attempt }}
-          path: "$RUNNER_TEMP/q104-date-change-receipt.json"
-          if-no-files-found: warn
+          path: "${{ runner.temp }}/q104-date-change-receipt.json"
+          if-no-files-found: error
           retention-days: 30
           overwrite: true
       - name: Fail closed on incomplete observations
