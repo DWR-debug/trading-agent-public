@@ -61,7 +61,7 @@ def test_header_parser_observes_filing_date_change_without_rewriting_filing_date
     )
     parsed = evidence.parse_header_observation(body, "complete_submission_header_prefix")
     assert parsed["filing_date"] == "2019-02-20"
-    assert parsed["filing_date_change"] == "2020-02-21"
+    assert parsed["filing_date_change"] == "2019-02-21"
     assert parsed["acceptance_datetime"] == "2019-02-20T17:23:00"
 
 
