@@ -4,11 +4,9 @@ on:
   push:
     branches: [master]
     paths:
+      # Expensive SEC Feed archives run only after an explicit request-file change.
+      # Source, tests, and workflow edits must not replay multi-GB downloads.
       - "research/run_requests/q220_primary_source_vintage_forensics.trigger"
-      - "research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json"
-      - "automation/q220_primary_source_vintage_forensics.py"
-      - "tests/test_q220_primary_source_vintage_forensics.py"
-      - ".github/workflows/q220-primary-source-vintage-forensics.yml"
   workflow_dispatch: {}
 
 permissions:
