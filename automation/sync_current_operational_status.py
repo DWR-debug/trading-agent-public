@@ -655,17 +655,17 @@ def generate(
             q218_sentence = " Q218 remains non-authorized for performance. "
         recorded_next_research_focus = (
             "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. "
-            "Q104:I19 next: finish the existing historical 13F census or its currently useful successor run; after a terminal result, recover only unresolved shard/header evidence and never restart the full census blindly. "
-            "Then compile the frozen concept-specific PIT state and require independent reproduction. "
+            "Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and the full suite passed on its tested revision. "
+            "Existing targeted receipt-gated repair request run #38231636160 was still in the repair step as of the 2026-10-12T10:02Z handoff; check its terminal result and immutable receipt before any next step, never restart the full census blindly. "
+            "After a terminal repair receipt, compile the frozen concept-specific PIT state and require independent reproduction. "
             + q220_population_sentence +
-            "Q221 next: prepare a new bounded award-level public-observation workpack; the five archived USAspending policy vintages do not prove first-public time for an individual award or modification. "
-            "Freeze transaction classes and recipient-to-issuer mapping, classify the DoD/USACE 90-day and FAR exceptions, and preserve correction lineage. Do not dispatch until the new workpack and prerequisites are explicit. "
+            " Q220 original SEC daily Feed forensic run #38233685159 ended fail-closed with FORENSIC_COMPARISON_INCOMPLETE: 0/3 comparisons, 2,829,769,099 bytes downloaded, and no original submission member found. "
+            "A source-path review found the daily .nc.tar.gz tar member is accession.nc; .dissem is the distinct PDS subscriber naming convention. The bounded follow-up corrects only that member resolver and fixture. Wait for both-architecture CI and full-suite checks, then deliberately trigger one fixed three-accession rerun; keep the 55/55 source-hash gate blocked until original bytes and identities are reconciled. No hash pin, contract, sample, concept set or research gate may change to force a pass. "
+            "Q221: the 348-row frozen public-boundary sample is complete under its bounded sample contract, but first-public-observation time remains unproven for all 348 rows and all 247 recipient identities remain unmapped to issuers. The archived five policy vintages do not prove an individual award/modification clock. Next: prepare a specific award-level vintage/clock and entity-mapping workpack before dispatch; do not infer a mapping from name similarity and preserve DoD/USACE 90-day, FAR 30-day, and correction-lineage checks. "
             "Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run. "
             + q218_sentence +
-            "Q219 remains paused; its prior evidence is preserved. "
-            "OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) "
-            "returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. "
-            "Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. "
+            " Q219 remains paused; its prior evidence is preserved. "
+            "OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. "
             "Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. "
             "No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs."
         )
