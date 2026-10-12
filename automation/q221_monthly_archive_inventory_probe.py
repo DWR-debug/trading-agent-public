@@ -89,6 +89,116 @@ def _parse_manifest(manifest: dict[str, Any]) -> tuple[dict[int, set[str]], list
     return by_fy, errors
 
 
+# One-shot request pins the current Q221 manifest; updating it requires an explicit re-registration.
+FROZEN_MANIFEST_PATH = "research/evidence/q221_historical_public_boundary_latest.json"
+FROZEN_MANIFEST_GIT_BLOB_SHA = "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f"
+FROZEN_MANIFEST_RECEIPT_FINGERPRINT = "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4"
+FROZEN_TARGET_KEY_COUNTS_BY_FY = {2019: 49, 2020: 50, 2021: 50, 2022: 50, 2023: 50, 2024: 49, 2025: 50}
+FROZEN_REQUEST_VALUES = {
+    "RUN_Q221_MONTHLY_ARCHIVE_INVENTORY": "true",
+    "REASON": "VERSIONED_ARCHIVE_CATALOG_INVENTORY_FOR_FROZEN_Q221_SAMPLE",
+    "SOURCE_MANIFEST_PATH": FROZEN_MANIFEST_PATH,
+    "SOURCE_MANIFEST_GIT_BLOB_SHA": FROZEN_MANIFEST_GIT_BLOB_SHA,
+    "SOURCE_MANIFEST_RECEIPT_FINGERPRINT": FROZEN_MANIFEST_RECEIPT_FINGERPRINT,
+    "TARGET_KEY_COUNT": "348",
+    "TARGET_FISCAL_YEARS": "2019,2020,2021,2022,2023,2024,2025",
+    "TARGET_KEY_COUNTS_BY_FY": "2019:49,2020:50,2021:50,2022:50,2023:50,2024:49,2025:50",
+    "MAX_FISCAL_YEARS": "7",
+    "CENSUS_RESTART": "false",
+    "PERFORMANCE": "false",
+    "HOLDOUT_SELECTION": "false",
+    "RANKING": "false",
+    "TUNING": "false",
+    "PROMOTION": "false",
+    "LIVE_EXECUTION": "false",
+}
+REQUEST_KEYS = set(FROZEN_REQUEST_VALUES) | {"REQUEST_SEQUENCE"}
+
+
+def _git_blob_sha1(body: bytes) -> str:
+    header = b"blob " + str(len(body)).encode("ascii") + b"\0"
+    return hashlib.sha1(header + body).hexdigest()
+
+
+def _read_key_value_request(request_path: Path) -> dict[str, str]:
+    values: dict[str, str] = {}
+    raw = request_path.read_text(encoding="utf-8")
+    for line_number, line in enumerate(raw.splitlines(), start=1):
+        if not line or line.strip() != line or "=" not in line:
+            raise ValueError(f"Q221_REQUEST_INVALID_LINE:{line_number}")
+        key, value = line.split("=", 1)
+        if not re.fullmatch(r"[A-Z0-9_]+", key) or not value:
+            raise ValueError(f"Q221_REQUEST_INVALID_KEY_VALUE:{line_number}")
+        if key in values:
+            raise ValueError(f"Q221_REQUEST_DUPLICATE_KEY:{key}")
+        values[key] = value
+    if set(values) != REQUEST_KEYS:
+        missing = sorted(REQUEST_KEYS - set(values))
+        extra = sorted(set(values) - REQUEST_KEYS)
+        raise ValueError(f"Q221_REQUEST_KEY_SET_MISMATCH:missing={missing}:extra={extra}")
+    if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", values["REQUEST_SEQUENCE"]):
+        raise ValueError("Q221_REQUEST_SEQUENCE_INVALID")
+    for key, expected in FROZEN_REQUEST_VALUES.items():
+        if values[key] != expected:
+            raise ValueError(f"Q221_REQUEST_VALUE_MISMATCH:{key}")
+    return values
+
+
+def validate_request(request_path: Path, input_path: Path) -> dict[str, Any]:
+    """Fail closed unless the request matches the frozen 348-key Q221 manifest."""
+    values = _read_key_value_request(request_path)
+    raw = input_path.read_bytes()
+    actual_blob_sha = _git_blob_sha1(raw)
+    if actual_blob_sha != values["SOURCE_MANIFEST_GIT_BLOB_SHA"]:
+        raise ValueError("Q221_SOURCE_MANIFEST_GIT_BLOB_SHA_MISMATCH:" + actual_blob_sha)
+    manifest = json.loads(raw.decode("utf-8"))
+    if not isinstance(manifest, dict):
+        raise ValueError("Q221_SOURCE_MANIFEST_ROOT_INVALID")
+    if manifest.get("receipt_fingerprint") != values["SOURCE_MANIFEST_RECEIPT_FINGERPRINT"]:
+        raise ValueError("Q221_SOURCE_MANIFEST_RECEIPT_FINGERPRINT_MISMATCH")
+    if manifest.get("candidate_id") != "Q221":
+        raise ValueError("Q221_SOURCE_MANIFEST_CANDIDATE_MISMATCH")
+    if manifest.get("gate_positive") is not False:
+        raise ValueError("Q221_SOURCE_MANIFEST_GATE_MUST_REMAIN_NEGATIVE")
+    if manifest.get("historical_first_public_observation_proven") is not False:
+        raise ValueError("Q221_SOURCE_MANIFEST_PUBLIC_CLOCK_GATE_MUST_REMAIN_NEGATIVE")
+    if manifest.get("event_level_public_boundary_proven") is True:
+        raise ValueError("Q221_SOURCE_MANIFEST_EVENT_BOUNDARY_GATE_MUST_REMAIN_NEGATIVE")
+    if manifest.get("action_date_is_not_public_observation_time") is not True:
+        raise ValueError("Q221_ACTION_DATE_PUBLIC_CLOCK_GUARD_MISSING")
+    targets, errors = _parse_manifest(manifest)
+    if errors:
+        raise ValueError("Q221_SOURCE_MANIFEST_INVALID:" + ";".join(errors[:5]))
+    raw_keys = [
+        key
+        for query in manifest["queries"]
+        for key in query.get("selected_transaction_keys", [])
+    ]
+    if len(raw_keys) != int(values["TARGET_KEY_COUNT"]) or len(set(raw_keys)) != len(raw_keys):
+        raise ValueError("Q221_TARGET_KEY_COUNT_OR_DUPLICATE_MISMATCH")
+    actual_years = sorted(targets)
+    expected_years = [int(x) for x in values["TARGET_FISCAL_YEARS"].split(",")]
+    if actual_years != expected_years or len(actual_years) > int(values["MAX_FISCAL_YEARS"]):
+        raise ValueError("Q221_TARGET_FISCAL_YEAR_SET_MISMATCH")
+    expected_counts = {
+        int(pair.split(":")[0]): int(pair.split(":")[1])
+        for pair in values["TARGET_KEY_COUNTS_BY_FY"].split(",")
+    }
+    actual_counts = {year: len(keys) for year, keys in targets.items()}
+    if actual_counts != expected_counts:
+        raise ValueError("Q221_TARGET_FISCAL_YEAR_COUNTS_MISMATCH")
+    return {
+        "request_sequence": values["REQUEST_SEQUENCE"],
+        "source_manifest_path": values["SOURCE_MANIFEST_PATH"],
+        "source_manifest_git_blob_sha": actual_blob_sha,
+        "source_manifest_receipt_fingerprint": manifest["receipt_fingerprint"],
+        "target_key_count": len(raw_keys),
+        "target_fiscal_years": actual_years,
+        "target_key_counts_by_fiscal_year": {str(year): actual_counts[year] for year in actual_years},
+        "request_valid": True,
+    }
+
+
 def request_inventory(fiscal_year: int) -> tuple[int, str, bytes, dict[str, Any]]:
     """Make one bounded read-only catalog POST; never fetch an archive payload."""
     payload = json.dumps({
@@ -193,7 +303,7 @@ def _write(output: Path, receipt: dict[str, Any]) -> None:
     )
 
 
-def run(input_path: Path, output_path: Path) -> dict[str, Any]:
+def run(input_path: Path, output_path: Path, request_path: Path | None = None) -> dict[str, Any]:
     """Write a machine-readable, fail-closed inventory receipt on all outcomes."""
     receipt: dict[str, Any] = {
         "schema_version": 1,
@@ -209,6 +319,11 @@ def run(input_path: Path, output_path: Path) -> dict[str, Any]:
         "request_timeout_seconds": REQUEST_TIMEOUT_SECONDS,
         "request_mode": "READ_ONLY_METADATA_POST; NO_ARCHIVE_PAYLOADS_DOWNLOADED",
         "input_manifest_path": input_path.as_posix(),
+        "request_validation_required": request_path is not None,
+        "request_validation_passed": False,
+        "source_manifest_git_blob_sha": None,
+        "source_manifest_receipt_fingerprint": None,
+        "request_sequence": None,
         "target_fiscal_years": [],
         "target_key_counts_by_fiscal_year": {},
         "target_key_hashes_by_fiscal_year": {},
@@ -232,6 +347,26 @@ def run(input_path: Path, output_path: Path) -> dict[str, Any]:
         "promotion": False,
         "live_execution": False,
     }
+
+    if request_path is not None:
+        try:
+            request_receipt = validate_request(request_path, input_path)
+            receipt.update({
+                "request_validation_passed": True,
+                "source_manifest_git_blob_sha": request_receipt["source_manifest_git_blob_sha"],
+                "source_manifest_receipt_fingerprint": request_receipt["source_manifest_receipt_fingerprint"],
+                "request_sequence": request_receipt["request_sequence"],
+                "frozen_request_validation": request_receipt,
+            })
+        except Exception as exc:
+            receipt.update({
+                "status": "REQUEST_REJECTED",
+                "request_validation_passed": False,
+                "error": f"{type(exc).__name__}: {exc}"[:500],
+                "next_gate": "repair or explicitly re-register the frozen Q221 request; no API request was made",
+            })
+            _write(output_path, receipt)
+            return receipt
 
     try:
         raw_manifest = input_path.read_bytes()
@@ -383,8 +518,9 @@ def main() -> int:
         help="frozen Q221 public-boundary receipt",
     )
     parser.add_argument("--output", type=Path, required=True, help="path for the inventory receipt")
+    parser.add_argument("--request", type=Path, help="explicit frozen one-shot request file")
     args = parser.parse_args()
-    receipt = run(args.input, args.output)
+    receipt = run(args.input, args.output, request_path=args.request)
     print(json.dumps(receipt, sort_keys=True))
     return 0 if receipt.get("status") == "DATED_ARCHIVE_SERIES_FOUND" else 2
 

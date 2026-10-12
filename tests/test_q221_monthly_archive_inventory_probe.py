@@ -1,4 +1,7 @@
 import json
+from pathlib import Path
+
+import pytest
 
 from automation import q221_monthly_archive_inventory_probe as probe
 
@@ -187,3 +190,48 @@ def test_untrusted_archive_host_invalidates_inventory(tmp_path, monkeypatch):
     assert receipt["fiscal_year_results"][0]["invalid_item_count"] == 1
     assert receipt["historical_first_public_observation_proven"] is False
     assert receipt["performance_authorization"] is False
+
+
+def test_frozen_inventory_request_matches_exact_q221_manifest():
+    root = Path(__file__).resolve().parents[1]
+    request_path = root / "research/run_requests/q221_monthly_archive_inventory.trigger"
+    manifest_path = root / probe.FROZEN_MANIFEST_PATH
+
+    validated = probe.validate_request(request_path, manifest_path)
+
+    assert validated["request_valid"] is True
+    assert validated["source_manifest_git_blob_sha"] == probe.FROZEN_MANIFEST_GIT_BLOB_SHA
+    assert validated["source_manifest_receipt_fingerprint"] == probe.FROZEN_MANIFEST_RECEIPT_FINGERPRINT
+    assert validated["target_key_count"] == 348
+    assert validated["target_fiscal_years"] == [2019, 2020, 2021, 2022, 2023, 2024, 2025]
+    assert validated["target_key_counts_by_fiscal_year"] == {
+        "2019": 49, "2020": 50, "2021": 50, "2022": 50,
+        "2023": 50, "2024": 49, "2025": 50,
+    }
+
+
+def test_frozen_inventory_request_rejects_manifest_mutation(tmp_path):
+    root = Path(__file__).resolve().parents[1]
+    request_path = root / "research/run_requests/q221_monthly_archive_inventory.trigger"
+    source = root / probe.FROZEN_MANIFEST_PATH
+    changed = tmp_path / source.name
+    changed.write_bytes(source.read_bytes() + b" ")
+
+    with pytest.raises(ValueError, match="Q221_SOURCE_MANIFEST_GIT_BLOB_SHA_MISMATCH"):
+        probe.validate_request(request_path, changed)
+
+
+def test_frozen_inventory_request_rejects_safety_flag_or_unknown_key(tmp_path):
+    root = Path(__file__).resolve().parents[1]
+    source_request = root / "research/run_requests/q221_monthly_archive_inventory.trigger"
+    source_manifest = root / probe.FROZEN_MANIFEST_PATH
+    original = source_request.read_text(encoding="utf-8")
+    changed = tmp_path / source_request.name
+    changed.write_text(original.replace("PERFORMANCE=false", "PERFORMANCE=true"), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Q221_REQUEST_VALUE_MISMATCH:PERFORMANCE"):
+        probe.validate_request(changed, source_manifest)
+
+    changed.write_text(original + "UNEXPECTED_KEY=false\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="Q221_REQUEST_KEY_SET_MISMATCH"):
+        probe.validate_request(changed, source_manifest)
