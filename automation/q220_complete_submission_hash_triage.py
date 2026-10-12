@@ -160,6 +160,10 @@ def current_primary_url(cik: str, accession: str, filename: str) -> str:
 
 
 def bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, Any]:
+    if budget.used >= budget.maximum:
+        return {"requested_url": url, "status": "TOTAL_DOWNLOAD_BUDGET_EXHAUSTED", "response_bytes": 0, "body": b""}
+    remaining = budget.maximum - budget.used
+    per_request_limit = min(max_bytes, remaining)
     budget.wait()
     req = urllib.request.Request(
         url,
@@ -187,10 +191,17 @@ def bounded_get(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, A
             }
             if declared_length is not None and declared_length > max_bytes:
                 return {**metadata, "status": "SKIPPED_DECLARED_LENGTH_OVER_LIMIT", "body": b"", "response_bytes": 0}
-            body = response.read(max_bytes + 1)
-            budget.add(len(body))
+            if declared_length is not None and declared_length > remaining:
+                return {**metadata, "status": "SKIPPED_DECLARED_LENGTH_OVER_TOTAL_BUDGET", "body": b"", "response_bytes": 0}
+            body = response.read(per_request_limit + 1)
+            try:
+                budget.add(len(body))
+            except BoundedSourceError as exc:
+                return {**metadata, "status": "TOTAL_DOWNLOAD_BUDGET_EXCEEDED", "body": b"", "response_bytes": len(body), "error": str(exc)}
             if len(body) > max_bytes:
                 return {**metadata, "status": "SKIPPED_ACTUAL_LENGTH_OVER_LIMIT", "body": b"", "response_bytes": len(body)}
+            if len(body) > remaining:
+                return {**metadata, "status": "TOTAL_DOWNLOAD_BUDGET_EXCEEDED", "body": b"", "response_bytes": len(body)}
             return {**metadata, "status": "FETCHED", "body": body, "response_bytes": len(body), "response_sha256": sha256(body)}
     except urllib.error.HTTPError as exc:
         return {
