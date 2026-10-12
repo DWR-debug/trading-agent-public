@@ -143,9 +143,14 @@ def test_current_status_reports_completed_q218_replication_and_open_primary_reva
     assert "three preselected sample keys" in focus
     assert "2,829,769,099 bytes downloaded; receipt fingerprint 840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b" in focus
     assert "each original Feed submission header lacks ACCEPTANCE-DATETIME" in focus
+    assert "Read-only header-only run #38258251764 completed HEADER_EVIDENCE_COMPLETE" in focus
+    assert "9/9 official EDGAR header routes" in focus
+    assert "101,547 bytes; no Feed or primary documents downloaded" in focus
+    assert "DATE-OF-FILING-DATE-CHANGE was also captured" in focus
+    assert "2019-02-12T18:15:22 before the EDGAR filing date 2019-02-13" in focus
+    assert "all 55 source-hash mismatches remain" in focus
+    assert "without redownloading multi-GB Feeds or fetching primary documents" in focus
     assert "Do not redownload these multi-GB Feeds" in focus
-    assert "header-only probes" in focus
-    assert "cannot clear the 55 primary source hash failures" in focus
     assert "do not repeat an outcome-bearing run" in focus
     assert focus.count("Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY") == 1
     # This status sync must fail closed when the population source code changed
