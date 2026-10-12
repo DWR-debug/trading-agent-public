@@ -63,7 +63,7 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: Install bounded diagnostic dependencies
-        run: python -m pip install --disable-pip-version-check pandas exchange-calendars pypdf tzdata==2026.5
+        run: python -m pip install --disable-pip-version-check pytest pandas exchange-calendars pypdf tzdata==2026.5
 
       - name: Test frozen CIK-role parser and fail-closed contracts
         run: python -m pytest -q tests/test_q104_i19_cik_role_diagnostic.py
