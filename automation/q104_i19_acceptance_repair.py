@@ -107,15 +107,15 @@ def _parse_sgml_acceptance_header(
     CIK must be read from the FILER block, not from another company role in
     the same submission. The acceptance timestamp is SEC's explicit tag.
     """
-    accepted = re.search(r"<ACCEPTANCE-DATETIME>\\s*([0-9]{14})", text, re.I)
+    accepted = re.search(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})", text, re.I)
     accession_m = re.search(
-        r"<ACCESSION-NUMBER>\\s*([0-9]{10}-[0-9]{2}-[0-9]{6})", text, re.I
+        r"<ACCESSION-NUMBER>\s*([0-9]{10}-[0-9]{2}-[0-9]{6})", text, re.I
     )
-    form_m = re.search(r"(?m)^<TYPE>\\s*([^\\s<]+)", text, re.I)
-    filed_m = re.search(r"(?m)^<FILING-DATE>\\s*([0-9]{8})", text, re.I)
-    filer_m = re.search(r"<FILER>\\s*(.*?)</FILER>", text, re.I | re.S)
+    form_m = re.search(r"(?m)^<TYPE>\s*([^\s<]+)", text, re.I)
+    filed_m = re.search(r"(?m)^<FILING-DATE>\s*([0-9]{8})", text, re.I)
+    filer_m = re.search(r"<FILER>\s*(.*?)</FILER>", text, re.I | re.S)
     cik_m = (
-        re.search(r"(?m)^<CIK>\\s*([0-9]{10})\\s*$", filer_m.group(1), re.I)
+        re.search(r"(?m)^<CIK>\s*([0-9]{10})\s*$", filer_m.group(1), re.I)
         if filer_m
         else None
     )
