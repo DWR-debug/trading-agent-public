@@ -37,6 +37,11 @@ on:
         required: false
         default: ""
         type: string
+      prior_repair_run_id:
+        description: "Completed bounded Q104 repair run whose repaired receipts are reused; empty means original receipts"
+        required: false
+        default: ""
+        type: string
 permissions:
   actions: write
   contents: write
