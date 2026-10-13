@@ -207,6 +207,8 @@ ACTIVE_WORKFLOWS = {
     "q182-ferc-self-hosted-access-probe.yml",
     "q127r1-finra-regsho-historical-pit.yml",
     "q130r1-wikimedia-attention-source.yml",
+    "q127r2-finra-wayback-metadata.yml",
+    "q130r2-wikimedia-wayback-metadata.yml",
     "q131r1-sec-disclosure-complexity.yml",
     "q095-authorization-once.yml",
     "rccsm-feasibility-cloud.yml",
