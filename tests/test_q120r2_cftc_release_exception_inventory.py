@@ -58,3 +58,54 @@ def test_q120r2_live_request_is_frozen_and_performance_prohibited():
         assert request[key] == expected
     assert request["PERFORMANCE"] == "false"
     assert request["LIVE_EXECUTION"] == "false"
+
+
+def test_q120r2_mocked_full_run_writes_utc_receipt(tmp_path):
+    from datetime import datetime, timezone
+
+    from automation import q120r2_cftc_release_exception_inventory as q120r2_module
+
+    request_path = ROOT / "research/run_requests/q120r2_cftc_release_exception_inventory.trigger"
+    upstream = {
+        "task_id": q120r2_module.UPSTREAM_TASK_ID,
+        "status": "Q120_SOURCE_ARCHIVE_AND_RELEASE_SCHEDULE_FEASIBILITY_COMPLETED",
+        "receipt_fingerprint": q120r2_module.UPSTREAM_RECEIPT_FINGERPRINT,
+        "release_dates_recovered": False,
+        "safety": {"paper_only": True, "live_trading_enabled": False},
+    }
+    upstream_path = tmp_path / "upstream.json"
+    upstream_path.write_text(json.dumps(upstream), encoding="utf-8")
+    output_path = tmp_path / "receipt.json"
+    requested = []
+
+    def fake_fetcher(url, max_bytes):
+        requested.append(url)
+        if url == q120r2_module.RELEASE_SCHEDULE_URL:
+            body = b"<html><body>3:30 p.m. Eastern time; 2026 Release Schedule</body></html>"
+        elif url == q120r2_module.SPECIAL_ANNOUNCEMENTS_URL:
+            body = (
+                "<html><table><tr><th>COT Report Date</th><th>Original Publish Date</th>"
+                "<th>New Publish Date</th></tr><tr><td>09/30/2025</td><td>10/03/2025</td>"
+                "<td>11/19/2025+</td></tr></table></html>"
+            ).encode("utf-8")
+        else:
+            raise AssertionError(f"unexpected Q120 source URL: {url}")
+        if isinstance(body, str):
+            body = body.encode("utf-8")
+        assert len(body) <= max_bytes
+        return 200, body, {"content-type": "text/html; charset=utf-8"}, url, None
+
+    result = q120r2_module.run(
+        request_path, upstream_path, output_path, fetcher=fake_fetcher
+    )
+    assert requested == [
+        q120r2_module.RELEASE_SCHEDULE_URL,
+        q120r2_module.SPECIAL_ANNOUNCEMENTS_URL,
+    ]
+    assert result["status"] == "Q120R2_CFTC_RELEASE_EXCEPTION_INVENTORY_COMPLETED"
+    stamp = datetime.fromisoformat(result["generated_at_utc"])
+    assert stamp.tzinfo is not None
+    assert stamp.utcoffset() == timezone.utc.utcoffset(stamp)
+    assert result["summary"]["official_exception_rows_parsed"] == 1
+    assert result["summary"]["request_count"] == 2
+    assert json.loads(output_path.read_text(encoding="utf-8")) == result
