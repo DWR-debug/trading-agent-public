@@ -1,0 +1,71 @@
+name: Q220 HTTP Representation Sensitivity
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q220_http_representation_sensitivity.trigger"
+      - ".github/workflows/q220-http-representation-sensitivity.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  compare-fixed-primary:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    concurrency:
+      group: q220-http-representation-sensitivity
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Run five-response profile comparison
+        id: probe
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q220_http_representation_sensitivity \
+            --request research/run_requests/q220_http_representation_sensitivity.trigger \
+            --source-receipt research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json \
+            --single-summary research/evidence/q220_single_feed_boundary_validation_2026_10_13_summary.json \
+            --output "research/runs/q220-http-representation-sensitivity/$GITHUB_RUN_ID/receipt.json"
+      - name: Upload immutable bounded receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-http-representation-sensitivity-${{ github.run_id }}-1
+          path: research/runs/q220-http-representation-sensitivity/${{ github.run_id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Require a complete five-request diagnostic, not a Q220 gate pass
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("research/runs/q220-http-representation-sensitivity/${{ github.run_id }}/receipt.json")
+          receipt = json.loads(path.read_text(encoding="utf-8"))
+          print(json.dumps({
+              "status": receipt.get("status"),
+              "completed_request_count": receipt.get("completed_request_count"),
+              "source_download_bytes": receipt.get("source_download_bytes"),
+              "gate_positive": receipt.get("gate_positive"),
+              "performance_authorization": receipt.get("performance_authorization"),
+              "live_execution": receipt.get("live_execution"),
+          }, sort_keys=True))
+          if receipt.get("status") not in {
+              "HTTP_REPRESENTATION_VARIATION_OBSERVED",
+              "HTTP_REPRESENTATION_INVARIANT_AT_PROBE_TIME",
+          } or receipt.get("completed_request_count") != 5:
+              raise SystemExit("Bounded HTTP response diagnostic incomplete; Q220 remains blocked.")
+          PY
