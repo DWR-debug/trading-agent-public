@@ -1,38 +1,78 @@
 {
-  "coverage_receipt_fingerprint": "cd7b23729d32e169cc09b20d85a610e18c6c11d9c55bb238affbafda56113bd1",
-  "receipt_fingerprint": "f261f1d6fd944c3e4cbafcb8a61baf7ad3b7b8d5737de23505a3abd810c949f0",
+  "coverage_receipt_fingerprint": "c67e0188cab6622888fedb1aed46f40e478cfd293f97303680a5a7c2ce92c2aa",
+  "receipt_fingerprint": "189e66981b07ac828c1f0c425eeec0fc2b121ce554a15641f8821cbe174e57e5",
   "results": {
     "AMP": {
-      "error": "HTTP Error 503: Service Unavailable",
-      "error_body_excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>SlowDown</Code><Message>Please reduce your request rate.</Message><RequestId>TXRJ5M465DQ3A9CS</RequestId><HostId>4CeKclhi4QjodJLqZberdWPdBipyI6Mrvd7q7lAm8H05I1DQScPCmdNWKtJBlVdVJj8S/CeZDJE=</HostId></Error>",
-      "error_type": "HTTPError",
-      "http_status": 503,
-      "status": "INFRA_ACCESS_BLOCKED",
-      "symbol": "AMP"
+      "checks": {
+        "http_content_length_boundary_exact": true,
+        "http_status_line_present": true,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
+        "target_matches_index_url": true,
+        "target_uri_present": true,
+        "warc_date_present": true,
+        "warc_payload_digest_present": true,
+        "warc_version_present": true
+      },
+      "compressed_sha256": "db3f474fe8b144711865c752dc6eaf84497ce0fd96e15f9535bcd4b5d67358f9",
+      "http_status_line": "HTTP/1.1 200 ",
+      "index_digest": "V4DXCUHNM6PRXEWVGONTVORWSDCWCZVJ",
+      "indexed_timestamp": "20250911183341",
+      "payload_bytes": 201245,
+      "payload_sha1_base32": "V4DXCUHNM6PRXEWVGONTVORWSDCWCZVJ",
+      "status": "WARC_RECONSTRUCTED",
+      "symbol": "AMP",
+      "target_uri": "https://ir.ameriprise.com/overview/default.aspx",
+      "warc_date": "2025-09-11T18:33:41Z",
+      "warc_record_sha256": "a063d401c1f9fd58bd9c89715bf5dc1e48241158f995f90b5dcac6eaa3b884c1"
     },
     "DVN": {
-      "error": "HTTP Error 503: Service Unavailable",
-      "error_body_excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>SlowDown</Code><Message>Please reduce your request rate.</Message><RequestId>KV5CPRD4KEFV2G0M</RequestId><HostId>CsE5zgGPbGtDXuDqAZxr7yqr/SKz9UJVzcTT0a9N0Wth4Rxfr3y0YNKS2hxSGrhz84/yifC7VYf5yHecGftILS3sUqipYJ62</HostId></Error>",
-      "error_type": "HTTPError",
-      "http_status": 503,
-      "status": "INFRA_ACCESS_BLOCKED",
-      "symbol": "DVN"
-    },
-    "SPGI": {
-      "error": "HTTP Error 503: Service Unavailable",
-      "error_body_excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>SlowDown</Code><Message>Please reduce your request rate.</Message><RequestId>TXRVAY1TNZSAB01A</RequestId><HostId>enjm7Y8YvfQqxeGTgfXfABElntQiBBELcCvroDXk6/uEgymjTIiyCVi2A9HuBncBZvt42PJriFwbAbHpPQcXtTcud0YysBw8</HostId></Error>",
-      "error_type": "HTTPError",
-      "http_status": 503,
-      "status": "INFRA_ACCESS_BLOCKED",
-      "symbol": "SPGI"
+      "checks": {
+        "http_content_length_boundary_exact": true,
+        "http_status_line_present": true,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
+        "target_matches_index_url": true,
+        "target_uri_present": true,
+        "warc_date_present": true,
+        "warc_payload_digest_present": true,
+        "warc_version_present": true
+      },
+      "compressed_sha256": "0666caa1ad605f9438373803712bf10d8077fe27468498676ea7a6ca945d04fc",
+      "http_status_line": "HTTP/1.1 200 ",
+      "index_digest": "ZTMO27KYGV3TYDUZ7A4UJKYJBSTDETPQ",
+      "indexed_timestamp": "20250324003644",
+      "payload_bytes": 58603,
+      "payload_sha1_base32": "ZTMO27KYGV3TYDUZ7A4UJKYJBSTDETPQ",
+      "status": "WARC_RECONSTRUCTED",
+      "symbol": "DVN",
+      "target_uri": "https://investors.devonenergy.com/investors/default.aspx",
+      "warc_date": "2025-03-24T00:36:44Z",
+      "warc_record_sha256": "66bcd13b59a4f7ebfccab927ec03c2398117c6bdee4344e791e2fdf37b205221"
     },
     "VLO": {
-      "error": "HTTP Error 503: Service Unavailable",
-      "error_body_excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>SlowDown</Code><Message>Please reduce your request rate.</Message><RequestId>KV5BC5RA56PW291Q</RequestId><HostId>6KCHulZNuh6/X2PqVmPhM/2XT8h1rFSaUxc9ObxXHkq6zA9TFDJLh7dvDrUBH9ag6i37EyraBTg=</HostId></Error>",
-      "error_type": "HTTPError",
-      "http_status": 503,
-      "status": "INFRA_ACCESS_BLOCKED",
-      "symbol": "VLO"
+      "checks": {
+        "http_content_length_boundary_exact": true,
+        "http_status_line_present": true,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
+        "target_matches_index_url": true,
+        "target_uri_present": true,
+        "warc_date_present": true,
+        "warc_payload_digest_present": true,
+        "warc_version_present": true
+      },
+      "compressed_sha256": "dc1ec1d4dee0c6c742763b07f02066a6db10667d0bdaf40d992d65531f92f300",
+      "http_status_line": "HTTP/1.1 200 ",
+      "index_digest": "IMRNCI3WPFNEQGEWTQ2JSMFO7KJYFCUG",
+      "indexed_timestamp": "20250315073343",
+      "payload_bytes": 74609,
+      "payload_sha1_base32": "IMRNCI3WPFNEQGEWTQ2JSMFO7KJYFCUG",
+      "status": "WARC_RECONSTRUCTED",
+      "symbol": "VLO",
+      "target_uri": "https://investorvalero.com/home/default.aspx",
+      "warc_date": "2025-03-15T07:33:43Z",
+      "warc_record_sha256": "ca02cd8f765c5973311858695f256f39efa173d6f7cdb860d35d3e3a8878cfae"
     }
   },
   "safety": {
@@ -55,12 +95,12 @@
     "threshold_search": false,
     "variant_search": false
   },
-  "source_commit": "94b2d4c6cbd402daa0779e4dccec5c51133ac9e1",
+  "source_commit": "c68c49b100e3734908c337a20847bc7465a4d7d6",
   "summary": {
-    "blocked": 4,
-    "capture_candidates": 4,
-    "infra_blocked": 4,
-    "warc_reconstructed": 0
+    "blocked": 0,
+    "capture_candidates": 3,
+    "infra_blocked": 0,
+    "warc_reconstructed": 3
   },
   "task_id": "Q-2026-10-03-Q171-WARC-RECONSTRUCTION"
 }
