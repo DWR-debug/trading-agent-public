@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q127r2_wayback_finra_metadata_preregistration",
+  "task_id": "Q-2026-10-13-127R2-FINRA-WAYBACK-METADATA",
+  "candidate_id": "Q127-R2",
+  "parent_candidate": "Q127-R1",
+  "status": "PREREGISTERED_SOURCE_ARCHIVE_METADATA_ONLY",
+  "upstream": {
+    "workflow_run_id": 38455702686,
+    "artifact_name": "q127r1-finra-regsho-historical-pit-38455702686",
+    "receipt_fingerprint": "2cbe22c49d885f527ac523ed74ab1e13a843c23999916c674282de6977e9c33c"
+  },
+  "fixed_population": {
+    "dates": [
+      "2024-02-05",
+      "2024-07-01",
+      "2025-01-02",
+      "2025-09-24"
+    ],
+    "symbols": [
+      "SPGI",
+      "NDAQ",
+      "AMP",
+      "RJF",
+      "WMB",
+      "VLO",
+      "DVN",
+      "EMN"
+    ]
+  },
+  "source_contract": {
+    "provider": "Internet Archive CDX",
+    "mode": "exact capture metadata for four pinned FINRA source URLs plus one fixed FINRA listing URL and two fixed listing captures",
+    "target_data_files_may_be_downloaded": false
+  },
+  "limits": {
+    "max_requests": 7,
+    "max_response_bytes": 350000,
+    "max_total_bytes": 1500000,
+    "retries": 0
+  },
+  "pit_contract": {
+    "official_same_trade_date_upper_bound": "18:00 ET",
+    "exact_first_publication_time_proven": false,
+    "original_updated_lineage_proven": false,
+    "same_day_formal_use_allowed": false
+  },
+  "governance": {
+    "performance": false,
+    "holdout": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
