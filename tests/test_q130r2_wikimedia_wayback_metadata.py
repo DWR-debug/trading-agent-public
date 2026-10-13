@@ -24,7 +24,7 @@ def test_q130_exact_cdx_url_targets_historical_api_response_not_live_api():
     url = build_cdx_url(original, from_year=2015, to_year=2026, limit=50)
     assert "web.archive.org/cdx/search/cdx" in url
     assert "matchType=exact" in url
-    assert "wikimedia.org/api/rest_v1/metrics/pageviews" in url
+    assert "wikimedia.org%2Fapi%2Frest_v1%2Fmetrics%2Fpageviews" in url
     assert R1_FP == "4334be29ff2387813ea9586ba12c6899979e0e43125aeaf0585b073063876568"
 
 
