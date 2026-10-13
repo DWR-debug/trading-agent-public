@@ -54,17 +54,34 @@ def validate_inputs(source_path,profile_path):
   if not row or any(row.get(k)!=v for k,v in (("award_id",award),("modification",mod),("action_date",date),("recipient_id",rid),("recipient_uei",uei))): raise ProbeError("FROZEN_TRANSACTION_MISMATCH:"+key)
   if not p or p.get("recipient_uei")!=uei or p.get("current_parent_classification")!="CURRENT_PARENT_ENTITY_LEAD": raise ProbeError("PROFILE_LEAD_MISMATCH:"+rid)
  return source,profile,pm
+MAX_API_ATTEMPTS=4
+RETRYABLE_HTTP_STATUSES={429,500,502,503,504}
 def api(url,body=None):
  h={"User-Agent":"DWR-debug/trading-agent-public Q221 transaction parent UEI probe/1.0","Accept":"application/json","Connection":"close"}; data=None
  if body is not None: h["Content-Type"]="application/json";data=json.dumps(body,separators=(",",":")).encode()
- req=urllib.request.Request(url,data=data,headers=h,method="POST" if body is not None else "GET")
- try:
-  with urllib.request.urlopen(req,timeout=30) as r:
-   b=r.read(2_000_001)
-   if len(b)>2_000_000: raise ProbeError("API_JSON_OVER_LIMIT")
-   return json.loads(b.decode()),len(b)
- except urllib.error.HTTPError as e:
-  raise ProbeError("API_HTTP_ERROR:"+str(e.code)+":"+e.read(500).decode(errors="replace"))
+ last_error=None
+ for attempt in range(MAX_API_ATTEMPTS):
+  req=urllib.request.Request(url,data=data,headers=h,method="POST" if body is not None else "GET")
+  try:
+   with urllib.request.urlopen(req,timeout=30) as r:
+    b=r.read(2_000_001)
+    if len(b)>2_000_000: raise ProbeError("API_JSON_OVER_LIMIT")
+    try: payload=json.loads(b.decode())
+    except (UnicodeDecodeError,json.JSONDecodeError) as e: raise ProbeError("API_JSON_INVALID") from e
+    return payload,len(b)
+  except urllib.error.HTTPError as e:
+   detail=e.read(500).decode(errors="replace")
+   last_error=ProbeError("API_HTTP_ERROR:"+str(e.code)+":"+detail)
+   if e.code not in RETRYABLE_HTTP_STATUSES or attempt+1>=MAX_API_ATTEMPTS: raise last_error from e
+  except (urllib.error.URLError,TimeoutError,OSError) as e:
+   last_error=ProbeError("API_TRANSPORT_ERROR:"+type(e).__name__+":"+str(getattr(e,"reason",e))[:300])
+   if attempt+1>=MAX_API_ATTEMPTS: raise last_error from e
+  time.sleep(min(2**attempt,8))
+ raise ProbeError("API_RETRY_EXHAUSTED:"+str(last_error))
+def incomplete_receipt(req,error):
+ receipt={"schema_version":1,"record_type":"q221_transaction_parent_uei_feasibility_probe","candidate_id":"Q221","status":"TRANSACTION_PARENT_UEI_PROBE_INCOMPLETE","generated_at_utc":datetime.now(timezone.utc).isoformat(),"request_sequence":req.get("REQUEST_SEQUENCE") if isinstance(req,dict) else None,"source_receipt_path":SOURCE_PATH,"source_receipt_git_blob_sha":SOURCE_BLOB,"source_receipt_fingerprint":SOURCE_FP,"profile_map_run_id":PROFILE_RUN,"profile_map_artifact":PROFILE_ARTIFACT,"profile_map_receipt_fingerprint":PROFILE_FP,"error_type":type(error).__name__,"error":str(error)[:900],"preflight_count":None,"download_rows_matched":0,"matches":[],"historical_parent_lineage_proven":False,"recipient_to_issuer_mapping_frozen":False,"historical_first_public_observation_proven":False,"gate_positive":False,"performance_authorization":False,"holdout_selection":False,"ranking":False,"tuning":False,"promotion":False,"live_execution":False,"next_gate":"Bounded probe did not complete. Inspect the recorded error and retry at most once after a transient upstream outage; no mapping or historical gate may change.","safety":{"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}}
+ receipt["receipt_fingerprint"]=fp(receipt)
+ return receipt
 def main_run(req,source_path,profile_path,out):
  source,profile,pm=validate_inputs(source_path,profile_path)
  filters={"award_ids":[f'"{s[1]}"' for s in SAMPLES],"time_period":[{"start_date":s[3],"end_date":s[3],"date_type":"action_date"} for s in SAMPLES]}
@@ -110,5 +127,15 @@ def main_run(req,source_path,profile_path,out):
  print(json.dumps({"status":receipt["status"],"receipt_fingerprint":receipt["receipt_fingerprint"],"preflight_count":n,"matched":len(matches),"parent_uei_observed":receipt["transaction_parent_uei_observed_count"],"exact_field_equality":receipt["exact_field_equality_count"],"zip_bytes":len(zbytes)},sort_keys=True))
 def main():
  p=argparse.ArgumentParser();p.add_argument("--request",type=Path,required=True);p.add_argument("--source",type=Path,required=True);p.add_argument("--profile-map",type=Path,required=True);p.add_argument("--output",type=Path,required=True);a=p.parse_args()
- main_run(read_request(a.request),a.source,a.profile_map,a.output)
-if __name__=="__main__":main()
+ req=None
+ try:
+  req=read_request(a.request)
+  main_run(req,a.source,a.profile_map,a.output)
+  return 0
+ except Exception as error:
+  receipt=incomplete_receipt(req,error)
+  a.output.parent.mkdir(parents=True,exist_ok=True)
+  a.output.write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+  print(json.dumps({"status":receipt["status"],"error_type":receipt["error_type"],"receipt_fingerprint":receipt["receipt_fingerprint"],"performance_authorization":False,"gate_positive":False},sort_keys=True))
+  return 2
+if __name__=="__main__":raise SystemExit(main())
