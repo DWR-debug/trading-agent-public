@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q130r2_wayback_pageviews_metadata_preregistration",
+  "task_id": "Q-2026-10-13-130R2-WIKIMEDIA-WAYBACK-METADATA",
+  "candidate_id": "Q130-R2",
+  "parent_candidate": "Q130-R1",
+  "status": "PREREGISTERED_SOURCE_ARCHIVE_METADATA_ONLY",
+  "upstream": {
+    "workflow_run_id": 38455993358,
+    "artifact_name": "q130r1-wikimedia-attention-source-38455993358",
+    "receipt_fingerprint": "4334be29ff2387813ea9586ba12c6899979e0e43125aeaf0585b073063876568"
+  },
+  "fixed_articles": {
+    "SPGI": "S&P Global",
+    "NDAQ": "Nasdaq",
+    "AMP": "Ameriprise Financial",
+    "RJF": "Raymond James",
+    "WMB": "Williams Companies",
+    "VLO": "Valero Energy",
+    "DVN": "Devon Energy",
+    "EMN": "Eastman Chemical"
+  },
+  "feasibility_window": {
+    "start": "20250920",
+    "end": "20250924"
+  },
+  "source_contract": {
+    "provider": "Internet Archive CDX",
+    "mode": "exact URL capture metadata for the eight pinned R1 per-article daily Pageviews API requests",
+    "pageview_api_requests": false,
+    "archived_api_payload_downloads": false
+  },
+  "limits": {
+    "max_requests": 8,
+    "max_response_bytes": 200000,
+    "max_total_bytes": 1600000,
+    "retries": 0
+  },
+  "pit_contract": {
+    "exact_historical_publication_time_proven": false,
+    "revision_lineage_proven": false,
+    "same_day_formal_use_allowed": false
+  },
+  "governance": {
+    "performance": false,
+    "holdout": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
