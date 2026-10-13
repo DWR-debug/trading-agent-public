@@ -32,10 +32,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m automation.q220_http_representation_sensitivity \\
-            --request research/run_requests/q220_http_representation_sensitivity.trigger \\
-            --source-receipt research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json \\
-            --single-summary research/evidence/q220_single_feed_boundary_validation_2026_10_13_summary.json \\
+          python -m automation.q220_http_representation_sensitivity \
+            --request research/run_requests/q220_http_representation_sensitivity.trigger \
+            --source-receipt research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json \
+            --single-summary research/evidence/q220_single_feed_boundary_validation_2026_10_13_summary.json \
             --output "research/runs/q220-http-representation-sensitivity/$GITHUB_RUN_ID/receipt.json"
       - name: Upload immutable bounded receipt
         if: always()
