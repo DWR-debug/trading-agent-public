@@ -44,6 +44,7 @@ ACTIVE_WORKFLOWS = {
     "q104-i19-filing-date-precedence-review.yml",
     "q221-recipient-parent-identity-probe.yml",
     "q221-current-parent-identity-map.yml",
+    "q221-transaction-parent-uei-probe.yml",
     "q104-i19-cik-role-lineage-diagnostic.yml",
     "q104-i19-missing-shard-recovery.yml",
     "q104-i19-historical-pit-compilation.yml",

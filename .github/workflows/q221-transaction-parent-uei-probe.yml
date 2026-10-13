@@ -1,0 +1,82 @@
+name: Q221 Transaction-Level Parent UEI Feasibility Probe
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q221_transaction_parent_uei_probe.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q221-transaction-parent-uei-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Validate exact current-parent map run and artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38305074104" > "$RUNNER_TEMP/profile-run.json"
+          jq -e '.name == "Q221 Current Parent Identity Lead Map" and .status == "completed" and .conclusion == "success" and .head_branch == "master"' "$RUNNER_TEMP/profile-run.json" >/dev/null
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38305074104/artifacts?per_page=100" > "$RUNNER_TEMP/profile-artifacts.json"
+          jq -e '[.artifacts[]? | select(.name == "q221-current-parent-identity-map-38305074104-1" and .expired == false)] | length == 1' "$RUNNER_TEMP/profile-artifacts.json" >/dev/null
+      - name: Download exact current-parent map receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/profile-map"
+          gh run download 38305074104 --repo "$GITHUB_REPOSITORY" --name "q221-current-parent-identity-map-38305074104-1" --dir "$RUNNER_TEMP/profile-map"
+      - name: Validate frozen inputs before external API access
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from automation.q221_transaction_parent_uei_probe import validate_inputs
+          root=Path.cwd()
+          profile=Path(os.environ["RUNNER_TEMP"])/"profile-map"/"q221-current-parent-identity-map-receipt.json"
+          validate_inputs(root/"research/evidence/q221_historical_public_boundary_latest.json",profile)
+          print("Q221_TRANSACTION_PARENT_UEI_INPUTS_VALID=true")
+          PY
+      - name: Probe documented transaction download
+        id: probe
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          python -m automation.q221_transaction_parent_uei_probe \
+            --request research/run_requests/q221_transaction_parent_uei_probe.trigger \
+            --source research/evidence/q221_historical_public_boundary_latest.json \
+            --profile-map "$RUNNER_TEMP/profile-map/q221-current-parent-identity-map-receipt.json" \
+            --output "$RUNNER_TEMP/q221-transaction-parent-uei-receipt.json"
+      - name: Upload immutable transaction-parent receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-transaction-parent-uei-probe-${{ github.run_id }}-${{ github.run_attempt }}
+          path: "${{ runner.temp }}/q221-transaction-parent-uei-receipt.json"
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+      - name: Fail closed on incomplete exact-key extraction
+        if: steps.probe.outcome != 'success'
+        run: |
+          echo "Q221 transaction parent UEI probe incomplete; no historical mapping gate changes."
+          exit 1
