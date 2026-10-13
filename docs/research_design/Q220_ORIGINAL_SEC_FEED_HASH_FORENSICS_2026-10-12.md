@@ -50,3 +50,29 @@ For the two fully scanned Feed submissions, identity checks passed (accession, f
 The extractor previously used a non-greedy first-close regex for TEXT, which accepts the first literal closing token even if the same byte sequence occurs inside the embedded HTML. This change selects only a closer with whitespace-only trailing bytes before the surrounding DOCUMENT boundary, records the number and offset of closing-tag candidates, and fails closed if that boundary is ambiguous. A regression test embeds a literal closing token inside the HTML body and requires every subsequent body byte to be preserved.
 
 **This is an extraction-integrity repair, not a source-hash repair.** The 55 expected hashes, 55-row population, frozen three-accession sample, archive identities, byte ceilings, and all scientific/PIT/performance gates remain unchanged. The incomplete 2025 sample is not inferred from the two older rows; no additional multi-GB source run is started by this PR. Any future live confirmation requires a separately reviewed request and successful exact byte/hash reconciliation.
+
+## Single-feed validation result — 2026-10-13 (SPGI accession)
+
+**Run:** [Q220 Single SEC Feed Boundary Validation #38446029194](https://github.com/DWR-debug/trading-agent-public/actions/runs/38446029194)  
+**Immutable artifact:** [artifact 11838034399](https://github.com/DWR-debug/trading-agent-public/actions/runs/38446029194/artifacts/11838034399)  
+**Upstream receipt fingerprint:** \`fe98cecb579d15ecf6e48c3b84a3a699345bf840745e9be0c7cfcd972aebf03a\`  
+**Status:** \`SINGLE_FEED_BOUNDARY_COMPARISON_COMPLETE\` — the bounded identity/extraction comparison completed; this is not a positive Q220 source-hash or PIT result.
+
+### Exact result
+
+The run validated the exact source fixture Git blob SHA, frozen source-receipt fingerprint, 55-failure compiler receipt, fixed accession/date/form/primary filename and all original-submission identity checks before accepting the result. It downloaded **870,543,118 bytes total**, below the registered 950,000,000-byte ceiling; the single daily Feed archive was 865,768,653 bytes. The archive was completely scanned, examining 6,501,098,502 uncompressed member bytes under the 12 GB cap. The exact \`./0000064040-19-000059.nc\` member was 26,429,640 bytes, and accession, CIK, form and filing date matched.
+
+The corrected extractor reported **one** \`</TEXT>\` closing-tag candidate in the exact primary \`spgi-20181231x10k.htm\` document block. Therefore, this actual sample gives no support to the hypothesis that an embedded \`</TEXT>\` token caused its earlier truncation: the corrected parser selected the only closer and still extracted 4,774,237 primary-text bytes, 221 fewer than the frozen 4,774,458-byte document.
+
+No hash variant matched the frozen expected SHA-256 \`27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83\`:
+- Raw extracted \`TEXT\`: 4,774,237 bytes; SHA-256 \`aa1f89efdf13029de9dd8f7eb020502dd518d4350513d4ef041ba67d902ef368\`.
+- Drop one leading line break: 4,774,236 bytes; SHA-256 \`54d62d26b31bd4e8a94b1f49c1641f2fc69c79cd5b4290d11d9191a4e9db39d0\`.
+- Drop outer line breaks: 4,774,235 bytes; SHA-256 \`bbaee52940cc5f2327445da95e98e46705d90b58a615edcd2d83df08da3a6fc1\`.
+
+The current primary-document URL returned HTTP 200 and 4,774,465 bytes, SHA-256 \`2693819652172f0c218394ef036eb3f4af95c2a7077f624f6efcd990df370172\`, also matching neither the frozen expected hash nor the previously captured 4,774,458-byte body. Its HTTP \`Last-Modified\` header continued to report 13 February 2019. This is a real source-byte/provenance discrepancy, not a successful hash reconciliation.
+
+### Interpretation and next gate
+
+This probe closes the one-accession byte-boundary test, not Q220. It does **not** reproduce the frozen expected hash and does not demonstrate that the expected hash came from the original submission. The proposed inner-\`</TEXT>\` explanation is not supported for this SPGI sample; the root cause remains unresolved. Keep all 55 frozen hashes and the compiler receipt unchanged, leave Q220 blocked, and do not repeat this 866 MB archive or launch another multi-GB run without a distinct, preregistered hypothesis.
+
+\`source_vintage_proven=false\`, \`historical_first_public_observation_proven=false\`, \`gate_positive=false\`, and performance, holdout selection, ranking, tuning, promotion and live execution remain false. Paper-only remains mandatory.

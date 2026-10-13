@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "record_type": "q220_single_feed_boundary_validation_summary",
+  "candidate_id": "Q220",
+  "observed_at_utc": "2026-10-13T18:21:24.093666+00:00",
+  "workflow_run_id": 38446029194,
+  "workflow_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38446029194",
+  "artifact_id": 11838034399,
+  "artifact_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38446029194/artifacts/11838034399",
+  "upstream_receipt_fingerprint": "fe98cecb579d15ecf6e48c3b84a3a699345bf840745e9be0c7cfcd972aebf03a",
+  "status": "SINGLE_FEED_BOUNDARY_COMPARISON_COMPLETE",
+  "request_validation_passed": true,
+  "frozen_source": {
+    "fixture_git_blob_sha1": "2a3abbff6c6950e4f11d85dba92cb9c57a5c7ee0",
+    "source_receipt_fingerprint": "c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075",
+    "population_receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+    "expected_hash_failure_count": 55,
+    "record_key": "0000064040|0000064040-19-000059|10-K|2019-02-13",
+    "primary_filename": "spgi-20181231x10k.htm",
+    "expected_sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+    "expected_bytes": 4774458,
+    "previously_captured_sha256": "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+    "previously_captured_bytes": 4774458
+  },
+  "bounded_run": {
+    "current_primary_response_bytes": 4774465,
+    "current_primary_sha256": "2693819652172f0c218394ef036eb3f4af95c2a7077f624f6efcd990df370172",
+    "current_primary_http_status": 200,
+    "current_primary_last_modified": "Wed, 13 Feb 2019 11:02:53 GMT",
+    "feed_archive_bytes": 865768653,
+    "feed_archive_sha256": "241b4bc744dd38bb3c4a3f9277ac04faeb1a2a5a314a1ace1bf45856922e82b5",
+    "total_source_download_bytes": 870543118,
+    "max_total_source_download_bytes": 950000000,
+    "original_submission_member": "./0000064040-19-000059.nc",
+    "original_submission_member_bytes": 26429640,
+    "total_uncompressed_member_bytes_scanned": 6501098502,
+    "max_uncompressed_member_scan_bytes": 12000000000,
+    "scan_complete": true
+  },
+  "identity_checks": {
+    "accession_matches": true,
+    "filer_cik_matches_company_cik": true,
+    "form_matches": true,
+    "filing_date_matches": true,
+    "pds_control_block_valid": true,
+    "pds_control_block_accession_matches": true,
+    "pds_control_block_submission_type_matches_sgml": true,
+    "sgml_control_block_conflict_absent": true
+  },
+  "extraction": {
+    "closing_tag_candidate_count": 1,
+    "selected_text_closing_tag_offset": 4774316,
+    "raw_text_block_bytes": 4774237,
+    "raw_text_block_sha256": "aa1f89efdf13029de9dd8f7eb020502dd518d4350513d4ef041ba67d902ef368",
+    "variants": [
+      {
+        "name": "raw_text_block",
+        "bytes": 4774237,
+        "sha256": "aa1f89efdf13029de9dd8f7eb020502dd518d4350513d4ef041ba67d902ef368",
+        "delta_vs_expected": -221
+      },
+      {
+        "name": "drop_one_leading_linebreak",
+        "bytes": 4774236,
+        "sha256": "54d62d26b31bd4e8a94b1f49c1641f2fc69c79cd5b4290d11d9191a4e9db39d0",
+        "delta_vs_expected": -222
+      },
+      {
+        "name": "drop_outer_linebreaks",
+        "bytes": 4774235,
+        "sha256": "bbaee52940cc5f2327445da95e98e46705d90b58a615edcd2d83df08da3a6fc1",
+        "delta_vs_expected": -223
+      }
+    ],
+    "frozen_expected_hash_match_count": 0,
+    "original_submission_identity_validated": true
+  },
+  "interpretation": {
+    "embedded_text_closer_explains_this_sample": false,
+    "frozen_expected_hash_reproduced": false,
+    "source_vintage_proven": false,
+    "historical_first_public_observation_proven": false,
+    "gate_positive": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false,
+    "paper_only": true,
+    "next_gate": "No more download of this archive. Investigate frozen-hash provenance via a distinct, bounded hypothesis before requesting any further source bytes."
+  }
+}
