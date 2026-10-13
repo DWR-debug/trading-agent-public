@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-12T16:06:08.358157Z",
+  "observed_at_utc": "2026-10-13T00:58:33.849790Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 43.46,
-  "stdout": "\n\n**Worker Handoff — Adversarial Source/PIT Review (Q202–Q204, Q205)**\n\n---\n\n### 1. Scope & Method\n- **Target candidates:** Q202 (information absence), Q203 (financing transmission), Q204 (public‑information latency), Q205 (NLRB labor‑representation certification channel).\n- **Standard:** Same seven attack vectors used in the Grok Q194–Q201 review, applied to every source/PIT candidate.\n- **Binding constraint:** No live endpoint probe, content hash, or current API response is accepted as durable historical evidence. Only immutable dated snapshots, frozen vintages, or explicitly frozen historical artifacts qualify.\n\n---\n\n### 2. Findings (Candidate‑Specific)\n\n#### Q202 — Information Absence\n- **Attack (1) endpoint drift:** The “absence” state is defined by what is *not* present. Any live probe can only show current absence; it cannot certify that a historical absence state was genuinely unobservable at the time. A retrospective addition of a previously missing record would retroactively alter the “absence” label.\n- **Attack (2) timestamps:** If the event clock is “next regular session boundary” (per shared contract), the exact public‑observation timestamp of the absence must be frozen. Without it, same‑day/date‑only leakage is indistinguishable from legitimate timing.\n- **Attack (3) revision lineage:** “Absence” records are often corrected or supplemented (e.g., late filings). No correction/withdrawal lineage is visible for Q202.\n- **Attack (4) frozen mapping:** The entity‑to‑absence mapping must be immutable. The shared contract requires a “fresh symbol‑disjoint research universe,” but no frozen universe snapshot is provided.\n- **Falsifier:** Shift the event observation window forward by 1–5 sessions while holding the calendar fixed. If the candidate’s inference changes, the clock discipline is broken.\n- **Missing artifact:** Immutable dated snapshot of the information‑absence state for each event, including the exact public‑observation timestamp and the full revision/withdrawal lineage of the underlying record.\n\n#### Q203 — Financing Transmission\n- **Attack (1) endpoint drift:** Financing relationships (e.g., credit lines, bond ownership) change over time. A current API snapshot cannot certify the pre‑event exposure mapping.\n- **Attack (2) timestamps:** The transmission channel relies on the timing of financing announcements relative to the event. Historical observation timestamps must be frozen; otherwise, the “transmission” may be an artifact of later‑disclosed information.\n- **Attack (3) revision lineage:** Financing filings (e.g., 8‑K, 13F) are frequently amended. No amendment/correction lineage is provided for Q203.\n- **Attack (4) frozen mapping:** The “fixed economic transmission channel” (e.g., lender‑borrower relationship) must be frozen before the outcome is observed. No such frozen mapping is present.\n- **Falsifier:** Replace the public‑observation time with the occurrence time (filing date) and require the candidate to show that the inference changes; otherwise reject the clock discipline.\n- **Missing artifact:** Immutable snapshot of the financing‑relationship graph as it existed at each event’s public‑observation boundary, with full revision history of the underlying filings.\n\n#### Q204 — Public‑Information Latency\n- **Attack (1) endpoint drift:** Latency is measured between an event’s occurrence and its public observation. Both endpoints must be frozen; a live probe can only measure current latency, not historical latency.\n- **Attack (2) timestamps:** The public‑observation timestamp is the critical variable. If it is derived from a live feed that may have been back‑filled, the latency measure is unreliable.\n- **Attack (3) revision lineage:** Public‑observation sources (e.g., wire services, EDGAR) may correct timestamps after the fact. No QC lineage is visible.\n- **Attack (4) frozen mapping:** The mapping from event to its public‑observation timestamp must be immutable. Not provided.\n- **Falsifier:** Shift the public‑observation timestamp forward by a fixed number of sessions while holding the calendar fixed. If the candidate’s signal flips, the latency measure is not robust.\n- **Missing artifact:** Immutable snapshot of the public‑observation timestamp for each event, with a documented chain of custody to the original dissemination source.\n\n#### Q205 — NLRB Labor‑Representation Certification Channel\n- **Status:** Discovery‑only, **not yet source/PIT validated**. No receipt exists in the `RECEIPTS` map of `orthogonal_pit_next_gate.py`.\n- **Attack (1) endpoint drift:** NLRB decisions are frequently amended, rehearsed, or vacated. A current API probe cannot certify the historical certification state.\n- **Attack (2) timestamps:** The certification date and the public‑observation date may diverge. The “event clock” is undefined for Q205.\n- **Attack (3) revision lineage:** NLRB representation decisions have a complex amendment history (regional office → Board → federal court). No lineage is tracked.\n- **Attack (4) frozen mapping:** The employer‑to‑certification mapping must be frozen pre‑outcome. No such mapping exists.\n- **Attack (5) cross‑candidate overlap:** Q205 may confound Q203 (financing transmission) if labor outcomes drive financing conditions. No overlap analysis has been performed.\n- **Falsifier:** Attempt to reproduce the candidate’s PIT using only the current NLRB API; if the historical data cannot be retrieved in a frozen state, the candidate fails the durability test.\n- **Missing artifact:** Immutable dated snapshot of the NLRB certification record for each event, including the full revision/amendment lineage and the exact public‑observation timestamp.\n\n---\n\n### 3. Cross‑Candidate Overlap & Confounding\n- **Q202 ↔ Q204:** “Information absence” may be a special case of “latency” (latency = duration of absence). If both candidates share the same underlying event set, they are not orthogonal.\n- **Q203 ↔ Q205:** Financing transmission could be confounded by labor‑representation outcomes. Without a frozen joint mapping, the two channels cannot be separated.\n- **Convergence risk:** The `orthogonal_pit_next_gate.py` compiler maps Q202, Q203, and Q204 to a **single receipt file** (`q202_q204_information_timing_feasibility_latest.json`). This lumping masks individual candidate readiness and may conceal candidate‑specific failures.\n\n---\n\n### 4. Counterarguments (Pre‑emptive)\n- *“The receipt file contains a durable snapshot hash.”*  \n  → The `source_readiness_snapshot_guard.py` classifies a receipt as `DURABLE_HISTORICAL_BOUND` only if it contains one of the listed durable keys (`immutable_historical_snapshot`, `snapshot_sha256`, etc.). Without inspecting the actual receipt, the classification remains **PROVISIONAL_LIVE_PROBE_ONLY**. The guard script itself is fail‑closed.\n- *“The shared contract’s ‘next regular session boundary’ is sufficient.”*  \n  → A date‑only boundary does not prevent same‑day leakage if the public‑observation timestamp is not frozen. The contract explicitly warns: “if only a date is available, use next regular trading‑session boundary and do not infer an intraday clock.” This is a minimum standard, not a substitute for a frozen clock.\n- *“Q205 is discovery‑only; no PIT validation is claimed.”*  \n  → Discovery‑only status is acceptable **only if** the candidate is explicitly quarantined and not advanced to any gate. The current automation does not list Q205 in `NEXT_GATES`, but it is also absent",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 31.463,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791821168-fNf9CPFs34QWX8H18WQ8",
-  "usage": {
-    "prompt_tokens": 5531,
-    "completion_tokens": 3200,
-    "total_tokens": 8731,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1666,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
