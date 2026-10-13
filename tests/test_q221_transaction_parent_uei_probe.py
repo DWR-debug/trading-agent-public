@@ -90,3 +90,22 @@ def test_incomplete_receipt_is_fingerprinted_and_non_authorizing():
         "orders_enabled": False,
         "automatic_promotion": False,
     }
+
+import sys
+
+
+def test_main_writes_a_valid_incomplete_receipt_after_probe_error(monkeypatch, tmp_path):
+    output = tmp_path / "receipt.json"
+    monkeypatch.setattr(probe, "read_request", lambda _path: {"REQUEST_SEQUENCE": "2026-10-13T16:23:00Z"})
+
+    def fail_probe(*_args):
+        raise probe.ProbeError("API_HTTP_ERROR:503:")
+
+    monkeypatch.setattr(probe, "main_run", fail_probe)
+    monkeypatch.setattr(sys, "argv", ["q221-probe", "--request", "request.trigger", "--source", "source.json", "--profile-map", "profile.json", "--output", str(output)])
+
+    assert probe.main() == 2
+    receipt = json.loads(output.read_text(encoding="utf-8"))
+    assert receipt["status"] == "TRANSACTION_PARENT_UEI_PROBE_INCOMPLETE"
+    assert receipt["receipt_fingerprint"] == probe.fp(receipt)
+    assert receipt["gate_positive"] is False
