@@ -129,7 +129,11 @@ def select_collection(collections: list[dict[str, Any]], target_date: str) -> di
             continue
         if start is None or end is None or end < start:
             continue
-        if start >= target and start <= latest_start:
+        # A collection can begin before the report date and still capture
+        # the exact URL after that date. Select the earliest collection whose
+        # advertised interval intersects [target, target + lookahead]; the
+        # actual per-URL timestamp is checked separately after the exact query.
+        if end >= target and start <= latest_start:
             eligible.append((start, collection_id, item))
     if not eligible:
         return None
