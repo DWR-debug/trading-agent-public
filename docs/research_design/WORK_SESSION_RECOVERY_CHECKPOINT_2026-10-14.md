@@ -1,6 +1,6 @@
 # Trading Agent OS — Working Session Recovery Checkpoint
 
-**Checkpoint time:** 2026-10-13T22:31:02Z (UTC; local date in Europe/Berlin is 2026-10-14)  
+**Checkpoint time:** 2026-10-13T22:35:08Z (UTC; local date in Europe/Berlin is 2026-10-14)
 **Canonical repository:** [DWR-debug/trading-agent-public](https://github.com/DWR-debug/trading-agent-public)  
 **Primary active research PR:** [#1417 — bounded Q120 CFTC exceptions and Q127 Common Crawl metadata](https://github.com/DWR-debug/trading-agent-public/pull/1417)  
 **Previous duplicate PR:** [#1416](https://github.com/DWR-debug/trading-agent-public/pull/1416) was closed without merge; do not revive it.
@@ -19,20 +19,18 @@ The self-hosted worker check was **skipped** and is not counted as a Windows run
 
 - Upstream feasibility run: [#38456880720](https://github.com/DWR-debug/trading-agent-public/actions/runs/38456880720)
 - Receipt fingerprint: `9e79abc9fac1b9d1599b35e111e82e19f8b365d99e06a447638d0c0135321445`
-- Official special-announcement pages document specific delays, including the ION incident in 2023 and the 2025 funding lapse/shutdown. The existing source-feasibility receipt recovered no complete historical release calendar.
-- Q120-R2 is a new two-request, official-source-only inventory of rows explicitly stating COT report date, original publish date and new publish date. Its 350 KB per-response / 700 KB total caps and non-authorizing flags are frozen. Unlisted dates must not be assigned an assumed Friday release date. The exact first-public timestamp remains unproven.
+- Official special-announcement pages document specific delays, including the ION incident in 2023 and the 2025 funding lapse/shutdown. Q120-R1 did not recover a complete historical release calendar.
+- The first Q120-R2 attempt after merge, [Run #38478541967](https://github.com/DWR-debug/trading-agent-public/actions/runs/38478541967), passed 11 offline tests and validated the pinned upstream receipt, but crashed while finalizing the receipt with `NameError: name 'timezone' is not defined`. This is an implementation bug, **not** a research outcome; no valid receipt/artifact was written.
+- The corrective fix imports `timezone`, adds an end-to-end mocked run test that validates the complete receipt path, refreshes only the request sequence, and lets the workflow trigger on code/test changes as well as request changes. Do not treat the failed run as source evidence; inspect the corrected retry's own receipt.
+- Q120-R2 still reads only two official CFTC pages, with 350 KB per response / 700 KB total. It records explicitly listed report-date, original publication-date and new publication-date rows. Unlisted dates must not be assigned an assumed Friday release date. Exact first-public time and a complete historical calendar remain unproven.
 
 ### Q127 — FINRA daily short-sale volume PIT feasibility
 
 - Upstream fixed-sample run: [#38455702686](https://github.com/DWR-debug/trading-agent-public/actions/runs/38455702686)
 - Receipt fingerprint: `2cbe22c49d885f527ac523ed74ab1e13a843c23999916c674282de6977e9c33c`
 - Q127-R2 (Internet Archive metadata) completed as `Q127R2_WAYBACK_METADATA_INCOMPLETE`: zero captured API response payloads; eight bounded metadata requests; reported body bytes were 18. It did not download target files.
-- Q127-R3 uses the distinct Common Crawl index for the same four frozen FINRA file URLs, up to five requests and 1.2 MB total. No FINRA file or WARC payload may be downloaded. A crawl timestamp means Common Crawl observed a URL then; it is not FINRA's exact first-publication time. A no-hit is not proof of nonpublication.
-
-### Q220 and Q221 — do not restart the same failed path
-
-- Q220's 55 frozen population hashes remain unchanged. The bounded SEC Feed retry found correct accession/CIK/form/filing-date identity in two of three samples, but none of their tested content representations reproduced the frozen expected hash; the third large feed download was incomplete. Do not change expected hashes or initiate another multi-GB retry without a genuinely new, evidence-backed route.
-- Q221's transaction-level parent-UEI route returned HTTP 503 on both the original attempt and the single permitted retry, before count preflight and with no archive download. Treat that route as exhausted; do not issue another identical retry or infer any identity mapping.
+- Q127-R3 run [#38478542257](https://github.com/DWR-debug/trading-agent-public/actions/runs/38478542257) wrote fingerprint `9b9159581e7770078325923e7d41df6e8fbc27986ffb329ec08d69f7bfe8bb4d`, status `Q127R3_COMMONCRAWL_METADATA_INCOMPLETE`. Common Crawl's collection list succeeded (HTTP 200, 35,226 bytes, 128 collection rows); all four selected collection-index queries failed instead: one HTTP 502 (`CC-MAIN-2024-10`) and three HTTP 404 (`CC-MAIN-2024-30`, `CC-MAIN-2025-05`, `CC-MAIN-2025-43`). The receipt has zero usable captures because the queries did not complete, not because the files were absent. No FINRA file or WARC payload was downloaded.
+- Do not rerun the same four failed URLs as if they were negative results. A next attempt must use an independently verified archival-index endpoint/path or a genuinely different source; a Common Crawl capture, if found, remains observation time rather than FINRA's exact first-publication time.
 
 ## Windows runner capacity and dispatch
 
