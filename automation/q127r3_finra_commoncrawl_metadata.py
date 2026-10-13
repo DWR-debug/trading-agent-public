@@ -154,6 +154,10 @@ def parse_cdx_jsonl(body: bytes, expected_url: str) -> list[dict[str, Any]]:
         timestamp = item.get("timestamp")
         if not isinstance(timestamp, str) or not re.fullmatch(r"20\d{12}", timestamp):
             raise ProbeError(f"COMMONCRAWL_TIMESTAMP_INVALID:{line_no}")
+        try:
+            datetime.strptime(timestamp, "%Y%m%d%H%M%S")
+        except ValueError as exc:
+            raise ProbeError(f"COMMONCRAWL_TIMESTAMP_INVALID:{line_no}") from exc
         for field in ("status", "digest", "length", "filename", "offset"):
             if item.get(field) is None:
                 raise ProbeError(f"COMMONCRAWL_REQUIRED_INDEX_FIELD_MISSING:{line_no}:{field}")
