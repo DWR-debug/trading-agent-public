@@ -5,6 +5,9 @@ on:
     branches: [master]
     paths:
       - "research/run_requests/q120r2_cftc_release_exception_inventory.trigger"
+      - ".github/workflows/q120r2-cftc-release-exception-inventory.yml"
+      - "tests/test_q120r2_cftc_release_exception_inventory.py"
+      - "automation/q120r2_cftc_release_exception_inventory.py"
 
 permissions:
   contents: read
