@@ -510,11 +510,32 @@ def extract_primary_document(
         filename = filename_match.group(1).decode("utf-8", "replace").strip()
         if filename.lower() != expected_filename.lower():
             continue
-        text_match = re.search(rb"<TEXT>(.*?)</TEXT>", block, re.I | re.S)
-        if not text_match:
+        text_start_match = re.search(rb"<TEXT\s*>", block, re.I)
+        if not text_start_match:
             matches.append({"filename": filename, "error": "PRIMARY_DOCUMENT_TEXT_BLOCK_MISSING"})
             continue
-        raw_body = text_match.group(1)
+        text_start = text_start_match.end()
+        # The primary HTML can itself contain the literal closing token </TEXT>.
+        # A non-greedy search for the first closer silently truncates that
+        # document. In an EDGAR SGML DOCUMENT block, select the closing TEXT
+        # tag whose remaining suffix before </DOCUMENT> is whitespace only.
+        # If the boundary is not unambiguous, fail closed rather than hashing
+        # a partial primary document.
+        text_close_matches = list(re.finditer(rb"</TEXT\s*>", block[text_start:], re.I))
+        valid_closings = [
+            candidate
+            for candidate in text_close_matches
+            if not block[text_start + candidate.end():].strip()
+        ]
+        if not valid_closings:
+            matches.append({
+                "filename": filename,
+                "error": "PRIMARY_DOCUMENT_TEXT_CLOSING_TAG_AMBIGUOUS",
+                "text_closing_tag_count": len(text_close_matches),
+            })
+            continue
+        text_match = valid_closings[-1]
+        raw_body = block[text_start:text_start + text_match.start()]
         if len(raw_body) > max_primary_bytes:
             matches.append({
                 "filename": filename,
@@ -537,6 +558,8 @@ def extract_primary_document(
             "document_block_sha256": sha256(document_match.group(0)),
             "raw_text_block_sha256": sha256(raw_body),
             "raw_text_block_bytes": len(raw_body),
+            "text_closing_tag_count": len(text_close_matches),
+            "selected_text_closing_tag_offset": text_start + text_match.start(),
             "body_hash_variants": variants,
         })
     if not matches:
