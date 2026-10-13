@@ -109,3 +109,30 @@ def test_q120r2_mocked_full_run_writes_utc_receipt(tmp_path):
     assert result["summary"]["official_exception_rows_parsed"] == 1
     assert result["summary"]["request_count"] == 2
     assert json.loads(output_path.read_text(encoding="utf-8")) == result
+
+
+
+def test_q120r2_preserves_multiple_dated_schedule_versions_for_same_report_date():
+    html = """
+    <p><strong>December 9, 2025:</strong> revised catch-up schedule</p>
+    <table>
+      <tr><th>COT Report Date</th><th>Original Publish Date</th><th>New Publish Date</th></tr>
+      <tr><td>11/10/2025</td><td>11/14/2025</td><td>12/10/2025</td></tr>
+    </table>
+    <p><strong>November 18, 2025:</strong> earlier catch-up schedule</p>
+    <table>
+      <tr><th>COT Report Date</th><th>Original Publish Date</th><th>New Publish Date</th></tr>
+      <tr><td>11/10/2025</td><td>11/14/2025</td><td>12/12/2025</td></tr>
+    </table>
+    """
+    rows = parse_exception_rows(html)
+    versions = [row for row in rows if row["report_date"] == "2025-11-10"]
+    assert len(versions) == 2
+    assert {
+        row["announcement_date"]: row["official_new_publish_date"]
+        for row in versions
+    } == {
+        "2025-12-09": "2025-12-10",
+        "2025-11-18": "2025-12-12",
+    }
+    assert all(row["official_original_publish_date"] == "2025-11-14" for row in versions)
