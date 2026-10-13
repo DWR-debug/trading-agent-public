@@ -135,7 +135,7 @@ def main():
  except Exception as error:
   receipt=incomplete_receipt(req,error)
   a.output.parent.mkdir(parents=True,exist_ok=True)
-  a.output.write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\\n",encoding="utf-8")
+  a.output.write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n",encoding="utf-8")
   print(json.dumps({"status":receipt["status"],"error_type":receipt["error_type"],"receipt_fingerprint":receipt["receipt_fingerprint"],"performance_authorization":False,"gate_positive":False},sort_keys=True))
   return 2
 if __name__=="__main__":raise SystemExit(main())
