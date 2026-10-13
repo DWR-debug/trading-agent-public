@@ -64,12 +64,14 @@ def read_request(path: Path) -> dict[str, str]:
     for line_no, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         if not raw:
             continue
-        if not re.fullmatch(r"[A-Z0-9_]+=[A-Za-z0-9._,:/-]*", raw):
+        if not re.fullmatch(r"[A-Z0-9_]+=[A-Za-z0-9._,:/%& -]*", raw):
             raise MetadataProbeError(f"REQUEST_LINE_INVALID:{line_no}")
         key, value = raw.split("=", 1)
         if key in values:
             raise MetadataProbeError(f"REQUEST_DUPLICATE_KEY:{key}")
         values[key] = value
+    if set(values) != set(FROZEN) | {"REQUEST_SEQUENCE"}:
+        raise MetadataProbeError("REQUEST_KEY_SET_MISMATCH")
     for key, expected in FROZEN.items():
         if values.get(key) != expected:
             raise MetadataProbeError(f"FROZEN_REQUEST_MISMATCH:{key}")
