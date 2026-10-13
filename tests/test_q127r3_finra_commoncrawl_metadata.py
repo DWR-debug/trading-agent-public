@@ -48,7 +48,7 @@ def test_q127r3_parse_cdx_jsonl_preserves_capture_metadata_without_payload():
 
 
 def test_q127r3_empty_index_result_is_valid_negative_metadata():
-    assert parse_cdx_jsonl(b"", TARGET) == b"" if False else []
+    assert parse_cdx_jsonl(b"", TARGET) == []
 
 
 def test_q127r3_rejects_other_url_even_if_index_returns_it():
