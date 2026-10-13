@@ -54,6 +54,7 @@ ACTIVE_WORKFLOWS = {
     "q220-bounded-header-evidence.yml",
     "q220-primary-source-vintage-forensics.yml",
     "q220-single-feed-boundary-validation.yml",
+    "q220-submission-text-provenance.yml",
     "q218-prereg-authorization-reconcile.yml",
     "q218-performance-authorization-once.yml",
     "q218-performance-prep.yml",
