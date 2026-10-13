@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q120r2_cftc_release_exception_inventory_preregistration",
+  "task_id": "Q-2026-10-13-120R2-CFTC-RELEASE-EXCEPTION-INVENTORY",
+  "candidate_id": "Q120-R2",
+  "status": "PREREGISTERED_OFFICIAL_RELEASE_EXCEPTION_INVENTORY_ONLY",
+  "upstream": {
+    "run_id": 38456880720,
+    "task_id": "Q-2026-10-01-120-CFTC-POSITIONING-SOURCE-FEASIBILITY",
+    "receipt_fingerprint": "9e79abc9fac1b9d1599b35e111e82e19f8b365d99e06a447638d0c0135321445"
+  },
+  "sources": [
+    {
+      "role": "normal release schedule",
+      "url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm"
+    },
+    {
+      "role": "historical exception announcements",
+      "url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/HistoricalSpecialAnnouncements/index.htm"
+    }
+  ],
+  "method": {
+    "max_requests": 2,
+    "max_response_bytes": 350000,
+    "max_total_download_bytes": 700000,
+    "payloads_persisted": false,
+    "parse_table_headers": [
+      "COT Report Date",
+      "Original Publish Date",
+      "New Publish Date"
+    ]
+  },
+  "hypothesis": "The official CFTC special-announcement table exposes a useful subset of named report-date/publication-date exceptions that can be inventoried without assuming the table is a complete historical release calendar.",
+  "outcomes": [
+    "Q120R2_CFTC_RELEASE_EXCEPTION_INVENTORY_COMPLETED",
+    "Q120R2_CFTC_RELEASE_EXCEPTION_INVENTORY_INCOMPLETE"
+  ],
+  "pit_contract": {
+    "listed_exception_dates_may_be_recorded": true,
+    "normal_schedule_applied_to_unlisted_dates": false,
+    "complete_historical_release_calendar_proven": false,
+    "exact_first_publication_time_proven": false,
+    "same_day_formal_use_allowed": false
+  },
+  "governance": {
+    "performance": false,
+    "performance_authorized": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
