@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q127r3_finra_commoncrawl_metadata_preregistration",
+  "task_id": "Q-2026-10-13-127R3-FINRA-COMMONCRAWL-METADATA",
+  "candidate_id": "Q127-R3",
+  "status": "PREREGISTERED_ALTERNATIVE_ARCHIVE_METADATA_ONLY",
+  "upstream": {
+    "run_id": 38455702686,
+    "task_id": "Q-2026-10-03-127R1-FINRA-REGSHO-HISTORICAL-PIT",
+    "receipt_fingerprint": "2cbe22c49d885f527ac523ed74ab1e13a843c23999916c674282de6977e9c33c"
+  },
+  "fixed_population": {
+    "dates": [
+      "2024-02-05",
+      "2024-07-01",
+      "2025-01-02",
+      "2025-09-24"
+    ],
+    "symbols": [
+      "SPGI",
+      "NDAQ",
+      "AMP",
+      "RJF",
+      "WMB",
+      "VLO",
+      "DVN",
+      "EMN"
+    ]
+  },
+  "source_contract": {
+    "provider": "Common Crawl",
+    "index_list_url": "https://index.commoncrawl.org/collinfo.json",
+    "exact_target_url_queries": true,
+    "selection": "earliest collection whose advertised interval intersects [target date, target date + 30 days]; actual target-URL capture timestamp must independently fall within 0–45 days after target date",
+    "max_capture_lag_days": 45,
+    "archived_payload_downloaded": false
+  },
+  "limits": {
+    "max_requests": 5,
+    "max_response_bytes": 300000,
+    "max_total_download_bytes": 1200000,
+    "target_file_downloads": 0,
+    "warc_record_downloads": 0
+  },
+  "pit_contract": {
+    "capture_timestamp_is_first_publication": false,
+    "exact_first_publication_time_proven": false,
+    "original_vs_updated_lineage_proven": false,
+    "same_day_formal_use_allowed": false,
+    "no_capture_proves_nonpublication": false
+  },
+  "governance": {
+    "performance": false,
+    "performance_authorized": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

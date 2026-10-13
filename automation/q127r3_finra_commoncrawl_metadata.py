@@ -129,7 +129,11 @@ def select_collection(collections: list[dict[str, Any]], target_date: str) -> di
             continue
         if start is None or end is None or end < start:
             continue
-        if start >= target and start <= latest_start:
+        # A collection can begin before the report date and still capture
+        # the exact URL after that date. Select the earliest collection whose
+        # advertised interval intersects [target, target + lookahead]; the
+        # actual per-URL timestamp is checked separately after the exact query.
+        if end >= target and start <= latest_start:
             eligible.append((start, collection_id, item))
     if not eligible:
         return None
@@ -154,6 +158,10 @@ def parse_cdx_jsonl(body: bytes, expected_url: str) -> list[dict[str, Any]]:
         timestamp = item.get("timestamp")
         if not isinstance(timestamp, str) or not re.fullmatch(r"20\d{12}", timestamp):
             raise ProbeError(f"COMMONCRAWL_TIMESTAMP_INVALID:{line_no}")
+        try:
+            datetime.strptime(timestamp, "%Y%m%d%H%M%S")
+        except ValueError as exc:
+            raise ProbeError(f"COMMONCRAWL_TIMESTAMP_INVALID:{line_no}") from exc
         for field in ("status", "digest", "length", "filename", "offset"):
             if item.get(field) is None:
                 raise ProbeError(f"COMMONCRAWL_REQUIRED_INDEX_FIELD_MISSING:{line_no}:{field}")

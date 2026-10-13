@@ -38,11 +38,19 @@ def test_q222_is_design_only_and_merge_or_kill_protected():
 
 def test_current_bounded_session_directive_is_bounded():
     d=json.loads((ROOT/"research/run_requests/rolling_capacity_window_2026-10-05.json").read_text(encoding="utf-8"))
-    assert d["session_mode"]["status"] == "EXPIRED"
+    # The lease may be ACTIVE while its UTC window is scheduled/current, or remain
+    # explicitly EXPIRED after a completed window; both states must remain bounded.
+    assert d["status"] in {"ACTIVE", "EXPIRED"}
+    assert d["session_mode"]["status"] in {"ACTIVE", "EXPIRED"}
+    start = __import__("datetime").datetime.fromisoformat(d["start_utc"].replace("Z", "+00:00"))
+    end = __import__("datetime").datetime.fromisoformat(d["end_utc"].replace("Z", "+00:00"))
+    assert (end - start).total_seconds() == 7200
     assert d["session_mode"]["duration_minutes"] == 120
     assert d["session_mode"]["no_artificial_work"] is True
     assert d["session_mode"]["no_duplicate_work"] is True
     assert d["session_mode"]["scientific_boundary_unchanged"] is True
+    assert d["safety"]["PAPER_ONLY"] is True
+    assert all(d["safety"][key] is False for key in ("LIVE_TRADING_ENABLED", "performance", "holdout_selection", "ranking", "tuning", "promotion", "live_execution"))
 
 
 def test_focused_operational_state_locks_automatic_candidate_dispatch():

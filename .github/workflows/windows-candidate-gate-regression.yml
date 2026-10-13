@@ -38,6 +38,18 @@ on:
       - "tests/test_wayback_cdx_metadata.py"
       - "tests/test_q127r2_finra_wayback_metadata.py"
       - "tests/test_q130r2_wikimedia_wayback_metadata.py"
+      - "automation/q120r2_cftc_release_exception_inventory.py"
+      - "tests/test_q120r2_cftc_release_exception_inventory.py"
+      - "research/run_requests/q120r2_cftc_release_exception_inventory.trigger"
+      - "research/preregistrations/q120r2_cftc_release_exception_inventory_2026_10_13.json"
+      - "docs/research_design/Q120R2_CFTC_RELEASE_EXCEPTION_INVENTORY_2026-10-13.md"
+      - ".github/workflows/q120r2-cftc-release-exception-inventory.yml"
+      - "automation/q127r3_finra_commoncrawl_metadata.py"
+      - "tests/test_q127r3_finra_commoncrawl_metadata.py"
+      - "research/run_requests/q127r3_finra_commoncrawl_metadata.trigger"
+      - "research/preregistrations/q127r3_finra_commoncrawl_metadata_2026_10_13.json"
+      - "docs/research_design/Q127R3_FINRA_COMMONCRAWL_METADATA_2026-10-13.md"
+      - ".github/workflows/q127r3-finra-commoncrawl-metadata.yml"
       - "research/run_requests/q127r2_finra_wayback_metadata.trigger"
       - "research/run_requests/q130r2_wikimedia_wayback_metadata.trigger"
       - ".github/workflows/q127r2-finra-wayback-metadata.yml"
@@ -62,7 +74,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        pack: [q220, q104, q221, q127, q130]
+        pack: [q220, q104, q221, q120, q127, q130]
     concurrency:
       group: trading-agent-windows-candidate-regression-${{ matrix.pack }}
       cancel-in-progress: false
@@ -108,8 +120,11 @@ jobs:
           ) else if /I "%REGRESSION_PACK%"=="q221" (
             "%PY_EXE%" -m pytest -q tests/test_q221_historical_source_vintage_gate.py tests/test_q221_usaspending_public_clock_gate.py tests/test_q221_historical_award_public_boundary.py tests/test_q221_monthly_archive_inventory_probe.py
             if errorlevel 1 exit /b 1
+          ) else if /I "%REGRESSION_PACK%"=="q120" (
+            "%PY_EXE%" -m pytest -q tests/test_q120_cftc_source_feasibility.py tests/test_q120_cftc_positioning_state.py tests/test_q120r2_cftc_release_exception_inventory.py
+            if errorlevel 1 exit /b 1
           ) else if /I "%REGRESSION_PACK%"=="q127" (
-            "%PY_EXE%" -m pytest -q tests/test_q127r1_finra_regsho_historical_pit.py tests/test_wayback_cdx_metadata.py tests/test_q127r2_finra_wayback_metadata.py
+            "%PY_EXE%" -m pytest -q tests/test_q127r1_finra_regsho_historical_pit.py tests/test_wayback_cdx_metadata.py tests/test_q127r2_finra_wayback_metadata.py tests/test_q127r3_finra_commoncrawl_metadata.py
             if errorlevel 1 exit /b 1
           ) else if /I "%REGRESSION_PACK%"=="q130" (
             "%PY_EXE%" -m pytest -q tests/test_q130r1_wikimedia_attention_source.py tests/test_wayback_cdx_metadata.py tests/test_q130r2_wikimedia_wayback_metadata.py
