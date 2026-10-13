@@ -1376,3 +1376,12 @@ def test_dispatcher_fills_an_independent_slot_when_same_slot_workflow_is_active(
     assert plan["performance_authorization"] is False
     assert plan["live_execution"] is False
 
+
+
+def test_q104_precedence_and_q221_archive_request_refreshes_trigger_windows_gate_regression():
+    workflow = (ROOT / ".github/workflows/windows-candidate-gate-regression.yml").read_text(encoding="utf-8")
+    for request_path in (
+        "research/run_requests/q104_i19_filing_date_precedence_review.trigger",
+        "research/run_requests/q221_monthly_archive_inventory.trigger",
+    ):
+        assert f'      - "{request_path}"' in workflow
