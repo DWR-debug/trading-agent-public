@@ -50,21 +50,27 @@ class ProbeError(RuntimeError):
 
 
 class HtmlTables(HTMLParser):
-    """Extract simple HTML tables while retaining their cell text."""
+    """Extract tables and retain the dated announcement section containing each table."""
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
-        self.tables: list[list[list[str]]] = []
+        self.tables: list[tuple[str | None, list[list[str]]]] = []
         self.table_depth = 0
         self.current_table: list[list[str]] | None = None
+        self.current_table_announcement_date: str | None = None
+        self.current_announcement_date: str | None = None
         self.current_row: list[str] | None = None
         self.current_cell: list[str] | None = None
+        self.current_strong: list[str] | None = None
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
+        if tag == "strong":
+            self.current_strong = []
         if tag == "table":
             if self.table_depth == 0:
                 self.current_table = []
+                self.current_table_announcement_date = self.current_announcement_date
             self.table_depth += 1
         elif self.table_depth and tag == "tr":
             self.current_row = []
@@ -74,9 +80,23 @@ class HtmlTables(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self.current_cell is not None:
             self.current_cell.append(data)
+        if self.current_strong is not None:
+            self.current_strong.append(data)
 
     def handle_endtag(self, tag: str) -> None:
         tag = tag.lower()
+        if tag == "strong" and self.current_strong is not None:
+            strong_text = " ".join("".join(self.current_strong).split())
+            match = re.fullmatch(r"([A-Za-z]+ \d{1,2}, \d{4}):?", strong_text)
+            if match:
+                try:
+                    self.current_announcement_date = datetime.strptime(
+                        match.group(1), "%B %d, %Y"
+                    ).date().isoformat()
+                except ValueError:
+                    pass
+            self.current_strong = None
+
         if self.table_depth and tag in {"th", "td"} and self.current_cell is not None:
             value = " ".join("".join(self.current_cell).split())
             if self.current_row is not None:
@@ -90,11 +110,13 @@ class HtmlTables(HTMLParser):
         elif tag == "table" and self.table_depth:
             self.table_depth -= 1
             if self.table_depth == 0 and self.current_table is not None:
-                self.tables.append(self.current_table)
+                self.tables.append(
+                    (self.current_table_announcement_date, self.current_table)
+                )
                 self.current_table = None
+                self.current_table_announcement_date = None
                 self.current_row = None
                 self.current_cell = None
-
 
 def read_request(path: Path) -> dict[str, str]:
     values: dict[str, str] = {}
@@ -150,7 +172,7 @@ def parse_exception_rows(html: str) -> list[dict[str, Any]]:
     matches: list[dict[str, Any]] = []
     header_found = False
 
-    for table in parser.tables:
+    for announcement_date, table in parser.tables:
         for header_index, row in enumerate(table):
             headers = [_header_key(cell) for cell in row]
             if not required.issubset(set(headers)):
@@ -177,6 +199,7 @@ def parse_exception_rows(html: str) -> list[dict[str, Any]]:
                 if original_date < report_date or new_date < report_date:
                     raise ProbeError("Q120R2_EXCEPTION_DATE_ORDER_INVALID:" + report_date)
                 matches.append({
+                    "announcement_date": announcement_date,
                     "report_date": report_date,
                     "official_original_publish_date": original_date,
                     "official_new_publish_date": new_date,
@@ -193,18 +216,29 @@ def parse_exception_rows(html: str) -> list[dict[str, Any]]:
     if not matches:
         raise ProbeError("Q120R2_EXCEPTION_TABLE_HAS_NO_PARSEABLE_ROWS")
 
-    unique: dict[str, dict[str, Any]] = {}
+    # CFTC can publish a later dated schedule revision for the same COT report
+    # date. Preserve each announcement-date version instead of collapsing the
+    # source history to one report-date row. Conflicts *within the same dated
+    # announcement* still fail closed.
+    unique: dict[tuple[str | None, str], dict[str, Any]] = {}
     for row in matches:
-        key = row["report_date"]
+        key = (row.get("announcement_date"), row["report_date"])
         prior = unique.get(key)
         if prior is not None and (
             prior["official_original_publish_date"] != row["official_original_publish_date"]
             or prior["official_new_publish_date"] != row["official_new_publish_date"]
         ):
-            raise ProbeError("Q120R2_CONFLICTING_EXCEPTION_ROWS:" + key)
+            raise ProbeError(
+                "Q120R2_CONFLICTING_EXCEPTION_ROWS:"
+                + str(key[0])
+                + ":"
+                + key[1]
+            )
         unique[key] = row
-    return [unique[key] for key in sorted(unique)]
-
+    return [
+        unique[key]
+        for key in sorted(unique, key=lambda value: (value[0] or "", value[1]))
+    ]
 
 def fetch_page(url: str, max_bytes: int) -> tuple[int, bytes, dict[str, str], str, str | None]:
     request = urllib.request.Request(

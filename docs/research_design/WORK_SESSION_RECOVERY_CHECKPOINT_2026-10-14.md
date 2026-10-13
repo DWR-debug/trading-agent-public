@@ -1,6 +1,6 @@
 # Trading Agent OS — Working Session Recovery Checkpoint
 
-**Checkpoint time:** 2026-10-13T22:35:08Z (UTC; local date in Europe/Berlin is 2026-10-14)
+**Checkpoint time:** 2026-10-13T22:40:33Z (UTC; local date in Europe/Berlin is 2026-10-14)
 **Canonical repository:** [DWR-debug/trading-agent-public](https://github.com/DWR-debug/trading-agent-public)  
 **Primary active research PR:** [#1417 — bounded Q120 CFTC exceptions and Q127 Common Crawl metadata](https://github.com/DWR-debug/trading-agent-public/pull/1417)  
 **Previous duplicate PR:** [#1416](https://github.com/DWR-debug/trading-agent-public/pull/1416) was closed without merge; do not revive it.
@@ -20,9 +20,10 @@ The self-hosted worker check was **skipped** and is not counted as a Windows run
 - Upstream feasibility run: [#38456880720](https://github.com/DWR-debug/trading-agent-public/actions/runs/38456880720)
 - Receipt fingerprint: `9e79abc9fac1b9d1599b35e111e82e19f8b365d99e06a447638d0c0135321445`
 - Official special-announcement pages document specific delays, including the ION incident in 2023 and the 2025 funding lapse/shutdown. Q120-R1 did not recover a complete historical release calendar.
-- The first Q120-R2 attempt after merge, [Run #38478541967](https://github.com/DWR-debug/trading-agent-public/actions/runs/38478541967), passed 11 offline tests and validated the pinned upstream receipt, but crashed while finalizing the receipt with `NameError: name 'timezone' is not defined`. This is an implementation bug, **not** a research outcome; no valid receipt/artifact was written.
-- The corrective fix imports `timezone`, adds an end-to-end mocked run test that validates the complete receipt path, refreshes only the request sequence, and lets the workflow trigger on code/test changes as well as request changes. Do not treat the failed run as source evidence; inspect the corrected retry's own receipt.
-- Q120-R2 still reads only two official CFTC pages, with 350 KB per response / 700 KB total. It records explicitly listed report-date, original publication-date and new publication-date rows. Unlisted dates must not be assigned an assumed Friday release date. Exact first-public time and a complete historical calendar remain unproven.
+- Initial Q120-R2 run [#38478541967](https://github.com/DWR-debug/trading-agent-public/actions/runs/38478541967) had an implementation-only `NameError: timezone`; no receipt was written.
+- Corrected UTC-writer run [#38479045457](https://github.com/DWR-debug/trading-agent-public/actions/runs/38479045457) wrote receipt fingerprint `7719507508202a0ff9e2d26c08141449829893711840bd873dd217450eea4b34`, status `Q120R2_CFTC_RELEASE_EXCEPTION_INVENTORY_INCOMPLETE`. Both official pages returned HTTP 200 (48,675 and 125,759 bytes), and release-schedule markers were present. It parsed zero rows because the page legitimately repeats report date 2025-11-10 in two differently dated schedule versions; the first says intended new publish date 2025-12-10, the second 2025-12-12.
+- The active fix preserves each row with the date heading of its source announcement section. Conflicts within the same announcement still fail closed. This treats the two records as a versioned schedule history, not a single inferred final date.
+- The next corrected attempt reads only the two official pages, max 350 KB per response / 700 KB total. Unlisted dates remain unknown; intended publish dates are not exact first-public timestamps, and no full historical calendar or same-day PIT clearance is inferred.
 
 ### Q127 — FINRA daily short-sale volume PIT feasibility
 
