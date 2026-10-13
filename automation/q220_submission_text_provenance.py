@@ -146,12 +146,17 @@ def validate_sources(
             raise BoundedProvenanceError(f"TARGET_FAILURE_PIN_MISMATCH:{label}")
 
     summary = _load_pinned_json(summary_path, request["SINGLE_SUMMARY_GIT_BLOB_SHA"])
+    frozen_single = summary.get("frozen_source") or {}
     if (
         summary.get("record_type") != "q220_single_feed_boundary_validation_summary"
         or summary.get("status") != "SINGLE_FEED_BOUNDARY_COMPARISON_COMPLETE"
         or summary.get("upstream_receipt_fingerprint") != request["SINGLE_SUMMARY_UPSTREAM_RECEIPT_FINGERPRINT"]
-        or summary.get("source_population_fingerprint") != request["SOURCE_POPULATION_RECEIPT_FINGERPRINT"]
-        or summary.get("target_record_key") != key
+        or frozen_single.get("population_receipt_fingerprint") != request["SOURCE_POPULATION_RECEIPT_FINGERPRINT"]
+        or frozen_single.get("record_key") != key
+        or frozen_single.get("expected_sha256") != request["EXPECTED_SHA256"]
+        or frozen_single.get("expected_bytes") != int(request["EXPECTED_BYTES"])
+        or frozen_single.get("previously_captured_sha256") != request["FROZEN_CAPTURED_SHA256"]
+        or frozen_single.get("previously_captured_bytes") != int(request["FROZEN_CAPTURED_BYTES"])
     ):
         raise BoundedProvenanceError("SINGLE_FEED_SUMMARY_PIN_MISMATCH")
     extraction = summary.get("extraction") or {}
