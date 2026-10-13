@@ -1383,5 +1383,6 @@ def test_q104_precedence_and_q221_archive_request_refreshes_trigger_windows_gate
     for request_path in (
         "research/run_requests/q104_i19_filing_date_precedence_review.trigger",
         "research/run_requests/q221_monthly_archive_inventory.trigger",
+        "research/run_requests/q220_primary_source_vintage_forensics.trigger",
     ):
         assert f'      - "{request_path}"' in workflow
