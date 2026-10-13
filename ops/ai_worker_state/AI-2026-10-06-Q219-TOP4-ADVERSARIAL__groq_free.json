@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
   "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
-  "observed_at_utc": "2026-10-12T15:12:34.234206Z",
+  "observed_at_utc": "2026-10-13T00:33:00.249813Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 3.121,
-  "stdout": "**Worker Handoff – Q219 Methods Review (SEC filing + options wedge)**  \n\n| Section | Content |\n|---------|---------|\n| **Findings** | 1. **SEC acceptance clock ambiguity** – The candidate’s event clock is defined as “public observation boundary of the filing change” but the current contract (`Q129-OPTIONS-SOURCE-2026-10-03`) only specifies an EOD snapshot at 4 PM ET.  No evidence that the filing acceptance time is the same as the 4 PM snapshot, nor that the acceptance time is strictly before the option data is published.  <br>2. **Same‑session leakage risk** – The filing change and the option snapshot may be released on the same calendar day.  The candidate’s event‑window rule (“next regular trading‑session boundary”) is not enforced in the current implementation; the code paths that compute the window do not check that the event date is strictly earlier than the observation date.  <br>3. **Option EOD timestamp semantics mismatch** – The Q129 contract claims “4:00 PM ET end‑of‑day snapshot”, yet the automation script `q129_options_source_feasibility.py` only verifies file size/sha256 and column presence; it does not parse the `date` column to confirm that all rows share the same 4 PM timestamp or that the timestamp is in ET.  <br>4. **Calendar‑roll handling unclear** – The candidate’s exposure mapping is “fixed_graph_exposure_to_affected_product_or_ingredient”, but the source data contains options that expire on different dates.  There is no logic to collapse or roll over expirations, so the exposure mapping may change across the event window.  <br>5. **Implied‑volatility fields absent** – The Q129 source files do not contain an `implied_vol` column.  If the candidate’s feature set includes implied vol, the feature will be missing or NaN, potentially biasing the signal.  <br>6. **Cross‑market wedge redundancy** – The wedge combines a filing‑change event with an options‑only state.  The options‑only state is already a public observation; adding the filing change may not provide additional information beyond the options snapshot itself.  No evidence is provided that the wedge is orthogonal to the filing‑change signal.  <br>7. **Missing immutable PIT receipt** – The Q129 contract states “SOURCE_FEASIBILITY_COMPLETED_INDEPENDENT_PIT_REPRODUCED”, but the repository contains only the source‑feasibility script, not a signed, timestamped receipt that the source was reproduced exactly at the claimed release ID.  |\n| **Counterarguments** | • The 4 PM snapshot may be the official SEC acceptance time for the filing; the contract could be interpreted that way.  <br>• The event‑window rule may be enforced downstream in the trading‑agent pipeline, not in the candidate code.  <br>• Calendar‑roll effects may be negligible if the event window is short (e.g., 5 days).  <br>• The wedge may be designed to capture a lagged effect between filing and option pricing that is not captured by the options snapshot alone. |\n| **Concrete Next Actions** | 1. **Obtain immutable PIT receipt** – Request a signed, timestamped artifact that proves the Q129 source files were reproduced exactly from release 289029018.  <br>2. **Verify timestamp alignment** – Parse the `date` column of each option parquet file and confirm that all rows share the same 4 PM ET timestamp (or document any deviations).  <br>3. **Document event‑window enforcement** – Provide code or configuration that enforces the “next regular trading‑session boundary” rule, ensuring the event date is strictly earlier than the observation date.  <br>4. **Calendar‑roll handling** – Add logic to collapse or roll options across expirations within the event window, or document why this is unnecessary.  <br>5. **Implied‑volatility check** – Confirm whether the candidate uses implied vol; if so, either add the field to the source or remove the dependency.  <br>6. **Cross‑market wedge analysis** – Perform a deterministic test: shift the filing event forward by 1–5 sessions while holding the calendar fixed, and observe whether the wedge signal changes.  If the signal remains unchanged, the wedge is redundant.  <br>7. **Same‑session leakage test** – Create a synthetic dataset where the filing and option snapshot are on the same day, then run the candidate.  If the signal is non‑zero, leakage is present.  <br>8. **Documentation update** – Add explicit statements in the candidate spec and Q129 contract about the acceptance clock, timestamp semantics, and event‑window enforcement. |\n| **Minimal Deterministic Falsifiers** | • **Shift‑forward test** – Move the filing event forward by 1–5 sessions; if the candidate’s signal remains unchanged, the event clock is not being used correctly.  <br>• **Shuffle‑exposure test** – Randomly permute issuer‑exposure assignments within the frozen universe; a robust signal should change sign or magnitude.  <br>• **Timestamp‑swap test** – Replace the 4 PM snapshot timestamp with the actual filing acceptance time (if different); if the signal changes, the timestamp semantics are critical.  <br>• **Roll‑date test** – Force an option expiration to occur within the event window; if the exposure mapping changes, the candidate must handle roll‑over. |\n| **Missing Artifacts** | 1. Signed, timestamped PIT receipt for Q129 source reproduction.  <br>2. Explicit mapping of SEC filing acceptance time to option snapshot timestamp.  <br>3. Code/configuration that enforces the event‑window rule.  <br>4. Documentation of implied‑volatility presence or absence.  <br>5. Evidence that the cross‑market wedge adds orthogonal information (e.g., statistical independence tests). |\n| **Uncertainty** | • Whether the 4 PM ET snapshot is indeed the SEC acceptance time for the filing.  <br>• Whether the event‑window rule is enforced downstream.  <br>• Whether calendar‑roll effects materially affect the exposure mapping.  <br>• Whether the wedge truly adds information beyond the options snapshot.  <br>• Whether the source files are truly immutable and match the contract. |\n\n**Summary** – The Q219 candidate has several methodological gaps that could invalidate the signal: ambiguous acceptance clock, potential same‑session leakage, unverified timestamp semantics, unclear roll handling, missing implied‑volatility data, and questionable wedge orthogonality. The above next actions and falsifiers will expose these weaknesses deterministically. No performance claims or live‑trading authorizations are made.",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.28,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5191, Requested 5840. Please try again in 22.7325s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-eac1e51f-a8dc-443e-8962-5d14021ec33d",
-  "usage": {
-    "queue_time": 0.063937318,
-    "prompt_tokens": 5373,
-    "prompt_time": 0.269270236,
-    "completion_tokens": 2369,
-    "completion_time": 2.596065897,
-    "total_tokens": 7742,
-    "total_time": 2.865336133,
-    "completion_tokens_details": {
-      "reasoning_tokens": 907
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-13T00:33:00.529410Z",
+    "blocked_until_utc": "2026-10-13T01:33:00.529410Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5191, Requested 5840. Please try again in 22.7325s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
