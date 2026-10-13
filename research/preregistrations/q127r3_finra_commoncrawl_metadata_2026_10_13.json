@@ -31,7 +31,7 @@
     "provider": "Common Crawl",
     "index_list_url": "https://index.commoncrawl.org/collinfo.json",
     "exact_target_url_queries": true,
-    "selection": "earliest collection whose start date is on/after target date and within 30 days",
+    "selection": "earliest collection whose advertised interval intersects [target date, target date + 30 days]; actual target-URL capture timestamp must independently fall within 0–45 days after target date",
     "max_capture_lag_days": 45,
     "archived_payload_downloaded": false
   },
