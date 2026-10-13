@@ -32,6 +32,20 @@ on:
       - "research/run_requests/q104_i19_filing_date_precedence_review.trigger"
       - "research/run_requests/q104_i19_targeted_acceptance_repair.trigger"
       - "research/run_requests/q221_monthly_archive_inventory.trigger"
+      - "automation/wayback_cdx_metadata.py"
+      - "automation/q127r2_finra_wayback_metadata.py"
+      - "automation/q130r2_wikimedia_wayback_metadata.py"
+      - "tests/test_wayback_cdx_metadata.py"
+      - "tests/test_q127r2_finra_wayback_metadata.py"
+      - "tests/test_q130r2_wikimedia_wayback_metadata.py"
+      - "research/run_requests/q127r2_finra_wayback_metadata.trigger"
+      - "research/run_requests/q130r2_wikimedia_wayback_metadata.trigger"
+      - ".github/workflows/q127r2-finra-wayback-metadata.yml"
+      - ".github/workflows/q130r2-wikimedia-wayback-metadata.yml"
+      - "research/preregistrations/q127r2_finra_wayback_metadata_2026_10_13.json"
+      - "research/preregistrations/q130r2_wikimedia_wayback_metadata_2026_10_13.json"
+      - "docs/research_design/Q127R2_FINRA_WAYBACK_METADATA_2026-10-13.md"
+      - "docs/research_design/Q130R2_WIKIMEDIA_WAYBACK_METADATA_2026-10-13.md"
       - ".github/workflows/windows-candidate-gate-regression.yml"
   workflow_dispatch: {}
 
@@ -48,7 +62,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        pack: [q220, q104, q221]
+        pack: [q220, q104, q221, q127, q130]
     concurrency:
       group: trading-agent-windows-candidate-regression-${{ matrix.pack }}
       cancel-in-progress: false
@@ -93,6 +107,12 @@ jobs:
             if errorlevel 1 exit /b 1
           ) else if /I "%REGRESSION_PACK%"=="q221" (
             "%PY_EXE%" -m pytest -q tests/test_q221_historical_source_vintage_gate.py tests/test_q221_usaspending_public_clock_gate.py tests/test_q221_historical_award_public_boundary.py tests/test_q221_monthly_archive_inventory_probe.py
+            if errorlevel 1 exit /b 1
+          ) else if /I "%REGRESSION_PACK%"=="q127" (
+            "%PY_EXE%" -m pytest -q tests/test_q127r1_finra_regsho_historical_pit.py tests/test_wayback_cdx_metadata.py tests/test_q127r2_finra_wayback_metadata.py
+            if errorlevel 1 exit /b 1
+          ) else if /I "%REGRESSION_PACK%"=="q130" (
+            "%PY_EXE%" -m pytest -q tests/test_q130r1_wikimedia_attention_source.py tests/test_wayback_cdx_metadata.py tests/test_q130r2_wikimedia_wayback_metadata.py
             if errorlevel 1 exit /b 1
           ) else (
             echo Unknown regression pack: %REGRESSION_PACK%
