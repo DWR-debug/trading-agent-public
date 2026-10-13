@@ -100,6 +100,30 @@ def test_frozen_q220_request_rejects_changed_request_and_source_pins(tmp_path):
         forensic.validate_frozen_source(changed_request, receipt_path)
 
 
+def test_extract_primary_document_uses_outer_text_closer_when_body_contains_literal_closing_tag():
+    filename = "sample-10k.htm"
+    body = (
+        b"<!DOCTYPE html>\r\n<HTML><BODY>"
+        b"Example code/string includes the literal token </TEXT> inside the HTML body. "
+        b"Bytes after that token must not be dropped."
+        b"</BODY></HTML>\r\n"
+    )
+    submission = (
+        b"<SEC-HEADER>\nACCESSION NUMBER: 0000064040-19-000059\n</SEC-HEADER>\n"
+        b"<DOCUMENT>\n<TYPE>10-K\n<SEQUENCE>1\n<FILENAME>" + filename.encode()
+        + b"\n<TEXT>\r\n" + body + b"</TEXT>\n</DOCUMENT>\n"
+    )
+
+    parsed = forensic.extract_primary_document(submission, filename)
+
+    assert parsed["found"] is True
+    assert parsed["raw_text_block_bytes"] == len(b"\r\n" + body)
+    assert parsed["raw_text_block_sha256"] == forensic.sha256(b"\r\n" + body)
+    assert parsed["body_hash_variants"]["drop_one_leading_linebreak"]["sha256"] == forensic.sha256(body)
+    assert parsed["text_closing_tag_count"] == 2
+    assert parsed["selected_text_closing_tag_offset"] > 0
+
+
 def test_extract_primary_document_preserves_bytes_and_reports_edge_variants():
     filename = "sample-10k.htm"
     body = b"<!DOCTYPE html>\r\n<HTML><BODY>Original filing</BODY></HTML>\r\n"
