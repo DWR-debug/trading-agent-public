@@ -75,13 +75,20 @@ def read_request(path: Path) -> dict[str, str]:
     return values
 
 
+def canonical_receipt_fingerprint(receipt: dict[str, Any]) -> str:
+    payload = dict(receipt)
+    payload.pop("receipt_fingerprint", None)
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return forensic.sha256(encoded)
+
+
 def validate_source(path: Path, request: dict[str, str]) -> tuple[dict[str, Any], dict[str, Any]]:
     raw = path.read_bytes()
     blob_sha = forensic.git_blob_sha1(raw)
     if blob_sha != request["SOURCE_RECEIPT_GIT_BLOB_SHA"]:
         raise BoundedValidationError(f"SOURCE_RECEIPT_GIT_BLOB_SHA_MISMATCH:{blob_sha}")
     receipt = json.loads(raw.decode("utf-8"))
-    if forensic.canonical_fingerprint(receipt) != request["SOURCE_RECEIPT_FINGERPRINT"]:
+    if canonical_receipt_fingerprint(receipt) != request["SOURCE_RECEIPT_FINGERPRINT"]:
         raise BoundedValidationError("SOURCE_RECEIPT_FINGERPRINT_MISMATCH")
     if receipt.get("candidate_id") != "Q220" or receipt.get("status") != "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED":
         raise BoundedValidationError("SOURCE_RECEIPT_STATUS_MISMATCH")
