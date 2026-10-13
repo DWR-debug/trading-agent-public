@@ -17,7 +17,7 @@ OUTPUT_DEFAULT = ROOT / "research/runs/q220-single-feed-boundary-validation/late
 
 FROZEN = {
     "RUN_Q220_SINGLE_FEED_BOUNDARY_VALIDATION": "true",
-    "REASON": "VERIFY_ONE_FROZEN_SPgi_FEED_TEXT_CLOSING_BOUNDARY",
+    "REASON": "VERIFY_ONE_FROZEN_SPGI_FEED_TEXT_CLOSING_BOUNDARY",
     "SOURCE_RECEIPT_PATH": "research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json",
     "SOURCE_RECEIPT_GIT_BLOB_SHA": "2a3abbff6c6950e4f11d85dba92cb9c57a5c7ee0",
     "SOURCE_RECEIPT_FINGERPRINT": "c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075",
