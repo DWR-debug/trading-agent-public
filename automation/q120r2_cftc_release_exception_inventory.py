@@ -7,7 +7,7 @@ timestamp. Source/PIT feasibility only; no performance or trading authority.
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 from html.parser import HTMLParser
 import hashlib
 import json
