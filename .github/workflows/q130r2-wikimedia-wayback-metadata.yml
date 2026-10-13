@@ -1,0 +1,78 @@
+name: Q130-R2 Wikimedia Wayback Metadata Feasibility
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q130r2_wikimedia_wayback_metadata.trigger"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q130r2-wikimedia-wayback-metadata
+  cancel-in-progress: false
+
+jobs:
+  metadata_probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Offline contract tests
+        run: python -m pytest -q tests/test_wayback_cdx_metadata.py tests/test_q130r2_wikimedia_wayback_metadata.py
+      - name: Download and verify the frozen R1 receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/q130r1"
+          gh run download 38455993358 --repo "$GITHUB_REPOSITORY" --name q130r1-wikimedia-attention-source-38455993358 --dir "$RUNNER_TEMP/q130r1"
+          mapfile -t files < <(find "$RUNNER_TEMP/q130r1" -type f -name result.json)
+          [[ "${#files[@]}" == "1" ]] || { echo "Q130R1_RECEIPT_COUNT_INVALID"; exit 2; }
+          cp "${files[0]}" "$RUNNER_TEMP/q130r1.json"
+      - name: Run bounded Wayback metadata probe
+        id: probe
+        run: |
+          set -euo pipefail
+          python -m automation.q130r2_wikimedia_wayback_metadata --request research/run_requests/q130r2_wikimedia_wayback_metadata.trigger --source-receipt "$RUNNER_TEMP/q130r1.json" --output "research/runs/q130r2_wikimedia_wayback_metadata/$GITHUB_RUN_ID/receipt.json"
+      - name: Validate source-only boundary
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(f"research/runs/q130r2_wikimedia_wayback_metadata/{os.environ['GITHUB_RUN_ID']}/receipt.json")
+          if not p.exists():
+              raise SystemExit("Q130R2_RECEIPT_MISSING")
+          r=json.loads(p.read_text(encoding="utf-8"))
+          assert r["status"] in {"Q130R2_WAYBACK_METADATA_COMPLETE","Q130R2_WAYBACK_METADATA_INCOMPLETE"}
+          assert r["upstream"]["receipt_fingerprint"] == "4334be29ff2387813ea9586ba12c6899979e0e43125aeaf0585b073063876568"
+          assert r["summary"]["metadata_request_count"] <= 8
+          assert r["summary"]["metadata_download_bytes"] <= 1600000
+          assert r["method"]["pageview_api_requests_made"] == 0
+          assert r["method"]["archived_api_response_payloads_downloaded"] == 0
+          assert r["pit"]["exact_first_publication_time_proven"] is False
+          assert r["pit"]["revision_lineage_proven"] is False
+          assert r["pit"]["same_day_formal_use_allowed"] is False
+          assert r["scientific_boundary"]["performance_authorized"] is False
+          assert r["safety"]["paper_only"] is True
+          print(json.dumps({"status":r["status"],"captures_found":r["summary"]["captured_api_responses_found"],"requests":r["summary"]["metadata_request_count"],"bytes":r["summary"]["metadata_download_bytes"],"receipt_fingerprint":r["receipt_fingerprint"]},sort_keys=True))
+          PY
+      - name: Upload bounded immutable receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q130r2-wikimedia-wayback-metadata-${{ github.run_id }}
+          path: research/runs/q130r2_wikimedia_wayback_metadata/${{ github.run_id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 30
