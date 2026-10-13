@@ -17,18 +17,21 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGET = "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20240701.txt"
 
 
-def test_q127r3_selects_earliest_collection_starting_after_fixed_report_date():
+def test_q127r3_selects_earliest_collection_overlapping_fixed_report_date_window():
     rows = [
         {"id": "CC-MAIN-2024-26", "cdx-api": "https://index.commoncrawl.org/CC-MAIN-2024-26-index", "from": "2024-06-15T00:00:00Z", "to": "2024-06-30T00:00:00Z"},
+        {"id": "CC-MAIN-2024-27", "cdx-api": "https://index.commoncrawl.org/CC-MAIN-2024-27-index", "from": "2024-06-25T00:00:00Z", "to": "2024-07-12T00:00:00Z"},
         {"id": "CC-MAIN-2024-30", "cdx-api": "https://index.commoncrawl.org/CC-MAIN-2024-30-index", "from": "2024-07-15T00:00:00Z", "to": "2024-07-30T00:00:00Z"},
         {"id": "CC-MAIN-2024-33", "cdx-api": "https://index.commoncrawl.org/CC-MAIN-2024-33-index", "from": "2024-08-01T00:00:00Z", "to": "2024-08-15T00:00:00Z"},
     ]
     chosen = select_collection(rows, "2024-07-01")
     assert chosen is not None
-    assert chosen["id"] == "CC-MAIN-2024-30"
+    # A crawl overlapping the report date is eligible; the capture's actual
+    # timestamp (and its ±window) is checked after the index lookup.
+    assert chosen["id"] == "CC-MAIN-2024-27"
 
 
-def test_q127r3_fails_closed_when_no_collection_starts_within_lookahead_window():
+def test_q127r3_fails_closed_when_no_collection_overlaps_lookahead_window():
     rows = [
         {"id": "CC-MAIN-2024-33", "cdx-api": "https://index.commoncrawl.org/CC-MAIN-2024-33-index", "from": "2024-08-15T00:00:00Z", "to": "2024-08-31T00:00:00Z"}
     ]
