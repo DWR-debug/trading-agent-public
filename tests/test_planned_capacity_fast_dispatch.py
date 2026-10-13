@@ -1385,6 +1385,7 @@ def test_q104_q220_q221_frozen_request_refreshes_trigger_windows_gate_regression
         "research/run_requests/q221_monthly_archive_inventory.trigger",
         "research/run_requests/q220_primary_source_vintage_forensics.trigger",
         "research/run_requests/q220_single_feed_boundary_validation.trigger",
+        "research/run_requests/q220_submission_text_provenance.trigger",
         "research/run_requests/q221_transaction_parent_uei_probe.trigger",
     ):
         assert f'      - "{request_path}"' in workflow
