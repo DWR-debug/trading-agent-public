@@ -1,0 +1,67 @@
+name: Q220 Complete Submission Text Provenance
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q220_submission_text_provenance.trigger"
+
+permissions:
+  contents: read
+
+jobs:
+  compare-one-submission:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    concurrency:
+      group: q220-complete-submission-text-provenance
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Set up pinned Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Compare the pinned index, submission text, and current primary
+        id: probe
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q220_submission_text_provenance \
+            --request research/run_requests/q220_submission_text_provenance.trigger \
+            --source-receipt research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json \
+            --single-summary research/evidence/q220_single_feed_boundary_validation_2026_10_13_summary.json \
+            --output research/runs/q220-submission-text-provenance/${{ github.run_id }}/receipt.json
+      - name: Upload receipt even if source comparison is incomplete
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-submission-text-provenance-${{ github.run_id }}-1
+          path: research/runs/q220-submission-text-provenance/${{ github.run_id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Fail only when source identity or bounded comparison is incomplete
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("research/runs/q220-submission-text-provenance/${{ github.run_id }}/receipt.json")
+          receipt = json.loads(p.read_text(encoding="utf-8"))
+          print(json.dumps({
+              "status": receipt.get("status"),
+              "source_download_bytes": receipt.get("source_download_bytes"),
+              "max_total_download_bytes": receipt.get("max_total_download_bytes"),
+              "gate_positive": False,
+              "performance_authorization": False,
+              "live_execution": False,
+          }, sort_keys=True))
+          if receipt.get("status") != "COMPLETE_SUBMISSION_TEXT_COMPARISON_COMPLETE":
+              raise SystemExit("Complete submission comparison incomplete; Q220 remains blocked.")
+          PY
