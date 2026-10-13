@@ -295,7 +295,7 @@ def run(
         "candidate_id": "Q120-R2",
         "task_id": "Q-2026-10-13-120R2-CFTC-RELEASE-EXCEPTION-INVENTORY",
         "status": "Q120R2_CFTC_RELEASE_EXCEPTION_INVENTORY_COMPLETED" if not errors else "Q120R2_CFTC_RELEASE_EXCEPTION_INVENTORY_INCOMPLETE",
-        "generated_at_utc": datetime.now().astimezone().isoformat(),
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_commit": __import__("os").environ.get("GITHUB_SHA"),
         "upstream": {
             "run_id": UPSTREAM_RUN_ID,
