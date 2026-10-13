@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
   "context_fingerprint": "af33b9bd08de8c944f12d3a4cdc141f7abbbe4c1b589cdd91f1ff50ecf3ee0ec",
-  "observed_at_utc": "2026-10-13T00:32:59.026619Z",
+  "observed_at_utc": "2026-10-13T14:04:04.739019Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.452,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5331, Requested 5378. Please try again in 20.3175s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.674,
+  "stdout": "**Worker Handoff – Q218 Candidate Gate Review**  \n*Scope: Deterministic 10‑K ↔ 8‑K pairing, SEC timestamps, filing amendments, event‑vs‑report ambiguity, voluntary/mandatory classification, issuer drift, and semantic‑wedge collapse.*\n\n| Section | Content |\n|---------|---------|\n| **Findings** | 1. **Pairing rule ambiguity** – The rule “latest eligible Item‑2.02/Exhibit‑99.1‑style 8‑K by SEC acceptance timestamp within (preceding 10‑K acceptance, target 10‑K acceptance]” does not guard against 8‑K acceptance *after* the target 10‑K acceptance but *before* the next 10‑K.  <br>2. **Filing amendments** – 10‑K amendments (10‑K/A) are treated identically to original 10‑K, but acceptance timestamps can shift, potentially invalidating the pairing window.  <br>3. **Report‑date vs event‑date** – The code uses `filingDate` for the 10‑K window but the event clock is defined as the SEC acceptance timestamp.  If a 10‑K’s `reportDate` is earlier than its `filingDate`, the event may be mis‑dated.  <br>4. **Voluntary vs mandatory** – The current implementation does not distinguish between mandatory 8‑K (e.g., Item 2.02) and voluntary 8‑K (e.g., Item 7.01).  A voluntary 8‑K could be paired erroneously.  <br>5. **Issuer identity drift** – `SEC_CIKS` is hard‑coded.  Corporate actions (spinoffs, name changes, ticker changes) can invalidate the mapping, leading to wrong issuer‑to‑CIK associations.  <br>6. **Semantic‑wedge collapse** – The candidate’s “semantic wedge” relies on document length/complexity similarity.  If the wedge collapses to a global similarity metric, the orthogonality claim is weakened. |\n| **Counterarguments** | • The pairing rule is *intended* to capture the *latest* 8‑K that is *between* two 10‑K acceptances; the current code’s omission of the “before next 10‑K” bound is a bug, not a design choice.  <br>• 10‑K amendments are treated as separate filings; the rule should explicitly exclude 10‑K/A from the target set or treat them as separate windows.  <br>• SEC acceptance timestamps are the canonical event times; however, the code should validate that `filingDate` ≥ `acceptance_datetime_found` to avoid mis‑ordering.  <br>• Voluntary 8‑K can be filtered by `items` containing “Item‑2.02” or “Exhibit‑99.1”; the current code does not perform this check.  <br>• Issuer drift can be mitigated by pulling the latest CIK mapping from the SEC’s `cik‑mapping.json` rather than a static dict.  <br>• Semantic‑wedge collapse can be detected by comparing the wedge’s similarity score against a baseline of random document pairs; if the score is indistinguishable, the wedge is not orthogonal. |\n| **Smallest Deterministic Falsifiers & Artifacts** | 1. **Pairing window overflow** – Create a fixture `test_pairing_overflow.json` containing: <br>   * 10‑K A (CIK 123456) with acceptance = 2026‑09‑01T10:00:00Z, reportDate = 2026‑08‑31. <br>   * 8‑K B (CIK 123456) with acceptance = 2026‑09‑02T09:00:00Z (after 10‑K A but before next 10‑K). <br>   * 10‑K C (CIK 123456) with acceptance = 2026‑09‑05T10:00:00Z. <br>   The current rule would pair B with C, violating the intended window.  <br>2. **Amendment shift** – Fixture `test_amendment_shift.json` with: <br>   * 10‑K (CIK 654321) acceptance = 2026‑08‑15T10:00:00Z. <br>   * 10‑K/A (CIK 654321) acceptance = 2026‑08‑20T10:00:00Z. <br>   * 8‑K (CIK 654321) acceptance = 2026‑08‑18T10:00:00Z. <br>   The code would pair the 8‑K with the 10‑K/A, but the rule should exclude amendments.  <br>3. **Report‑date vs event‑date mismatch** – Fixture `test_report_event_mismatch.json` with: <br>   * 10‑K (CIK 111111) reportDate = 2026‑07‑01, filingDate = 2026‑07‑10, acceptance = 2026‑07‑10T10:00:00Z. <br>   The event clock should be 2026‑07‑10, but if the code mistakenly uses reportDate it would mis‑align.  <br>4. **Voluntary 8‑K mis‑pairing** – Fixture `test_voluntary_8k.json` with: <br>   * 8‑K (CIK 222222) items = [“Item‑7.01”], acceptance = 2026‑08‑01T10:00:00Z. <br>   * 10‑K (CIK 222222) acceptance = 2026‑08‑05T10:00:00Z. <br>   The rule should reject the voluntary 8‑K, but the current code would pair it.  <br>5. **Issuer drift** – Artifact `test_cik_mapping_change.json` containing: <br>   * Old mapping: “ABC” → CIK 333333. <br>   * New mapping: “ABC” → CIK 444444. <br>   The hard‑coded dict would still use 333333, leading to wrong pairing.  <br>6. **Semantic‑wedge collapse** – Artifact `test_wedge_similarity.txt` with two synthetic documents of identical length/complexity but no event linkage.  The wedge similarity score should be high; if it matches the baseline, the wedge is not orthogonal. |\n| **Concrete Next Actions** | 1. **Add explicit window bounds** – Modify `sec_submission_census()` to enforce that the 8‑K acceptance timestamp is *strictly* less than the next 10‑K acceptance (if any).  <br>2. **Exclude amendments** – Add a flag `is_amendment` based on `form` ending in “/A” and skip such filings from the target set.  <br>3. **Validate report vs filing dates** – Add a check that `reportDate` ≤ `filingDate` and that the event clock uses `filingDate` (or `acceptance_datetime_found`).  <br>4. **Filter voluntary 8‑K** – Parse `items` and only accept 8‑K where `Item‑2.02` or `Exhibit‑99.1` is present.  <br>5. **Dynamic CIK mapping** – Replace `SEC_CIKS` with a runtime lookup from the SEC’s `cik‑mapping.json` (or a local snapshot).  <br>6. **Semantic‑wedge sanity check** – Implement a baseline similarity test: compute the wedge similarity for a set of random document pairs; if the candidate’s similarity is within 5 % of the baseline, flag a collapse.  <br>7. **Deterministic falsifier harness** – Create a lightweight test harness that loads the six artifacts above, runs `sec_submission_census()`, and asserts that the output matches the expected pairing (or failure).  <br>8. **Documentation** – Update `docs/research_design/Q218_DESIGN.md` to explicitly list the above failure modes, the falsifiers, and the required artifacts. |\n| **Uncertainty** | • The exact format of SEC acceptance timestamps in the JSON payload is not fully confirmed; if the field name differs (e.g., `acceptanceDatetime` vs `acceptance_datetime_found`), the code may mis‑parse.  <br>• The mapping between `filingDate` and `acceptance_datetime_found` may not be one‑to‑one; some filings have multiple acceptance events.  <br>• The semantic‑wedge similarity metric is not defined in the provided context; the collapse test assumes a simple cosine similarity over TF‑IDF vectors.  <br>• The hard‑coded `SEC_CIKS` list may be incomplete for the 2025‑2026 window; additional tickers may be missing, leading to silent failures.  <br>• The test harness will need to be run against a stable snapshot of the SEC API to guarantee determinism; any change in the API response format will invalidate the falsifiers. |\n\n---  \n*End of handoff.*",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-13T00:32:59.478857Z",
-    "blocked_until_utc": "2026-10-13T01:32:59.478857Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5331, Requested 5378. Please try again in 20.3175s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-a75925d3-8f27-4cc1-b095-ce0ff129ab6e",
+  "usage": {
+    "queue_time": 0.023314051,
+    "prompt_tokens": 5058,
+    "prompt_time": 0.303790516,
+    "completion_tokens": 2780,
+    "completion_time": 3.149650693,
+    "total_tokens": 7838,
+    "total_time": 3.453441209,
+    "completion_tokens_details": {
+      "reasoning_tokens": 744
+    }
   }
 }\n
