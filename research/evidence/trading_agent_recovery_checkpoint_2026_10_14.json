@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "record_type": "trading_agent_recovery_checkpoint",
+  "generated_at_utc": "2026-10-14T05:59:38.332Z",
+  "repository": "DWR-debug/trading-agent-public",
+  "observed_master_sha": "542d3d7852466e26b77676f18f6a47e83445c66e",
+  "closed_unmerged_pr": {
+    "number": 1416,
+    "url": "https://github.com/DWR-debug/trading-agent-public/pull/1416",
+    "state": "closed",
+    "merged": false,
+    "note": "Work was later committed to master through PR #1417 and follow-up PR #1418; do not revive PR #1416."
+  },
+  "merged_lineage": [
+    {
+      "pr": 1417,
+      "url": "https://github.com/DWR-debug/trading-agent-public/pull/1417",
+      "merged_at_utc": "2026-10-13T22:33:02Z",
+      "purpose": "bounded Q120/Q127 source probes and checkpoint baseline"
+    },
+    {
+      "pr": 1418,
+      "url": "https://github.com/DWR-debug/trading-agent-public/pull/1418",
+      "merged_at_utc": "2026-10-13T22:37:39Z",
+      "purpose": "fix Q120 UTC receipt generation and retrigger bounded probe"
+    }
+  ],
+  "outcomes": {
+    "q120_r2": {
+      "run_id": 38479765335,
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38479765335",
+      "workflow_conclusion": "success",
+      "receipt_status": "Q120R2_CFTC_RELEASE_EXCEPTION_INVENTORY_COMPLETED",
+      "receipt_fingerprint": "b92f42f2c3f8dbf8f7cfd8499be44b4130c154c415e14e97f831da9230b846dc",
+      "exception_rows": 30,
+      "changed_publish_dates": 28,
+      "request_count": 2,
+      "download_bytes": 174434,
+      "interpretation": "Officially listed exception dates only. The exception table is not claimed to be a complete historical release calendar; exact first-publication time and same-day PIT remain unproven."
+    },
+    "q127_r3": {
+      "run_id": 38478542257,
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38478542257",
+      "workflow_conclusion": "success",
+      "receipt_status": "Q127R3_COMMONCRAWL_METADATA_INCOMPLETE",
+      "receipt_fingerprint": "9b9159581e7770078325923e7d41df6e8fbc27986ffb329ec08d69f7bfe8bb4d",
+      "request_count": 5,
+      "download_bytes": 35686,
+      "captured_dates": [],
+      "interpretation": "Not a negative finding and not evidence that files were never published. The immutable artifact carries per-request errors, but the prior Actions stdout omitted them; this PR adds bounded diagnostics then permits one rerun through the source workflow's code/test path trigger."
+    },
+    "windows_regression": {
+      "run_id": 38479765250,
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38479765250",
+      "conclusion": "success",
+      "packs": {
+        "q104": "success",
+        "q220": "success",
+        "q221": "success",
+        "q120": "success",
+        "q127": "success",
+        "q130": "success"
+      }
+    },
+    "runner_c": {
+      "run_id": 38516367259,
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38516367259",
+      "conclusion": "success",
+      "interpretation": "Runner C's bounded deterministic readiness workpack completed; this is an operations/test result, not scientific candidate clearance."
+    },
+    "last_capacity_dispatch": {
+      "run_id": 38519107497,
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38519107497",
+      "checked_at_utc": "2026-10-14T05:54:24Z",
+      "result": "DIRECT_SNAPSHOT_READY",
+      "all_three_windows_slots": "ROUTABLE_NO_RUNNING_JOB_OBSERVED",
+      "active_research_jobs": 0,
+      "planned_executable_count": 0,
+      "actual_dispatches": 0,
+      "interpretation": "Capacity is free but the current dispatcher generated no eligible work. Do not count stale queued entries from 2026-10-07 as physical occupancy. No artificial/filler work is authorized."
+    }
+  },
+  "current_window": {
+    "window_id": "TA-2H-2026-10-14-Q120-Q127-RECOVERY-0519Z",
+    "start_utc": "2026-10-14T05:19:00Z",
+    "end_utc": "2026-10-14T07:19:00Z",
+    "last_confirmed_status": "ACTIVE",
+    "source": "research/run_requests/rolling_capacity_window_2026-10-05.json",
+    "note": "Re-verify before any future dispatch because the lease is time-bounded."
+  },
+  "next_steps": [
+    "Run the Q127-R3 offline parser/diagnostic test in CI.",
+    "After merge, read the one bounded Q127 metadata rerun's request_diagnostics/errors before any further retry; frozen dates/symbols/URLs and budgets must remain unchanged.",
+    "Use the new receipt to decide whether an alternate archive route is worth pursuing; no capture/failed query is not proof of nonpublication.",
+    "Continue Q220 hash provenance only with new evidence; never rewrite the 55 frozen hashes to match current SEC content.",
+    "Keep all three Windows runner slots treated as always routable except while an actual job is executing on that exact slot; use a bounded independent workpack when one is available, never artificial quota work."
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "performance_authorized": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false,
+    "research_gates_relaxed": false
+  }
+}
