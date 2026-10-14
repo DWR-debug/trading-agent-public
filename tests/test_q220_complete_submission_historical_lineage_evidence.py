@@ -43,6 +43,14 @@ def test_q220_same_code_historical_capture_shows_five_byte_shift_for_all_55_rows
     assert field_diff["observed_unchanged_fields"]["primary_document"] is True
     assert field_diff["observed_unchanged_fields"]["acceptance_datetime"] is True
 
+    paths = history["code_path_comparison"]
+    assert paths["old_vs_current_population_fetch_function_identical"] is True
+    assert paths["fetch_function_contract"]["accept_encoding"] == "identity"
+    assert paths["fetch_function_contract"]["retry_attempts"] == 3
+    assert paths["current_pit_compiler_fetch_is_separate"] is True
+    assert paths["current_pit_compiler_fetch_contract"]["retry_attempts"] == 4
+    assert paths["root_cause_proven"] is False
+
     samples = {row["record_key"]: row for row in history["same_code_sample_comparisons"]}
     spgi = samples["0000064040|0000064040-19-000059|10-K|2019-02-13"]
     assert spgi["oct10_1719_bytes"] == 4_774_463
