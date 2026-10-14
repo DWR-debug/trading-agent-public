@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q104_i22_cross_arch_reconciliation",
+  "task_id": "Q-2026-10-01-104-I22-CROSS-ARCH-RECONCILIATION",
+  "candidate_id": "Q104:I22",
+  "status": "I22_PIT_COMPILER_RECONCILED_X64_ARM64_NO_PERFORMANCE",
+  "source_workflow_run_id": 38274043682,
+  "source_master_sha": "65c879498e3f5d494e1d6c9749418bc0bf137a31",
+  "x64_receipt_fingerprint": "53b0d7df16c997d0daaaa706b5e713d3596110be4bf839595ec3044e959be236",
+  "arm64_receipt_fingerprint": "7400ac67a0b120cb1aac894f48d25e8a53c85a1b6e44f8fc5fd7ba3eda3f47bd",
+  "x64_source_response_fingerprint": "a9595d33a34615553ee706c95458fff0bb9fec9642a9d61710f3e5dbd45ca23e",
+  "arm64_source_response_fingerprint": "bb1521ff938ce1217343362f335aae521d9978b105229eabef69124ac24bbb1c",
+  "source_response_fingerprint_equal": false,
+  "architecture_equality_rule": "Exact equality after excluding raw response-body and receipt fingerprints; target CIK mapping and all substantive compiler outputs must match.",
+  "summary": {
+    "filings": 2209,
+    "eligible_sessions": 2011
+  },
+  "mutation_tests": {
+    "input_order_invariance": true,
+    "future_acceptance_invariance": true,
+    "amendment_accession_separation": true
+  },
+  "architecture_equality": true,
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "next_gate": "Q104:I22 candidate-specific non-overlap audit + independent PIT reproduction against frozen Q107/Q108 inputs",
+  "receipt_fingerprint": "058bba7fd9aebb9d30cc5294fc71548ebe9bd9f11d5ee38a558936b29ecfb9a0"
+}
