@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `17c79eec362ca2904b874370aa91f517bc2aefa6`
+**Current operational snapshot:** `6bbc0b1c9983803a8e9b54c70d456049efc0ab40`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-14T05:23:23.080302+00:00`
+**Generated (UTC):** `2026-10-14T06:01:33.754883+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -134,7 +134,7 @@ This checkpoint preserves what was known at that time. It is historical context,
 - Source-feasibility latest receipt: **DISCOVERY_SOURCE_FEASIBILITY_COMPLETED**.
 - Q179 ClinicalTrials.gov, Q180 NHTSA, Q181 OSHA/DOL, Q183 NTSB and Q184 FCC currently pass the bounded source probe; Q182 FERC eLibrary remains **runner-access blocked** where the GitHub-hosted probe receives HTTP 403.
 - PIT Readiness R1 latest receipt: **PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE**.
-- Latest Q179–Q184 PIT receipt fingerprint: `1493902c853de88fe3785469b2c049ebb759212a4b26998e1d3acbaceddbea28`.
+- Latest Q179–Q184 PIT receipt fingerprint: `075192ff00072b9db1570dad7cd91a132ef7fe49c2321bc477146291a16ad423`.
 - Candidate-level PIT status remains non-authorizing; all six current statuses are surfaced directly in `research/evidence/q179_q184_pit_readiness_r1_latest.json`.
 - Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
 ### Q197–Q201 Orthogonal Information Frontier
