@@ -47,3 +47,9 @@ def test_scout_runs_after_its_workflow_or_policy_changes_on_master():
     assert '".github/workflows/literature-frontier-scout.yml"' in workflow
     assert '"research/governance/literature_research_policy.json"' in workflow
     assert '"tests/test_literature_frontier_scout.py"' in workflow
+
+def test_scout_defines_run_scoped_output_path_before_use():
+    workflow = Path(".github/workflows/literature-frontier-scout.yml").read_text(encoding="utf-8")
+    define = workflow.index('OUT="research/runs/literature_frontier/${GITHUB_RUN_ID}"')
+    use = workflow.index('mkdir -p "$OUT"')
+    assert define < use
