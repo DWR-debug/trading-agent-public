@@ -2,7 +2,7 @@
 
 **Classification:** literature/source synthesis; design-only; no performance authorization  
 **Repository basis:** current master as of PR creation; technical truth remains master and immutable receipts  
-**Discovery scope:** 10 distinct search workstreams; 94 returned result slots before deduplication; selected sources were opened and checked against primary/official pages where available  
+**Discovery scope:** 15 targeted search calls across 10 distinct workstreams; 138 returned result slots before deduplication; selected sources were opened and checked against primary/official pages where available  
 **Active execution lock:** Q104:I19, Q220, Q221 only  
 **Safety:** PAPER_ONLY; no live trading, orders, performance, holdout selection, ranking, tuning, promotion, or paid data/API use
 
