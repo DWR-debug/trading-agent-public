@@ -31,3 +31,15 @@ def test_self_hosted_wave_bootstraps_pinned_python_without_setup_python_action()
     assert "python-3.13.15-nuget-wave-q104" in windows_jobs
     assert "python-3.13.15-nuget-wave-q220" in windows_jobs
     assert "shell: cmd" in windows_jobs
+
+
+
+def test_isolated_q221_failure_audit_uses_frozen_request_and_is_offline():
+    workflow_name = "q221-frozen-503-failure-audit.yml"
+    workflow = (ROOT / ".github" / "workflows" / workflow_name).read_text(encoding="utf-8")
+    assert workflow_name in ACTIVE_WORKFLOWS
+    assert "--request research/run_requests/q221_transaction_parent_uei_failure_audit.trigger" in workflow
+    assert "q221-transaction-parent-uei-probe-38531250865-1" in workflow
+    assert "USAspending requests" in workflow
+    assert "actions/setup-python@v6" not in workflow
+    assert "q221-transaction-parent-uei-probe.trigger --output" not in workflow
