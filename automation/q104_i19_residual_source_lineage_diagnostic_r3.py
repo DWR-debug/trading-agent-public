@@ -35,7 +35,7 @@ SOURCE_SHARDS = {
 ARCHIVE_PINS = {
     "2016q4_form13f.zip": {
         "url": "https://www.sec.gov/files/structureddata/data/form-13f-data-sets/2016q4_form13f.zip",
-        "sha256": "40dea4a7e9b7d3678524faa3e10c2645468712e5bb5808b124951781027c13",
+        "sha256": "40dea4a7e1e7d7ba118ffed32ab1941e365a2835d748e7ae682af8b1dc8f1be4",
         "bytes": 41801560,
         "shard": "2013-2016",
     },

@@ -172,7 +172,7 @@ def test_r3_freezes_new_2016q4_archive_and_never_expands_the_census():
         "0001144204-16-134474",
         "0001352900-16-000030"
     }
-    assert lineage.ARCHIVE_PINS["2016q4_form13f.zip"]["sha256"] == "40dea4a7e9b7d3678524faa3e10c2645468712e5bb5808b124951781027c13"
+    assert lineage.ARCHIVE_PINS["2016q4_form13f.zip"]["sha256"] == "40dea4a7e1e7d7ba118ffed32ab1941e365a2835d748e7ae682af8b1dc8f1be4"
     assert lineage.ARCHIVE_PINS["2016q4_form13f.zip"]["bytes"] == 41801560
     assert lineage.FROZEN_REQUEST_VALUES["SAMPLE_COUNT"] == "6"
     assert lineage.MAX_SOURCE_ARCHIVE_BYTES == 100_000_000

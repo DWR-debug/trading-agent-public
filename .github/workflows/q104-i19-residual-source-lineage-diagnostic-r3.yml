@@ -32,6 +32,9 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install bounded test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
       - name: Run bounded regression tests
         run: python -m pytest -q tests/test_q104_i19_residual_source_lineage_diagnostic_r3.py
 
