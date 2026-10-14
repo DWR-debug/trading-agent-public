@@ -1,7 +1,4 @@
 from copy import deepcopy
-from datetime import datetime, timezone
-import json
-
 import pytest
 
 from automation import q104_i19_cross_vintage_precedence_review as review
