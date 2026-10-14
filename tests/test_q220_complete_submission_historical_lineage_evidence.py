@@ -49,6 +49,12 @@ def test_q220_same_code_historical_capture_shows_five_byte_shift_for_all_55_rows
     assert paths["fetch_function_contract"]["retry_attempts"] == 3
     assert paths["current_pit_compiler_fetch_is_separate"] is True
     assert paths["current_pit_compiler_fetch_contract"]["retry_attempts"] == 4
+    assert paths["current_pit_compiler_fetch_contract"]["response_fields_embedded_in_hash_failure_receipt"] == [
+        "content_type", "content_length_header", "content_encoding",
+        "last_modified", "etag", "final_url",
+    ]
+    assert "requested_url" in paths["current_pit_compiler_fetch_contract"]["response_headers_returned_by_fetch_helper"]
+    assert "requested_url" not in paths["current_pit_compiler_fetch_contract"]["response_fields_embedded_in_hash_failure_receipt"]
     assert paths["root_cause_proven"] is False
 
     samples = {row["record_key"]: row for row in history["same_code_sample_comparisons"]}
