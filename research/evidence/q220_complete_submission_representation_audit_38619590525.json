@@ -513,9 +513,26 @@
           "Content-Encoding",
           "Last-Modified",
           "ETag",
+          "final URL"
+        ],
+        "response_headers_returned_by_fetch_helper": [
           "requested_url",
+          "final_url",
+          "content_type",
+          "content_length_header",
+          "content_encoding",
+          "last_modified",
+          "etag"
+        ],
+        "response_fields_embedded_in_hash_failure_receipt": [
+          "content_type",
+          "content_length_header",
+          "content_encoding",
+          "last_modified",
+          "etag",
           "final_url"
-        ]
+        ],
+        "requested_url_persistence": "The helper constructs requested_url, but the historical hash-failure receipt embeds only the fields listed in response_fields_embedded_in_hash_failure_receipt; the requested URL is derivable from the frozen CIK/accession/filename but is not copied into the error string."
       },
       "interpretation": "The historical all-55 minus-five shift occurred with identical fetch-function source and request profile, so it is not explained by a code change to the population fetch implementation. The current PIT compiler uses a separate fetch function/profile, so the current minus-one observation must not be described as occurring under identical code/profile. The complete-submission capture and five-profile probe separately establish same-time repeatability for their limited sample, not the historical origin/body version.",
       "root_cause_proven": false
