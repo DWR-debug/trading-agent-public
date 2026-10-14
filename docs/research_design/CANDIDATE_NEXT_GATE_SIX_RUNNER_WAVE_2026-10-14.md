@@ -21,7 +21,7 @@ The two jobs using the common Windows research label are independent. If only on
 
 - Q104: establishes whether the six already identified 2016-Q4 bulk/header filing-date mismatches have observable and internally consistent DATE-OF-FILING-DATE-CHANGE metadata. Missing metadata is recorded as missing, not interpreted as proof of absence.
 - Q220: preserves and contrasts the frozen expected hash, prior compiler observation, earlier response observation, and later bounded response for one fixed key. Identical URL/Last-Modified metadata with distinct response hashes is recorded as an unresolved provenance conflict, not as proof of why the body changed.
-- Q221: documents a terminal, bounded HTTP 503 at the transaction-count preflight. It does not repeat the endpoint, download transaction data, infer a parent mapping, or claim a historical public clock.
+- Q221: documents a terminal, bounded HTTP 503 at the transaction-count preflight. A separate audit-trigger snapshot freezes the exact request timestamp and identity pins used by that failed run; this avoids accidentally validating the old failure against a later active request revision. It does not repeat the endpoint, download transaction data, infer a parent mapping, or claim a historical public clock.
 
 ## Safety and audit
 

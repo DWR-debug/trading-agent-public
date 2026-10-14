@@ -33,6 +33,7 @@ ACTIVE_WORKFLOWS = {
     "copilot-setup-steps.yml",
     "coverage-candidate-discovery.yml",
     "coverage-candidate-search.yml",
+    "candidate-next-gate-runner-wave.yml",
     "current-status-sync.yml",
     "evidence-graph-stage4-stage5-wave.yml",
     "q104-i19-13f-historical-identity-census.yml",

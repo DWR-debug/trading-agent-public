@@ -71,7 +71,7 @@ def build_analysis(compiler: dict[str,Any], forensics: dict[str,Any], header: di
         raise DiagnosticError("CURRENT_COMPILER_FINGERPRINT_MISMATCH")
     if compiler.get("source_population_receipt_fingerprint")!=POPULATION_FP or compiler.get("source_hash_failure_count")!=55 or compiler.get("verified_primary_document_count")!=0:
         raise DiagnosticError("COMPILER_SOURCE_POPULATION_CONTRACT_MISMATCH")
-    if forensics.get("record_type")!="q220_primary_source_vintage_forensics" or forensics.get("status")!="FORENSIC_COMPARISON_INCOMPLETE":
+    if forensics.get("record_type")!="q220_original_sec_feed_primary_hash_forensics" or forensics.get("status")!="FORENSIC_COMPARISON_INCOMPLETE":
         raise DiagnosticError("PINNED_FORENSICS_RECEIPT_STATUS_MISMATCH")
     if forensics.get("receipt_fingerprint")!=FORENSICS_FP or fp(forensics)!=FORENSICS_FP:
         raise DiagnosticError("PINNED_FORENSICS_RECEIPT_FINGERPRINT_MISMATCH")
