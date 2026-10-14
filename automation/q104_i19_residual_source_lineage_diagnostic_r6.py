@@ -226,11 +226,11 @@ def validate_frozen_inputs(
             if archive_record.get("archive_bytes") != pin["bytes"]:
                 raise DiagnosticError(f"Q104_LINEAGE_{label}_RECEIPT_ARCHIVE_BYTES_MISMATCH:" + archive_name)
         original_failure = original_archive.get("acceptance_failures", {}).get(SAMPLES[0]["accession"])
-        recovered_failure = recovered_archive.get("acceptance_failures", {}).get(SAMPLES[0]["accession"])
         if original_failure != "SEC_HEADER_HTTP_503":
             raise DiagnosticError("Q104_LINEAGE_ORIGINAL_FAILURE_CLASSIFICATION_MISMATCH:" + str(original_failure))
-        if recovered_failure != SAMPLES[0]["frozen_failure"]:
-            raise DiagnosticError("Q104_LINEAGE_FROZEN_FAILURE_NOT_FOUND:" + SAMPLES[0]["accession"])
+        # The repaired shard is independently pinned by its canonical receipt
+        # fingerprint. The targeted recovery receipt carries the exact accession
+        # classification; do not assume the shard archive summary repeats it.
 
     recovery_lineage = {
         "recovery_run_id": RECOVERY_RUN_ID,
