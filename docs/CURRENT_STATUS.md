@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `a6a5582a2c1de94d0dd47e8520d8c8ccd9bc7e93`
+**Current operational snapshot:** `17c79eec362ca2904b874370aa91f517bc2aefa6`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-14T05:19:08.969180+00:00`
+**Generated (UTC):** `2026-10-14T05:23:23.080302+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -43,7 +43,7 @@ This checkpoint preserves what was known at that time. It is historical context,
 ### Permanent Capacity Saturation & Rolling Research Waves
 
 - **STATUS: ACTIVE_AND_PERSISTENT.** Useful free compute is continuously routed whenever a real bounded backlog exists.
-- **Current two-hour activation:** `TA-2H-2026-10-14-Q120-Q127-RECOVERY-0520Z`, `2026-10-14T05:20:00Z–2026-10-14T07:20:00Z`.
+- **Current two-hour activation:** `TA-2H-2026-10-14-Q120-Q127-RECOVERY-0519Z`, `2026-10-14T05:19:00Z–2026-10-14T07:19:00Z`.
 - **Scheduler:** every 10 minutes; active duplicates are skipped, phase-successful work is not rerun, and only one bounded retry is permitted after failure/cancellation.
 - **Wave order:** W1 source/PIT/clock closure -> W2 candidate/contracts and information timing -> W3 next-gate compilation and independent reproduction -> W4 literature discovery/consolidation.
 - **Utilization rule:** maximize useful occupancy across Windows A/B/C, hosted Linux, bounded free-AI lanes and S10/mobile support when those resources are reachable and the work is independent and useful. Never manufacture work to consume quota.
@@ -147,9 +147,9 @@ This checkpoint preserves what was known at that time. It is historical context,
 - All four frontier candidates remain non-authorizing: performance/holdout selection/ranking/tuning/promotion/live execution are closed. Source readiness is not PIT validation.
 ### Q202–Q204 Information-Timing Frontier
 
-- Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `753320c4aa203717e9142ac28e2b6ea22330ab7cb737eb742def5b150b6361b5`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.
-- Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `753320c4aa203717e9142ac28e2b6ea22330ab7cb737eb742def5b150b6361b5`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.
-- Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `753320c4aa203717e9142ac28e2b6ea22330ab7cb737eb742def5b150b6361b5`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.
+- Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `8eb422c856b951f692e8a8ef3b96fb4d871bb8959a2a80436aca7345e17f375d`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.
+- Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `8eb422c856b951f692e8a8ef3b96fb4d871bb8959a2a80436aca7345e17f375d`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.
+- Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `8eb422c856b951f692e8a8ef3b96fb4d871bb8959a2a80436aca7345e17f375d`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.
 - Q202–Q204 remain source/PIT discovery tracks only: performance, holdout selection, ranking, tuning, promotion and live execution remain closed. Source feasibility is not PIT validation.
 
 ### Q148-R1 EIA WPSR Source/Clock Gate
