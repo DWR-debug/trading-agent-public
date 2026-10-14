@@ -380,7 +380,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-  q104_cross_vintage_independent_reproduction_windows:
+  q104_cross_vintage_independent_reproduction_ubuntu_arm:
     name: GitHub Ubuntu ARM64 — independently reproduce Q104 aggregate
     if: github.repository == 'DWR-debug/trading-agent-public'
     needs: [q104_cross_vintage_aggregate]
