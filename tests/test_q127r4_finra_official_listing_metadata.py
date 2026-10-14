@@ -39,6 +39,8 @@ def test_q127r4_parses_year_filtered_exact_links_and_size_labels():
     assert parsed["selected_year_filter_verified"] is True
     assert parsed["publication_policy_markers"]["by_1800_et_same_trade_date"] is True
     assert parsed["publication_policy_markers"]["later_update_possible"] is True
+    assert parsed["publication_policy_markers"]["original_and_updated_both_listed"] is True
+    assert parsed["publication_policy_markers"]["updated_variant_is_labelled"] is True
     assert parsed["target_observations"]["2024-02-05"]["listing_rows"][0]["file_size_label"] == "321 KB"
     assert parsed["target_observations"]["2024-07-01"]["exact_url_listed_once"] is True
     assert parsed["target_observations"]["2024-02-05"]["listing_rows"][0]["updated_label_visible_in_row"] is False
