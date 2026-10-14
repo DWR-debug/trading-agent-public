@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-06-Q224-EDGAR-MODERN-WINDOW-SOURCE-GATE",
   "status": "SOURCE_ARCHIVE_INTEGRITY_COMPLETED_NO_PERFORMANCE",
-  "generated_at_utc": "2026-10-13T22:41:53.892892+00:00",
+  "generated_at_utc": "2026-10-14T01:01:38.692448+00:00",
   "candidate_id": "Q224",
   "source_contract": {
     "official_dataset": "SEC EDGAR Log File Data Sets",
@@ -72,55 +72,16 @@
     {
       "control_date": "2022-12-30",
       "url": "https://www.sec.gov/dera/data/Public-EDGAR-log-file-data/2022/Qtr4/log20221230.zip",
-      "reachable": true,
-      "http_status": 200,
-      "content_length": "294991286",
-      "content_type": "application/zip",
-      "accept_ranges": "bytes",
-      "etag": "\"439098a248d417acff40e873caa5affb-36\"",
-      "sha256": "150a484e18fa595c79c1e36a89b1d4c96c7ba055e211a76016d7c15d09455f3b",
-      "zip_valid": true,
-      "schema": {
-        "member": "log20221230.csv",
-        "member_count": 1,
-        "header": [
-          "time",
-          "uri_path"
-        ],
-        "request_time_column": "time",
-        "expected_columns_present": true,
-        "traffic_quality_columns_present": [],
-        "traffic_quality_fields_absent_in_modern_schema": true,
-        "sample_rows_read": 250,
-        "sample_uri_regex_matches": 193,
-        "sample_uri_match_rate": 0.772,
-        "first_rows_sha256": "e9f5ae23a0fc39754abdeeac013016d40d9ef7e201e831d73c7536f2a5957ef2",
-        "request_time_parse_rate": 1.0,
-        "request_time_examples": [
-          {
-            "raw": "2022-12-30T23:59:58.997-0500",
-            "normalized_iso": "2022-12-30T23:59:58.997000-05:00"
-          },
-          {
-            "raw": "2022-12-30T23:59:58.993-0500",
-            "normalized_iso": "2022-12-30T23:59:58.993000-05:00"
-          },
-          {
-            "raw": "2022-12-30T23:59:58.992-0500",
-            "normalized_iso": "2022-12-30T23:59:58.992000-05:00"
-          },
-          {
-            "raw": "2022-12-30T23:59:58.991-0500",
-            "normalized_iso": "2022-12-30T23:59:58.991000-05:00"
-          },
-          {
-            "raw": "2022-12-30T23:59:58.987-0500",
-            "normalized_iso": "2022-12-30T23:59:58.987000-05:00"
-          }
-        ]
-      },
-      "error": null,
-      "download_bytes": 294991286
+      "reachable": false,
+      "http_status": null,
+      "content_length": null,
+      "content_type": null,
+      "accept_ranges": null,
+      "etag": null,
+      "sha256": null,
+      "zip_valid": false,
+      "schema": null,
+      "error": "HTTPError:HTTP Error 503: Service Unavailable"
     },
     {
       "control_date": "2025-06-30",
@@ -210,5 +171,5 @@
     "2017_07_01_to_2020_05_18_available": false,
     "legacy_modern_schema_splice_allowed": false
   },
-  "receipt_fingerprint": "b56a9ad9a0498b4a7176af28c52b7acd21ca87d12a54521a0488e6ab7e727cd6"
+  "receipt_fingerprint": "d0cb01a098fa30659bc472509d20045f2c06e33844226e2bdc86fb60a3f98a2a"
 }
