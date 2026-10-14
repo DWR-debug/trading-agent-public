@@ -201,3 +201,27 @@ def test_r4_parser_keeps_missing_date_change_missing():
     observed = lineage.parse_header_observation(body, "index_headers")
     assert observed["filing_date"] == "2017-06-30"
     assert observed["date_of_filing_date_change"] is None
+
+
+def test_r4_parser_normalizes_iso_date_change_on_text_route():
+    body = (
+        b"ACCESSION NUMBER: 0001008929-17-000008\\n"
+        b"CENTRAL INDEX KEY: 1008929\\n"
+        b"CONFORMED SUBMISSION TYPE: 13F-HR\\n"
+        b"FILED AS OF DATE: 20170630\\n"
+        b"DATE OF FILING DATE CHANGE: 2017-05-15\\n"
+    )
+    observed = lineage.parse_header_observation(body, "index_headers")
+    assert observed["date_of_filing_date_change"] == "2017-05-15"
+
+
+def test_r4_workflow_is_single_vintage_read_only_and_bounded():
+    from pathlib import Path
+
+    workflow = Path(".github/workflows/q104-i19-residual-source-lineage-r4.yml").read_text(encoding="utf-8")
+    assert "q104_i19_residual_source_lineage_r4.trigger" in workflow
+    assert "q104-i19-census-2017-2018-$source_run_id" in workflow
+    assert "2024-2025-09" not in workflow
+    assert "if-no-files-found: warn" in workflow
+    assert "CENSUS_RESTART=false" in Path("research/run_requests/q104_i19_residual_source_lineage_r4.trigger").read_text(encoding="utf-8")
+    assert "PERFORMANCE=false" in Path("research/run_requests/q104_i19_residual_source_lineage_r4.trigger").read_text(encoding="utf-8")
