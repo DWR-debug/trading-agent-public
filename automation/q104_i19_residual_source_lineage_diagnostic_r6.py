@@ -46,6 +46,12 @@ SAMPLES = (
 MAX_SOURCE_ARCHIVE_BYTES = 40_000_000
 MAX_HEADER_RESPONSE_BYTES = 262_144
 MAX_TOTAL_DOWNLOAD_BYTES = 40_000_000
+RECOVERY_RUN_ID = "38250105408"
+RECOVERY_ARTIFACT_ID = "11747003791"
+RECOVERY_ARTIFACT_NAME = "q104-i19-targeted-acceptance-repair-38168441086-38250105408-2"
+PRIOR_RECOVERY_RUN_ID = "38231636160"
+PRIOR_RECOVERY_RECEIPT_SHA256 = "f8be22dd8ecaabd4a589dde8dd2ec81ce1a4acf36d4d5e1668562082187b1d47"
+RECOVERED_SHARD_FINGERPRINT = "cb1f2bf7705e4b9cc0500279650fd2d88ffd1180320137e1de8157a6cb129663"
 REQUEST_GAP_SECONDS = 1.0
 REQUEST_TIMEOUT_SECONDS = 120
 USER_AGENT = census.UA
@@ -59,6 +65,11 @@ FROZEN_REQUEST_VALUES = {
     "MAX_SOURCE_ARCHIVE_BYTES": str(MAX_SOURCE_ARCHIVE_BYTES),
     "MAX_HEADER_RESPONSE_BYTES": str(MAX_HEADER_RESPONSE_BYTES),
     "MAX_TOTAL_DOWNLOAD_BYTES": str(MAX_TOTAL_DOWNLOAD_BYTES),
+    "RECOVERY_RUN_ID": RECOVERY_RUN_ID,
+    "RECOVERY_ARTIFACT_ID": RECOVERY_ARTIFACT_ID,
+    "PRIOR_RECOVERY_RUN_ID": PRIOR_RECOVERY_RUN_ID,
+    "PRIOR_RECOVERY_RECEIPT_SHA256": PRIOR_RECOVERY_RECEIPT_SHA256,
+    "RECOVERED_SHARD_FINGERPRINT": RECOVERED_SHARD_FINGERPRINT,
     "CENSUS_RESTART": "false",
     "REPAIR_RECEIPTS": "false",
     "PERFORMANCE": "false",
@@ -133,7 +144,7 @@ def validate_frozen_inputs(
     request: dict[str, str],
     snapshot_dir: Path,
     input_dir: Path,
-) -> tuple[dict[str, dict[str, Any]], dict[str, str]]:
+) -> tuple[dict[str, dict[str, Any]], dict[str, str], dict[str, str], dict[str, Any]]:
     source_page = snapshot_dir / "source_page.html"
     if not source_page.is_file():
         raise DiagnosticError("Q104_LINEAGE_SOURCE_PAGE_MISSING")
@@ -141,41 +152,99 @@ def validate_frozen_inputs(
     if actual_page_sha != SOURCE_PAGE_SHA256 or actual_page_sha != request["SOURCE_PAGE_SHA256"]:
         raise DiagnosticError("Q104_LINEAGE_SOURCE_PAGE_SHA256_MISMATCH:" + actual_page_sha)
 
-    receipts: dict[str, dict[str, Any]] = {}
-    shard_fingerprints: dict[str, str] = {}
+    recovery_path = input_dir / "targeted_recovery_receipt.json"
+    if not recovery_path.is_file():
+        raise DiagnosticError("Q104_LINEAGE_RECOVERY_RECEIPT_MISSING")
+    recovery = json.loads(recovery_path.read_text(encoding="utf-8"))
+    if str(recovery.get("source_run_id")) != SOURCE_RUN_ID:
+        raise DiagnosticError("Q104_LINEAGE_RECOVERY_SOURCE_RUN_MISMATCH")
+    if str(recovery.get("prior_recovery_run_id")) != PRIOR_RECOVERY_RUN_ID:
+        raise DiagnosticError("Q104_LINEAGE_PRIOR_RECOVERY_RUN_MISMATCH")
+    if recovery.get("prior_recovery_receipt_sha256") != PRIOR_RECOVERY_RECEIPT_SHA256:
+        raise DiagnosticError("Q104_LINEAGE_PRIOR_RECOVERY_RECEIPT_SHA256_MISMATCH")
+    if recovery.get("status") != "RECOVERY_INCOMPLETE":
+        raise DiagnosticError("Q104_LINEAGE_RECOVERY_STATUS_UNEXPECTED")
+    if recovery.get("original_shard_receipt_fingerprints", {}).get("2013-2016") != SOURCE_SHARDS["2013-2016"]["receipt_fingerprint"]:
+        raise DiagnosticError("Q104_LINEAGE_RECOVERY_ORIGINAL_SHARD_FINGERPRINT_MISMATCH")
+    if recovery.get("repaired_shard_receipt_fingerprints", {}).get("2013-2016") != RECOVERED_SHARD_FINGERPRINT:
+        raise DiagnosticError("Q104_LINEAGE_RECOVERED_SHARD_FINGERPRINT_MISMATCH")
+
+    original_receipts: dict[str, dict[str, Any]] = {}
+    recovered_receipts: dict[str, dict[str, Any]] = {}
+    original_fingerprints: dict[str, str] = {}
+    recovered_fingerprints: dict[str, str] = {}
     for shard, pin in SOURCE_SHARDS.items():
-        receipt_path = _find_shard_receipt(input_dir / shard)
-        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-        if receipt.get("shard") != shard:
-            raise DiagnosticError("Q104_LINEAGE_SHARD_ID_MISMATCH:" + shard)
-        if receipt.get("source_page_sha256") != SOURCE_PAGE_SHA256:
-            raise DiagnosticError("Q104_LINEAGE_SHARD_SOURCE_PAGE_MISMATCH:" + shard)
-        if receipt.get("receipt_fingerprint") != pin["receipt_fingerprint"]:
+        original = json.loads(_find_shard_receipt(input_dir / "input" / shard).read_text(encoding="utf-8"))
+        recovered = json.loads(_find_shard_receipt(input_dir / "repaired" / shard).read_text(encoding="utf-8"))
+        for label, receipt in (("ORIGINAL", original), ("RECOVERED", recovered)):
+            if receipt.get("shard") != shard:
+                raise DiagnosticError(f"Q104_LINEAGE_{label}_SHARD_ID_MISMATCH:" + shard)
+            if receipt.get("source_page_sha256") != SOURCE_PAGE_SHA256:
+                raise DiagnosticError(f"Q104_LINEAGE_{label}_SHARD_SOURCE_PAGE_MISMATCH:" + shard)
+            if receipt_fingerprint(receipt) != receipt.get("receipt_fingerprint"):
+                raise DiagnosticError(f"Q104_LINEAGE_{label}_SHARD_CANONICAL_FINGERPRINT_INVALID:" + shard)
+        if original.get("receipt_fingerprint") != pin["receipt_fingerprint"]:
             raise DiagnosticError("Q104_LINEAGE_SHARD_RECEIPT_FINGERPRINT_MISMATCH:" + shard)
-        if receipt_fingerprint(receipt) != receipt.get("receipt_fingerprint"):
-            raise DiagnosticError("Q104_LINEAGE_SHARD_RECEIPT_CANONICAL_FINGERPRINT_INVALID:" + shard)
-        receipts[shard] = receipt
-        shard_fingerprints[shard] = str(receipt["receipt_fingerprint"])
+        if recovered.get("receipt_fingerprint") != RECOVERED_SHARD_FINGERPRINT:
+            raise DiagnosticError("Q104_LINEAGE_RECOVERED_SHARD_RECEIPT_FINGERPRINT_MISMATCH:" + shard)
+        original_receipts[shard], recovered_receipts[shard] = original, recovered
+        original_fingerprints[shard] = str(original["receipt_fingerprint"])
+        recovered_fingerprints[shard] = str(recovered["receipt_fingerprint"])
+
+    matching_attempts = [
+        item for item in recovery.get("attempts", [])
+        if item.get("shard") == "2013-2016" and item.get("accession") == SAMPLES[0]["accession"]
+    ]
+    if len(matching_attempts) != 1:
+        raise DiagnosticError("Q104_LINEAGE_RECOVERY_SAMPLE_ATTEMPT_COUNT_INVALID")
+    attempt = matching_attempts[0]
+    if (
+        attempt.get("original_failure") != "HEADER_VALIDATION:FILING_DATE_MISMATCH"
+        or attempt.get("attempts") != 0
+        or attempt.get("status") != "NOT_RETRIED_NONTRANSIENT"
+        or attempt.get("final_error") != "HEADER_VALIDATION:FILING_DATE_MISMATCH"
+    ):
+        raise DiagnosticError("Q104_LINEAGE_RECOVERY_SAMPLE_CLASSIFICATION_MISMATCH")
+    if SAMPLES[0]["accession"] not in recovery.get("failed_accession_set", []):
+        raise DiagnosticError("Q104_LINEAGE_RECOVERY_SAMPLE_NOT_IN_FAILED_SET")
 
     for archive_name, pin in ARCHIVE_PINS.items():
-        shard_receipt = receipts[pin["shard"]]
-        matches = [
-            archive for archive in shard_receipt.get("archives", [])
+        original_matches = [
+            archive for archive in original_receipts[pin["shard"]].get("archives", [])
             if archive.get("archive", {}).get("url") == pin["url"]
         ]
-        if len(matches) != 1:
+        recovered_matches = [
+            archive for archive in recovered_receipts[pin["shard"]].get("archives", [])
+            if archive.get("archive", {}).get("url") == pin["url"]
+        ]
+        if len(original_matches) != 1 or len(recovered_matches) != 1:
             raise DiagnosticError("Q104_LINEAGE_PINNED_ARCHIVE_RECORD_COUNT_INVALID:" + archive_name)
-        archive_record = matches[0]
-        if archive_record.get("archive_sha256") != pin["sha256"]:
-            raise DiagnosticError("Q104_LINEAGE_RECEIPT_ARCHIVE_SHA256_MISMATCH:" + archive_name)
-        if archive_record.get("archive_bytes") != pin["bytes"]:
-            raise DiagnosticError("Q104_LINEAGE_RECEIPT_ARCHIVE_BYTES_MISMATCH:" + archive_name)
-        frozen_failures = archive_record.get("acceptance_failures", {})
-        for sample in SAMPLES:
-            if sample["archive"] == archive_name:
-                if frozen_failures.get(sample["accession"]) != sample["frozen_failure"]:
-                    raise DiagnosticError("Q104_LINEAGE_FROZEN_FAILURE_NOT_FOUND:" + sample["accession"])
-    return receipts, shard_fingerprints
+        original_archive, recovered_archive = original_matches[0], recovered_matches[0]
+        for label, archive_record in (("ORIGINAL", original_archive), ("RECOVERED", recovered_archive)):
+            if archive_record.get("archive_sha256") != pin["sha256"]:
+                raise DiagnosticError(f"Q104_LINEAGE_{label}_RECEIPT_ARCHIVE_SHA256_MISMATCH:" + archive_name)
+            if archive_record.get("archive_bytes") != pin["bytes"]:
+                raise DiagnosticError(f"Q104_LINEAGE_{label}_RECEIPT_ARCHIVE_BYTES_MISMATCH:" + archive_name)
+        original_failure = original_archive.get("acceptance_failures", {}).get(SAMPLES[0]["accession"])
+        recovered_failure = recovered_archive.get("acceptance_failures", {}).get(SAMPLES[0]["accession"])
+        if original_failure != "SEC_HEADER_HTTP_503":
+            raise DiagnosticError("Q104_LINEAGE_ORIGINAL_FAILURE_CLASSIFICATION_MISMATCH:" + str(original_failure))
+        if recovered_failure != SAMPLES[0]["frozen_failure"]:
+            raise DiagnosticError("Q104_LINEAGE_FROZEN_FAILURE_NOT_FOUND:" + SAMPLES[0]["accession"])
+
+    recovery_lineage = {
+        "recovery_run_id": RECOVERY_RUN_ID,
+        "recovery_artifact_id": RECOVERY_ARTIFACT_ID,
+        "recovery_artifact_name": RECOVERY_ARTIFACT_NAME,
+        "prior_recovery_run_id": PRIOR_RECOVERY_RUN_ID,
+        "prior_recovery_receipt_sha256": PRIOR_RECOVERY_RECEIPT_SHA256,
+        "original_failure": "SEC_HEADER_HTTP_503",
+        "recovered_failure": "HEADER_VALIDATION:FILING_DATE_MISMATCH",
+        "terminal_recovery_attempt_count": 0,
+        "prior_recovery_attempt_count": 2,
+        "interpretation": "Preserve original HTTP 503 and later bounded recovery classification as separate immutable evidence; neither receipt is rewritten.",
+    }
+    return recovered_receipts, original_fingerprints, recovered_fingerprints, recovery_lineage
 
 
 def fetch_bounded(
@@ -390,7 +459,7 @@ def run_diagnostic(
     input_dir: Path,
     output: Path,
 ) -> dict[str, Any]:
-    _, shard_fingerprints = validate_frozen_inputs(request, snapshot_dir, input_dir)
+    _, source_shard_fingerprints, recovered_shard_fingerprints, recovery_lineage = validate_frozen_inputs(request, snapshot_dir, input_dir)
     budget = DownloadBudget(MAX_TOTAL_DOWNLOAD_BYTES)
     archive_results: dict[str, dict[str, Any]] = {}
     sample_rows: dict[str, dict[str, str]] = {}
@@ -494,7 +563,9 @@ def run_diagnostic(
         "request_sequence": request["REQUEST_SEQUENCE"],
         "source_run_id": SOURCE_RUN_ID,
         "source_page_sha256": SOURCE_PAGE_SHA256,
-        "source_shard_receipt_fingerprints": shard_fingerprints,
+        "source_shard_receipt_fingerprints": source_shard_fingerprints,
+        "recovered_shard_receipt_fingerprints": recovered_shard_fingerprints,
+        "recovery_lineage": recovery_lineage,
         "pinned_archives": archive_results,
         "samples": sample_results,
         "summary": {
@@ -511,7 +582,7 @@ def run_diagnostic(
             "identity_discrepancies_resolved": False,
             "acceptance_time_gate_cleared": False,
             "historical_archive_gate_reopened": False,
-            "next_action": "Compare this additional frozen 2013 Q3 accession with the immutable 14-row aggregate and R4; this is a new row, not a new archive vintage, and does not authorize precedence or repairs.",
+            "next_action": "Compare this additional frozen 2013 Q3 accession with the immutable 14-row aggregate; preserve original HTTP 503 and recovered filing-date-mismatch classifications separately; no precedence, receipt repair, or gate clearance.",
         },
         "safety": {
             "paper_only": True,
