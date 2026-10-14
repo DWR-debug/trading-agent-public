@@ -173,6 +173,7 @@ def test_r6_freezes_one_new_accession_from_existing_archive_vintage():
     assert lineage.RECOVERY_RUN_ID == "38250105408"
     assert lineage.RECOVERY_ARTIFACT_ID == "11747003791"
     assert lineage.RECOVERED_SHARD_FINGERPRINT == "cb1f2bf7705e4b9cc0500279650fd2d88ffd1180320137e1de8157a6cb129663"
+    assert lineage.FROZEN_REQUEST_VALUES["RECOVERED_SHARD_FINGERPRINT"] == lineage.RECOVERED_SHARD_FINGERPRINT
 
 
 def test_r6_parser_captures_date_change_as_separate_clock():
