@@ -28,7 +28,15 @@ The SEC's [Webmaster FAQ](https://www.sec.gov/about/webmaster-frequently-asked-q
 - Preserve the frozen bulk date, header filing date, acceptance timestamp, and `DATE-OF-FILING-DATE-CHANGE` as separate fields.
 - Do not infer that the date-change field supersedes the header date or that either field proves the first-public clock.
 - Extend header-only observations across additional already-frozen date-mismatch archive vintages only after the exact sample keys, routes, budgets, and source receipt fingerprints are preregistered.
-- Keep the current 14-row aggregate descriptive. Do not repair source receipts or restart the census based on this literature finding.
+- Keep the existing 14-row aggregate descriptive and unchanged; the R4 row below is not silently merged into that immutable receipt. Do not repair source receipts or restart the census based on this literature finding.
+
+**Verified one-row R4 follow-up — 2017 Q2 archive:** [run #38574180245](https://github.com/DWR-debug/trading-agent-public/actions/runs/38574180245) completed with `LINEAGE_DIAGNOSTIC_COMPLETE`, receipt fingerprint `8be8fd68de0324a331d2b587a540b605ac5c6e9a71ec203fa9d2fc089450fb3c`, and [immutable artifact #11899236364](https://github.com/DWR-debug/trading-agent-public/actions/runs/38574180245/artifacts/11899236364). The one frozen accession `0001008929-17-000008` was found in the previously fingerprinted `2017q2_form13f.zip` source archive; observed length and SHA-256 matched the historical census pin. Three predeclared header routes completed with zero errors; aggregate response bytes were 43,305,542 under the 50,000,000-byte bound.
+
+- Frozen bulk row: `FILING_DATE=2017-05-31`, `13F-HR`, filer CIK `0001008929`.
+- Index-header and raw-SGML routes agreed on header `FILING-DATE=2017-04-21`, EDGAR acceptance timestamp `2017-05-31T14:33:43`, and `DATE-OF-FILING-DATE-CHANGE=2017-06-01`. All three routes agreed on accession, filer CIK and form.
+- The bounded complete-submission header prefix retained the 2017-04-21 filing date and acceptance timestamp, but the date-change field was absent from that representation. All three routes still disagreed with the frozen bulk filing date.
+
+This is one selected row, not a prevalence estimate. It strengthens the evidence that these are distinct clocks/fields and that date-change observability depends on the header representation; it does not establish which filing date should drive production joins or when the record first became public. No precedence was applied, no source receipt changed, the census was not restarted, and no historical/PIT/performance gate was cleared.
 
 **Reusable infrastructure idea:** represent each event's information time as a *typed boundary with evidence quality*, not a single unqualified date. Where first public availability is not directly observed, store the known lower/upper constraints and the evidence supporting them; exclude events whose uncertainty interval crosses the decision cutoff. Do not manufacture an exact timestamp from an acceptance date, a date-only field, a later download, or a missing archive capture.
 
