@@ -2,7 +2,7 @@ name: Q221 Transaction-Level Parent UEI Feasibility Probe
 
 on:
   push:
-    branches: [master]
+    branches: [master, research/q221-parent-uei-single-retry-2026-10-14]
     paths:
       - "research/run_requests/q221_transaction_parent_uei_probe.trigger"
   workflow_dispatch: {}
