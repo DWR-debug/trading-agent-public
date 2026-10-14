@@ -70,7 +70,7 @@ def fake_fetcher_for_test(calls: list[str]):
 
 def test_registered_preregistration_has_exact_sample_contract_and_closed_gates():
     prereg = audit.validate_preregistration(ROOT)
-    assert prereg["sample_count"] == 3
+    assert prereg["bounds"]["sample_count"] == 3
     assert prereg["bounds"]["retry_count"] == 0
     assert prereg["bounds"]["persist_complete_submission_text"] is False
     assert [x["record_key"] for x in prereg["samples"]] == [x["record_key"] for x in audit.SAMPLES]
