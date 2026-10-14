@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import zipfile
+from pathlib import Path
 
 import pytest
 
@@ -172,3 +173,12 @@ def test_r3_freezes_only_the_remaining_2017q2_mismatch_and_never_expands_the_cen
     assert lineage.FROZEN_REQUEST_VALUES["CENSUS_RESTART"] == "false"
     assert lineage.FROZEN_REQUEST_VALUES["REPAIR_RECEIPTS"] == "false"
     assert all(lineage.FROZEN_REQUEST_VALUES[k] == "false" for k in ("CENSUS_RESTART", "REPAIR_RECEIPTS", "PERFORMANCE", "HOLDOUT_SELECTION", "RANKING", "TUNING", "PROMOTION", "LIVE_EXECUTION"))
+
+
+def test_registered_r3_trigger_matches_frozen_request_contract():
+    request = Path("research/run_requests/q104_i19_residual_source_lineage_r3.trigger")
+    parsed = lineage.read_request(request)
+    assert parsed["SOURCE_RUN_ID"] == "38168441086"
+    assert parsed["SAMPLE_COUNT"] == "1"
+    assert parsed["RUN_Q104_I19_ADDITIONAL_VINTAGE_DATE_CHANGE_PROBE"] == "true"
+    assert parsed["LIVE_EXECUTION"] == "false"
