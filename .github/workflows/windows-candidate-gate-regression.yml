@@ -99,7 +99,20 @@ jobs:
           "%PY_EXE%" --version || exit /b 1
           "%PY_EXE%" -m pip --version >nul 2>&1
           if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
-          "%PY_EXE%" -m pip install --disable-pip-version-check pytest pandas exchange-calendars pypdf tzdata==2026.5 || exit /b 1
+          set "PIP_DEFAULT_TIMEOUT=60"
+          set "PIP_RETRIES=5"
+          "%PY_EXE%" -m pip install --disable-pip-version-check --retries 5 --timeout 60 pytest pandas exchange-calendars pypdf tzdata==2026.5
+          if not errorlevel 1 goto :pip_install_ok
+          echo PIP_INSTALL_ATTEMPT_1_FAILED; retrying once after transient index/network errors.
+          timeout /t 10 /nobreak >nul
+          "%PY_EXE%" -m pip install --disable-pip-version-check --retries 5 --timeout 60 pytest pandas exchange-calendars pypdf tzdata==2026.5
+          if not errorlevel 1 goto :pip_install_ok
+          echo PIP_INSTALL_ATTEMPT_2_FAILED; retrying final time after transient index/network errors.
+          timeout /t 20 /nobreak >nul
+          "%PY_EXE%" -m pip install --disable-pip-version-check --retries 5 --timeout 60 pytest pandas exchange-calendars pypdf tzdata==2026.5
+          if errorlevel 1 exit /b 1
+          :pip_install_ok
+          "%PY_EXE%" -m pytest --version || exit /b 1
           endlocal
       - name: Run offline/mocked candidate and orchestrator regression tests
         shell: cmd
