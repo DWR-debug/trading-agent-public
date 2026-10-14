@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "record_type": "rolling_capacity_window",
   "status": "ACTIVE",
-  "window_id": "TA-2H-2026-10-14-Q120-Q127-RECOVERY-0519Z",
-  "start_utc": "2026-10-14T05:19:00Z",
-  "end_utc": "2026-10-14T07:19:00Z",
+  "window_id": "TA-2H-2026-10-14-RUNNER-C-CANDIDATE-GATE-0840Z",
+  "start_utc": "2026-10-14T08:40:00Z",
+  "end_utc": "2026-10-14T10:40:00Z",
   "cadence_minutes": 10,
   "max_dispatch_per_tick": 1,
   "retry_limit_per_workflow_per_phase": 1,
@@ -15,7 +15,7 @@
       "id": "W3",
       "start_after_minutes": 0,
       "name": "RUNNER_C_INDEPENDENT_CANDIDATE_DEVELOPMENT",
-      "objective": "Use the free exclusive Windows Runner C for the existing deterministic source/PIT readiness and guard workpack while hosted evidence-graph work continues; do not repeat terminal Q220/Q221 source attempts.",
+      "objective": "Use the exclusive Windows Runner C for bounded deterministic source/PIT readiness, next-gate compilation and independent contract checks on current master. This is engineering/source-readiness work only; do not rerun terminal Q220/Q221 source probes or claim scientific readiness.",
       "workflows": [
         "windows-runner-c-long-research.yml"
       ]
@@ -41,12 +41,12 @@
     "Scientific authority remains unchanged; this scheduler only allocates execution capacity.",
     "Successful source-feasibility workflows are not re-run as filler; only their explicit next-gate workflows may be scheduled."
   ],
-  "retargeted_at_utc": "2026-10-14T05:20:34Z",
-  "retarget_reason": "The first push-triggered capacity wave for the previous window ran at 05:19Z, one minute before the configured 05:20Z start, and correctly reported WINDOW_INACTIVE. This revision starts at 05:19Z so the path-triggered event sees an active lease immediately after merge; the prior window end of 07:20Z remains essentially unchanged. No research source retries or scientific gates are changed.",
+  "renewed_at_utc": "2026-10-14T08:40:00Z",
+  "renewal_reason": "The prior two-hour lease expired at 07:19Z and the latest verified dashboard reported zero active research lanes with a six-lane shortfall. Renew the bounded Runner C workpack for a fresh two-hour lease; the scheduler remains fail-closed, skips active/recent duplicate work and retries at most once. No source, candidate, parameter, performance or scientific gate is changed.",
   "session_mode": {
     "status": "ACTIVE",
     "duration_minutes": 120,
-    "directive": "Use Runner C for the existing deterministic orthogonal source/PIT readiness workpack, without duplicating Q220/Q221 source attempts or claiming Q120/Q127 scientific readiness. Refresh after the lease.",
+    "directive": "Route Runner C to the existing current-master deterministic source/PIT readiness workpack. Record actual runner assignment and immutable artifact; refresh only after lease expiry or a material evidence change.",
     "no_artificial_work": true,
     "no_duplicate_work": true,
     "scientific_boundary_unchanged": true
