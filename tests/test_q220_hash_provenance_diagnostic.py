@@ -1,4 +1,14 @@
-from automation.q220_hash_provenance_diagnostic import classify_primary_hashes, EXPECTED_SHA
+import json
+from pathlib import Path
+
+from automation.q220_hash_provenance_diagnostic import (
+    CANDIDATE,
+    COMPILER_FP,
+    EXPECTED_SHA,
+    POPULATION_FP,
+    classify_primary_hashes,
+    fp,
+)
 
 
 def test_distinct_whole_document_hashes_same_metadata_remain_unresolved():
@@ -31,3 +41,21 @@ def test_textblock_and_submission_member_hashes_are_not_whole_primary_hashes():
     ])
     assert out["whole_primary_observation_count"] == 0
     assert out["frozen_expected_hash_reproduced"] is False
+
+
+def test_current_canonical_compiler_receipt_matches_frozen_pin():
+    root = Path(__file__).resolve().parents[1]
+    compiler = json.loads(
+        (root / "research/evidence/q220_historical_representation_pit_latest.json")
+        .read_text(encoding="utf-8")
+    )
+
+    assert compiler["candidate_id"] == CANDIDATE
+    assert compiler["status"] == "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED"
+    assert compiler["receipt_fingerprint"] == COMPILER_FP
+    assert fp(compiler) == COMPILER_FP
+    assert compiler["source_population_receipt_fingerprint"] == POPULATION_FP
+    assert compiler["source_hash_failure_count"] == 55
+    assert len(compiler["source_hash_failures"]) == 55
+    assert compiler["verified_primary_document_count"] == 0
+    assert compiler["gate_positive"] is False
