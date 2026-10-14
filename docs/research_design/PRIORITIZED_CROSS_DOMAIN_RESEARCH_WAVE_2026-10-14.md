@@ -8,7 +8,7 @@
 
 ## 1. Executive decision
 
-The highest-value finding is operational rather than a new alpha claim: the scheduled Literature Frontier Scout has repeatedly failed before it reaches its discovery queries. Run [38559281959](https://github.com/DWR-debug/trading-agent-public/actions/runs/38559281959) failed because the runner image did not have `pytest` installed; the public-literature and repository scans were skipped and no discovery receipt was produced. A narrow bootstrap fix and regression test are proposed separately in [PR #1441](https://github.com/DWR-debug/trading-agent-public/pull/1441). Until that is merged and a later scheduled run produces a receipt, the continuous literature pipeline should be treated as configured but not currently producing discovery evidence.
+The highest-value operational finding was that the scheduled Literature Frontier Scout was failing before it could produce discovery evidence. Run [38559281959](https://github.com/DWR-debug/trading-agent-public/actions/runs/38559281959) lacked `pytest`; after [PR #1441](https://github.com/DWR-debug/trading-agent-public/pull/1441) restored that dependency, event-driven run [38570923825](https://github.com/DWR-debug/trading-agent-public/actions/runs/38570923825) exposed a second defect: the run-scoped output variable `OUT` was undefined. [PR #1443](https://github.com/DWR-debug/trading-agent-public/pull/1443) added a scoped smoke trigger, and [PR #1445](https://github.com/DWR-debug/trading-agent-public/pull/1445) defined the output path. The subsequent run [38571272581](https://github.com/DWR-debug/trading-agent-public/actions/runs/38571272581) completed all steps successfully and uploaded an immutable discovery artifact. This is the first verified successful scout receipt in this repair sequence; metadata remains discovery-only, not project evidence.
 
 The external research produced three useful dispositions:
 
@@ -79,6 +79,25 @@ No performance experiment, universe search, horizon search, threshold search, or
 The IMF working paper [Nowcasting Global Trade from Space](https://www.imf.org/-/media/files/publications/wp/2025/english/wpiea2025093-print-pdf.pdf) and the public [Watching Trade from Space repository](https://github.com/yonggeun-jung/watching_trade_public) support the feasibility of combining vessel movements, satellite SAR, nighttime lights, and port characteristics to measure maritime activity. The repository notes that satellite extraction requires Google Earth Engine access; therefore, public code does not by itself establish a fully self-contained, free historical data path.
 
 The project has already captured port/satellite-vs-AIS divergence as a frontier idea in [PR #1257](https://github.com/DWR-debug/trading-agent-public/pull/1257). This pass adds no new candidate. Any future continuation should remain attached to that existing lineage and first prove historical observation dates, sensor-quality controls, geolocation/entity exposure, free access, and incremental information beyond ordinary trade/commodity data.
+
+### 2.6 Triage of the successful Literature Frontier Scout receipt
+
+Run [38571272581](https://github.com/DWR-debug/trading-agent-public/actions/runs/38571272581) completed with:
+- 8 public OpenAlex metadata queries;
+- 47 deduplicated work records, zero query errors, bundle fingerprint `2ef74cc3b0008f76319d2f2745a623c9b26978a57c82153d041d3cd183170dc0`;
+- 35 public GitHub repository records, zero repository/web-link scan errors, and zero Hacker News web links returned;
+- immutable artifact [literature-frontier-scout-38571272581](https://github.com/DWR-debug/trading-agent-public/actions/runs/38571272581#artifacts), SHA-256 digest `892ddda12eb42777b1f676c46bfc181566a4f250bc662b06925b02cd472c19a3`.
+
+These are discovery metadata counts, not 82 validated papers or candidate evidence. Repository search returned substantial noise (general AI/API lists and unrelated projects); no strategy was selected from popularity or metadata counts. Triage of the source-backed leads:
+
+| Lead from scout | Project disposition | Cheap next gate / reason |
+|---|---|---|
+| Li & Luan, “News-based investor disagreement and stock returns” (2025) | **Deduplicate into existing Q213**, not a new candidate. The source already appears in the project’s literature-frontier expansion. | Preserve Q213’s existing mechanism: volume–volatility elasticity around news. Do not reopen until multi-year public intraday news/volume/volatility PIT feasibility is demonstrated. |
+| Huang et al., “Local information advantage and stock returns: Evidence from social media” (2024) | **UNVERIFIED / parked design lead**, no new candidate ID. | The paper’s geography-conditioned message-board posting measure is economically distinct from pure text sentiment, but public historical post coverage, reliable location labels, terms/licensing, edit/deletion history, and issuer mapping are not established. Kill if any core input requires unavailable/paywalled or non-reconstructable history. |
+| Wang et al., “AWARE-FX” (2026 preprint) | **Method-transfer lead only**, not an alpha candidate. | Useful auditable pattern: channel-specific labels, negation/accounting-status rules, exact evidence gates, selective abstention and a traceable snippet ledger. Its Hong Kong firm-year corpus, code/data reuse terms, and project-compatible historical vintages have not been verified; do not import scores or model weights without that audit. |
+| Chen et al., “The spillover effect of private firm disclosure on public firms’ loan pricing” (2026) | **PRUNE from current equity-candidate queue; retain as literature prior art.** | The reported outcome is syndicated-loan spreads and the mechanism depends on private-firm disclosures. No free, point-in-time, issuer-linked loan-spread dataset has been established. Reconsider only if a public-source feasibility proof exists; do not proxy loan pricing with equity returns without a separate mechanism. |
+
+CrossAlpha remains merged-or-killed under Q088, and satellite/AIS/port divergence remains attached to its existing frontier lineage. The scout therefore yielded **zero new executable candidates** in this pass, which is a valid result: its main value is literature coverage and overlap control. No new candidate ID, runner dispatch, API key, paid data, performance trial, holdout selection, ranking, tuning, or promotion resulted from this triage.
 
 ## 3. Research methodology: useful ideas, not automatic adoption
 
