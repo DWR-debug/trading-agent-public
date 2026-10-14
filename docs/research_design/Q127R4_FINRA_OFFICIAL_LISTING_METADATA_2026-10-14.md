@@ -14,6 +14,8 @@ A manual live metadata inspection on 2026-10-14 returned HTTP 200 for both selec
 
 No visible `Updated` label was adjacent to these links in the current listing. FINRA's own page states that daily files are posted no later than 6:00 p.m. ET on the trade date, but also that a subsequent-day update is possible and updated files are labelled. These statements provide an official publication policy/nominal upper bound; they do not prove the historical first-public timestamp or which bytes were available then.
 
+The policy statement is captured from the current FINRA page. No archived version of the catalogue page establishes that the same statement was in force on each frozen 2024/2025 date. The year-filtered view is not a historical snapshot of the page itself, so its current presence of the URLs or lack of an Updated badge cannot prove the version available at the original date.
+
 The automated probe must preserve the exact selected-year filter, response hashes/byte counts, exact target URL counts and adjacent visible labels. It will not persist raw HTML or download the four FINRA files. Regardless of result, same-day PIT clearance and historical revision lineage remain false unless separate immutable vintage evidence is established.
 
 Sources: [FINRA Daily Short Sale Volume Files](https://www.finra.org/finra-data/browse-catalog/short-sale-volume-data/daily-short-sale-volume-files); [FINRA Short Sale Volume Data catalogue](https://www.finra.org/finra-data/browse-catalog/short-sale-volume-data).
