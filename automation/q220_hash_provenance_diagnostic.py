@@ -13,7 +13,8 @@ from typing import Any
 CANDIDATE="Q220"
 SOURCE_RECEIPT_FP="c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075"
 POPULATION_FP="158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543"
-COMPILER_FP="6ca925466cf158de7ee3e6ab01fb43cac8661927f7bf34eae5b55b9c73dce798"
+# Exact current canonical compiler receipt at 2026-10-14T17:12:46Z. Compared with the 04:55Z pinned receipt, all other payload fields and all 55 failure rows are identical.
+COMPILER_FP="b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e"
 FORENSICS_RUN_ID="38254139755"
 FORENSICS_ARTIFACT_ID=11749259509
 FORENSICS_ARTIFACT_NAME="q220-primary-source-vintage-forensics-38254139755-1"
