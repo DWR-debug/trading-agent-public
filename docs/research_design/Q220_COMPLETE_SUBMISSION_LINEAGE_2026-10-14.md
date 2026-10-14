@@ -125,3 +125,12 @@ The evidence now supports three appropriately separated statements:
 3. **Bounded repeatability probes:** repeated/profile-varied direct-primary requests were invariant within the fixed SPGI 2019 probe at that time; this does not reconstruct either historical byte set.
 
 No retained raw bodies allow a byte-level diff. This distinction is frozen in the result JSON; it must constrain any future source-contract proposal.
+
+
+### Historical independent reproduction was positive before the current mismatch
+
+A separate immutable receipt, committed at [`c3c01e66dba382e062d84614d179ae1c0b97614f`](https://github.com/DWR-debug/trading-agent-public/commit/c3c01e66dba382e062d84614d179ae1c0b97614f), records `Q220_INDEPENDENT_PIT_REPRODUCED` at **2026-10-11 23:08:31 UTC**. It says 55/55 primary documents were independently retrieved, all expected hashes matched, zero source-hash failures remained, and the independent prefix/textblock/structured checks passed. Its upstream population fingerprint is the same frozen `158e8496…` receipt; its compiler pin was `1b34b3ac…`.
+
+That historical result is not a current pass: it is tied to the older compiler fingerprint, and neither the receipt nor its artifact preserves the 55 raw document bodies. The independent retrieval code `automation/q220_independent_pit_reproduction.py` has the same Git blob SHA-1 (`3a424e17e2ca35b531e48c011480b1b9fab186db`) at that commit and current master. Its route is the direct primary HTML URL with a separate User-Agent and `Accept: text/html,application/xhtml+xml,*/*`. This is useful evidence that the expected hash set was successfully reproduced through a second retrieval/parser path after the frozen population set was persisted.
+
+By **2026-10-14 17:12:46 UTC**, the current compiler recorded 55/55 source-hash failures, zero verified primary documents, and a one-byte-short actual response length for every row. Thus a successful hash-verification state existed on 2026-10-11 and the mismatch state is present by 2026-10-14. The exact transition time and mechanism remain unknown; there is no retained raw body for a byte-level diff, and a positive historical reproduction receipt does not override the current blocked source/PIT gate.
