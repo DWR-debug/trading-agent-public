@@ -37,20 +37,46 @@ jobs:
         with:
           ref: master
           fetch-depth: 1
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.13.15"
-      - name: Install bounded test dependency
-        run: python -m pip install --disable-pip-version-check pytest
-      - name: Verify Windows runner identity
-        shell: pwsh
+      - name: Bootstrap pinned Python
+        shell: cmd
         run: |
-          Write-Output "RUNNER_NAME=$env:RUNNER_NAME"
-          Write-Output "RUNNER_OS=$env:RUNNER_OS"
-          Write-Output "RUNNER_ARCH=$env:RUNNER_ARCH"
-          if ($env:RUNNER_OS -ne "Windows") { throw "Expected a Windows self-hosted runner" }
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-wave-q104"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-wave-q104.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir pytest || exit /b 1
+          endlocal
+      - name: Install bounded test dependency
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-wave-q104\tools\python.exe"
+          "%PY_EXE%" -m pip install --disable-pip-version-check pytest
+          if errorlevel 1 exit /b 1
+      - name: Verify Windows runner identity
+        shell: cmd
+        run: |
+          @echo off
+          echo RUNNER_NAME=%RUNNER_NAME%
+          echo RUNNER_OS=%RUNNER_OS%
+          echo RUNNER_ARCH=%RUNNER_ARCH%
+          if /I not "%RUNNER_OS%"=="Windows" exit /b 1
       - name: Test header parser and fail-closed sample contract
-        run: python -m pytest -q tests/test_q104_i19_r3_date_change_header_probe.py
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\\python-3.13.15-nuget-wave-q104\\tools\\python.exe"
+          "%PY_EXE%" -m pytest -q tests/test_q104_i19_r3_date_change_header_probe.py
+          if errorlevel 1 exit /b 1
       - name: Download the exact immutable R3 receipt
         uses: actions/download-artifact@v6
         with:
@@ -60,10 +86,13 @@ jobs:
           repository: ${{ github.repository }}
           github-token: ${{ github.token }}
       - name: Capture only the 18 frozen EDGAR header routes
-        run: >-
-          python -m automation.q104_i19_r3_date_change_header_probe
-          --source-artifact q104-r3-source
-          --output runner-results/q104-r3-date-change/receipt.json
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\\python-3.13.15-nuget-wave-q104\\tools\\python.exe"
+          "%PY_EXE%" -m automation.q104_i19_r3_date_change_header_probe --source-artifact q104-r3-source --output runner-results/q104-r3-date-change/receipt.json
+          if errorlevel 1 exit /b 1
+
       - name: Upload immutable Q104 header-only result
         if: always()
         uses: actions/upload-artifact@v6
@@ -84,20 +113,46 @@ jobs:
         with:
           ref: master
           fetch-depth: 1
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.13.15"
-      - name: Install bounded test dependency
-        run: python -m pip install --disable-pip-version-check pytest
-      - name: Verify Windows runner identity
-        shell: pwsh
+      - name: Bootstrap pinned Python
+        shell: cmd
         run: |
-          Write-Output "RUNNER_NAME=$env:RUNNER_NAME"
-          Write-Output "RUNNER_OS=$env:RUNNER_OS"
-          Write-Output "RUNNER_ARCH=$env:RUNNER_ARCH"
-          if ($env:RUNNER_OS -ne "Windows") { throw "Expected a Windows self-hosted runner" }
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-wave-q104"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-wave-q104.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir pytest || exit /b 1
+          endlocal
+      - name: Install bounded test dependency
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-wave-q104\tools\python.exe"
+          "%PY_EXE%" -m pip install --disable-pip-version-check pytest
+          if errorlevel 1 exit /b 1
+      - name: Verify Windows runner identity
+        shell: cmd
+        run: |
+          @echo off
+          echo RUNNER_NAME=%RUNNER_NAME%
+          echo RUNNER_OS=%RUNNER_OS%
+          echo RUNNER_ARCH=%RUNNER_ARCH%
+          if /I not "%RUNNER_OS%"=="Windows" exit /b 1
       - name: Test frozen failure classification and no-retry boundary
-        run: python -m pytest -q tests/test_q221_transaction_parent_uei_probe_failure_audit.py
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\\python-3.13.15-nuget-wave-q104\\tools\\python.exe"
+          "%PY_EXE%" -m pytest -q tests/test_q221_transaction_parent_uei_probe_failure_audit.py
+          if errorlevel 1 exit /b 1
       - name: Download the exact failed-probe receipt, not source data
         uses: actions/download-artifact@v6
         with:
@@ -107,11 +162,13 @@ jobs:
           repository: ${{ github.repository }}
           github-token: ${{ github.token }}
       - name: Audit the 503 receipt offline — no USAspending requests
-        run: >-
-          python -m automation.q221_transaction_parent_uei_probe_failure_audit
-          --source-artifact q221-failed-probe-source
-          --request research/run_requests/q221_transaction_parent_uei_probe.trigger
-          --output runner-results/q221-failure-audit/receipt.json
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\\python-3.13.15-nuget-wave-q104\\tools\\python.exe"
+          "%PY_EXE%" -m automation.q221_transaction_parent_uei_probe_failure_audit --source-artifact q221-failed-probe-source --request research/run_requests/q221_transaction_parent_uei_probe.trigger --output runner-results/q221-failure-audit/receipt.json
+          if errorlevel 1 exit /b 1
+
       - name: Upload immutable Q221 diagnostic-only result
         if: always()
         uses: actions/upload-artifact@v6
@@ -132,20 +189,46 @@ jobs:
         with:
           ref: master
           fetch-depth: 1
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.13.15"
-      - name: Install bounded test dependency
-        run: python -m pip install --disable-pip-version-check pytest
-      - name: Verify dedicated long-run Windows runner identity
-        shell: pwsh
+      - name: Bootstrap pinned Python
+        shell: cmd
         run: |
-          Write-Output "RUNNER_NAME=$env:RUNNER_NAME"
-          Write-Output "RUNNER_OS=$env:RUNNER_OS"
-          Write-Output "RUNNER_ARCH=$env:RUNNER_ARCH"
-          if ($env:RUNNER_OS -ne "Windows") { throw "Expected a Windows self-hosted runner" }
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-wave-q220"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-wave-q220.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir pytest || exit /b 1
+          endlocal
+      - name: Install bounded test dependency
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-wave-q220\tools\python.exe"
+          "%PY_EXE%" -m pip install --disable-pip-version-check pytest
+          if errorlevel 1 exit /b 1
+      - name: Verify Windows runner identity
+        shell: cmd
+        run: |
+          @echo off
+          echo RUNNER_NAME=%RUNNER_NAME%
+          echo RUNNER_OS=%RUNNER_OS%
+          echo RUNNER_ARCH=%RUNNER_ARCH%
+          if /I not "%RUNNER_OS%"=="Windows" exit /b 1
       - name: Test offline hash classification
-        run: python -m pytest -q tests/test_q220_hash_provenance_diagnostic.py
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\\python-3.13.15-nuget-wave-q220\\tools\\python.exe"
+          "%PY_EXE%" -m pytest -q tests/test_q220_hash_provenance_diagnostic.py
+          if errorlevel 1 exit /b 1
       - name: Download only the two pinned small diagnostic artifacts
         uses: actions/download-artifact@v6
         with:
@@ -163,12 +246,13 @@ jobs:
           repository: ${{ github.repository }}
           github-token: ${{ github.token }}
       - name: Reconcile only frozen hashes and existing metadata
-        run: >-
-          python -m automation.q220_hash_provenance_diagnostic
-          --repo-root .
-          --forensics-artifact q220-forensics-source
-          --header-artifact q220-header-source
-          --output runner-results/q220-hash-provenance/receipt.json
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\\python-3.13.15-nuget-wave-q220\\tools\\python.exe"
+          "%PY_EXE%" -m automation.q220_hash_provenance_diagnostic --repo-root . --forensics-artifact q220-forensics-source --header-artifact q220-header-source --output runner-results/q220-hash-provenance/receipt.json
+          if errorlevel 1 exit /b 1
+
       - name: Upload immutable offline diagnostic
         if: always()
         uses: actions/upload-artifact@v6
