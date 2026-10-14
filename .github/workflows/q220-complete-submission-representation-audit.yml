@@ -1,0 +1,118 @@
+name: Q220 Complete Submission Representation Audit
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q220_complete_submission_representation_audit.trigger"
+      - "research/preregistrations/q220_complete_submission_representation_audit_2026_10_14.json"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: q220-complete-submission-representation-audit
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Checkout the exact canonical trigger revision
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Setup pinned Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Download the exact prior immutable Feed-forensics artifact (no new Feed request)
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-primary-source-vintage-forensics-38254139755-1
+          path: q220-forensics-source
+          run-id: 38254139755
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+      - name: Capture exactly the three frozen SEC Complete submission .txt routes
+        run: >-
+          python -m automation.q220_complete_submission_representation_audit
+          --mode capture
+          --repo-root .
+          --forensics-artifact q220-forensics-source
+          --output-dir q220-capture
+      - name: Upload bounded capture artifacts (no full .txt response body)
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-complete-submission-capture-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-capture/
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 6
+
+  independent_offline_reproduction:
+    needs: [capture]
+    if: needs.capture.result == 'success' && github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
+    steps:
+      - name: Checkout the exact canonical trigger revision
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Setup pinned Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Download the bounded capture artifact for offline replay
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-complete-submission-capture-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-capture
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+      - name: Download the exact prior immutable Feed-forensics artifact for pin revalidation (no new Feed request)
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-primary-source-vintage-forensics-38254139755-1
+          path: q220-forensics-source
+          run-id: 38254139755
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+      - name: Freeze expected deterministic analysis fingerprint
+        id: expected
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          receipt = json.loads(Path("q220-capture/receipt.json").read_text(encoding="utf-8"))
+          if receipt.get("status") != "Q220_COMPLETE_SUBMISSION_REPRESENTATION_DIAGNOSTIC_ONLY":
+              raise SystemExit("Q220_CAPTURE_NOT_COMPLETE")
+          print("fingerprint=" + receipt["analysis_fingerprint"])
+          PY
+      - name: Independently reparse the frozen header and DOCUMENT blocks (zero network requests)
+        run: >-
+          python -m automation.q220_complete_submission_representation_audit
+          --mode verify
+          --repo-root .
+          --capture-dir q220-capture
+          --forensics-artifact q220-forensics-source
+          --output-dir q220-verification
+          --expected-analysis-fingerprint ${{ steps.expected.outputs.fingerprint }}
+      - name: Upload independent offline reproduction receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-complete-submission-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-verification/
+          if-no-files-found: warn
+          retention-days: 90
+          compression-level: 6
