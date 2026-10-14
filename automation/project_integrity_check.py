@@ -46,6 +46,7 @@ ACTIVE_WORKFLOWS = {
     "q221-recipient-parent-identity-probe.yml",
     "q221-current-parent-identity-map.yml",
     "q221-transaction-parent-uei-probe.yml",
+    "q221-frozen-503-failure-audit.yml",
     "q104-i19-cik-role-lineage-diagnostic.yml",
     "q104-i19-missing-shard-recovery.yml",
     "q104-i19-historical-pit-compilation.yml",
