@@ -355,10 +355,10 @@ def parse_header_observation(body: bytes, source_type: str) -> dict[str, str | N
     if filed and re.fullmatch(r"\d{8}", filed):
         filed = f"{filed[:4]}-{filed[4:6]}-{filed[6:8]}"
     date_change = capture((
-        rb"<DATE-OF-FILING-DATE-CHANGE>\\s*([0-9]{8}|[0-9]{4}-[0-9]{2}-[0-9]{2})",
-        rb"DATE OF FILING DATE CHANGE:\\s*([0-9]{8}|[0-9]{4}-[0-9]{2}-[0-9]{2})",
+        rb"<DATE-OF-FILING-DATE-CHANGE>\s*([0-9]{8}|[0-9]{4}-[0-9]{2}-[0-9]{2})",
+        rb"DATE OF FILING DATE CHANGE:\s*([0-9]{8}|[0-9]{4}-[0-9]{2}-[0-9]{2})",
     ))
-    if date_change and re.fullmatch(r"\\d{8}", date_change):
+    if date_change and re.fullmatch(r"\d{8}", date_change):
         date_change = f"{date_change[:4]}-{date_change[4:6]}-{date_change[6:8]}"
     accepted = capture((rb"<ACCEPTANCE-DATETIME>\s*([0-9]{14})",))
     if accepted and re.fullmatch(r"\d{14}", accepted):
