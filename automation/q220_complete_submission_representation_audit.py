@@ -269,9 +269,9 @@ def parse_primary_document_block(
     return matches[0]
 
 
-def validate_frozen_inputs(root: Path, forensics_artifact_dir: Path) -> dict[str, Any]:
-    request = read_request(root / REQUEST_PATH)
+def validate_preregistration(root: Path) -> dict[str, Any]:
     prereg = read_json(root / PREREG_PATH)
+    bounds = prereg.get("bounds") or {}
     prereg_samples = prereg.get("samples")
     expected_prereg_samples = [
         {
@@ -298,23 +298,30 @@ def validate_frozen_inputs(root: Path, forensics_artifact_dir: Path) -> dict[str
         prereg.get("candidate_id") != "Q220"
         or prereg.get("status") != "PREREGISTERED_DIAGNOSTIC_ONLY_NO_GATE_CHANGE"
         or prereg.get("request_sequence") != REQUEST_SEQUENCE
-        or prereg.get("sample_count") != 3
+        or bounds.get("sample_count") != 3
         or prereg_samples != expected_prereg_samples
-        or prereg.get("max_total_download_bytes") != MAX_TOTAL_DOWNLOAD_BYTES
-        or prereg.get("max_complete_submission_bytes_each") != MAX_COMPLETE_SUBMISSION_BYTES
-        or prereg.get("retry_count") != 0
-        or prereg.get("persist_complete_submission_text") is not False
-        or prereg.get("gate_change_authorized") is not False
+        or bounds.get("max_total_download_bytes") != MAX_TOTAL_DOWNLOAD_BYTES
+        or bounds.get("max_complete_submission_bytes_each") != MAX_COMPLETE_SUBMISSION_BYTES
+        or bounds.get("retry_count") != 0
+        or bounds.get("persist_complete_submission_text") is not False
         or frozen.get("population_receipt_fingerprint") != POPULATION_FP
         or frozen.get("compiler_receipt_fingerprint") != COMPILER_FP
         or frozen.get("prior_feed_forensics_receipt_fingerprint") != FORENSICS_FP
         or (prereg.get("gates") or {}).get("source_complete") is not False
         or (prereg.get("gates") or {}).get("historical_pit_positive") is not False
+        or prereg.get("gate_change_authorized") is not False
+        or (prereg.get("safety") or {}).get("paper_only") is not True
         or (prereg.get("safety") or {}).get("live_trading_enabled") is not False
         or (prereg.get("safety") or {}).get("orders_enabled") is not False
+        or (prereg.get("safety") or {}).get("automatic_promotion") is not False
     ):
         raise AuditError("PREREGISTRATION_CONTRACT_MISMATCH")
+    return prereg
 
+
+def validate_frozen_inputs(root: Path, forensics_artifact_dir: Path) -> dict[str, Any]:
+    request = read_request(root / REQUEST_PATH)
+    prereg = validate_preregistration(root)
     fixture_raw = (root / SOURCE_FIXTURE_PATH).read_bytes()
     if git_blob_sha1(fixture_raw) != SOURCE_FIXTURE_BLOB_SHA1:
         raise AuditError("SOURCE_FIXTURE_BLOB_SHA1_MISMATCH")
