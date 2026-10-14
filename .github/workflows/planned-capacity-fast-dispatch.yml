@@ -116,14 +116,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          set +e
           python3 -m automation.planned_capacity_fast_dispatch \
             --snapshot "$RUNNER_TEMP/direct_dispatch_snapshot.json" \
             --runs "$RUNNER_TEMP/current_runs.json" \
             --output "$RUNNER_TEMP/planned_capacity_fast_dispatch.json" \
             --repo "$GITHUB_REPOSITORY" \
             --max-dispatches 6
+          dispatch_rc=$?
+          set -e
 
+          # Publish the diagnostic receipt to the summary before propagating a
+          # zero-plan attention exit. The following always() artifact upload keeps
+          # the full receipt available for forensic review.
           cat "$RUNNER_TEMP/planned_capacity_fast_dispatch.json" >> "$GITHUB_STEP_SUMMARY"
+          exit "$dispatch_rc"
 
       - name: Ensure a fail-closed dispatch receipt exists
         if: always()
