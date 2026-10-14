@@ -20,3 +20,14 @@ def test_q221_failure_audit_uses_the_actual_frozen_attempt_sequence():
     assert values["SOURCE_RECEIPT_FINGERPRINT"] == "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4"
     assert values["FREEZE_RECIPIENT_TO_ISSUER_MAPPING"] == "false"
     assert values["LIVE_EXECUTION"] == "false"
+
+
+
+def test_self_hosted_wave_bootstraps_pinned_python_without_setup_python_action():
+    workflow = (ROOT / ".github" / "workflows" / "candidate-next-gate-runner-wave.yml").read_text(encoding="utf-8")
+    windows_jobs = workflow.split("  q104_r3_date_change_capture:", 1)[1].split("  q104_cross_vintage_aggregate:", 1)[0]
+    assert "uses: actions/setup-python@v6" not in windows_jobs
+    assert windows_jobs.count("name: Bootstrap pinned Python") == 3
+    assert "python-3.13.15-nuget-wave-q104" in windows_jobs
+    assert "python-3.13.15-nuget-wave-q220" in windows_jobs
+    assert "shell: cmd" in windows_jobs
