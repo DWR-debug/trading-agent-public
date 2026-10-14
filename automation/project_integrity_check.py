@@ -43,6 +43,7 @@ ACTIVE_WORKFLOWS = {
     "q104-i19-residual-source-lineage-diagnostic-r2.yml",
     "q104-i19-filing-date-change-header-probe.yml",
     "q104-i19-filing-date-precedence-review.yml",
+    "q104-i19-cross-vintage-precedence-review.yml",
     "q221-recipient-parent-identity-probe.yml",
     "q221-current-parent-identity-map.yml",
     "q221-transaction-parent-uei-probe.yml",
