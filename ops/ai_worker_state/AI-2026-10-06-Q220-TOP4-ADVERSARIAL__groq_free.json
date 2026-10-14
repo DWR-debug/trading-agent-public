@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-10-14T04:43:41.219597Z",
+  "observed_at_utc": "2026-10-14T11:42:31.970570Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 3.818,
-  "stdout": "**Worker Handoff – Q220 Methods Review (XBRL Text‑Block & Presentation‑Role Mapping)**  \n*Scope: Adversarial source/PIT review only – no performance, ranking, or promotion.*\n\n| Section | Content |\n|---------|---------|\n| **1. Summary** | Q220 relies on SEC Financial Statement Notes (FSN) XBRL filings to build a PIT. The current implementation assumes: <br>• XBRL text‑blocks are extracted verbatim from the `<us-gaap:TextBlock>` element.<br>• Presentation‑role mapping follows the standard `presentationRole` taxonomy without custom extensions.<br>• All required archive members (`sub`, `tag`, `dim`, `num`, `txt`, `pre`) are present and correctly named.<br>• Amended filings, future‑dated XBRL, and duplicate facts are ignored or treated as benign. <br>These assumptions introduce several potential failure modes that could invalidate the PIT or bias downstream analysis. |\n| **2. Findings (Failure Modes)** | 1. **Text‑Block Extraction Errors** – Custom namespaces or missing `textBlock` elements cause silent data loss.<br>2. **Presentation‑Role Mis‑Mapping** – Custom roles or taxonomy extensions not covered by the standard mapping lead to incorrect fact grouping.<br>3. **Custom Namespace Handling** – Filings that declare non‑standard namespaces are parsed incorrectly, dropping facts.<br>4. **Section Identity Ambiguity** – Identical section titles across multiple contexts are conflated, producing duplicate or merged facts.<br>5. **Narrative Tokenization Issues** – Line‑breaks, punctuation, or encoding differences break tokenization, affecting downstream NLP features.<br>6. **Amended Filing Structure** – Amended filings may reorder or rename elements; the current parser assumes a static order.<br>7. **Future/Current XBRL Contamination** – The archive may contain filings dated after the fixed end date (`2026‑10‑05`), skewing the PIT.<br>8. **Duplicate Facts** – Same fact appears in multiple contexts or units; the current deduplication logic may keep the wrong instance.<br>9. **Period/Unit/Context Mis‑Alignment** – Mismatched periods or units cause incorrect aggregation or comparison.<br>10. **Representation Mismatch vs Filing Length** – Apparent mismatches may simply reflect longer or shorter filings, not substantive content differences. |\n| **3. Counterarguments** | • The FSN archive is curated; missing members are unlikely but possible.<br>• Custom namespaces are rare in 2009‑Q1 filings; most use the standard `us-gaap` namespace.<br>• Presentation‑role mapping is stable across the archive; custom roles may not exist.<br>• Amended filings are a small fraction; their impact may be negligible.<br>• Duplicate facts are usually resolved by context; the current logic may suffice. |\n| **4. Concrete Next Actions (Deterministic Falsifiers & Artifacts)** | **Action 1 – Text‑Block Extraction**<br>• **Falsifier**: Select filing `2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes/2009q1_notes",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.431,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5075, Requested 5729. Please try again in 21.029999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-01d2a0d5-0eff-4b54-891d-d00c4bab2d6e",
-  "usage": {
-    "queue_time": 0.118387359,
-    "prompt_tokens": 5086,
-    "prompt_time": 0.298047947,
-    "completion_tokens": 3200,
-    "completion_time": 3.261015302,
-    "total_tokens": 8286,
-    "total_time": 3.5590632490000003,
-    "completion_tokens_details": {
-      "reasoning_tokens": 878
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-14T11:42:32.401957Z",
+    "blocked_until_utc": "2026-10-14T12:42:32.401957Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5075, Requested 5729. Please try again in 21.029999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
