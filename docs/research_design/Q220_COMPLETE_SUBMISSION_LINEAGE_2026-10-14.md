@@ -78,3 +78,24 @@ This is a reproducible **representation diagnostic**, not historical source-vint
 The detailed metadata-only result is preserved in [`q220_complete_submission_representation_audit_38619590525.json`](../../research/evidence/q220_complete_submission_representation_audit_38619590525.json). It records the immutable workflow artifact IDs/digests, three sample comparisons, original runner-log limitations, and all safety/gate flags.
 
 **Next step:** offline-only inspection of retained Git history and older immutable artifacts for a body-bearing original primary response or independently pinned historic representation. If none exists, keep the missing-byte provenance gap explicit. Do not redownload the three daily Feed archives or the direct primary documents, rewrite expected hashes, or alter Q220 gates.
+
+
+### Historical same-code hash drift found in Git history
+
+The saved population-receipt diffs establish a broader time-varying representation change before the currently frozen hash set was created. The strict same-code comparison is **2026-10-10 17:19 UTC** versus **2026-10-11 08:24 UTC** (with an unchanged metadata re-publish at 2026-10-10 21:54 UTC), not the earlier 10:42 receipt by itself. The 10:42 receipt records the same SPGI 2019 values as the 17:19 receipt but predates the explicit code-fingerprint field, so it is excluded from the same-code proof.
+
+Both strict-comparison endpoints carry gate-code SHA-256 `62ef075c9fe5ccc2527e5a918f9653a5a6d1602359d4bb795a0e97a5370ddcc1` and the exact same code Git-blob SHA-1 `17d3464605138e5035718664fb02ff1a56dcf5cc`. The diff between their immutable receipts changes all **55/55** primary-document SHA-256 values. All **55/55** primary-document byte counts decrease by exactly five bytes. The currently frozen 55-hash/length set exactly matches the 2026-10-11 08:24 side of that comparison.
+
+Three row-level examples:
+
+| Accession | 2026-10-10 17:19 UTC | 2026-10-11 08:24 UTC | Difference |
+|---|---|---|---:|
+| SPGI 2019 | 4,774,463 bytes; `f9b44be839a2775217b7e0fa15b3d91f8cae6b95dc0723dec54bf03e87aa3e0c` | 4,774,458 bytes; `27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83` | −5 bytes |
+| DVN 2019 | 10,558,511 bytes; `77b8333af3c42f4a020ed2667c8911c415d11083ba5456dc06f32c32decd51ce` | 10,558,506 bytes; `b024964aa602547d102af1f9cd51c61a3d723ab25b21ef5686b02ac8d4f40dd1` | −5 bytes |
+| SPGI 2025 | 4,133,821 bytes; `33732dc05d44f8e3fa83a82e73f34040a201097456e58ab74fe0d77868724d0a` | 4,133,816 bytes; `afe05282d5d5af7f3068287cceaa679db962264d5d704d2d32ac19e2c4d3531d` | −5 bytes |
+
+A separate comparison against the current blocked compiler receipt finds another common shift on 2026-10-14: all 55 current direct-primary hashes differ from the frozen set, and all 55 current HTTP body lengths are one byte below their frozen lengths. The five-request HTTP-profile test also returned one identical current SPGI 2019 hash and length across all five profiles. Thus, User-Agent/Accept profile variation is still not supported as the cause; rather, the persisted metadata shows at least two systematic between-capture shifts under a fixed population request implementation.
+
+This does **not** prove which five bytes were removed on the first transition or which byte differed in the current capture. No raw original response bodies were persisted, so a byte-level diff cannot be reconstructed. We also do not infer that the difference was an SEC correction, a server-layer rewrite, line-ending normalization, or any other specific cause. The observed evidence is: same-code direct-primary captures; different hashes in all 55 rows; exactly −5 bytes in all rows in the earlier transition; then exactly −1 byte versus the frozen set in all rows in the current compiler view.
+
+The new structured timeline and exact checks are in [`q220_complete_submission_representation_audit_38619590525.json`](../../research/evidence/q220_complete_submission_representation_audit_38619590525.json). No frozen hash has been changed; the PIT/source gate stays blocked.
