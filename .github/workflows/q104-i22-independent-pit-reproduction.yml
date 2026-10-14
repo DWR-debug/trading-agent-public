@@ -5,6 +5,7 @@ on:
     branches: [master]
     paths:
       - "automation/q104_i22_independent_pit_reproduction.py"
+      - "research/evidence/q104_i22_cross_arch_reconciliation_38274043682.json"
       - "tests/test_q104_i22_independent_pit_reproduction.py"
       - ".github/workflows/q104-i22-independent-pit-reproduction.yml"
       - "automation/project_integrity_check.py"
@@ -51,7 +52,7 @@ jobs:
                [ "$HEAD_BRANCH" = "master" ]; then
             changed="$(git diff-tree --no-commit-id --name-only -r HEAD^ HEAD)"
             printf '%s\n' "$changed"
-            if printf '%s\n' "$changed" | grep -Eq '^(automation/q104_i22_independent_pit_reproduction\.py|tests/test_q104_i22_independent_pit_reproduction\.py|\.github/workflows/q104-i22-independent-pit-reproduction\.yml|automation/project_integrity_check\.py|research/evidence/q104_i22_cross_arch_reconciliation_latest\.json|research/evidence/q107_coverage_result\.json|research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE/snapshot_manifest\.json|research/evidence/q108_pit_integration_2026_10_01\.json|research/preregistrations/q104_i22_filing_arrival_2026_10_01\.json|research/asset_universes\.py|research/governance/knowledge_relation_graph_contract_2026_10_06\.json|research/candidates/.*\.json|research/frontier/.*\.json)$'; then
+            if printf '%s\n' "$changed" | grep -Eq '^(automation/q104_i22_independent_pit_reproduction\.py|tests/test_q104_i22_independent_pit_reproduction\.py|\.github/workflows/q104-i22-independent-pit-reproduction\.yml|automation/project_integrity_check\.py|research/evidence/q104_i22_cross_arch_reconciliation_latest\.json|research/evidence/q104_i22_cross_arch_reconciliation_38274043682[.]json|research/evidence/q107_coverage_result\.json|research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE/snapshot_manifest\.json|research/evidence/q108_pit_integration_2026_10_01\.json|research/preregistrations/q104_i22_filing_arrival_2026_10_01\.json|research/asset_universes\.py|research/governance/knowledge_relation_graph_contract_2026_10_06\.json|research/candidates/.*\.json|research/frontier/.*\.json)$'; then
               eligible=true
             fi
           fi
