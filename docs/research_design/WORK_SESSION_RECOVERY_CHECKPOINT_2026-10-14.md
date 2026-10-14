@@ -45,7 +45,7 @@ The permanent operator contract in `ops/trading_agent_os_state.json` says all th
 
 At the last live snapshot, the only in-progress workflow reported was the hosted [Evidence Graph Stage 4–5 wave](https://github.com/DWR-debug/trading-agent-public/actions/runs/38512814652). Old queued Monitor/Router entries date to 2026-10-07 and do not reserve a Windows runner. Runner-C long workpack [#38487402103](https://github.com/DWR-debug/trading-agent-public/actions/runs/38487402103) previously completed successfully.
 
-The paired window update in this checkpoint proposes the existing deterministic readiness/guard workpack for **2026-10-14 05:20Z–07:20Z**. It does not initiate Q220/Q221/Q127 external-source retries. It becomes active on `master` only after this checkpoint PR is merged.
+The paired window proposes the existing deterministic readiness/guard workpack for **2026-10-14 05:19Z–07:19Z**. The first path-triggered capacity run (#38515969003) executed at 05:19Z when the old start was 05:20Z and correctly returned `ROLLING_CAPACITY_WINDOW=INACTIVE`, so it did not dispatch Runner C. This follow-up moves the start back one minute so that the next push-triggered capacity run can dispatch immediately. It does not initiate Q220/Q221/Q127 external-source retries.
 
 ## Resume checklist
 
