@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import urllib.request
 from pathlib import Path
 
 import pytest
@@ -137,7 +138,13 @@ def test_capture_uses_only_three_frozen_txt_routes_and_offline_replay_is_determi
         assert (capture_dir / record["submission_header_artifact_path"]).is_file()
         assert (capture_dir / record["primary_document_block_artifact_path"]).is_file()
 
-    verification = audit.verify_capture(capture_dir, tmp_path / "verify", result["analysis_fingerprint"])
+    verification = audit.verify_capture(
+        capture_dir,
+        tmp_path / "verify",
+        result["analysis_fingerprint"],
+        repo_root=ROOT,
+        forensics_artifact_dir=tmp_path / "pinned-forensics-artifact",
+    )
     assert verification["status"] == "Q220_COMPLETE_SUBMISSION_REPRESENTATION_REPRODUCED_OFFLINE"
     assert verification["verified_sample_count"] == 3
     assert verification["network_requests_made"] == 0
@@ -160,4 +167,24 @@ def test_offline_replay_fails_closed_if_any_retained_document_block_changes(tmp_
     block_path = capture_dir / record["primary_document_block_artifact_path"]
     block_path.write_bytes(block_path.read_bytes() + b"tamper")
     with pytest.raises(ValueError, match="CAPTURE_ARTIFACT_BYTE_OR_HASH_MISMATCH"):
-        audit.verify_capture(capture_dir, tmp_path / "verify-tampered", result["analysis_fingerprint"])
+        audit.verify_capture(
+            capture_dir,
+            tmp_path / "verify-tampered",
+            result["analysis_fingerprint"],
+            repo_root=ROOT,
+            forensics_artifact_dir=tmp_path / "pinned-forensics-artifact",
+        )
+
+
+def test_http_redirects_are_not_followed():
+    handler = audit.NoRedirectHandler()
+    request = urllib.request.Request("https://www.sec.gov/frozen.txt")
+    result = handler.redirect_request(
+        request,
+        object(),
+        302,
+        "Found",
+        {},
+        "https://www.sec.gov/alternate-route.txt",
+    )
+    assert result is None
