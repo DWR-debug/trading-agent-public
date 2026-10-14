@@ -57,6 +57,7 @@ ACTIVE_WORKFLOWS = {
     "q104-i19-asfiled-xbrl-source-probe.yml",
     "q218-independent-architecture-pit-reproduction.yml",
     "q220-bounded-header-evidence.yml",
+    "q220-complete-submission-representation-audit.yml",
     "q220-http-representation-sensitivity.yml",
     "q220-primary-source-vintage-forensics.yml",
     "q220-single-feed-boundary-validation.yml",
