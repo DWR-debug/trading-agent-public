@@ -32,7 +32,7 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Validate terminal census and exact source artifacts
+      - name: Validate frozen census and recovery artifact lineage
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -41,7 +41,9 @@ jobs:
           request="research/run_requests/q104_i19_residual_source_lineage_r6.trigger"
           test -s "$request"
           source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' "$request")"
-          [[ "$source_run_id" =~ ^[0-9]+$ ]]
+          recovery_run_id="$(sed -n 's/^RECOVERY_RUN_ID=//p' "$request")"
+          recovery_artifact_id="$(sed -n 's/^RECOVERY_ARTIFACT_ID=//p' "$request")"
+          [[ "$source_run_id" =~ ^[0-9]+$ && "$recovery_run_id" =~ ^[0-9]+$ && "$recovery_artifact_id" =~ ^[0-9]+$ ]]
           gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id" > "$RUNNER_TEMP/q104-lineage-r6-source-run.json"
           jq -e '
             .name == "Q104 I19 Historical 13F Identity Census"
@@ -49,28 +51,43 @@ jobs:
             and .head_branch == "master"
             and (.conclusion == "failure" or .conclusion == "cancelled")
           ' "$RUNNER_TEMP/q104-lineage-r6-source-run.json" >/dev/null
-          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/q104-lineage-r6-artifacts.json"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/q104-lineage-r6-source-artifacts.json"
           for artifact in \
             "q104-i19-sec-source-snapshot-$source_run_id" \
             "q104-i19-census-2013-2016-$source_run_id"; do
             jq -e --arg n "$artifact" '[.artifacts[]? | select(.name == $n and .expired == false)] | length == 1' \
-              "$RUNNER_TEMP/q104-lineage-r6-artifacts.json" >/dev/null
+              "$RUNNER_TEMP/q104-lineage-r6-source-artifacts.json" >/dev/null
           done
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$recovery_run_id" > "$RUNNER_TEMP/q104-lineage-r6-recovery-run.json"
+          jq -e '
+            .name == "Q104 I19 Targeted Acceptance Header Repair"
+            and .status == "completed"
+            and .head_branch == "master"
+            and (.conclusion == "failure" or .conclusion == "cancelled")
+          ' "$RUNNER_TEMP/q104-lineage-r6-recovery-run.json" >/dev/null
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$recovery_run_id/artifacts?per_page=100" > "$RUNNER_TEMP/q104-lineage-r6-recovery-artifacts.json"
+          jq -e --argjson id "$recovery_artifact_id" --arg n "q104-i19-targeted-acceptance-repair-38168441086-38250105408-2" \
+            '[.artifacts[]? | select(.id == $id and .name == $n and .expired == false)] | length == 1' \
+            "$RUNNER_TEMP/q104-lineage-r6-recovery-artifacts.json" >/dev/null
           echo "Q104_LINEAGE_R6_SOURCE_RUN_ID=$source_run_id"
+          echo "Q104_LINEAGE_R6_RECOVERY_RUN_ID=$recovery_run_id"
 
-      - name: Download exact source snapshot and pinned shard receipts
+      - name: Download the pinned recovery bundle with original and recovered receipts
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          source_run_id="$(sed -n 's/^SOURCE_RUN_ID=//p' research/run_requests/q104_i19_residual_source_lineage_r6.trigger)"
+          recovery_run_id="$(sed -n 's/^RECOVERY_RUN_ID=//p' research/run_requests/q104_i19_residual_source_lineage_r6.trigger)"
+          recovery_artifact_name="q104-i19-targeted-acceptance-repair-38168441086-38250105408-2"
           root="research/runs/q104_i19_residual_source_lineage_r6/$GITHUB_RUN_ID"
-          mkdir -p "$root/source_snapshot" "$root/input/2013-2016"
-          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
-            --name "q104-i19-sec-source-snapshot-$source_run_id" --dir "$root/source_snapshot"
-          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
-            --name "q104-i19-census-2013-2016-$source_run_id" --dir "$root/input/2013-2016"
+          mkdir -p "$root"
+          gh run download "$recovery_run_id" --repo "$GITHUB_REPOSITORY" \
+            --name "$recovery_artifact_name" --dir "$root/recovery"
+          test -s "$root/recovery/38168441086/source_snapshot/source_page.html"
+          test -s "$root/recovery/38168441086/input/2013-2016/shard_receipt.json"
+          test -s "$root/recovery/38168441086/repaired/2013-2016/shard_receipt.json"
+          test -s "$root/recovery/38168441086/targeted_recovery_receipt.json"
           echo "Q104_LINEAGE_R6_ROOT=$root" >> "$GITHUB_ENV"
 
       - name: Capture bounded cross-vintage source-lineage observations
@@ -81,8 +98,8 @@ jobs:
           set -euo pipefail
           python -m automation.q104_i19_residual_source_lineage_diagnostic_r6 \
             --request research/run_requests/q104_i19_residual_source_lineage_r6.trigger \
-            --source-snapshot-dir "$Q104_LINEAGE_R6_ROOT/source_snapshot" \
-            --input-dir "$Q104_LINEAGE_R6_ROOT/input" \
+            --source-snapshot-dir "$Q104_LINEAGE_R6_ROOT/recovery/38168441086/source_snapshot" \
+            --input-dir "$Q104_LINEAGE_R6_ROOT/recovery/38168441086" \
             --output "$Q104_LINEAGE_R6_ROOT/receipt.json"
 
       - name: Upload immutable R6 diagnostic receipt
