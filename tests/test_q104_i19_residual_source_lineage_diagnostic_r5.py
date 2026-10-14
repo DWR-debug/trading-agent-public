@@ -178,9 +178,9 @@ def test_r5_parser_captures_date_change_as_separate_clock():
         b"<ACCESSION-NUMBER>0000950123-15-003183\n"
         b"<FILER>\n<COMPANY-DATA>\n<CIK>1008929\n</COMPANY-DATA>\n</FILER>\n"
         b"<TYPE>13F-HR\n"
-        b"<FILING-DATE>20170630\n"
-        b"<DATE-OF-FILING-DATE-CHANGE>20170515\n"
-        b"<ACCEPTANCE-DATETIME>20170515120000\n"
+        b"<FILING-DATE>20150313\n"
+        b"<DATE-OF-FILING-DATE-CHANGE>20150312\n"
+        b"<ACCEPTANCE-DATETIME>20150312120000\n"
         b"</SEC-HEADER><DOCUMENT>\n<TYPE>EX-99.1\n"
     )
     observed = lineage.parse_header_observation(body, "raw_sgml_header")
