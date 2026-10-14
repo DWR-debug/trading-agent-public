@@ -204,6 +204,41 @@ def fetch_bounded(url: str, max_bytes: int) -> tuple[int, bytes, dict[str, str],
     return status, body, headers, final_url, None
 
 
+def console_summary(result: dict[str, Any]) -> dict[str, Any]:
+    """Expose bounded failure details to Actions logs without dumping payloads or query URLs."""
+    summary = result.get("summary", {})
+    request_diagnostics = [
+        {
+            "label": item.get("label"),
+            "http_status": item.get("http_status"),
+            "response_bytes": item.get("response_bytes"),
+            "error": item.get("error"),
+        }
+        for item in result.get("requests", [])
+    ]
+    target_diagnostics = {
+        day: {
+            "collection_selection_status": item.get("collection_selection_status"),
+            "collection_id": item.get("collection_id"),
+            "query_completed": item.get("query_completed"),
+            "capture_count": item.get("capture_count", 0),
+            "http_200_capture_within_max_lag_count": item.get("http_200_capture_within_max_lag_count", 0),
+        }
+        for day, item in result.get("observations", {}).items()
+    }
+    return {
+        "status": result.get("status"),
+        "captured_dates": summary.get("exact_file_dates_with_http_200_capture_within_max_lag", []),
+        "requests": summary.get("request_count", 0),
+        "download_bytes": summary.get("download_bytes", 0),
+        "error_count": summary.get("error_count", 0),
+        "errors": summary.get("errors", [])[:20],
+        "request_diagnostics": request_diagnostics,
+        "target_diagnostics": target_diagnostics,
+        "receipt_fingerprint": result.get("receipt_fingerprint"),
+    }
+
+
 def run(
     request_path: Path,
     source_receipt_path: Path,
@@ -396,13 +431,7 @@ def run(
     ).hexdigest()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({
-        "status": result["status"],
-        "captured_dates": captured_dates,
-        "requests": state["request_count"],
-        "download_bytes": state["download_bytes"],
-        "receipt_fingerprint": result["receipt_fingerprint"],
-    }, sort_keys=True))
+    print(json.dumps(console_summary(result), sort_keys=True))
     return result
 
 
