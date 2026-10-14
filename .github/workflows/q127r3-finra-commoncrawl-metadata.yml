@@ -5,6 +5,8 @@ on:
     branches: [master]
     paths:
       - "research/run_requests/q127r3_finra_commoncrawl_metadata.trigger"
+      - "automation/q127r3_finra_commoncrawl_metadata.py"
+      - "tests/test_q127r3_finra_commoncrawl_metadata.py"
 
 permissions:
   contents: read
