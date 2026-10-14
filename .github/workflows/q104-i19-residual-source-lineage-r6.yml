@@ -60,7 +60,7 @@ jobs:
           done
           gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$recovery_run_id" > "$RUNNER_TEMP/q104-lineage-r6-recovery-run.json"
           jq -e '
-            .name == "Q104 I19 Targeted Acceptance Header Repair"
+            .name == "Q104 I19 Receipt-Gated Targeted Acceptance Repair Request"
             and .status == "completed"
             and .head_branch == "master"
             and (.conclusion == "failure" or .conclusion == "cancelled")
