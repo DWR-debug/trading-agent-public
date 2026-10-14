@@ -23,15 +23,15 @@ def test_q221_failure_audit_uses_the_actual_frozen_attempt_sequence():
 
 
 
-def test_self_hosted_wave_bootstraps_pinned_python_without_setup_python_action():
+def test_priority_wave_uses_hosted_windows_python_not_self_hosted_bootstrap():
     workflow = (ROOT / ".github" / "workflows" / "candidate-next-gate-runner-wave.yml").read_text(encoding="utf-8")
     windows_jobs = workflow.split("  q104_r3_date_change_capture:", 1)[1].split("  q104_cross_vintage_aggregate:", 1)[0]
-    assert "uses: actions/setup-python@v6" not in windows_jobs
-    assert windows_jobs.count("name: Bootstrap pinned Python") == 3
-    assert "python-3.13.15-nuget-wave-q104" in windows_jobs
-    assert "python-3.13.15-nuget-wave-q220" in windows_jobs
-    assert "shell: cmd" in windows_jobs
-
+    assert windows_jobs.count("runs-on: windows-latest") == 3
+    assert windows_jobs.count("uses: actions/setup-python@v6") == 3
+    assert windows_jobs.count('python-version: "3.13.15"') == 3
+    assert "runs-on: [self-hosted, trading-agent-research" not in windows_jobs
+    assert "name: Bootstrap pinned Python" not in windows_jobs
+    assert "python -m pytest" in windows_jobs
 
 
 def test_candidate_wave_q221_audit_uses_the_frozen_failure_audit_request():
