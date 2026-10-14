@@ -1,0 +1,92 @@
+name: Q221 Frozen 503 Failure Audit
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/q221-frozen-503-failure-audit.yml"
+      - "research/run_requests/q221_transaction_parent_uei_failure_audit.trigger"
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q221-frozen-503-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    name: Windows — offline audit of frozen Q221 503 attempt
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout canonical master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q221-audit"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q221-audit.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir pytest || exit /b 1
+          endlocal
+
+      - name: Verify Windows runner identity
+        shell: cmd
+        run: |
+          @echo off
+          echo RUNNER_NAME=%RUNNER_NAME%
+          echo RUNNER_OS=%RUNNER_OS%
+          echo RUNNER_ARCH=%RUNNER_ARCH%
+          if /I not "%RUNNER_OS%"=="Windows" exit /b 1
+
+      - name: Test frozen single-attempt contract
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q221-audit\tools\python.exe"
+          "%PY_EXE%" -m pytest -q tests/test_q221_transaction_parent_uei_probe_failure_audit.py
+          if errorlevel 1 exit /b 1
+
+      - name: Download only the exact frozen failed-probe receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-transaction-parent-uei-probe-38531250865-1
+          path: q221-failed-probe-source
+          run-id: 38531250865
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Audit the frozen 503 receipt offline — no USAspending requests
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q221-audit\tools\python.exe"
+          "%PY_EXE%" -m automation.q221_transaction_parent_uei_probe_failure_audit --source-artifact q221-failed-probe-source --request research/run_requests/q221_transaction_parent_uei_failure_audit.trigger --output runner-results/q221-failure-audit/receipt.json
+          if errorlevel 1 exit /b 1
+
+      - name: Upload immutable diagnostic-only result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-failure-audit-${{ github.run_id }}-${{ github.run_attempt }}
+          path: runner-results/q221-failure-audit/
+          if-no-files-found: warn
+          retention-days: 30
