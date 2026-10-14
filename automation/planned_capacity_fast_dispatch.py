@@ -958,6 +958,39 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     }
 
 
+def classify_dispatch_status(plan: dict[str, Any]) -> dict[str, Any]:
+    """Expose an empty executable plan as an operational problem, never as success.
+
+    An accepted workflow-dispatch request is not evidence that a child job started
+    or that research passed. This status classifies orchestration only.
+    """
+    dispatches = plan.get("dispatches") or []
+    results = plan.get("dispatch_results") or []
+    failed_requests = [
+        item for item in results
+        if int(item.get("returncode", 1)) != 0
+    ]
+    if failed_requests:
+        status = "DISPATCH_REQUEST_FAILED"
+    elif dispatches and results:
+        status = "DISPATCH_REQUESTS_ACCEPTED"
+    elif dispatches:
+        status = "READY_TO_DISPATCH"
+    elif int(plan.get("planned_executable_count") or 0) == 0:
+        status = "NEEDS_ATTENTION_ZERO_EXECUTABLE_PLAN"
+    else:
+        status = "NO_DISPATCH_AFTER_GUARDS"
+    plan["status"] = status
+    plan["operational_attention_required"] = status in {
+        "NEEDS_ATTENTION_ZERO_EXECUTABLE_PLAN",
+        "NO_DISPATCH_AFTER_GUARDS",
+        "DISPATCH_REQUEST_FAILED",
+    }
+    plan["dispatch_request_count"] = len(results)
+    plan["dispatch_request_failure_count"] = len(failed_requests)
+    return plan
+
+
 def top4_slot_fallback(
     resource: str,
     skipped_candidate: str,
@@ -1038,10 +1071,13 @@ def main() -> int:
     plan = dispatch_candidates(snapshot, runs, max_dispatches=max(1, args.max_dispatches))
     if not args.dry_run:
         plan = run_dispatches(plan, args.repo)
-        if any(int(x.get("returncode", 1)) != 0 for x in plan.get("dispatch_results", [])):
-            rc = 1
-        else:
-            rc = 0
+    plan = classify_dispatch_status(plan)
+    if any(int(x.get("returncode", 1)) != 0 for x in plan.get("dispatch_results", [])):
+        rc = 1
+    elif not args.dry_run and plan["status"] == "NEEDS_ATTENTION_ZERO_EXECUTABLE_PLAN":
+        # Persist and print the full receipt first; the workflow uploads it even
+        # when this command exits non-zero. No gates are bypassed to avoid the alert.
+        rc = 2
     else:
         rc = 0
     args.output.parent.mkdir(parents=True, exist_ok=True)
