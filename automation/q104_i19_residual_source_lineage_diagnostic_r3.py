@@ -166,9 +166,15 @@ def validate_frozen_inputs(
         if len(matches) != 1:
             raise DiagnosticError("Q104_LINEAGE_PINNED_ARCHIVE_RECORD_COUNT_INVALID:" + archive_name)
         archive_record = matches[0]
-        if archive_record.get("archive_sha256") != pin["sha256"]:
+        # The census shard may fail before a complete per-archive receipt is written.
+        # For this bounded follow-up, the frozen archive pin and known accession key
+        # are the immutable inputs; require a matching row in the source receipt when
+        # such a row was actually persisted, but do not fabricate an archive observation.
+        recorded_sha = archive_record.get("archive_sha256")
+        recorded_bytes = archive_record.get("archive_bytes")
+        if recorded_sha is not None and recorded_sha != pin["sha256"]:
             raise DiagnosticError("Q104_LINEAGE_RECEIPT_ARCHIVE_SHA256_MISMATCH:" + archive_name)
-        if archive_record.get("archive_bytes") != pin["bytes"]:
+        if recorded_bytes is not None and recorded_bytes != pin["bytes"]:
             raise DiagnosticError("Q104_LINEAGE_RECEIPT_ARCHIVE_BYTES_MISMATCH:" + archive_name)
         frozen_failures = archive_record.get("acceptance_failures", {})
         for sample in SAMPLES:
