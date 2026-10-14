@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "record_type": "candidate_next_gate_wave_execution_summary",
+  "status": "SIX_RUNNER_WAVE_COMPLETE",
+  "generated_at_utc": "2026-10-14T11:39:31Z",
+  "repository": "DWR-debug/trading-agent-public",
+  "master_commit_at_wave_start": "b7d7d6ec2692a320b05e93adc87db39d35d4539b",
+  "workflow": {
+    "name": "Candidate Next-Gate Wave — Six Runner Pool",
+    "run_id": 38557631541,
+    "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38557631541",
+    "conclusion": "success",
+    "runner_topology": {
+      "self_hosted_windows": [
+        {
+          "slot": "A",
+          "runner": "LHT-N133732",
+          "job": "Q221 pinned 503 failure audit",
+          "conclusion": "success"
+        },
+        {
+          "slot": "B",
+          "runner": "LHT-N133732-2",
+          "job": "Q104 R3 date-change header capture",
+          "conclusion": "success"
+        },
+        {
+          "slot": "C",
+          "runner": "LHT-N133732-3",
+          "job": "Q220 offline source-hash lineage",
+          "conclusion": "success"
+        }
+      ],
+      "github_hosted_ubuntu": [
+        {
+          "architecture": "ARM64",
+          "job": "Q220 independent hash-lineage reproduction",
+          "conclusion": "success"
+        },
+        {
+          "architecture": "x64",
+          "job": "Q104 R1/R2/R3 cross-vintage aggregate",
+          "conclusion": "success"
+        },
+        {
+          "architecture": "ARM64",
+          "job": "Q104 independent aggregate reproduction",
+          "conclusion": "success"
+        }
+      ]
+    }
+  },
+  "candidate_results": {
+    "Q104:I19": {
+      "status": "FIELD_PRECEDENCE_EXTENDED_DIAGNOSTIC_ONLY_NOT_APPLIED",
+      "r3_header_probe": {
+        "analysis_fingerprint": "d4cfb31e48a4130795f53148d57f4559ea72bf99e6204d33fa47e9b507e6915a",
+        "receipt_fingerprint": "fe63bafb19594a2a4d61df3cb5630919a77d6ca31497a87bf725781761f9290e",
+        "frozen_header_routes_captured": 18,
+        "response_bytes": 73828
+      },
+      "cross_vintage_aggregate": {
+        "analysis_fingerprint": "9bff9c1b1b0da2f1415c7aabaa66a5ce97b14abd89015f9d47d61a287189e12b",
+        "windows_x64_receipt_fingerprint": "95644cd88172dad43cb311ad5b217b4f082185fd3280f7cd5735089eb82ba8cd",
+        "ubuntu_arm64_receipt_fingerprint": "1b9236ed4848b51016426e6a9ad6e1623ea318c9455f66f70736286e602cc8cf",
+        "independent_analysis_fingerprint_match": true,
+        "counts": {
+          "sample_count": 14,
+          "bulk_date_differs_from_header": 14,
+          "header_filing_date_routes_agree": 14,
+          "acceptance_routes_agree": 14,
+          "date_change_observed": 14,
+          "date_change_routes_agree_where_observed": 14,
+          "date_change_equals_header_filing_date": 2,
+          "date_change_differs_from_header_filing_date": 12
+        },
+        "interpretation": "Descriptive cross-vintage evidence only. No field precedence applied; no receipt repaired; no census restarted; no historical, acceptance-time, PIT, or performance gate cleared."
+      }
+    },
+    "Q220": {
+      "status": "Q220_SOURCE_HASH_LINEAGE_UNRESOLVED_MULTIPLE_OBSERVED_HASHES",
+      "analysis_fingerprint": "acbba71ae7f368c0f06c396d31868e3606baf8189a68816a6df076590db46ec8",
+      "windows_receipt_fingerprint": "bfe187e5b24e7803c31ea3dec877cc2be4e0d19416e451674b45d50bbd99660d",
+      "ubuntu_arm64_receipt_fingerprint": "6fca4a2dd3e43813428e6a050dd0f144b8cfcb79218206fc590d3cdac9d2dbd2",
+      "independent_analysis_fingerprint_match": true,
+      "whole_primary_observation_count": 3,
+      "distinct_whole_primary_sha256": [
+        "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+        "2693819652172f0c218394ef036eb3f4af95c2a7077f624f6efcd990df370172",
+        "fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3"
+      ],
+      "frozen_expected_hash_reproduced": false,
+      "same_url_same_last_modified_multiple_hashes": true,
+      "interpretation": "Source-vintage lineage remains unresolved. No SEC Feed or primary-document download occurred in this wave. Preserve all 55 frozen hash failures and the closed PIT gate."
+    },
+    "Q221": {
+      "status": "Q221_TRANSACTION_PROBE_AUDITED_NO_GATE_CHANGE",
+      "analysis_fingerprint": "ff1dd39cfa371f8da601c36d63cf5c7ab0d12dfe2461b5863e7fc2dd7ff70681",
+      "source_failure_stage": "DOCUMENTED_DOWNLOAD_COUNT_PREFLIGHT",
+      "failure_class": "UPSTREAM_HTTP_503_AFTER_BOUNDED_CLIENT_RETRY_POLICY",
+      "transaction_download_attempted": false,
+      "same_route_retry_allowed": false,
+      "interpretation": "Failure classified from the pinned receipt only. Historical parent lineage, first-public-observation time, and recipient-to-issuer mapping remain unproven."
+    }
+  },
+  "next_gates": {
+    "Q104:I19": "Extend bounded header-only evidence across additional frozen date-mismatch archive vintages; review field precedence separately and do not apply it in production joins.",
+    "Q220": "Identify an authoritative pinned source-vintage record or preserve the blocked state. Do not fetch another Feed/primary document, rewrite expected hashes, or rerun the census to force a match.",
+    "Q221": "Only consider a materially different documented route/transport contract after preregistration and independent testing; never retry the identical failed route."
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false,
+    "scientific_evidence_created_by_this_summary": false
+  }
+}
