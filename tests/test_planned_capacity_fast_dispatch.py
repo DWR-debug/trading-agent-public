@@ -1400,3 +1400,44 @@ def test_windows_regression_bootstrap_retries_transient_package_index_failures()
     assert "PIP_INSTALL_ATTEMPT_1_FAILED" in workflow
     assert "PIP_INSTALL_ATTEMPT_2_FAILED" in workflow
     assert '"%PY_EXE%" -m pytest --version || exit /b 1' in workflow
+
+
+
+def test_empty_executable_plan_is_classified_as_operational_attention():
+    from automation.planned_capacity_fast_dispatch import classify_dispatch_status
+
+    plan = {
+        "planned_executable_count": 0,
+        "active_research_job_count": 0,
+        "dispatches": [],
+        "decisions": [],
+        "paper_only": True,
+        "performance_authorization": False,
+        "holdout_selection": False,
+        "ranking": False,
+        "tuning": False,
+        "promotion": False,
+        "live_execution": False,
+    }
+    classified = classify_dispatch_status(plan)
+    assert classified["status"] == "NEEDS_ATTENTION_ZERO_EXECUTABLE_PLAN"
+    assert classified["operational_attention_required"] is True
+    assert classified["dispatch_request_count"] == 0
+    assert classified["paper_only"] is True
+    assert classified["performance_authorization"] is False
+    assert classified["holdout_selection"] is False
+    assert classified["ranking"] is False
+    assert classified["tuning"] is False
+    assert classified["promotion"] is False
+    assert classified["live_execution"] is False
+
+
+def test_dispatch_status_does_not_claim_child_run_from_accepted_request():
+    from automation.planned_capacity_fast_dispatch import classify_dispatch_status
+
+    plan = {
+        "planned_executable_count": 1,
+        "dispatches": [{"workflow": ".github/workflows/example.yml"}],
+        "dispatch_results": [{"returncode": 0}],
+    }
+    assert classify_dispatch_status(plan)["status"] == "DISPATCH_REQUESTS_ACCEPTED"
