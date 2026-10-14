@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "record_type": "q104_i19_residual_source_lineage_diagnostic_summary",
+  "status": "LINEAGE_DIAGNOSTIC_COMPLETE",
+  "generated_at_utc": "2026-10-14T14:41:11.629263+00:00",
+  "repository": "DWR-debug/trading-agent-public",
+  "workflow": {
+    "name": "Q104 I19 Residual Source-Lineage Diagnostic R5",
+    "run_id": 38582684174,
+    "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38582684174",
+    "conclusion": "success",
+    "commit": "1ba78a10889ea4ecf4fbe68dea84cc2835482bbd"
+  },
+  "receipt": {
+    "artifact_id": 11902804060,
+    "artifact_name": "q104-i19-residual-lineage-r5-38582684174-1",
+    "artifact_zip_sha256": "db4a995d31dfc123c142bb22caa030cd714e88ffbda4ccd78287717d9ae36d8e",
+    "receipt_fingerprint": "3d9bc88c1f43e4efac88e4528d5ac2c4b6a017beccdbe2e0e821ff150b7cd8a5",
+    "request_sequence": "2026-10-14T14:45:00Z",
+    "source_run_id": 38168441086,
+    "source_page_sha256": "b2c4083c3615ce6646764d8e80dc18c2f5484a25c417281be580bdc650817b46"
+  },
+  "frozen_scope": {
+    "sample_count": 1,
+    "accession": "0000950123-15-003183",
+    "archive": "2015q1_form13f.zip",
+    "archive_url": "https://www.sec.gov/files/structureddata/data/form-13f-data-sets/2015q1_form13f.zip",
+    "expected_bytes": 42434965,
+    "observed_bytes": 42434965,
+    "expected_sha256": "96ab4cb60063beb98317ce3e2558b3539546e54485fdb1c68adcd33b5634a6ee",
+    "observed_sha256": "96ab4cb60063beb98317ce3e2558b3539546e54485fdb1c68adcd33b5634a6ee",
+    "archive_verified": true,
+    "source_row_filing_date": "2015-02-18",
+    "source_row_filing_date_raw": "18-FEB-2015",
+    "source_row_filer_cik": "0000860656",
+    "source_row_form": "13F-HR"
+  },
+  "observations": {
+    "probes_expected": 3,
+    "probes_captured": 3,
+    "total_download_bytes": 42447464,
+    "download_budget_bytes": 50000000,
+    "all_routes_http_200": true,
+    "header_filing_date": "2015-02-17",
+    "acceptance_datetime": "2015-02-17T18:51:10",
+    "date_of_filing_date_change": "2015-02-20",
+    "date_change_seen_on": [
+      "index_headers",
+      "raw_sgml_header"
+    ],
+    "date_change_absent_from": "complete_submission_header_prefix",
+    "identity_fields_agree": [
+      "accession",
+      "filer_cik",
+      "form",
+      "acceptance_datetime"
+    ],
+    "bulk_filing_date_matches_header": false
+  },
+  "interpretation": {
+    "new_archive_vintage": false,
+    "new_row_not_in_14_row_aggregate": true,
+    "prevalence_established": false,
+    "first_public_time_established": false,
+    "production_precedence_authorized": false,
+    "receipts_repaired": false,
+    "census_restarted": false,
+    "historical_archive_gate_reopened": false,
+    "acceptance_time_gate_cleared": false,
+    "performance_authorized": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  }
+}
