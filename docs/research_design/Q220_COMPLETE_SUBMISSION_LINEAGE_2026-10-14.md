@@ -111,3 +111,17 @@ The immutable Git diff was also classified by JSON field name. Across the 55-row
 The receipt-level `generated_at_utc` and derived `receipt_fingerprint` also changed, as expected. The recorded `directory_index_sha256`, selected primary filename and source label, acceptance datetime, and the other persisted XBRL mapping/source-structure fields did not change in the diff. Thus, the five-byte/primary-hash transition coincided with a changed filing-header response hash for every accession, while the directory-index hash stayed constant in the stored receipt.
 
 This narrows where the metadata change is observed: the filing-header route and direct-primary body representation both changed, while the stored directory index did not. It does **not** tell us which bytes changed, or prove whether the source of the change was the SEC origin, a transfer/caching layer, or another response-representation detail. The old response bytes are absent, so the precise cause remains unidentifiable from the repository's retained evidence. The structured field-by-field count is saved alongside the population timeline in the immutable result JSON.
+
+
+### Collector-code boundary: historical and current routes are not identical
+
+A final offline code check compares the exact `def fetch(...)` source text from the older population gate code blob `17d3464605138e5035718664fb02ff1a56dcf5cc` and current population gate blob `16d37c9b346c1542348d26212c50c257d558c05e`. The function is byte-for-byte identical in both. It uses the same population User-Agent, the same `Accept` value (`text/html,text/plain,application/json,application/xml,*/*`), `Accept-Encoding: identity`, a 60-second timeout, three attempts, and an unbounded `response.read()`. Therefore, the all-55 hash/length change between 2026-10-10 17:19Z and 2026-10-11 08:24Z cannot be explained by a change to that function in source control.
+
+The current PIT compiler is a different route: `automation/q220_historical_representation_pit.py::fetch_primary` uses a different `Accept` value (`text/html,application/xhtml+xml,*/*`), four attempts, and `response.read(MAX_PRIMARY_BYTES + 1)`; the current compiler records `Content-Type`, `Content-Length`, `Content-Encoding`, `Last-Modified`, `ETag`, requested URL and final URL. The one-byte-short current receipt therefore must not be misdescribed as a same-code/same-request-profile comparison with the old population runner.
+
+The evidence now supports three appropriately separated statements:
+1. **Historical shift, same population code and request profile:** all 55 direct-primary hashes changed and all lengths fell by five bytes.
+2. **Current PIT compiler view:** all 55 current hashes differ and all bodies are one byte shorter than the frozen lengths, but its fetch function/profile differs from the population fetch function.
+3. **Bounded repeatability probes:** repeated/profile-varied direct-primary requests were invariant within the fixed SPGI 2019 probe at that time; this does not reconstruct either historical byte set.
+
+No retained raw bodies allow a byte-level diff. This distinction is frozen in the result JSON; it must constrain any future source-contract proposal.
