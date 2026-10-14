@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0",
+  "record_type": "trading_agent_recovery_checkpoint",
+  "generated_at_utc": "2026-10-14T06:09:33.272Z",
+  "repository": "DWR-debug/trading-agent-public",
+  "observed_master_sha": "502eb054658fc1799aeeae6aa8ab72f74550fd58",
+  "merged_changes": [
+    {
+      "pr": 1422,
+      "url": "https://github.com/DWR-debug/trading-agent-public/pull/1422",
+      "merge_commit": "6bbc0b1c9983803a8e9b54c70d456049efc0ab40",
+      "result": "Recovery checkpoint and bounded Q127 diagnostics merged."
+    },
+    {
+      "pr": 1423,
+      "url": "https://github.com/DWR-debug/trading-agent-public/pull/1423",
+      "merge_commit": "974f8a0169870962f2179fb97c91c8763e9b1a52",
+      "result": "Windows regression pip install has bounded retry/timeout; full suite and Ubuntu x64/ARM64 passed; self_hosted_worker skipped."
+    }
+  ],
+  "q120_r2": {
+    "run_id": 38479765335,
+    "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38479765335",
+    "status": "Q120R2_CFTC_RELEASE_EXCEPTION_INVENTORY_COMPLETED",
+    "receipt_fingerprint": "b92f42f2c3f8dbf8f7cfd8499be44b4130c154c415e14e97f831da9230b846dc",
+    "exception_rows": 30,
+    "changed_publish_dates": 28,
+    "requests": 2,
+    "download_bytes": 174434,
+    "interpretation": "Official listed exceptions only; not a complete historical release calendar, no exact first-public time or same-day PIT clearance."
+  },
+  "q127_r3": {
+    "run_id": 38519811046,
+    "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38519811046",
+    "workflow_conclusion": "success; source probe incomplete",
+    "receipt_status": "Q127R3_COMMONCRAWL_METADATA_INCOMPLETE",
+    "receipt_fingerprint": "5667314ff526288cb695e3dc6c911c6f274669518a9f7b60008f451a606326ea",
+    "requests": 5,
+    "bytes": 35894,
+    "index_list": {
+      "status": 200,
+      "bytes": 35226
+    },
+    "target_queries": [
+      {
+        "date": "2024-02-05",
+        "collection": "CC-MAIN-2024-10",
+        "http_status": 504,
+        "error": "HTTP_ERROR",
+        "response_bytes": 167
+      },
+      {
+        "date": "2024-07-01",
+        "collection": "CC-MAIN-2024-30",
+        "http_status": 504,
+        "error": "HTTP_ERROR",
+        "response_bytes": 167
+      },
+      {
+        "date": "2025-01-02",
+        "collection": "CC-MAIN-2025-05",
+        "http_status": 504,
+        "error": "HTTP_ERROR",
+        "response_bytes": 167
+      },
+      {
+        "date": "2025-09-24",
+        "collection": "CC-MAIN-2025-43",
+        "http_status": 504,
+        "error": "HTTP_ERROR",
+        "response_bytes": 167
+      }
+    ],
+    "captured_dates": [],
+    "target_or_warc_downloads": 0,
+    "interpretation": "Common Crawl exact URL index API unavailable for all four target lookups. Not evidence that files were never published. Avoid blind reruns; find a genuinely different index access path."
+  },
+  "q220": {
+    "status": "blocked_source_hash_provenance",
+    "population_receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+    "compiler_receipt_fingerprint": "c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075",
+    "hash_failures": 55,
+    "interpretation": "Two of three SEC feed sample documents matched identity but not frozen hash; third large feed download incomplete. Never rewrite expected hashes without immutable historical source evidence."
+  },
+  "q221": {
+    "status": "blocked_transient_official_endpoint",
+    "failure": "HTTP 503 before count preflight; no downloads",
+    "same_endpoint_retries_used": 1,
+    "interpretation": "Do not repeat without a distinct source route or new diagnostics."
+  },
+  "windows_regression": {
+    "run_id": 38519811144,
+    "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38519811144",
+    "status_as_of_utc": "2026-10-14T06:08:21Z",
+    "packs": {
+      "q220": {
+        "job": 115706677697,
+        "runner": "LHT-N133732",
+        "status": "success",
+        "tests_passed": 89
+      },
+      "q221": {
+        "job": 115706677878,
+        "runner": "LHT-N133732-2",
+        "status": "success",
+        "tests_passed": 28
+      },
+      "q104": {
+        "job": 115706677928,
+        "runner": "LHT-N133732-3",
+        "status": "bootstrap_failure_before_tests",
+        "cause": "pip could not locate pytest; no Q104 tests ran"
+      },
+      "q120": {
+        "job": 115707343615,
+        "runner": "LHT-N133732-3",
+        "status": "success",
+        "tests_passed": 13
+      },
+      "q127": {
+        "job": 115707613736,
+        "runner": "LHT-N133732-2",
+        "status": "in_progress",
+        "step": "Bootstrap pinned Python 3.13 and dependencies"
+      },
+      "q130": {
+        "job": 115707624768,
+        "runner": "LHT-N133732",
+        "status": "in_progress",
+        "step": "Bootstrap pinned Python 3.13 and dependencies"
+      }
+    },
+    "retry_wave": {
+      "run_id": 38520324412,
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38520324412",
+      "status": "queued_after_PR_1423",
+      "note": "Per-pack concurrency prevents duplicate simultaneous jobs; retry-enabled wave awaits slots."
+    }
+  },
+  "dispatcher": {
+    "run_id": 38520293423,
+    "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38520293423",
+    "snapshot_at": "2026-10-14T06:07:19Z",
+    "slot_assignments": {
+      "A": "LHT-N133732 running Q130",
+      "B": "LHT-N133732-2 running Q127",
+      "C": "LHT-N133732-3 running Q120"
+    },
+    "planned_executable_count": 0,
+    "dispatches": [],
+    "interpretation": "Later fresh snapshot identified all three exact occupied slots and dispatched no overlapping work. An earlier immediate post-merge snapshot briefly showed unoccupied slots during workflow visibility lag."
+  },
+  "q104_i22": {
+    "run_id": 38520294955,
+    "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38520294955",
+    "workflow_conclusion": "success",
+    "dispatch_gate": "success",
+    "contracts": "skipped",
+    "independent_pit": "skipped",
+    "interpretation": "Not an independent PIT reproduction; no scientific gate cleared."
+  },
+  "windows_runner_contract": {
+    "source": "ops/trading_agent_os_state.json",
+    "policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
+    "slots": [
+      {
+        "runner": "LHT-N133732",
+        "slot": "A"
+      },
+      {
+        "runner": "LHT-N133732-2",
+        "slot": "B"
+      },
+      {
+        "runner": "LHT-N133732-3",
+        "slot": "C"
+      }
+    ],
+    "occupancy_rule": "Only an actual in_progress job assigned to the exact runner or verified busy=true occupies the slot; queued jobs do not."
+  },
+  "next_steps": [
+    "Check terminal results for the in-progress old Windows wave Q127/Q130.",
+    "Verify retry wave #38520324412 exercises the bounded pip retries, including Q104 on Runner C.",
+    "Do not repeat Common Crawl exact queries after four HTTP 504 responses; research a materially different metadata access method.",
+    "Keep Q220 frozen hashes and all Q221 historical-public-boundary gates unchanged.",
+    "Re-check capacity only from fresh job-level data; do not dispatch into a slot with an actual running job."
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "performance_authorized": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false,
+    "research_gates_relaxed": false
+  }
+}
