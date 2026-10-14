@@ -50,15 +50,15 @@ This rules against the specific explanation that the tested User-Agent/Accept pr
 
 ### 2.3 Q221: source semantics and retention boundaries
 
-The [official GSA/SAM.gov Contract Awards API documentation](https://open.gsa.gov/api/contract-awards/) describes revealed versus unrevealed data, an API-key requirement, a restricted access path for unrevealed DoD data, and a `deletedStatus` query that returns contracts deleted within the last six months. The docs expose useful record/search fields, but the reviewed material does not establish all of:
-- a durable record-level first-public-observation timestamp;
-- retrieval of arbitrary historical versions of the same award/modification;
-- complete correction, deletion, and supersession lineage;
-- a pre-event recipient-to-issuer identity mapping for the 348 frozen observations.
+The [official GSA/SAM.gov Contract Awards API documentation](https://open.gsa.gov/api/contract-awards/) and its [published OpenAPI contract](https://open.gsa.gov/api/contract-awards/v1/openapi.yaml) were checked directly (documentation version v1.0; changelog updated 2026-08-25 to add `publicDeltaDate`). The API supports revealed records, while unrevealed DoD data requires a DoD-assigned access role and API key. The `deletedStatus=yes` route covers deleted contracts only within a rolling six-month window.
 
-A current API record or a `lastModifiedDate` / `publicDeltaDate` filter cannot be substituted for those missing facts. No authenticated API call was made and no key was used.
+The contract has transaction identifiers (`PIID`, modification number, transaction number) and response metadata including `awardDetails.transactionData.createdDate`, `lastModifiedDate`, `approvedDate`, and `version`. However, the OpenAPI response schema does **not** define a record-level `revealDate` / first-public timestamp field, nor an endpoint for requesting an arbitrary historical version. The documentation defines `publicDeltaDate` only as a *search filter* matching Last Modified Date **or** Reveal Date; it does not state that the matched Reveal Date is returned as a per-record value or that old response versions can be reconstructed. A version property plus a query parameter named `documentVersion` is not a documented version-history retrieval contract.
 
-**Next action:** desk research on the official OpenAPI/field contract and public examples only. A future probe may be proposed only if a materially different documented route demonstrates transaction-level Reveal Date semantics and the necessary version lineage before preregistration. Do not repeat the failed route or expand Wayback checks across all 348 keys.
+Therefore, this route is not sufficient for Q221's first-public-clock and historical-lineage gates. It also does not resolve the frozen 348 rows' pre-event recipient-to-issuer identity mapping, nor the applicability/correction/supersession questions.
+
+No authenticated API call was made and no API key was used. No data was downloaded from the API.
+
+**Next action:** stop further desk research on this same API unless GSA publishes a materially different schema or explicit documentation of record-level Reveal Date return semantics and historical-version retrieval. Do not build or dispatch a connector, do not repeat the failed route, and do not expand Wayback checks across all 348 keys. Keep Q221 blocked pending a source with timestamped transaction-level versions or a bounded archive whose transaction-row presence can be validated, alongside separately frozen transaction-class applicability and pre-event recipient-to-issuer mapping.
 
 ### 2.4 Cross-market annual-report information graph: a Q088 merge-or-kill lead
 
