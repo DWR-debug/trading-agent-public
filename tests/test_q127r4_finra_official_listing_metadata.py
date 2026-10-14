@@ -136,3 +136,5 @@ def test_q127r4_full_probe_never_infers_historical_same_day_pit(tmp_path):
 def test_q127r4_contract_runs_inside_the_windows_q127_regression_pack():
     workflow = (ROOT / ".github/workflows/windows-candidate-gate-regression.yml").read_text(encoding="utf-8")
     assert "tests/test_q127r1_finra_regsho_historical_pit.py tests/test_wayback_cdx_metadata.py tests/test_q127r2_finra_wayback_metadata.py tests/test_q127r3_finra_commoncrawl_metadata.py tests/test_q127r4_finra_official_listing_metadata.py" in workflow
+    path_filters = workflow.split("permissions:", 1)[0]
+    assert path_filters.count('      - "tests/test_q127r4_finra_official_listing_metadata.py"') == 1
