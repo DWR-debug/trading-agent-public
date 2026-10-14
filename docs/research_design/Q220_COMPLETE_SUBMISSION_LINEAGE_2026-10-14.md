@@ -45,3 +45,36 @@ Any incomplete response, identity mismatch, missing/duplicate primary filename, 
 - Preserve Q220 blocked unless a separately reviewed source-contract correction is supported by immutable source evidence, independent reproduction, and explicit gate review.
 - No scientific/performance evidence, holdout selection, ranking, tuning, promotion, orders, or live execution is authorized.
 - Paper-only remains mandatory; live trading, orders and automatic promotion remain disabled.
+
+
+## Result — complete-submission audit, 2026-10-14
+
+The frozen run was executed after PR [#1464](https://github.com/DWR-debug/trading-agent-public/pull/1464) merged. Capture run [#38619590525](https://github.com/DWR-debug/trading-agent-public/actions/runs/38619590525) completed successfully; immutable capture metadata is in [artifact #11921560717](https://github.com/DWR-debug/trading-agent-public/actions/runs/38619590525/artifacts/11921560717). It made three HTTP-200 requests, read 86,836,164 aggregate bytes (below the 120,000,000-byte cap), and used zero retries. The complete `.txt` response bodies were not persisted.
+
+The ARM64 [independent offline-reproduction job](https://github.com/DWR-debug/trading-agent-public/actions/runs/38619590525) completed successfully for all three samples and made zero network requests. Its immutable verification artifact is [#11922195517](https://github.com/DWR-debug/trading-agent-public/actions/runs/38619590525/artifacts/11922195517). Capture analysis fingerprint: `867ad0b84913619a2b505e82e8c0903dea7b0e44dd4b77d31ccc05d51e5b8ca5`; verification fingerprint: `cd5467600478db509a9bc3903c43a08498b077365b9156ec92bb096e86503685`.
+
+### Exact comparison
+
+| Frozen accession | Frozen expected primary | Current Complete `.txt` extracted raw `TEXT` | Earlier original-Feed `TEXT` reproduced? | Expected hash reproduced? |
+|---|---|---|---|---|
+| SPGI 2019 — `0000064040-19-000059` | 4,774,458 bytes; `27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83` | 4,774,237 bytes; `aa1f89efdf13029de9dd8f7eb020502dd518d4350513d4ef041ba67d902ef368` | Yes; exact SHA and length | No |
+| DVN 2019 — `0001564590-19-003382` | 10,558,506 bytes; `b024964aa602547d102af1f9cd51c61a3d723ab25b21ef5686b02ac8d4f40dd1` | 10,558,411 bytes; `e72d769d3ebcd9fddee3732785dd94d530f6d81a03c94c7f9343fb5bda25e2cc` | Yes; exact SHA and length | No |
+| SPGI 2025 — `0000064040-25-000052` | 4,133,816 bytes; `afe05282d5d5af7f3068287cceaa679db962264d5d704d2d32ac19e2c4d3531d` | 4,133,721 bytes; `44040ca6cf934f7bd336063ba4b3da67a3c815678dda87474a11a1e6a2ec47ba` | No; same byte length as the prior Feed extraction but different SHA | No |
+
+All three current submissions returned HTTP 200 and passed accession, filer CIK, form, filing-date and acceptance-datetime validation. None reproduced a frozen expected hash. For the 2019 samples, the Complete `.txt` raw `TEXT` exactly reproduces the previously extracted original-Feed `TEXT` body. For the 2025 sample, its text body has the same length as the prior Feed extraction but a different SHA-256. This narrows the observed representation lineage; it does not reveal which representation generated the original 2025 expected hash or the 2019 expected hashes.
+
+### Original population-run review
+
+The original population run [#38155914188](https://github.com/DWR-debug/trading-agent-public/actions/runs/38155914188) has a successful 55/55 population receipt with fingerprint `158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543`. Its retained runner stdout contains only the aggregate success summary; it does not retain per-accession HTTP headers or raw response bodies. The immutable population artifact preserves hash/length fields but not the original primary-document bytes.
+
+The same run's independent route artifact [#11712140975](https://github.com/DWR-debug/trading-agent-public/actions/runs/38155914188/artifacts/11712140975) contains an additional cross-check for SPGI 2025: the direct primary-document route returned the frozen `afe052...` hash and 4,133,816-byte length at 2026-10-11 18:49:19 UTC, after the population receipt was created. The route artifact stores the hash and length, not the response body or per-row HTTP response metadata. Thus it corroborates that the frozen 2025 direct-route hash was reproducible at that time, but it does not preserve bytes for a later byte-for-byte diff.
+
+The population code's `primary_document_source=company_submissions_recent` labels where the primary filename was selected; the selected document body was fetched separately from the direct EDGAR Archives accession URL. The later compiler receipt records a distinct present-time byte set for all 55 rows (including lengths one byte below the frozen expectation for these three samples). The five-request HTTP-profile sensitivity probe also returned the same current SPGI 2019 representation for every profile. The request-profile variation hypothesis therefore remains unsupported; the historical capture body is missing.
+
+### Disposition
+
+This is a reproducible **representation diagnostic**, not historical source-vintage proof. The original source hash/byte values remain untouched, the compiler still reports 55 hash failures and zero verified primary documents, and Q220 remains blocked. Neither current `Last-Modified` nor a matching daily-Feed/Complete-submission body is treated as proof of first public observation time.
+
+The detailed metadata-only result is preserved in [`q220_complete_submission_representation_audit_38619590525.json`](../../research/evidence/q220_complete_submission_representation_audit_38619590525.json). It records the immutable workflow artifact IDs/digests, three sample comparisons, original runner-log limitations, and all safety/gate flags.
+
+**Next step:** offline-only inspection of retained Git history and older immutable artifacts for a body-bearing original primary response or independently pinned historic representation. If none exists, keep the missing-byte provenance gap explicit. Do not redownload the three daily Feed archives or the direct primary documents, rewrite expected hashes, or alter Q220 gates.
