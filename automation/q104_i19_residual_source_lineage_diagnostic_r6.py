@@ -229,8 +229,8 @@ def validate_frozen_inputs(
         recovered_failure = recovered_archive.get("acceptance_failures", {}).get(SAMPLES[0]["accession"])
         if original_failure != "SEC_HEADER_HTTP_503":
             raise DiagnosticError("Q104_LINEAGE_ORIGINAL_FAILURE_CLASSIFICATION_MISMATCH:" + str(original_failure))
-        if recovered_failure != SAMPLES[0]["frozen_failure"]:
-            raise DiagnosticError("Q104_LINEAGE_FROZEN_FAILURE_NOT_FOUND:" + SAMPLES[0]["accession"])
+        if recovered_failure != "HEADER_VALIDATION:" + SAMPLES[0]["frozen_failure"]:
+            raise DiagnosticError("Q104_LINEAGE_RECOVERED_FAILURE_CLASSIFICATION_MISMATCH:" + str(recovered_failure))
 
     recovery_lineage = {
         "recovery_run_id": RECOVERY_RUN_ID,
@@ -241,7 +241,6 @@ def validate_frozen_inputs(
         "original_failure": "SEC_HEADER_HTTP_503",
         "recovered_failure": "HEADER_VALIDATION:FILING_DATE_MISMATCH",
         "terminal_recovery_attempt_count": 0,
-        "prior_recovery_attempt_count": 2,
         "interpretation": "Preserve original HTTP 503 and later bounded recovery classification as separate immutable evidence; neither receipt is rewritten.",
     }
     return recovered_receipts, original_fingerprints, recovered_fingerprints, recovery_lineage
