@@ -229,3 +229,26 @@ def test_q220_hashless_legacy_population_receipt_is_not_a_positive_gate():
     rendered = q220_population_focus_sentence(legacy)
     assert "STALE" in rendered
     assert "fresh post-fix population receipt" in rendered
+
+def test_current_status_surfaces_q104_r4_without_unlocking_gates():
+    from automation.sync_current_operational_status import generate
+
+    payload, doc = generate(
+        source_master_sha="abc123",
+        workflow_run_id=None,
+        github_state_path=None,
+    )
+    focus = payload["chat_handoff"]["next_research_focus"]
+    assert "R4 run #38574180245" in focus
+    assert "8be8fd68de0324a331d2b587a540b605ac5c6e9a71ec203fa9d2fc089450fb3c" in focus
+    assert "2017-05-31 versus EDGAR header date 2017-04-21" in focus
+    assert "DATE-OF-FILING-DATE-CHANGE 2017-06-01" in focus
+    assert "immutable 14-row aggregate" in focus
+    assert "does not change the immutable 14-row aggregate" in focus
+    assert "choose production precedence" in focus
+    assert "or clear a gate" in focus
+    assert "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221." in focus
+    assert payload["safety"]["status"] == "SAFE"
+    assert "R4 run #38574180245" in doc
+    assert "immutable 14-row aggregate" in doc
+
