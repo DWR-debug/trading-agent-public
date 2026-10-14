@@ -225,3 +225,7 @@ def test_r6_workflow_is_single_vintage_read_only_and_bounded():
     assert "if-no-files-found: warn" in workflow
     assert "CENSUS_RESTART=false" in Path("research/run_requests/q104_i19_residual_source_lineage_r6.trigger").read_text(encoding="utf-8")
     assert "PERFORMANCE=false" in Path("research/run_requests/q104_i19_residual_source_lineage_r6.trigger").read_text(encoding="utf-8")
+    request = Path("research/run_requests/q104_i19_residual_source_lineage_r6.trigger").read_text(encoding="utf-8")
+    assert "REASON=READ_ONLY_ADD_DISTINCT_FROZEN_2013Q3_ARCHIVE_VINTAGE_NOT_IN_14_ROW_AGGREGATE" in request
+    assert "MAX_SOURCE_ARCHIVE_BYTES=40000000" in request
+    assert "MAX_TOTAL_DOWNLOAD_BYTES=40000000" in request
