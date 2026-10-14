@@ -210,6 +210,7 @@ ACTIVE_WORKFLOWS = {
     "q130r1-wikimedia-attention-source.yml",
     "q127r2-finra-wayback-metadata.yml",
     "q127r3-finra-commoncrawl-metadata.yml",
+    "q127r4-finra-official-listing-metadata.yml",
     "q130r2-wikimedia-wayback-metadata.yml",
     "q131r1-sec-disclosure-complexity.yml",
     "q095-authorization-once.yml",
