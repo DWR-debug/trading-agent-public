@@ -1,0 +1,81 @@
+name: Q127-R4 FINRA Official Listing Metadata
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q127r4_finra_official_listing_metadata.trigger"
+      - "automation/q127r4_finra_official_listing_metadata.py"
+      - "tests/test_q127r4_finra_official_listing_metadata.py"
+      - "research/preregistrations/q127r4_finra_official_listing_metadata_2026_10_14.json"
+      - "docs/research_design/Q127R4_FINRA_OFFICIAL_LISTING_METADATA_2026-10-14.md"
+      - ".github/workflows/q127r4-finra-official-listing-metadata.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-q127r4-finra-official-listing-metadata
+  cancel-in-progress: false
+
+jobs:
+  listing_probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Offline parser and frozen-request tests
+        run: python -m pytest -q tests/test_q127r4_finra_official_listing_metadata.py tests/test_q127r1_finra_regsho_historical_pit.py tests/test_q127r2_finra_wayback_metadata.py tests/test_q127r3_finra_commoncrawl_metadata.py
+      - name: Download and verify pinned Q127-R1 upstream receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/q127r1"
+          gh run download 38455702686 --repo "$GITHUB_REPOSITORY" --name q127r1-finra-regsho-historical-pit-38455702686 --dir "$RUNNER_TEMP/q127r1"
+          mapfile -t files < <(find "$RUNNER_TEMP/q127r1" -type f -name result.json)
+          [[ "${#files[@]}" == "1" ]] || { echo "Q127R1_RECEIPT_COUNT_INVALID"; exit 2; }
+          cp "${files[0]}" "$RUNNER_TEMP/q127r1.json"
+      - name: Inspect two frozen official FINRA listing pages
+        run: |
+          python -m automation.q127r4_finra_official_listing_metadata --request research/run_requests/q127r4_finra_official_listing_metadata.trigger --source-receipt "$RUNNER_TEMP/q127r1.json" --output "research/runs/q127r4_finra_official_listing_metadata/$GITHUB_RUN_ID/receipt.json"
+      - name: Validate metadata-only fail-closed boundary
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(f"research/runs/q127r4_finra_official_listing_metadata/{os.environ['GITHUB_RUN_ID']}/receipt.json")
+          if not p.exists():
+              raise SystemExit("Q127R4_RECEIPT_MISSING")
+          r=json.loads(p.read_text(encoding="utf-8"))
+          assert r["status"] in {"Q127R4_OFFICIAL_LISTING_METADATA_COMPLETED","Q127R4_OFFICIAL_LISTING_METADATA_INCOMPLETE"}
+          assert r["upstream"]["receipt_fingerprint"] == "2cbe22c49d885f527ac523ed74ab1e13a843c23999916c674282de6977e9c33c"
+          assert r["summary"]["request_count"] <= 2
+          assert r["summary"]["download_bytes"] <= 1000000
+          assert r["method"]["target_file_downloads"] == 0
+          assert r["pit_interpretation"]["exact_first_publication_time_proven"] is False
+          assert r["pit_interpretation"]["historical_listing_snapshot_proven"] is False
+          assert r["pit_interpretation"]["same_day_formal_use_allowed"] is False
+          assert r["governance"]["performance_authorized"] is False
+          assert r["safety"]["paper_only"] is True
+          print(json.dumps({"status":r["status"],"exact_url_counts":{k:v["exact_url_listing_count"] for k,v in r["observations"].items()},"request_count":r["summary"]["request_count"],"bytes":r["summary"]["download_bytes"],"receipt_fingerprint":r["receipt_fingerprint"]},sort_keys=True))
+          PY
+      - name: Upload immutable Q127-R4 receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q127r4-finra-official-listing-metadata-${{ github.run_id }}
+          path: research/runs/q127r4_finra_official_listing_metadata/${{ github.run_id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 30
