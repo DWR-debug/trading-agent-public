@@ -170,7 +170,7 @@ def page_markers(html: str) -> dict[str, bool]:
         "by_1800_et_same_trade_date": "no later than 6:00:00pm et of the same day on the relevant trade date" in plain,
         "later_update_possible": "in rare instances, finra may need to update a file on a subsequent day" in plain,
         "original_and_updated_both_listed": "finra will reflect both the original and updated files on this page" in plain,
-        "updated_variant_is_labelled": re.search(r'identify the updated file as ["“]updated\\.?["”]', plain) is not None,
+        "updated_variant_is_labelled": re.search(r'identify the updated file as ["“]updated[.]?["”]', plain) is not None,
     }
 
 
