@@ -1022,6 +1022,12 @@ def generate(
 
 ## Current state
 
+### Current next-research focus
+
+{recorded_next_research_focus}
+
+---
+
 ### Historical research handoff checkpoint — 2026-10-12T10:17Z (superseded by live Actions and receipts)
 
 This checkpoint preserves what was known at that time. It is historical context, not current status; the generated next-research focus, live Actions, and immutable receipts take precedence.
