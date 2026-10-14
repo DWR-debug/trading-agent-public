@@ -1,8 +1,8 @@
 # Q220 — Complete-submission representation lineage audit
 
-**Registered:** 2026-10-14 18:25 UTC  
+**Registered:** 2026-10-14 18:43:09 UTC (preregistration commit)  
 **Status:** preregistered, bounded source/PIT diagnostic only  
-**Request sequence:** `2026-10-14T18:25:00Z`
+**Request sequence:** `2026-10-14T18:43:14Z` (trigger freeze commit)
 
 ## Question
 
