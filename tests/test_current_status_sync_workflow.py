@@ -48,3 +48,11 @@ def test_status_generator_surfaces_q186_pit_r2_boundary():
     source = Path("automation/sync_current_operational_status.py").read_text(encoding="utf-8")
     assert "q186_pit_r2_receipt" in source
     assert "Q186_PIT_R2_CLOCK_ARCHIVE_COMPLETED_NO_PERFORMANCE" in source
+
+
+def test_status_generator_surfaces_q220_http_representation_probe_result():
+    source = Path("automation/sync_current_operational_status.py").read_text(encoding="utf-8")
+    assert "38590133217" in source
+    assert "HTTP_REPRESENTATION_INVARIANT_AT_PROBE_TIME" in source
+    assert "870aa4fdae7eda932bb8f50ebb9eab1a7781ee503fb5120dea5b0f099e4fd65c" in source
+    assert "Do not repeat this probe or fetch further primary documents." in source
