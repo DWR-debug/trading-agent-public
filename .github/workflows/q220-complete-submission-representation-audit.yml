@@ -78,6 +78,14 @@ jobs:
           run-id: ${{ github.run_id }}
           repository: ${{ github.repository }}
           github-token: ${{ github.token }}
+      - name: Download the exact prior immutable Feed-forensics artifact for pin revalidation (no new Feed request)
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-primary-source-vintage-forensics-38254139755-1
+          path: q220-forensics-source
+          run-id: 38254139755
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Freeze expected deterministic analysis fingerprint
         id: expected
         shell: bash
@@ -96,6 +104,7 @@ jobs:
           --mode verify
           --repo-root .
           --capture-dir q220-capture
+          --forensics-artifact q220-forensics-source
           --output-dir q220-verification
           --expected-analysis-fingerprint ${{ steps.expected.outputs.fingerprint }}
       - name: Upload independent offline reproduction receipt
