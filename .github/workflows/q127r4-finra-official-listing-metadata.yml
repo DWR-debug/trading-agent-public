@@ -66,6 +66,7 @@ jobs:
           assert r["method"]["target_file_downloads"] == 0
           assert r["pit_interpretation"]["exact_first_publication_time_proven"] is False
           assert r["pit_interpretation"]["historical_listing_snapshot_proven"] is False
+          assert r["pit_interpretation"]["publication_statement_historical_applicability_proven"] is False
           assert r["pit_interpretation"]["same_day_formal_use_allowed"] is False
           assert r["governance"]["performance_authorized"] is False
           assert r["safety"]["paper_only"] is True
