@@ -11,6 +11,7 @@ from automation.q127r3_finra_commoncrawl_metadata import (
     parse_cdx_jsonl,
     select_collection,
     read_request,
+    console_summary,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -70,3 +71,35 @@ def test_q127r3_live_request_is_frozen():
         assert request[key] == expected
     assert request["PERFORMANCE"] == "false"
     assert request["LIVE_EXECUTION"] == "false"
+
+
+def test_q127r3_console_summary_surfaces_bounded_failure_reasons():
+    receipt = {
+        "status": "Q127R3_COMMONCRAWL_METADATA_INCOMPLETE",
+        "summary": {
+            "request_count": 5,
+            "download_bytes": 35686,
+            "error_count": 1,
+            "errors": ["target_url_cdx_2025-01-02:HTTP_502"],
+            "exact_file_dates_with_http_200_capture_within_max_lag": [],
+        },
+        "requests": [
+            {"label": "target_url_cdx_2025-01-02", "http_status": 502, "response_bytes": 94, "error": "HTTP_ERROR"},
+        ],
+        "observations": {
+            "2025-01-02": {
+                "collection_selection_status": "COLLECTION_SELECTED",
+                "collection_id": "CC-MAIN-2025-02",
+                "query_completed": False,
+                "capture_count": 0,
+                "http_200_capture_within_max_lag_count": 0,
+            },
+        },
+        "receipt_fingerprint": "f" * 64,
+    }
+    summary = console_summary(receipt)
+    assert summary["status"] == "Q127R3_COMMONCRAWL_METADATA_INCOMPLETE"
+    assert summary["errors"] == ["target_url_cdx_2025-01-02:HTTP_502"]
+    assert summary["request_diagnostics"][0]["http_status"] == 502
+    assert summary["request_diagnostics"][0]["error"] == "HTTP_ERROR"
+    assert summary["target_diagnostics"]["2025-01-02"]["query_completed"] is False
