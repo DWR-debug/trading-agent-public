@@ -1,55 +1,57 @@
-# Trading Agent OS — Working Session Recovery Checkpoint
+# Trading Agent OS — Current Working-Session Recovery Checkpoint
 
-**Checkpoint time:** 2026-10-13T22:40:33Z (UTC; local date in Europe/Berlin is 2026-10-14)
-**Canonical repository:** [DWR-debug/trading-agent-public](https://github.com/DWR-debug/trading-agent-public)  
-**Primary active research PR:** [#1417 — bounded Q120 CFTC exceptions and Q127 Common Crawl metadata](https://github.com/DWR-debug/trading-agent-public/pull/1417)  
-**Previous duplicate PR:** [#1416](https://github.com/DWR-debug/trading-agent-public/pull/1416) was closed without merge; do not revive it.
+**State verified through:** 2026-10-14T05:12:19Z
+**Canonical repository:** DWR-debug/trading-agent-public
+**Last master snapshot inspected:** `af993717710aaf566151f82a511231c76282acb3`
+**North Star:** `research/governance/project_north_star.json`
+**Safety:** PAPER_ONLY=true; live orders, live execution, automatic promotion and all performance/holdout/ranking/tuning gates remain disabled.
 
-## Resume point and validation
+## Save and merge status
 
-The default branch was verified at `6fe23d483f4a535f590854ddcae27cf6342f69c8` before this checkpoint refresh. PR #1417's prior head was `95d9cc08c085965d032b060b94841260d875a3c8`, whose checks had completed successfully on Ubuntu x64, Ubuntu ARM64, and the full suite:
-- [Ubuntu / ARM64 and x64 checks](https://github.com/DWR-debug/trading-agent-public/actions/runs/38469075033)
-- [Full Suite Verification](https://github.com/DWR-debug/trading-agent-public/actions/runs/38469075235)
+- PR [#1417 — bounded Q120 CFTC exceptions and Q127 Common Crawl metadata](https://github.com/DWR-debug/trading-agent-public/pull/1417) is **merged** at 2026-10-13T22:33:02Z (`3165bb2ae4f1ab3c114288892bc5b2c71075a708`).
+- Duplicate PR [#1416](https://github.com/DWR-debug/trading-agent-public/pull/1416) remains closed without merge. Do not revive it; its useful changes were independently reapplied in #1417 and subsequent master commits.
+- This checkpoint supersedes the older snapshot in this file. Its source of truth is current `master`, not the historical branch `research/q120-exceptions-q127-commoncrawl-20261013`.
 
-The self-hosted worker check was **skipped** and is not counted as a Windows runner test. The PR branch had diverged from the advancing default branch; the refresh merges the verified master snapshot into the PR history and reapplies only the bounded research changes, preserving unrelated newer master state. Re-run CI on the refreshed head before merging.
+## Q120 — CFTC release-date exception inventory
 
-## Research state
+- Upstream R1: [run #38456880720](https://github.com/DWR-debug/trading-agent-public/actions/runs/38456880720), fingerprint `9e79abc9fac1b9d1599b35e111e82e19f8b365d99e06a447638d0c0135321445`; 822 weekly report rows from 2011-01-04 to 2026-09-29.
+- Initial R2 run [#38478541967](https://github.com/DWR-debug/trading-agent-public/actions/runs/38478541967) failed due to a missing `timezone` import; it wrote no receipt.
+- Corrected run [#38479045457](https://github.com/DWR-debug/trading-agent-public/actions/runs/38479045457) revealed the source page repeats report date 2025-11-10 under separate dated schedule versions. Fix commit `a47375ab742863d57664ec40a940180f4e8294be` preserves those versions instead of collapsing rows.
+- Latest verified run [#38479765335](https://github.com/DWR-debug/trading-agent-public/actions/runs/38479765335) completed successfully with 13 offline tests passed. Receipt fingerprint: `b92f42f2c3f8dbf8f7cfd8499be44b4130c154c415e14e97f831da9230b846dc`. Two official-page requests; 174,434 bytes; 30 explicit exception rows; 28 changed intended publish dates and 2 unchanged.
+- Interpretation limit: useful official exception inventory, not a complete release calendar. Intended publish dates do not prove exact first-publication time. Unlisted dates remain unknown; same-day PIT remains closed.
 
-### Q120 — CFTC report-date versus publication-date feasibility
+## Q127 — FINRA historical short-sale-volume PIT
 
-- Upstream feasibility run: [#38456880720](https://github.com/DWR-debug/trading-agent-public/actions/runs/38456880720)
-- Receipt fingerprint: `9e79abc9fac1b9d1599b35e111e82e19f8b365d99e06a447638d0c0135321445`
-- Official special-announcement pages document specific delays, including the ION incident in 2023 and the 2025 funding lapse/shutdown. Q120-R1 did not recover a complete historical release calendar.
-- Initial Q120-R2 run [#38478541967](https://github.com/DWR-debug/trading-agent-public/actions/runs/38478541967) had an implementation-only `NameError: timezone`; no receipt was written.
-- Corrected UTC-writer run [#38479045457](https://github.com/DWR-debug/trading-agent-public/actions/runs/38479045457) wrote receipt fingerprint `7719507508202a0ff9e2d26c08141449829893711840bd873dd217450eea4b34`, status `Q120R2_CFTC_RELEASE_EXCEPTION_INVENTORY_INCOMPLETE`. Both official pages returned HTTP 200 (48,675 and 125,759 bytes), and release-schedule markers were present. It parsed zero rows because the page legitimately repeats report date 2025-11-10 in two differently dated schedule versions; the first says intended new publish date 2025-12-10, the second 2025-12-12.
-- The active fix preserves each row with the date heading of its source announcement section. Conflicts within the same announcement still fail closed. This treats the two records as a versioned schedule history, not a single inferred final date.
-- The next corrected attempt reads only the two official pages, max 350 KB per response / 700 KB total. Unlisted dates remain unknown; intended publish dates are not exact first-public timestamps, and no full historical calendar or same-day PIT clearance is inferred.
+- Frozen R1 sample: [run #38455702686](https://github.com/DWR-debug/trading-agent-public/actions/runs/38455702686), fingerprint `2cbe22c49d885f527ac523ed74ab1e13a843c23999916c674282de6977e9c33c`; 4 dates and 8 fixed symbols.
+- R2 Internet Archive metadata: [run #38461580319](https://github.com/DWR-debug/trading-agent-public/actions/runs/38461580319), `Q127R2_WAYBACK_METADATA_INCOMPLETE`, 7 bounded metadata requests, 3,848 bytes and no target-file captures.
+- R3 Common Crawl metadata: [run #38478542257](https://github.com/DWR-debug/trading-agent-public/actions/runs/38478542257), 28 offline tests passed, 5 requests / 35,686 bytes, receipt fingerprint `9b9159581e7770078325923e7d41df6e8fbc27986ffb329ec08d69f7bfe8bb4d`, status `Q127R3_COMMONCRAWL_METADATA_INCOMPLETE`.
+- Common Crawl collection listing succeeded (128 collection rows), but all four selected index queries failed at the endpoint layer: 1 HTTP 502 and 3 HTTP 404. Zero usable captures means queries did not complete, not that files were absent. No FINRA data files or WARC payloads were downloaded.
+- Next Q127 step must verify a different documented endpoint/index route or use a genuinely independent source. Do not repeat the same failed URLs as a negative result. A capture time remains an archive observation, not FINRA's exact first-publication time.
 
-### Q127 — FINRA daily short-sale volume PIT feasibility
+## Q220 — frozen SEC/XBRL hashes
 
-- Upstream fixed-sample run: [#38455702686](https://github.com/DWR-debug/trading-agent-public/actions/runs/38455702686)
-- Receipt fingerprint: `2cbe22c49d885f527ac523ed74ab1e13a843c23999916c674282de6977e9c33c`
-- Q127-R2 (Internet Archive metadata) completed as `Q127R2_WAYBACK_METADATA_INCOMPLETE`: zero captured API response payloads; eight bounded metadata requests; reported body bytes were 18. It did not download target files.
-- Q127-R3 run [#38478542257](https://github.com/DWR-debug/trading-agent-public/actions/runs/38478542257) wrote fingerprint `9b9159581e7770078325923e7d41df6e8fbc27986ffb329ec08d69f7bfe8bb4d`, status `Q127R3_COMMONCRAWL_METADATA_INCOMPLETE`. Common Crawl's collection list succeeded (HTTP 200, 35,226 bytes, 128 collection rows); all four selected collection-index queries failed instead: one HTTP 502 (`CC-MAIN-2024-10`) and three HTTP 404 (`CC-MAIN-2024-30`, `CC-MAIN-2025-05`, `CC-MAIN-2025-43`). The receipt has zero usable captures because the queries did not complete, not because the files were absent. No FINRA file or WARC payload was downloaded.
-- Do not rerun the same four failed URLs as if they were negative results. A next attempt must use an independently verified archival-index endpoint/path or a genuinely different source; a Common Crawl capture, if found, remains observation time rather than FINRA's exact first-publication time.
+Q220 remains blocked. Two bounded original-submission checks matched accession/CIK/form/filing-date identity but did not reproduce the frozen source hashes; the third daily-feed download was incomplete. The 55-entry population retained hashes and byte counts but not immutable raw bytes from original ingestion. This is a provenance gap, not proof which representation changed. Do not rewrite hashes or retry broad multi-GB downloads. Continue by reconstructing byte-boundary/extraction provenance from existing code, commit history and receipts.
 
-## Windows runner capacity and dispatch
+## Q221 — transaction public-observation boundary
 
-The permanent operator policy is committed in `ops/trading_agent_os_state.json` as `ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR`:
-- A: `LHT-N133732`, formal readiness / local reproduction.
-- B: `LHT-N133732-2`, frontier discovery / data QA.
-- C: `LHT-N133732-3`, long deterministic research / independent reproduction.
+The official monthly archive catalogue exposed no multi-date archive series for the seven target fiscal years; no ZIP payload was downloaded. The transaction-parent UEI probe and its one registered retry both returned HTTP 503 before count preflight/download. Do not retry the same endpoint without a new route or documented service recovery. The 348 frozen keys and recipient-to-issuer mapping remain unchanged.
 
-All three are exclusive and routable. Only a job that is actually `in_progress` on a specific runner, or a verified `busy=true` observation, occupies that slot. Queued/waiting jobs do not reserve the physical runner. Availability never creates scientific evidence or authorization.
+## Exclusive Windows runner capacity
 
-The bounded Runner-C window is renewed in this checkpoint to **2026-10-13 22:25Z–2026-10-14 00:25Z**. The capacity scheduler may dispatch the existing long deterministic readiness/guard workpack during the active interval. It must not duplicate an active job or preempt useful work actually running on that slot.
+The permanent operator contract in `ops/trading_agent_os_state.json` says all three Windows slots are always routable except when a job is actually running on that exact slot:
+- A: `LHT-N133732` — formal readiness/local reproduction.
+- B: `LHT-N133732-2` — frontier discovery/data QA.
+- C: `LHT-N133732-3` — long deterministic research/independent reproduction.
 
-## Next actions after this checkpoint
+At the last live snapshot, the only in-progress workflow reported was the hosted [Evidence Graph Stage 4–5 wave](https://github.com/DWR-debug/trading-agent-public/actions/runs/38512814652). Old queued Monitor/Router entries date to 2026-10-07 and do not reserve a Windows runner. Runner-C long workpack [#38487402103](https://github.com/DWR-debug/trading-agent-public/actions/runs/38487402103) previously completed successfully.
 
-1. Wait for refreshed PR #1417 CI and inspect any failures on the current merged tree; only merge a clean revision.
-2. After merge, verify that Q120-R2, Q127-R3 and the six-pack Windows regression **actually started**. A green workflow check is not itself a scientific gate.
-3. Inspect each receipt and artifact for exact status, request count/bytes, frozen upstream fingerprints and gate fields. Keep Q120 PIT and Q127 same-day/revision-lineage gates closed unless the receipts independently prove otherwise.
-4. Confirm that all three Windows runners are productively used while jobs exist, and that an idle runner is refilled only with an independent, bounded, non-duplicate task.
-5. Preserve the invariant: `PAPER_ONLY=true`; performance, holdout selection, ranking, tuning, promotion, orders and live execution remain disabled.
+The paired window update in this checkpoint proposes the existing deterministic readiness/guard workpack for **2026-10-14 05:20Z–07:20Z**. It does not initiate Q220/Q221/Q127 external-source retries. It becomes active on `master` only after this checkpoint PR is merged.
 
-**No Q220 expected hash, Q221 identity mapping, frozen sample, or scientific/performance gate is modified by this checkpoint.**
+## Resume checklist
+
+1. Validate this checkpoint/window PR; merge only after all required checks pass.
+2. Verify the Runner-C long deterministic workpack actually starts in the proposed window. Only an in-progress job on the exact runner reserves a slot; a queued job does not.
+3. Keep Q120's complete-calendar/exact-publication-time gates closed.
+4. For Q127, verify a different documented index route before further requests.
+5. For Q220, resume byte-provenance analysis, not hash rewriting or broad downloads.
+6. Preserve PAPER_ONLY=true; performance, holdout, ranking, tuning, promotion, orders and live execution remain disabled.
