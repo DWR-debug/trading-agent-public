@@ -536,6 +536,49 @@
       },
       "interpretation": "The historical all-55 minus-five shift occurred with identical fetch-function source and request profile, so it is not explained by a code change to the population fetch implementation. The current PIT compiler uses a separate fetch function/profile, so the current minus-one observation must not be described as occurring under identical code/profile. The complete-submission capture and five-profile probe separately establish same-time repeatability for their limited sample, not the historical origin/body version.",
       "root_cause_proven": false
+    },
+    "historical_independent_reproduction": {
+      "evidence_commit": "c3c01e66dba382e062d84614d179ae1c0b97614f",
+      "evidence_commit_time_utc": "2026-10-11T23:08:34Z",
+      "evidence_blob_sha1": "cf5a165af09147712f388580211e169e1217de4d",
+      "receipt_generated_at_utc": "2026-10-11T23:08:31.626126+00:00",
+      "record_type": "q220_independent_pit_reproduction",
+      "receipt_status": "Q220_INDEPENDENT_PIT_REPRODUCED",
+      "historical_gate_positive": true,
+      "record_count": 55,
+      "independently_retrieved_documents": 55,
+      "source_hash_failure_count": 0,
+      "relevant_check": "all_primary_sources_independently_retrieved_and_hash_verified",
+      "relevant_check_passed": true,
+      "upstream": {
+        "compiler_receipt_fingerprint": "1b34b3ac2f3a6fc3ff90fa42cd8ea1c7b73297b5cbd71414a0877bb25d9b203c",
+        "population_receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+        "population_gate_code_sha256": "2a455f02835b2d85308ac2c178777999fc059312218275a697204313de8cab0d",
+        "population_contract_sha256": "5014eb888a4e66502cb30c9ec5208caec1de65425dad3c1bd3feb8b17a29ac88"
+      },
+      "independent_retrieval_source_code": {
+        "path": "automation/q220_independent_pit_reproduction.py",
+        "git_blob_sha1": "3a424e17e2ca35b531e48c011480b1b9fab186db",
+        "same_blob_at_historical_receipt_and_current_master": true,
+        "request_route": "direct SEC Archives primary document URL derived from frozen CIK/accession/filename",
+        "user_agent": "DWR-debug/trading-agent-public Q220 independent PIT reproduction/1.0 research@example.invalid",
+        "accept": "text/html,application/xhtml+xml,*/*",
+        "accept_encoding": "identity",
+        "retry_attempts": 4,
+        "timeout_seconds": 60,
+        "response_body_persisted_in_receipt": false
+      },
+      "current_comparison": {
+        "compiler_receipt_fingerprint": "b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e",
+        "compiler_generated_at_utc": "2026-10-14T17:12:46.964937+00:00",
+        "compiler_status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+        "source_hash_failure_count": 55,
+        "verified_primary_document_count": 0,
+        "gate_positive": false,
+        "frozen_expected_hash_match_count": 0
+      },
+      "interpretation": "An immutable independent-reproduction receipt recorded 55/55 primary-document hash matches and a complete PIT reproduction on 2026-10-11 23:08 UTC, bound to the then-current compiler receipt and the same frozen population. By the 2026-10-14 17:12 UTC compiler capture, the same frozen hash set produced 55/55 mismatches and all current response bodies were one byte shorter. This is a time-bounded successful historical reproduction followed by a current failure. It narrows the interval in which the mismatch state emerged but does not prove the exact time or cause; the prior raw body bytes are absent.",
+      "present_gate_clearance": false
     }
   }
 }
