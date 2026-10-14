@@ -338,6 +338,7 @@ def run(
         },
         "pit_interpretation": {
             "official_nominal_publication_upper_bound_stated": overall_policy_markers.get("by_1800_et_same_trade_date", False),
+            "publication_statement_historical_applicability_proven": False,
             "later_update_possible_stated": overall_policy_markers.get("later_update_possible", False),
             "exact_first_publication_time_proven": False,
             "historical_listing_snapshot_proven": False,
