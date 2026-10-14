@@ -57,6 +57,21 @@ def test_q220_same_code_historical_capture_shows_five_byte_shift_for_all_55_rows
     assert "requested_url" not in paths["current_pit_compiler_fetch_contract"]["response_fields_embedded_in_hash_failure_receipt"]
     assert paths["root_cause_proven"] is False
 
+    historical_independent = history["historical_independent_reproduction"]
+    assert historical_independent["receipt_status"] == "Q220_INDEPENDENT_PIT_REPRODUCED"
+    assert historical_independent["historical_gate_positive"] is True
+    assert historical_independent["record_count"] == 55
+    assert historical_independent["independently_retrieved_documents"] == 55
+    assert historical_independent["source_hash_failure_count"] == 0
+    assert historical_independent["upstream"]["population_receipt_fingerprint"] == (
+        "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543"
+    )
+    assert historical_independent["independent_retrieval_source_code"]["same_blob_at_historical_receipt_and_current_master"] is True
+    assert historical_independent["current_comparison"]["source_hash_failure_count"] == 55
+    assert historical_independent["current_comparison"]["verified_primary_document_count"] == 0
+    assert historical_independent["current_comparison"]["gate_positive"] is False
+    assert historical_independent["present_gate_clearance"] is False
+
     samples = {row["record_key"]: row for row in history["same_code_sample_comparisons"]}
     spgi = samples["0000064040|0000064040-19-000059|10-K|2019-02-13"]
     assert spgi["oct10_1719_bytes"] == 4_774_463
