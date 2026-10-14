@@ -1,6 +1,12 @@
 name: Literature Frontier Scout
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/literature-frontier-scout.yml"
+      - "research/governance/literature_research_policy.json"
+      - "tests/test_literature_frontier_scout.py"
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
