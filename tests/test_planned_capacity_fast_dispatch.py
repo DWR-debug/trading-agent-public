@@ -1389,3 +1389,14 @@ def test_q104_q220_q221_frozen_request_refreshes_trigger_windows_gate_regression
         "research/run_requests/q221_transaction_parent_uei_probe.trigger",
     ):
         assert f'      - "{request_path}"' in workflow
+
+
+
+def test_windows_regression_bootstrap_retries_transient_package_index_failures():
+    workflow = (ROOT / ".github/workflows/windows-candidate-gate-regression.yml").read_text(encoding="utf-8")
+    assert 'set "PIP_DEFAULT_TIMEOUT=60"' in workflow
+    assert 'set "PIP_RETRIES=5"' in workflow
+    assert workflow.count('--retries 5 --timeout 60 pytest pandas exchange-calendars pypdf tzdata==2026.5') == 3
+    assert "PIP_INSTALL_ATTEMPT_1_FAILED" in workflow
+    assert "PIP_INSTALL_ATTEMPT_2_FAILED" in workflow
+    assert '"%PY_EXE%" -m pytest --version || exit /b 1' in workflow
