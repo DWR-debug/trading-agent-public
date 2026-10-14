@@ -27,6 +27,7 @@ def test_parse_header_observation_uses_filer_scope_and_stops_before_document():
         "filer_cik": "0000123456",
         "form": "13F-HR",
         "filing_date": "2015-03-13",
+        "date_of_filing_date_change": None,
         "acceptance_datetime": "2015-03-13T17:05:21",
     }
 
@@ -173,14 +174,14 @@ def test_r4_freezes_one_new_archive_vintage_and_never_expands_the_census():
 
 def test_r4_parser_captures_date_change_as_separate_clock():
     body = (
-        b"<SEC-HEADER>\\n"
-        b"<ACCESSION-NUMBER>0001008929-17-000008\\n"
-        b"<FILER>\\n<COMPANY-DATA>\\n<CIK>1008929\\n</COMPANY-DATA>\\n</FILER>\\n"
-        b"<TYPE>13F-HR\\n"
-        b"<FILING-DATE>20170630\\n"
-        b"<DATE-OF-FILING-DATE-CHANGE>20170515\\n"
-        b"<ACCEPTANCE-DATETIME>20170515120000\\n"
-        b"</SEC-HEADER><DOCUMENT>\\n<TYPE>EX-99.1\\n"
+        b"<SEC-HEADER>\n"
+        b"<ACCESSION-NUMBER>0001008929-17-000008\n"
+        b"<FILER>\n<COMPANY-DATA>\n<CIK>1008929\n</COMPANY-DATA>\n</FILER>\n"
+        b"<TYPE>13F-HR\n"
+        b"<FILING-DATE>20170630\n"
+        b"<DATE-OF-FILING-DATE-CHANGE>20170515\n"
+        b"<ACCEPTANCE-DATETIME>20170515120000\n"
+        b"</SEC-HEADER><DOCUMENT>\n<TYPE>EX-99.1\n"
     )
     observed = lineage.parse_header_observation(body, "raw_sgml_header")
     assert observed["accession"] == "0001008929-17-000008"
@@ -192,10 +193,10 @@ def test_r4_parser_captures_date_change_as_separate_clock():
 
 def test_r4_parser_keeps_missing_date_change_missing():
     body = (
-        b"ACCESSION NUMBER: 0001008929-17-000008\\n"
-        b"CENTRAL INDEX KEY: 1008929\\n"
-        b"CONFORMED SUBMISSION TYPE: 13F-HR\\n"
-        b"FILED AS OF DATE: 20170630\\n"
+        b"ACCESSION NUMBER: 0001008929-17-000008\n"
+        b"CENTRAL INDEX KEY: 1008929\n"
+        b"CONFORMED SUBMISSION TYPE: 13F-HR\n"
+        b"FILED AS OF DATE: 20170630\n"
     )
     observed = lineage.parse_header_observation(body, "index_headers")
     assert observed["filing_date"] == "2017-06-30"
