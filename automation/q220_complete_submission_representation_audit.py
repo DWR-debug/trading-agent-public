@@ -272,16 +272,46 @@ def parse_primary_document_block(
 def validate_frozen_inputs(root: Path, forensics_artifact_dir: Path) -> dict[str, Any]:
     request = read_request(root / REQUEST_PATH)
     prereg = read_json(root / PREREG_PATH)
+    prereg_samples = prereg.get("samples")
+    expected_prereg_samples = [
+        {
+            "record_key": sample["record_key"],
+            "accession": sample["accession"],
+            "cik": sample["cik"],
+            "form": sample["form"],
+            "filed_date": sample["filed_date"],
+            "acceptance_datetime": sample["acceptance_datetime"],
+            "primary_filename": sample["primary_filename"],
+            "expected_sha256": sample["expected_sha256"],
+            "expected_bytes": sample["expected_bytes"],
+            "prior_feed_text_sha256": sample["feed_text_sha256"],
+            "prior_feed_text_bytes": sample["feed_text_bytes"],
+            "prior_feed_submission_member_sha256": sample["feed_submission_member_sha256"],
+            "prior_feed_submission_member_bytes": sample["feed_submission_member_bytes"],
+            "prior_current_primary_sha256": sample["prior_current_primary_sha256"],
+            "prior_current_primary_bytes": sample["prior_current_primary_bytes"],
+        }
+        for sample in SAMPLES
+    ]
+    frozen = prereg.get("frozen_inputs") or {}
     if (
         prereg.get("candidate_id") != "Q220"
         or prereg.get("status") != "PREREGISTERED_DIAGNOSTIC_ONLY_NO_GATE_CHANGE"
         or prereg.get("request_sequence") != REQUEST_SEQUENCE
         or prereg.get("sample_count") != 3
+        or prereg_samples != expected_prereg_samples
         or prereg.get("max_total_download_bytes") != MAX_TOTAL_DOWNLOAD_BYTES
         or prereg.get("max_complete_submission_bytes_each") != MAX_COMPLETE_SUBMISSION_BYTES
         or prereg.get("retry_count") != 0
         or prereg.get("persist_complete_submission_text") is not False
         or prereg.get("gate_change_authorized") is not False
+        or frozen.get("population_receipt_fingerprint") != POPULATION_FP
+        or frozen.get("compiler_receipt_fingerprint") != COMPILER_FP
+        or frozen.get("prior_feed_forensics_receipt_fingerprint") != FORENSICS_FP
+        or (prereg.get("gates") or {}).get("source_complete") is not False
+        or (prereg.get("gates") or {}).get("historical_pit_positive") is not False
+        or (prereg.get("safety") or {}).get("live_trading_enabled") is not False
+        or (prereg.get("safety") or {}).get("orders_enabled") is not False
     ):
         raise AuditError("PREREGISTRATION_CONTRACT_MISMATCH")
 
@@ -459,7 +489,7 @@ def _read_response(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str
                 return {**meta, "status": "INCOMPLETE_CONTENT_LENGTH", "body": b"", "error": "CONTENT_LENGTH_MISMATCH"}
             if int(meta["http_status"] or 0) != 200:
                 return {**meta, "status": "HTTP_STATUS_NOT_200", "body": b"", "error": "HTTP_STATUS_NOT_200"}
-            return {**meta, "status": "FETCHED", "body": body}
+            return {**meta, "status": "FETCHED", "body": body, "budget_charged": True}
     except urllib.error.HTTPError as exc:
         return {
             **meta,
@@ -503,7 +533,7 @@ def extract_sample(
         "prior_feed_submission_member_bytes": sample["feed_submission_member_bytes"],
         "prior_current_primary_sha256": sample["prior_current_primary_sha256"],
         "prior_current_primary_bytes": sample["prior_current_primary_bytes"],
-        "complete_submission": {k: v for k, v in response.items() if k != "body"},
+        "complete_submission": {k: v for k, v in response.items() if k not in {"body", "budget_charged"}},
         "identity_validated": False,
         "primary_document_extracted": False,
         "expected_hash_reproduced": False,
