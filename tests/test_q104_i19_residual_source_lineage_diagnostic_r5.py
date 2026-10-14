@@ -186,33 +186,33 @@ def test_r5_parser_captures_date_change_as_separate_clock():
     observed = lineage.parse_header_observation(body, "raw_sgml_header")
     assert observed["accession"] == "0000950123-15-003183"
     assert observed["filer_cik"] == "0001008929"
-    assert observed["filing_date"] == "2017-06-30"
-    assert observed["date_of_filing_date_change"] == "2017-05-15"
-    assert observed["acceptance_datetime"] == "2017-05-15T12:00:00"
+    assert observed["filing_date"] == "2015-03-13"
+    assert observed["date_of_filing_date_change"] == "2015-03-12"
+    assert observed["acceptance_datetime"] == "2015-03-12T12:00:00"
 
 
 def test_r5_parser_keeps_missing_date_change_missing():
     body = (
         b"ACCESSION NUMBER: 0000950123-15-003183\n"
-        b"CENTRAL INDEX KEY: 1008929\n"
+        b"CENTRAL INDEX KEY: 0000123456\n"
         b"CONFORMED SUBMISSION TYPE: 13F-HR\n"
-        b"FILED AS OF DATE: 20170630\n"
+        b"FILED AS OF DATE: 20150313\n"
     )
     observed = lineage.parse_header_observation(body, "index_headers")
-    assert observed["filing_date"] == "2017-06-30"
+    assert observed["filing_date"] == "2015-03-13"
     assert observed["date_of_filing_date_change"] is None
 
 
 def test_r5_parser_normalizes_iso_date_change_on_text_route():
     body = (
         b"ACCESSION NUMBER: 0000950123-15-003183\n"
-        b"CENTRAL INDEX KEY: 1008929\n"
+        b"CENTRAL INDEX KEY: 0000123456\n"
         b"CONFORMED SUBMISSION TYPE: 13F-HR\n"
-        b"FILED AS OF DATE: 20170630\n"
-        b"DATE OF FILING DATE CHANGE: 2017-05-15\n"
+        b"FILED AS OF DATE: 20150313\n"
+        b"DATE OF FILING DATE CHANGE: 2015-03-12\n"
     )
     observed = lineage.parse_header_observation(body, "index_headers")
-    assert observed["date_of_filing_date_change"] == "2017-05-15"
+    assert observed["date_of_filing_date_change"] == "2015-03-12"
 
 
 def test_r5_workflow_is_single_vintage_read_only_and_bounded():
