@@ -71,7 +71,6 @@ jobs:
             --name "q104-i19-sec-source-snapshot-$source_run_id" --dir "$root/source_snapshot"
           gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
             --name "q104-i19-census-2017-2018-$source_run_id" --dir "$root/input/2017-2018"
-          gh run download "$source_run_id" --repo "$GITHUB_REPOSITORY" \
           echo "Q104_LINEAGE_R4_ROOT=$root" >> "$GITHUB_ENV"
 
       - name: Capture bounded cross-vintage source-lineage observations
