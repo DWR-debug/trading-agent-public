@@ -129,3 +129,14 @@ def test_reproduction_code_sha_requires_full_immutable_commit():
     assert validate_reproduction_code_sha("a" * 40) == "a" * 40
     with pytest.raises(argparse.ArgumentTypeError, match="40-character"):
         validate_reproduction_code_sha("main")
+
+
+def test_independent_reproduction_uses_immutable_run_pinned_reconciliation():
+    from automation.q104_i22_independent_pit_reproduction import PINNED, RECONCILIATION_PATH
+
+    assert RECONCILIATION_PATH.name == "q104_i22_cross_arch_reconciliation_38274043682.json"
+    assert RECONCILIATION_PATH.name != "q104_i22_cross_arch_reconciliation_latest.json"
+    assert PINNED["source_workflow_run_id"] == 38274043682
+    receipt = __import__("json").loads(RECONCILIATION_PATH.read_text(encoding="utf-8"))
+    assert receipt["source_workflow_run_id"] == PINNED["source_workflow_run_id"]
+    assert receipt["receipt_fingerprint"] == PINNED["reconciliation_fingerprint"]
