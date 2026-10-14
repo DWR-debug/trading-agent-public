@@ -106,7 +106,7 @@ def test_request_is_exact_and_live_execution_cannot_be_enabled(tmp_path):
 
     parsed = lineage.read_request(request)
     assert parsed["SOURCE_RUN_ID"] == "38168441086"
-    assert parsed["SAMPLE_COUNT"] == "4"
+    assert parsed["SAMPLE_COUNT"] == "6"
 
     pairs["LIVE_EXECUTION"] = "true"
     request.write_text("".join(f"{k}={v}\n" for k, v in pairs.items()), encoding="utf-8")
