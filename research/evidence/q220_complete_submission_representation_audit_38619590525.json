@@ -304,13 +304,19 @@
     "gate_positive": false
   },
   "historical_lineage_assessment": {
-    "original_expected_hash_capture_time": "2026-10-11 population artifact",
+    "original_expected_hash_capture_time": "Current frozen population values were persisted 2026-10-11T17:36:13Z; an earlier same-code snapshot at 2026-10-10T17:19:36Z had a different 55-hash set with each primary document five bytes longer.",
     "immutable_original_primary_bodies_available": false,
     "immutable_original_http_response_headers_available": false,
     "original_population_runner_log_contains_per_record_source_metadata": false,
     "source_vintage_proven": false,
     "historical_first_public_observation_proven": false,
-    "conclusion": "The three expected hashes were captured from a working direct-primary-HTML route on 2026-10-11, and SPGI 2025 was independently re-observed at the frozen hash by the same-day route probe. The original raw response bytes and per-record HTTP metadata were not preserved. The current complete-submission route exactly reproduces prior Feed TEXT for both 2019 samples, but gives a distinct 2025 TEXT hash at unchanged length. This narrows the representation lineage but does not identify the historical cause of all 55 mismatches."
+    "conclusion": "The frozen hashes were persisted from the 2026-10-11 second representation set. All 55 prior direct-primary hashes had already differed between 2026-10-10T17:19Z and 2026-10-11T08:24Z under the same exact code blob; every length decreased by five bytes. The current 2026-10-14 compiler view differs again across all 55 rows, with each observed body one byte shorter than the frozen value. This is compelling common-mode representation-drift evidence, but absent raw original bytes it does not identify the exact changed bytes, prove source vintage, or establish first-public observation time.",
+    "original_primary_capture_raw_bytes_preserved": false,
+    "same_code_population_hash_drift_proven_by_git_metadata": true,
+    "same_code_hash_drift_count": 55,
+    "same_code_byte_delta_all_rows": -5,
+    "current_direct_response_hash_drift_count": 55,
+    "current_direct_response_byte_delta_all_rows": -1
   },
   "gates": {
     "source_complete": false,
@@ -329,5 +335,101 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "next_gate": "Offline-only: inspect all retained Git history and artifacts for an immutable original response body or an independently pinned raw primary representation. If none exists, preserve the provenance gap explicitly; do not redownload Feed archives, rewrite hashes, or change the Q220 gate."
+  "next_gate": "Offline-only: inspect all retained Git history and artifacts for an immutable original response body or an independently pinned raw primary representation. If none exists, preserve the provenance gap explicitly; do not redownload Feed archives, rewrite hashes, or change the Q220 gate.",
+  "historical_population_hash_drift": {
+    "status": "SAME_CODE_FIVE_BYTE_SHIFT_ACROSS_ALL_55_PRIMARY_DOCUMENTS",
+    "research_question": "Did the frozen 55-row primary hash set appear as a response representation stable across the historical capture runs, or was there a systematic change before the current compiler pin was frozen?",
+    "method": "Offline analysis of immutable Git diffs for the saved population receipts and exact source-code blob IDs at those commits. No SEC requests or additional source downloads were made.",
+    "snapshots": [
+      {
+        "commit": "65f725a4cde933750d2b06bd4345ab314018bab9",
+        "observed_at_utc": "2026-10-10T17:19:36.701501+00:00",
+        "record_count": 55,
+        "gate_code_sha256": "62ef075c9fe5ccc2527e5a918f9653a5a6d1602359d4bb795a0e97a5370ddcc1",
+        "gate_code_git_blob_sha1": "17d3464605138e5035718664fb02ff1a56dcf5cc",
+        "role": "First preserved snapshot in the same-code comparison; contains the old primary-document hash/length set."
+      },
+      {
+        "commit": "7aab3a11af3a533c4ff1078cf303395022614694",
+        "observed_at_utc": "2026-10-10T21:54:32.086848+00:00",
+        "record_count": 55,
+        "gate_code_sha256": "62ef075c9fe5ccc2527e5a918f9653a5a6d1602359d4bb795a0e97a5370ddcc1",
+        "gate_code_git_blob_sha1": "17d3464605138e5035718664fb02ff1a56dcf5cc",
+        "source_hash_and_length_set_matches_previous_snapshot": true,
+        "git_diff_scope": "Only generated timestamp/receipt fingerprint changed; no primary document hashes or byte lengths changed."
+      },
+      {
+        "commit": "3d41bfbf18e525522da7c274e68ed692ef54c8d1",
+        "observed_at_utc": "2026-10-11T08:24:12.052069+00:00",
+        "record_count": 55,
+        "gate_code_sha256": "62ef075c9fe5ccc2527e5a918f9653a5a6d1602359d4bb795a0e97a5370ddcc1",
+        "gate_code_git_blob_sha1": "17d3464605138e5035718664fb02ff1a56dcf5cc",
+        "changed_primary_hash_count": 55,
+        "changed_primary_byte_length_count": 55,
+        "primary_byte_delta_distribution": {
+          "-5": 55
+        },
+        "all_55_hashes_changed": true,
+        "interpretation": "A direct-primary retrieval under the same pinned collector code produced a different hash and exactly five fewer bytes for each of the 55 records. The missing raw bodies prevent identifying which bytes changed."
+      },
+      {
+        "commit": "5997aa28f65322ec15e6e41e5a0f0a4d802a5afb",
+        "observed_at_utc": "2026-10-11T17:36:13.586472+00:00",
+        "workflow_run_id": 38155914188,
+        "receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+        "gate_code_sha256": "2a455f02835b2d85308ac2c178777999fc059312218275a697204313de8cab0d",
+        "role": "Published the 55-row source population that remains pinned by the current blocked compiler."
+      }
+    ],
+    "equality_checks": {
+      "oct10_1719_vs_oct11_0824_same_gate_code_sha256": true,
+      "oct10_1719_vs_oct11_0824_same_gate_code_git_blob_sha1": true,
+      "oct10_1719_vs_oct11_0824_primary_hash_different_count": 55,
+      "oct10_1719_vs_oct11_0824_all_primary_lengths_decreased_by_five": true,
+      "oct11_0824_hash_set_matches_current_compiler_expected_hash_set": true,
+      "oct11_0824_length_set_matches_current_compiler_expected_length_set": true
+    },
+    "same_code_sample_comparisons": [
+      {
+        "record_key": "0000064040|0000064040-19-000059|10-K|2019-02-13",
+        "filename": "spgi-20181231x10k.htm",
+        "oct10_1719_sha256": "f9b44be839a2775217b7e0fa15b3d91f8cae6b95dc0723dec54bf03e87aa3e0c",
+        "oct10_1719_bytes": 4774463,
+        "oct11_0824_sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+        "oct11_0824_bytes": 4774458,
+        "delta_bytes": -5
+      },
+      {
+        "record_key": "0001090012|0001564590-19-003382|10-K|2019-02-20",
+        "filename": "dvn-10k_20181231.htm",
+        "oct10_1719_sha256": "77b8333af3c42f4a020ed2667c8911c415d11083ba5456dc06f32c32decd51ce",
+        "oct10_1719_bytes": 10558511,
+        "oct11_0824_sha256": "b024964aa602547d102af1f9cd51c61a3d723ab25b21ef5686b02ac8d4f40dd1",
+        "oct11_0824_bytes": 10558506,
+        "delta_bytes": -5
+      },
+      {
+        "record_key": "0000064040|0000064040-25-000052|10-K|2025-02-11",
+        "filename": "spgi-20241231.htm",
+        "oct10_1719_sha256": "33732dc05d44f8e3fa83a82e73f34040a201097456e58ab74fe0d77868724d0a",
+        "oct10_1719_bytes": 4133821,
+        "oct11_0824_sha256": "afe05282d5d5af7f3068287cceaa679db962264d5d704d2d32ac19e2c4d3531d",
+        "oct11_0824_bytes": 4133816,
+        "delta_bytes": -5
+      }
+    ],
+    "current_direct_primary_observations": {
+      "compiler_receipt_fingerprint": "b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e",
+      "captured_at_utc": "2026-10-14T17:12:46.964937+00:00",
+      "total_rows": 55,
+      "current_hashes_differ_from_frozen_count": 55,
+      "current_actual_byte_delta_vs_frozen_distribution": {
+        "-1": 55
+      },
+      "current_hash_set_matches_frozen_set": false,
+      "interpretation": "A later current-code compiler snapshot again observed a different direct-primary body hash for every row; all response lengths were exactly one byte below the frozen second snapshot. Five-profile repeatability testing on the SPGI 2019 document later produced the same current hash/length for all five request profiles. This is consistent with another common-mode representation shift but does not identify the changed bytes."
+    },
+    "source_bytes_preserved_in_old_population_receipts": false,
+    "caveat": "The historical receipts persist only primary-document hashes, lengths, and source metadata—not the raw body bytes. The same-code, all-55, minus-five comparison is strong metadata evidence of time-varying returned representations, not a byte-level diff or proof of the exact mechanism."
+  }
 }
