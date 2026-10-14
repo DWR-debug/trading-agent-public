@@ -170,6 +170,9 @@ def test_r6_freezes_one_new_accession_from_existing_archive_vintage():
     assert lineage.MAX_TOTAL_DOWNLOAD_BYTES == 40_000_000
     assert lineage.FROZEN_REQUEST_VALUES["CENSUS_RESTART"] == "false"
     assert lineage.FROZEN_REQUEST_VALUES["REPAIR_RECEIPTS"] == "false"
+    assert lineage.RECOVERY_RUN_ID == "38250105408"
+    assert lineage.RECOVERY_ARTIFACT_ID == "11747003791"
+    assert lineage.RECOVERED_SHARD_FINGERPRINT == "cb1f2bf7705e4b9cc0500279650fd2d88ffd1180320137e1de8157a6cb129663"
 
 
 def test_r6_parser_captures_date_change_as_separate_clock():
@@ -224,7 +227,11 @@ def test_r6_workflow_is_single_vintage_read_only_and_bounded():
     assert "2024-2025-09" not in workflow
     assert "if-no-files-found: warn" in workflow
     assert "CENSUS_RESTART=false" in Path("research/run_requests/q104_i19_residual_source_lineage_r6.trigger").read_text(encoding="utf-8")
-    assert "PERFORMANCE=false" in Path("research/run_requests/q104_i19_residual_source_lineage_r6.trigger").read_text(encoding="utf-8")
+    request_text = Path("research/run_requests/q104_i19_residual_source_lineage_r6.trigger").read_text(encoding="utf-8")
+    assert "PERFORMANCE=false" in request_text
+    assert "RECOVERY_RUN_ID=38250105408" in request_text
+    assert "RECOVERY_ARTIFACT_ID=11747003791" in request_text
+    assert "RECOVERED_SHARD_FINGERPRINT=cb1f2bf7705e4b9cc0500279650fd2d88ffd1180320137e1de8157a6cb129663" in request_text
     request = Path("research/run_requests/q104_i19_residual_source_lineage_r6.trigger").read_text(encoding="utf-8")
     assert "REASON=READ_ONLY_ADD_DISTINCT_FROZEN_2013Q3_ARCHIVE_VINTAGE_NOT_IN_14_ROW_AGGREGATE" in request
     assert "MAX_SOURCE_ARCHIVE_BYTES=40000000" in request
