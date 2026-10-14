@@ -166,7 +166,7 @@ jobs:
         run: |
           @echo off
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-wave-q104\tools\python.exe"
-          "%PY_EXE%" -m automation.q221_transaction_parent_uei_probe_failure_audit --source-artifact q221-failed-probe-source --request research/run_requests/q221_transaction_parent_uei_probe.trigger --output runner-results/q221-failure-audit/receipt.json
+          "%PY_EXE%" -m automation.q221_transaction_parent_uei_probe_failure_audit --source-artifact q221-failed-probe-source --request research/run_requests/q221_transaction_parent_uei_failure_audit.trigger --output runner-results/q221-failure-audit/receipt.json
           if errorlevel 1 exit /b 1
 
       - name: Upload immutable Q221 diagnostic-only result
