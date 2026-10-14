@@ -31,6 +31,18 @@ def test_q220_same_code_historical_capture_shows_five_byte_shift_for_all_55_rows
     assert second["primary_byte_delta_distribution"] == {"-5": 55}
     assert second["all_55_hashes_changed"] is True
 
+    field_diff = history["same_code_receipt_diff_field_counts"]
+    changed_fields = {row["field"]: row for row in field_diff["fields_changed"]}
+    assert changed_fields["header_sha256"]["removed_values"] == 55
+    assert changed_fields["header_sha256"]["added_values"] == 55
+    assert changed_fields["primary_document_bytes"]["removed_values"] == 55
+    assert changed_fields["primary_document_bytes"]["added_values"] == 55
+    assert changed_fields["primary_document_sha256"]["removed_values"] == 55
+    assert changed_fields["primary_document_sha256"]["added_values"] == 55
+    assert field_diff["observed_unchanged_fields"]["directory_index_sha256"] is True
+    assert field_diff["observed_unchanged_fields"]["primary_document"] is True
+    assert field_diff["observed_unchanged_fields"]["acceptance_datetime"] is True
+
     samples = {row["record_key"]: row for row in history["same_code_sample_comparisons"]}
     spgi = samples["0000064040|0000064040-19-000059|10-K|2019-02-13"]
     assert spgi["oct10_1719_bytes"] == 4_774_463
