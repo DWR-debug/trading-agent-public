@@ -56,8 +56,8 @@ jobs:
           name: q104-i19-residual-lineage-r3-38532233135-1
           path: q104-r3-source
           run-id: 38532233135
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Capture only the 18 frozen EDGAR header routes
         run: >-
           python -m automation.q104_i19_r3_date_change_header_probe
@@ -67,7 +67,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q104-r3-date-change-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q104-r3-date-change-${{ github.run_id }}-${{ github.run_attempt }}
           path: runner-results/q104-r3-date-change/
           if-no-files-found: warn
           retention-days: 30
@@ -103,8 +103,8 @@ jobs:
           name: q221-transaction-parent-uei-probe-38531250865-1
           path: q221-failed-probe-source
           run-id: 38531250865
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Audit the 503 receipt offline — no USAspending requests
         run: >-
           python -m automation.q221_transaction_parent_uei_probe_failure_audit
@@ -115,7 +115,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q221-failure-audit-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q221-failure-audit-${{ github.run_id }}-${{ github.run_attempt }}
           path: runner-results/q221-failure-audit/
           if-no-files-found: warn
           retention-days: 30
@@ -151,16 +151,16 @@ jobs:
           name: q220-primary-source-vintage-forensics-38254139755-1
           path: q220-forensics-source
           run-id: 38254139755
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Download the pinned header-only evidence, no Feed or primary document
         uses: actions/download-artifact@v6
         with:
           name: q220-bounded-header-evidence-38258251764-1
           path: q220-header-source
           run-id: 38258251764
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Reconcile only frozen hashes and existing metadata
         run: >-
           python -m automation.q220_hash_provenance_diagnostic
@@ -172,7 +172,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q220-hash-provenance-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q220-hash-provenance-${{ github.run_id }}-${{ github.run_attempt }}
           path: runner-results/q220-hash-provenance/
           if-no-files-found: warn
           retention-days: 30
@@ -199,19 +199,19 @@ jobs:
       - name: Download newly captured R3 header-only receipt
         uses: actions/download-artifact@v6
         with:
-          name: q104-r3-date-change-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q104-r3-date-change-${{ github.run_id }}-${{ github.run_attempt }}
           path: q104-r3-probe
-          run-id: \${{ github.run_id }}
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Download the pinned R1/R2 8-row header-only receipt
         uses: actions/download-artifact@v6
         with:
           name: q104-i19-filing-date-change-header-probe-38304249742-1
           path: q104-prior-probe
           run-id: 38304249742
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Aggregate 14 frozen observations without applying precedence
         run: >-
           python -m automation.q104_i19_r3_date_change_aggregate
@@ -222,7 +222,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q104-cross-vintage-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q104-cross-vintage-${{ github.run_id }}-${{ github.run_attempt }}
           path: runner-results/q104-cross-vintage/
           if-no-files-found: warn
           retention-days: 30
@@ -245,11 +245,11 @@ jobs:
       - name: Download the first Q220 analysis fingerprint
         uses: actions/download-artifact@v6
         with:
-          name: q220-hash-provenance-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q220-hash-provenance-${{ github.run_id }}-${{ github.run_attempt }}
           path: q220-first-result
-          run-id: \${{ github.run_id }}
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Read expected deterministic analysis fingerprint
         id: expected
         shell: bash
@@ -268,29 +268,29 @@ jobs:
           name: q220-primary-source-vintage-forensics-38254139755-1
           path: q220-forensics-source
           run-id: 38254139755
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Download exact immutable Q220 header-only receipt
         uses: actions/download-artifact@v6
         with:
           name: q220-bounded-header-evidence-38258251764-1
           path: q220-header-source
           run-id: 38258251764
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Independently reproduce deterministic Q220 analysis
         run: >-
           python -m automation.q220_hash_provenance_diagnostic
           --repo-root .
           --forensics-artifact q220-forensics-source
           --header-artifact q220-header-source
-          --expected-analysis-fingerprint \${{ steps.expected.outputs.fingerprint }}
+          --expected-analysis-fingerprint ${{ steps.expected.outputs.fingerprint }}
           --output runner-results/q220-arm64-reproduction/receipt.json
       - name: Upload ARM64 reproduction receipt
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q220-hash-provenance-arm64-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q220-hash-provenance-arm64-${{ github.run_id }}-${{ github.run_attempt }}
           path: runner-results/q220-arm64-reproduction/
           if-no-files-found: warn
           retention-days: 30
@@ -317,11 +317,11 @@ jobs:
       - name: Download the first Q104 aggregate result
         uses: actions/download-artifact@v6
         with:
-          name: q104-cross-vintage-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q104-cross-vintage-${{ github.run_id }}-${{ github.run_attempt }}
           path: q104-first-result
-          run-id: \${{ github.run_id }}
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Read expected deterministic analysis fingerprint
         id: expected
         shell: pwsh
@@ -333,31 +333,31 @@ jobs:
       - name: Download newly captured R3 header-only receipt
         uses: actions/download-artifact@v6
         with:
-          name: q104-r3-date-change-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q104-r3-date-change-${{ github.run_id }}-${{ github.run_attempt }}
           path: q104-r3-probe
-          run-id: \${{ github.run_id }}
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Download the pinned prior 8-row receipt
         uses: actions/download-artifact@v6
         with:
           name: q104-i19-filing-date-change-header-probe-38304249742-1
           path: q104-prior-probe
           run-id: 38304249742
-          repository: \${{ github.repository }}
-          github-token: \${{ github.token }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Independently reproduce the 14-row Q104 aggregate on Windows
         run: >-
           python -m automation.q104_i19_r3_date_change_aggregate
           --prior-probe q104-prior-probe
           --r3-probe q104-r3-probe
-          --expected-analysis-fingerprint \${{ steps.expected.outputs.fingerprint }}
+          --expected-analysis-fingerprint ${{ steps.expected.outputs.fingerprint }}
           --output runner-results/q104-windows-reproduction/receipt.json
       - name: Upload independent Windows reproduction receipt
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q104-cross-vintage-windows-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q104-cross-vintage-windows-${{ github.run_id }}-${{ github.run_attempt }}
           path: runner-results/q104-windows-reproduction/
           if-no-files-found: warn
           retention-days: 30
