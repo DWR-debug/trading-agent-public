@@ -249,4 +249,6 @@ def test_current_status_surfaces_q104_r4_without_unlocking_gates():
     assert "or clear a gate" in focus
     assert "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221." in focus
     assert payload["safety"]["status"] == "SAFE"
-    assert "Q104 R4" not in doc  # R4 stays in the current next-focus metadata, not in the historical handoff checkpoint.
+    assert "R4 run #38574180245" in doc
+    assert "immutable 14-row aggregate" in doc
+
