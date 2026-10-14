@@ -63,10 +63,39 @@ def test_q220_same_code_historical_capture_shows_five_byte_shift_for_all_55_rows
     assert historical_independent["record_count"] == 55
     assert historical_independent["independently_retrieved_documents"] == 55
     assert historical_independent["source_hash_failure_count"] == 0
-    assert historical_independent["upstream"]["population_receipt_fingerprint"] == (
-        "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543"
+    assert historical_independent["receipt_generated_at_utc"] == "2026-10-11T23:08:31.626126+00:00"
+    assert historical_independent["workflow_run"]["id"] == 38183038217
+    assert historical_independent["workflow_run"]["conclusion"] == "success"
+    assert historical_independent["workflow_run"]["started_at_utc"] == "2026-10-11T23:06:46Z"
+    assert historical_independent["workflow_run"]["terminal_updated_at_utc"] == "2026-10-11T23:08:40Z"
+    assert historical_independent["immutable_artifact"]["id"] == 11717643698
+    assert historical_independent["immutable_artifact"]["sha256"] == (
+        "1147d01f71d11c5436b85791bbd4157c8db8fe8d6d11791461627325b6d4477b"
     )
-    assert historical_independent["independent_retrieval_source_code"]["same_blob_at_historical_receipt_and_current_master"] is True
+    assert historical_independent["upstream"]["compiler_receipt_fingerprint"] == (
+        "1b34b3ac2f3a6fc3ff90fa42cd8ea1c7b73297b5cbd71414a0877bb25d9b203c"
+    )
+    assert historical_independent["historical_compiler"]["gate_positive"] is True
+    assert historical_independent["historical_compiler"]["generated_at_utc"] == (
+        "2026-10-11T23:06:37.379425+00:00"
+    )
+    assert historical_independent["historical_compiler"]["compiler_source_git_blob_sha1"] == (
+        "c4587f75551297c1ceae9ed151196681eddfbdb8"
+    )
+    independent_code = historical_independent["independent_retrieval_source_code"]
+    assert independent_code["git_blob_sha1"] == "3a424e17e2ca35b531e48c011480b1b9fab186db"
+    assert independent_code["same_blob_at_historical_receipt_and_current_master"] is True
+    assert independent_code["user_agent"] == (
+        "DWR-debug/trading-agent-public Q220 independent PIT reproduction/1.0 research@example.invalid"
+    )
+    assert independent_code["accept"] == "text/html,application/xhtml+xml,*/*"
+    assert independent_code["max_attempts"] == 3
+    assert historical_independent["current_comparison"]["compiler_receipt_fingerprint"] == (
+        "b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e"
+    )
+    assert historical_independent["current_comparison"]["compiler_source_git_blob_sha1"] == (
+        "5092a459ce8a976af2a07af926653885a7c86281"
+    )
     assert historical_independent["current_comparison"]["source_hash_failure_count"] == 55
     assert historical_independent["current_comparison"]["verified_primary_document_count"] == 0
     assert historical_independent["current_comparison"]["gate_positive"] is False
