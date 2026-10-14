@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "record_type": "q220_complete_submission_representation_audit_preregistration",
+  "candidate_id": "Q220",
+  "registered_at_utc": "2026-10-14T18:25:00Z",
+  "request_sequence": "2026-10-14T18:25:00Z",
+  "status": "PREREGISTERED_DIAGNOSTIC_ONLY_NO_GATE_CHANGE",
+  "question": "Does the exact primary DOCUMENT/TEXT block in the official Complete submission text route match any of the three frozen expected primary-document hashes, and does it match the already observed daily-Feed TEXT representation?",
+  "hypotheses": {
+    "H1": "At least one exact primary TEXT block from the complete-submission route reproduces its frozen expected hash and byte count, linking the expected hash to that representation for that accession only.",
+    "H2": "The complete-submission TEXT block reproduces the prior daily-Feed TEXT hash and byte count, while neither reproduces the frozen expected primary hash; direct primary-HTML and submission-wrapper extraction paths are therefore distinct observed representations.",
+    "H3": "The complete-submission route yields a third reproducible representation, so source-lineage remains unresolved."
+  },
+  "source_route": {
+    "official_documentation": "https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data",
+    "route_template": "https://www.sec.gov/Archives/edgar/data/{CIK}/{accession_without_dashes}/{accession}.txt",
+    "purpose": "Fetch each full SEC complete-submission response once in memory, verify its pre-document filing header, and extract only the exact frozen primary DOCUMENT/TEXT block.",
+    "not_in_scope": ["daily Feed archives", "direct primary .htm URLs", "company submissions JSON", "index pages", "other accessions", "performance or strategy outputs"]
+  },
+  "frozen_inputs": {
+    "source_fixture_path": "research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json",
+    "source_fixture_blob_sha1": "2a3abbff6c6950e4f11d85dba92cb9c57a5c7ee0",
+    "source_fixture_receipt_fingerprint": "c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075",
+    "population_path": "research/evidence/q220_as_filed_xbrl_population_latest.json",
+    "population_blob_sha1": "4a1abe7f4633a5c8ee810e6e0f7208dc75103ad2",
+    "population_receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+    "population_gate_code_sha256": "2a455f02835b2d85308ac2c178777999fc059312218275a697204313de8cab0d",
+    "population_contract_sha256": "5014eb888a4e66502cb30c9ec5208caec1de65425dad3c1bd3feb8b17a29ac88",
+    "compiler_path": "research/evidence/q220_historical_representation_pit_latest.json",
+    "compiler_receipt_fingerprint": "b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e",
+    "compiler_status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+    "source_hash_failure_count": 55,
+    "verified_primary_document_count": 0,
+    "gate_positive": false,
+    "prior_feed_forensics_run_id": 38254139755,
+    "prior_feed_forensics_artifact_id": 11749259509,
+    "prior_feed_forensics_receipt_fingerprint": "840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b"
+  },
+  "samples": [
+    {
+      "record_key": "0000064040|0000064040-19-000059|10-K|2019-02-13",
+      "cik": "0000064040",
+      "accession": "0000064040-19-000059",
+      "form": "10-K",
+      "filed_date": "2019-02-13",
+      "acceptance_datetime": "2019-02-12T18:15:22",
+      "primary_filename": "spgi-20181231x10k.htm",
+      "expected_sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+      "expected_bytes": 4774458,
+      "prior_feed_text_sha256": "aa1f89efdf13029de9dd8f7eb020502dd518d4350513d4ef041ba67d902ef368",
+      "prior_feed_text_bytes": 4774237,
+      "prior_feed_submission_member_sha256": "e73d211f2bb02f099d9a8559735fb627678d7db0e3b11ae491eb80ae2b45fa54",
+      "prior_feed_submission_member_bytes": 26429640,
+      "prior_current_primary_sha256": "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+      "prior_current_primary_bytes": 4774458
+    },
+    {
+      "record_key": "0001090012|0001564590-19-003382|10-K|2019-02-20",
+      "cik": "0001090012",
+      "accession": "0001564590-19-003382",
+      "form": "10-K",
+      "filed_date": "2019-02-20",
+      "acceptance_datetime": "2019-02-20T12:18:53",
+      "primary_filename": "dvn-10k_20181231.htm",
+      "expected_sha256": "b024964aa602547d102af1f9cd51c61a3d723ab25b21ef5686b02ac8d4f40dd1",
+      "expected_bytes": 10558506,
+      "prior_feed_text_sha256": "e72d769d3ebcd9fddee3732785dd94d530f6d81a03c94c7f9343fb5bda25e2cc",
+      "prior_feed_text_bytes": 10558411,
+      "prior_feed_submission_member_sha256": "7dc11f4ecefd080e17daf09f508db575fe0fef823b07d5f3e435ef078b48815b",
+      "prior_feed_submission_member_bytes": 37864414,
+      "prior_current_primary_sha256": "5dfdcb52a74efa233ca0c65bf58b2caad44d859f4ecd23e618142c71b2d25a59",
+      "prior_current_primary_bytes": 10558506
+    },
+    {
+      "record_key": "0000064040|0000064040-25-000052|10-K|2025-02-11",
+      "cik": "0000064040",
+      "accession": "0000064040-25-000052",
+      "form": "10-K",
+      "filed_date": "2025-02-11",
+      "acceptance_datetime": "2025-02-11T17:29:21",
+      "primary_filename": "spgi-20241231.htm",
+      "expected_sha256": "afe05282d5d5af7f3068287cceaa679db962264d5d704d2d32ac19e2c4d3531d",
+      "expected_bytes": 4133816,
+      "prior_feed_text_sha256": "4446f768a1dc88f7dae9c67abf55694393425e441712fbf1fafe0d0a30523393",
+      "prior_feed_text_bytes": 4133721,
+      "prior_feed_submission_member_sha256": "53e774ec08da24e02ac18b0910fa2526421a7326be94eca7ffce2f4349543f13",
+      "prior_feed_submission_member_bytes": 22542746,
+      "prior_current_primary_sha256": "cb84c569cef0a88fffbe6114ad30607af4a99068b10a3d0f135ebdf7242b7a55",
+      "prior_current_primary_bytes": 4133816
+    }
+  ],
+  "bounds": {
+    "sample_count": 3,
+    "max_complete_submission_bytes_each": 45000000,
+    "max_total_download_bytes": 120000000,
+    "max_header_prefix_bytes": 2000000,
+    "max_primary_document_block_bytes": 16000000,
+    "request_timeout_seconds": 180,
+    "request_gap_seconds": 1.0,
+    "retry_count": 0,
+    "user_agent": "Reuse already established Q220 SEC forensic User-Agent; do not vary its profile.",
+    "accept_encoding": "identity",
+    "persist_complete_submission_text": false,
+    "retention_days_for_bounded_header_and_document_block_artifacts": 90
+  },
+  "decision_rules": {
+    "complete_and_expected_hash_matches": "Record a per-accession representation match only; never rewrite frozen expected hashes and do not clear Q220.",
+    "complete_and_prior_feed_text_matches_but_expected_hash_does_not": "Strengthens the route-specific representation lineage explanation for the fixed sample; Q220 remains blocked.",
+    "complete_but_neither_matches": "Source lineage remains unresolved; no more downloads without a distinct preregistered hypothesis.",
+    "any_fetch_failure_or_identity_or_boundary_mismatch": "Record incomplete result and fail closed. No retries or alternate endpoints."
+  },
+  "prohibitions": [
+    "Do not rewrite any of the 55 expected hashes or change population membership.",
+    "Do not download daily Feed archives or call primary .htm routes.",
+    "Do not repeat requests, request profile variants, or add cache-busting parameters.",
+    "Do not persist complete-submission .txt bodies; retain only the pre-document header prefix and the exact selected primary DOCUMENT block.",
+    "Do not infer source vintage or first-public observation time from a matching body hash alone.",
+    "Do not run performance tests, select holdout, rank, tune, promote, or execute live."
+  ],
+  "gate_change_authorized": false,
+  "gates": {
+    "source_complete": false,
+    "historical_pit_positive": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
