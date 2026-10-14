@@ -1501,7 +1501,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-14T06:48:40.665333+00:00",
+    "generated_at_utc": "2026-10-14T07:09:57.917672+00:00",
     "next_research_focus": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. Q104:I22 has a positive independent PIT receipt but remains a separate, non-dispatched mechanism-signature and non-overlap review; this does not authorize performance. Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and full-suite verification passed on its tested revision. Frozen census run #38168441086 is terminal; repair run #38231636160 reported 7,452 repaired/25 unresolved but undercounted residual accessions. Incremental run #38250105408 reused the exact six prior repaired-shard fingerprints and reports 53 unique unresolved accession keys, zero new attempts and zero repairs across 17 SEC archives (43 CIK/form/filing-date conflicts; 10 SEC_COMPLETE_SUBMISSION_HTTP_404). PR #1363 is merged (3c0f084405b3ccc293c16dd9f0bd5affa53d3ac1): it fixes recovery-receipt accounting without relaxing identity rules. Read-only residual lineage run #38255701998 completed LINEAGE_DIAGNOSTIC_COMPLETE (receipt c0881b295d37fa34925103b30acbb893a78bbbe230af6e637576dfda4fac86f7): 4/4 frozen accessions, 12/12 SEC header probes, both source ZIPs byte-identical to the original receipt pins, 91,535,030 aggregate bytes under the 150 MB cap. In all four samples accession, filer CIK and form agree across sources, but the SEC 13F bulk SUBMISSION.FILING_DATE differs from the EDGAR header date by one calendar/business day: 2015-02-18 vs 2015-02-17 in two samples and 2020-08-10 vs 2020-08-07 in two. The acceptance timestamps are present and consistent across all three header routes. SEC's own 13F data-set readme warns the extracted data may contain discrepancies with other publication formats and is not a substitute for the full filing; EDGAR's PDS specification identifies <FILING-DATE> as the assigned official filing date. Treat this as an unresolved cross-publication source-field conflict, not a license for date arithmetic or a blanket override. Keep all 53 residuals and historical/acceptance-time gates closed; do not repair the receipts or restart the census. Next, extend the bounded source lineage sample across other date-mismatch archive vintages and capture DATE-OF-FILING-DATE-CHANGE/official filing detail where available before proposing a separately reviewed field-precedence policy. Do not start the frozen concept-specific PIT compiler or independent reproduction until unresolved accession identity/source lineage is closed. Q220 historical prefix/PIT compiler is BLOCKED: Current compiler receipt reports 55 primary-document hash mismatches. The independent reproduction references a different compiler fingerprint and is not current; it cannot reopen this gate. Next gate: repair source hash mismatches or reconcile TextBlock/presentation mapping gaps before independent reproduction; performance authorization remains closed. Current compiler receipt fingerprint 6ca925466cf158de7ee3e6ab01fb43cac8661927f7bf34eae5b55b9c73dce798.  Q220: original SEC daily Feed forensic run #38233685159 ended fail-closed with FORENSIC_COMPARISON_INCOMPLETE: 0/3 comparisons, 2,829,769,099 bytes downloaded, and no original submission member found. The source-path correction preserves the frozen receipt, population fingerprint, all 55 expected hashes and three preselected sample keys: the daily .nc.tar.gz member is accession.nc; .dissem is a distinct PDS subscriber naming convention. PR #1364 corrected the source path; PR #1366 corrected bounded HTTP streaming, separated the 150 MB outer .nc wrapper limit from the unchanged 30 MB primary-document limit, and fixed pre-document <TYPE> parsing. Post-fix run #38254139755 is terminal FORENSIC_COMPARISON_INCOMPLETE (0/3; 2,829,769,099 bytes downloaded; receipt fingerprint 840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b). All three Feed archives and .nc wrappers were completely fetched and identity fields accession/CIK/form/filing date matched, but each original Feed submission header lacks ACCEPTANCE-DATETIME; all 55 frozen primary-document hash mismatches also remain. Do not redownload these multi-GB Feeds. Read-only header-only run #38258251764 completed HEADER_EVIDENCE_COMPLETE: 9/9 official EDGAR header routes, receipt fingerprint 39bf95fa15bf149094d5b56c90e58622c2339d452fd138c6deb0a463668f85b4, 101,547 bytes; no Feed or primary documents downloaded. All three fixed samples have matching accession/CIK/form/filing-date and identical ACCEPTANCE-DATETIME values across index headers, raw .hdr.sgml, and header-only .txt prefixes. DATE-OF-FILING-DATE-CHANGE was also captured: for 0000064040-19-000059 the acceptance was 2019-02-12T18:15:22 before the EDGAR filing date 2019-02-13, and its change date is 2019-02-12; the other two samples show acceptance and change date on the filing date. This is supplemental timestamp evidence only; all 55 source-hash mismatches remain and both Q220 gates stay closed. Next, trace the frozen expected versus observed primary-document hashes and their source-vintage provenance without redownloading multi-GB Feeds or fetching primary documents. Do not change source pins, population, sample keys, expected hashes or research gates to force a pass. Q221: the 348-row frozen public-boundary sample is complete under its bounded sample contract, but first-public-observation time remains unproven for all 348 rows and all 247 recipient identities remain unmapped to issuers. The archived five policy vintages do not prove an individual award/modification clock. A fixed exploratory exact-Wayback-CDX spot check of seven award-page URLs (one per frozen year window, derived from frozen generated_internal_id values) found one captured exact URL and six no-hit responses; the captured HTML responses were only 2,171–2,696 bytes and no row-level transaction payload was verified. This is low-coverage source discovery only; no-hit is not proof of historical absence. The official GSA/SAM Contract Awards API requires a SAM.gov API key; publicDeltaDate is documented as a filter over Last Modified Date or Reveal Date, not proof that the response exposes a reproducible transaction-level first-public timestamp or retained old versions. No authenticated request was made, and unrevealed DoD data has additional role restrictions. Treat it as a desk-check lead only, not a dispatch-ready source contract. Next: do not expand the exact-page route across the 348-key sample. Seek a source with timestamped transaction-level versions or a bounded archive whose transaction-row presence can be validated, and separately freeze transaction-class applicability and pre-event recipient-to-issuer mapping. Preserve DoD/USACE 90-day, FAR 30-day, and correction-lineage checks; never map from name similarity. Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred.  Q219 remains paused; its prior evidence is preserved. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1509,7 +1509,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "8e2a4b6fe6f2a92568e9b29cb380c6ff6f622ee3"
+    "source_master_sha": "784b4be5c0d227e5fe3db6ee2df1cb96966f59a4"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-14T06:48:40.665333+00:00",
+  "generated_at_utc": "2026-10-14T07:09:57.917672+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4538,6 +4538,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "ops/20261014-research-status-checkpoint",
+        "number": 1426,
+        "title": "OPS: checkpoint research status and next-gate plan (2026-10-14)",
+        "updatedAt": "2026-10-14T06:51:07Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1426"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "ops/q104-targeted-header-repair-and-dashboard-freshness-20261012",
         "number": 1336,
         "title": "OPS: run receipt-gated Q104 header repair and refresh S10 dashboard",
@@ -4603,6 +4611,36 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: pin Q104 I22 inputs and complete Q127 Windows gate coverage",
+        "sha": "784b4be5c0d227e5fe3db6ee2df1cb96966f59a4",
+        "timestamp": "2026-10-14T09:09:42+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "dd4f26a3bbb4f32ab34959f2fb932cf1620855cb",
+        "timestamp": "2026-10-14T06:58:59Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "2af92017048e2a709c75c636d9870ad00c51f15b",
+        "timestamp": "2026-10-14T06:58:46Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "3653a15316f5e61bedd282827108682eda47fee0",
+        "timestamp": "2026-10-14T06:58:33Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "dd927e70aa1eb0ff6c0acdbd5db054fd07cbfe86",
+        "timestamp": "2026-10-14T06:58:25Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d1583556b98fbc9e9aef51b27d435d7cf4191dd7",
+        "timestamp": "2026-10-14T06:48:43Z"
+      },
+      {
         "message": "RESEARCH: add official FINRA historical listing metadata probe",
         "sha": "8e2a4b6fe6f2a92568e9b29cb380c6ff6f622ee3",
         "timestamp": "2026-10-14T08:48:24+02:00"
@@ -4611,36 +4649,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "37b484c38d453ffa0cf948d4b9e7298c3cf1e7d7",
         "timestamp": "2026-10-14T06:35:13Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "f5a5a3e2950e6e438df2a0ca4ef015ece06becae",
-        "timestamp": "2026-10-14T06:32:02Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "3c936b3e60e1560b5b74ce6f30be9544dff91ded",
-        "timestamp": "2026-10-14T06:15:55Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1cb15a222baf347f402b79b7362a995e74c124dc",
-        "timestamp": "2026-10-14T06:13:34Z"
-      },
-      {
-        "message": "CHECKPOINT: preserve Q127 HTTP 504 and Windows runner evidence",
-        "sha": "513e12c4a5e6d0d7f90766bef241726123dea3a9",
-        "timestamp": "2026-10-14T08:13:14+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "502eb054658fc1799aeeae6aa8ab72f74550fd58",
-        "timestamp": "2026-10-14T06:07:06Z"
-      },
-      {
-        "message": "OPS: retry transient Windows regression package-index failures",
-        "sha": "974f8a0169870962f2179fb97c91c8763e9b1a52",
-        "timestamp": "2026-10-14T08:06:50+02:00"
       }
     ]
   },
@@ -4738,7 +4746,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8e2a4b6fe6f2a92568e9b29cb380c6ff6f622ee3",
+  "source_master_sha": "784b4be5c0d227e5fe3db6ee2df1cb96966f59a4",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4852,6 +4860,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "38524386021"
+    "run_id": "38526554737"
   }
 }
