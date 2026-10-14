@@ -234,6 +234,10 @@ def test_r6_workflow_is_single_vintage_read_only_and_bounded():
     assert "RECOVERED_SHARD_FINGERPRINT=cb1f2bf7705e4b9cc0500279650fd2d88ffd1180320137e1de8157a6cb129663" in request_text
     workflow = Path(".github/workflows/q104-i19-residual-source-lineage-r6.yml").read_text(encoding="utf-8")
     assert '.name == "Q104 I19 Receipt-Gated Targeted Acceptance Repair Request"' in workflow
+    source = Path("automation/q104_i19_residual_source_lineage_diagnostic_r6.py").read_text(encoding="utf-8")
+    assert 'original_failure != "SEC_HEADER_HTTP_503"' in source
+    assert 'attempt.get("final_error") != "HEADER_VALIDATION:FILING_DATE_MISMATCH"' in source
+    assert 'recovered_failure = recovered_archive.get("acceptance_failures"' not in source
     request = Path("research/run_requests/q104_i19_residual_source_lineage_r6.trigger").read_text(encoding="utf-8")
     assert "REASON=READ_ONLY_ADD_DISTINCT_FROZEN_2013Q3_ARCHIVE_VINTAGE_NOT_IN_14_ROW_AGGREGATE" in request
     assert "MAX_SOURCE_ARCHIVE_BYTES=40000000" in request
