@@ -99,3 +99,15 @@ A separate comparison against the current blocked compiler receipt finds another
 This does **not** prove which five bytes were removed on the first transition or which byte differed in the current capture. No raw original response bodies were persisted, so a byte-level diff cannot be reconstructed. We also do not infer that the difference was an SEC correction, a server-layer rewrite, line-ending normalization, or any other specific cause. The observed evidence is: same-code direct-primary captures; different hashes in all 55 rows; exactly −5 bytes in all rows in the earlier transition; then exactly −1 byte versus the frozen set in all rows in the current compiler view.
 
 The new structured timeline and exact checks are in [`q220_complete_submission_representation_audit_38619590525.json`](../../research/evidence/q220_complete_submission_representation_audit_38619590525.json). No frozen hash has been changed; the PIT/source gate stays blocked.
+
+
+### Which receipt fields changed in the five-byte same-code transition?
+
+The immutable Git diff was also classified by JSON field name. Across the 55-row receipt, the only per-row fields that changed were:
+- `header_sha256`: 55 old and 55 new values;
+- `primary_document_bytes`: 55 old and 55 new values;
+- `primary_document_sha256`: 55 old and 55 new values.
+
+The receipt-level `generated_at_utc` and derived `receipt_fingerprint` also changed, as expected. The recorded `directory_index_sha256`, selected primary filename and source label, acceptance datetime, and the other persisted XBRL mapping/source-structure fields did not change in the diff. Thus, the five-byte/primary-hash transition coincided with a changed filing-header response hash for every accession, while the directory-index hash stayed constant in the stored receipt.
+
+This narrows where the metadata change is observed: the filing-header route and direct-primary body representation both changed, while the stored directory index did not. It does **not** tell us which bytes changed, or prove whether the source of the change was the SEC origin, a transfer/caching layer, or another response-representation detail. The old response bytes are absent, so the precise cause remains unidentifiable from the repository's retained evidence. The structured field-by-field count is saved alongside the population timeline in the immutable result JSON.
