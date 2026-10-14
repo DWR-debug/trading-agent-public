@@ -1,6 +1,6 @@
 """Read-only Q104 lineage R4 for one frozen 2017 Q2 archive accession.
 
-Downloads only two exact SEC quarterly 13F source archives whose original SHA-256 and
+Downloads one exact SEC quarterly 13F source archive whose original SHA-256 and
 byte lengths were recorded in census receipts, then captures bounded SEC header evidence.
 This probe neither repairs receipts nor changes any identity or research gate.
 """
