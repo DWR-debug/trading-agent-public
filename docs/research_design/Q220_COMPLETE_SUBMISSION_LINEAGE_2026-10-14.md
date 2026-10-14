@@ -99,3 +99,51 @@ A separate comparison against the current blocked compiler receipt finds another
 This does **not** prove which five bytes were removed on the first transition or which byte differed in the current capture. No raw original response bodies were persisted, so a byte-level diff cannot be reconstructed. We also do not infer that the difference was an SEC correction, a server-layer rewrite, line-ending normalization, or any other specific cause. The observed evidence is: same-code direct-primary captures; different hashes in all 55 rows; exactly −5 bytes in all rows in the earlier transition; then exactly −1 byte versus the frozen set in all rows in the current compiler view.
 
 The new structured timeline and exact checks are in [`q220_complete_submission_representation_audit_38619590525.json`](../../research/evidence/q220_complete_submission_representation_audit_38619590525.json). No frozen hash has been changed; the PIT/source gate stays blocked.
+
+
+### Which receipt fields changed in the five-byte same-code transition?
+
+The immutable Git diff was also classified by JSON field name. Across the 55-row receipt, the only per-row fields that changed were:
+- `header_sha256`: 55 old and 55 new values;
+- `primary_document_bytes`: 55 old and 55 new values;
+- `primary_document_sha256`: 55 old and 55 new values.
+
+The receipt-level `generated_at_utc` and derived `receipt_fingerprint` also changed, as expected. The recorded `directory_index_sha256`, selected primary filename and source label, acceptance datetime, and the other persisted XBRL mapping/source-structure fields did not change in the diff. Thus, the five-byte/primary-hash transition coincided with a changed filing-header response hash for every accession, while the directory-index hash stayed constant in the stored receipt.
+
+This narrows where the metadata change is observed: the filing-header route and direct-primary body representation both changed, while the stored directory index did not. It does **not** tell us which bytes changed, or prove whether the source of the change was the SEC origin, a transfer/caching layer, or another response-representation detail. The old response bytes are absent, so the precise cause remains unidentifiable from the repository's retained evidence. The structured field-by-field count is saved alongside the population timeline in the immutable result JSON.
+
+
+### Collector-code boundary: historical and current routes are not identical
+
+A final offline code check compares the exact `def fetch(...)` source text from the older population gate code blob `17d3464605138e5035718664fb02ff1a56dcf5cc` and current population gate blob `16d37c9b346c1542348d26212c50c257d558c05e`. The function is byte-for-byte identical in both. It uses the same population User-Agent, the same `Accept` value (`text/html,text/plain,application/json,application/xml,*/*`), `Accept-Encoding: identity`, a 60-second timeout, three attempts, and an unbounded `response.read()`. Therefore, the all-55 hash/length change between 2026-10-10 17:19Z and 2026-10-11 08:24Z cannot be explained by a change to that function in source control.
+
+The current PIT compiler is a different route: `automation/q220_historical_representation_pit.py::fetch_primary` uses a different `Accept` value (`text/html,application/xhtml+xml,*/*`), four attempts, and `response.read(MAX_PRIMARY_BYTES + 1)`. Its fetch helper returns `requested_url`, `final_url`, `content_type`, `content_length_header`, `content_encoding`, `last_modified` and `etag`; when a primary hash fails, the persisted error string includes the non-empty `content_type`, `content_length_header`, `content_encoding`, `last_modified`, `etag` and `final_url` values. The requested URL is deterministically derived from the pinned CIK/accession/filename but is not copied into that error string. The one-byte-short current receipt therefore must not be misdescribed as a same-code/same-request-profile comparison with the old population runner.
+
+The evidence now supports three appropriately separated statements:
+1. **Historical shift, same population code and request profile:** all 55 direct-primary hashes changed and all lengths fell by five bytes.
+2. **Current PIT compiler view:** all 55 current hashes differ and all bodies are one byte shorter than the frozen lengths, but its fetch function/profile differs from the population fetch function.
+3. **Bounded repeatability probes:** repeated/profile-varied direct-primary requests were invariant within the fixed SPGI 2019 probe at that time; this does not reconstruct either historical byte set.
+
+No retained raw bodies allow a byte-level diff. This distinction is frozen in the result JSON; it must constrain any future source-contract proposal.
+
+
+### Historical independent reproduction — exact run, source code and time boundary
+
+The historical positive reproduction is **GitHub Actions run [#38183038217](https://github.com/DWR-debug/trading-agent-public/actions/runs/38183038217)**, workflow `Q220 Independent Historical PIT Reproduction`. The recorded run interval is 2026-10-11 23:06:46 UTC to terminal update 23:08:40 UTC; its `reproduce` job (ID `114599454543`) and all enforcement steps concluded successfully. The receipt was generated at **2026-10-11 23:08:31.626126 UTC** and published at commit [`c3c01e66dba382e062d84614d179ae1c0b97614f`](https://github.com/DWR-debug/trading-agent-public/commit/c3c01e66dba382e062d84614d179ae1c0b97614f).
+
+That exact independent receipt records:
+- `status=Q220_INDEPENDENT_PIT_REPRODUCED`, `gate_positive=true`;
+- 55/55 primary documents independently retrieved and hash-verified; zero source-hash failures and zero errors;
+- all primary-source, identity, strict acceptance-time prefix, TextBlock, structured-fact and mutation-invariant checks passed;
+- upstream frozen population receipt `158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543`;
+- upstream compiler receipt fingerprint **`1b34b3ac2f3a6fc3ff90fa42cd8ea1c7b73297b5cbd71414a0877bb25d9b203c`**, generated at **2026-10-11 23:06:37.379425 UTC**, with `gate_positive=true`.
+
+The immutable job artifact is [#11717643698](https://github.com/DWR-debug/trading-agent-public/actions/runs/38183038217/artifacts/11717643698), `q220-independent-pit-reproduction-38183038217-1`, SHA-256 `1147d01f71d11c5436b85791bbd4157c8db8fe8d6d11791461627325b6d4477b`. It contains the small reproduction receipt, not the raw 55 primary-document bodies.
+
+**Independent reproducer path (unchanged between the historic run and current master):** `automation/q220_independent_pit_reproduction.py` has the same exact Git blob SHA-1 `3a424e17e2ca35b531e48c011480b1b9fab186db` at the historical run's commit and current master. Its request used its own User-Agent `DWR-debug/trading-agent-public Q220 independent PIT reproduction/1.0 research@example.invalid`, `Accept: text/html,application/xhtml+xml,*/*`, `Accept-Encoding: identity`, a 60-second timeout, 0.25-second request spacing, and at most three attempts. This is the independent retrieval/parser route; it is not the same source file as the primary compiler.
+
+**The compiler was not the same current version.** The historical compiler source file at the run commit has Git blob SHA-1 `c4587f75551297c1ceae9ed151196681eddfbdb8`. The current compiler source file has Git blob SHA-1 `5092a459ce8a976af2a07af926653885a7c86281`. The current canonical compiler receipt was generated at **2026-10-14 17:12:46.964937 UTC** with fingerprint **`b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e`**; it is `Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED`, reports 55 source-hash failures, zero verified primary documents, and `gate_positive=false`.
+
+This establishes a precise temporal boundary: a positive 55-document independent reproduction existed on 2026-10-11 against compiler fingerprint `1b34b3ac…`; by 2026-10-14 17:12:46 UTC the canonical compiler was blocked against fingerprint `b394356b…`. The unchanged independent-reproducer blob shows that its implementation source did not drift between these two repository states, but it does not make the old upstream compiler receipt current. Nor does it reconstruct the original document bodies. **The historical pass is valid evidence for that specific time-bound chain only; it must not be used to clear the current Q220 gate.**
+
+The exact fields, run/artifact IDs, blob IDs, upstream fingerprints and current comparison are pinned in [`q220_complete_submission_representation_audit_38619590525.json`](../../research/evidence/q220_complete_submission_representation_audit_38619590525.json). The source/PIT gate remains blocked until a new review proves the current representation and exact historical source/availability contract; no expected hash, population membership or gate has been changed.

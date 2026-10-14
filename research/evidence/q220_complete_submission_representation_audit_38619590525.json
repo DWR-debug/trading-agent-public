@@ -430,6 +430,187 @@
       "interpretation": "A later current-code compiler snapshot again observed a different direct-primary body hash for every row; all response lengths were exactly one byte below the frozen second snapshot. Five-profile repeatability testing on the SPGI 2019 document later produced the same current hash/length for all five request profiles. This is consistent with another common-mode representation shift but does not identify the changed bytes."
     },
     "source_bytes_preserved_in_old_population_receipts": false,
-    "caveat": "The historical receipts persist only primary-document hashes, lengths, and source metadata—not the raw body bytes. The same-code, all-55, minus-five comparison is strong metadata evidence of time-varying returned representations, not a byte-level diff or proof of the exact mechanism."
+    "caveat": "The historical receipts persist only primary-document hashes, lengths, and source metadata—not the raw body bytes. The same-code, all-55, minus-five comparison is strong metadata evidence of time-varying returned representations, not a byte-level diff or proof of the exact mechanism.",
+    "same_code_receipt_diff_field_counts": {
+      "comparison": {
+        "older_commit": "65f725a4cde933750d2b06bd4345ab314018bab9",
+        "newer_commit": "3d41bfbf18e525522da7c274e68ed692ef54c8d1",
+        "method": "Offline counting of removed and added JSON fields in the immutable Git patch for the 55-row population receipt; no network requests."
+      },
+      "fields_changed": [
+        {
+          "field": "header_sha256",
+          "removed_values": 55,
+          "added_values": 55,
+          "meaning": "The SEC filing-header response hash changed for all 55 rows."
+        },
+        {
+          "field": "primary_document_bytes",
+          "removed_values": 55,
+          "added_values": 55,
+          "meaning": "The direct-primary response length decreased by five bytes for all 55 rows."
+        },
+        {
+          "field": "primary_document_sha256",
+          "removed_values": 55,
+          "added_values": 55,
+          "meaning": "The direct-primary response hash changed for all 55 rows."
+        },
+        {
+          "field": "generated_at_utc",
+          "removed_values": 1,
+          "added_values": 1,
+          "meaning": "Receipt timestamp only."
+        },
+        {
+          "field": "receipt_fingerprint",
+          "removed_values": 1,
+          "added_values": 1,
+          "meaning": "Derived receipt fingerprint only."
+        }
+      ],
+      "observed_unchanged_fields": {
+        "directory_index_sha256": true,
+        "primary_document": true,
+        "primary_document_source": true,
+        "primary_event_identity_fields": true,
+        "acceptance_datetime": true,
+        "primary_document_facts_and_xbrl_metadata": true
+      },
+      "interpretation": "The five-byte/hash shift was accompanied by a changed filing-header response hash for every row, while the recorded directory-index hashes and selected primary filenames/source labels remained unchanged. This narrows the change to the returned filing-header and direct-primary response content as represented by metadata. It does not identify the exact changed bytes or establish whether they changed at SEC origin, an intermediary, or another representation layer."
+    },
+    "code_path_comparison": {
+      "older_population_code": {
+        "git_blob_sha1": "17d3464605138e5035718664fb02ff1a56dcf5cc",
+        "gate_code_sha256": "62ef075c9fe5ccc2527e5a918f9653a5a6d1602359d4bb795a0e97a5370ddcc1"
+      },
+      "current_population_code": {
+        "git_blob_sha1": "16d37c9b346c1542348d26212c50c257d558c05e",
+        "gate_code_sha256": "2a455f02835b2d85308ac2c178777999fc059312218275a697204313de8cab0d"
+      },
+      "old_vs_current_population_fetch_function_identical": true,
+      "fetch_function_contract": {
+        "user_agent": "DWR-debug/trading-agent-public Q220 as-filed XBRL repair/1.0 research@example.invalid",
+        "accept": "text/html,text/plain,application/json,application/xml,*/*",
+        "accept_encoding": "identity",
+        "timeout_seconds": 60,
+        "retry_attempts": 3,
+        "response_read": "urllib response .read() with no explicit body truncation limit",
+        "same_function_verification": "Exact source text of def fetch(...) through the master_url function was byte-for-byte identical between both code blobs."
+      },
+      "current_pit_compiler_fetch_is_separate": true,
+      "current_pit_compiler_fetch_contract": {
+        "function": "automation/q220_historical_representation_pit.py::fetch_primary",
+        "user_agent": "Configured from that file's UA constant",
+        "accept": "text/html,application/xhtml+xml,*/*",
+        "accept_encoding": "identity",
+        "timeout_seconds": 60,
+        "retry_attempts": 4,
+        "response_read": "response.read(MAX_PRIMARY_BYTES + 1) with a hard size ceiling",
+        "response_headers_recorded_in_current_receipt": [
+          "Content-Type",
+          "Content-Length",
+          "Content-Encoding",
+          "Last-Modified",
+          "ETag",
+          "final URL"
+        ],
+        "response_headers_returned_by_fetch_helper": [
+          "requested_url",
+          "final_url",
+          "content_type",
+          "content_length_header",
+          "content_encoding",
+          "last_modified",
+          "etag"
+        ],
+        "response_fields_embedded_in_hash_failure_receipt": [
+          "content_type",
+          "content_length_header",
+          "content_encoding",
+          "last_modified",
+          "etag",
+          "final_url"
+        ],
+        "requested_url_persistence": "The helper constructs requested_url, but the historical hash-failure receipt embeds only the fields listed in response_fields_embedded_in_hash_failure_receipt; the requested URL is derivable from the frozen CIK/accession/filename but is not copied into the error string."
+      },
+      "interpretation": "The historical all-55 minus-five shift occurred with identical fetch-function source and request profile, so it is not explained by a code change to the population fetch implementation. The current PIT compiler uses a separate fetch function/profile, so the current minus-one observation must not be described as occurring under identical code/profile. The complete-submission capture and five-profile probe separately establish same-time repeatability for their limited sample, not the historical origin/body version.",
+      "root_cause_proven": false
+    },
+    "historical_independent_reproduction": {
+      "evidence_commit": "c3c01e66dba382e062d84614d179ae1c0b97614f",
+      "evidence_commit_time_utc": "2026-10-11T23:08:34Z",
+      "evidence_blob_sha1": "cf5a165af09147712f388580211e169e1217de4d",
+      "receipt_generated_at_utc": "2026-10-11T23:08:31.626126+00:00",
+      "record_type": "q220_independent_pit_reproduction",
+      "receipt_status": "Q220_INDEPENDENT_PIT_REPRODUCED",
+      "historical_gate_positive": true,
+      "record_count": 55,
+      "independently_retrieved_documents": 55,
+      "source_hash_failure_count": 0,
+      "relevant_check": "all_primary_sources_independently_retrieved_and_hash_verified",
+      "relevant_check_passed": true,
+      "upstream": {
+        "compiler_receipt_fingerprint": "1b34b3ac2f3a6fc3ff90fa42cd8ea1c7b73297b5cbd71414a0877bb25d9b203c",
+        "population_receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+        "population_gate_code_sha256": "2a455f02835b2d85308ac2c178777999fc059312218275a697204313de8cab0d",
+        "population_contract_sha256": "5014eb888a4e66502cb30c9ec5208caec1de65425dad3c1bd3feb8b17a29ac88"
+      },
+      "independent_retrieval_source_code": {
+        "path": "automation/q220_independent_pit_reproduction.py",
+        "git_blob_sha1": "3a424e17e2ca35b531e48c011480b1b9fab186db",
+        "same_blob_at_historical_receipt_and_current_master": true,
+        "request_route": "direct SEC Archives primary document URL derived from frozen CIK/accession/filename",
+        "user_agent": "DWR-debug/trading-agent-public Q220 independent PIT reproduction/1.0 research@example.invalid",
+        "accept": "text/html,application/xhtml+xml,*/*",
+        "accept_encoding": "identity",
+        "timeout_seconds": 60,
+        "response_body_persisted_in_receipt": false,
+        "max_attempts": 3,
+        "request_gap_seconds": 0.25
+      },
+      "current_comparison": {
+        "compiler_receipt_fingerprint": "b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e",
+        "compiler_generated_at_utc": "2026-10-14T17:12:46.964937+00:00",
+        "compiler_status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+        "source_hash_failure_count": 55,
+        "verified_primary_document_count": 0,
+        "gate_positive": false,
+        "frozen_expected_hash_match_count": 0,
+        "compiler_source_git_blob_sha1": "5092a459ce8a976af2a07af926653885a7c86281",
+        "compiler_source_blob_matches_historical": false
+      },
+      "interpretation": "The immutable run #38183038217 completed successfully from 2026-10-11T23:06:46Z to terminal update 2026-10-11T23:08:40Z. Its independent receipt was generated at 23:08:31.626126Z and recorded 55/55 independent primary-document hash matches, zero source-hash failures, and all independent checks true. It pinned upstream compiler receipt 1b34b3ac... generated at 23:06:37.379425Z, whose historical compiler source Git blob was c4587f75551297c1ceae9ed151196681eddfbdb8. The independent reproducer itself is byte-for-byte the same Git blob 3a424e17e2ca35b531e48c011480b1b9fab186db at the historic run and current master, with its own User-Agent and Accept request profile. The current compiler source blob is 5092a459ce8a976af2a07af926653885a7c86281, and the current receipt b394356b... is blocked with 55 failures and zero verified documents. Therefore the October 11 positive result is a concrete time-bound reproduction for its pinned compiler and source representation; it does not clear the October 14 gate. No exact transition time or cause is proven because the historic response bodies were not retained.",
+      "present_gate_clearance": false,
+      "workflow_run": {
+        "id": 38183038217,
+        "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38183038217",
+        "name": "Q220 Independent Historical PIT Reproduction",
+        "event": "workflow_run",
+        "conclusion": "success",
+        "started_at_utc": "2026-10-11T23:06:46Z",
+        "terminal_updated_at_utc": "2026-10-11T23:08:40Z",
+        "head_commit_sha": "192a0270daff1f340a37c70461d945096c41ff93",
+        "job_id": 114599454543,
+        "job_name": "reproduce",
+        "job_conclusion": "success"
+      },
+      "immutable_artifact": {
+        "id": 11717643698,
+        "name": "q220-independent-pit-reproduction-38183038217-1",
+        "size_bytes": 1714,
+        "sha256": "1147d01f71d11c5436b85791bbd4157c8db8fe8d6d11791461627325b6d4477b",
+        "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38183038217/artifacts/11717643698",
+        "expires": false
+      },
+      "historical_compiler": {
+        "generated_at_utc": "2026-10-11T23:06:37.379425+00:00",
+        "receipt_fingerprint": "1b34b3ac2f3a6fc3ff90fa42cd8ea1c7b73297b5cbd71414a0877bb25d9b203c",
+        "gate_positive": true,
+        "compiler_source_git_blob_sha1": "c4587f75551297c1ceae9ed151196681eddfbdb8",
+        "source_code_was_current_at_historical_run": true,
+        "note": "This source blob is historical and differs from the current compiler source blob listed below."
+      }
+    }
   }
 }
