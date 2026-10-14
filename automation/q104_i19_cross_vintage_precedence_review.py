@@ -23,6 +23,7 @@ PRIOR_FP = "17fa46e3f49b4bb296122a1f6e80b7fbe7e3c134868803b2ddb910f898521412"
 R1_FP = "c0881b295d37fa34925103b30acbb893a78bbbe230af6e637576dfda4fac86f7"
 R2_FP = "d85ad092296b38f29fa25147537f52804f9a32d9969051c7f9e9cadff283fe04"
 R3_FP = "f4c309fe9f5389fdd726fbdb9aa969a46e376d1bd212c3654cc7ec1a6682015a"
+ARCHIVE_VINTAGES = ["2015q1", "2016q4", "2017q1", "2020q3", "01jun2025-31aug2025"]
 
 FROZEN = {
     "RUN_Q104_I19_CROSS_VINTAGE_PRECEDENCE_REVIEW": "true",
@@ -173,7 +174,8 @@ def build_review(x64: dict[str, Any], arm64: dict[str, Any]) -> dict[str, Any]:
         "source_r2_receipt_fingerprint": R2_FP,
         "source_r3_lineage_receipt_fingerprint": R3_FP,
         "counts": counts,
-        "archive_vintage_count": len({row["source_label"] for row in x64["samples"]}),
+        "archive_vintage_count": len(ARCHIVE_VINTAGES),
+        "archive_vintages": list(ARCHIVE_VINTAGES),
         "samples": x64["samples"],
         "proposal": {
             "acceptance_event_clock": "Use EDGAR ACCEPTANCE-DATETIME as a distinct event clock only after exact accession/CIK/form validation and cross-route agreement.",
