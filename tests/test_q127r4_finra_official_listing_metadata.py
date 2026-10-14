@@ -58,7 +58,7 @@ def test_q127r4_captures_updated_badge_without_claiming_historical_revision_line
     parsed = parse_listing_page(page, 2025, ("2025-01-02",))
     row = parsed["target_observations"]["2025-01-02"]["listing_rows"][0]
     assert row["updated_label_visible_in_row"] is True
-    assert row["exact_url_listed_once"] is True
+    assert parsed["target_observations"]["2025-01-02"]["exact_url_listed_once"] is True
 
 
 def test_q127r4_fails_closed_for_wrong_selected_year():
