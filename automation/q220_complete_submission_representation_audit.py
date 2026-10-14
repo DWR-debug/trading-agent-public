@@ -431,6 +431,13 @@ def validate_frozen_inputs(root: Path, forensics_artifact_dir: Path) -> dict[str
     }
 
 
+class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Refuse redirects so every sample has one exact requested URL and no fallback."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 def _read_response(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str, Any]:
     """Single HTTP attempt. No retry, cache-busting query, or source-route fallback."""
     budget.wait()
@@ -459,7 +466,8 @@ def _read_response(url: str, max_bytes: int, budget: DownloadBudget) -> dict[str
         "attempt_count": 1,
     }
     try:
-        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+        opener = urllib.request.build_opener(NoRedirectHandler())
+        with opener.open(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
             headers = response.headers
             raw_length = headers.get("Content-Length")
             declared = int(raw_length) if raw_length and str(raw_length).isdigit() else None
@@ -727,9 +735,18 @@ def run_capture(
         return result
 
 
-def verify_capture(capture_dir: Path, output_dir: Path, expected_analysis_fingerprint: str) -> dict[str, Any]:
+def verify_capture(
+    capture_dir: Path,
+    output_dir: Path,
+    expected_analysis_fingerprint: str,
+    repo_root: Path = ROOT,
+    forensics_artifact_dir: Path | None = None,
+) -> dict[str, Any]:
     if not expected_analysis_fingerprint or not re.fullmatch(r"[0-9a-f]{64}", expected_analysis_fingerprint):
         raise AuditError("EXPECTED_ANALYSIS_FINGERPRINT_INVALID")
+    if forensics_artifact_dir is None:
+        raise AuditError("PINNED_FORENSICS_ARTIFACT_REQUIRED_FOR_OFFLINE_REPLAY")
+    frozen = validate_frozen_inputs(repo_root, forensics_artifact_dir)
     if output_dir.exists() and any(output_dir.iterdir()):
         raise AuditError("VERIFY_OUTPUT_DIRECTORY_NOT_EMPTY")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -804,6 +821,9 @@ def verify_capture(capture_dir: Path, output_dir: Path, expected_analysis_finger
         "status": "Q220_COMPLETE_SUBMISSION_REPRESENTATION_REPRODUCED_OFFLINE",
         "capture_receipt_fingerprint": receipt["receipt_fingerprint"],
         "capture_analysis_fingerprint": expected_analysis_fingerprint,
+        "validated_source_population_receipt_fingerprint": POPULATION_FP,
+        "validated_compiler_receipt_fingerprint": COMPILER_FP,
+        "validated_prior_feed_forensics_receipt_fingerprint": FORENSICS_FP,
         "verified_sample_count": len(verified),
         "samples": verified,
         "network_requests_made": 0,
@@ -855,9 +875,15 @@ def main() -> int:
             "gate_positive": False,
         }, sort_keys=True))
         return 0 if result.get("status") == "Q220_COMPLETE_SUBMISSION_REPRESENTATION_DIAGNOSTIC_ONLY" else 2
-    if args.capture_dir is None or args.expected_analysis_fingerprint is None:
-        raise AuditError("OFFLINE_CAPTURE_DIR_AND_EXPECTED_FINGERPRINT_REQUIRED")
-    result = verify_capture(args.capture_dir, args.output_dir, args.expected_analysis_fingerprint)
+    if args.capture_dir is None or args.expected_analysis_fingerprint is None or args.forensics_artifact is None:
+        raise AuditError("OFFLINE_CAPTURE_DIR_FORENSICS_ARTIFACT_AND_EXPECTED_FINGERPRINT_REQUIRED")
+    result = verify_capture(
+        args.capture_dir,
+        args.output_dir,
+        args.expected_analysis_fingerprint,
+        repo_root=args.repo_root,
+        forensics_artifact_dir=args.forensics_artifact,
+    )
     print(json.dumps({"status": result["status"], "receipt_fingerprint": result["receipt_fingerprint"], "analysis_fingerprint": result["capture_analysis_fingerprint"], "verified_sample_count": result["verified_sample_count"], "network_requests_made": 0}, sort_keys=True))
     return 0
 
