@@ -478,6 +478,47 @@
         "primary_document_facts_and_xbrl_metadata": true
       },
       "interpretation": "The five-byte/hash shift was accompanied by a changed filing-header response hash for every row, while the recorded directory-index hashes and selected primary filenames/source labels remained unchanged. This narrows the change to the returned filing-header and direct-primary response content as represented by metadata. It does not identify the exact changed bytes or establish whether they changed at SEC origin, an intermediary, or another representation layer."
+    },
+    "code_path_comparison": {
+      "older_population_code": {
+        "git_blob_sha1": "17d3464605138e5035718664fb02ff1a56dcf5cc",
+        "gate_code_sha256": "62ef075c9fe5ccc2527e5a918f9653a5a6d1602359d4bb795a0e97a5370ddcc1"
+      },
+      "current_population_code": {
+        "git_blob_sha1": "16d37c9b346c1542348d26212c50c257d558c05e",
+        "gate_code_sha256": "2a455f02835b2d85308ac2c178777999fc059312218275a697204313de8cab0d"
+      },
+      "old_vs_current_population_fetch_function_identical": true,
+      "fetch_function_contract": {
+        "user_agent": "DWR-debug/trading-agent-public Q220 as-filed XBRL repair/1.0 research@example.invalid",
+        "accept": "text/html,text/plain,application/json,application/xml,*/*",
+        "accept_encoding": "identity",
+        "timeout_seconds": 60,
+        "retry_attempts": 3,
+        "response_read": "urllib response .read() with no explicit body truncation limit",
+        "same_function_verification": "Exact source text of def fetch(...) through the master_url function was byte-for-byte identical between both code blobs."
+      },
+      "current_pit_compiler_fetch_is_separate": true,
+      "current_pit_compiler_fetch_contract": {
+        "function": "automation/q220_historical_representation_pit.py::fetch_primary",
+        "user_agent": "Configured from that file's UA constant",
+        "accept": "text/html,application/xhtml+xml,*/*",
+        "accept_encoding": "identity",
+        "timeout_seconds": 60,
+        "retry_attempts": 4,
+        "response_read": "response.read(MAX_PRIMARY_BYTES + 1) with a hard size ceiling",
+        "response_headers_recorded_in_current_receipt": [
+          "Content-Type",
+          "Content-Length",
+          "Content-Encoding",
+          "Last-Modified",
+          "ETag",
+          "requested_url",
+          "final_url"
+        ]
+      },
+      "interpretation": "The historical all-55 minus-five shift occurred with identical fetch-function source and request profile, so it is not explained by a code change to the population fetch implementation. The current PIT compiler uses a separate fetch function/profile, so the current minus-one observation must not be described as occurring under identical code/profile. The complete-submission capture and five-profile probe separately establish same-time repeatability for their limited sample, not the historical origin/body version.",
+      "root_cause_proven": false
     }
   }
 }
