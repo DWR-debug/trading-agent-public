@@ -564,9 +564,10 @@
         "user_agent": "DWR-debug/trading-agent-public Q220 independent PIT reproduction/1.0 research@example.invalid",
         "accept": "text/html,application/xhtml+xml,*/*",
         "accept_encoding": "identity",
-        "retry_attempts": 4,
         "timeout_seconds": 60,
-        "response_body_persisted_in_receipt": false
+        "response_body_persisted_in_receipt": false,
+        "max_attempts": 3,
+        "request_gap_seconds": 0.25
       },
       "current_comparison": {
         "compiler_receipt_fingerprint": "b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e",
@@ -575,10 +576,41 @@
         "source_hash_failure_count": 55,
         "verified_primary_document_count": 0,
         "gate_positive": false,
-        "frozen_expected_hash_match_count": 0
+        "frozen_expected_hash_match_count": 0,
+        "compiler_source_git_blob_sha1": "5092a459ce8a976af2a07af926653885a7c86281",
+        "compiler_source_blob_matches_historical": false
       },
-      "interpretation": "An immutable independent-reproduction receipt recorded 55/55 primary-document hash matches and a complete PIT reproduction on 2026-10-11 23:08 UTC, bound to the then-current compiler receipt and the same frozen population. By the 2026-10-14 17:12 UTC compiler capture, the same frozen hash set produced 55/55 mismatches and all current response bodies were one byte shorter. This is a time-bounded successful historical reproduction followed by a current failure. It narrows the interval in which the mismatch state emerged but does not prove the exact time or cause; the prior raw body bytes are absent.",
-      "present_gate_clearance": false
+      "interpretation": "The immutable run #38183038217 completed successfully from 2026-10-11T23:06:46Z to terminal update 2026-10-11T23:08:40Z. Its independent receipt was generated at 23:08:31.626126Z and recorded 55/55 independent primary-document hash matches, zero source-hash failures, and all independent checks true. It pinned upstream compiler receipt 1b34b3ac... generated at 23:06:37.379425Z, whose historical compiler source Git blob was c4587f75551297c1ceae9ed151196681eddfbdb8. The independent reproducer itself is byte-for-byte the same Git blob 3a424e17e2ca35b531e48c011480b1b9fab186db at the historic run and current master, with its own User-Agent and Accept request profile. The current compiler source blob is 5092a459ce8a976af2a07af926653885a7c86281, and the current receipt b394356b... is blocked with 55 failures and zero verified documents. Therefore the October 11 positive result is a concrete time-bound reproduction for its pinned compiler and source representation; it does not clear the October 14 gate. No exact transition time or cause is proven because the historic response bodies were not retained.",
+      "present_gate_clearance": false,
+      "workflow_run": {
+        "id": 38183038217,
+        "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38183038217",
+        "name": "Q220 Independent Historical PIT Reproduction",
+        "event": "workflow_run",
+        "conclusion": "success",
+        "started_at_utc": "2026-10-11T23:06:46Z",
+        "terminal_updated_at_utc": "2026-10-11T23:08:40Z",
+        "head_commit_sha": "192a0270daff1f340a37c70461d945096c41ff93",
+        "job_id": 114599454543,
+        "job_name": "reproduce",
+        "job_conclusion": "success"
+      },
+      "immutable_artifact": {
+        "id": 11717643698,
+        "name": "q220-independent-pit-reproduction-38183038217-1",
+        "size_bytes": 1714,
+        "sha256": "1147d01f71d11c5436b85791bbd4157c8db8fe8d6d11791461627325b6d4477b",
+        "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38183038217/artifacts/11717643698",
+        "expires": false
+      },
+      "historical_compiler": {
+        "generated_at_utc": "2026-10-11T23:06:37.379425+00:00",
+        "receipt_fingerprint": "1b34b3ac2f3a6fc3ff90fa42cd8ea1c7b73297b5cbd71414a0877bb25d9b203c",
+        "gate_positive": true,
+        "compiler_source_git_blob_sha1": "c4587f75551297c1ceae9ed151196681eddfbdb8",
+        "source_code_was_current_at_historical_run": true,
+        "note": "This source blob is historical and differs from the current compiler source blob listed below."
+      }
     }
   }
 }
