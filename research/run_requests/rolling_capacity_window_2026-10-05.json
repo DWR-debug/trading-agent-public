@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "record_type": "rolling_capacity_window",
   "status": "ACTIVE",
-  "window_id": "TA-2H-2026-10-13-Q120-Q127-ORTHOGONAL-PIT-2225Z",
-  "start_utc": "2026-10-13T22:25:00Z",
-  "end_utc": "2026-10-14T00:25:00Z",
+  "window_id": "TA-2H-2026-10-14-Q120-Q127-RECOVERY-0520Z",
+  "start_utc": "2026-10-14T05:20:00Z",
+  "end_utc": "2026-10-14T07:20:00Z",
   "cadence_minutes": 10,
   "max_dispatch_per_tick": 1,
   "retry_limit_per_workflow_per_phase": 1,
@@ -15,7 +15,7 @@
       "id": "W3",
       "start_after_minutes": 0,
       "name": "RUNNER_C_INDEPENDENT_CANDIDATE_DEVELOPMENT",
-      "objective": "Use one free Windows Runner C for an independent long deterministic candidate-development/readiness workpack; do not duplicate the active Top-4 or Q104:I19 waves.",
+      "objective": "Use the free exclusive Windows Runner C for the existing deterministic source/PIT readiness and guard workpack while hosted evidence-graph work continues; do not repeat terminal Q220/Q221 source attempts.",
       "workflows": [
         "windows-runner-c-long-research.yml"
       ]
@@ -41,12 +41,12 @@
     "Scientific authority remains unchanged; this scheduler only allocates execution capacity.",
     "Successful source-feasibility workflows are not re-run as filler; only their explicit next-gate workflows may be scheduled."
   ],
-  "retargeted_at_utc": "2026-10-13T22:31:02Z",
-  "retarget_reason": "Saved-session refresh after the default branch advanced while the research PR was open. Extend the bounded Runner-C availability window across final validation and post-merge dispatch, without duplicating Q220/Q221 source retries or preempting genuinely running Windows work.",
+  "retargeted_at_utc": "2026-10-14T05:12:19Z",
+  "retarget_reason": "Prior lease expired at 00:25Z. Q120-R2 now has a successful version-aware CFTC exception inventory; Q127-R3 completed with Common Crawl endpoint errors and must not be treated as a negative source result. The three Windows slots are always routable unless a job is actually in progress on that exact slot. Reactivate only Runner C's existing bounded deterministic readiness/guard workpack; do not repeat Q220 large-feed downloads or the same failed Q221/Q127 endpoints.",
   "session_mode": {
     "status": "ACTIVE",
     "duration_minutes": 120,
-    "directive": "Route the existing long deterministic readiness/guard workpack to Windows Runner C when that exact slot is not executing a job. Q120-R2 and Q127-R3 are separate bounded metadata-only probes. A queued job does not reserve a physical runner. Preserve all fail-closed scientific gates and Paper-Only boundaries.",
+    "directive": "Use Runner C for the existing deterministic orthogonal source/PIT readiness workpack, without duplicating Q220/Q221 source attempts or claiming Q120/Q127 scientific readiness. Refresh after the lease.",
     "no_artificial_work": true,
     "no_duplicate_work": true,
     "scientific_boundary_unchanged": true
