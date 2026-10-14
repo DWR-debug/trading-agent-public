@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-10-14T11:42:31.970570Z",
+  "observed_at_utc": "2026-10-14T17:03:03.722200Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.431,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5075, Requested 5729. Please try again in 21.029999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.476,
+  "stdout": "**Q220 Methods‑Review Handoff**  \n*(All findings are purely methodological; no performance claims are made.)*\n\n| # | Failure Mode | Why it matters for Q220 | Minimal Deterministic Falsifier | Exact Artifact Needed |\n|---|--------------|------------------------|---------------------------------|-----------------------|\n| 1 | **As‑filed XBRL text‑block mapping** | The candidate assumes that the `<textBlock>` element in the filing’s XBRL is always present and in the same order as the “txt” member of the SEC notes archive. If a filing omits the element or reorders it, the mapping will break. | Create a filing that contains a `<textBlock>` but with a different `id` or no `id` at all, and verify that the candidate fails to locate the block. | A single SEC 10‑K filing (e.g., `0000320193-23-000001.xml`) that contains a `<textBlock>` with a non‑standard `id` or no `id`. |\n| 2 | **Presentation‑role mapping** | Q220 relies on the mapping between presentation roles (e.g., `us-gaap:StatementOfFinancialPosition`) and the taxonomy. If the role URI changes or is omitted, the candidate will mis‑classify facts. | Use a filing that declares a presentation role with a different URI (e.g., `us-gaap:StatementOfFinancialPosition` → `us-gaap:StatementOfFinancialPositionV2`). | A 10‑K filing that includes a `<presentationLink>` with a non‑standard role URI. |\n| 3 | **Taxonomy‑extension changes** | The SEC periodically publishes taxonomy extensions (e.g., new elements for ESG). Q220 assumes the taxonomy is static. | Use a filing that references a newer taxonomy extension (e.g., `us-gaap:NetIncomeLoss` replaced by `us-gaap:NetIncomeLossV2`). | A 10‑K filing that imports a newer taxonomy extension file (`us-gaap-2025-01-01.xsd`). |\n| 4 | **Custom namespaces** | Some filings introduce custom namespaces for proprietary data. The candidate may ignore or mis‑parse these. | Create a filing that declares a custom namespace (e.g., `xmlns:custom=\"http://example.com/custom\"`) and uses it in a fact. | A 10‑K filing with a custom namespace declaration and a fact using that namespace. |\n| 5 | **Section identity** | The mapping from SEC “section” (e.g., “Item 8”) to taxonomy elements is not one‑to‑one. Q220 may mis‑attribute facts if the section header is ambiguous. | Use a filing where the section header is misspelled or uses a non‑standard abbreviation (e.g., “Item 8A” written as “Item 8A: Risk Factors”). | A 10‑K filing with a non‑standard section header. |\n| 6 | **Narrative tokenization** | The candidate tokenizes narrative text into tokens for downstream analysis. If tokenization rules differ (e.g., handling of hyphens, apostrophes), the token set will change. | Use a filing that contains a narrative with unusual punctuation (e.g., “state-of-the‑art” vs “state of the art”). | A 10‑K filing with a narrative paragraph containing hyphenated compounds. |\n| 7 | **Amended filings** | Amended filings (e.g., 8‑K/A) may contain duplicate or corrected facts. Q220 may treat them as new events. | Use an amended filing that repeats a fact from the original filing. | A 10‑K filing followed by its amended version (e.g., `0000320193-23-000001.xml` and `0000320193-23-000001A.xml`). |\n| 8 | **Future/current XBRL contamination** | The candidate may inadvertently include filings from future dates (e.g., a filing dated 2027 in a 2026 archive). | Use a filing whose `<filingDate>` is in the future relative to the archive’s `FIXED_END`. | A 10‑K filing dated 2027‑01‑01. |\n| 9 | **Duplicate facts** | Duplicate facts (same context, unit, and concept) can inflate counts. Q220 may not deduplicate. | Create a filing that repeats a fact twice with identical context and unit. | A 10‑K filing containing two identical `<us-gaap:NetIncomeLoss>` facts. |\n|10 | **Period/unit/context alignment** | Mis‑aligned periods or units (e.g., a fact with a period that does not match the filing period) can corrupt the PIT. | Use a filing where a fact’s `<period>` element is set to a different fiscal year than the filing’s `<filingDate>`. | A 10‑K filing with a `<period>` element set to 2024‑12‑31 while the filing date is 2025‑01‑15. |\n|11 | **Representation mismatch proxies** | The candidate may treat any representation mismatch (e.g., missing `<textBlock>`) as a proxy for filing length or readability, which is a weak signal. | Use a filing that is very short (e.g., a 10‑Q) but still contains all required elements; verify that the candidate flags it as a mismatch. | A 10‑Q filing that is < 5 KB but includes all required elements. |\n\n---\n\n### Counterarguments (why Q220 might still be robust)\n\n* The SEC’s XBRL filing guidelines are stable; most filings conform to the same taxonomy and role URIs.  \n* The archive’s member names (`sub`, `tag`, `dim`, `num`, `txt`, `pre`) are consistent across all files, suggesting a controlled source.  \n* The candidate’s design includes a “presentation‑role mapping” lookup that can be updated; a single mismatch does not invalidate the entire approach.  \n* Duplicate facts are rare in SEC filings; the candidate may already deduplicate by context and unit.  \n\n---\n\n### Concrete Next Actions\n\n1. **Download the full SEC financial‑statement‑notes archive** (`2009q1_notes.zip`) and extract the `txt.txt` file.  \n2. **Construct a minimal test harness** that loads a single 10‑K filing and applies the candidate’s mapping logic.  \n3. **For each failure mode above, create a single test filing** (or modify an existing filing) that triggers the falsifier.  \n4. **Run the harness on each test filing** and capture the error or mismatch.  \n5. **Document the failure** in a structured log (JSON) that records:  \n   * Failure mode  \n   * Test filing identifier (Cik, accession, form)  \n   * Expected vs. actual mapping outcome  \n6. **Aggregate results** to determine which failure modes are currently unhandled.  \n\n---\n\n### Uncertainty\n\n* **Extent of taxonomy evolution**: The archive is from 2009; newer filings may use updated taxonomies not represented in the archive.  \n* **Custom namespace prevalence**: It is unclear how often SEC filings include custom namespaces; the falsifier may be rare.  \n* **Amended filing frequency**: The archive may contain few amended filings; the falsifier may not reflect typical usage.  \n* **Future contamination**: The archive’s `FIXED_END` is 2026‑10‑05; any future filings are outside the current source contract, but the candidate may still ingest them if not properly filtered.  \n\n---\n\n**Summary**  \nThe above table and action plan provide a deterministic, artifact‑driven approach to expose potential methodological weaknesses in Q220’s handling of SEC XBRL filings. No performance metrics or promotion decisions are made; the focus is solely on exposing failure modes and proposing minimal tests that can be executed by the deterministic project tooling.",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-14T11:42:32.401957Z",
-    "blocked_until_utc": "2026-10-14T12:42:32.401957Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5075, Requested 5729. Please try again in 21.029999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-1214f60b-4316-486b-add9-ef6efd8bafdb",
+  "usage": {
+    "queue_time": 0.003777651,
+    "prompt_tokens": 5093,
+    "prompt_time": 0.25716076,
+    "completion_tokens": 2581,
+    "completion_time": 2.974690554,
+    "total_tokens": 7674,
+    "total_time": 3.231851314,
+    "completion_tokens_details": {
+      "reasoning_tokens": 909
+    }
   }
 }\n
