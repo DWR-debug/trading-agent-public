@@ -171,4 +171,4 @@ def test_r3_freezes_only_the_remaining_2017q2_mismatch_and_never_expands_the_cen
     assert lineage.MAX_TOTAL_DOWNLOAD_BYTES == 50_000_000
     assert lineage.FROZEN_REQUEST_VALUES["CENSUS_RESTART"] == "false"
     assert lineage.FROZEN_REQUEST_VALUES["REPAIR_RECEIPTS"] == "false"
-    assert lineage.FROZEN_REQUEST_VALUES["FIELD_PRECEDENCE_APPLIED"] if "FIELD_PRECEDENCE_APPLIED" in lineage.FROZEN_REQUEST_VALUES else True
+    assert all(lineage.FROZEN_REQUEST_VALUES[k] == "false" for k in ("CENSUS_RESTART", "REPAIR_RECEIPTS", "PERFORMANCE", "HOLDOUT_SELECTION", "RANKING", "TUNING", "PROMOTION", "LIVE_EXECUTION"))
