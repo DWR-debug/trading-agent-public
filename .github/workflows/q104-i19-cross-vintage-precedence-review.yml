@@ -1,0 +1,84 @@
+name: Q104 I19 Cross-Vintage Filing-Date Precedence Review
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q104_i19_cross_vintage_precedence_review.trigger"
+      - "automation/q104_i19_cross_vintage_precedence_review.py"
+      - "tests/test_q104_i19_cross_vintage_precedence_review.py"
+      - ".github/workflows/q104-i19-cross-vintage-precedence-review.yml"
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q104-i19-cross-vintage-precedence-review
+  cancel-in-progress: false
+
+jobs:
+  review:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout canonical master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Validate immutable source run and both artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38557631541" > "$RUNNER_TEMP/source-run.json"
+          jq -e '.name == "Candidate Next-Gate Wave — Six Runner Pool" and .status == "completed" and .conclusion == "success" and .head_sha == "b7d7d6ec2692a320b05e93adc87db39d35d4539b"' "$RUNNER_TEMP/source-run.json" >/dev/null
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38557631541/artifacts?per_page=100" > "$RUNNER_TEMP/source-artifacts.json"
+          jq -e '[.artifacts[]? | select(.name == "q104-cross-vintage-38557631541-1" and .expired == false)] | length == 1' "$RUNNER_TEMP/source-artifacts.json" >/dev/null
+          jq -e '[.artifacts[]? | select(.name == "q104-cross-vintage-ubuntu-arm-38557631541-1" and .expired == false)] | length == 1' "$RUNNER_TEMP/source-artifacts.json" >/dev/null
+      - name: Download immutable Ubuntu x64 aggregate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/q104-x64" "$RUNNER_TEMP/q104-arm64"
+          gh run download 38557631541 --repo "$GITHUB_REPOSITORY" --name "q104-cross-vintage-38557631541-1" --dir "$RUNNER_TEMP/q104-x64"
+      - name: Download immutable Ubuntu ARM64 reproduction
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh run download 38557631541 --repo "$GITHUB_REPOSITORY" --name "q104-cross-vintage-ubuntu-arm-38557631541-1" --dir "$RUNNER_TEMP/q104-arm64"
+      - name: Test the review contract
+        run: python -m pytest -q tests/test_q104_i19_cross_vintage_precedence_review.py
+      - name: Generate expanded proposal-only review
+        id: review
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          python -m automation.q104_i19_cross_vintage_precedence_review \
+            --request research/run_requests/q104_i19_cross_vintage_precedence_review.trigger \
+            --x64-artifact "$RUNNER_TEMP/q104-x64" \
+            --arm64-artifact "$RUNNER_TEMP/q104-arm64" \
+            --output "$RUNNER_TEMP/q104-i19-cross-vintage-precedence-review.json"
+      - name: Upload immutable review receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-cross-vintage-precedence-review-${{ github.run_id }}-${{ github.run_attempt }}
+          path: "${{ runner.temp }}/q104-i19-cross-vintage-precedence-review.json"
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+      - name: Fail closed if the expanded evidence contract does not pass
+        if: steps.review.outcome != 'success'
+        run: |
+          echo "Q104 cross-vintage precedence review incomplete; no precedence or gate changes."
+          exit 1
