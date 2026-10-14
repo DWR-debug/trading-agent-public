@@ -64,12 +64,12 @@ def read_request(path:Path)->dict[str,str]:
     if values!=expected: raise AuditError("Q221_REQUEST_NOT_THE_FROZEN_SINGLE_ATTEMPT")
     return values
 
-def build_audit(receipt:dict[str,Any], request:dict[str,str])->dict[str,Any]:
+def build_audit(receipt:dict[str,Any], request:dict[str,str], expected_receipt_fp:str=SOURCE_RECEIPT_FP)->dict[str,Any]:
     if receipt.get("record_type")!="q221_transaction_parent_uei_feasibility_probe":
         raise AuditError("Q221_FAILURE_RECORD_TYPE_MISMATCH")
     if receipt.get("status")!="TRANSACTION_PARENT_UEI_PROBE_INCOMPLETE":
         raise AuditError("Q221_SOURCE_RECEIPT_NOT_THE_EXPECTED_FAILURE")
-    if receipt.get("receipt_fingerprint")!=SOURCE_RECEIPT_FP or fingerprint(receipt)!=SOURCE_RECEIPT_FP:
+    if receipt.get("receipt_fingerprint")!=expected_receipt_fp or fingerprint(receipt)!=expected_receipt_fp:
         raise AuditError("Q221_FAILURE_RECEIPT_FINGERPRINT_MISMATCH")
     if receipt.get("request_sequence")!=request["REQUEST_SEQUENCE"]:
         raise AuditError("Q221_FAILURE_REQUEST_SEQUENCE_MISMATCH")

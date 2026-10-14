@@ -27,7 +27,7 @@ def test_audit_classifies_frozen_503_as_preflight_not_data_download():
         "REQUEST_SEQUENCE":EXPECTED_SEQUENCE,
     }
     # Use module's request contract keys as a tiny fixture-independent shape.
-    out=build_audit(receipt,request)
+    out=build_audit(receipt,request,expected_receipt_fp=fingerprint(receipt))
     assert out["failure_stage"]=="DOCUMENTED_DOWNLOAD_COUNT_PREFLIGHT"
     assert out["transaction_download_attempted"] is False
     assert out["same_route_retry_allowed"] is False
@@ -41,7 +41,7 @@ def test_audit_rejects_mismatched_or_non_503_receipt():
     receipt["error"]="API_HTTP_ERROR:429:rate limited"
     receipt["receipt_fingerprint"]=fingerprint(receipt)
     try:
-        build_audit(receipt,{"REQUEST_SEQUENCE":EXPECTED_SEQUENCE})
+        build_audit(receipt,{"REQUEST_SEQUENCE":EXPECTED_SEQUENCE},expected_receipt_fp=fingerprint(receipt))
     except AuditError as exc:
         assert "FROZEN_HTTP_503" in str(exc)
     else:

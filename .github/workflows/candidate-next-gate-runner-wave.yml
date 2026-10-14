@@ -1,0 +1,363 @@
+name: Candidate Next-Gate Wave — Six Runner Pool
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/candidate-next-gate-runner-wave.yml"
+      - "research/run_requests/candidate_next_gate_runner_wave.trigger"
+      - "automation/q104_i19_r3_date_change_header_probe.py"
+      - "automation/q104_i19_r3_date_change_aggregate.py"
+      - "automation/q220_hash_provenance_diagnostic.py"
+      - "automation/q221_transaction_parent_uei_probe_failure_audit.py"
+      - "tests/test_q104_i19_r3_date_change_header_probe.py"
+      - "tests/test_q104_i19_r3_date_change_aggregate.py"
+      - "tests/test_q220_hash_provenance_diagnostic.py"
+      - "tests/test_q221_transaction_parent_uei_probe_failure_audit.py"
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-candidate-next-gate-six-runner-wave
+  cancel-in-progress: false
+
+jobs:
+  q104_r3_date_change_capture:
+    name: Windows A/B — Q104 R3 date-change header capture
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 25
+    steps:
+      - name: Checkout canonical master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Install bounded test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Verify Windows runner identity
+        shell: pwsh
+        run: |
+          Write-Output "RUNNER_NAME=$env:RUNNER_NAME"
+          Write-Output "RUNNER_OS=$env:RUNNER_OS"
+          Write-Output "RUNNER_ARCH=$env:RUNNER_ARCH"
+          if ($env:RUNNER_OS -ne "Windows") { throw "Expected a Windows self-hosted runner" }
+      - name: Test header parser and fail-closed sample contract
+        run: python -m pytest -q tests/test_q104_i19_r3_date_change_header_probe.py
+      - name: Download the exact immutable R3 receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-i19-residual-lineage-r3-38532233135-1
+          path: q104-r3-source
+          run-id: 38532233135
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Capture only the 18 frozen EDGAR header routes
+        run: >-
+          python -m automation.q104_i19_r3_date_change_header_probe
+          --source-artifact q104-r3-source
+          --output runner-results/q104-r3-date-change/receipt.json
+      - name: Upload immutable Q104 header-only result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-r3-date-change-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: runner-results/q104-r3-date-change/
+          if-no-files-found: warn
+          retention-days: 30
+
+  q221_failure_audit:
+    name: Windows A/B — Q221 pinned 503 failure audit
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout canonical master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Install bounded test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Verify Windows runner identity
+        shell: pwsh
+        run: |
+          Write-Output "RUNNER_NAME=$env:RUNNER_NAME"
+          Write-Output "RUNNER_OS=$env:RUNNER_OS"
+          Write-Output "RUNNER_ARCH=$env:RUNNER_ARCH"
+          if ($env:RUNNER_OS -ne "Windows") { throw "Expected a Windows self-hosted runner" }
+      - name: Test frozen failure classification and no-retry boundary
+        run: python -m pytest -q tests/test_q221_transaction_parent_uei_probe_failure_audit.py
+      - name: Download the exact failed-probe receipt, not source data
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-transaction-parent-uei-probe-38531250865-1
+          path: q221-failed-probe-source
+          run-id: 38531250865
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Audit the 503 receipt offline — no USAspending requests
+        run: >-
+          python -m automation.q221_transaction_parent_uei_probe_failure_audit
+          --source-artifact q221-failed-probe-source
+          --request research/run_requests/q221_transaction_parent_uei_probe.trigger
+          --output runner-results/q221-failure-audit/receipt.json
+      - name: Upload immutable Q221 diagnostic-only result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-failure-audit-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: runner-results/q221-failure-audit/
+          if-no-files-found: warn
+          retention-days: 30
+
+  q220_offline_hash_lineage:
+    name: Windows C — Q220 offline source-hash lineage
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research, trading-agent-long]
+    timeout-minutes: 20
+    steps:
+      - name: Checkout canonical master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Install bounded test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Verify dedicated long-run Windows runner identity
+        shell: pwsh
+        run: |
+          Write-Output "RUNNER_NAME=$env:RUNNER_NAME"
+          Write-Output "RUNNER_OS=$env:RUNNER_OS"
+          Write-Output "RUNNER_ARCH=$env:RUNNER_ARCH"
+          if ($env:RUNNER_OS -ne "Windows") { throw "Expected a Windows self-hosted runner" }
+      - name: Test offline hash classification
+        run: python -m pytest -q tests/test_q220_hash_provenance_diagnostic.py
+      - name: Download only the two pinned small diagnostic artifacts
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-primary-source-vintage-forensics-38254139755-1
+          path: q220-forensics-source
+          run-id: 38254139755
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Download the pinned header-only evidence, no Feed or primary document
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-bounded-header-evidence-38258251764-1
+          path: q220-header-source
+          run-id: 38258251764
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Reconcile only frozen hashes and existing metadata
+        run: >-
+          python -m automation.q220_hash_provenance_diagnostic
+          --repo-root .
+          --forensics-artifact q220-forensics-source
+          --header-artifact q220-header-source
+          --output runner-results/q220-hash-provenance/receipt.json
+      - name: Upload immutable offline diagnostic
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-hash-provenance-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: runner-results/q220-hash-provenance/
+          if-no-files-found: warn
+          retention-days: 30
+
+  q104_cross_vintage_aggregate:
+    name: GitHub Ubuntu x64 — Q104 R1/R2/R3 cross-vintage aggregate
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [q104_r3_date_change_capture]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout canonical master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Install bounded test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Test the combined-sample and non-authority contract
+        run: python -m pytest -q tests/test_q104_i19_r3_date_change_aggregate.py
+      - name: Download newly captured R3 header-only receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-r3-date-change-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: q104-r3-probe
+          run-id: \${{ github.run_id }}
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Download the pinned R1/R2 8-row header-only receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-i19-filing-date-change-header-probe-38304249742-1
+          path: q104-prior-probe
+          run-id: 38304249742
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Aggregate 14 frozen observations without applying precedence
+        run: >-
+          python -m automation.q104_i19_r3_date_change_aggregate
+          --prior-probe q104-prior-probe
+          --r3-probe q104-r3-probe
+          --output runner-results/q104-cross-vintage/receipt.json
+      - name: Upload immutable combined Q104 result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-cross-vintage-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: runner-results/q104-cross-vintage/
+          if-no-files-found: warn
+          retention-days: 30
+
+  q220_offline_independent_reproduction_arm64:
+    name: GitHub ARM64 — independently reproduce Q220 hash lineage
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [q220_offline_hash_lineage]
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    steps:
+      - name: Checkout canonical master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Download the first Q220 analysis fingerprint
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-hash-provenance-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: q220-first-result
+          run-id: \${{ github.run_id }}
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Read expected deterministic analysis fingerprint
+        id: expected
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          candidates=list(Path("q220-first-result").rglob("receipt.json"))
+          if len(candidates)!=1: raise SystemExit("Q220_FIRST_RESULT_RECEIPT_COUNT_INVALID")
+          row=json.loads(candidates[0].read_text(encoding="utf-8"))
+          print("fingerprint="+row["analysis_fingerprint"])
+          PY
+      - name: Download exact immutable Q220 input receipts
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-primary-source-vintage-forensics-38254139755-1
+          path: q220-forensics-source
+          run-id: 38254139755
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Download exact immutable Q220 header-only receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-bounded-header-evidence-38258251764-1
+          path: q220-header-source
+          run-id: 38258251764
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Independently reproduce deterministic Q220 analysis
+        run: >-
+          python -m automation.q220_hash_provenance_diagnostic
+          --repo-root .
+          --forensics-artifact q220-forensics-source
+          --header-artifact q220-header-source
+          --expected-analysis-fingerprint \${{ steps.expected.outputs.fingerprint }}
+          --output runner-results/q220-arm64-reproduction/receipt.json
+      - name: Upload ARM64 reproduction receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-hash-provenance-arm64-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: runner-results/q220-arm64-reproduction/
+          if-no-files-found: warn
+          retention-days: 30
+
+  q104_cross_vintage_independent_reproduction_windows:
+    name: GitHub Windows — independently reproduce Q104 aggregate
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [q104_cross_vintage_aggregate]
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout canonical master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+      - name: Install bounded test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Test cross-vintage contract
+        run: python -m pytest -q tests/test_q104_i19_r3_date_change_aggregate.py
+      - name: Download the first Q104 aggregate result
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-cross-vintage-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: q104-first-result
+          run-id: \${{ github.run_id }}
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Read expected deterministic analysis fingerprint
+        id: expected
+        shell: pwsh
+        run: |
+          $files = @(Get-ChildItem -Path q104-first-result -Filter receipt.json -Recurse)
+          if ($files.Count -ne 1) { throw "Q104_FIRST_RESULT_RECEIPT_COUNT_INVALID" }
+          $row = Get-Content -Raw $files[0].FullName | ConvertFrom-Json
+          "fingerprint=$($row.analysis_fingerprint)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+      - name: Download newly captured R3 header-only receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-r3-date-change-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: q104-r3-probe
+          run-id: \${{ github.run_id }}
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Download the pinned prior 8-row receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-i19-filing-date-change-header-probe-38304249742-1
+          path: q104-prior-probe
+          run-id: 38304249742
+          repository: \${{ github.repository }}
+          github-token: \${{ github.token }}
+      - name: Independently reproduce the 14-row Q104 aggregate on Windows
+        run: >-
+          python -m automation.q104_i19_r3_date_change_aggregate
+          --prior-probe q104-prior-probe
+          --r3-probe q104-r3-probe
+          --expected-analysis-fingerprint \${{ steps.expected.outputs.fingerprint }}
+          --output runner-results/q104-windows-reproduction/receipt.json
+      - name: Upload independent Windows reproduction receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-cross-vintage-windows-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: runner-results/q104-windows-reproduction/
+          if-no-files-found: warn
+          retention-days: 30

@@ -81,6 +81,8 @@ def build_aggregate(prior: dict[str, Any], r3: dict[str, Any]) -> dict[str, Any]
         raise AggregateError("PRIOR_FIELD_PROBE_UPSTREAM_CONTRACT_MISMATCH")
     if r3.get("record_type")!="q104_i19_r3_date_change_header_probe" or r3.get("status")!="R3_DATE_CHANGE_HEADER_PROBE_COMPLETE":
         raise AggregateError("R3_HEADER_PROBE_NOT_COMPLETE")
+    if r3.get("receipt_fingerprint")!=receipt_fingerprint(r3):
+        raise AggregateError("R3_HEADER_PROBE_FINGERPRINT_MISMATCH")
     if r3.get("source_receipt_fingerprint")!=R3_FP or r3.get("source_sample_count")!=6 or r3.get("probe_count_captured")!=18:
         raise AggregateError("R3_HEADER_PROBE_UPSTREAM_CONTRACT_MISMATCH")
     if r3.get("receipt_fingerprint")!=receipt_fingerprint(r3):

@@ -100,7 +100,9 @@ def build_analysis(compiler: dict[str,Any], forensics: dict[str,Any], header: di
     match=re.search(r"expected=([0-9a-f]{64}).*actual=([0-9a-f]{64}).*expected_bytes=(\d+):actual_bytes=(\d+)",err)
     if not match or match.group(1)!=EXPECTED_SHA or int(match.group(3))!=EXPECTED_BYTES:
         raise DiagnosticError("CURRENT_COMPILER_HASH_DIAGNOSTIC_SHAPE_MISMATCH")
-    if "last_modified=Wed, 13 Feb 2019 11_02_53 GMT" not in err or "primary=spgi-20181231x10k.htm" not in err:
+    if ("last_modified=Wed, 13 Feb 2019 11_02_53 GMT" not in err
+        or "primary=spgi-20181231x10k.htm" not in err
+        or "final_url=https_//www.sec.gov/Archives/edgar/data/64040/000006404019000059/spgi-20181231x10k.htm" not in err):
         raise DiagnosticError("CURRENT_COMPILER_HTTP_METADATA_MISMATCH")
     original=ff.get("current_primary",{})
     feed=ff.get("daily_feed",{})
@@ -118,7 +120,7 @@ def build_analysis(compiler: dict[str,Any], forensics: dict[str,Any], header: di
     ):
         raise DiagnosticError("OBSERVED_PRIMARY_BODY_LINEAGE_CHANGED")
     observations=[
-        {"source":"frozen_expected_primary_document","scope":"whole_primary_document","sha256":EXPECTED_SHA,"bytes":EXPECTED_BYTES,"url":PRIMARY_URL,"last_modified":LAST_MODIFIED},
+        {"source":"frozen_expected_primary_document","scope":"frozen_expected_value","sha256":EXPECTED_SHA,"bytes":EXPECTED_BYTES,"url":PRIMARY_URL,"last_modified":LAST_MODIFIED},
         {"source":"original_forensics_current_primary","scope":"whole_primary_document","sha256":original["response_sha256"],"bytes":original["response_bytes"],"url":original["final_url"],"last_modified":original["last_modified"]},
         {"source":"current_compiler_observation","scope":"whole_primary_document","sha256":match.group(2),"bytes":int(match.group(4)),"url":PRIMARY_URL,"last_modified":LAST_MODIFIED},
         {"source":"single_feed_boundary_later_primary_response","scope":"whole_primary_document","sha256":current["current_primary_sha256"],"bytes":current["current_primary_response_bytes"],"url":PRIMARY_URL,"last_modified":current["current_primary_last_modified"]},
