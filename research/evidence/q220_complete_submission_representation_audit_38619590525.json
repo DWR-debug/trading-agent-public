@@ -310,13 +310,45 @@
     "original_population_runner_log_contains_per_record_source_metadata": false,
     "source_vintage_proven": false,
     "historical_first_public_observation_proven": false,
-    "conclusion": "The frozen hashes were persisted from the 2026-10-11 second representation set. All 55 prior direct-primary hashes had already differed between 2026-10-10T17:19Z and 2026-10-11T08:24Z under the same exact code blob; every length decreased by five bytes. The current 2026-10-14 compiler view differs again across all 55 rows, with each observed body one byte shorter than the frozen value. This is compelling common-mode representation-drift evidence, but absent raw original bytes it does not identify the exact changed bytes, prove source vintage, or establish first-public observation time.",
+    "conclusion": "The earliest known primary-response transition is bounded to between the last positive compiler receipt (2026-10-11T23:06:37Z) and the first blocked compiler receipt (2026-10-12T06:00:28Z), with identical compiler source/code fingerprints. Further saved receipts document two additional common-mode response changes by 2026-10-13 00:41 UTC and 2026-10-14 04:55 UTC.",
     "original_primary_capture_raw_bytes_preserved": false,
     "same_code_population_hash_drift_proven_by_git_metadata": true,
     "same_code_hash_drift_count": 55,
     "same_code_byte_delta_all_rows": -5,
     "current_direct_response_hash_drift_count": 55,
-    "current_direct_response_byte_delta_all_rows": -1
+    "current_direct_response_byte_delta_all_rows": -1,
+    "last_known_positive_compiler_receipt_utc": "2026-10-11T23:06:37.379425Z",
+    "positive_independent_reproduction_receipt_utc": "2026-10-11T23:08:31.626126Z",
+    "first_known_blocked_compiler_receipt_utc": "2026-10-12T06:00:28.208402Z",
+    "first_known_blocked_compiler_receipt_fingerprint": "c9cc85da4e632a801a2cf451ecaf83ae8a375688ea33aad42eaba7eee50e3e5d",
+    "first_known_blocked_compiler_code_sha256": "6a8fb9496181fb2a46393d4d9dc348660b068d50255d807401bb8eff0da686ed",
+    "elapsed_seconds_positive_compiler_to_first_blocked_receipt": 24830.828977,
+    "later_primary_representation_states_observed": [
+      {
+        "first_receipt_utc": "2026-10-12T06:00:28.208402Z",
+        "last_receipt_utc": "2026-10-12T15:27:56.147463Z",
+        "representative_sha256": "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+        "byte_delta_distribution": {
+          "0": 55
+        }
+      },
+      {
+        "first_receipt_utc": "2026-10-13T00:41:46.756632Z",
+        "last_receipt_utc": "2026-10-13T22:46:56.195079Z",
+        "representative_sha256": "2693819652172f0c218394ef036eb3f4af95c2a7077f624f6efcd990df370172",
+        "byte_delta_distribution": {
+          "7": 55
+        }
+      },
+      {
+        "first_receipt_utc": "2026-10-14T04:55:53.484073Z",
+        "last_receipt_utc": "2026-10-14T17:12:46.964937Z",
+        "representative_sha256": "fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3",
+        "byte_delta_distribution": {
+          "-1": 55
+        }
+      }
+    ]
   },
   "gates": {
     "source_complete": false,
@@ -611,6 +643,222 @@
         "source_code_was_current_at_historical_run": true,
         "note": "This source blob is historical and differs from the current compiler source blob listed below."
       }
+    },
+    "compiler_representation_timeline": {
+      "status": "TIME_VARYING_PRIMARY_RESPONSE_REPRESENTATIONS_OBSERVED",
+      "method": "Offline comparison of immutable Q220 compiler receipts and Git commits only. No SEC requests were made for this timeline.",
+      "known_positive_compiler_observation": {
+        "workflow_run_id": 38182963418,
+        "workflow_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38182963418",
+        "generated_at_utc": "2026-10-11T23:06:37.379425Z",
+        "receipt_fingerprint": "1b34b3ac2f3a6fc3ff90fa42cd8ea1c7b73297b5cbd71414a0877bb25d9b203c",
+        "status": "Q220_HISTORICAL_REPRESENTATION_PIT_COMPILED",
+        "compiler_code_sha256": "6a8fb9496181fb2a46393d4d9dc348660b068d50255d807401bb8eff0da686ed",
+        "compiler_source_git_blob_sha1": "c4587f75551297c1ceae9ed151196681eddfbdb8",
+        "verified_primary_document_count": 55,
+        "source_hash_failure_count": 0,
+        "compiled_event_count": 55,
+        "gate_positive": true,
+        "artifact_id": 11718182857,
+        "artifact_sha256": "c5b2fecc5b9a75d63c898098024532f9615abda6f4a171ba0a630aa943b1647e"
+      },
+      "earliest_known_blocked_observation": {
+        "workflow_run_id": 38210402239,
+        "workflow_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38210402239",
+        "workflow_run_number": 11,
+        "run_started_at_utc": "2026-10-12T05:59:41Z",
+        "run_terminal_updated_at_utc": "2026-10-12T06:00:35Z",
+        "receipt_generated_at_utc": "2026-10-12T06:00:28.208402Z",
+        "receipt_fingerprint": "c9cc85da4e632a801a2cf451ecaf83ae8a375688ea33aad42eaba7eee50e3e5d",
+        "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+        "compiler_code_sha256": "6a8fb9496181fb2a46393d4d9dc348660b068d50255d807401bb8eff0da686ed",
+        "compiler_source_git_blob_sha1": "c4587f75551297c1ceae9ed151196681eddfbdb8",
+        "verified_primary_document_count": 0,
+        "source_hash_failure_count": 55,
+        "compiled_event_count": 0,
+        "gate_positive": false,
+        "sample_failure": {
+          "record_key": "0000064040|0000064040-19-000059|10-K|2019-02-13",
+          "expected_sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+          "observed_sha256": "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb"
+        },
+        "artifact_id": 11729007177,
+        "artifact_name": "q220-historical-representation-pit-38210402239-1",
+        "artifact_size_bytes": 6633,
+        "artifact_sha256": "1780ac90f403b977d0f80235964c0d828f89534c701d92ffecf36c564120b778",
+        "artifact_expired": false,
+        "interpretation": "This is the first retained blocked compiler receipt found in the reviewed run/receipt history; the compiler source blob and compiler_code_sha256 exactly match the 2026-10-11 positive compiler receipt."
+      },
+      "first_observed_transition_window": {
+        "last_known_positive_compiler_receipt_utc": "2026-10-11T23:06:37.379425Z",
+        "positive_independent_reproduction_receipt_utc": "2026-10-11T23:08:31.626126Z",
+        "first_known_negative_compiler_receipt_utc": "2026-10-12T06:00:28.208402Z",
+        "elapsed_from_positive_compiler_receipt_seconds": 24830.828977,
+        "elapsed_from_positive_independent_receipt_seconds": 24716.582276,
+        "interpretation": "The representation change is bounded by the last stored positive compiler/independent receipts and the first stored blocked compiler receipt. These are observation bounds, not proof of the exact server-side transition moment."
+      },
+      "observed_receipt_snapshots": [
+        {
+          "generated_at_utc": "2026-10-12T06:00:28.208402Z",
+          "commit": "318a99be7d1586cd70b22fa190df5c91d7f5fb8e",
+          "receipt_fingerprint": "c9cc85da4e632a801a2cf451ecaf83ae8a375688ea33aad42eaba7eee50e3e5d",
+          "compiler_code_sha256": "6a8fb9496181fb2a46393d4d9dc348660b068d50255d807401bb8eff0da686ed",
+          "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+          "source_hash_failure_count": 55,
+          "verified_primary_document_count": 0,
+          "observed_spgi2019_primary_sha256": "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+          "byte_delta_distribution": null,
+          "note": "The compiler at this time did not persist actual/expected byte counts in the hash error."
+        },
+        {
+          "generated_at_utc": "2026-10-12T07:15:14.773357Z",
+          "commit": "729cb6d3b1e54272606adfb2e366ae99b99e75eb",
+          "receipt_fingerprint": "c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075",
+          "compiler_code_sha256": "08f904ef38cbf8b1fb3adbf8542d9642c786ffc0d2be51fd56546263e7f1264c",
+          "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+          "source_hash_failure_count": 55,
+          "verified_primary_document_count": 0,
+          "observed_spgi2019_primary_sha256": "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+          "byte_delta_distribution": {
+            "0": 55
+          },
+          "last_modified_sample": "Wed, 13 Feb 2019 11:02:53 GMT",
+          "note": "The new compiler version continued to receive the same observed hash seen in the first blocked receipt; all 55 lengths equalled the frozen expected lengths."
+        },
+        {
+          "generated_at_utc": "2026-10-12T15:27:56.147463Z",
+          "commit": "3209f4fcf71165d5929b0a8bb1664b9e694b855d",
+          "receipt_fingerprint": "64b75209923593aaf931f8a6728c19c69d7f97bdf8b8b0e4e4b7229a8d39c62c",
+          "compiler_code_sha256": "08f904ef38cbf8b1fb3adbf8542d9642c786ffc0d2be51fd56546263e7f1264c",
+          "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+          "source_hash_failure_count": 55,
+          "verified_primary_document_count": 0,
+          "observed_spgi2019_primary_sha256": "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+          "byte_delta_distribution": {
+            "0": 55
+          },
+          "all_55_failure_rows_equal_to_previous_observation": true
+        },
+        {
+          "generated_at_utc": "2026-10-13T00:41:46.756632Z",
+          "commit": "74ce6c972fafb5295026f0fb8db47bd4518a42ba",
+          "receipt_fingerprint": "1960eb6db1d70da4d4dae95871aa21db45eab8d94d2cec9dc3db10df77886ed1",
+          "compiler_code_sha256": "08f904ef38cbf8b1fb3adbf8542d9642c786ffc0d2be51fd56546263e7f1264c",
+          "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+          "source_hash_failure_count": 55,
+          "verified_primary_document_count": 0,
+          "observed_spgi2019_primary_sha256": "2693819652172f0c218394ef036eb3f4af95c2a7077f624f6efcd990df370172",
+          "byte_delta_distribution": {
+            "7": 55
+          },
+          "last_modified_sample": "Wed, 13 Feb 2019 11:02:53 GMT",
+          "note": "All 55 observed hashes and all 55 lengths changed versus the previous saved representation state; each current length was seven bytes above the frozen expected length."
+        },
+        {
+          "generated_at_utc": "2026-10-13T14:14:02.270940Z",
+          "commit": "205787f5a44fe36e9aca82a3594e0e54cd01fd7e",
+          "receipt_fingerprint": "6f4fbd664de8674db0636edac9a1af4372d1b8bafd5ab2df95f9c4cab34c445e",
+          "compiler_code_sha256": "08f904ef38cbf8b1fb3adbf8542d9642c786ffc0d2be51fd56546263e7f1264c",
+          "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+          "source_hash_failure_count": 55,
+          "observed_spgi2019_primary_sha256": "2693819652172f0c218394ef036eb3f4af95c2a7077f624f6efcd990df370172",
+          "byte_delta_distribution": {
+            "7": 55
+          },
+          "all_55_failure_rows_equal_to_previous_observation": true
+        },
+        {
+          "generated_at_utc": "2026-10-13T22:46:56.195079Z",
+          "commit": "6575483153152c1dfa3ef4df30811f796f6ddbf3",
+          "receipt_fingerprint": "20c3b1b26766ecd4f4a8837eba8a4359989f02328f9fa31e491f5b068e515ba2",
+          "compiler_code_sha256": "08f904ef38cbf8b1fb3adbf8542d9642c786ffc0d2be51fd56546263e7f1264c",
+          "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+          "source_hash_failure_count": 55,
+          "observed_spgi2019_primary_sha256": "2693819652172f0c218394ef036eb3f4af95c2a7077f624f6efcd990df370172",
+          "byte_delta_distribution": {
+            "7": 55
+          },
+          "all_55_failure_rows_equal_to_previous_observation": true
+        },
+        {
+          "generated_at_utc": "2026-10-14T04:55:53.484073Z",
+          "commit": "23d147e10b28946ac22845aaff93b1ac34e61fa3",
+          "receipt_fingerprint": "6ca925466cf158de7ee3e6ab01fb43cac8661927f7bf34eae5b55b9c73dce798",
+          "compiler_code_sha256": "08f904ef38cbf8b1fb3adbf8542d9642c786ffc0d2be51fd56546263e7f1264c",
+          "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+          "source_hash_failure_count": 55,
+          "verified_primary_document_count": 0,
+          "observed_spgi2019_primary_sha256": "fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3",
+          "byte_delta_distribution": {
+            "-1": 55
+          },
+          "last_modified_sample": "Wed, 13 Feb 2019 11:02:53 GMT",
+          "note": "All 55 observed hashes and all 55 lengths changed again; each current length was one byte below the frozen expected length."
+        },
+        {
+          "generated_at_utc": "2026-10-14T11:54:43.266153Z",
+          "commit": "52463c272a1a1f16f40600fbe917e982e5e8811c",
+          "receipt_fingerprint": "a38753bc59ef0c545ccbaabc5fb49497d80bca76a2c8df9c87b06593954df3f5",
+          "compiler_code_sha256": "08f904ef38cbf8b1fb3adbf8542d9642c786ffc0d2be51fd56546263e7f1264c",
+          "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+          "source_hash_failure_count": 55,
+          "observed_spgi2019_primary_sha256": "fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3",
+          "byte_delta_distribution": {
+            "-1": 55
+          },
+          "all_55_failure_rows_equal_to_previous_observation": true
+        },
+        {
+          "generated_at_utc": "2026-10-14T17:12:46.964937Z",
+          "commit": "e2438e1e43a8e3254788428a8b474a2f7c7bbbca",
+          "receipt_fingerprint": "b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e",
+          "compiler_code_sha256": "08f904ef38cbf8b1fb3adbf8542d9642c786ffc0d2be51fd56546263e7f1264c",
+          "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+          "source_hash_failure_count": 55,
+          "verified_primary_document_count": 0,
+          "compiled_event_count": 0,
+          "observed_spgi2019_primary_sha256": "fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3",
+          "byte_delta_distribution": {
+            "-1": 55
+          },
+          "all_55_failure_rows_equal_to_previous_observation": true
+        }
+      ],
+      "observed_state_transitions": [
+        {
+          "previous_observation_utc": "2026-10-11T23:06:37.379425Z",
+          "previous_state": "EXPECTED_FROZEN_55_HASH_SET_VERIFIED",
+          "next_observation_utc": "2026-10-12T06:00:28.208402Z",
+          "next_state": "55_HASH_MISMATCHES_SAME_COMPILER_CODE",
+          "changed_hash_rows": 55,
+          "transition_byte_delta_known_from_first_negative_receipt": false,
+          "source_or_intermediary_cause_proven": false
+        },
+        {
+          "previous_observation_utc": "2026-10-12T15:27:56.147463Z",
+          "previous_state": "CURRENT_PRIMARY_HASH_STATE_08039132_WITH_EXPECTED_LENGTHS",
+          "next_observation_utc": "2026-10-13T00:41:46.756632Z",
+          "next_state": "CURRENT_PRIMARY_HASH_STATE_26938196_WITH_PLUS_SEVEN_BYTES",
+          "changed_hash_rows": 55,
+          "changed_length_rows": 55,
+          "length_delta_change_all_rows": 7,
+          "same_compiler_code_sha256": true,
+          "source_or_intermediary_cause_proven": false
+        },
+        {
+          "previous_observation_utc": "2026-10-13T22:46:56.195079Z",
+          "previous_state": "CURRENT_PRIMARY_HASH_STATE_26938196_WITH_PLUS_SEVEN_BYTES",
+          "next_observation_utc": "2026-10-14T04:55:53.484073Z",
+          "next_state": "CURRENT_PRIMARY_HASH_STATE_FC7DFEDD_WITH_MINUS_ONE_BYTE",
+          "changed_hash_rows": 55,
+          "changed_length_rows": 55,
+          "length_delta_change_all_rows": -8,
+          "same_compiler_code_sha256": true,
+          "same_last_modified_sample": true,
+          "source_or_intermediary_cause_proven": false
+        }
+      ],
+      "interpretation": "The last positive compiler receipt and first blocked compiler receipt use the same compiler_code_sha256 and exact same compiler-source Git blob, while the first blocked receipt records a different primary hash for every row. Later blocked compiler receipts show two more common-mode response states: first an observed hash family with expected byte lengths, then a family uniformly seven bytes longer, then a family uniformly one byte shorter than the frozen lengths. Repeated receipt snapshots within each of those latter states had identical per-row failure details. The observed Last-Modified value for SPGI 2019 stayed constant across the later response states. This confirms time-varying primary-response representations under the same compiler retrieval path, but the precise byte-level cause and server-side transition times remain unproven because the original raw response bodies were not retained."
     }
   }
 }
