@@ -34,3 +34,9 @@ def test_literature_policy_covers_free_public_source_classes_without_claiming_ex
         assert required in scope["include_classes"]
     assert scope["paywalled_only_sources_excluded"] is True
     assert "not a claim of exhaustive coverage" in scope["exhaustiveness"]
+
+def test_scout_workflow_installs_pytest_before_invoking_it():
+    workflow = Path(".github/workflows/literature-frontier-scout.yml").read_text(encoding="utf-8")
+    install = workflow.index("python -m pip install --disable-pip-version-check pytest")
+    invoke = workflow.index("python -m pytest -q tests/test_literature_frontier_scout.py")
+    assert install < invoke
