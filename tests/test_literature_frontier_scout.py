@@ -40,3 +40,10 @@ def test_scout_workflow_installs_pytest_before_invoking_it():
     install = workflow.index("python -m pip install --disable-pip-version-check pytest")
     invoke = workflow.index("python -m pytest -q tests/test_literature_frontier_scout.py")
     assert install < invoke
+
+def test_scout_runs_after_its_workflow_or_policy_changes_on_master():
+    workflow = Path(".github/workflows/literature-frontier-scout.yml").read_text(encoding="utf-8")
+    assert 'branches: [master]' in workflow
+    assert '".github/workflows/literature-frontier-scout.yml"' in workflow
+    assert '"research/governance/literature_research_policy.json"' in workflow
+    assert '"tests/test_literature_frontier_scout.py"' in workflow
