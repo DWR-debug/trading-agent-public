@@ -1,0 +1,435 @@
+{
+  "schema_version": 1,
+  "record_type": "q220_complete_submission_representation_audit_result",
+  "candidate_id": "Q220",
+  "generated_at_utc": "2026-10-14T18:58:25Z",
+  "status": "COMPLETE_SUBMISSION_DIAGNOSTIC_COMPLETE_OFFLINE_REPRODUCED",
+  "research_scope": "Bounded source-byte lineage diagnostics only; no source hash correction, no PIT gate change.",
+  "upstream": {
+    "merged_pr": {
+      "number": 1464,
+      "url": "https://github.com/DWR-debug/trading-agent-public/pull/1464",
+      "merge_commit_sha": "bbcfc32b245c40c58f9ec43097f6fa9dcf90bafe",
+      "merge_time_utc": "2026-10-14T18:57:27Z"
+    },
+    "population_run": {
+      "id": 38155914188,
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38155914188",
+      "result_status": "Q220_AS_FILED_XBRL_POPULATION_COMPLETED",
+      "receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+      "source_population_blob_sha1": "4a1abe7f4633a5c8ee810e6e0f7208dc75103ad2",
+      "generated_at_utc": "2026-10-11T17:36:13.586472+00:00",
+      "row_count": 55,
+      "failure_count": 0,
+      "artifact": {
+        "id": 11710195878,
+        "name": "q220-as-filed-population-38155914188-1",
+        "size_bytes": 2302234,
+        "archive_sha256": "b72ccf9cf0bb79d1037e388d095ca642b911978df3b3cb3073b0a5d81d561b3b"
+      },
+      "gate_code_sha256": "2a455f02835b2d85308ac2c178777999fc059312218275a697204313de8cab0d",
+      "contract_sha256": "5014eb888a4e66502cb30c9ec5208caec1de65425dad3c1bd3feb8b17a29ac88",
+      "runner_log_finding": "The retained job stdout contains a successful 55-row summary only; it does not preserve the per-accession HTTP response headers or raw primary-document response bodies.",
+      "initial_capture_contract": {
+        "primary_document_name_source": "company_submissions_recent",
+        "primary_document_body_route": "Direct SEC Archives primary-document URL derived from CIK, accession, and selected primary filename.",
+        "raw_primary_response_bodies_persisted_in_receipt": false
+      }
+    },
+    "original_route_probe": {
+      "id": 38155914188,
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38155914188",
+      "receipt_fingerprint": "78cd9beea6beed3aaeb7f8ba939673274754b452a046f7e78ab76eb0e9c27c6d",
+      "status": "Q220_AS_FILED_XBRL_ROUTE_COMPLETED",
+      "record_count": 8,
+      "failure_count": 0,
+      "artifact": {
+        "id": 11712140975,
+        "name": "q220-as-filed-route-38155914188-1",
+        "size_bytes": 348890,
+        "archive_sha256": "a7dd89d81b3665c110ba0d2927d70cc1da0f8615885d63184002df4d6d3834a8"
+      },
+      "independent_cross_check": {
+        "record_key": "0000064040|0000064040-25-000052|10-K|2025-02-11",
+        "primary_document_source": "company_submissions_recent",
+        "primary_document_sha256": "afe05282d5d5af7f3068287cceaa679db962264d5d704d2d32ac19e2c4d3531d",
+        "primary_document_bytes": 4133816,
+        "agrees_with_frozen_expected_hash": true,
+        "captured_at_utc": "2026-10-11T18:49:19.633544+00:00",
+        "limitation": "The route receipt retains hash/length metadata, not the raw response body or per-record HTTP headers."
+      }
+    },
+    "prior_feed_forensics": {
+      "run_id": 38254139755,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38254139755",
+      "artifact_id": 11749259509,
+      "receipt_fingerprint": "840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b"
+    },
+    "frozen_fixture": {
+      "path": "research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json",
+      "git_blob_sha1": "2a3abbff6c6950e4f11d85dba92cb9c57a5c7ee0",
+      "receipt_fingerprint": "c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075"
+    },
+    "current_compiler": {
+      "path": "research/evidence/q220_historical_representation_pit_latest.json",
+      "receipt_fingerprint": "b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e",
+      "status": "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED",
+      "source_hash_failure_count": 55,
+      "verified_primary_document_count": 0,
+      "gate_positive": false
+    }
+  },
+  "capture_run": {
+    "id": 38619590525,
+    "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38619590525",
+    "conclusion": "success",
+    "started_at_utc": "2026-10-14T18:57:35Z",
+    "completed_at_utc": "2026-10-14T18:58:25Z",
+    "workflow_path": ".github/workflows/q220-complete-submission-representation-audit.yml",
+    "request_sequence": "2026-10-14T18:43:14Z",
+    "request_validation_passed": true,
+    "sample_count": 3,
+    "successful_identity_validated_samples": 3,
+    "response_statuses": [
+      200,
+      200,
+      200
+    ],
+    "aggregate_download_bytes": 86836164,
+    "max_aggregate_download_bytes": 120000000,
+    "max_each_response_bytes": 45000000,
+    "retry_count": 0,
+    "daily_feed_archive_requests": 0,
+    "direct_primary_html_requests": 0,
+    "complete_submission_body_files_persisted": false,
+    "analysis_fingerprint": "867ad0b84913619a2b505e82e8c0903dea7b0e44dd4b77d31ccc05d51e5b8ca5",
+    "capture_receipt_fingerprint": "3d3514a8fcbcc5d711da2cd15a3cf506ba16192022e0f9f15c8f1b9ef8f6a6f3",
+    "artifact": {
+      "id": 11921560717,
+      "name": "q220-complete-submission-capture-38619590525-1",
+      "size_bytes": 877020,
+      "archive_sha256": "7ef25dce9cc424cbf77958a48df2214053fb74fc7235773f07d9d817ea956af4",
+      "expires": false
+    },
+    "retained_evidence": "Only the bounded pre-DOCUMENT header prefix and exact selected primary DOCUMENT block were retained; full .txt response bodies were not persisted."
+  },
+  "independent_reproduction": {
+    "job_name": "independent_offline_reproduction",
+    "runner": "GitHub-hosted ubuntu-24.04-arm",
+    "conclusion": "success",
+    "status": "Q220_COMPLETE_SUBMISSION_REPRESENTATION_REPRODUCED_OFFLINE",
+    "network_requests_made": 0,
+    "verified_sample_count": 3,
+    "capture_analysis_fingerprint": "867ad0b84913619a2b505e82e8c0903dea7b0e44dd4b77d31ccc05d51e5b8ca5",
+    "verification_receipt_fingerprint": "cd5467600478db509a9bc3903c43a08498b077365b9156ec92bb096e86503685",
+    "artifact": {
+      "id": 11922195517,
+      "name": "q220-complete-submission-verification-38619590525-1",
+      "size_bytes": 1437,
+      "archive_sha256": "7ed6061e08dda222e024a92c09822d89c22d19ed6394ca81ef081f39ccc26751",
+      "expires": false
+    }
+  },
+  "comparison_rules": {
+    "expected_hash_reproduced": "Exact raw TEXT body or registered outer-line-break variant matches both frozen SHA-256 and byte count.",
+    "prior_feed_body_reproduced": "Raw TEXT hash and byte count match the previously recorded original daily-Feed submission body.",
+    "interpretation": "A match proves representation reproducibility for that accession only; it does not establish historical source vintage or first-public observation time."
+  },
+  "samples": [
+    {
+      "record_key": "0000064040|0000064040-19-000059|10-K|2019-02-13",
+      "primary_filename": "spgi-20181231x10k.htm",
+      "frozen_expected_primary": {
+        "sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+        "bytes": 4774458
+      },
+      "original_population_capture": {
+        "primary_document_source": "company_submissions_recent",
+        "sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+        "bytes": 4774458,
+        "raw_bytes_preserved": false
+      },
+      "complete_submission_response": {
+        "http_status": 200,
+        "bytes": 26429931,
+        "sha256": "065dfb0e1c668292e61b5cf9ff2a14a39488b5c1b928954a8b7df4ea84f2027b",
+        "content_type": "text/plain",
+        "last_modified": "Wed, 13 Feb 2019 11:02:41 GMT",
+        "etag": "\"d62947ffea37bb60f72fdd391fe98825-gzip\""
+      },
+      "extracted_primary_document_block": {
+        "sha256": "cd5f2a074e7e1858bf45a5225944f5eec0d7352fdbf61c0789404645d4b2c512",
+        "bytes": 4774346
+      },
+      "extracted_raw_text_body": {
+        "sha256": "aa1f89efdf13029de9dd8f7eb020502dd518d4350513d4ef041ba67d902ef368",
+        "bytes": 4774237
+      },
+      "edge_variants": [
+        {
+          "name": "drop_one_leading_linebreak",
+          "sha256": "54d62d26b31bd4e8a94b1f49c1641f2fc69c79cd5b4290d11d9191a4e9db39d0",
+          "bytes": 4774236
+        },
+        {
+          "name": "drop_outer_linebreaks",
+          "sha256": "bbaee52940cc5f2327445da95e98e46705d90b58a615edcd2d83df08da3a6fc1",
+          "bytes": 4774235
+        }
+      ],
+      "prior_original_feed_text": {
+        "sha256": "aa1f89efdf13029de9dd8f7eb020502dd518d4350513d4ef041ba67d902ef368",
+        "bytes": 4774237,
+        "reproduced": true
+      },
+      "prior_population_capture_hash_reproduced": false,
+      "prior_current_primary_hash_reproduced": false,
+      "identity_checks_all_passed": true,
+      "interpretation": "Complete-submission TEXT exactly reproduces the earlier Feed-extracted TEXT, but neither matches the frozen expected direct-primary hash."
+    },
+    {
+      "record_key": "0001090012|0001564590-19-003382|10-K|2019-02-20",
+      "primary_filename": "dvn-10k_20181231.htm",
+      "frozen_expected_primary": {
+        "sha256": "b024964aa602547d102af1f9cd51c61a3d723ab25b21ef5686b02ac8d4f40dd1",
+        "bytes": 10558506
+      },
+      "original_population_capture": {
+        "primary_document_source": "company_submissions_recent",
+        "sha256": "b024964aa602547d102af1f9cd51c61a3d723ab25b21ef5686b02ac8d4f40dd1",
+        "bytes": 10558506,
+        "raw_bytes_preserved": false
+      },
+      "complete_submission_response": {
+        "http_status": 200,
+        "bytes": 37864689,
+        "sha256": "e879e4c649ee05eda834a1f557af7ee1636e1e5226f81f7f32819f7600eb8dcd",
+        "content_type": "text/plain",
+        "last_modified": "Wed, 20 Feb 2019 17:22:48 GMT",
+        "etag": "\"43ff85720d671d5bd335d4d51377a2aa-gzip\""
+      },
+      "extracted_primary_document_block": {
+        "sha256": "6369f2207e113e72a6529cc1a66d2c1f54eef77bd82b10bc7132ca15e629c768",
+        "bytes": 10558528
+      },
+      "extracted_raw_text_body": {
+        "sha256": "e72d769d3ebcd9fddee3732785dd94d530f6d81a03c94c7f9343fb5bda25e2cc",
+        "bytes": 10558411
+      },
+      "edge_variants": [
+        {
+          "name": "drop_one_leading_linebreak",
+          "sha256": "8bba1c491d02bcfd2142299f980eb35166f47eac2ae737ee981843b2193d97fb",
+          "bytes": 10558410
+        },
+        {
+          "name": "drop_outer_linebreaks",
+          "sha256": "8f69a716882f752ebc76b9542b5a2062c3deef12a681f08a2a4e8bff133f5941",
+          "bytes": 10558409
+        }
+      ],
+      "prior_original_feed_text": {
+        "sha256": "e72d769d3ebcd9fddee3732785dd94d530f6d81a03c94c7f9343fb5bda25e2cc",
+        "bytes": 10558411,
+        "reproduced": true
+      },
+      "prior_population_capture_hash_reproduced": false,
+      "prior_current_primary_hash_reproduced": false,
+      "identity_checks_all_passed": true,
+      "interpretation": "Complete-submission TEXT exactly reproduces the earlier Feed-extracted TEXT, but neither matches the frozen expected direct-primary hash."
+    },
+    {
+      "record_key": "0000064040|0000064040-25-000052|10-K|2025-02-11",
+      "primary_filename": "spgi-20241231.htm",
+      "frozen_expected_primary": {
+        "sha256": "afe05282d5d5af7f3068287cceaa679db962264d5d704d2d32ac19e2c4d3531d",
+        "bytes": 4133816
+      },
+      "original_population_capture": {
+        "primary_document_source": "company_submissions_recent",
+        "sha256": "afe05282d5d5af7f3068287cceaa679db962264d5d704d2d32ac19e2c4d3531d",
+        "bytes": 4133816,
+        "raw_bytes_preserved": false
+      },
+      "original_route_probe_crosscheck": {
+        "sha256": "afe05282d5d5af7f3068287cceaa679db962264d5d704d2d32ac19e2c4d3531d",
+        "bytes": 4133816,
+        "sha256_matches_frozen_expected": true
+      },
+      "complete_submission_response": {
+        "http_status": 200,
+        "bytes": 22541544,
+        "sha256": "3f2e6baa71d7697e9cb92c1f96729b3db3ee905087272f65460d47f245a93556",
+        "content_type": "text/plain",
+        "last_modified": "Tue, 11 Feb 2025 22:29:56 GMT",
+        "etag": "\"f51a27a50ed0d80dfddf5ac24b505472-gzip\""
+      },
+      "extracted_primary_document_block": {
+        "sha256": "f4eecb1a270e56f2c74607a8ffccf3de512cc8134f2b5ac8d1cfd2478e7ea45b",
+        "bytes": 4133826
+      },
+      "extracted_raw_text_body": {
+        "sha256": "44040ca6cf934f7bd336063ba4b3da67a3c815678dda87474a11a1e6a2ec47ba",
+        "bytes": 4133721
+      },
+      "edge_variants": [
+        {
+          "name": "drop_one_leading_linebreak",
+          "sha256": "627f7bfb69721f5b91028d1a6a6bd01e83bd7fda13b856a4b67f0706891f2c6e",
+          "bytes": 4133720
+        },
+        {
+          "name": "drop_outer_linebreaks",
+          "sha256": "f3e49bf70a8dd76aadfcdeeb347c41bfb12f9e9bffa420b443b80d3d8a090bcb",
+          "bytes": 4133719
+        }
+      ],
+      "prior_original_feed_text": {
+        "sha256": "4446f768a1dc88f7dae9c67abf55694393425e441712fbf1fafe0d0a30523393",
+        "bytes": 4133721,
+        "reproduced": false
+      },
+      "prior_population_capture_hash_reproduced": false,
+      "prior_current_primary_hash_reproduced": false,
+      "identity_checks_all_passed": true,
+      "interpretation": "The complete-submission TEXT is the same byte length as the prior Feed-extracted TEXT but has a different SHA-256. It matches neither the frozen expected direct-primary hash nor the earlier Feed body."
+    }
+  ],
+  "aggregate_result": {
+    "samples": 3,
+    "expected_hash_matches": 0,
+    "exact_prior_feed_text_matches": 2,
+    "accepted_identity_checks": 3,
+    "incomplete_rows": 0,
+    "gate_positive": false
+  },
+  "historical_lineage_assessment": {
+    "original_expected_hash_capture_time": "Current frozen population values were persisted 2026-10-11T17:36:13Z; an earlier same-code snapshot at 2026-10-10T17:19:36Z had a different 55-hash set with each primary document five bytes longer.",
+    "immutable_original_primary_bodies_available": false,
+    "immutable_original_http_response_headers_available": false,
+    "original_population_runner_log_contains_per_record_source_metadata": false,
+    "source_vintage_proven": false,
+    "historical_first_public_observation_proven": false,
+    "conclusion": "The frozen hashes were persisted from the 2026-10-11 second representation set. All 55 prior direct-primary hashes had already differed between 2026-10-10T17:19Z and 2026-10-11T08:24Z under the same exact code blob; every length decreased by five bytes. The current 2026-10-14 compiler view differs again across all 55 rows, with each observed body one byte shorter than the frozen value. This is compelling common-mode representation-drift evidence, but absent raw original bytes it does not identify the exact changed bytes, prove source vintage, or establish first-public observation time.",
+    "original_primary_capture_raw_bytes_preserved": false,
+    "same_code_population_hash_drift_proven_by_git_metadata": true,
+    "same_code_hash_drift_count": 55,
+    "same_code_byte_delta_all_rows": -5,
+    "current_direct_response_hash_drift_count": 55,
+    "current_direct_response_byte_delta_all_rows": -1
+  },
+  "gates": {
+    "source_complete": false,
+    "historical_pit_positive": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "next_gate": "Offline-only: inspect all retained Git history and artifacts for an immutable original response body or an independently pinned raw primary representation. If none exists, preserve the provenance gap explicitly; do not redownload Feed archives, rewrite hashes, or change the Q220 gate.",
+  "historical_population_hash_drift": {
+    "status": "SAME_CODE_FIVE_BYTE_SHIFT_ACROSS_ALL_55_PRIMARY_DOCUMENTS",
+    "research_question": "Did the frozen 55-row primary hash set appear as a response representation stable across the historical capture runs, or was there a systematic change before the current compiler pin was frozen?",
+    "method": "Offline analysis of immutable Git diffs for the saved population receipts and exact source-code blob IDs at those commits. No SEC requests or additional source downloads were made.",
+    "snapshots": [
+      {
+        "commit": "65f725a4cde933750d2b06bd4345ab314018bab9",
+        "observed_at_utc": "2026-10-10T17:19:36.701501+00:00",
+        "record_count": 55,
+        "gate_code_sha256": "62ef075c9fe5ccc2527e5a918f9653a5a6d1602359d4bb795a0e97a5370ddcc1",
+        "gate_code_git_blob_sha1": "17d3464605138e5035718664fb02ff1a56dcf5cc",
+        "role": "First preserved snapshot in the same-code comparison; contains the old primary-document hash/length set."
+      },
+      {
+        "commit": "7aab3a11af3a533c4ff1078cf303395022614694",
+        "observed_at_utc": "2026-10-10T21:54:32.086848+00:00",
+        "record_count": 55,
+        "gate_code_sha256": "62ef075c9fe5ccc2527e5a918f9653a5a6d1602359d4bb795a0e97a5370ddcc1",
+        "gate_code_git_blob_sha1": "17d3464605138e5035718664fb02ff1a56dcf5cc",
+        "source_hash_and_length_set_matches_previous_snapshot": true,
+        "git_diff_scope": "Only generated timestamp/receipt fingerprint changed; no primary document hashes or byte lengths changed."
+      },
+      {
+        "commit": "3d41bfbf18e525522da7c274e68ed692ef54c8d1",
+        "observed_at_utc": "2026-10-11T08:24:12.052069+00:00",
+        "record_count": 55,
+        "gate_code_sha256": "62ef075c9fe5ccc2527e5a918f9653a5a6d1602359d4bb795a0e97a5370ddcc1",
+        "gate_code_git_blob_sha1": "17d3464605138e5035718664fb02ff1a56dcf5cc",
+        "changed_primary_hash_count": 55,
+        "changed_primary_byte_length_count": 55,
+        "primary_byte_delta_distribution": {
+          "-5": 55
+        },
+        "all_55_hashes_changed": true,
+        "interpretation": "A direct-primary retrieval under the same pinned collector code produced a different hash and exactly five fewer bytes for each of the 55 records. The missing raw bodies prevent identifying which bytes changed."
+      },
+      {
+        "commit": "5997aa28f65322ec15e6e41e5a0f0a4d802a5afb",
+        "observed_at_utc": "2026-10-11T17:36:13.586472+00:00",
+        "workflow_run_id": 38155914188,
+        "receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+        "gate_code_sha256": "2a455f02835b2d85308ac2c178777999fc059312218275a697204313de8cab0d",
+        "role": "Published the 55-row source population that remains pinned by the current blocked compiler."
+      }
+    ],
+    "equality_checks": {
+      "oct10_1719_vs_oct11_0824_same_gate_code_sha256": true,
+      "oct10_1719_vs_oct11_0824_same_gate_code_git_blob_sha1": true,
+      "oct10_1719_vs_oct11_0824_primary_hash_different_count": 55,
+      "oct10_1719_vs_oct11_0824_all_primary_lengths_decreased_by_five": true,
+      "oct11_0824_hash_set_matches_current_compiler_expected_hash_set": true,
+      "oct11_0824_length_set_matches_current_compiler_expected_length_set": true
+    },
+    "same_code_sample_comparisons": [
+      {
+        "record_key": "0000064040|0000064040-19-000059|10-K|2019-02-13",
+        "filename": "spgi-20181231x10k.htm",
+        "oct10_1719_sha256": "f9b44be839a2775217b7e0fa15b3d91f8cae6b95dc0723dec54bf03e87aa3e0c",
+        "oct10_1719_bytes": 4774463,
+        "oct11_0824_sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+        "oct11_0824_bytes": 4774458,
+        "delta_bytes": -5
+      },
+      {
+        "record_key": "0001090012|0001564590-19-003382|10-K|2019-02-20",
+        "filename": "dvn-10k_20181231.htm",
+        "oct10_1719_sha256": "77b8333af3c42f4a020ed2667c8911c415d11083ba5456dc06f32c32decd51ce",
+        "oct10_1719_bytes": 10558511,
+        "oct11_0824_sha256": "b024964aa602547d102af1f9cd51c61a3d723ab25b21ef5686b02ac8d4f40dd1",
+        "oct11_0824_bytes": 10558506,
+        "delta_bytes": -5
+      },
+      {
+        "record_key": "0000064040|0000064040-25-000052|10-K|2025-02-11",
+        "filename": "spgi-20241231.htm",
+        "oct10_1719_sha256": "33732dc05d44f8e3fa83a82e73f34040a201097456e58ab74fe0d77868724d0a",
+        "oct10_1719_bytes": 4133821,
+        "oct11_0824_sha256": "afe05282d5d5af7f3068287cceaa679db962264d5d704d2d32ac19e2c4d3531d",
+        "oct11_0824_bytes": 4133816,
+        "delta_bytes": -5
+      }
+    ],
+    "current_direct_primary_observations": {
+      "compiler_receipt_fingerprint": "b394356b05c0c3e512f750174ffd501aafd9de8809da2266115b57c21d5bb93e",
+      "captured_at_utc": "2026-10-14T17:12:46.964937+00:00",
+      "total_rows": 55,
+      "current_hashes_differ_from_frozen_count": 55,
+      "current_actual_byte_delta_vs_frozen_distribution": {
+        "-1": 55
+      },
+      "current_hash_set_matches_frozen_set": false,
+      "interpretation": "A later current-code compiler snapshot again observed a different direct-primary body hash for every row; all response lengths were exactly one byte below the frozen second snapshot. Five-profile repeatability testing on the SPGI 2019 document later produced the same current hash/length for all five request profiles. This is consistent with another common-mode representation shift but does not identify the changed bytes."
+    },
+    "source_bytes_preserved_in_old_population_receipts": false,
+    "caveat": "The historical receipts persist only primary-document hashes, lengths, and source metadata—not the raw body bytes. The same-code, all-55, minus-five comparison is strong metadata evidence of time-varying returned representations, not a byte-level diff or proof of the exact mechanism."
+  }
+}
