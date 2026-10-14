@@ -1,14 +1,20 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 
 import pytest
 
 from automation.q127r4_finra_official_listing_metadata import (
+    FIXED_DATES,
     FROZEN,
+    R1_FP,
+    R1_TASK,
+    SYMBOLS,
     ProbeError,
     parse_listing_page,
     read_request,
+    run,
     target_urls,
 )
 
@@ -78,3 +84,50 @@ def test_q127r4_live_request_is_frozen_and_non_authorizing():
     assert request["PERFORMANCE"] == "false"
     assert request["HOLDOUT_SELECTION"] == "false"
     assert request["LIVE_EXECUTION"] == "false"
+
+
+def test_q127r4_full_probe_never_infers_historical_same_day_pit(tmp_path):
+    targets = target_urls()
+    upstream = {
+        "task_id": R1_TASK,
+        "status": "Q127R1_SOURCE_PIT_FEASIBILITY_COMPLETED",
+        "receipt_fingerprint": R1_FP,
+        "observations": {
+            day: {
+                "source_url": targets[day],
+                "status": "PASS",
+                "rows_for_fixed_symbols": {symbol: {} for symbol in SYMBOLS},
+            }
+            for day in FIXED_DATES
+        },
+        "pit": {"same_day_pit_safe": False, "revision_lineage_established": False},
+    }
+    upstream_path = tmp_path / "upstream.json"
+    upstream_path.write_text(json.dumps(upstream), encoding="utf-8")
+    out_path = tmp_path / "receipt.json"
+    rows_2024 = [(targets["2024-02-05"], "Monday 5th", "321 KB"), (targets["2024-07-01"], "Monday 1st", "323 KB")]
+    rows_2025 = [(targets["2025-01-02"], "Thursday 2nd", "342 KB"), (targets["2025-09-24"], "Wednesday 24th", "358 KB")]
+    pages = {
+        2024: fixture_page(2024, "2", rows_2024).encode("utf-8"),
+        2025: fixture_page(2025, "1", rows_2025).encode("utf-8"),
+    }
+
+    def fake_fetch(url, max_bytes):
+        year = 2024 if "custom_year%5Byear%5D=2" in url else 2025
+        body = pages[year]
+        assert len(body) <= max_bytes
+        return 200, body, {"content-type": "text/html", "content-length": str(len(body))}, url, None
+
+    receipt = run(
+        ROOT / "research/run_requests/q127r4_finra_official_listing_metadata.trigger",
+        upstream_path,
+        out_path,
+        fetcher=fake_fetch,
+    )
+    assert receipt["status"] == "Q127R4_OFFICIAL_LISTING_METADATA_COMPLETED"
+    assert receipt["summary"]["target_urls_present_exactly_once"] is True
+    assert receipt["pit_interpretation"]["official_nominal_publication_upper_bound_stated"] is True
+    assert receipt["pit_interpretation"]["publication_statement_historical_applicability_proven"] is False
+    assert receipt["pit_interpretation"]["exact_first_publication_time_proven"] is False
+    assert receipt["pit_interpretation"]["historical_listing_snapshot_proven"] is False
+    assert receipt["pit_interpretation"]["same_day_formal_use_allowed"] is False
