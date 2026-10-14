@@ -31,3 +31,10 @@ def test_self_hosted_wave_bootstraps_pinned_python_without_setup_python_action()
     assert "python-3.13.15-nuget-wave-q104" in windows_jobs
     assert "python-3.13.15-nuget-wave-q220" in windows_jobs
     assert "shell: cmd" in windows_jobs
+
+
+
+def test_candidate_wave_q221_audit_uses_the_frozen_failure_audit_request():
+    workflow = (ROOT / ".github" / "workflows" / "candidate-next-gate-runner-wave.yml").read_text(encoding="utf-8")
+    assert "--request research/run_requests/q221_transaction_parent_uei_failure_audit.trigger" in workflow
+    assert "--request research/run_requests/q221_transaction_parent_uei_probe.trigger" not in workflow
