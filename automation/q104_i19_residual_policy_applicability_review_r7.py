@@ -235,8 +235,8 @@ def capture_headers(inputs:dict[str,Any])->dict[str,Any]:
  budget=CombinedBudget(MAX_TOTAL_BYTES,MAX_HEADER_TOTAL)
  archive_results={};rows={}
  for name,pin in ARCHIVES.items():
-  pr=archive_row(inputs["repaired"][pin["shard"]],pin["url"],pin["shard"])
-  orow=archive_row(inputs["original"][pin["shard"]],pin["url"],pin["shard"])
+  pr=archive_row(inputs["repaired_shards"][pin["shard"]],pin["url"],pin["shard"])
+  orow=archive_row(inputs["original_shards"][pin["shard"]],pin["url"],pin["shard"])
   if any(r.get("archive_sha256")!=pin["sha"] or r.get("archive_bytes")!=pin["bytes"] for r in (pr,orow)): raise ReviewError("ARCHIVE_PIN_NOT_IN_FROZEN_SHARD:"+name)
   for a in pin["accessions"]:
    attempt=attempts.get(a)
