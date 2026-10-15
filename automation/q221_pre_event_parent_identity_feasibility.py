@@ -270,11 +270,21 @@ def validate_frozen_inputs(
     }
 
 
+class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Treat redirects as source failures so no unpinned URL is ever requested."""
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 def _read_one_source(spec: dict[str, Any], source_dir: Path, aggregate_before: int) -> tuple[dict[str, Any], int]:
     url = str(spec.get("document_url") or "")
     parsed = urlparse(url)
     if parsed.scheme != "https" or parsed.hostname != ALLOWED_HOST:
         raise FeasibilityError("SOURCE_URL_OUTSIDE_ALLOWLIST:" + str(spec.get("record_id")))
+    remaining = MAX_TOTAL_BYTES - aggregate_before
+    if remaining <= 0:
+        raise FeasibilityError("SEC_SOURCE_AGGREGATE_BUDGET_EXHAUSTED_BEFORE_REQUEST")
+    read_limit = min(MAX_BYTES_EACH, remaining)
     req = urllib.request.Request(
         url,
         headers={
@@ -284,12 +294,26 @@ def _read_one_source(spec: dict[str, Any], source_dir: Path, aggregate_before: i
             "Connection": "close",
         },
     )
+    opener = urllib.request.build_opener(NoRedirectHandler())
     try:
-        with urllib.request.urlopen(req, timeout=TIMEOUT_SECONDS) as response:
+        with opener.open(req, timeout=TIMEOUT_SECONDS) as response:
             status = int(response.status)
             final_url = str(response.geturl())
             headers = response.headers
-            body = response.read(MAX_BYTES_EACH + 1)
+            content_length_header = headers.get("Content-Length")
+            declared_length = int(content_length_header) if content_length_header and content_length_header.isdigit() else None
+            if declared_length is not None and declared_length > read_limit:
+                raise FeasibilityError(f"SEC_SOURCE_DECLARED_BYTES_EXCEED_REMAINING_BUDGET:{spec['record_id']}:{declared_length}:{read_limit}")
+            body = response.read(read_limit)
+            # If length is unknown and we consumed the whole allowance, we cannot
+            # distinguish an exact-size document from a truncated one without an
+            # extra byte read, which would violate the aggregate budget. Fail closed.
+            if len(body) == read_limit and declared_length is None:
+                raise FeasibilityError(f"SEC_SOURCE_LENGTH_UNKNOWN_AT_HARD_LIMIT:{spec['record_id']}:{read_limit}")
+            if declared_length is not None and len(body) != declared_length:
+                raise FeasibilityError(f"SEC_SOURCE_CONTENT_LENGTH_MISMATCH:{spec['record_id']}:{len(body)}:{declared_length}")
+    except FeasibilityError:
+        raise
     except Exception as exc:
         raise FeasibilityError(f"SEC_SOURCE_FETCH_FAILED:{spec['record_id']}:{type(exc).__name__}") from exc
     if status != 200:
