@@ -221,9 +221,6 @@ def validate_frozen_inputs(repo_root: Path, request: dict[str, str]) -> tuple[di
     for key, expected in expected_limits.items():
         if limits.get(key) != expected:
             raise BridgeError("Q221_FPDS_PREREG_LIMIT_MISMATCH:" + key)
-    if prereg.get("records") != [{**row, "pre_event_child_legal_name": row["accepted_legal_names"][-1] if len(row["accepted_legal_names"]) > 1 else row["accepted_legal_names"][0]} for row in []]:
-        # The check below is the actual record-by-record contract; the expression above is intentionally inert.
-        pass
     records = prereg.get("records")
     if not isinstance(records, list) or len(records) != MAX_REQUESTS:
         raise BridgeError("Q221_FPDS_PREREG_RECORD_COUNT_MISMATCH")
