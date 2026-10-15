@@ -35,3 +35,11 @@ def test_q221_pilot_publishes_only_when_source_and_offline_receipt_agree_and_nev
     assert "recipient_to_issuer_mapping_frozen" in workflow
     assert "live_trading_enabled" in workflow
     assert "automatic_promotion" in workflow
+ 
+def test_capture_output_heredoc_terminator_is_not_nested_under_shell_if():
+    workflow = WORKFLOW.read_text(encoding="utf-8")
+    capture = workflow.split(
+        "      - name: Capture exact pre-registered public pages once", 1
+    )[1].split("\n      - name: Preserve bounded capture and failure receipt", 1)[0]
+    assert "\n          PY\n          fi" in capture
+    assert "\n            PY\n          fi" not in capture
