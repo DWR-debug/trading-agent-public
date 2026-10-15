@@ -27,6 +27,13 @@ jobs:
       github.event_name == 'workflow_run' &&
       github.event.workflow_run.head_branch == github.event.repository.default_branch &&
       github.event.workflow_run.event != 'workflow_dispatch' &&
+      github.event.workflow_run.name != 'Top-4 Candidate Slot Research' &&
+      github.event.workflow_run.name != 'Top-4 Candidate Research Capacity' &&
+      github.event.workflow_run.name != 'Q104 I19 Historical 13F Identity Census' &&
+      github.event.workflow_run.name != 'Q089 Contract Audit' &&
+      github.event.workflow_run.name != 'Q185-Q186 Windows Bounded Reproduction' &&
+      github.event.workflow_run.name != 'H06 PIT Independent Reproduction (self-hosted)' &&
+      github.event.workflow_run.name != 'Free AI Worker Fabric' &&
       github.event.workflow_run.name != 'Planned Capacity Fast Dispatch' &&
       github.event.workflow_run.name != 'Resource Dashboard Update' &&
       github.event.workflow_run.name != 'Current Operational Status Synchronizer' &&
