@@ -25,7 +25,8 @@ def test_research_completion_relay_wakes_capacity_dispatch_and_dashboard_refresh
     text = (ROOT / ".github/workflows/research-completion-relay.yml").read_text(encoding="utf-8")
     assert "gh workflow run planned-capacity-fast-dispatch.yml" in text
     assert "gh workflow run resource-dashboard-update.yml" in text
-    assert "DASHBOARD_REFRESH_RELAY=SUCCESS" in text
+    assert "DASHBOARD_REFRESH_WAKE=RELAY" in text
+    assert "DASHBOARD_REFRESH_WAKE=DIRECT_WORKFLOW_RUN_OWNER" in text
 
 
 def test_research_completion_relay_has_single_owner_per_event_path():
