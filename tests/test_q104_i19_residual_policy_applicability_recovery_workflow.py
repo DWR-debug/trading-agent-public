@@ -70,7 +70,7 @@ def test_recovery_request_is_bound_to_the_exact_failed_capture_artifact():
         "TUNING": "false",
         "PROMOTION": "false",
         "LIVE_EXECUTION": "false",
-        "RECOVERY_REQUEST_SEQUENCE": "2026-10-15T16:06:00Z",
+        "RECOVERY_REQUEST_SEQUENCE": "2026-10-15T16:14:00Z",
     }
 
 
