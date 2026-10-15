@@ -74,6 +74,19 @@ def _sha256(body: bytes) -> str:
     return hashlib.sha256(body).hexdigest()
 
 
+def _fingerprint(value: dict[str, Any]) -> str:
+    """Return the canonical receipt fingerprint, excluding its own field."""
+    payload = {key: item for key, item in value.items() if key != "receipt_fingerprint"}
+    canonical = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return _sha256(canonical)
+
+
 def _blob_sha1(body: bytes) -> str:
     return hashlib.sha1(b"blob " + str(len(body)).encode("ascii") + b"\0" + body).hexdigest()
 

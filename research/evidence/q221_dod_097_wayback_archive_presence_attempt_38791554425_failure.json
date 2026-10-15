@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_dod_097_one_shot_probe_attempt_failure_audit",
+  "candidate_id": "Q221",
+  "generated_at_utc": "2026-10-15T19:09:43Z",
+  "source_of_truth": "DWR-debug/trading-agent-public",
+  "status": "Q221_DOD_097_ONE_SHOT_ATTEMPT_FAILED_RECEIPT_NOT_PERSISTED_NO_ROW_RESULT",
+  "original_attempt": {
+    "workflow_name": "Q221 DoD 097 Wayback Archive Schema and Row-Presence Probe",
+    "workflow_run_id": 38791554425,
+    "job_id": 116617122187,
+    "commit_sha": "f18d04a8930e2573047dc1397c7cb92bdfe2fa6a",
+    "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38791554425",
+    "last_relevant_log_time_utc": "2026-10-15T19:09:43Z"
+  },
+  "observed_facts": {
+    "frozen_input_prevalidation_status": "Q221_DOD_097_FROZEN_INPUTS_VALID",
+    "frozen_manifest_blob_sha1_verified": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "frozen_target_count": 28,
+    "prevalidation_source_requests_made": 0,
+    "probe_step_started": true,
+    "receipt_writer_exception": "NameError: name '_fingerprint' is not defined",
+    "exception_site": "automation/q221_dod_097_wayback_archive_presence.py::_write_receipt",
+    "receipt_json_persisted": false,
+    "workflow_artifact_published": false,
+    "later_log_summary_published": false
+  },
+  "unknowns_that_must_not_be_inferred": {
+    "actual_source_request_count": null,
+    "cdx_response_status_and_digest": null,
+    "archive_replay_status_and_digest": null,
+    "archive_schema_recognized": null,
+    "archive_row_presence_counts": null,
+    "exact_archive_response_bytes": null,
+    "reason": "The run failed while generating its final receipt, and no receipt artifact was available. Logs do not preserve a verifiable row-level or network-response receipt.",
+    "source_requests_count_known": false
+  },
+  "interpretation": {
+    "archive_presence_result_available": false,
+    "historical_first_public_observation_proven": false,
+    "event_level_public_boundary_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "q221_gate_positive": false,
+    "this_failure_is_not_evidence_of_absence": true,
+    "this_failure_is_not_evidence_of_presence": true
+  },
+  "recovery_decision": {
+    "original_one_shot_retriggered": false,
+    "automatic_source_retry_authorized": false,
+    "rationale": "The preregistered two-request probe was intentionally single-use. Since the exact number of requests and the archive-stage outcome were not persisted, blindly repeating the same source inspection would not be a safe recovery.",
+    "next_allowed_step": "Fix and test receipt generation offline. Keep the snapshot row-presence result unresolved. Any future source acquisition requires a distinct reviewed preregistration and explicit request marker; do not reuse or rewrite the original marker."
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "source_population_changed": false,
+    "census_restarted": false,
+    "source_receipts_modified": false,
+    "historical_first_public_observation_proven": false,
+    "event_level_public_boundary_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  }
+}
