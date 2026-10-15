@@ -134,6 +134,27 @@ def test_frozen_request_and_preregistration_agree_on_limits_urls_and_gate_author
     assert prereg["decision_boundary"]["recipient_to_issuer_mapping_frozen"] is False
 
 
+def test_preregistration_mutations_that_expand_scope_or_open_gates_fail_closed():
+    request = parse_key_value_request(ROOT / "research/run_requests/q221_pre_event_identity_bridge_pilot.trigger")
+    prereg_path = ROOT / "research/preregistrations/q221_pre_event_identity_bridge_pilot_2026_10_15.json"
+    frozen = json.loads(prereg_path.read_text(encoding="utf-8"))
+
+    mutated_budget = json.loads(json.dumps(frozen))
+    mutated_budget["limits"]["maximum_total_bytes"] += 1
+    with pytest.raises(Exception, match="PREREGISTRATION_CONTRACT_MISMATCH"):
+        validate_request_and_prereg(request, mutated_budget)
+
+    mutated_host = json.loads(json.dumps(frozen))
+    mutated_host["limits"]["source_host_allowlist"].append("example.invalid")
+    with pytest.raises(Exception, match="PREREGISTRATION_CONTRACT_MISMATCH"):
+        validate_request_and_prereg(request, mutated_host)
+
+    mutated_gate = json.loads(json.dumps(frozen))
+    mutated_gate["decision_boundary"]["historical_first_public_observation_proven"] = True
+    with pytest.raises(Exception, match="PREREGISTRATION_CONTRACT_MISMATCH"):
+        validate_request_and_prereg(request, mutated_gate)
+
+
 def test_analysis_fingerprint_does_not_include_capture_timestamp_or_workflow_run_id():
     manifest, parent_map, selected, observations, bodies = _synthetic_bundle()
     analysis_a = make_analysis(manifest, parent_map, selected, observations, bodies)
