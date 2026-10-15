@@ -14,7 +14,7 @@ The writer fix and canonical fingerprint regression test are on current `master`
 - Exact archive: `FY2025_097_Contracts_Full_20250106.zip`; Wayback capture `20250128184322` (2025-01-28 18:43:22 UTC).
 - Expected archive identity: CDX SHA-1/Base32 `IYPLEC2VXYNMEA2CUHSSPVKPEJRKBJQB`, length `13,605,284` bytes.
 - Fixed 28 FY2025 DoD exception-candidate transaction keys derived at runtime from the frozen 348-key manifest. No additions, removals, ranking, census restart or live USAspending API calls.
-- Same hard bounds: at most two GET requests, both to `web.archive.org`; 5 MB CDX response, 20 MB archive response, 25 MB combined response, 250 MB expanded ZIP, 512 ZIP members, 128 CSVs and 2,000,000 rows. No redirects; archive bytes stay in memory; only a JSON receipt is uploaded.
+- Same hard bounds: at most two GET requests, both to `web.archive.org`; 5 MB CDX response, 20 MB archive response, 25 MB combined response, 250 MB expanded ZIP, 512 ZIP members, 128 CSVs and 2,000,000 rows. No redirects; archive bytes stay in memory; only a JSON receipt is uploaded. The dedicated R2 receipt-sync workflow validates the canonical fingerprint and safety boundary, then persists both an immutable run-specific receipt and a latest pointer.
 
 ## Interpretation and hard gates
 
