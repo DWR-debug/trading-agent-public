@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_wayback_archive_metadata_feasibility_review",
+  "candidate_id": "Q221",
+  "review_date_utc": "2026-10-15",
+  "source_of_truth": "DWR-debug/trading-agent-public",
+  "source_urls": {
+    "official_award_archive_page": "https://www.usaspending.gov/download_center/award_data_archive",
+    "current_listing_api_contract": "https://github.com/fedspendingtransparency/usaspending-api/blob/03b9e2554837998c4c261c65e2947dc79f23855a/usaspending_api/api_contracts/contracts/v2/bulk_download/list_monthly_files.md",
+    "current_listing_implementation": "https://github.com/fedspendingtransparency/usaspending-api/blob/03b9e2554837998c4c261c65e2947dc79f23855a/usaspending_api/download/v2/list_monthly_downloads.py",
+    "wayback_directory_cdx": "https://web.archive.org/cdx/search/cdx?url=files.usaspending.gov/award_data_archive/&output=json&fl=timestamp,original,statuscode,mimetype,digest,length&filter=statuscode:200&from=2018&to=2026"
+  },
+  "review_scope": "Metadata-only review of timestamped Internet Archive captures of the official USAspending award archive. No award archive ZIP payloads were downloaded and no transaction presence/absence query was run.",
+  "frozen_inputs": [
+    {
+      "path": "research/evidence/q221_historical_public_boundary_latest.json",
+      "git_blob_sha": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+      "receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+      "status": "Q221_HISTORICAL_AWARD_SAMPLE_CAPTURED_PUBLIC_BOUNDARY_UNPROVEN",
+      "transaction_count": 348
+    },
+    {
+      "path": "research/evidence/q221_monthly_archive_inventory_run_38161449892.json",
+      "git_blob_sha": "4aaa4d9f7fe4a5ea508786b2e3ef05053528a887",
+      "receipt_fingerprint": "78e8bca54e70724c44d0c32bf092cde60d7c02cda59838de37f766fe4115be7e",
+      "status": "ARCHIVE_LISTING_OK_NO_VERSION_SERIES_FOUND"
+    },
+    {
+      "path": "research/evidence/q221_historical_source_vintages_latest.json",
+      "git_blob_sha": "a28b2371dd22ec63a37bbcf0346caf8e8495a765",
+      "receipt_fingerprint": "3bf4144b256856e268295f0e0a0a0003027751c2fb3a16e96e984b963d7b3561",
+      "status": "Q221_HISTORICAL_POLICY_VINTAGES_RECONSTRUCTED",
+      "award_level_public_boundary_proven": false
+    }
+  ],
+  "directory_cdx_captures": [
+    {
+      "timestamp": "20181207151855",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "5ET5K7ABUSBWJIDIRG3OQB3575ADGSST",
+      "length": 29224
+    },
+    {
+      "timestamp": "20250820111954",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "WQ5AX6IC5TZO4J3SQWEFCUJHXHIVJMGR",
+      "length": 29804
+    },
+    {
+      "timestamp": "20250926184546",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "4CGLWYA62KPBDBIOMHTF5VP3LFKGLJLW",
+      "length": 29685
+    },
+    {
+      "timestamp": "20251024181648",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "LCNRMGKEHPTEYXYRLVJZDSI4EJMFGQRV",
+      "length": 29675
+    },
+    {
+      "timestamp": "20251030235112",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "LCNRMGKEHPTEYXYRLVJZDSI4EJMFGQRV",
+      "length": 29690
+    },
+    {
+      "timestamp": "20251103160804",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "LCNRMGKEHPTEYXYRLVJZDSI4EJMFGQRV",
+      "length": 29721
+    },
+    {
+      "timestamp": "20260203034649",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "NGKTKXZDNSKGZ6B6CPKJJ3PCXYXNWRIX",
+      "length": 29638
+    },
+    {
+      "timestamp": "20260411162212",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "SUS6WTYSFTZLNVCT2AR7V56JXDZNS75N",
+      "length": 29651
+    },
+    {
+      "timestamp": "20260424225351",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "SUS6WTYSFTZLNVCT2AR7V56JXDZNS75N",
+      "length": 29661
+    },
+    {
+      "timestamp": "20260527192629",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "P52LESW3ZKSDFLJKJ7IY2E4PTX7Z6WA4",
+      "length": 29600
+    },
+    {
+      "timestamp": "20260625144050",
+      "statuscode": 200,
+      "mimetype": "application/xml",
+      "digest": "IOB7JFMNESYSJUHCIJTWYEBWI4OJHAJN",
+      "length": 29725
+    }
+  ],
+  "directory_listing_observations": [
+    {
+      "capture_timestamp": "20181207151855",
+      "replay_url": "https://web.archive.org/web/20181207151855id_/https://files.usaspending.gov/award_data_archive/",
+      "bucket_name": "usaspending-monthly-downloads",
+      "max_keys": 1000,
+      "is_truncated": true,
+      "listing_rows_parsed": 1000,
+      "example_keys": [
+        "003_Contracts_Delta_20181114.zip",
+        "2001_001_Contracts_Full_20181114.zip"
+      ],
+      "format_note": "Legacy naming lacks the later FY prefix; listing is partial and truncated."
+    },
+    {
+      "capture_timestamp": "20250820111954",
+      "replay_url": "https://web.archive.org/web/20250820111954id_/https://files.usaspending.gov/award_data_archive/",
+      "bucket_name": "dti-usaspending-monthly-downloads",
+      "max_keys": 1000,
+      "is_truncated": true,
+      "listing_rows_parsed": 1000,
+      "example_keys": [
+        "FY2007_003_Contracts_Full_20250806.zip",
+        "FY(All)_097_Contracts_Delta_20250806.zip"
+      ],
+      "observed_example_delta_bytes": 152861815,
+      "format_note": "FY-prefixed naming observed; root listing is partial, not an exhaustive object inventory."
+    },
+    {
+      "capture_timestamp": "20250926184546",
+      "replay_url": "https://web.archive.org/web/20250926184546id_/https://files.usaspending.gov/award_data_archive/",
+      "bucket_name": "dti-usaspending-monthly-downloads",
+      "max_keys": 1000,
+      "is_truncated": true,
+      "listing_rows_parsed": 1000,
+      "example_keys": [
+        "FY2007_003_Contracts_Full_20250906.zip",
+        "FY(All)_097_Contracts_Delta_20250906.zip"
+      ],
+      "observed_example_delta_bytes": 133884865,
+      "format_note": "Partial listing; object names/size do not constitute transaction rows or first-public timestamps."
+    }
+  ],
+  "archived_dod_fy_full_objects": [
+    {
+      "object_key": "FY2019_097_Contracts_Full_20250106.zip",
+      "capture_timestamp": "20250128180453",
+      "replay_url": "https://web.archive.org/web/20250128180453id_/https://files.usaspending.gov/award_data_archive/FY2019_097_Contracts_Full_20250106.zip",
+      "http_status": 200,
+      "mimetype": "application/zip",
+      "wayback_digest": "RDPZYOAVEIMG4WWFQECFPDTIRCQNENKX",
+      "length_bytes": 1132346583,
+      "payload_downloaded_by_this_review": false
+    },
+    {
+      "object_key": "FY2020_097_Contracts_Full_20250106.zip",
+      "capture_timestamp": "20250128180848",
+      "replay_url": "https://web.archive.org/web/20250128180848id_/https://files.usaspending.gov/award_data_archive/FY2020_097_Contracts_Full_20250106.zip",
+      "http_status": 200,
+      "mimetype": "application/zip",
+      "wayback_digest": "U55NVRSYPSZZVTNOITRMWH4UKZM6FBLV",
+      "length_bytes": 1090017865,
+      "payload_downloaded_by_this_review": false
+    }
+  ],
+  "interpretation": {
+    "status": "WAYBACK_ARCHIVE_METADATA_OBSERVED_EVENT_LEVEL_PIT_UNPROVEN",
+    "directory_capture_count": 11,
+    "first_observed_directory_capture": "20181207151855",
+    "next_observed_directory_capture": "20250820111954",
+    "no_bucket_root_capture_in_cdx_result_between_2019_and_2024": true,
+    "root_capture_gap_is_not_evidence_no_individual_object_capture_exists": true,
+    "root_listing_is_truncated": true,
+    "full_fy_archive_objects_captured_in_wayback": 2,
+    "two_full_objects_each_exceed_bytes": 1000000000,
+    "transaction_rows_searched": false,
+    "presence_absence_tested_for_frozen_348_keys": false,
+    "first_public_observation_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "current_listing_api_returns_current_versions_only": true,
+    "source_channel_admissible_for_event_level_pit": false,
+    "rationale": [
+      "The CDX result for the bucket-root listing shows one capture in 2018 followed by the next observed capture in August 2025; it has no bucket-root capture in 2019–2024. This describes observed root-listing coverage, not the nonexistence of every individual object capture.",
+      "The inspected bucket-root response payloads are explicitly truncated at 1,000 keys. They cannot support a complete archive inventory or a negative claim that a specific archive object did not exist.",
+      "The exact FY2019 and FY2020 DoD full-archive objects have Wayback captures on 2025-01-28 in the queried results, with payload lengths above 1 GB. Neither metadata nor the filename's 2025-01-06 release label establishes first public observation time for any transaction.",
+      "No ZIP payload was downloaded, decompressed, or searched. This review neither establishes nor negates the presence of any frozen transaction in any archive snapshot.",
+      "The existing official API inventory reports only current archive versions and no multi-date version series. The Wayback metadata adds evidence of historical catalog/object captures but does not solve the fixed sample's transaction-level PIT gap."
+    ],
+    "allowed_next_step": "Do not download the >1 GB full archives. Retire this metadata-only route for gate advancement. Reopen only if an independently archived, bounded transaction-level record or appropriately bracketed archive version is located, with a strict payload cap and exact frozen transaction-key matching."
+  },
+  "gate_effect": {
+    "gate_positive": false,
+    "q221_historical_first_public_observation_proven": false,
+    "q221_historical_public_boundary_proven": false,
+    "q221_recipient_to_issuer_mapping_frozen": false,
+    "q221_performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false,
+    "candidate_status_change": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "paid_api_budget_usd": 0,
+    "source_transaction_requests_made": 0,
+    "archive_payload_requests_made": 0,
+    "archive_payload_bytes_downloaded": 0,
+    "historical_census_restarted": false
+  },
+  "receipt_fingerprint": "52cd1fe2099d5b361afa6ab808a49335ffc71a43349e090a6807df3cbe2f204e"
+}
