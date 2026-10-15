@@ -252,6 +252,9 @@ def capture_headers(inputs:dict[str,Any])->dict[str,Any]:
   # only selected frozen rows are read from the verified ZIP; the body stays in memory.
   source_rows=lineage.read_source_rows(body,set(pin["accessions"]))
   if set(source_rows)!=set(pin["accessions"]): raise ReviewError("SOURCE_ROW_SET_MISMATCH:"+name)
+  ar["requested_accessions"]=sorted(pin["accessions"])
+  ar["source_rows_found"]=sorted(source_rows)
+  ar["source_rows_missing"]=[]
   rows.update(source_rows)
  budget.is_header_phase=True
  samples=[]
@@ -289,6 +292,48 @@ def lineage_case(sample:dict[str,Any],attempt:dict[str,Any],source:str)->dict[st
  dates={p["observed_identity"].get("filing_date") for p in usable};accepted={p["observed_identity"].get("acceptance_datetime") for p in usable}
  changes={p["observed_identity"].get("date_of_filing_date_change") for p in usable if p["observed_identity"].get("date_of_filing_date_change")}
  return {"accession":sample["accession"],"source_evidence":source,"original_recovery_failure":attempt["original_failure"],"bulk_filing_date":(sample.get("source_row") or {}).get("filing_date_iso") if sample.get("source_row") else sample.get("bulk_filing_date"),"edgar_header_filing_date":next(iter(dates)) if len(dates)==1 else (sample.get("edgar_header_filing_dates") or [None])[0],"acceptance_datetime":next(iter(accepted)) if len(accepted)==1 else (sample.get("acceptance_datetimes") or [None])[0],"date_of_filing_date_change":next(iter(changes)) if len(changes)==1 else (sample.get("date_change_values") or [None])[0],"identity_fields_consistent":sample.get("identity_fields_consistent") is True if "identity_fields_consistent" in sample else bool(usable) and all((p.get("comparison_to_frozen_archive_row") or {}).get(k) is True for p in usable for k in ("accession_matches","filer_cik_matches","form_matches")),"header_filing_date_routes_agree":sample.get("header_filing_date_routes_agree") is True if "header_filing_date_routes_agree" in sample else len(dates)==1 and None not in dates,"acceptance_routes_agree":sample.get("acceptance_routes_agree") is True if "acceptance_routes_agree" in sample else len(accepted)==1 and None not in accepted,"successful_header_route_count":sample.get("edgar_header_filing_date_route_count",3) if "edgar_header_filing_date_route_count" in sample else len(usable),"date_change_observed":sample.get("date_change_observed") is True if "date_change_observed" in sample else bool(changes),"date_change_routes_agree_where_observed":sample.get("date_change_routes_agree_where_observed") is True if "date_change_routes_agree_where_observed" in sample else len(changes)<=1,"source_archive_pin_status":"FROZEN_ARCHIVE_BYTE_HASH_PINNED","source_archive_name":sample.get("archive_name")}
+
+def validate_capture_payload(inputs:dict[str,Any],capture:dict[str,Any])->None:
+ if not isinstance(capture,dict) or capture.get("record_type")!="q104_i19_residual_policy_applicability_r7_capture": raise ReviewError("CAPTURE_RECEIPT_TYPE_INVALID")
+ if capture.get("receipt_fingerprint")!=fp(capture) or capture.get("status")!="Q104_I19_RESIDUAL_R7_CAPTURE_COMPLETE": raise ReviewError("CAPTURE_RECEIPT_FINGERPRINT_OR_STATUS_INVALID")
+ if capture.get("frozen_request_sequence")!=inputs["request"].get("REQUEST_SEQUENCE") or capture.get("frozen_input_receipt_fingerprints")!=frozen_fingerprints(inputs) or capture.get("helper_code_blobs")!=inputs["helper_blobs"]: raise ReviewError("CAPTURE_UPSTREAM_PINS_INVALID")
+ for key in ("source_bodies_persisted","complete_submission_text_bodies_persisted"):
+  if capture.get(key) is not False: raise ReviewError("CAPTURE_BODY_PERSISTENCE_VIOLATION:"+key)
+ for key in ("primary_document_requests","daily_feed_requests"):
+  if capture.get(key)!=0: raise ReviewError("CAPTURE_PROHIBITED_REQUESTS:"+key)
+ for key in ("archive_census_restarted","source_receipts_modified","frozen_expected_dates_modified","field_precedence_applied","production_join_changed","acceptance_time_gate_cleared","historical_archive_gate_cleared","performance_authorization","holdout_selection","ranking","tuning","promotion","live_execution"):
+  if capture.get(key) is not False: raise ReviewError("CAPTURE_SCOPE_VIOLATION:"+key)
+ if capture.get("safety")!=SAFETY: raise ReviewError("CAPTURE_SAFETY_MISMATCH")
+ archive_rows=capture.get("source_archives")
+ if not isinstance(archive_rows,dict) or set(archive_rows)!=set(ARCHIVES): raise ReviewError("CAPTURE_ARCHIVE_SET_INVALID")
+ for name,pin in ARCHIVES.items():
+  row=archive_rows[name]
+  if any((row.get("url")!=pin["url"],row.get("expected_sha256")!=pin["sha"],row.get("expected_bytes")!=pin["bytes"],row.get("actual_sha256")!=pin["sha"],row.get("actual_bytes")!=pin["bytes"],row.get("verified") is not True,(row.get("http") or {}).get("status")!="FETCHED",(row.get("http") or {}).get("http_status")!=200)):
+   raise ReviewError("CAPTURE_ARCHIVE_HASH_OR_LENGTH_INVALID:"+name)
+  if set(row.get("requested_accessions") or [])!=set(pin["accessions"]) or set(row.get("source_rows_found") or [])!=set(pin["accessions"]) or row.get("source_rows_missing")!=[]: raise ReviewError("CAPTURE_ARCHIVE_ACCESSION_SET_INVALID:"+name)
+ samples=capture.get("samples");targets={a for pin in ARCHIVES.values() for a in pin["accessions"]}
+ if not isinstance(samples,list) or len(samples)!=19 or {x.get("accession") for x in samples}!=targets: raise ReviewError("CAPTURE_SAMPLE_SET_INVALID")
+ usable=0
+ for s in samples:
+  acc=s.get("accession");name=s.get("source_archive_name")
+  if name not in ARCHIVES or acc not in ARCHIVES[name]["accessions"] or s.get("status")!="OBSERVED" or s.get("source_archive_sha256_match") is not True: raise ReviewError("CAPTURE_SAMPLE_NOT_VALIDATED:"+str(acc))
+  source=s.get("source_row") or {};probes=s.get("probes")
+  if source.get("accession")!=acc or not isinstance(probes,list) or len(probes)!=3 or {p.get("route") for p in probes}!={"index_headers","raw_sgml_header","complete_submission_header_prefix"}: raise ReviewError("CAPTURE_SAMPLE_SOURCE_OR_ROUTE_INVALID:"+str(acc))
+  dates=set();accepts=set();changes=set()
+  for p in probes:
+   if p.get("http_status")!=200 or p.get("status") not in {"FETCHED","FETCHED_PREFIX"} or not p.get("response_sha256") or int(p.get("response_bytes") or 0)>MAX_HEADER_EACH: raise ReviewError("CAPTURE_ROUTE_HTTP_OR_SIZE_INVALID:"+str(acc))
+   if "_body" in p or "body" in p or "response_body" in p: raise ReviewError("CAPTURE_ROUTE_BODY_PRESENT:"+str(acc))
+   obs=p.get("observed_identity") or {};cmp=p.get("comparison_to_frozen_archive_row") or {}
+   if obs.get("accession")!=acc or obs.get("filer_cik")!=source.get("filer_cik") or obs.get("form")!=source.get("form") or not obs.get("filing_date") or not obs.get("acceptance_datetime") or cmp.get("accession_matches") is not True or cmp.get("filer_cik_matches") is not True or cmp.get("form_matches") is not True or cmp.get("filing_date_matches") is not False: raise ReviewError("CAPTURE_ROUTE_IDENTITY_OR_DATE_INVALID:"+str(acc))
+   dates.add(obs.get("filing_date"));accepts.add(obs.get("acceptance_datetime"))
+   if obs.get("date_of_filing_date_change"): changes.add(obs["date_of_filing_date_change"])
+   usable+=1
+  sm=s.get("summary") or {}
+  if len(dates)!=1 or None in dates or len(accepts)!=1 or None in accepts or next(iter(dates))==source.get("filing_date_iso") or sm.get("all_three_routes_usable") is not True or sm.get("identity_fields_match_frozen_source_row") is not True or sm.get("header_filing_dates_agree") is not True or sm.get("acceptance_datetimes_agree") is not True or sm.get("bulk_filing_date_differs_from_header") is not True or sm.get("date_change_values_agree_where_observed") is not True or len(changes)>1: raise ReviewError("CAPTURE_SAMPLE_SUMMARY_INVALID:"+str(acc))
+ if capture.get("sample_count")!=19 or capture.get("sample_count_complete")!=19 or capture.get("source_row_count")!=19 or capture.get("header_route_request_count")!=57 or capture.get("header_route_usable_count")!=57 or usable!=57 or capture.get("bulk_date_differs_count")!=19 or capture.get("identity_validated_count")!=19 or capture.get("acceptance_routes_agree_count")!=19: raise ReviewError("CAPTURE_AGGREGATE_COUNTS_INVALID")
+ if capture.get("source_archive_download_expected_bytes")!=TOTAL_ARCHIVE_BYTES or capture.get("source_archive_download_actual_bytes")!=TOTAL_ARCHIVE_BYTES: raise ReviewError("CAPTURE_ARCHIVE_TOTAL_BYTES_INVALID")
+ budget=capture.get("download_budget") or {}
+ if not (budget.get("bytes_consumed",MAX_TOTAL_BYTES+1)<=MAX_TOTAL_BYTES and budget.get("bytes_consumed",0)>=TOTAL_ARCHIVE_BYTES and budget.get("header_bytes_consumed",MAX_HEADER_TOTAL+1)<=MAX_HEADER_TOTAL and budget.get("header_bytes_consumed")==budget.get("bytes_consumed")-TOTAL_ARCHIVE_BYTES and budget.get("max_total_bytes")==MAX_TOTAL_BYTES and budget.get("max_header_response_bytes")==MAX_HEADER_TOTAL and budget.get("max_header_response_bytes_each")==MAX_HEADER_EACH): raise ReviewError("CAPTURE_DOWNLOAD_BUDGET_INVALID")
 
 def build_analysis(inputs:dict[str,Any],capture:dict[str,Any])->dict[str,Any]:
  validate_capture_payload(inputs,capture)
