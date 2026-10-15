@@ -254,6 +254,15 @@ def known_index_header_404_exception(sample:dict[str,Any])->bool:
         if set(by_route) != {"index_headers", "raw_sgml_header", "complete_submission_header_prefix"}:
             return False
         index = by_route["index_headers"]
+        normalized = accession.replace("-", "")
+        base = f"https://www.sec.gov/Archives/edgar/data/{int(source['filer_cik'])}/{normalized}"
+        expected_urls = {
+            "index_headers": f"{base}/{accession}-index-headers.html",
+            "raw_sgml_header": f"{base}/{accession}.hdr.sgml",
+            "complete_submission_header_prefix": f"{base}/{accession}.txt",
+        }
+        if any(by_route[route].get("requested_url") != url for route, url in expected_urls.items()):
+            return False
         if (
             index.get("http_status") != 404
             or index.get("status") != "HTTP_ERROR"
@@ -409,8 +418,12 @@ def validate_capture_payload(inputs:dict[str,Any],capture:dict[str,Any])->None:
    raise ReviewError("CAPTURE_SAMPLE_NOT_VALIDATED:"+str(acc))
   dates=set();accepts=set();changes=set();usable_for_sample=0
   identity_ok=True
+  normalized=acc.replace("-","")
+  base=f"https://www.sec.gov/Archives/edgar/data/{int(source['filer_cik'])}/{normalized}"
+  expected_urls={"index_headers":f"{base}/{acc}-index-headers.html","raw_sgml_header":f"{base}/{acc}.hdr.sgml","complete_submission_header_prefix":f"{base}/{acc}.txt"}
   for p in probes:
    if any(k in p for k in ("_body","body","response_body")): raise ReviewError("CAPTURE_ROUTE_BODY_PRESENT:"+str(acc))
+   if p.get("requested_url")!=expected_urls.get(p.get("route")): raise ReviewError("CAPTURE_ROUTE_URL_INVALID:"+str(acc))
    if route_exception and p.get("route")=="index_headers":
     if not (p.get("http_status")==404 and p.get("status")=="HTTP_ERROR" and p.get("error")=="HTTP_404" and p.get("response_error")=="HTTP_404" and int(p.get("response_bytes") or 0)==0 and not isinstance(p.get("observed_identity"),dict)):
      raise ReviewError("CAPTURE_ROUTE_404_EXCEPTION_INVALID:"+str(acc))
