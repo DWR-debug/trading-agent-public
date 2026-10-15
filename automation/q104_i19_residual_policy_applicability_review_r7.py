@@ -370,26 +370,45 @@ def save_capture(out:Path,inputs:dict[str,Any],raw:dict[str,bytes],capture:dict[
 
 def replay_inputs(root:Path,request:dict[str,str]):
  raw={p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob("*") if p.is_file()}
+ required={"recovery.json","x64.json","arm64.json","r4.json","r5.json","r6.json","source_page.html"}
+ required|={f"{kind}/{shard}.json" for kind,pins in (("original",ORIGINAL),("repaired",REPAIRED)) for shard in pins}
+ if not required.issubset(raw): raise ReviewError("BUNDLE_REQUIRED_INPUT_MISSING:"+",".join(sorted(required-set(raw))))
  rec=json.loads(raw["recovery.json"]);x64=json.loads(raw["x64.json"]);arm=json.loads(raw["arm64.json"]);extra={k:json.loads(raw[k+".json"]) for k in ("r4","r5","r6")}
  if sha(raw["recovery.json"])!=RECOVERY_SHA256: raise ReviewError("BUNDLE_RECOVERY_RAW_SHA_MISMATCH")
  if x64.get("receipt_fingerprint")!=X64_FP or fp(x64)!=X64_FP or arm.get("receipt_fingerprint")!=ARM_FP or fp(arm)!=ARM_FP or x64.get("samples")!=arm.get("samples") or x64.get("analysis_fingerprint")!=ANALYSIS_FP or arm.get("analysis_fingerprint")!=ANALYSIS_FP: raise ReviewError("BUNDLE_CROSS_ARCH_RECEIPTS_INVALID")
- if rec.get("status")!="RECOVERY_INCOMPLETE" or len(rec.get("unresolved_accession_set",[]))!=53 or set(rec.get("unresolved_accession_set",[]))!=set(rec.get("failed_accession_set",[])) or rec.get("original_shard_receipt_fingerprints")!=ORIGINAL or rec.get("repaired_shard_receipt_fingerprints")!=REPAIRED or rec.get("input_shard_receipt_fingerprints")!=REPAIRED: raise ReviewError("BUNDLE_RECOVERY_STATE_INVALID")
+ if rec.get("record_type")!="q104_i19_targeted_acceptance_header_recovery" or rec.get("status")!="RECOVERY_INCOMPLETE" or str(rec.get("source_run_id"))!=str(SOURCE_RUN_ID) or rec.get("source_page_sha256")!=SOURCE_PAGE_SHA256: raise ReviewError("BUNDLE_RECOVERY_IDENTITY_INVALID")
+ if rec.get("original_shard_receipt_fingerprints")!=ORIGINAL or rec.get("repaired_shard_receipt_fingerprints")!=REPAIRED or rec.get("input_shard_receipt_fingerprints")!=REPAIRED or rec.get("repaired_accession_set")!=[] or rec.get("summary",{}).get("repaired")!=0: raise ReviewError("BUNDLE_RECOVERY_STATE_INVALID")
+ unresolved_list=rec.get("unresolved_accession_set",[]);failed_list=rec.get("failed_accession_set",[]);attempt_list=rec.get("attempts",[])
+ unresolved=set(unresolved_list);attempts={z.get("accession"):z for z in attempt_list if isinstance(z,dict)}
+ from collections import Counter
+ if len(unresolved_list)!=53 or len(unresolved)!=53 or set(failed_list)!=unresolved or len(attempts)!=53 or set(attempts)!=unresolved or dict(Counter(str(z.get("original_failure") or "") for z in attempt_list))!=FAILURE_COUNTS: raise ReviewError("BUNDLE_RECOVERY_COUNTS_INVALID")
  originals={};repaired={}
  for kind,dest,pins in (("original",originals,ORIGINAL),("repaired",repaired,REPAIRED)):
   for shard,wanted in pins.items():
-   name=f"{kind}/{shard}.json";body=raw.get(name)
-   if not body: raise ReviewError("BUNDLE_SHARD_FILE_MISSING:"+name)
-   value=json.loads(body)
+   name=f"{kind}/{shard}.json";value=json.loads(raw[name])
    if value.get("receipt_fingerprint")!=wanted or fp(value)!=wanted or value.get("shard")!=shard or value.get("source_page_sha256")!=SOURCE_PAGE_SHA256: raise ReviewError("BUNDLE_SHARD_PIN_INVALID:"+name)
    dest[shard]=value
- page=raw.get("source_page.html",b"")
- if sha(page)!=SOURCE_PAGE_SHA256: raise ReviewError("BUNDLE_SOURCE_PAGE_PIN_INVALID")
- attempts={a["accession"]:a for a in rec["attempts"]};unresolved=set(rec["unresolved_accession_set"])
+ for kind,values in (("original",originals),("repaired",repaired)):
+  for name,pin in ARCHIVES.items():
+   row=archive_row(values[pin["shard"]],pin["url"],pin["shard"])
+   if row.get("archive_sha256")!=pin["sha"] or row.get("archive_bytes")!=pin["bytes"]: raise ReviewError("BUNDLE_ARCHIVE_ROW_PIN_INVALID:"+kind+":"+name)
+   for acc in pin["accessions"]:
+    z=attempts.get(acc)
+    if not z or z.get("source_archive")!=pin["url"] or z.get("original_failure") not in DATE_FAILURES: raise ReviewError("BUNDLE_TARGET_ATTEMPT_INVALID:"+acc)
+    if kind=="repaired" and (row.get("acceptance_failures") or {}).get(acc)!=z.get("original_failure"): raise ReviewError("BUNDLE_REPAIRED_FAILURE_INVALID:"+acc)
+ if sha(raw["source_page.html"])!=SOURCE_PAGE_SHA256: raise ReviewError("BUNDLE_SOURCE_PAGE_PIN_INVALID")
  for k,value in extra.items():
-  pin=ADDITIONAL[k]
-  if value.get("receipt_fingerprint")!=pin["fp"] or fp(value)!=pin["fp"]: raise ReviewError("BUNDLE_EXTRA_PIN_INVALID:"+k)
- inputs={"request":request,"recovery":rec,"original":originals,"repaired":repaired,"x64":x64,"arm64":arm,"extras":extra,"attempts":attempts,"unresolved":unresolved,"prior":{x["accession"] for x in x64["samples"]}|{x["samples"][0]["accession"] for x in extra.values()},"target":{a for v in ARCHIVES.values() for a in v["accessions"]},"helper_blobs":validate_helpers()}
- if inputs["prior"]&inputs["target"] or len(inputs["prior"])!=17: raise ReviewError("BUNDLE_PARTITION_INVALID")
+  pin=ADDITIONAL[k];samples=value.get("samples",[])
+  if value.get("record_type")!=pin["type"] or value.get("status")!="LINEAGE_DIAGNOSTIC_COMPLETE" or value.get("receipt_fingerprint")!=pin["fp"] or fp(value)!=pin["fp"] or str(value.get("source_run_id"))!=str(SOURCE_RUN_ID) or value.get("source_page_sha256")!=SOURCE_PAGE_SHA256: raise ReviewError("BUNDLE_EXTRA_RECEIPT_INVALID:"+k)
+  if value.get("source_shard_receipt_fingerprints",{}).get(pin["shard"])!=ORIGINAL[pin["shard"]] or len(samples)!=1 or samples[0].get("accession") not in unresolved: raise ReviewError("BUNDLE_EXTRA_SAMPLE_OR_SHARD_INVALID:"+k)
+  sample=samples[0];acc=sample["accession"];usable=[p for p in sample.get("probes",[]) if isinstance(p.get("observed_identity"),dict)]
+  dates={p["observed_identity"].get("filing_date") for p in usable};accepts={p["observed_identity"].get("acceptance_datetime") for p in usable}
+  if attempts[acc].get("original_failure") not in DATE_FAILURES or sample.get("frozen_failure")!="FILING_DATE_MISMATCH" or sample.get("archive_sha256_match") is not True or len(usable) not in (2,3) or len(dates)!=1 or None in dates or len(accepts)!=1 or None in accepts or next(iter(dates))==sample.get("source_row",{}).get("filing_date_iso"): raise ReviewError("BUNDLE_EXTRA_OBSERVATION_INVALID:"+k)
+ targets={a for pin in ARCHIVES.values() for a in pin["accessions"]}
+ prior={z["accession"] for z in x64.get("samples",[])}|{z["samples"][0]["accession"] for z in extra.values()}
+ date_set={a for a,z in attempts.items() if z.get("original_failure") in DATE_FAILURES}
+ if len(prior)!=17 or prior&targets or date_set-prior!=targets or len(date_set)!=36: raise ReviewError("BUNDLE_17_PLUS_19_PARTITION_INVALID")
+ inputs={"request":request,"recovery":rec,"original":originals,"repaired":repaired,"x64":x64,"arm64":arm,"extras":extra,"attempts":attempts,"unresolved":unresolved,"prior":prior,"target":targets,"helper_blobs":validate_helpers()}
  return inputs,raw
 
 def publish(xdir:Path,adir:Path,run_id:int,attempt:int,out:Path):
