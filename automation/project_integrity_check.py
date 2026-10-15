@@ -56,6 +56,7 @@ ACTIVE_WORKFLOWS = {
     "q221-fpds-public-atom-identity-bridge.yml",
     "q221-pre-event-parent-identity-feasibility.yml",
     "q221-transaction-parent-uei-probe.yml",
+    "q221-dod-097-wayback-archive-presence.yml",
     "q104-i19-cik-role-lineage-diagnostic.yml",
     "q104-i19-missing-shard-recovery.yml",
     "q104-i19-historical-pit-compilation.yml",
