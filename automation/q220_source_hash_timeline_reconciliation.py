@@ -83,7 +83,7 @@ def build_analysis(audit: dict[str, Any], current: dict[str, Any]) -> dict[str, 
         raise TimelineError("HISTORICAL_SAME_CODE_SHIFT_STATUS_MISMATCH")
     if audit.get("capture_run", {}).get("capture_receipt_fingerprint") != AUDIT_CAPTURE_RECEIPT_FP:
         raise TimelineError("HISTORICAL_AUDIT_CAPTURE_RECEIPT_FINGERPRINT_MISMATCH")
-    if audit.get("upstream", {}).get("source_population_receipt_fingerprint") != POPULATION_FP:
+    if audit.get("upstream", {}).get("population_run", {}).get("receipt_fingerprint") != POPULATION_FP:
         raise TimelineError("HISTORICAL_AUDIT_POPULATION_FINGERPRINT_MISMATCH")
     if current.get("receipt_fingerprint") != LINEAGE_RECEIPT_FP or sha256_json(
         {k: v for k, v in current.items() if k != "receipt_fingerprint"}
@@ -231,7 +231,7 @@ def build_analysis(audit: dict[str, Any], current: dict[str, Any]) -> dict[str, 
             "changed_hash_rows": after["changed_primary_hash_count"],
             "changed_byte_length_rows": after["changed_primary_byte_length_count"],
             "byte_delta_distribution": after["primary_byte_delta_distribution"],
-            "header_hash_rows_changed": history["same_code_receipt_diff_field_counts"]["fields_changed"][0]["removed_values"],
+            "header_hash_rows_changed": next(row["removed_values"] for row in history["same_code_receipt_diff_field_counts"]["fields_changed"] if row["field"] == "header_sha256"),
             "directory_index_hashes_unchanged": history["same_code_receipt_diff_field_counts"]["observed_unchanged_fields"]["directory_index_sha256"],
             "root_cause_proven": False,
         },
