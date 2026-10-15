@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_fpds_public_atom_identity_bridge_preregistration",
+  "candidate_id": "Q221",
+  "preregistered_at_utc": "2026-10-15T09:18:00Z",
+  "study_mode": "BOUNDED_PUBLIC_SOURCE_FEASIBILITY",
+  "selection_disclosure": "Purposeful four-record source-feasibility sample inherited unchanged from the frozen Q221 pre-event-parent audit; not a random/prevalence sample and no extrapolation is permitted.",
+  "frozen_inputs": {
+    "boundary_path": "research/evidence/q221_historical_public_boundary_latest.json",
+    "boundary_git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "boundary_receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+    "pre_event_feasibility_path": "research/evidence/q221_pre_event_parent_identity_feasibility_latest.json",
+    "pre_event_feasibility_receipt_fingerprint": "7b969cc7dd0a5c5e94050c9e99b797e59b77d20712e51661b1b281fb170dd953"
+  },
+  "official_source": {
+    "name": "FPDS Public Atom Feed, legacy public route",
+    "endpoint": "https://www.fpds.gov/dbsight/FEEDS/ATOM",
+    "query_contract": "FEEDNAME=PUBLIC with a fixed PIID query for each frozen contract ID; exact modification number, action date, UEI/DUNS and awardee name are selected from the returned entries.",
+    "documentation": [
+      "https://www.fpds.gov/wiki/index.php?oldid=3270&title=Public_Atom_Feed_Usage",
+      "https://www.fpds.gov/wiki/index.php/V1.5_SP_9.0",
+      "https://sam.gov/contracting",
+      "https://open.gsa.gov/api/contract-awards/"
+    ],
+    "access_note": "Current SAM.gov Contract Awards API documentation requires an API key. This workpack does not assume an API key exists and does not call the SAM.gov API. The FPDS Atom endpoint is tested only as a bounded legacy public-source availability check; redirects are not followed."
+  },
+  "records": [
+    {
+      "record_id": "CACI_2019_PRE_EVENT",
+      "transaction_key": "FA875018C0180|P00003|2019-01-03|28eee911-76af-7147-f760-4ec5f90bec2d-C|N3PBJAVNKF61",
+      "piid": "FA875018C0180",
+      "modification_number": "P00003",
+      "action_date": "2019-01-03",
+      "recipient_uei": "N3PBJAVNKF61",
+      "recipient_id": "28eee911-76af-7147-f760-4ec5f90bec2d-C",
+      "accepted_legal_names": [
+        "CACI, INC. - FEDERAL"
+      ],
+      "pre_event_child_legal_name": "CACI, INC. - FEDERAL",
+      "pre_event_accession": "0001564590-18-022021",
+      "identifier_regime_at_action": "DUNS_AUTHORITATIVE_UEI_NOT_YET_AUTHORITATIVE"
+    },
+    {
+      "record_id": "BOOZ_ALLEN_2020_PRE_EVENT",
+      "transaction_key": "FA807520F0004|0|2020-01-02|ffca72e5-fba2-798a-6969-2a6c45e9f985-C|JCBMLGPE6Z71",
+      "piid": "FA807520F0004",
+      "modification_number": "0",
+      "action_date": "2020-01-02",
+      "recipient_uei": "JCBMLGPE6Z71",
+      "recipient_id": "ffca72e5-fba2-798a-6969-2a6c45e9f985-C",
+      "accepted_legal_names": [
+        "BOOZ ALLEN HAMILTON INC",
+        "Booz Allen Hamilton Inc."
+      ],
+      "pre_event_child_legal_name": "Booz Allen Hamilton Inc.",
+      "pre_event_accession": "0001443646-18-000100",
+      "identifier_regime_at_action": "DUNS_AUTHORITATIVE_UEI_NOT_YET_AUTHORITATIVE"
+    },
+    {
+      "record_id": "OSI_AS_E_2023_PRE_EVENT",
+      "transaction_key": "70RWMD23C00000001|0|2023-01-03|f857dc49-8bdd-480e-25fb-f2be8c9d65c2-C|CNB9EF8VHML3",
+      "piid": "70RWMD23C00000001",
+      "modification_number": "0",
+      "action_date": "2023-01-03",
+      "recipient_uei": "CNB9EF8VHML3",
+      "recipient_id": "f857dc49-8bdd-480e-25fb-f2be8c9d65c2-C",
+      "accepted_legal_names": [
+        "AMERICAN SCIENCE & ENGINEERING INC",
+        "American Science and Engineering, Inc."
+      ],
+      "pre_event_child_legal_name": "American Science and Engineering, Inc.",
+      "pre_event_accession": "0001104659-22-092999",
+      "identifier_regime_at_action": "UEI_AUTHORITATIVE"
+    },
+    {
+      "record_id": "NORTHROP_2024_PRE_EVENT",
+      "transaction_key": "FA865124FB001|0|2024-01-02|c19bef58-16e3-f32b-b699-25b3078161f8-C|FVSEZFPCQ316",
+      "piid": "FA865124FB001",
+      "modification_number": "0",
+      "action_date": "2024-01-02",
+      "recipient_uei": "FVSEZFPCQ316",
+      "recipient_id": "c19bef58-16e3-f32b-b699-25b3078161f8-C",
+      "accepted_legal_names": [
+        "NORTHROP GRUMMAN SYSTEMS CORPORATION",
+        "Northrop Grumman Systems Corporation"
+      ],
+      "pre_event_child_legal_name": "Northrop Grumman Systems Corporation",
+      "pre_event_accession": "0001133421-23-000006",
+      "identifier_regime_at_action": "UEI_AUTHORITATIVE"
+    }
+  ],
+  "execution_limits": {
+    "exact_record_queries": 4,
+    "requests_per_fixed_piid": 1,
+    "automatic_retries": 0,
+    "follow_redirects": false,
+    "max_response_bytes_each": 1000000,
+    "max_total_response_bytes": 4000000,
+    "max_atom_entries_each": 250,
+    "request_timeout_seconds": 25,
+    "minimum_gap_between_requests_seconds": 1,
+    "allowed_initial_host": "www.fpds.gov",
+    "no_sam_api_requests": true,
+    "no_new_usaspending_requests": true,
+    "no_sec_requests": true,
+    "no_archive_downloads": true,
+    "no_source_row_or_hash_changes": true,
+    "paid_data_budget_usd": 0
+  },
+  "hypotheses": {
+    "H1": "The public FPDS Atom route still serves bounded exact award records and exposes a deterministic PIID/modification/action-date/awardee identity tuple, with UEI and/or DUNS fields that can be compared to the frozen Q221 record.",
+    "H0": "The route is retired/unavailable, redirects to an unpinned/authenticated route, or fails to expose a unique exact record/identifier tuple under the fixed limits."
+  },
+  "outcome_rules": {
+    "all_four_exact_identity_tuples_and_uei_matches": "A source-identity bridge lead for these four fixed records only; not proof of historical parent lineage, the UEI's authoritative status before 2022-04-04, first-public observation time, or the 348-row Q221 gate.",
+    "partial_or_ambiguous_records": "Preserve per-row states; no inference for unobserved rows; all Q221 gates remain closed.",
+    "redirect_or_authentication_requirement": "Classify the legacy public route as inaccessible under this contract; do not follow the redirect or call SAM.gov.",
+    "no_matches_or_feed_retired": "Stop this route. Do not retry, widen PIID scope, download archives, or change the frozen sample."
+  },
+  "required_assertions": {
+    "frozen_boundary_unchanged": true,
+    "pre_event_receipt_unchanged": true,
+    "query_exactly_four_pinned_piids": true,
+    "source_responses_not_persisted": true,
+    "exact_modification_and_action_date_required": true,
+    "identifier_fields_are_observed_not_inferred": true,
+    "historical_parent_lineage_proven": false,
+    "historical_first_public_observation_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "q221_gate_positive": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "next_gate": "If the public route yields an exact record, adjudicate row-level UEI/DUNS/name consistency and the post-hoc identifier regime separately. If the route is retired or requires authenticated API access, leave the gate blocked until an authorized public-API key/source is made available.",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "paid_api_budget_usd": 0
+  }
+}
