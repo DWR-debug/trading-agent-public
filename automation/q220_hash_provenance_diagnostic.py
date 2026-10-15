@@ -1,6 +1,6 @@
 """Offline, receipt-pinned Q220 primary-body hash lineage diagnostic.
 
-It reads committed summaries and two small immutable historical receipts. It does
+It reads committed summaries and three small immutable historical receipts. It does
 not fetch SEC data, download primary documents/Feeds, alter expected hashes, or
 recompute any candidate/PIT/performance gate.
 """
