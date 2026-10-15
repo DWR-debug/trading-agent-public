@@ -811,7 +811,7 @@ def validate_request_and_prereg(request: dict[str, str], prereg: dict[str, Any])
         or prereg.get("limits", {}).get("maximum_bytes_per_source") != MAX_BYTES_PER_SOURCE
         or prereg.get("limits", {}).get("maximum_total_bytes") != MAX_TOTAL_BYTES
         or prereg.get("prohibitions", {}).get("issuer_mapping") is not True
-        or prereg.get("prohibitions", {}).get("publication_clock_inference") is not True
+        or prereg.get("prohibitions", {}).get("public_clock_inference") is not True
         or prereg.get("safety", {}).get("paper_only") is not True
         or prereg.get("safety", {}).get("live_trading_enabled") is not False
         or prereg.get("safety", {}).get("orders_enabled") is not False
