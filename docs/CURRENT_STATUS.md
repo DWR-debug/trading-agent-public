@@ -1,24 +1,14 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `a2157bb4353cc2a4ccc5c01027b5c4595b65890e`
+**Current operational snapshot:** `f437013746ef2b932c359c2bb257ce6261831edb`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-15T08:42:23.393816+00:00`
+**Generated (UTC):** `2026-10-15T08:46:07.221377+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
 > This file is the canonical current operational status. `PROJECT_STATUS.md` is historical reconstruction and must not override it for current operational facts. Scientific evidence remains governed by the trial ledger, immutable evidence/checkpoints and workflow artifacts.
-
-## Verified follow-up — 2026-10-15T08:42:23Z
-
-These results were verified from immutable public Actions runs and the current repository evidence after the prior status snapshot:
-
-- **Q220 offline hash lineage:** [run #38698289935](https://github.com/DWR-debug/trading-agent-public/actions/runs/38698289935) completed successfully across Ubuntu x64, Ubuntu ARM64, and final publication. Both architectures matched analysis fingerprint `380bc17bdec6c390c4f282ff25cbabbd1c6dcb2a2847a9af6d60711df3dac35e`. The committed result is `research/evidence/q220_source_hash_lineage_latest.json`, receipt `acdec97252ba86d844f97fea2b11b755bef91769cd7badd53a5fedcc811bd059`. Four distinct whole-document hashes remain observed for the frozen SPGI accession; its frozen expected hash is still unreproduced, all 55 source-hash mismatches remain, and the Q220 PIT/independent-reproduction gates remain closed. This was offline receipt synthesis; no Feed archive or primary document was downloaded by this diagnostic.
-- **Q221 current-parent lead map:** existing [run #38305074104](https://github.com/DWR-debug/trading-agent-public/actions/runs/38305074104), artifact [11772786096](https://github.com/DWR-debug/trading-agent-public/actions/runs/38305074104/artifacts/11772786096), captured 247/247 recipient profiles from 247/247 requests (342,214 response bytes). Classifier counts are 71 `CURRENT_PARENT_ENTITY_LEAD` and 176 `CURRENT_PROFILE_SELF_OR_NO_SEPARATE_PARENT`. Summary `research/evidence/q221_current_parent_identity_map_summary_2026_10_12.json` records source artifact receipt fingerprint `ae3a3263d5e7d2545dbdaed7ba7ff1cfe3d4cd00e0403352096dcce4d4797602` and separate summary fingerprint `444179ed66cb0560ca792d2b831144c89165f46f19095a15456e21db7b18623a`. This is current-state metadata only: historical parent lineage, first-public observation, recipient-to-issuer mapping, and performance authority all remain unproven/false.
-- **Capacity router:** [run #38704828651](https://github.com/DWR-debug/trading-agent-public/actions/runs/38704828651) returned `NEEDS_ATTENTION_ZERO_EXECUTABLE_PLAN`, zero active research jobs and zero executable assignments. It is a fail-closed orchestration alert, not a failed scientific run. No dispatch should be forced merely to occupy a slot; Q104:I19/Q220/Q221 prerequisites still govern the eligible plan.
-
-Safety remains `PAPER_ONLY=true`, `LIVE_TRADING_ENABLED=false`, `ORDERS_ENABLED=false`, `AUTOMATIC_PROMOTION=false`; paid API budget remains zero.
 
 ## Current state
 
