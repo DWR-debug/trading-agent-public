@@ -73,6 +73,7 @@ def _valid_sensitivity_receipt():
             "requested_url": PRIMARY_URL,
             "final_url": PRIMARY_URL,
             "last_modified": LAST_MODIFIED,
+            "body": None,
         }
         for name in names
     ]
