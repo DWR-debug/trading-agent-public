@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-15T12:07:05.628403Z",
+  "observed_at_utc": "2026-10-15T17:21:27.293017Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 2.844,
-  "stdout": "User Safety: safe",
+  "duration_seconds": 42.1,
+  "stdout": "**Adversarial Methods Review – Q202‑Q204 & Q205 (NLRB labor‑representation)**  \n\n---\n\n### 1. Findings  \n\n| Candidate | Current source‑readiness evidence | Key durability gaps (per GROK‑PRINCIPLE‑2026‑10‑04) |\n|-----------|----------------------------------|---------------------------------------------------|\n| **Q202** | Receipt located at `research/evidence/q202_q204_information_timing_feasibility_latest.json`. No explicit content shown; classification depends on whether the receipt contains any of the durable keys (`immutable_historical_snapshot`, `snapshot_sha256`, …). | • No visible immutable dated snapshot or frozen hash in the snippet. <br>• Event‑clock definition relies on “earliest defensible public observation timestamp” – not yet bound to a frozen artifact. <br>• No evidence of a frozen pre‑event entity/exposure mapping (issuer ↔ product). |\n| **Q203** | Same receipt as Q202 (shared file). | • Inherits all gaps of Q202. <br>• No separate “revision lineage” or “withdrawal” mapping documented. |\n| **Q204** | Same receipt as Q202/Q203. | • Same durability deficiency. <br>• The “information‑timing” family may conflate multiple public‑observation clocks (e.g., filing‑date vs. header‑date) – risk of same‑day/date‑only leakage. |\n| **Q205** (NLRB labor‑representation) | Not yet assigned a receipt in the `RECEIPTS` map; status is “discovery‑only”. | • No source‑feasibility receipt → cannot be classified as durable. <br>• No frozen mapping of NLRB‑certified representation to issuers/entities. <br>• No historical snapshot of the certification event (date, scope). |\n\n**Common issues across Q202‑Q204**  \n\n1. **Provisional live‑endpoint reliance** – the receipt may be marked “PROVISIONAL_LIVE_PROBE_ONLY” (see `classify` function). Without an immutable SHA‑256 binding to a dated snapshot, the readiness is not durable.  \n2. **Missing frozen exposure mapping** – the candidate spec requires “exposure_mapping: frozen before outcome observation; issuer/entity mapping is immutable for the trial”. No such mapping is evident in the provided specs.  \n3. **Temporal ambiguity** – the event clock for Q202‑Q204 references “earliest defensible public observation timestamp” but does not enforce a frozen pre‑event date; same‑day leakage could invalidate the clock.  \n4. **Cross‑candidate confounding** – Q202‑Q204 belong to the same “information‑timing” family; they may share the same public‑observation source (e.g., SEC filing arrival) leading to overlap/confounding that violates the anti‑convergence rule.  \n\n**Q205 specific**  \n\n- No receipt → cannot verify any durable binding.  \n- The NLRB certification is a *discovery* artifact; unless a frozen snapshot of the certification filing (date, docket number, issuer list) is attached, the channel remains non‑source‑ready.  \n\n---\n\n### 2. Counterarguments<unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk><unk> \n [ to ,, [user/]] - is [ [user] |] - user., and,, and user -\n [user][ing] — - [.",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1792066025-8KScvyb5krnWRq3XNNIB",
+  "response_id": "gen-1792084887-gIgVZtgPQxbnklwZUgNr",
   "usage": {
-    "prompt_tokens": 6085,
-    "completion_tokens": 160,
-    "total_tokens": 6245,
+    "prompt_tokens": 6003,
+    "completion_tokens": 1741,
+    "total_tokens": 7744,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 173,
+      "reasoning_tokens": 889,
       "image_tokens": 0,
       "audio_tokens": 0
     }
