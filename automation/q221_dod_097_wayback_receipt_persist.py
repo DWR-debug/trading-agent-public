@@ -94,6 +94,24 @@ def validate_receipt(receipt: dict[str, Any], receipt_filename: str = RECEIPT_FI
             or row_selection.get("match_fields") != ["PIID", "modification", "action_date", "recipient_uei"]
         ):
             raise ReceiptPersistenceError("WAYBACK_FROZEN_ROW_SELECTION_MISMATCH", "row selection differs")
+        # Re-derive the frozen composite keys from the pinned manifest; don't trust
+        # a receipt merely because it claims that the sample size is 28.
+        from automation import q221_dod_097_wayback_archive_presence as probe_module
+        repo_root = Path(__file__).resolve().parents[1]
+        frozen_request = (
+            (repo_root / "research/preregistrations/q221_dod_097_wayback_archive_presence_r3_2026_10_15.json",
+             repo_root / "research/run_requests/q221_dod_097_wayback_archive_presence_r3.trigger")
+            if profile == "R3" else
+            (repo_root / "research/preregistrations/q221_dod_097_wayback_archive_presence_r2_2026_10_15.json",
+             repo_root / "research/run_requests/q221_dod_097_wayback_archive_presence_r2.trigger")
+        )
+        try:
+            frozen_inputs = probe_module.validate_frozen_inputs(repo_root, frozen_request[0], frozen_request[1])
+        except probe_module.ProbeError as exc:
+            raise ReceiptPersistenceError("WAYBACK_FROZEN_INPUTS_NO_LONGER_VALID", exc.status) from exc
+        expected_keys = [target["transaction_key"] for target in frozen_inputs["targets"]]
+        if row_selection.get("target_keys") != expected_keys or len(expected_keys) != 28:
+            raise ReceiptPersistenceError("WAYBACK_FROZEN_TARGET_KEYS_MISMATCH", "receipt keys differ from pinned manifest")
         probe = receipt.get("source_probe", {})
         expected_profile = {
             "R2": {
