@@ -55,6 +55,17 @@ def test_request_rejects_attempt_to_expand_scope(tmp_path):
     with pytest.raises(BridgeError, match="VALUE_MISMATCH:TARGET_RECORD_COUNT"):
         read_request(expanded)
 
+def test_request_sequence_is_pinned_to_preregistration(tmp_path):
+    request = REQUEST.read_text(encoding="utf-8").replace(
+        "REQUEST_SEQUENCE=2026-10-15T09:18:00Z",
+        "REQUEST_SEQUENCE=2026-10-15T09:19:00Z",
+    )
+    altered = tmp_path / "request.trigger"
+    altered.write_text(request, encoding="utf-8")
+    values = read_request(altered)
+    with pytest.raises(BridgeError, match="REQUEST_SEQUENCE_DIFFERS_FROM_PREREGISTRATION"):
+        validate_frozen_inputs(ROOT, values)
+
 
 def test_atom_parser_reads_exact_piid_modification_date_uei_duns_and_legal_name():
     body = b"""<?xml version="1.0" encoding="UTF-8"?>
