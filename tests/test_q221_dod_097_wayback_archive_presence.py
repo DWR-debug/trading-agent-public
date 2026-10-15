@@ -104,8 +104,9 @@ def test_unknown_csv_schema_is_not_reported_as_absence():
 
 
 def test_non_wayback_hosts_and_redirects_fail_closed():
-    with pytest.raises(probe.ProbeError, match="NON_WAYBACK"):
+    with pytest.raises(probe.ProbeError) as exc:
         probe.fetch_wayback_bounded("https://files.usaspending.gov/award_data_archive/fake.zip", {}, 100)
+    assert exc.value.status == "Q221_DOD_097_NON_WAYBACK_URL_FORBIDDEN"
     assert probe._NoRedirect().redirect_request(None,None,302,"Found",{},"https://files.usaspending.gov/") is None
 
 
