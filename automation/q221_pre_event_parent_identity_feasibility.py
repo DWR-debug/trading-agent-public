@@ -15,6 +15,7 @@ import re
 import time
 import urllib.error
 import urllib.request
+from urllib.parse import urlparse
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
@@ -135,6 +136,33 @@ def validate_preregistration(prereg: dict[str, Any], prereg_path: Path) -> None:
             raise FeasibilityError(f"PREREG_LIMIT_DRIFT:{key}")
     if prereg_path.name != Path(PREREG_PATH).name:
         raise FeasibilityError("PREREG_PATH_NAME_MISMATCH")
+    for spec in prereg["records"]:
+        parsed = urlparse(str(spec.get("document_url") or ""))
+        if parsed.scheme != "https" or parsed.hostname != ALLOWED_HOST:
+            raise FeasibilityError("PREREG_SOURCE_URL_OUTSIDE_ALLOWLIST:" + str(spec.get("record_id")))
+        path_parts = parsed.path.split("/Archives/edgar/data/", 1)
+        if len(path_parts) != 2:
+            raise FeasibilityError("PREREG_SOURCE_URL_NOT_EDGAR_ARCHIVE:" + str(spec.get("record_id")))
+        path_cik = path_parts[1].split("/", 1)[0].zfill(10)
+        if path_cik != str(spec.get("filing_filer_cik") or ""):
+            raise FeasibilityError("PREREG_URL_FILER_CIK_MISMATCH:" + str(spec.get("record_id")))
+        if spec.get("role") == "pre_event_parent_subsidiary_list":
+            if spec.get("expected_parent_cik") != spec.get("filing_filer_cik"):
+                raise FeasibilityError("PREREG_PARENT_AND_FILER_CIK_MISMATCH:" + str(spec.get("record_id")))
+        elif spec.get("role") == "post_event_successor_name_control":
+            if spec.get("expected_parent_cik") is not None:
+                raise FeasibilityError("TEMPORAL_CONTROL_MUST_NOT_CLAIM_PARENT_CIK")
+        else:
+            raise FeasibilityError("PREREG_ROLE_UNKNOWN:" + str(spec.get("record_id")))
+        try:
+            event_date = datetime.fromisoformat(str(spec.get("transaction_date")))
+            filing_date = datetime.fromisoformat(str(spec.get("filing_date")))
+        except ValueError as exc:
+            raise FeasibilityError("PREREG_DATE_INVALID:" + str(spec.get("record_id"))) from exc
+        if spec.get("role") == "pre_event_parent_subsidiary_list" and not filing_date.date() < event_date.date():
+            raise FeasibilityError("PREREG_PARENT_FILING_DATE_NOT_PRE_EVENT:" + str(spec.get("record_id")))
+        if spec.get("role") == "post_event_successor_name_control" and not filing_date.date() > event_date.date():
+            raise FeasibilityError("PREREG_TEMPORAL_CONTROL_DATE_NOT_POST_EVENT:" + str(spec.get("record_id")))
     safety = prereg.get("safety", {})
     if safety != {
         "paper_only": True,
@@ -244,9 +272,6 @@ def validate_frozen_inputs(
 
 def _read_one_source(spec: dict[str, Any], source_dir: Path, aggregate_before: int) -> tuple[dict[str, Any], int]:
     url = str(spec.get("document_url") or "")
-    parsed = urllib.request.urlparse(url) if hasattr(urllib.request, "urlparse") else None
-    # urllib.parse is the actual URL parser; kept local to avoid global URL mutation.
-    from urllib.parse import urlparse
     parsed = urlparse(url)
     if parsed.scheme != "https" or parsed.hostname != ALLOWED_HOST:
         raise FeasibilityError("SOURCE_URL_OUTSIDE_ALLOWLIST:" + str(spec.get("record_id")))
@@ -350,10 +375,7 @@ def read_downloaded_sources(prereg: dict[str, Any], source_dir: Path) -> dict[st
 
 
 def build_analysis(
-    repo_root: Path,
     prereg: dict[str, Any],
-    boundary: dict[str, Any],
-    parent_map: dict[str, Any],
     frozen_inputs: dict[str, Any],
     source_dir: Path,
 ) -> dict[str, Any]:
@@ -374,6 +396,7 @@ def build_analysis(
             "filing_index_url": spec.get("filing_index_url"),
             "accession": spec.get("accession"),
             "expected_parent_cik": spec.get("expected_parent_cik"),
+        "filing_filer_cik": spec.get("filing_filer_cik"),
             "declared_filing_date": source_date,
             "document_sha256": src["response_sha256"],
             "document_bytes": src["response_bytes"],
@@ -540,7 +563,7 @@ def run(
             output_path.parent.mkdir(parents=True, exist_ok=True)
             output_path.write_text(json.dumps(fail, sort_keys=True, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
             return fail
-    core = build_analysis(repo_root, prereg, boundary, parent_map, frozen_inputs, source_dir)
+    core = build_analysis(prereg, frozen_inputs, source_dir)
     if expected_analysis_fingerprint and core["analysis_fingerprint"] != expected_analysis_fingerprint:
         raise FeasibilityError("CROSS_ARCH_ANALYSIS_FINGERPRINT_MISMATCH")
     result = {**core, "generated_at_utc": datetime.now(timezone.utc).isoformat()}
