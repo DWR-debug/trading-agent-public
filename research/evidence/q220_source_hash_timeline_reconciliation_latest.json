@@ -1,0 +1,121 @@
+{
+  "analysis_fingerprint": "d234558a59254469bae3c4b738884403db7c863b7452e2aa2a8bcaf3e7d6c9c8",
+  "candidate_id": "Q220",
+  "cross_arch_reproduction": {
+    "arm64_analysis_fingerprint": "d234558a59254469bae3c4b738884403db7c863b7452e2aa2a8bcaf3e7d6c9c8",
+    "arm64_platform": "ubuntu-24.04-arm",
+    "arm64_receipt_fingerprint": "e8b39de13356f46f485623778aa37902ecda080b8e2dc86b2ba7df551d84ab93",
+    "run_attempt": 1,
+    "run_id": 38726193492,
+    "same_analysis_fingerprint": true,
+    "status": "DETERMINISTIC_ANALYSIS_MATCHED",
+    "x64_analysis_fingerprint": "d234558a59254469bae3c4b738884403db7c863b7452e2aa2a8bcaf3e7d6c9c8",
+    "x64_platform": "ubuntu-24.04",
+    "x64_receipt_fingerprint": "b581538b37f80cc70094d7e96171d5fa0f1d70e4e8c1e6477700ca8bfa0a93da"
+  },
+  "current_observation_state": {
+    "all_55_current_compiler_hash_failures_remain": true,
+    "current_lineage_analysis_fingerprint": "380bc17bdec6c390c4f282ff25cbabbd1c6dcb2a2847a9af6d60711df3dac35e",
+    "current_lineage_receipt_fingerprint": "acdec97252ba86d844f97fea2b11b755bef91769cd7badd53a5fedcc811bd059",
+    "current_lineage_status": "Q220_SOURCE_HASH_LINEAGE_UNRESOLVED_MULTIPLE_OBSERVED_HASHES",
+    "distinct_whole_primary_hash_count": 4,
+    "frozen_expected_sha256_present_in_current_observation_set": false,
+    "whole_primary_observation_count": 4,
+    "whole_primary_sha256": [
+      "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+      "2693819652172f0c218394ef036eb3f4af95c2a7077f624f6efcd990df370172",
+      "ccd9060d023c3ca8e5fc5d3fd43a67c394dfd97ef1e42a72f71c4ca630cd2f63",
+      "fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3"
+    ]
+  },
+  "first_known_blocked": {
+    "compiler_code_sha256": "6a8fb9496181fb2a46393d4d9dc348660b068d50255d807401bb8eff0da686ed",
+    "compiler_receipt_fingerprint": "c9cc85da4e632a801a2cf451ecaf83ae8a375688ea33aad42eaba7eee50e3e5d",
+    "compiler_receipt_generated_at_utc": "2026-10-12T06:00:28.208402Z",
+    "compiler_run_id": 38210402239,
+    "compiler_source_git_blob_sha1": "c4587f75551297c1ceae9ed151196681eddfbdb8",
+    "same_compiler_code_as_last_positive": true,
+    "source_hash_failure_count": 55,
+    "verified_primary_document_count": 0
+  },
+  "first_observed_transition_window": {
+    "elapsed_seconds": 24830.828977,
+    "first_known_negative_utc": "2026-10-12T06:00:28.208402Z",
+    "last_known_positive_utc": "2026-10-11T23:06:37.379425Z",
+    "observation_bounds_only": true,
+    "server_side_transition_time_proven": false
+  },
+  "frozen_expected": {
+    "bytes": 4774458,
+    "historical_match_attested": true,
+    "historical_raw_body_preserved": false,
+    "interpretation": "A historical successful compiler receipt and independent reproduction attest that all 55 expected hashes matched on 2026-10-11. The raw whole-document bodies were not retained, so the historical bytes cannot now be independently re-hashed from the receipt alone.",
+    "present_in_current_whole_primary_observation_set": false,
+    "sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83"
+  },
+  "generated_at_utc": "2026-10-15T11:17:40.925946+00:00",
+  "historical_positive": {
+    "compiler_code_sha256": "6a8fb9496181fb2a46393d4d9dc348660b068d50255d807401bb8eff0da686ed",
+    "compiler_receipt_fingerprint": "1b34b3ac2f3a6fc3ff90fa42cd8ea1c7b73297b5cbd71414a0877bb25d9b203c",
+    "compiler_receipt_generated_at_utc": "2026-10-11T23:06:37.379425Z",
+    "compiler_run_id": 38182963418,
+    "compiler_source_git_blob_sha1": "c4587f75551297c1ceae9ed151196681eddfbdb8",
+    "independent_artifact_id": 11717643698,
+    "independent_artifact_sha256": "1147d01f71d11c5436b85791bbd4157c8db8fe8d6d11791461627325b6d4477b",
+    "independent_receipt_generated_at_utc": "2026-10-11T23:08:31.626126+00:00",
+    "independent_receipt_status": "Q220_INDEPENDENT_PIT_REPRODUCED",
+    "independent_run_id": 38183038217,
+    "independent_source_code_git_blob_sha1": "3a424e17e2ca35b531e48c011480b1b9fab186db",
+    "source_hash_failure_count": 0,
+    "verified_primary_document_count": 55
+  },
+  "interpretation_scope": {
+    "authoritative_source_vintage_proven": false,
+    "current_gate_positive": false,
+    "exact_server_or_intermediary_root_cause_proven": false,
+    "historical_hash_match_attested": true,
+    "historical_raw_body_rehashable": false,
+    "holdout_selection": false,
+    "live_execution": false,
+    "performance_authorization": false,
+    "promotion": false,
+    "ranking": false,
+    "scientific_evidence": false,
+    "tuning": false
+  },
+  "next_gate": "Locate an authoritative pinned source-vintage record or preserve Q220 as BLOCKED. Do not redownload SEC Feeds or primary documents, rewrite expected hashes, or restart the census to force a match.",
+  "receipt_fingerprint": "19cc74222889708782dbc6001b8a3de248792d4c0efe5d3315a8ec29c36e8099",
+  "record_type": "q220_source_hash_timeline_reconciliation",
+  "safety": {
+    "automatic_promotion": false,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "paper_only": true
+  },
+  "same_code_population_capture_shift": {
+    "byte_delta_distribution": {
+      "-5": 55
+    },
+    "changed_byte_length_rows": 55,
+    "changed_hash_rows": 55,
+    "collector_code_git_blob_sha1": "17d3464605138e5035718664fb02ff1a56dcf5cc",
+    "collector_code_sha256": "62ef075c9fe5ccc2527e5a918f9653a5a6d1602359d4bb795a0e97a5370ddcc1",
+    "directory_index_hashes_unchanged": true,
+    "earlier_snapshot_utc": "2026-10-10T17:19:36.701501+00:00",
+    "header_hash_rows_changed": 55,
+    "later_snapshot_utc": "2026-10-11T08:24:12.052069+00:00",
+    "root_cause_proven": false
+  },
+  "schema_version": 1,
+  "source_pins": {
+    "current_lineage_analysis_fingerprint": "380bc17bdec6c390c4f282ff25cbabbd1c6dcb2a2847a9af6d60711df3dac35e",
+    "current_lineage_git_blob_sha1": "ead271b6afd6fea8964856c70bbd4cc9d0fe0bb1",
+    "current_lineage_path": "research/evidence/q220_source_hash_lineage_latest.json",
+    "current_lineage_receipt_fingerprint": "acdec97252ba86d844f97fea2b11b755bef91769cd7badd53a5fedcc811bd059",
+    "historical_audit_git_blob_sha1": "a33d72025c091ebb6ed93c601df7e0e24551b521",
+    "historical_audit_path": "research/evidence/q220_complete_submission_representation_audit_38619590525.json",
+    "historical_capture_receipt_fingerprint": "3d3514a8fcbcc5d711da2cd15a3cf506ba16192022e0f9f15c8f1b9ef8f6a6f3",
+    "source_population_receipt_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543"
+  },
+  "status": "HISTORICAL_HASH_MATCH_ATTESTED_CURRENT_LINEAGE_UNRESOLVED"
+}
