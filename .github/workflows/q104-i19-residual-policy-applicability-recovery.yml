@@ -1,0 +1,318 @@
+name: Q104 I19 Residual Filing-Date Policy Applicability R7 Offline Recovery
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q104_i19_residual_policy_applicability_recovery_38762761429.trigger"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: q104-i19-residual-policy-applicability-r7-offline-recovery
+  cancel-in-progress: false
+
+jobs:
+  replay-x64:
+    name: Ubuntu x64 — verify captured R7 evidence offline
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    outputs:
+      analysis_fingerprint: ${{ steps.replay.outputs.analysis_fingerprint }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Install bounded test runner
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Run focused frozen-contract and offline-recovery tests
+        run: >-
+          python -m pytest -q
+          tests/test_q104_i19_residual_policy_applicability_review_r7.py
+          tests/test_q104_i19_residual_policy_applicability_recovery_workflow.py
+
+      - name: Validate exact failed capture run and immutable artifact pins
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38762761429" > "$RUNNER_TEMP/q104-r7-source-run.json"
+          jq -e '
+            .id == 38762761429 and
+            .name == "Q104 I19 Residual Filing-Date Policy Applicability R7" and
+            .event == "push" and
+            .head_branch == "master" and
+            .head_sha == "9caaa609f8793180c6518f52df1f595450d9ff0b" and
+            .status == "completed" and
+            .conclusion == "failure"
+          ' "$RUNNER_TEMP/q104-r7-source-run.json" >/dev/null
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38762761429/artifacts?per_page=100" > "$RUNNER_TEMP/q104-r7-source-artifacts.json"
+          jq -e '
+            [.artifacts[]? |
+              select(
+                .id == 11986177930 and
+                .name == "q104-i19-residual-policy-r7-capture-38762761429-1" and
+                .expired == false and
+                .digest == "sha256:8dc9f6645389e1ba1513449a61ef9b20cb72243c3279b0592d36c49c5223304c" and
+                .workflow_run.id == 38762761429 and
+                .workflow_run.head_sha == "9caaa609f8793180c6518f52df1f595450d9ff0b"
+              )
+            ] | length == 1
+          ' "$RUNNER_TEMP/q104-r7-source-artifacts.json" >/dev/null
+
+      - name: Download only the exact existing capture artifact (no SEC requests)
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-i19-residual-policy-r7-capture-38762761429-1
+          path: q104-r7-capture
+          run-id: 38762761429
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Pin the original captured receipt without modifying it
+        env:
+          EXPECTED_CAPTURE_FP: "15828d97f29fe3a2cf9c15a26aa2f145aa96a3b6785693fea556c1fbe4c0d31a"
+          EXPECTED_REQUEST_SEQUENCE: "2026-10-15T15:42:00Z"
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from automation.q104_i19_residual_policy_applicability_review_r7 import fp
+
+          receipt = json.loads(Path("q104-r7-capture/capture_receipt.json").read_text(encoding="utf-8"))
+          assert receipt["receipt_fingerprint"] == "15828d97f29fe3a2cf9c15a26aa2f145aa96a3b6785693fea556c1fbe4c0d31a"
+          assert receipt["receipt_fingerprint"] == fp(receipt)
+          assert receipt["status"] == "Q104_I19_RESIDUAL_R7_CAPTURE_INCOMPLETE"
+          assert receipt["frozen_request_sequence"] == "2026-10-15T15:42:00Z"
+          assert receipt["header_route_request_count"] == 57
+          assert receipt["header_route_usable_count"] == 53
+          assert receipt["sample_count"] == 19
+          assert receipt["sample_count_complete"] == 15
+          assert receipt["primary_document_requests"] == 0
+          assert receipt["daily_feed_requests"] == 0
+          assert receipt["source_bodies_persisted"] is False
+          assert receipt["field_precedence_applied"] is False
+          assert receipt["production_join_changed"] is False
+          assert receipt["acceptance_time_gate_cleared"] is False
+          assert receipt["historical_archive_gate_cleared"] is False
+          print("Q104_R7_ORIGINAL_CAPTURE_PIN_VALID=true")
+          PY
+
+      - name: Reproduce the exact 19-case analysis from saved receipts and header metadata only
+        id: replay
+        run: |
+          set -euo pipefail
+          python -m automation.q104_i19_residual_policy_applicability_review_r7 replay \
+            --request research/run_requests/q104_i19_residual_policy_applicability_r7.trigger \
+            --capture-dir q104-r7-capture \
+            --output-dir q104-r7-x64
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          result = json.loads(Path("q104-r7-x64/analysis.json").read_text(encoding="utf-8"))
+          analysis = result["analysis"]
+          assert analysis["status"] == "Q104_I19_RESIDUAL_POLICY_APPLICABILITY_REVIEW_COMPLETE_PROPOSAL_NOT_APPLIED"
+          assert result["analysis_fingerprint"]
+          assert analysis["capture_provenance"]["source_capture_receipt_fingerprint"] == "15828d97f29fe3a2cf9c15a26aa2f145aa96a3b6785693fea556c1fbe4c0d31a"
+          assert analysis["capture_provenance"]["offline_source_requests_made"] == 0
+          assert analysis["capture_provenance"]["source_capture_receipt_modified"] is False
+          assert analysis["interpretation_scope"]["offline_route_exception_used"] is True
+          assert analysis["counts"]["new_r7_rows"] == 19
+          assert analysis["counts"]["r7_expected_2013_index_header_404s"] == 4
+          assert analysis["counts"]["r7_two_route_exception_cases"] == 4
+          assert analysis["counts"]["r7_three_route_cases"] == 15
+          assert analysis["counts"]["r7_header_route_requests"] == 57
+          assert analysis["counts"]["r7_usable_header_route_responses"] == 53
+          print("analysis_fingerprint=" + result["analysis_fingerprint"])
+          PY
+
+      - name: Preserve x64 offline analysis
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-r7-offline-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q104-r7-x64/analysis.json
+          if-no-files-found: error
+          retention-days: 30
+
+  replay-arm64:
+    name: Ubuntu ARM64 — independent offline reproduction
+    needs: [replay-x64]
+    if: needs.replay-x64.result == 'success' && github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 12
+    outputs:
+      analysis_fingerprint: ${{ steps.replay.outputs.analysis_fingerprint }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Install bounded test runner
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Run focused frozen-contract and offline-recovery tests
+        run: >-
+          python -m pytest -q
+          tests/test_q104_i19_residual_policy_applicability_review_r7.py
+          tests/test_q104_i19_residual_policy_applicability_recovery_workflow.py
+
+      - name: Revalidate source run and artifact before downloading the frozen capture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38762761429" > "$RUNNER_TEMP/q104-r7-source-run.json"
+          jq -e '.id == 38762761429 and .head_sha == "9caaa609f8793180c6518f52df1f595450d9ff0b" and .status == "completed" and .conclusion == "failure"' "$RUNNER_TEMP/q104-r7-source-run.json" >/dev/null
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38762761429/artifacts?per_page=100" > "$RUNNER_TEMP/q104-r7-source-artifacts.json"
+          jq -e '[.artifacts[]? | select(.id == 11986177930 and .name == "q104-i19-residual-policy-r7-capture-38762761429-1" and .expired == false and .digest == "sha256:8dc9f6645389e1ba1513449a61ef9b20cb72243c3279b0592d36c49c5223304c")] | length == 1' "$RUNNER_TEMP/q104-r7-source-artifacts.json" >/dev/null
+
+      - name: Download the exact existing capture artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-i19-residual-policy-r7-capture-38762761429-1
+          path: q104-r7-capture
+          run-id: 38762761429
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download the x64 analysis fingerprint
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-i19-r7-offline-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q104-r7-x64
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Independently reproduce from the same saved capture with zero source requests
+        id: replay
+        run: |
+          set -euo pipefail
+          python -m automation.q104_i19_residual_policy_applicability_review_r7 replay \
+            --request research/run_requests/q104_i19_residual_policy_applicability_r7.trigger \
+            --capture-dir q104-r7-capture \
+            --output-dir q104-r7-arm64 \
+            --expected-analysis-fingerprint "${{ needs.replay-x64.outputs.analysis_fingerprint }}"
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          result = json.loads(Path("q104-r7-arm64/analysis.json").read_text(encoding="utf-8"))
+          analysis = result["analysis"]
+          assert analysis["capture_provenance"]["offline_source_requests_made"] == 0
+          assert analysis["capture_provenance"]["source_capture_receipt_modified"] is False
+          assert analysis["counts"]["r7_two_route_exception_cases"] == 4
+          print("analysis_fingerprint=" + result["analysis_fingerprint"])
+          PY
+
+      - name: Preserve ARM64 independent analysis
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-r7-offline-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q104-r7-arm64/analysis.json
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-receipt:
+    name: Publish only the cross-architecture matched review receipt
+    needs: [replay-x64, replay-arm64]
+    if: needs.replay-x64.result == 'success' && needs.replay-arm64.result == 'success' && github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Download x64 analysis
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-i19-r7-offline-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q104-r7-x64
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download ARM64 analysis
+        uses: actions/download-artifact@v6
+        with:
+          name: q104-i19-r7-offline-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q104-r7-arm64
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Verify both analyses and build final receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python -m automation.q104_i19_residual_policy_applicability_review_r7 publish \
+            --x64-dir q104-r7-x64 \
+            --arm64-dir q104-r7-arm64 \
+            --workflow-run-id "${{ github.run_id }}" \
+            --workflow-run-attempt "${{ github.run_attempt }}" \
+            --output research/evidence/q104_i19_residual_policy_applicability_latest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          receipt = json.loads(Path("research/evidence/q104_i19_residual_policy_applicability_latest.json").read_text(encoding="utf-8"))
+          assert receipt["status"] == "Q104_I19_RESIDUAL_POLICY_APPLICABILITY_REVIEW_COMPLETE_PROPOSAL_NOT_APPLIED"
+          assert receipt["cross_arch_reproduction"]["same_analysis_fingerprint"] is True
+          assert receipt["cross_arch_reproduction"]["network_requests_made_on_arm64"] == 0
+          assert receipt["capture_provenance"]["source_capture_run_id"] == 38762761429
+          assert receipt["capture_provenance"]["source_capture_receipt_fingerprint"] == "15828d97f29fe3a2cf9c15a26aa2f145aa96a3b6785693fea556c1fbe4c0d31a"
+          assert receipt["counts"]["new_r7_rows"] == 19
+          assert receipt["counts"]["r7_two_route_exception_cases"] == 4
+          assert receipt["counts"]["r7_three_route_cases"] == 15
+          assert receipt["interpretation_scope"]["field_precedence_applied"] is False
+          assert receipt["interpretation_scope"]["source_receipts_modified"] is False
+          assert receipt["interpretation_scope"]["production_join_changed"] is False
+          assert receipt["interpretation_scope"]["acceptance_time_gate_cleared"] is False
+          assert receipt["interpretation_scope"]["historical_archive_gate_cleared"] is False
+          assert receipt["interpretation_scope"]["performance_authorization"] is False
+          assert receipt["interpretation_scope"]["promotion"] is False
+          assert receipt["interpretation_scope"]["live_execution"] is False
+          assert receipt["safety"]["paper_only"] is True
+          assert receipt["safety"]["live_trading_enabled"] is False
+          assert receipt["safety"]["orders_enabled"] is False
+          assert receipt["safety"]["automatic_promotion"] is False
+          PY
+          python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha latest \
+            --file "research/evidence/q104_i19_residual_policy_applicability_latest.json=research/evidence/q104_i19_residual_policy_applicability_latest.json"
+
+      - name: Preserve immutable published receipt artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-r7-offline-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/evidence/q104_i19_residual_policy_applicability_latest.json
+          if-no-files-found: warn
+          retention-days: 30
