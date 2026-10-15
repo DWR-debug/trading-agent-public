@@ -19,7 +19,7 @@ def test_q221_pilot_workflow_is_registered_and_triggered_only_by_frozen_request(
 
 def test_q221_pilot_uses_exact_existing_artifact_and_two_architecture_offline_reproduction():
     workflow = WORKFLOW.read_text(encoding="utf-8")
-    assert workflow.count("q221-current-parent-identity-map-38305074104-1") == 3
+    assert workflow.count("q221-current-parent-identity-map-38305074104-1") == 4
     assert workflow.count("run-id: 38305074104") == 3
     assert "ubuntu-24.04-arm" in workflow
     assert "Q221_PRE_EVENT_IDENTITY_BRIDGE_REPRODUCED_OFFLINE" in workflow
