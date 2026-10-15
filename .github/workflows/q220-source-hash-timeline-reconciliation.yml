@@ -219,7 +219,7 @@ jobs:
           assert blob_sha("research/evidence/q220_source_hash_lineage_latest.json") == "ead271b6afd6fea8964856c70bbd4cc9d0fe0bb1"
 
           x64 = json.loads(Path("q220-x64/x64/receipt.json").read_text(encoding="utf-8"))
-          arm64 = json.loads(Path("q220-arm64/arm64/receipt.json").read_text(encoding="utf-8"))
+          arm64 = json.loads(Path("q220-arm64/receipt.json").read_text(encoding="utf-8"))
           if x64.get("analysis_fingerprint") != arm64.get("analysis_fingerprint"):
               raise SystemExit("Q220_TIMELINE_CROSS_ARCH_FINGERPRINT_MISMATCH")
           if x64.get("status") != arm64.get("status") or x64.get("frozen_expected") != arm64.get("frozen_expected"):

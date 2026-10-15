@@ -97,6 +97,9 @@ def test_q220_timeline_workflow_is_integrity_registered_and_explicit_request_onl
     assert "workflow_dispatch:" not in workflow
     assert "https://www.sec.gov" not in workflow
     assert "actions/download-artifact@v6" in workflow
+    assert 'path: q220-arm64' in workflow
+    assert 'Path("q220-arm64/receipt.json")' in workflow
+    assert 'Path("q220-arm64/arm64/receipt.json")' not in workflow
 
 
 def test_timeline_request_freezes_both_committed_receipt_blobs_and_no_network_sources():
@@ -107,6 +110,7 @@ def test_timeline_request_freezes_both_committed_receipt_blobs_and_no_network_so
     )
     assert values["HISTORICAL_AUDIT_GIT_BLOB_SHA1"] == AUDIT_GIT_BLOB_SHA1
     assert values["CURRENT_LINEAGE_GIT_BLOB_SHA1"] == CURRENT_LINEAGE_GIT_BLOB_SHA1
+    assert values["REQUEST_SEQUENCE"] == "2026-10-15T11:15:00Z"
     assert values["EXPECTED_SHA256"] == EXPECTED_SHA
     assert values["NO_SEC_REQUESTS"] == "true"
     assert values["NO_BODY_REDOWNLOADS"] == "true"
