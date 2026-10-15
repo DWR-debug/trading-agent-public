@@ -761,6 +761,7 @@ def validate_request_and_prereg(request: dict[str, str], prereg: dict[str, Any])
     expected = {
         "RUN_Q221_PRE_EVENT_IDENTITY_BRIDGE_PILOT": "true",
         "SOURCE_OF_TRUTH": "DWR-debug/trading-agent-public",
+        "SOURCE_MANIFEST_PATH": MANIFEST_PATH,
         "SOURCE_MANIFEST_GIT_BLOB_SHA": MANIFEST_BLOB_SHA1,
         "SOURCE_MANIFEST_RECEIPT_FINGERPRINT": MANIFEST_FP,
         "PARENT_MAP_RUN_ID": str(PARENT_MAP_RUN_ID),
