@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_current_parent_identity_lead_map_summary",
+  "candidate_id": "Q221",
+  "status": "CURRENT_PARENT_MAP_COMPLETE_HISTORY_UNPROVEN",
+  "generated_at_utc": "2026-10-12T20:38:59.122633+00:00",
+  "source_of_truth": "DWR-debug/trading-agent-public",
+  "immutable_run": {
+    "workflow_run_id": 38305074104,
+    "workflow_name": "Q221 Current Parent Identity Lead Map",
+    "workflow_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38305074104",
+    "head_sha": "179aab94f12bf15aff05a4fea7010872d8fa8317",
+    "conclusion": "success",
+    "artifact_id": 11772786096,
+    "artifact_name": "q221-current-parent-identity-map-38305074104-1",
+    "artifact_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38305074104/artifacts/11772786096",
+    "artifact_expires": false
+  },
+  "receipt_fingerprint": "ae3a3263d5e7d2545dbdaed7ba7ff1cfe3d4cd00e0403352096dcce4d4797602",
+  "upstream": {
+    "source_receipt_path": "research/evidence/q221_historical_public_boundary_latest.json",
+    "source_receipt_git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "source_receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+    "feasibility_run_id": 38303469112,
+    "feasibility_receipt_fingerprint": "d4f5819f51849d7ba037ec0fa610f5e6e47b74b9353a0c534b6e2e666842509e",
+    "endpoint": "https://api.usaspending.gov/api/v2/recipient/",
+    "source_contract_url": "https://github.com/fedspendingtransparency/usaspending-api/blob/master/usaspending_api/api_contracts/contracts/v2/recipient/recipient_id.md"
+  },
+  "coverage": {
+    "expected_recipients": 247,
+    "captured_recipients": 247,
+    "expected_queries": 247,
+    "captured_queries": 247,
+    "verified_profiles": 247,
+    "response_bytes": 342214,
+    "max_response_budget_bytes": 25000000
+  },
+  "current_parent_classification_counts": {
+    "CURRENT_PARENT_ENTITY_LEAD": 71,
+    "CURRENT_PROFILE_SELF_OR_NO_SEPARATE_PARENT": 176
+  },
+  "interpretation": {
+    "current_parent_identity_leads_only": true,
+    "historical_parent_lineage_proven": false,
+    "historical_first_public_observation_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "next_gate": "For non-self parent UEI leads, obtain independent pre-event entity evidence and verify parent relationships as of the transaction date. Do not map issuers by name similarity.",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "persistence_note": "This summary preserves counts and immutable provenance only; the row-level map remains in the linked GitHub Actions artifact."
+}
