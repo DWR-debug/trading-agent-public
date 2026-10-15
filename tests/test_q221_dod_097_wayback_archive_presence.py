@@ -49,8 +49,9 @@ def test_frozen_cdx_capture_pin_and_mismatch_fail_closed():
     assert probe.verify_pinned_capture([row]) == row
     with pytest.raises(probe.ProbeError, match="digest/length"):
         probe.verify_pinned_capture([{**row,"digest":"WRONG"}])
-    with pytest.raises(probe.ProbeError, match="expected one exact capture"):
+    with pytest.raises(probe.ProbeError) as missing:
         probe.verify_pinned_capture([])
+    assert missing.value.status == "Q221_DOD_097_PINNED_CDX_CAPTURE_COUNT_MISMATCH"
 
 
 def test_cdx_query_is_bounded_wayback_prefix_not_live_archive_access():
