@@ -23,7 +23,7 @@ def test_checked_in_request_matches_every_frozen_runtime_pin():
     request = ROOT / "research/run_requests/q104_i19_residual_policy_applicability_r7.trigger"
     values = r7.read_request(request)
     assert values["SOURCE_OF_TRUTH"] == "DWR-debug/trading-agent-public"
-    assert values["REQUEST_SEQUENCE"] == "2026-10-15T10:01:00Z"
+    assert values["REQUEST_SEQUENCE"] == "2026-10-15T11:18:00Z"
     assert values["EXPECTED_SOURCE_ARCHIVE_DOWNLOAD_BYTES"] == "127943839"
     assert values["DATE_MISMATCH_TARGET_COUNT"] == "19"
     assert values["HEADER_ROUTE_COUNT"] == "57"
