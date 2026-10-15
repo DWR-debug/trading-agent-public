@@ -67,6 +67,20 @@ FROZEN_REQUEST_R2 = {
     "RUN_Q221_DOD_097_WAYBACK_ARCHIVE_PRESENCE_R2": "true",
     "REQUEST_SEQUENCE": R2_REQUEST_SEQUENCE,
 }
+
+# R3 is separately preregistered after R2's first CDX request timed out at 25 s.
+# The only acquisition-method change is a single-request timeout of 60 s.
+PREREG_PATH_R3 = "research/preregistrations/q221_dod_097_wayback_archive_presence_r3_2026_10_15.json"
+REQUEST_PATH_R3 = "research/run_requests/q221_dod_097_wayback_archive_presence_r3.trigger"
+R3_REQUEST_SEQUENCE = "2026-10-15T19:55:24Z"
+R3_REQUEST_TIMEOUT_SECONDS = 60
+FROZEN_REQUEST_R3 = {
+    **{key: value for key, value in FROZEN_REQUEST.items()
+       if key != "RUN_Q221_DOD_097_WAYBACK_ARCHIVE_PRESENCE"},
+    "RUN_Q221_DOD_097_WAYBACK_ARCHIVE_PRESENCE_R3": "true",
+    "REQUEST_SEQUENCE": R3_REQUEST_SEQUENCE,
+    "PER_REQUEST_TIMEOUT_SECONDS": str(R3_REQUEST_TIMEOUT_SECONDS),
+}
 ALIASES = {
     "piid": ("award_id_piid", "piid"),
     "modification": ("modification_number", "modification", "mod_number"),
@@ -135,14 +149,18 @@ def _marker(path: Path, expected_request: dict[str, str] = FROZEN_REQUEST) -> di
 def _validate_prereg(
     p: dict, expected_request: dict[str, str] = FROZEN_REQUEST
 ) -> None:
-    is_r2 = expected_request.get("RUN_Q221_DOD_097_WAYBACK_ARCHIVE_PRESENCE_R2") == "true"
+    profile = (
+        "R3" if expected_request.get("RUN_Q221_DOD_097_WAYBACK_ARCHIVE_PRESENCE_R3") == "true"
+        else "R2" if expected_request.get("RUN_Q221_DOD_097_WAYBACK_ARCHIVE_PRESENCE_R2") == "true"
+        else "R1"
+    )
     expected_type = (
-        "q221_dod_097_wayback_archive_presence_recovery_preregistration"
-        if is_r2 else "q221_dod_097_wayback_archive_presence_preregistration"
+        "q221_dod_097_wayback_archive_presence_preregistration"
+        if profile == "R1" else "q221_dod_097_wayback_archive_presence_recovery_preregistration"
     )
     if p.get("schema_version") != 1 or p.get("record_type") != expected_type:
         raise ProbeError("Q221_DOD_097_PREREGISTRATION_TYPE_INVALID", "type/version differs")
-    if is_r2:
+    if profile == "R2":
         expected_recovery = {
             "prior_workflow_run_id": 38791554425,
             "prior_attempt_status": "Q221_DOD_097_ONE_SHOT_ATTEMPT_FAILED_RECEIPT_NOT_PERSISTED_NO_ROW_RESULT",
@@ -152,7 +170,30 @@ def _validate_prereg(
             "reason": "The first probe failed while serializing its receipt. Its source request count and archive outcome are unknown; this R2 attempt has a separate preregistration and marker.",
         }
         if p.get("attempt_number") != 2 or p.get("recovery") != expected_recovery:
-            raise ProbeError("Q221_DOD_097_RECOVERY_PREREGISTRATION_INVALID", "recovery lineage differs")
+            raise ProbeError("Q221_DOD_097_RECOVERY_PREREGISTRATION_INVALID", "R2 recovery lineage differs")
+    elif profile == "R3":
+        expected_recovery = {
+            "prior_workflow_run_id": 38797148893,
+            "prior_attempt_status": "Q221_DOD_097_WAYBACK_TRANSPORT_ERROR",
+            "prior_source_request_count": 1,
+            "prior_source_request_count_known": True,
+            "prior_response_bytes": 0,
+            "prior_archive_outcome_known": False,
+            "original_marker_reuse_authorized": False,
+            "reason": "R2 made one CDX request with zero response bytes and recorded TimeoutError at the frozen 25-second timeout. R3 uses a distinct preregistration and marker and changes only the per-request timeout to 60 seconds; the source, selected keys, request-count ceiling, byte/ZIP/CSV caps, interpretation, and scientific gates remain unchanged.",
+        }
+        expected_transport = {
+            "previous_per_request_timeout_seconds": 25,
+            "per_request_timeout_seconds": 60,
+            "max_source_requests": 2,
+            "automatic_retries": 0,
+            "alternate_sources_allowed": False,
+            "scope_or_caps_changed": False,
+        }
+        if p.get("attempt_number") != 3 or p.get("recovery") != expected_recovery:
+            raise ProbeError("Q221_DOD_097_RECOVERY_PREREGISTRATION_INVALID", "R3 recovery lineage differs")
+        if p.get("transport_contract") != expected_transport:
+            raise ProbeError("Q221_DOD_097_TRANSPORT_CONTRACT_MISMATCH", "R3 timeout or invariants differ")
     if p.get("frozen_source_manifest") != {
         "path": MANIFEST_PATH, "git_blob_sha1": MANIFEST_BLOB, "receipt_fingerprint": MANIFEST_FP,
         "expected_transaction_count": MANIFEST_COUNT,
@@ -251,6 +292,7 @@ def validate_frozen_inputs(root: Path, prereg_path: Path | None = None, request_
     profiles = {
         REQUEST_PATH: ("R1", FROZEN_REQUEST, PREREG_PATH, 1),
         REQUEST_PATH_R2: ("R2", FROZEN_REQUEST_R2, PREREG_PATH_R2, 2),
+        REQUEST_PATH_R3: ("R3", FROZEN_REQUEST_R3, PREREG_PATH_R3, 3),
     }
     if request_rel not in profiles:
         raise ProbeError("Q221_DOD_097_REQUEST_PROFILE_NOT_ALLOWED", request_rel)
@@ -265,6 +307,10 @@ def validate_frozen_inputs(root: Path, prereg_path: Path | None = None, request_
     prereg = _json(prereg_file)
     _validate_prereg(prereg, expected_request)
     request = _marker(request_file, expected_request)
+    request_timeout_seconds = prereg.get("transport_contract", {}).get("per_request_timeout_seconds", 25)
+    expected_timeout = R3_REQUEST_TIMEOUT_SECONDS if request_profile == "R3" else 25
+    if isinstance(request_timeout_seconds, bool) or request_timeout_seconds != expected_timeout:
+        raise ProbeError("Q221_DOD_097_REQUEST_TIMEOUT_PROFILE_MISMATCH", str(request_timeout_seconds))
     path = root / MANIFEST_PATH
     try:
         raw = path.read_bytes()
@@ -280,6 +326,7 @@ def validate_frozen_inputs(root: Path, prereg_path: Path | None = None, request_
         "preregistration": prereg, "request": request, "manifest_blob_sha1": blob,
         "targets": select_frozen_targets(manifest), "request_profile": request_profile,
         "attempt_number": attempt_number, "preregistration_path": prereg_rel, "request_marker_path": request_rel,
+        "request_timeout_seconds": request_timeout_seconds,
     }
 
 
@@ -304,6 +351,9 @@ def fetch_wayback_bounded(url: str, state: dict, cap: int) -> tuple[int, bytes, 
     u = urlparse(url)
     if u.scheme != "https" or u.hostname != "web.archive.org" or u.username or u.password or u.port not in (None, 443):
         raise ProbeError("Q221_DOD_097_NON_WAYBACK_URL_FORBIDDEN", url)
+    request_timeout = state.get("request_timeout_seconds", 25)
+    if isinstance(request_timeout, bool) or not isinstance(request_timeout, int) or not 1 <= request_timeout <= 60:
+        raise ProbeError("Q221_DOD_097_REQUEST_TIMEOUT_INVALID", str(request_timeout))
     state["request_count"] += 1
     req = urllib.request.Request(url, headers={"User-Agent": "DWR-debug/trading-agent-public/Q221-DOD-097-wayback-probe/1.0",
                                              "Accept": "application/json,application/zip,*/*",
@@ -311,7 +361,7 @@ def fetch_wayback_bounded(url: str, state: dict, cap: int) -> tuple[int, bytes, 
     opener = urllib.request.build_opener(_NoRedirect())
     status, headers, body = 0, {}, b""
     try:
-        with opener.open(req, timeout=25) as resp:
+        with opener.open(req, timeout=request_timeout) as resp:
             status = int(getattr(resp, "status", 200))
             headers = {str(k).lower(): str(v) for k, v in resp.headers.items()}
             body = resp.read(cap + 1)
@@ -534,10 +584,11 @@ def _write_receipt(path: Path, receipt: dict[str, Any]) -> None:
 def run_probe(root: Path, prereg_path: Path | None = None, request_path: Path | None = None,
               output_path: Path | None = None, fetcher: Callable | None = None) -> dict[str, Any]:
     output = output_path or (root / "q221-dod-097-wayback-presence-receipt.json")
-    receipt, state = _base_receipt(), {"request_count": 0, "response_bytes": 0, "responses": [], "transport_errors": []}
+    receipt, state = _base_receipt(), {"request_count": 0, "response_bytes": 0, "responses": [], "transport_errors": [], "request_timeout_seconds": 25}
     fetch = fetcher or fetch_wayback_bounded
     try:
         inputs = validate_frozen_inputs(root, prereg_path, request_path)
+        state["request_timeout_seconds"] = inputs["request_timeout_seconds"]
         targets = inputs["targets"]
         receipt["frozen_row_selection"]["target_keys"] = [t["transaction_key"] for t in targets]
         receipt["source_probe"].update({
@@ -547,6 +598,7 @@ def run_probe(root: Path, prereg_path: Path | None = None, request_path: Path | 
             "request_profile": inputs["request_profile"], "one_shot_attempt": inputs["attempt_number"],
             "preregistration_path": inputs["preregistration_path"],
             "request_marker_path": inputs["request_marker_path"],
+            "request_timeout_seconds": inputs["request_timeout_seconds"],
         })
         status, cdx, headers = fetch(build_cdx_query_url(), state, MAX_CDX_BYTES)
         rows = parse_cdx_rows(cdx)

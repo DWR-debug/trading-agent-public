@@ -200,6 +200,8 @@ def _write_r2_persistable_receipt(path, *, fallback=False):
         }
     else:
         receipt = probe._base_receipt()
+        frozen = probe.validate_frozen_inputs(ROOT, ROOT / probe.PREREG_PATH_R2, ROOT / probe.REQUEST_PATH_R2)
+        receipt["frozen_row_selection"]["target_keys"] = [target["transaction_key"] for target in frozen["targets"]]
         receipt["source_probe"].update({
             "request_profile": "R2", "one_shot_attempt": 2,
             "preregistration_path": probe.PREREG_PATH_R2,
@@ -229,7 +231,7 @@ def test_r2_receipt_persistence_accepts_only_a_pinned_fingerprinted_probe_receip
     assert json.loads(attempt.read_text(encoding="utf-8"))["receipt_fingerprint"] == original["receipt_fingerprint"]
     with pytest.raises(persistence.ReceiptPersistenceError) as exc:
         persistence.persist_receipt(artifact, tmp_path / "evidence", "123456")
-    assert exc.value.code == "IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS"
+    assert exc.value.code == "IMMUTABLE_WAYBACK_ATTEMPT_RECEIPT_ALREADY_EXISTS"
 
 
 def test_r2_receipt_persistence_rejects_bad_fingerprint_and_open_safety_flags(tmp_path):
@@ -271,11 +273,191 @@ def test_r2_receipt_sync_validates_fingerprint_safety_and_persists_immutably():
     assert "automation.q221_dod_097_wayback_receipt_persist" in text
     persistence = (ROOT / "automation/q221_dod_097_wayback_receipt_persist.py").read_text(encoding="utf-8")
     assert "canonical_fingerprint" in persistence
-    assert "R2_RECEIPT_FINGERPRINT_MISMATCH" in persistence
-    assert "IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS" in persistence
+    assert "WAYBACK_RECEIPT_FINGERPRINT_MISMATCH" in persistence
+    assert "IMMUTABLE_WAYBACK_ATTEMPT_RECEIPT_ALREADY_EXISTS" in persistence
     assert "q221_dod_097_wayback_archive_presence_attempt_" in text
     assert "github_contents_publish.py" in text
     assert '"live_trading_enabled"' in persistence
+
+
+
+
+def test_r3_recovery_uses_a_distinct_preregistration_marker_and_only_changes_timeout():
+    r2 = probe.validate_frozen_inputs(
+        ROOT, ROOT / probe.PREREG_PATH_R2, ROOT / probe.REQUEST_PATH_R2
+    )
+    r3 = probe.validate_frozen_inputs(
+        ROOT, ROOT / probe.PREREG_PATH_R3, ROOT / probe.REQUEST_PATH_R3
+    )
+    assert r2["request_timeout_seconds"] == 25
+    assert r3["request_timeout_seconds"] == 60
+    assert r3["request_profile"] == "R3"
+    assert r3["attempt_number"] == 3
+    assert r3["request"]["PER_REQUEST_TIMEOUT_SECONDS"] == "60"
+    assert r3["request"]["REQUEST_SEQUENCE"] == probe.R3_REQUEST_SEQUENCE
+    assert r3["preregistration"]["recovery"]["prior_workflow_run_id"] == 38797148893
+    assert r3["preregistration"]["recovery"]["prior_source_request_count"] == 1
+    assert r3["preregistration"]["recovery"]["prior_source_request_count_known"] is True
+    assert r3["preregistration"]["recovery"]["prior_response_bytes"] == 0
+    assert r3["preregistration"]["recovery"]["prior_archive_outcome_known"] is False
+    assert r3["preregistration"]["transport_contract"] == {
+        "previous_per_request_timeout_seconds": 25,
+        "per_request_timeout_seconds": 60,
+        "max_source_requests": 2,
+        "automatic_retries": 0,
+        "alternate_sources_allowed": False,
+        "scope_or_caps_changed": False,
+    }
+    assert r3["targets"] == r2["targets"]
+    assert r3["manifest_blob_sha1"] == r2["manifest_blob_sha1"]
+    assert r3["preregistration"]["caps"] == r2["preregistration"]["caps"]
+    assert r3["request"]["LIVE_EXECUTION"] == "false"
+
+
+def test_r1_r2_and_r3_request_markers_cannot_be_interchanged():
+    with pytest.raises(probe.ProbeError, match="marker differs"):
+        probe._marker(ROOT / probe.REQUEST_PATH_R3, probe.FROZEN_REQUEST_R2)
+    with pytest.raises(probe.ProbeError, match="marker differs"):
+        probe._marker(ROOT / probe.REQUEST_PATH_R2, probe.FROZEN_REQUEST_R3)
+    with pytest.raises(probe.ProbeError) as exc:
+        probe.validate_frozen_inputs(ROOT, ROOT / probe.PREREG_PATH_R2, ROOT / probe.REQUEST_PATH_R3)
+    assert exc.value.status == "Q221_DOD_097_PREREGISTRATION_PROFILE_MISMATCH"
+
+
+def test_bounded_fetcher_uses_profile_timeout_without_network_access(monkeypatch):
+    captured = {}
+
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/json"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self, limit):
+            captured["read_limit"] = limit
+            return b"[]"
+
+    class FakeOpener:
+        def open(self, request, timeout):
+            captured["timeout"] = timeout
+            captured["url"] = request.full_url
+            return FakeResponse()
+
+    monkeypatch.setattr(probe.urllib.request, "build_opener", lambda *handlers: FakeOpener())
+    state = {
+        "request_count": 0, "response_bytes": 0, "responses": [],
+        "transport_errors": [], "request_timeout_seconds": 60,
+    }
+    status, body, headers = probe.fetch_wayback_bounded(probe.build_cdx_query_url(), state, 5_000_000)
+    assert status == 200
+    assert body == b"[]"
+    assert captured["timeout"] == 60
+    assert captured["url"].startswith("https://web.archive.org/cdx/search/cdx?")
+    assert captured["read_limit"] == 5_000_001
+    assert state["request_count"] == 1
+    assert state["response_bytes"] == 2
+
+
+def _write_r3_persistable_receipt(path):
+    import json
+    from automation import q221_dod_097_wayback_receipt_persist as persistence
+
+    validated = probe.validate_frozen_inputs(
+        ROOT, ROOT / probe.PREREG_PATH_R3, ROOT / probe.REQUEST_PATH_R3
+    )
+    receipt = probe._base_receipt()
+    receipt["frozen_row_selection"]["target_keys"] = [target["transaction_key"] for target in validated["targets"]]
+    receipt["status"] = "Q221_DOD_097_WAYBACK_TRANSPORT_ERROR"
+    receipt["errors"] = [{"code": "Q221_DOD_097_WAYBACK_TRANSPORT_ERROR", "message": "TimeoutError"}]
+    receipt["next_gate"] = "Retain blocker; this one-shot authorizes no retry or archive expansion."
+    receipt["source_probe"].update({
+        "request_sequence": validated["request"]["REQUEST_SEQUENCE"],
+        "manifest_blob_sha1_verified": validated["manifest_blob_sha1"],
+        "request_marker_validated": True,
+        "preregistration_validated": True,
+        "request_profile": "R3",
+        "one_shot_attempt": 3,
+        "preregistration_path": probe.PREREG_PATH_R3,
+        "request_marker_path": probe.REQUEST_PATH_R3,
+        "request_timeout_seconds": 60,
+        "request_count": 1,
+        "response_bytes": 0,
+        "responses": [],
+        "transport_errors": ["TimeoutError"],
+    })
+    receipt["safety"]["source_requests_made"] = 1
+    receipt["receipt_fingerprint"] = persistence.canonical_fingerprint(receipt)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return receipt
+
+
+def test_r3_receipt_persistence_accepts_the_preregistered_timeout_and_preserves_unknown_result(tmp_path):
+    from automation import q221_dod_097_wayback_receipt_persist as persistence
+
+    artifact = tmp_path / "artifacts" / "q221-r3"
+    artifact.mkdir(parents=True)
+    source = artifact / persistence.RECEIPT_FILENAME_R3
+    original = _write_r3_persistable_receipt(source)
+    result = persistence.persist_receipt(
+        artifact, tmp_path / "evidence", "765432",
+        receipt_filename=persistence.RECEIPT_FILENAME_R3,
+    )
+    attempt = Path(result["attempt_path"])
+    latest = Path(result["latest_path"])
+    assert attempt.read_bytes() == source.read_bytes()
+    assert latest.read_bytes() == source.read_bytes()
+    assert original["source_probe"]["request_count"] == 1
+    assert original["source_probe"]["response_bytes"] == 0
+    assert original["source_probe"]["transport_errors"] == ["TimeoutError"]
+    assert original["safety"]["performance_authorization"] is False
+    assert original["safety"]["live_execution"] is False
+
+
+def test_receipt_persistence_rejects_forged_frozen_target_keys_even_with_a_valid_fingerprint(tmp_path):
+    from automation import q221_dod_097_wayback_receipt_persist as persistence
+
+    receipt = _write_r3_persistable_receipt(tmp_path / persistence.RECEIPT_FILENAME_R3)
+    receipt["frozen_row_selection"]["target_keys"][0] = "FORGED|KEY|MUST|NOT|PASS"
+    receipt["receipt_fingerprint"] = persistence.canonical_fingerprint(receipt)
+    with pytest.raises(persistence.ReceiptPersistenceError, match="receipt keys differ from pinned manifest"):
+        persistence.validate_receipt(receipt, persistence.RECEIPT_FILENAME_R3)
+
+
+def test_r3_receipt_cannot_be_persisted_under_r2_filename(tmp_path):
+    from automation import q221_dod_097_wayback_receipt_persist as persistence
+
+    receipt = _write_r3_persistable_receipt(tmp_path / persistence.RECEIPT_FILENAME_R3)
+    with pytest.raises(persistence.ReceiptPersistenceError, match="R2 marker/preregistration/timeout differs"):
+        persistence.validate_receipt(receipt, persistence.RECEIPT_FILENAME)
+
+
+def test_r3_source_and_sync_workflows_are_marker_only_and_one_shot():
+    source = (ROOT / ".github/workflows/q221-dod-097-wayback-archive-presence-r3.yml").read_text(encoding="utf-8")
+    source_triggers = source.split("permissions:", 1)[0]
+    assert "branches: [master]" in source_triggers
+    assert "research/run_requests/q221_dod_097_wayback_archive_presence_r3.trigger" in source_triggers
+    assert "schedule:" not in source_triggers and "workflow_dispatch:" not in source_triggers
+    assert "q221-dod-097-wayback-archive-presence-r3.yml/runs" in source
+    assert "probe_attempt_number" in source and "recovery_of_workflow_run_id" in source
+    assert "60-second" in source
+    assert "upload-artifact@v6" in source
+
+    sync = (ROOT / ".github/workflows/q221-dod-097-wayback-archive-presence-r3-sync.yml").read_text(encoding="utf-8")
+    assert "Q221 DoD 097 Wayback Archive Schema and Row-Presence Probe (Recovery R3)" in sync
+    assert "github.event.workflow_run.head_branch == 'master'" in sync
+    assert "--receipt-filename q221-dod-097-wayback-presence-r3.json" in sync
+    assert "github_contents_publish.py" in sync
+    persistence = (ROOT / "automation/q221_dod_097_wayback_receipt_persist.py").read_text(encoding="utf-8")
+    assert "RECEIPT_FILENAME_R3" in persistence
+    assert '"timeout": 60' in persistence
+    assert "WAYBACK_RECEIPT_FINGERPRINT_MISMATCH" in persistence
+
+
 
 
 
