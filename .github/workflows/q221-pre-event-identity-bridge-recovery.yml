@@ -55,7 +55,7 @@ jobs:
               "RUN_Q221_PRE_EVENT_IDENTITY_BRIDGE_RECOVERY": "true",
               "SOURCE_OF_TRUTH": "DWR-debug/trading-agent-public",
               "CAPTURE_RUN_ID": "38760595610",
-              "CAPTURE_HEAD_SHA": "737dfd64fbfb19b2737fc0cbac2ba2c0f994691d",
+              "CAPTURE_HEAD_SHA": "737dfd64fbfb19b2737fc0cbac01fde5aecc58b0",
               "CAPTURE_ARTIFACT_ID": "11985846368",
               "CAPTURE_ARTIFACT_NAME": "q221-pre-event-identity-capture-38760595610-1",
               "CAPTURE_ARTIFACT_SHA256": "fce7dee0fe123d4564c188bda60d2e8b00a7f1083fb9cc4971e6ceeaeeaec643",
@@ -99,7 +99,7 @@ jobs:
             .name == "Q221 Pre-Event Identity Bridge Pilot" and
             .event == "push" and
             .head_branch == "master" and
-            .head_sha == "737dfd64fbfb19b2737fc0cbac2ba2c0f994691d" and
+            .head_sha == "737dfd64fbfb19b2737fc0cbac01fde5aecc58b0" and
             .status == "completed" and
             .conclusion == "failure"
           ' "$RUNNER_TEMP/q221-capture-run.json" >/dev/null
@@ -112,7 +112,7 @@ jobs:
                 .expired == false and
                 .digest == "sha256:fce7dee0fe123d4564c188bda60d2e8b00a7f1083fb9cc4971e6ceeaeeaec643" and
                 .workflow_run.id == 38760595610 and
-                .workflow_run.head_sha == "737dfd64fbfb19b2737fc0cbac2ba2c0f994691d"
+                .workflow_run.head_sha == "737dfd64fbfb19b2737fc0cbac01fde5aecc58b0"
               )
             ] | length == 1
           ' "$RUNNER_TEMP/q221-capture-artifacts.json" >/dev/null
