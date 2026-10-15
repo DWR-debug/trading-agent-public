@@ -76,6 +76,19 @@ def test_current_pinned_helper_implementations_match_the_frozen_contract():
     assert r7.validate_helpers() == r7.HELPER_BLOBS
 
 
+def test_capture_reader_uses_the_exact_shard_keys_emitted_by_input_loader():
+    source = Path(__file__).resolve().parents[1] / "automation/q104_i19_residual_policy_applicability_review_r7.py"
+    code = source.read_text(encoding="utf-8")
+    loader = code[code.index('inputs={"request":request'):code.index("return inputs,bundle")]
+    capture = code[code.index("def capture_headers("):code.index("def build_analysis(")]
+    assert '"original_shards":originals' in loader
+    assert '"repaired_shards":repaired' in loader
+    assert 'inputs["original_shards"]' in capture
+    assert 'inputs["repaired_shards"]' in capture
+    assert 'inputs["original"]' not in capture
+    assert 'inputs["repaired"]' not in capture
+
+
 def test_capture_validator_fails_closed_before_it_can_authorize_incomplete_evidence():
     incomplete = {
         "record_type": "q104_i19_residual_policy_applicability_r7_capture",
