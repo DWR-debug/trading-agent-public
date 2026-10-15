@@ -23,7 +23,7 @@ def test_checked_in_request_matches_every_frozen_runtime_pin():
     request = ROOT / "research/run_requests/q104_i19_residual_policy_applicability_r7.trigger"
     values = r7.read_request(request)
     assert values["SOURCE_OF_TRUTH"] == "DWR-debug/trading-agent-public"
-    assert values["REQUEST_SEQUENCE"] == "2026-10-15T10:01:00Z"
+    assert values["REQUEST_SEQUENCE"] == "2026-10-15T11:18:00Z"
     assert values["EXPECTED_SOURCE_ARCHIVE_DOWNLOAD_BYTES"] == "127943839"
     assert values["DATE_MISMATCH_TARGET_COUNT"] == "19"
     assert values["HEADER_ROUTE_COUNT"] == "57"
@@ -74,6 +74,19 @@ def test_combined_budget_enforces_total_and_header_limits_separately():
 
 def test_current_pinned_helper_implementations_match_the_frozen_contract():
     assert r7.validate_helpers() == r7.HELPER_BLOBS
+
+
+def test_capture_reader_uses_the_exact_shard_keys_emitted_by_input_loader():
+    source = Path(__file__).resolve().parents[1] / "automation/q104_i19_residual_policy_applicability_review_r7.py"
+    code = source.read_text(encoding="utf-8")
+    loader = code[code.index('inputs={"request":request'):code.index("return inputs,bundle")]
+    capture = code[code.index("def capture_headers("):code.index("def build_analysis(")]
+    assert '"original_shards":originals' in loader
+    assert '"repaired_shards":repaired' in loader
+    assert 'inputs["original_shards"]' in capture
+    assert 'inputs["repaired_shards"]' in capture
+    assert 'inputs["original"]' not in capture
+    assert 'inputs["repaired"]' not in capture
 
 
 def test_capture_validator_fails_closed_before_it_can_authorize_incomplete_evidence():
