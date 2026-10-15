@@ -105,6 +105,20 @@ REQUEST_KEYS=set(FROZEN)|{"REQUEST_SEQUENCE"}
 
 class ReviewError(ValueError): pass
 
+class CombinedBudget:
+ def __init__(self,total:int,header:int):
+  self.maximum=total;self.header_maximum=header;self.used=0;self.header_used=0;self.is_header_phase=False;self.next_request_at=0.0
+ def wait(self):
+  if self.next_request_at:
+   delay=1.0-(time.monotonic()-self.next_request_at)
+   if delay>0: time.sleep(delay)
+  self.next_request_at=time.monotonic()
+ def add(self,count:int):
+  if count<0 or self.used+count>self.maximum: raise ReviewError("TOTAL_DOWNLOAD_BUDGET_EXCEEDED")
+  if self.is_header_phase and self.header_used+count>self.header_maximum: raise ReviewError("HEADER_DOWNLOAD_BUDGET_EXCEEDED")
+  self.used+=count
+  if self.is_header_phase: self.header_used+=count
+
 def sha(raw:bytes)->str: return hashlib.sha256(raw).hexdigest()
 def blob_sha(raw:bytes)->str: return hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
 def fp(value:dict[str,Any])->str:
@@ -218,7 +232,7 @@ def frozen_fingerprints(i:dict[str,Any])->dict[str,Any]:
 
 def capture_headers(inputs:dict[str,Any])->dict[str,Any]:
  request=inputs["request"];attempts=inputs["attempts"]
- budget=lineage.DownloadBudget(MAX_TOTAL_BYTES)
+ budget=CombinedBudget(MAX_TOTAL_BYTES,MAX_HEADER_TOTAL)
  archive_results={};rows={}
  for name,pin in ARCHIVES.items():
   pr=archive_row(inputs["repaired"][pin["shard"]],pin["url"],pin["shard"])
