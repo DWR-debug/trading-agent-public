@@ -102,4 +102,4 @@ def test_recovery_has_no_scientific_or_execution_authority():
     assert 'assert receipt["interpretation_scope"]["performance_authorization"] is False' in workflow
     assert 'assert receipt["interpretation_scope"]["promotion"] is False' in workflow
     assert 'assert receipt["interpretation_scope"]["live_execution"] is False' in workflow
-    assert "No SEC source calls" in workflow or "no SEC requests" in workflow.lower()
+    assert "no sec requests" in workflow.lower() or "no sec source requests" in workflow.lower()
