@@ -268,7 +268,9 @@ def test_r2_receipt_sync_validates_fingerprint_safety_and_persists_immutably():
     assert "actions: read" in text
     assert "contents: write" in text
     assert "automation.q221_dod_097_wayback_receipt_persist" in text
-    assert "receipt_fingerprint" in text
+    persistence = (ROOT / "automation/q221_dod_097_wayback_receipt_persist.py").read_text(encoding="utf-8")
+    assert "canonical_fingerprint" in persistence
+    assert "R2_RECEIPT_FINGERPRINT_MISMATCH" in persistence
     assert "q221_dod_097_wayback_archive_presence_attempt_" in text
     assert "IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS" in text
     assert "github_contents_publish.py" in text
