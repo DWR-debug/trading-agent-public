@@ -1,0 +1,388 @@
+name: Q220 Offline Source Hash Lineage Diagnostic
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q220_hash_provenance_diagnostic.trigger"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q220-offline-source-hash-lineage
+  cancel-in-progress: false
+
+jobs:
+  analyze-x64:
+    name: Ubuntu x64 — frozen source-hash lineage
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    outputs:
+      analysis_fingerprint: ${{ steps.analysis.outputs.analysis_fingerprint }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Install bounded local test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Test frozen pins and diagnostic contracts
+        run: >-
+          python -m pytest -q
+          tests/test_q220_hash_provenance_diagnostic.py
+          tests/test_q220_hash_provenance_workflow.py
+
+      - name: Verify the three immutable GitHub run/artifact identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          check_source() {
+            local run_id="$1" expected_name="$2" expected_sha="$3" expected_conclusion="$4" artifact_id="$5" artifact_name="$6"
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$run_id" > "$RUNNER_TEMP/q220-run.json"
+            jq -e --arg name "$expected_name" --arg sha "$expected_sha" --arg conclusion "$expected_conclusion" --argjson id "$run_id" '
+              .id == $id and .name == $name and .head_branch == "master" and
+              .head_sha == $sha and .status == "completed" and .conclusion == $conclusion
+            ' "$RUNNER_TEMP/q220-run.json" >/dev/null
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$run_id/artifacts?per_page=100" > "$RUNNER_TEMP/q220-artifacts.json"
+            jq -e --arg name "$artifact_name" --argjson id "$artifact_id" '
+              [.artifacts[]? | select(.id == $id and .name == $name and .expired == false)] | length == 1
+            ' "$RUNNER_TEMP/q220-artifacts.json" >/dev/null
+          }
+
+          check_source \
+            "38254139755" \
+            "Q220 Original SEC Feed Primary-Hash Forensics" \
+            "f67f7b3cf91b25d09f899bd00587fd5868c54c1f" \
+            "failure" \
+            "11749259509" \
+            "q220-primary-source-vintage-forensics-38254139755-1"
+
+          check_source \
+            "38258251764" \
+            "Q220 Bounded Header-Only Acceptance Evidence" \
+            "934e3865ef7c88d268fbb504a98ffdd526f1b2fb" \
+            "success" \
+            "11751436149" \
+            "q220-bounded-header-evidence-38258251764-1"
+
+          check_source \
+            "38590133217" \
+            "Q220 HTTP Representation Sensitivity" \
+            "22cfe961aa0af9666b7a7b2ef784b109c697807e" \
+            "success" \
+            "11907246485" \
+            "q220-http-representation-sensitivity-38590133217-1"
+
+      - name: Download only the pinned small metadata receipts
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-primary-source-vintage-forensics-38254139755-1
+          path: q220-work/inputs/forensics
+          run-id: 38254139755
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download the pinned header-only receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-bounded-header-evidence-38258251764-1
+          path: q220-work/inputs/header
+          run-id: 38258251764
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download the pinned five-response sensitivity receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-http-representation-sensitivity-38590133217-1
+          path: q220-work/inputs/sensitivity
+          run-id: 38590133217
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Reconcile only frozen hashes and existing metadata
+        id: analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q220_hash_provenance_diagnostic \
+            --repo-root . \
+            --forensics-artifact q220-work/inputs/forensics \
+            --header-artifact q220-work/inputs/header \
+            --sensitivity-artifact q220-work/inputs/sensitivity \
+            --output q220-work/x64/receipt.json
+
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("q220-work/x64/receipt.json")
+          row = json.loads(path.read_text(encoding="utf-8"))
+          payload = dict(row)
+          saved = payload.pop("receipt_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+          assert saved == actual, "OUTER_RECEIPT_FINGERPRINT_INVALID"
+          assert row["status"] == "Q220_SOURCE_HASH_LINEAGE_UNRESOLVED_MULTIPLE_OBSERVED_HASHES"
+          assert row["analysis_fingerprint"]
+          assert row["classification"]["distinct_whole_primary_sha256_count"] == 4
+          assert row["classification"]["frozen_expected_hash_reproduced"] is False
+          assert row["classification"]["same_url_same_last_modified_multiple_hashes"] is True
+          assert row["interpretation_scope"]["gate_positive"] is False
+          assert row["interpretation_scope"]["source_vintage_proven"] is False
+          assert row["interpretation_scope"]["performance_authorization"] is False
+          assert row["interpretation_scope"]["promotion"] is False
+          safety = row["safety"]
+          assert safety == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+          }
+          print("analysis_fingerprint=" + row["analysis_fingerprint"])
+          print("receipt_fingerprint=" + row["receipt_fingerprint"])
+          PY
+
+      - name: Preserve immutable x64 receipt and exact small inputs
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-source-hash-lineage-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-work/
+          if-no-files-found: error
+          retention-days: 30
+
+  reproduce-arm64:
+    name: Ubuntu ARM64 — independent deterministic reproduction
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [analyze-x64]
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Install bounded local test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Test frozen pins and diagnostic contracts
+        run: >-
+          python -m pytest -q
+          tests/test_q220_hash_provenance_diagnostic.py
+          tests/test_q220_hash_provenance_workflow.py
+
+      - name: Download the exact x64 analysis and frozen input bundle
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-source-hash-lineage-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-first-result
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Read the expected deterministic analysis fingerprint
+        id: expected
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          path = Path("q220-first-result/x64/receipt.json")
+          if not path.is_file():
+              raise SystemExit("Q220_X64_RECEIPT_MISSING")
+          row = json.loads(path.read_text(encoding="utf-8"))
+          print("fingerprint=" + row["analysis_fingerprint"])
+          PY
+
+      - name: Independently reproduce from the same frozen receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q220_hash_provenance_diagnostic \
+            --repo-root . \
+            --forensics-artifact q220-first-result/inputs/forensics \
+            --header-artifact q220-first-result/inputs/header \
+            --sensitivity-artifact q220-first-result/inputs/sensitivity \
+            --expected-analysis-fingerprint "${{ steps.expected.outputs.fingerprint }}" \
+            --output q220-work/arm64/receipt.json
+
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          row = json.loads(Path("q220-work/arm64/receipt.json").read_text(encoding="utf-8"))
+          payload = dict(row)
+          saved = payload.pop("receipt_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+          assert saved == actual, "OUTER_RECEIPT_FINGERPRINT_INVALID"
+          assert row["status"] == "Q220_SOURCE_HASH_LINEAGE_UNRESOLVED_MULTIPLE_OBSERVED_HASHES"
+          assert row["classification"]["distinct_whole_primary_sha256_count"] == 4
+          assert row["classification"]["frozen_expected_hash_reproduced"] is False
+          assert row["interpretation_scope"]["gate_positive"] is False
+          assert row["safety"]["paper_only"] is True
+          assert row["safety"]["live_trading_enabled"] is False
+          assert row["safety"]["orders_enabled"] is False
+          assert row["safety"]["automatic_promotion"] is False
+          PY
+
+      - name: Preserve ARM64 reproduction receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-source-hash-lineage-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-work/arm64/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-receipt:
+    name: Verify cross-architecture agreement and publish receipt
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [analyze-x64, reproduce-arm64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Download x64 frozen inputs and result
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-source-hash-lineage-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-x64-bundle
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download ARM64 reproduction receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-source-hash-lineage-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-arm64-result
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Combine independently agreeing diagnostic receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          x64 = json.loads(Path("q220-x64-bundle/x64/receipt.json").read_text(encoding="utf-8"))
+          arm64 = json.loads(Path("q220-arm64-result/receipt.json").read_text(encoding="utf-8"))
+          if x64.get("analysis_fingerprint") != arm64.get("analysis_fingerprint"):
+              raise SystemExit("Q220_CROSS_ARCH_ANALYSIS_FINGERPRINT_MISMATCH")
+          if x64.get("status") != arm64.get("status"):
+              raise SystemExit("Q220_CROSS_ARCH_STATUS_MISMATCH")
+          if x64.get("classification") != arm64.get("classification"):
+              raise SystemExit("Q220_CROSS_ARCH_CLASSIFICATION_MISMATCH")
+          safety_expected = {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+          }
+          if x64.get("safety") != safety_expected or arm64.get("safety") != safety_expected:
+              raise SystemExit("Q220_CROSS_ARCH_SAFETY_MISMATCH")
+
+          result = dict(x64)
+          result["cross_arch_reproduction"] = {
+              "status": "DETERMINISTIC_ANALYSIS_MATCHED",
+              "same_analysis_fingerprint": True,
+              "x64_analysis_fingerprint": x64["analysis_fingerprint"],
+              "arm64_analysis_fingerprint": arm64["analysis_fingerprint"],
+              "x64_receipt_fingerprint": x64["receipt_fingerprint"],
+              "arm64_receipt_fingerprint": arm64["receipt_fingerprint"],
+              "x64_platform": "ubuntu-24.04",
+              "arm64_platform": "ubuntu-24.04-arm",
+              "run_id": int("${{ github.run_id }}"),
+              "run_attempt": int("${{ github.run_attempt }}"),
+          }
+          result["generated_at_utc"] = datetime.now(timezone.utc).isoformat()
+          result.pop("receipt_fingerprint", None)
+          result["receipt_fingerprint"] = hashlib.sha256(
+              json.dumps(result, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+
+          target = Path("research/evidence/q220_source_hash_lineage_latest.json")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+          print(json.dumps({
+              "status": result["status"],
+              "analysis_fingerprint": result["analysis_fingerprint"],
+              "receipt_fingerprint": result["receipt_fingerprint"],
+              "distinct_whole_primary_sha256_count": result["classification"]["distinct_whole_primary_sha256_count"],
+              "frozen_expected_hash_reproduced": result["classification"]["frozen_expected_hash_reproduced"],
+              "gate_positive": result["interpretation_scope"]["gate_positive"],
+          }, sort_keys=True))
+          PY
+
+      - name: Verify cross-architecture result remains diagnostic-only
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          path = Path("research/evidence/q220_source_hash_lineage_latest.json")
+          row = json.loads(path.read_text(encoding="utf-8"))
+          payload = dict(row)
+          saved = payload.pop("receipt_fingerprint")
+          actual = hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")).hexdigest()
+          assert saved == actual
+          assert row["cross_arch_reproduction"]["same_analysis_fingerprint"] is True
+          assert row["classification"]["distinct_whole_primary_sha256_count"] == 4
+          assert row["classification"]["frozen_expected_hash_reproduced"] is False
+          assert row["interpretation_scope"]["gate_positive"] is False
+          assert row["interpretation_scope"]["performance_authorization"] is False
+          assert row["interpretation_scope"]["promotion"] is False
+          assert row["safety"] == {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False, "automatic_promotion": False}
+          PY
+
+      - name: Publish receipt with fast-forward-safe source control
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: publish Q220 offline source hash lineage diagnostic"
+        run: >-
+          python automation/github_contents_publish.py
+          --repository "$GITHUB_REPOSITORY"
+          --branch master
+          --base-sha latest
+          --file "research/evidence/q220_source_hash_lineage_latest.json=research/evidence/q220_source_hash_lineage_latest.json"
+
+      - name: Upload immutable final cross-architecture receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-source-hash-lineage-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/evidence/q220_source_hash_lineage_latest.json
+          if-no-files-found: warn
+          retention-days: 30

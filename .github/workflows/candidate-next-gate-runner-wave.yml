@@ -1,21 +1,11 @@
 name: Candidate Next-Gate Wave — Six Runner Pool
 
 on:
+  # Legacy bundled wave: explicit request-file change only; never trigger it for code/test edits.
   push:
     branches: [master]
     paths:
-      - ".github/workflows/candidate-next-gate-runner-wave.yml"
       - "research/run_requests/candidate_next_gate_runner_wave.trigger"
-      - "automation/q104_i19_r3_date_change_header_probe.py"
-      - "automation/q104_i19_r3_date_change_aggregate.py"
-      - "automation/q220_hash_provenance_diagnostic.py"
-      - "automation/q221_transaction_parent_uei_probe_failure_audit.py"
-      - "tests/test_q104_i19_r3_date_change_header_probe.py"
-      - "tests/test_q104_i19_r3_date_change_aggregate.py"
-      - "tests/test_q220_hash_provenance_diagnostic.py"
-      - "tests/test_q221_transaction_parent_uei_probe_failure_audit.py"
-      - "tests/test_candidate_next_gate_runner_wave.py"
-  workflow_dispatch: {}
 
 permissions:
   actions: read
@@ -245,12 +235,20 @@ jobs:
           run-id: 38258251764
           repository: ${{ github.repository }}
           github-token: ${{ github.token }}
+      - name: Download the pinned five-response HTTP sensitivity receipt, not a document
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-http-representation-sensitivity-38590133217-1
+          path: q220-sensitivity-source
+          run-id: 38590133217
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Reconcile only frozen hashes and existing metadata
         shell: cmd
         run: |
           @echo off
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-wave-q220\tools\python.exe"
-          "%PY_EXE%" -m automation.q220_hash_provenance_diagnostic --repo-root . --forensics-artifact q220-forensics-source --header-artifact q220-header-source --output runner-results/q220-hash-provenance/receipt.json
+          "%PY_EXE%" -m automation.q220_hash_provenance_diagnostic --repo-root . --forensics-artifact q220-forensics-source --header-artifact q220-header-source --sensitivity-artifact q220-sensitivity-source --output runner-results/q220-hash-provenance/receipt.json
           if errorlevel 1 exit /b 1
 
       - name: Upload immutable offline diagnostic
@@ -363,12 +361,21 @@ jobs:
           run-id: 38258251764
           repository: ${{ github.repository }}
           github-token: ${{ github.token }}
+      - name: Download the pinned HTTP sensitivity receipt for independent reproduction
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-http-representation-sensitivity-38590133217-1
+          path: q220-sensitivity-source
+          run-id: 38590133217
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
       - name: Independently reproduce deterministic Q220 analysis
         run: >-
           python -m automation.q220_hash_provenance_diagnostic
           --repo-root .
           --forensics-artifact q220-forensics-source
           --header-artifact q220-header-source
+          --sensitivity-artifact q220-sensitivity-source
           --expected-analysis-fingerprint ${{ steps.expected.outputs.fingerprint }}
           --output runner-results/q220-arm64-reproduction/receipt.json
       - name: Upload ARM64 reproduction receipt

@@ -59,6 +59,7 @@ ACTIVE_WORKFLOWS = {
     "q220-bounded-header-evidence.yml",
     "q220-complete-submission-representation-audit.yml",
     "q220-http-representation-sensitivity.yml",
+    "q220-offline-source-hash-lineage.yml",
     "q220-primary-source-vintage-forensics.yml",
     "q220-single-feed-boundary-validation.yml",
     "q220-submission-text-provenance.yml",
