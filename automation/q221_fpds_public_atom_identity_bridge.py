@@ -199,6 +199,8 @@ def validate_frozen_inputs(repo_root: Path, request: dict[str, str]) -> tuple[di
         raise BridgeError("Q221_FPDS_PREREG_BOUNDARY_MISMATCH")
     if prereg.get("frozen_inputs", {}).get("pre_event_feasibility_receipt_fingerprint") != PRE_EVENT_FP:
         raise BridgeError("Q221_FPDS_PREREG_PRE_EVENT_FP_MISMATCH")
+    if request.get("REQUEST_SEQUENCE") != prereg.get("preregistered_at_utc"):
+        raise BridgeError("Q221_FPDS_REQUEST_SEQUENCE_DIFFERS_FROM_PREREGISTRATION")
     limits = prereg.get("execution_limits", {})
     expected_limits = {
         "exact_record_queries": MAX_REQUESTS,
