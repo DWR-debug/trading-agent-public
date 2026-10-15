@@ -164,6 +164,14 @@ jobs:
             --capture-dir q221-capture \
             --expected-analysis-fingerprint "${{ needs.capture.outputs.analysis_fingerprint }}" \
             --output-dir q221-verification
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          row = json.loads(Path("q221-verification/receipt.json").read_text(encoding="utf-8"))
+          assert row["status"] == "Q221_PRE_EVENT_IDENTITY_BRIDGE_REPRODUCED_OFFLINE"
+          assert row["network_requests_made"] == 0
+          print("Q221_PRE_EVENT_IDENTITY_BRIDGE_REPRODUCED_OFFLINE=true")
+          PY
 
       - name: Preserve offline reproduction receipt
         if: always()
@@ -238,6 +246,7 @@ jobs:
           row = json.loads(p.read_text(encoding="utf-8"))
           assert row["status"] == "Q221_PRE_EVENT_IDENTITY_BRIDGE_PILOT_COMPLETE_MAPPING_UNRESOLVED"
           assert row["cross_arch_reproduction"]["same_analysis_fingerprint"] is True
+          assert row["cross_arch_reproduction"]["status"] == "DETERMINISTIC_ANALYSIS_MATCHED"
           assert row["decision_boundary"]["historical_first_public_observation_proven"] is False
           assert row["decision_boundary"]["recipient_to_issuer_mapping_frozen"] is False
           assert row["decision_boundary"]["performance_authorization"] is False
