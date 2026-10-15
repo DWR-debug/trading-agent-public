@@ -312,8 +312,8 @@ def parse_atom(body: bytes) -> list[dict[str, Any]]:
         piids = _get(values, "piid")
         mods = _get(values, "modificationnumber", "modnumber", "modificationnum")
         signed_dates = _get(values, "signeddate", "datesigned")
-        uei_values = _get(values, "uei", "uniquentityid", "uniquentityidentifier", "genericstring02")
-        duns_values = _get(values, "dunsnumber", "vendordunsnumber", "uniquentityidduns")
+        uei_values = _get(values, "uei", "uniqueentityid", "uniqueentityidentifier", "genericstring02")
+        duns_values = _get(values, "dunsnumber", "vendordunsnumber", "uniqueentityidduns")
         names = _get(
             values,
             "ueilegalbusinessname",
