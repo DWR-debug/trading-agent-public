@@ -10,6 +10,7 @@ from automation.sync_current_operational_status import (
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_PATH = ROOT / "research/evidence/q104_i19_residual_policy_applicability_latest.json"
 REVIEW_PATH = ROOT / "research/evidence/q104_i19_residual_policy_independent_admissibility_review_latest.json"
+SIDECAR_PATH = ROOT / "research/evidence/q104_i19_residual_filing_date_sidecar_latest.json"
 
 
 def _inputs():
@@ -31,6 +32,11 @@ def test_q104_independent_admissibility_is_surfaced_by_generated_status():
     assert state["review_status"] == "INDEPENDENT_REVIEW_COMPLETE"
     assert state["admissible_scope"] == "NON_DESTRUCTIVE_RESEARCH_SIDE_CAR_ONLY"
     assert state["verified_date_mismatch_cases"] == 36
+    assert state["sidecar_path"] == "research/evidence/q104_i19_residual_filing_date_sidecar_latest.json"
+    assert state["sidecar_status"] == "CURRENT_NON_DESTRUCTIVE_RESEARCH_ONLY"
+    assert state["sidecar_row_count"] == 36
+    assert state["bulk_filing_dates_overwritten"] is False
+    assert "research/evidence/q104_i19_residual_filing_date_sidecar_latest.json contains 36" in state["summary"]
     assert state["exact_identity_validations"] == 36
     assert state["successful_header_route_counts_by_case"] == {"2": 5, "3": 31}
     assert state["r7_allowlisted_index_header_404_cases"] == 4
@@ -92,3 +98,20 @@ def test_q104_status_fails_closed_if_any_row_no_longer_matches_the_review():
     assert status["review_status"] == "REVIEW_MISSING_STALE_OR_INVALID"
     assert status["verified_date_mismatch_cases"] == 0
     assert status["production_field_precedence_authorized"] is False
+
+
+def test_q104_status_fails_closed_when_sidecar_is_missing_or_mutated():
+    source, review = _inputs()
+    sidecar = json.loads(SIDECAR_PATH.read_text(encoding="utf-8"))
+
+    missing = q104_i19_independent_admissibility_status(review, source, sidecar={})
+    assert missing["review_status"] == "REVIEW_MISSING_STALE_OR_INVALID"
+    assert missing["sidecar_status"] == "SIDECAR_MISSING_STALE_OR_INVALID"
+    assert missing["production_field_precedence_authorized"] is False
+
+    altered = copy.deepcopy(sidecar)
+    altered["rows"][0]["bulk_filing_date"] = "2099-01-01"
+    stale = q104_i19_independent_admissibility_status(review, source, sidecar=altered)
+    assert stale["review_status"] == "REVIEW_MISSING_STALE_OR_INVALID"
+    assert stale["sidecar_row_count"] == 0
+    assert stale["production_field_precedence_authorized"] is False

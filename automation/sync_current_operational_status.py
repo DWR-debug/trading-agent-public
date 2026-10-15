@@ -266,6 +266,7 @@ Q104_I19_EXPECTED_REVIEW_SOURCE_FP = "de6c5feca4e27f020b77890a6b00e67a87735d6572
 def q104_i19_independent_admissibility_status(
     review: dict[str, Any] | None = None,
     source_receipt: dict[str, Any] | None = None,
+    sidecar: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Expose the Q104:I19 review only while its exact source pins remain valid.
 
@@ -282,6 +283,11 @@ def q104_i19_independent_admissibility_status(
             ROOT / "research/evidence/q104_i19_residual_policy_applicability_latest.json",
             {},
         )
+    if sidecar is None:
+        sidecar = _load_json(
+            ROOT / "research/evidence/q104_i19_residual_filing_date_sidecar_latest.json",
+            {},
+        )
     fail_closed_summary = (
         "Q104:I19 independent admissibility receipt is missing, stale, or fails strict pin/count validation; "
         "do not infer admissibility from this status summary. The 53 residual records and all historical PIT, "
@@ -294,6 +300,10 @@ def q104_i19_independent_admissibility_status(
             "disposition": "NOT_ADMITTED_BY_CURRENT_STATUS",
             "validation_reason": reason,
             "input_receipt_fingerprint": source_receipt.get("receipt_fingerprint") if isinstance(source_receipt, dict) else None,
+            "sidecar_status": "SIDECAR_MISSING_STALE_OR_INVALID",
+            "sidecar_path": "research/evidence/q104_i19_residual_filing_date_sidecar_latest.json",
+            "sidecar_row_count": 0,
+            "bulk_filing_dates_overwritten": False,
             "verified_date_mismatch_cases": 0,
             "exact_identity_validations": 0,
             "production_field_precedence_authorized": False,
@@ -475,11 +485,24 @@ def q104_i19_independent_admissibility_status(
     ):
         return invalid("PAPER_ONLY_SAFETY_FLAGS_CHANGED")
 
+    try:
+        from automation.build_q104_i19_residual_filing_date_sidecar import SidecarError, build_sidecar
+
+        expected_sidecar = build_sidecar(source_receipt, review)
+    except (SidecarError, TypeError, ValueError, KeyError):
+        return invalid("EXPECTED_FILING_DATE_SIDECAR_BUILD_FAILED")
+    if not isinstance(sidecar, dict) or sidecar != expected_sidecar:
+        return invalid("FILING_DATE_SIDECAR_MISSING_STALE_OR_MUTATED")
+
     return {
         "review_status": "INDEPENDENT_REVIEW_COMPLETE",
         "disposition": review["disposition"],
         "validation_reason": "ALL_FROZEN_PINS_COUNTS_AND_NON_AUTHORIZING_SCOPE_CHECKS_PASSED",
         "input_receipt_fingerprint": source_fp,
+        "sidecar_path": "research/evidence/q104_i19_residual_filing_date_sidecar_latest.json",
+        "sidecar_status": "CURRENT_NON_DESTRUCTIVE_RESEARCH_ONLY",
+        "sidecar_row_count": 36,
+        "bulk_filing_dates_overwritten": False,
         "verified_date_mismatch_cases": 36,
         "exact_identity_validations": 36,
         "successful_header_route_counts_by_case": route_counts,
@@ -503,6 +526,8 @@ def q104_i19_independent_admissibility_status(
             "Q104:I19 independent admissibility review [PR #1484] is current for exactly 36 frozen date-mismatch rows: "
             "all 36 pass identity/header/acceptance consistency and bulk-versus-header date-difference checks "
             "(31 have three successful header routes; 5 have two, including only the four frozen R7 index-header 404 exceptions). "
+            "Persisted sidecar research/evidence/q104_i19_residual_filing_date_sidecar_latest.json contains 36 "
+            "sorted, source-pinned rows and has been revalidated against the exact source receipt and independent review. "
             "Admissible scope is a non-destructive research sidecar only: preserve bulk FILING_DATE unchanged, retain the "
             "EDGAR header filing date as a separate field with a discrepancy flag, keep ACCEPTANCE-DATETIME separate "
             "from first-public-observation time, and retain DATE-OF-FILING-DATE-CHANGE as separate metadata "
