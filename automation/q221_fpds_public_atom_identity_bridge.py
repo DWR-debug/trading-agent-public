@@ -149,7 +149,7 @@ def canonical_fingerprint(value: dict[str, Any], field: str = "receipt_fingerpri
 
 def canonical_analysis_fingerprint(value: dict[str, Any]) -> str:
     payload = dict(value)
-    for key in ("analysis_fingerprint", "receipt_fingerprint", "generated_at_utc", "workflow_run_id"):
+    for key in ("analysis_fingerprint", "receipt_fingerprint", "generated_at_utc", "workflow_run_id", "cross_arch_validation"):
         payload.pop(key, None)
     raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
     return sha256(raw)
