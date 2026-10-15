@@ -172,6 +172,25 @@ def test_r2_workflow_has_its_own_master_only_one_shot_guard_and_marker():
     assert "recovery_of_workflow_run_id" in text
     assert "upload-artifact@v6" in text
 
+ 
+ 
+def test_r2_receipt_sync_validates_fingerprint_safety_and_persists_immutably():
+    text = (ROOT / ".github/workflows/q221-dod-097-wayback-archive-presence-r2-sync.yml").read_text(encoding="utf-8")
+    triggers = text.split("permissions:", 1)[0]
+    assert "workflow_run:" in triggers
+    assert "Q221 DoD 097 Wayback Archive Schema and Row-Presence Probe (Recovery R2)" in triggers
+    assert "types: [completed]" in triggers
+    assert "github.event.workflow_run.head_branch == 'master'" in text
+    assert "conclusion != 'cancelled'" in text
+    assert "actions: read" in text
+    assert "contents: write" in text
+    assert "receipt_fingerprint" in text
+    assert "R2_RECEIPT_FINGERPRINT_MISMATCH" in text
+    assert "q221_dod_097_wayback_archive_presence_attempt_" in text
+    assert "IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS" in text
+    assert "github_contents_publish.py" in text
+    assert "live_trading_enabled" in text
+
 
 
 def test_receipt_writer_persists_a_verifiable_canonical_fingerprint(tmp_path):
