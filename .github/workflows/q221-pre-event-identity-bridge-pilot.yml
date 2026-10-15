@@ -1,0 +1,280 @@
+name: Q221 Pre-Event Identity Bridge Pilot
+
+on:
+  # Explicit frozen request only; edits to code/tests cannot replay the network capture.
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q221_pre_event_identity_bridge_pilot.trigger"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q221-pre-event-identity-bridge-pilot
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    name: Capture seven bounded public sources on Ubuntu x64
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      analysis_fingerprint: ${{ steps.capture.outputs.analysis_fingerprint }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Test frozen pilot contract and workflow gates
+        run: >-
+          python -m pytest -q
+          tests/test_q221_pre_event_identity_bridge_pilot.py
+          tests/test_q221_pre_event_identity_bridge_pilot_workflow.py
+
+      - name: Verify exact immutable parent-map run and artifact before download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38305074104" > "$RUNNER_TEMP/q221-parent-map-run.json"
+          jq -e '
+            .id == 38305074104 and
+            .name == "Q221 Current Parent Identity Lead Map" and
+            .head_branch == "master" and
+            .head_sha == "179aab94f12bf15aff05a4fea7010872d8fa8317" and
+            .status == "completed" and
+            .conclusion == "success"
+          ' "$RUNNER_TEMP/q221-parent-map-run.json" >/dev/null
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38305074104/artifacts?per_page=100" > "$RUNNER_TEMP/q221-parent-map-artifacts.json"
+          jq -e '
+            [.artifacts[]? |
+              select(
+                .id == 11772786096 and
+                .name == "q221-current-parent-identity-map-38305074104-1" and
+                .expired == false
+              )
+            ] | length == 1
+          ' "$RUNNER_TEMP/q221-parent-map-artifacts.json" >/dev/null
+
+      - name: Download exact existing parent-map artifact; do not re-query USAspending
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-current-parent-identity-map-38305074104-1
+          path: q221-parent-map
+          run-id: 38305074104
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Capture exact pre-registered public pages once
+        id: capture
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          python -m automation.q221_pre_event_identity_bridge_pilot \
+            --mode capture \
+            --repo-root . \
+            --parent-map-artifact q221-parent-map \
+            --output-dir q221-capture
+          capture_rc=$?
+          set -e
+          if [[ -s q221-capture/receipt.json ]]; then
+            python - <<'PY' >> "$GITHUB_OUTPUT"
+            import json
+            from pathlib import Path
+            row = json.loads(Path("q221-capture/receipt.json").read_text(encoding="utf-8"))
+            if row.get("status") == "Q221_PRE_EVENT_IDENTITY_BRIDGE_CAPTURE_COMPLETE":
+                print("analysis_fingerprint=" + row["analysis_fingerprint"])
+            PY
+          fi
+          exit "$capture_rc"
+
+      - name: Preserve bounded capture and failure receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-pre-event-identity-capture-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-capture/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Stop downstream stages on incomplete capture
+        if: steps.capture.outcome != 'success'
+        run: |
+          echo "Q221 source capture incomplete. Gates remain closed; no retry or mapping is implied."
+          exit 1
+
+  verify:
+    name: Offline reproduction on Ubuntu ARM64
+    needs: [capture]
+    if: needs.capture.result == 'success' && github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Re-run frozen contract tests on independent architecture
+        run: >-
+          python -m pytest -q
+          tests/test_q221_pre_event_identity_bridge_pilot.py
+          tests/test_q221_pre_event_identity_bridge_pilot_workflow.py
+
+      - name: Download the immutable capture bundle; no network source requests
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-pre-event-identity-capture-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-capture
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download exact existing parent-map artifact for independent pin validation
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-current-parent-identity-map-38305074104-1
+          path: q221-parent-map
+          run-id: 38305074104
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Independently rebuild source checks and analysis fingerprint offline
+        run: |
+          set -euo pipefail
+          python -m automation.q221_pre_event_identity_bridge_pilot \
+            --mode verify \
+            --repo-root . \
+            --parent-map-artifact q221-parent-map \
+            --capture-dir q221-capture \
+            --expected-analysis-fingerprint "${{ needs.capture.outputs.analysis_fingerprint }}" \
+            --output-dir q221-verification
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          row = json.loads(Path("q221-verification/receipt.json").read_text(encoding="utf-8"))
+          assert row["status"] == "Q221_PRE_EVENT_IDENTITY_BRIDGE_REPRODUCED_OFFLINE"
+          assert row["network_requests_made"] == 0
+          print("Q221_PRE_EVENT_IDENTITY_BRIDGE_REPRODUCED_OFFLINE=true")
+          PY
+
+      - name: Preserve offline reproduction receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-pre-event-identity-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-verification/
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    name: Publish only the matched diagnostic receipt
+    needs: [capture, verify]
+    if: needs.capture.result == 'success' && needs.verify.result == 'success' && github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Download original capture bundle
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-pre-event-identity-capture-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-capture
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download independent ARM64 verification receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-pre-event-identity-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-verification
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download exact existing parent-map artifact for final pin revalidation
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-current-parent-identity-map-38305074104-1
+          path: q221-parent-map
+          run-id: 38305074104
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Synthesize matched receipt without networking
+        run: |
+          set -euo pipefail
+          python -m automation.q221_pre_event_identity_bridge_pilot \
+            --mode publish \
+            --repo-root . \
+            --parent-map-artifact q221-parent-map \
+            --capture-dir q221-capture \
+            --verification-receipt q221-verification/receipt.json \
+            --output research/evidence/q221_pre_event_identity_bridge_pilot_latest.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("research/evidence/q221_pre_event_identity_bridge_pilot_latest.json")
+          row = json.loads(p.read_text(encoding="utf-8"))
+          assert row["status"] == "Q221_PRE_EVENT_IDENTITY_BRIDGE_PILOT_COMPLETE_MAPPING_UNRESOLVED"
+          assert row["cross_arch_reproduction"]["same_analysis_fingerprint"] is True
+          assert row["cross_arch_reproduction"]["status"] == "DETERMINISTIC_ANALYSIS_MATCHED"
+          assert row["decision_boundary"]["historical_first_public_observation_proven"] is False
+          assert row["decision_boundary"]["recipient_to_issuer_mapping_frozen"] is False
+          assert row["decision_boundary"]["performance_authorization"] is False
+          assert row["decision_boundary"]["promotion"] is False
+          assert row["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+          }
+          PY
+
+      - name: Publish receipt with fast-forward-safe public source control
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: publish Q221 pre-event identity bridge pilot"
+        run: >-
+          python automation/github_contents_publish.py
+          --repository "$GITHUB_REPOSITORY"
+          --branch master
+          --base-sha latest
+          --file "research/evidence/q221_pre_event_identity_bridge_pilot_latest.json=research/evidence/q221_pre_event_identity_bridge_pilot_latest.json"
+
+      - name: Preserve final matched receipt artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-pre-event-identity-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/evidence/q221_pre_event_identity_bridge_pilot_latest.json
+          if-no-files-found: warn
+          retention-days: 30
