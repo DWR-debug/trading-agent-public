@@ -117,7 +117,7 @@ def test_workflow_uses_immutable_input_artifact_ids_and_no_primary_document_down
     for value in (
         "38250105408", "11747003791", "38557631541", "11890995910", "11891525016",
         "38574180245", "11899236364", "38582684174", "11902804060", "38588100012", "11905763813",
-        "q104-i19-residual-policy-applicability-r7.trigger",
+        "q104_i19_residual_policy_applicability_r7.trigger",
     ):
         assert value in workflow
     assert "no-new-primary" in workflow.lower()
