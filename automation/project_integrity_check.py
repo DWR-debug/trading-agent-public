@@ -51,6 +51,7 @@ ACTIVE_WORKFLOWS = {
     "q221-recipient-parent-identity-probe.yml",
     "q221-current-parent-identity-map.yml",
     "q221-pre-event-identity-bridge-pilot.yml",
+    "q221-pre-event-identity-bridge-recovery.yml",
     "q221-fpds-public-atom-identity-bridge.yml",
     "q221-pre-event-parent-identity-feasibility.yml",
     "q221-transaction-parent-uei-probe.yml",
