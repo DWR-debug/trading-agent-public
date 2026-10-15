@@ -22,7 +22,6 @@ def test_q221_failure_audit_uses_the_actual_frozen_attempt_sequence():
     assert values["LIVE_EXECUTION"] == "false"
 
 
-
 def test_priority_wave_uses_three_self_hosted_windows_and_three_github_ubuntu_slots():
     workflow = (ROOT / ".github" / "workflows" / "candidate-next-gate-runner-wave.yml").read_text(encoding="utf-8")
     windows_jobs = workflow.split("  q104_r3_date_change_capture:", 1)[1].split("  q104_cross_vintage_aggregate:", 1)[0]
@@ -43,3 +42,20 @@ def test_candidate_wave_q221_audit_uses_the_frozen_failure_audit_request():
     workflow = (ROOT / ".github" / "workflows" / "candidate-next-gate-runner-wave.yml").read_text(encoding="utf-8")
     assert "--request research/run_requests/q221_transaction_parent_uei_failure_audit.trigger" in workflow
     assert "--request research/run_requests/q221_transaction_parent_uei_probe.trigger" not in workflow
+
+
+def test_legacy_wave_requires_explicit_request_marker_and_does_not_trigger_on_code_edits():
+    workflow = (ROOT / ".github" / "workflows" / "candidate-next-gate-runner-wave.yml").read_text(encoding="utf-8")
+    trigger = workflow.split("\npermissions:", 1)[0]
+    assert 'paths:\n      - "research/run_requests/candidate_next_gate_runner_wave.trigger"' in trigger
+    assert workflow.count("research/run_requests/candidate_next_gate_runner_wave.trigger") == 1
+    assert "workflow_dispatch:" not in workflow
+    assert "automation/q220_hash_provenance_diagnostic.py" not in trigger
+    assert "tests/test_q220_hash_provenance_diagnostic.py" not in trigger
+
+
+def test_legacy_q220_analysis_and_arm64_reproduction_use_exact_sensitivity_receipt():
+    workflow = (ROOT / ".github" / "workflows" / "candidate-next-gate-runner-wave.yml").read_text(encoding="utf-8")
+    assert workflow.count("q220-http-representation-sensitivity-38590133217-1") == 2
+    assert workflow.count("--sensitivity-artifact q220-sensitivity-source") == 2
+    assert "run-id: 38590133217" in workflow
