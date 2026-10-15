@@ -2,12 +2,13 @@
 
 **Source run:** [#38305074104](https://github.com/DWR-debug/trading-agent-public/actions/runs/38305074104)  
 **Immutable artifact:** [q221-current-parent-identity-map-38305074104-1](https://github.com/DWR-debug/trading-agent-public/actions/runs/38305074104/artifacts/11772786096)  
-**Receipt fingerprint:** `ae3a3263d5e7d2545dbdaed7ba7ff1cfe3d4cd00e0403352096dcce4d4797602`  
+**Source artifact receipt fingerprint:** `ae3a3263d5e7d2545dbdaed7ba7ff1cfe3d4cd00e0403352096dcce4d4797602`  
+**Summary receipt fingerprint:** `444179ed66cb0560ca792d2b831144c89165f46f19095a15456e21db7b18623a`  
 **Persisted summary:** `research/evidence/q221_current_parent_identity_map_summary_2026_10_12.json`
 
 ## Verified result
 
-The bounded USAspending recipient endpoint run completed 247/247 frozen recipient profiles from 247/247 requests. It transferred 342,214 response bytes under the 25,000,000-byte budget and independently recomputes to the receipt fingerprint above.
+The bounded USAspending recipient endpoint run completed 247/247 frozen recipient profiles from 247/247 requests. It transferred 342,214 response bytes under the 25,000,000-byte budget. The source artifact's own receipt fingerprint was independently recomputed; the compact summary has a separate canonical fingerprint.
 
 | Classification | Count | Meaning |
 |---|---:|---|
