@@ -513,7 +513,7 @@ def fetch_one(spec: dict[str, Any], budget: _Budget) -> dict[str, Any]:
         elif spec["identifier_regime_at_action"] == "DUNS_AUTHORITATIVE_UEI_NOT_YET_AUTHORITATIVE":
             record["row_interpretation"] = "UEI_AND_NAME_MATCH_ON_CURRENT_RECORD_POST_HOC_CROSSWALK_NOT_CONTEMPORANEOUS_UEI_PROOF"
         else:
-            record["row_interpretation"] = "CONTEMPORANEOUS_UEI_REGIME_RECORD_AND_NAME_MATCH"
+            record["row_interpretation"] = "POST_CUTOVER_IDENTIFIER_REGIME_UEI_AND_NAME_MATCH_ON_CURRENT_RECORD_NOT_HISTORICAL_SNAPSHOT_PROOF"
         observation["observed_records"].append(record)
 
     if len(exact) > 1:
