@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "record_type": "q104_i19_independent_receipt_consistency_review",
+  "candidate_id": "Q104:I19",
+  "review_timestamp_utc": "2026-10-15T17:15:00Z",
+  "source_of_truth": "DWR-debug/trading-agent-public",
+  "source_receipt": {
+    "path": "research/evidence/q104_i19_residual_policy_applicability_latest.json",
+    "blob_sha": "24678487c0481045573df149828f556d1699b863",
+    "receipt_fingerprint": "de6c5feca4e27f020b77890a6b00e67a87735d6572070f263ba56d8ee24d0444",
+    "workflow_run_id": 38767254513
+  },
+  "review_type": "independent_structural_consistency_review_of_published_receipt_only",
+  "review_limits": [
+    "This review rechecks consistency of the published JSON receipt and its row-level fields; it does not independently re-fetch SEC sources or re-hash the underlying downloaded archives.",
+    "No source requests were made by this review.",
+    "No source receipts or census inputs were changed."
+  ],
+  "checks": {
+    "row_count_equals_frozen_date_mismatch_count": true,
+    "row_count": 36,
+    "frozen_date_mismatch_count": 36,
+    "all_rows_have_consistent_identity_fields": true,
+    "all_rows_have_header_filing_date_route_agreement": true,
+    "all_rows_have_acceptance_datetime_route_agreement": true,
+    "all_rows_have_at_least_two_successful_header_routes": true,
+    "date_change_observation_presence_matches_value": true,
+    "route_count_distribution": {
+      "2": 5,
+      "3": 31
+    },
+    "bulk_minus_header_calendar_day_distribution": {
+      "1": 25,
+      "3": 9,
+      "26": 1,
+      "40": 1
+    },
+    "date_change_observed_rows": 17,
+    "date_change_differs_from_header_date": 15,
+    "date_change_equals_header_date": 2,
+    "structurally_inconsistent_rows": []
+  },
+  "decision": {
+    "status": "ADMISSIBLE_FOR_NON_DESTRUCTIVE_SIDECAR_ONLY",
+    "rationale": [
+      "The receipt's 36 row-level identity, header-date route agreement and acceptance-time route agreement flags are internally consistent, and all rows have at least two successful routes.",
+      "The discrepancies are not a uniform one-day offset: 25 rows differ by one calendar day, nine by three days, one by 26 days and one by 40 days. This rules out a blanket date-shift rule and requires retaining per-row provenance.",
+      "DATE-OF-FILING-DATE-CHANGE is present in only 17 rows and differs from the EDGAR header date in 15 of those; it cannot serve as a substitute for either filing date or acceptance time.",
+      "The receipt-only review is not independent verification of raw SEC source bytes, first-public observation time, archive completeness or point-in-time admissibility."
+    ],
+    "allowed_next_step": "A non-destructive sidecar may preserve the bulk FILING_DATE as provenance and store the route-consistent EDGAR header filing date and ACCEPTANCE-DATETIME as separately labelled fields, with an explicit discrepancy flag and source provenance for each row.",
+    "prohibited": [
+      "Do not overwrite or replace the bulk filing date.",
+      "Do not apply production field precedence or change production joins.",
+      "Do not infer first-public availability, clear historical archive/PIT/acceptance-time gates, or claim scientific evidence.",
+      "Do not merge the seven identity-conflict cases or ten complete-submission HTTP 404 cases into this 36-row branch.",
+      "Do not restart the census, repeat SEC requests, download daily Feeds or primary documents, or relax any research gate."
+    ]
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "source_requests_made": 0,
+    "field_precedence_applied": false,
+    "production_join_changed": false,
+    "source_receipts_modified": false,
+    "census_restarted": false,
+    "historical_archive_gate_cleared": false,
+    "acceptance_time_gate_cleared": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  }
+}
