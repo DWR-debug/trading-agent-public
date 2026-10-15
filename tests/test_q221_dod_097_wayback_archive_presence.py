@@ -129,6 +129,9 @@ def test_workflow_is_master_marker_only_and_one_shot_guarded():
     assert "workflow_dispatch:" not in triggers
     assert "Q221_097_ONE_SHOT_GUARD=PASS" in text
     assert "one-shot source request" in text.lower()
+    assert "Ensure a fail-closed fallback receipt exists" in text
+    assert "Q221_DOD_097_RECEIPT_PERSISTENCE_FAILED_SOURCE_OUTCOME_UNKNOWN" in text
+    assert '"request_count_known": False' in text
 
 
 
