@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_pre_event_identity_bridge_pilot_preregistration",
+  "candidate_id": "Q221",
+  "title": "Three-key pre-event corporate identity bridge pilot",
+  "registered_at_utc": "2026-10-15T12:58:00Z",
+  "status": "FROZEN_SOURCE_IDENTITY_PILOT",
+  "source_of_truth": "DWR-debug/trading-agent-public",
+  "research_question": "Do fixed, officially published pre-event corporate documents support a historical recipient/entity relationship lead for three frozen Q221 transactions, and where does exact legal-entity form conflict remain?",
+  "boundaries": {
+    "sample_size": 3,
+    "sample_selection": "Three transaction keys already present in the immutable 348-row Q221 manifest; no requery or resampling.",
+    "unit": "historical legal-entity relationship evidence, not a security-price observation",
+    "permitted_conclusion": "source-specific evidence is present or absent; ambiguity is preserved",
+    "forbidden_conclusion": "historical first-public timestamp, legal continuity through action date, recipient-to-issuer map, investability, or scientific/performance authority"
+  },
+  "frozen_manifest": {
+    "path": "research/evidence/q221_historical_public_boundary_latest.json",
+    "git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+    "row_count": 348,
+    "historical_first_public_observation_proven": false,
+    "recipient_to_issuer_mapping_frozen": false
+  },
+  "frozen_current_parent_leads": {
+    "workflow_run_id": 38305074104,
+    "workflow_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38305074104",
+    "workflow_head_sha": "179aab94f12bf15aff05a4fea7010872d8fa8317",
+    "artifact_id": 11772786096,
+    "artifact_name": "q221-current-parent-identity-map-38305074104-1",
+    "artifact_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38305074104/artifacts/11772786096",
+    "raw_json_sha256": "5f62867c8153fc03dec7d2d983f9017d9014e829e5cfcdf1729579539db4c0f0",
+    "receipt_fingerprint": "ae3a3263d5e7d2545dbdaed7ba7ff1cfe3d4cd00e0403352096dcce4d4797602",
+    "interpretation": "current-state metadata only; not historical parent evidence"
+  },
+  "transaction_keys": {
+    "CACI_2019": "FA875018C0180|P00003|2019-01-03|28eee911-76af-7147-f760-4ec5f90bec2d-C|N3PBJAVNKF61",
+    "AURORA_2024": "HR001123C0013|P00006|2024-01-02|23c9b680-370f-e3eb-79d0-f1afc23e13fc-C|K1L1BZLNPWC4",
+    "ATK_2019": "FA930018FD001|P00004|2019-01-03|1a27c4e3-c0a0-5d50-3277-128bfbd90200-C|GRJJTMCRKJD1"
+  },
+  "source_urls": [
+    "https://www.sec.gov/Archives/edgar/data/16058/000156459018022021/0001564590-18-022021-index.htm",
+    "https://www.sec.gov/Archives/edgar/data/16058/000156459018022021/caci-ex211_14.htm",
+    "https://www.sec.gov/Archives/edgar/data/1706946/000170694622000124/0001706946-22-000124-index.htm",
+    "https://www.sec.gov/Archives/edgar/data/1706946/000170694622000124/a101auroramasteragreement.htm",
+    "https://www.sec.gov/Archives/edgar/data/866121/000086612117000027/0000866121-17-000027-index.htm",
+    "https://www.sec.gov/Archives/edgar/data/866121/000086612117000027/oa-ex21x20161231.htm",
+    "https://investor.northropgrumman.com/news-releases/news-release-details/northrop-grumman-completes-orbital-atk-acquisition-blake-larson"
+  ],
+  "hypotheses": {
+    "H1": "The frozen recipient has exact legal-entity evidence in a filing dated before the sampled action date; this supports only a pre-event relationship lead.",
+    "H0": "The fixed public pages do not contain the exact pre-registered legal-entity terms or do not establish a pre-event relationship lead.",
+    "H2": "A legal-entity-form mismatch means the row must remain unresolved even if a historic acquisition chain is independently documented."
+  },
+  "preregistered_classifications": {
+    "CACI_2019": "PRE_EVENT_SUBSIDIARY_EVIDENCE_FOUND_PERSISTENCE_TO_ACTION_DATE_UNPROVEN",
+    "AURORA_2024": "PRE_EVENT_PARENT_RELATION_EVIDENCE_FOUND_PERSISTENCE_TO_ACTION_DATE_UNPROVEN",
+    "ATK_2019": "BLOCKED_LEGAL_ENTITY_FORM_MISMATCH"
+  },
+  "limits": {
+    "maximum_requests": 7,
+    "request_profiles": "one HTTPS GET per allowlisted URL; no retries",
+    "maximum_bytes_per_source": 300000,
+    "maximum_total_bytes": 900000,
+    "timeout_seconds": 30,
+    "inter_request_gap_seconds": 1,
+    "captured_content": "bounded public HTML pages only; no SEC Feed, submission-wide text, source archive, USAspending API, bulk ZIP, or row-level 348-key endpoint request",
+    "source_host_allowlist": [
+      "www.sec.gov",
+      "investor.northropgrumman.com"
+    ],
+    "capture_receipt_retention_days": 30
+  },
+  "prohibitions": {
+    "source_population_changes": true,
+    "transaction_key_changes": true,
+    "current_parent_used_as_historical_proof": true,
+    "issuer_mapping": true,
+    "public_clock_inference": true,
+    "issuer_name_similarity_mapping": true,
+    "broad_archive_downloads": true,
+    "usaspending_api_requests": true,
+    "performance_evaluation": true,
+    "holdout_selection": true,
+    "ranking": true,
+    "tuning": true,
+    "promotion": true,
+    "live_execution": true
+  },
+  "decision_boundary": {
+    "Q221_348_row_public_clock_gate_remains_closed": true,
+    "historical_parent_lineage_proven": false,
+    "persistence_to_action_date_proven": false,
+    "historical_first_public_observation_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "scientific_evidence": false,
+    "performance_authorization": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "paid_api_budget_usd": 0
+  }
+}
