@@ -1,0 +1,191 @@
+name: Q221 DoD 097 Wayback Archive Schema and Row-Presence Probe (Recovery R3)
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q221_dod_097_wayback_archive_presence_r3.trigger"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q221-dod-097-wayback-row-presence-r3
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact marker commit
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.16"
+
+      - name: Install bounded test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Prevent re-use of this one-shot R3 recovery source request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/workflows/q221-dod-097-wayback-archive-presence-r3.yml/runs?branch=master&per_page=100" > "$RUNNER_TEMP/q221-097-prior-runs.json"
+          jq -e --argjson current "$CURRENT_RUN_ID" '
+            (.total_count < 100) and
+            ([.workflow_runs[]? | select(.id != $current)] | length == 0)
+          ' "$RUNNER_TEMP/q221-097-prior-runs.json" >/dev/null
+          echo "Q221_097_ONE_SHOT_GUARD=PASS"
+
+      - name: Test frozen pins and archive parser offline
+        run: python -m pytest -q tests/test_q221_dod_097_wayback_archive_presence.py
+
+      - name: Validate source pins and selected-key set before network access
+        run: >-
+          python -m automation.q221_dod_097_wayback_archive_presence
+          --repo-root .
+          --prereg research/preregistrations/q221_dod_097_wayback_archive_presence_r3_2026_10_15.json
+          --request research/run_requests/q221_dod_097_wayback_archive_presence_r3.trigger
+          --output "$RUNNER_TEMP/q221-dod-097-wayback-presence-r3.json"
+          --validate-only
+
+      - name: Make the two-request bounded Wayback inspection with the preregistered 60-second timeout
+        id: capture
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q221_dod_097_wayback_archive_presence \
+            --repo-root . \
+            --prereg research/preregistrations/q221_dod_097_wayback_archive_presence_r3_2026_10_15.json \
+            --request research/run_requests/q221_dod_097_wayback_archive_presence_r3.trigger \
+            --output "$RUNNER_TEMP/q221-dod-097-wayback-presence-r3.json"
+
+      - name: Ensure a fail-closed fallback receipt exists
+        if: always()
+        env:
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt="$RUNNER_TEMP/q221-dod-097-wayback-presence-r3.json"
+          if [[ -s "$receipt" ]]; then
+            echo "Q221_097_RECEIPT_PRESENT=true"
+            exit 0
+          fi
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          receipt = {
+              "schema_version": 1,
+              "record_type": "q221_dod_097_wayback_archive_presence_recovery_fallback_receipt",
+              "candidate_id": "Q221",
+              "probe_attempt_number": 3,
+              "recovery_of_workflow_run_id": 38797148893,
+              "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+              "status": "Q221_DOD_097_RECEIPT_PERSISTENCE_FAILED_SOURCE_OUTCOME_UNKNOWN",
+              "workflow_run_id": int(os.environ["CURRENT_RUN_ID"]),
+              "source_probe": {
+                  "request_cap": 2,
+                  "request_count": None,
+                  "request_count_known": False,
+                  "response_bytes": None,
+                  "responses": [],
+                  "response_outcome_known": False
+              },
+              "archive_schema_and_row_presence": None,
+              "interpretation": {
+                  "row_presence_result_available": False,
+                  "first_public_observation_time_proven": False,
+                  "event_level_public_boundary_proven": False,
+                  "recipient_to_issuer_mapping_frozen": False
+              },
+              "errors": [{
+                  "code": "RECEIPT_GENERATION_FAILED",
+                  "message": "Probe did not persist its result; source request count and archive outcome are unknown."
+              }],
+              "safety": {
+                  "paper_only": True,
+                  "live_trading_enabled": False,
+                  "orders_enabled": False,
+                  "source_request_count_known": False,
+                  "source_receipts_modified": False,
+                  "source_population_changed": False,
+                  "census_restarted": False,
+                  "historical_first_public_observation_proven": False,
+                  "event_level_public_boundary_proven": False,
+                  "recipient_to_issuer_mapping_frozen": False,
+                  "scientific_evidence": False,
+                  "performance_authorization": False,
+                  "holdout_selection": False,
+                  "ranking": False,
+                  "tuning": False,
+                  "promotion": False,
+                  "live_execution": False
+              }
+          }
+          payload = json.dumps(receipt, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+          receipt["receipt_fingerprint"] = hashlib.sha256(payload).hexdigest()
+          Path(os.environ["RUNNER_TEMP"], "q221-dod-097-wayback-presence-r3.json").write_text(
+              json.dumps(receipt, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+              encoding="utf-8"
+          )
+          print("Q221_097_FALLBACK_RECEIPT_WRITTEN=true")
+          PY
+
+      - name: Upload bounded receipt only (never upload archive bytes)
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-dod-097-wayback-archive-presence-r3-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/q221-dod-097-wayback-presence-r3.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Publish receipt summary
+        if: always()
+        shell: bash
+        run: |
+          if [[ ! -s "$RUNNER_TEMP/q221-dod-097-wayback-presence-r3.json" ]]; then
+            echo "No probe receipt exists; inspect the failed step before retrying." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          p = Path("${{ runner.temp }}/q221-dod-097-wayback-presence-r3.json")
+          r = json.loads(p.read_text(encoding="utf-8"))
+          print("# Q221 DoD 097 archived row-presence probe")
+          print("")
+          for key in ("status", "receipt_fingerprint"):
+              print(f"- **{key}:** {r.get(key, 'not available')}")
+          print(f"- Source requests: {r.get('source_probe', {}).get('request_count', 0)}")
+          print(f"- Response bytes: {r.get('source_probe', {}).get('response_bytes', 0)}")
+          print(f"- Per-request timeout: {r.get('source_probe', {}).get('request_timeout_seconds', 'unknown')} seconds")
+          observed = r.get("archive_schema_and_row_presence", {})
+          print(f"- CSV schema recognized: {observed.get('schema_recognized', False)}")
+          print(f"- Row counts: {json.dumps(observed.get('presence_counts', {}), sort_keys=True)}")
+          print("- Historical first-public/PIT, mapping, performance and execution gates remain false.")
+          PY
+
+      - name: Keep failed or blocked capture visibly fail-closed
+        if: always() && steps.capture.outcome != 'success'
+        run: |
+          echo "The bounded source inspection failed or remained blocked; inspect the immutable receipt."
+          exit 1
