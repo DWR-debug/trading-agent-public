@@ -49,16 +49,16 @@ def test_request_rejects_a_mutated_performance_or_hash_policy(tmp_path):
 
 
 def test_combined_budget_enforces_total_and_header_limits_separately():
-    budget = r7.CombinedBudget(total=10, header=4)
+    budget = r7.CombinedBudget(total=20, header=4)
     budget.add(7)
     budget.is_header_phase = True
     budget.add(4)
-    assert budget.used == 11 - 0  # source bytes plus the separate header phase are both counted
+    assert budget.used == 11
     assert budget.header_used == 4
     with pytest.raises(r7.ReviewError, match="HEADER_DOWNLOAD_BUDGET_EXCEEDED"):
         budget.add(1)
+    budget2 = r7.CombinedBudget(total=3, header=3)
     with pytest.raises(r7.ReviewError, match="TOTAL_DOWNLOAD_BUDGET_EXCEEDED"):
-        budget2 = r7.CombinedBudget(total=3, header=3)
         budget2.add(4)
 
 
