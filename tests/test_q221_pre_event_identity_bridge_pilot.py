@@ -2,6 +2,8 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
+
 from automation.q221_pre_event_identity_bridge_pilot import (
     MANIFEST_FP,
     PARENT_MAP_FP,
