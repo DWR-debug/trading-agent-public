@@ -807,15 +807,37 @@ def validate_request_and_prereg(request: dict[str, str], prereg: dict[str, Any])
         or prereg.get("frozen_current_parent_leads", {}).get("raw_json_sha256") != PARENT_MAP_RAW_SHA256
         or prereg.get("transaction_keys") != {k: v["transaction_key"] for k, v in TRANSACTIONS.items()}
         or prereg.get("source_urls") != [x["url"] for x in SOURCES]
+        or prereg.get("source_of_truth") != "DWR-debug/trading-agent-public"
+        or prereg.get("registered_at_utc") != "2026-10-15T12:58:00Z"
+        or prereg.get("boundaries", {}).get("sample_size") != len(TRANSACTIONS)
         or prereg.get("limits", {}).get("maximum_requests") != len(SOURCES)
+        or prereg.get("limits", {}).get("request_profiles") != "one HTTPS GET per allowlisted URL; no retries"
         or prereg.get("limits", {}).get("maximum_bytes_per_source") != MAX_BYTES_PER_SOURCE
         or prereg.get("limits", {}).get("maximum_total_bytes") != MAX_TOTAL_BYTES
+        or prereg.get("limits", {}).get("timeout_seconds") != TIMEOUT_SECONDS
+        or prereg.get("limits", {}).get("inter_request_gap_seconds") != REQUEST_GAP_SECONDS
+        or prereg.get("limits", {}).get("source_host_allowlist") != ["www.sec.gov", "investor.northropgrumman.com"]
+        or prereg.get("limits", {}).get("capture_receipt_retention_days") != 30
+        or prereg.get("prohibitions", {}).get("source_population_changes") is not True
+        or prereg.get("prohibitions", {}).get("transaction_key_changes") is not True
+        or prereg.get("prohibitions", {}).get("current_parent_used_as_historical_proof") is not True
         or prereg.get("prohibitions", {}).get("issuer_mapping") is not True
+        or prereg.get("prohibitions", {}).get("issuer_name_similarity_mapping") is not True
         or prereg.get("prohibitions", {}).get("public_clock_inference") is not True
+        or prereg.get("prohibitions", {}).get("usaspending_api_requests") is not True
+        or prereg.get("prohibitions", {}).get("broad_archive_downloads") is not True
+        or prereg.get("decision_boundary", {}).get("Q221_348_row_public_clock_gate_remains_closed") is not True
+        or prereg.get("decision_boundary", {}).get("historical_parent_lineage_proven") is not False
+        or prereg.get("decision_boundary", {}).get("persistence_to_action_date_proven") is not False
+        or prereg.get("decision_boundary", {}).get("historical_first_public_observation_proven") is not False
+        or prereg.get("decision_boundary", {}).get("recipient_to_issuer_mapping_frozen") is not False
+        or prereg.get("decision_boundary", {}).get("scientific_evidence") is not False
+        or prereg.get("decision_boundary", {}).get("performance_authorization") is not False
         or prereg.get("safety", {}).get("paper_only") is not True
         or prereg.get("safety", {}).get("live_trading_enabled") is not False
         or prereg.get("safety", {}).get("orders_enabled") is not False
         or prereg.get("safety", {}).get("automatic_promotion") is not False
+        or prereg.get("safety", {}).get("paid_api_budget_usd") != 0
     ):
         raise PilotError("PREREGISTRATION_CONTRACT_MISMATCH")
 
