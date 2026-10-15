@@ -45,7 +45,6 @@ def test_workflow_uses_one_bounded_network_stage_and_arm64_is_offline_only():
     assert "sam.gov/api" not in workflow.lower()
     assert "q221-fpds-public-atom-x64-" in workflow
     assert "q221-fpds-public-atom-arm64-" in workflow
-    assert "network_requests_made"] if False else True
     assert "DETERMINISTIC_CAPTURE_RECEIPT_VALIDATED_NOT_SOURCE_REPLAYED" in workflow
     assert "Q221_FPDS_X64_ARM64_ANALYSIS_FINGERPRINT_MISMATCH" in workflow
     assert "q221_fpds_public_atom_identity_bridge_latest.json" in workflow
