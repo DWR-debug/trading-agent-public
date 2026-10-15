@@ -26,3 +26,4 @@ LIVE_TRADING_ENABLED=false
 ORDERS_ENABLED=false
 AUTOMATIC_PROMOTION=false
 REQUEST_SEQUENCE=2026-10-15T12:58:00Z
+# Re-arm the identical frozen request after run 38742364698 failed at pytest preflight before any source request; no key, URL, budget, sample, or gate is changed.
