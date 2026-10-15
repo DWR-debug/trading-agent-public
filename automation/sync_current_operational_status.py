@@ -259,6 +259,260 @@ def q221_fpds_identity_bridge_sentence(receipt: dict[str, Any] | None = None) ->
     )
 
 
+
+Q104_I19_EXPECTED_REVIEW_SOURCE_FP = "de6c5feca4e27f020b77890a6b00e67a87735d6572070f263ba56d8ee24d0444"
+
+
+def q104_i19_independent_admissibility_status(
+    review: dict[str, Any] | None = None,
+    source_receipt: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Expose the Q104:I19 review only while its exact source pins remain valid.
+
+    This is status reporting/consistency validation; it creates no evidence and grants
+    no production, PIT, performance, promotion, or execution authority.
+    """
+    if review is None:
+        review = _load_json(
+            ROOT / "research/evidence/q104_i19_residual_policy_independent_admissibility_review_latest.json",
+            {},
+        )
+    if source_receipt is None:
+        source_receipt = _load_json(
+            ROOT / "research/evidence/q104_i19_residual_policy_applicability_latest.json",
+            {},
+        )
+    fail_closed_summary = (
+        "Q104:I19 independent admissibility receipt is missing, stale, or fails strict pin/count validation; "
+        "do not infer admissibility from this status summary. The 53 residual records and all historical PIT, "
+        "acceptance-time, performance, holdout, ranking, tuning, promotion and live-execution gates remain closed."
+    )
+
+    def invalid(reason: str) -> dict[str, Any]:
+        return {
+            "review_status": "REVIEW_MISSING_STALE_OR_INVALID",
+            "disposition": "NOT_ADMITTED_BY_CURRENT_STATUS",
+            "validation_reason": reason,
+            "input_receipt_fingerprint": source_receipt.get("receipt_fingerprint") if isinstance(source_receipt, dict) else None,
+            "verified_date_mismatch_cases": 0,
+            "exact_identity_validations": 0,
+            "production_field_precedence_authorized": False,
+            "production_join_change_authorized": False,
+            "historical_pit_authorized": False,
+            "performance_authorized": False,
+            "holdout_selection": False,
+            "ranking": False,
+            "tuning": False,
+            "promotion": False,
+            "live_execution": False,
+            "summary": fail_closed_summary,
+        }
+
+    if not isinstance(review, dict) or not isinstance(source_receipt, dict):
+        return invalid("SOURCE_OR_REVIEW_NOT_OBJECT")
+    if (
+        source_receipt.get("record_type") != "q104_i19_residual_policy_applicability_review"
+        or source_receipt.get("status") != "Q104_I19_RESIDUAL_POLICY_APPLICABILITY_REVIEW_COMPLETE_PROPOSAL_NOT_APPLIED"
+        or source_receipt.get("receipt_fingerprint") != Q104_I19_EXPECTED_REVIEW_SOURCE_FP
+    ):
+        return invalid("SOURCE_RECEIPT_PIN_MISMATCH")
+    source_payload = dict(source_receipt)
+    source_fp = source_payload.pop("receipt_fingerprint", None)
+    try:
+        calculated_source_fp = hashlib.sha256(
+            json.dumps(
+                source_payload,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+                allow_nan=False,
+            ).encode("utf-8")
+        ).hexdigest()
+    except (TypeError, ValueError):
+        return invalid("SOURCE_RECEIPT_FINGERPRINT_RECOMPUTE_FAILED")
+    if calculated_source_fp != source_fp:
+        return invalid("SOURCE_RECEIPT_FINGERPRINT_INVALID")
+
+    if (
+        review.get("record_type") != "q104_i19_residual_policy_independent_admissibility_review"
+        or review.get("review_status") != "INDEPENDENT_REVIEW_COMPLETE"
+        or review.get("disposition") != "NON_DESTRUCTIVE_RESEARCH_REPRESENTATION_ADMISSIBLE_PRODUCTION_PRECEDENCE_NOT_AUTHORIZED"
+        or review.get("input_evidence", {}).get("receipt_fingerprint") != source_fp
+        or review.get("input_evidence", {}).get("path") != "research/evidence/q104_i19_residual_policy_applicability_latest.json"
+    ):
+        return invalid("INDEPENDENT_REVIEW_INPUT_PIN_OR_DISPOSITION_INVALID")
+
+    cases = source_receipt.get("date_mismatch_cases")
+    assessments = review.get("case_assessments")
+    counts = review.get("counts")
+    decision = review.get("decision")
+    interpretation = source_receipt.get("interpretation_scope")
+    provenance = source_receipt.get("capture_provenance")
+    if not all(isinstance(x, dict) for x in (counts, decision, interpretation, provenance)):
+        return invalid("REVIEW_REQUIRED_SECTIONS_INVALID")
+    if not isinstance(cases, list) or len(cases) != 36 or not isinstance(assessments, list) or len(assessments) != 36:
+        return invalid("EXACT_36_CASE_COUNT_INVALID")
+
+    source_by_accession = {
+        row.get("accession"): row for row in cases
+        if isinstance(row, dict) and isinstance(row.get("accession"), str)
+    }
+    review_by_accession = {
+        row.get("accession"): row for row in assessments
+        if isinstance(row, dict) and isinstance(row.get("accession"), str)
+    }
+    if len(source_by_accession) != 36 or set(source_by_accession) != set(review_by_accession):
+        return invalid("SOURCE_AND_REVIEW_ACCESSION_SET_MISMATCH")
+
+    route_counts: dict[str, int] = {}
+    date_change_observed = 0
+    date_change_equal = 0
+    date_change_different = 0
+    for accession, source_case in source_by_accession.items():
+        assessment = review_by_accession[accession]
+        if not all(source_case.get(key) is True for key in (
+            "identity_fields_consistent", "header_filing_date_routes_agree", "acceptance_routes_agree"
+        )):
+            return invalid("SOURCE_CASE_IDENTITY_OR_ROUTE_FAILURE:" + accession)
+        bulk_date = source_case.get("bulk_filing_date")
+        header_date = source_case.get("edgar_header_filing_date")
+        acceptance = source_case.get("acceptance_datetime")
+        if (
+            not isinstance(bulk_date, str)
+            or not isinstance(header_date, str)
+            or bulk_date == header_date
+            or not isinstance(acceptance, str)
+            or not acceptance
+        ):
+            return invalid("SOURCE_CASE_DATE_OR_ACCEPTANCE_FAILURE:" + accession)
+        for key, expected in (
+            ("bulk_filing_date", bulk_date),
+            ("edgar_header_filing_date", header_date),
+            ("acceptance_datetime", acceptance),
+            ("source_evidence", source_case.get("source_evidence")),
+            ("successful_header_route_count", source_case.get("successful_header_route_count")),
+            ("date_change_observed", source_case.get("date_change_observed")),
+            ("date_of_filing_date_change", source_case.get("date_of_filing_date_change")),
+        ):
+            if assessment.get(key) != expected:
+                return invalid("SOURCE_REVIEW_ROW_DIFFERENCE:" + accession + ":" + key)
+        if (
+            assessment.get("identity_verified") is not True
+            or assessment.get("header_routes_agree") is not True
+            or assessment.get("acceptance_routes_agree") is not True
+        ):
+            return invalid("REVIEW_ROW_IDENTITY_OR_ROUTE_FAILURE:" + accession)
+        routes = str(source_case.get("successful_header_route_count"))
+        route_counts[routes] = route_counts.get(routes, 0) + 1
+        if source_case.get("date_change_observed") is True:
+            date_change_observed += 1
+            if source_case.get("date_of_filing_date_change") == header_date:
+                date_change_equal += 1
+            else:
+                date_change_different += 1
+
+    if route_counts != {"2": 5, "3": 31} or counts.get("successful_header_route_counts_by_case") != {"2": 5, "3": 31}:
+        return invalid("HEADER_ROUTE_COUNT_AGGREGATE_INVALID")
+    if (date_change_observed, date_change_equal, date_change_different) != (17, 2, 15):
+        return invalid("DATE_CHANGE_AGGREGATE_INVALID")
+    if (
+        counts.get("verified_date_mismatch_cases") != 36
+        or counts.get("exact_identity_validations") != 36
+        or counts.get("cross_route_header_date_agreement") != 36
+        or counts.get("acceptance_datetime_present_and_cross_route_consistent") != 36
+        or counts.get("bulk_date_differs_from_edgar_header_date") != 36
+        or counts.get("r7_allowlisted_index_header_404_cases") != 4
+        or counts.get("identity_conflicts_excluded") != 7
+        or counts.get("complete_submission_404_cases_excluded") != 10
+        or counts.get("date_change_observed_rows") != 17
+        or counts.get("date_change_equals_edgar_header_date") != 2
+        or counts.get("date_change_differs_from_edgar_header_date") != 15
+        or provenance.get("offline_source_requests_made") != 0
+        or provenance.get("source_capture_receipt_modified") is not False
+    ):
+        return invalid("INDEPENDENT_REVIEW_COUNTS_OR_PROVENANCE_INVALID")
+
+    known_404 = set(provenance.get("known_index_header_404_accessions", []))
+    two_route_r7 = {
+        accession for accession, row in source_by_accession.items()
+        if row.get("source_evidence") == "R7_BOUNDED_THREE_ROUTE_CAPTURE"
+        and row.get("successful_header_route_count") == 2
+    }
+    if len(known_404) != 4 or two_route_r7 != known_404:
+        return invalid("R7_INDEX_HEADER_404_ALLOWLIST_INVALID")
+
+    false_flags = (
+        "field_precedence_applied", "source_receipts_modified", "production_join_changed",
+        "census_restarted", "source_capture_receipt_modified", "acceptance_time_gate_cleared",
+        "historical_archive_gate_cleared", "scientific_evidence", "performance_authorization",
+        "holdout_selection", "ranking", "tuning", "promotion", "live_execution",
+    )
+    if any(interpretation.get(flag) is not False for flag in false_flags):
+        return invalid("SOURCE_RESEARCH_SCOPE_FLAGS_CHANGED")
+    if (
+        decision.get("admissible_scope") != "NON_DESTRUCTIVE_RESEARCH_SIDE_CAR_ONLY"
+        or decision.get("production_field_precedence_authorized") is not False
+        or decision.get("production_join_change_authorized") is not False
+        or decision.get("acceptance_datetime_is_first_public_observation_clock") is not False
+        or decision.get("historical_pit_authorized") is not False
+        or decision.get("scientific_evidence_created") is not False
+        or decision.get("performance_authorized") is not False
+        or any(decision.get(flag) is not False for flag in (
+            "holdout_selection", "ranking", "tuning", "promotion", "live_execution"
+        ))
+    ):
+        return invalid("REVIEW_AUTHORIZATION_FLAGS_CHANGED")
+
+    safety = source_receipt.get("safety", {})
+    if (
+        safety.get("paper_only") is not True
+        or any(safety.get(flag) is not False for flag in (
+            "live_trading_enabled", "orders_enabled", "automatic_promotion",
+            "performance_authorization", "holdout_selection", "ranking", "tuning",
+            "promotion", "live_execution"
+        ))
+        or safety.get("paid_api_budget_usd") != 0
+    ):
+        return invalid("PAPER_ONLY_SAFETY_FLAGS_CHANGED")
+
+    return {
+        "review_status": "INDEPENDENT_REVIEW_COMPLETE",
+        "disposition": review["disposition"],
+        "validation_reason": "ALL_FROZEN_PINS_COUNTS_AND_NON_AUTHORIZING_SCOPE_CHECKS_PASSED",
+        "input_receipt_fingerprint": source_fp,
+        "verified_date_mismatch_cases": 36,
+        "exact_identity_validations": 36,
+        "successful_header_route_counts_by_case": route_counts,
+        "r7_allowlisted_index_header_404_cases": 4,
+        "identity_conflicts_excluded": 7,
+        "complete_submission_404_cases_excluded": 10,
+        "date_change_observed_rows": 17,
+        "date_change_equals_edgar_header_date": 2,
+        "date_change_differs_from_edgar_header_date": 15,
+        "admissible_scope": "NON_DESTRUCTIVE_RESEARCH_SIDE_CAR_ONLY",
+        "production_field_precedence_authorized": False,
+        "production_join_change_authorized": False,
+        "historical_pit_authorized": False,
+        "performance_authorized": False,
+        "holdout_selection": False,
+        "ranking": False,
+        "tuning": False,
+        "promotion": False,
+        "live_execution": False,
+        "summary": (
+            "Q104:I19 independent admissibility review [PR #1484] is current for exactly 36 frozen date-mismatch rows: "
+            "all 36 pass identity/header/acceptance consistency and bulk-versus-header date-difference checks "
+            "(31 have three successful header routes; 5 have two, including only the four frozen R7 index-header 404 exceptions). "
+            "Admissible scope is a non-destructive research sidecar only: preserve bulk FILING_DATE unchanged, retain the "
+            "EDGAR header filing date as a separate field with a discrepancy flag, keep ACCEPTANCE-DATETIME separate "
+            "from first-public-observation time, and retain DATE-OF-FILING-DATE-CHANGE as separate metadata "
+            "(17 observed; 15 differ from header date and 2 match). The seven CIK/form-conflict and ten complete-submission "
+            "HTTP 404 rows remain outside this review. Production precedence/joins, historical PIT and first-public-time "
+            "clearance, performance, holdout, ranking, tuning, promotion and live execution remain blocked. "
+            "Input R7 review receipt fingerprint " + source_fp + "."
+        ),
+    }
+
 def _git(*args: str) -> str:
     return subprocess.check_output(
         ["git", *args],
@@ -449,6 +703,7 @@ def generate(
         ROOT / "research/evidence/q220_as_filed_xbrl_population_latest.json", {}
     )
     q220_population_sentence = q220_population_focus_sentence(q220_population_receipt)
+    q104_i19_review = q104_i19_independent_admissibility_status()
 
     q218_auth_record = _load_json(ROOT / "research/authorizations/q218_performance_2026_10_08.json", {})
     q218_result = _load_json(ROOT / "research/evidence/q218_deterministic_performance_result_latest.json", {})
@@ -784,7 +1039,7 @@ def generate(
             "Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and full-suite verification passed on its tested revision. "
             "Frozen census run #38168441086 is terminal; repair run #38231636160 reported 7,452 repaired/25 unresolved but undercounted residual accessions. Incremental run #38250105408 reused the exact six prior repaired-shard fingerprints and reports 53 unique unresolved accession keys, zero new attempts and zero repairs across 17 SEC archives (43 CIK/form/filing-date conflicts; 10 SEC_COMPLETE_SUBMISSION_HTTP_404). "
             "PR #1363 is merged (3c0f084405b3ccc293c16dd9f0bd5affa53d3ac1): it fixes recovery-receipt accounting without relaxing identity rules. Read-only residual lineage run #38255701998 completed LINEAGE_DIAGNOSTIC_COMPLETE (receipt c0881b295d37fa34925103b30acbb893a78bbbe230af6e637576dfda4fac86f7): 4/4 frozen accessions, 12/12 SEC header probes, both source ZIPs byte-identical to the original receipt pins, 91,535,030 aggregate bytes under the 150 MB cap. In all four samples accession, filer CIK and form agree across sources, but the SEC 13F bulk SUBMISSION.FILING_DATE differs from the EDGAR header date by one calendar/business day: 2015-02-18 vs 2015-02-17 in two samples and 2020-08-10 vs 2020-08-07 in two. The acceptance timestamps are present and consistent across all three header routes. SEC's own 13F data-set readme warns the extracted data may contain discrepancies with other publication formats and is not a substitute for the full filing; EDGAR's PDS specification identifies <FILING-DATE> as the assigned official filing date. Treat this as an unresolved cross-publication source-field conflict, not a license for date arithmetic or a blanket override. Keep all 53 residuals and historical/acceptance-time gates closed; do not repair the receipts or restart the census. R4 run #38574180245 (receipt 8be8fd68de0324a331d2b587a540b605ac5c6e9a71ec203fa9d2fc089450fb3c) added one separately pinned 2017 Q2 case: bulk filing date 2017-05-31 versus EDGAR header date 2017-04-21; acceptance 2017-05-31T14:33:43; DATE-OF-FILING-DATE-CHANGE 2017-06-01 appeared on index and raw-SGML routes but was absent from the bounded complete-submission header prefix. The archive matched its frozen hash and byte-length pins, and all three routes agreed on accession, CIK and form. This single preselected diagnostic does not change the immutable 14-row aggregate, establish prevalence or first-public time, choose production precedence, repair a receipt, or clear a gate. Continue source/PIT-only work only on additional frozen inputs that offer new information; do not restart the census. R5 run #38582684174 (receipt 3d9bc88c1f43e4efac88e4528d5ac2c4b6a017beccdbe2e0e821ff150b7cd8a5) added accession 0000950123-15-003183 from the already represented 2015 Q1 archive: frozen bulk filing date 2015-02-18 versus EDGAR header date 2015-02-17; acceptance 2015-02-17T18:51:10 agrees across all three routes; DATE-OF-FILING-DATE-CHANGE 2015-02-20 appears on index and raw-SGML routes but not the bounded complete-submission prefix. The archive matched the frozen 42,434,965-byte/SHA-256 pin and all 3/3 routes completed under the 50 MB cap. R5 is a distinct row, not a new archive vintage; it does not change the immutable 14-row aggregate, establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. R6 run #38588100012 (receipt 5571f2a8c496d32583b4b7a6bd5d6fee71533e889a5e75b434d1d84031c59522; artifact 11905763813) added accession 0000950123-13-006989 from a separately pinned 2013 Q3 archive (36,457,022 bytes; SHA-256 aa20c79d552722cb7bae8cefe3e63cd61a0929a4d5234c0b5d9ce1c75309a616). Bulk filing date 2013-08-15 differs from EDGAR header date 2013-08-14; acceptance 2013-08-14T21:51:40 is consistent across the two successful header routes; DATE-OF-FILING-DATE-CHANGE 2013-08-26 appears on raw SGML but not the bounded complete-submission header prefix; the index-header route returned HTTP 404. The original census HTTP 503 and later recovery FILING_DATE_MISMATCH remain separate pinned states. Total downloaded bytes were 36,466,001 under the 40 MB cap. R6 is an additional diagnostic row, not a modification of the immutable 14-row aggregate; it does not establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. Keep all 53 residuals and historical/acceptance-time gates closed. "
-            "Do not start the frozen concept-specific PIT compiler or independent reproduction until unresolved accession identity/source lineage is closed. "
+            "The frozen concept-specific PIT compiler/independent reproduction remains closed for the full residual set: the 36 verified date-mismatch rows are admissible only for a non-destructive sidecar; seven identity-conflict and ten complete-submission HTTP 404 branches remain unresolved, and historical first-public/PIT timing is unproven. "
             + q220_population_sentence +
             " Q220: original SEC daily Feed forensic run #38233685159 ended fail-closed with FORENSIC_COMPARISON_INCOMPLETE: 0/3 comparisons, 2,829,769,099 bytes downloaded, and no original submission member found. "
             "The source-path correction preserves the frozen receipt, population fingerprint, all 55 expected hashes and three preselected sample keys: the daily .nc.tar.gz member is accession.nc; .dissem is a distinct PDS subscriber naming convention. PR #1364 corrected the source path; PR #1366 corrected bounded HTTP streaming, separated the 150 MB outer .nc wrapper limit from the unchanged 30 MB primary-document limit, and fixed pre-document <TYPE> parsing. Post-fix run #38254139755 is terminal FORENSIC_COMPARISON_INCOMPLETE (0/3; 2,829,769,099 bytes downloaded; receipt fingerprint 840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b). All three Feed archives and .nc wrappers were completely fetched and identity fields accession/CIK/form/filing date matched, but each original Feed submission header lacks ACCEPTANCE-DATETIME; all 55 frozen primary-document hash mismatches also remain. Do not redownload these multi-GB Feeds. Read-only header-only run #38258251764 completed HEADER_EVIDENCE_COMPLETE: 9/9 official EDGAR header routes, receipt fingerprint 39bf95fa15bf149094d5b56c90e58622c2339d452fd138c6deb0a463668f85b4, 101,547 bytes; no Feed or primary documents downloaded. All three fixed samples have matching accession/CIK/form/filing-date and identical ACCEPTANCE-DATETIME values across index headers, raw .hdr.sgml, and header-only .txt prefixes. DATE-OF-FILING-DATE-CHANGE was also captured: for 0000064040-19-000059 the acceptance was 2019-02-12T18:15:22 before the EDGAR filing date 2019-02-13, and its change date is 2019-02-12; the other two samples show acceptance and change date on the filing date. This is supplemental timestamp evidence only; all 55 source-hash mismatches remain and both Q220 gates stay closed. Bounded five-request HTTP representation probe [run #38590133217](https://github.com/DWR-debug/trading-agent-public/actions/runs/38590133217) completed HTTP_REPRESENTATION_INVARIANT_AT_PROBE_TIME (receipt fingerprint 870aa4fdae7eda932bb8f50ebb9eab1a7781ee503fb5120dea5b0f099e4fd65c; request sequence 2026-10-14T15:29:01Z). All five complete HTTP 200 responses were byte-identical at 4,774,457 bytes with SHA-256 fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3; total response bytes were 23,872,285 and response bodies were not persisted. The observed bytes match none of the frozen expected, prior-captured, prior-current, or Feed-extracted body hashes/lengths. This makes request-profile and repeatability variation unsupported as the explanation at probe time; it does not establish historical source vintage or clear any gate. Do not repeat this probe or fetch further primary documents. Next, trace the frozen expected versus observed primary-document hashes and their source-vintage provenance without redownloading multi-GB Feeds or fetching primary documents. Do not change source pins, population, sample keys, expected hashes or research gates to force a pass. "
@@ -797,6 +1052,9 @@ def generate(
             "Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. "
             "No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs."
         )
+    if "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221." in recorded_next_research_focus:
+        recorded_next_research_focus += " " + q104_i19_review["summary"]
+
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
@@ -1058,6 +1316,7 @@ def generate(
         "source_pit_frontier_outcomes": source_pit_frontier_outcomes,
         "q121_r5_dual_index_reconciliation": q121_r5_receipt,
         "q121_r6_execution_attempts": q121_r6_attempts,
+        "q104_i19_independent_admissibility_review": q104_i19_review,
         "scientific_state_recorded": {
             "latest_formal_trial": latest_formal.get("trial_id") or project_state.get("latest_formal_trial"),
             "latest_formal_status": latest_formal.get("status") or project_state.get("latest_trial_status"),
