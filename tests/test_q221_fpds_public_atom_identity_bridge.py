@@ -15,6 +15,7 @@ from automation.q221_fpds_public_atom_identity_bridge import (
     _normalize_name,
     _text_values,
     build_receipt,
+    canonical_analysis_fingerprint,
     canonical_fingerprint,
     parse_atom,
     read_request,
@@ -150,6 +151,38 @@ def test_offline_verification_checks_receipt_identity_and_performs_no_network(tm
     assert validation["recipient_to_issuer_mapping_frozen"] is False
     assert validation["receipt_fingerprint"] == canonical_fingerprint(validation)
 
+
+def test_cross_arch_validation_metadata_does_not_mutate_analysis_fingerprint():
+    request = read_request(REQUEST)
+    observations = [
+        {
+            "record_id": spec["record_id"],
+            "transaction_key": spec["transaction_key"],
+            "requested_url": ENDPOINT + "?FEEDNAME=PUBLIC",
+            "method": "GET",
+            "requested_host": ALLOWED_HOST,
+            "http_status": None,
+            "content_type": "",
+            "response_bytes": 0,
+            "response_sha256": None,
+            "response_persisted": False,
+            "entry_count": 0,
+            "piid_entry_count": 0,
+            "piid_modification_candidate_count": 0,
+            "exact_tuple_count": 0,
+            "observed_records": [],
+            "status": "NETWORK_ERROR",
+            "error_type": "URLError",
+        }
+        for spec in EXPECTED_RECORDS
+    ]
+    receipt = build_receipt(ROOT, request, observations, 0)
+    frozen_fp = receipt["analysis_fingerprint"]
+    receipt["cross_arch_validation"] = {
+        "status": "DETERMINISTIC_CAPTURE_RECEIPT_VALIDATED_NOT_SOURCE_REPLAYED",
+        "network_requests_made_on_validation_platform": 0,
+    }
+    assert canonical_analysis_fingerprint(receipt) == frozen_fp
 
 def test_frozen_source_safety_contract_is_not_positive_or_performance_authority():
     request = read_request(REQUEST)
