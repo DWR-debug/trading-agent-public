@@ -310,10 +310,12 @@ def read_pinned_parent_map(directory: Path, manifest: dict[str, Any]) -> tuple[d
     return payload, selected
 
 
-def fetch_source(spec: dict[str, Any]) -> tuple[dict[str, Any], bytes]:
+def fetch_source(spec: dict[str, Any], max_bytes: int = MAX_BYTES_PER_SOURCE) -> tuple[dict[str, Any], bytes]:
     url = str(spec["url"])
     if url not in ALLOWED_URLS:
         raise PilotError("SOURCE_URL_OUTSIDE_FROZEN_ALLOWLIST")
+    if max_bytes < 1 or max_bytes > MAX_BYTES_PER_SOURCE:
+        raise PilotError("SOURCE_BUDGET_BOUND_INVALID")
     request = urllib.request.Request(
         url,
         headers={
@@ -326,8 +328,8 @@ def fetch_source(spec: dict[str, Any]) -> tuple[dict[str, Any], bytes]:
     )
     try:
         with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:
-            raw = response.read(MAX_BYTES_PER_SOURCE + 1)
-            if len(raw) > MAX_BYTES_PER_SOURCE:
+            raw = response.read(max_bytes + 1)
+            if len(raw) > max_bytes:
                 raise PilotError(f"SOURCE_RESPONSE_OVER_LIMIT:{spec['id']}")
             status = int(getattr(response, "status", 200))
             content_type = str(response.headers.get("Content-Type", ""))
@@ -558,9 +560,12 @@ def run_capture(repo_root: Path, parent_map_dir: Path, output_dir: Path) -> dict
         parent_map, selected_map_rows = read_pinned_parent_map(parent_map_dir, manifest)
         for index, spec in enumerate(SOURCES):
             try:
+                remaining = MAX_TOTAL_BYTES - sum(len(value) for value in bodies.values())
+                if remaining < 1:
+                    raise PilotError("Q221_PILOT_TOTAL_SOURCE_BUDGET_EXHAUSTED")
                 if index:
                     time.sleep(REQUEST_GAP_SECONDS)
-                observation, raw = fetch_source(spec)
+                observation, raw = fetch_source(spec, min(MAX_BYTES_PER_SOURCE, remaining))
                 bodies[spec["id"]] = raw
                 observations.append(observation)
                 (output_dir / "sources" / f"{spec['id']}.html").write_bytes(raw)
