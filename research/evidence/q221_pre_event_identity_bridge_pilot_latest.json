@@ -1,0 +1,246 @@
+{
+  "authority": {
+    "historical_first_public_observation_proven": false,
+    "historical_parent_lineage_proven": false,
+    "holdout_selection": false,
+    "live_execution": false,
+    "performance_authorization": false,
+    "persistence_to_action_date_proven": false,
+    "promotion": false,
+    "ranking": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "scientific_evidence": false,
+    "tuning": false
+  },
+  "candidate_id": "Q221",
+  "cross_arch_reproduction": {
+    "analysis_fingerprint": "349b2e282ee2ea83660e2b5cb68e709bf1bc53d540fd9c583ba20e214058420c",
+    "capture_platform": "ubuntu-24.04",
+    "capture_receipt_fingerprint": "20f7646ecc0751edd55a4f1e4f56b5dcc48d20927a2ef29f27e7b741638370e9",
+    "network_requests_made_during_verification": 0,
+    "same_analysis_fingerprint": true,
+    "status": "DETERMINISTIC_ANALYSIS_MATCHED",
+    "verification_platform": "ubuntu-24.04-arm",
+    "verification_receipt_fingerprint": "91814f45fe67f0ed2df69fdfd49a8c54af2fb112dc0fe886d957d1a13c0ab47c"
+  },
+  "decision_boundary": {
+    "historical_first_public_observation_proven": false,
+    "historical_parent_lineage_proven": false,
+    "holdout_selection": false,
+    "interpretation": "Pre-event identity-source pilot only. Source links can support a historical lead, but do not prove legal continuity through the action date or transaction-level first-public observation.",
+    "live_execution": false,
+    "performance_authorization": false,
+    "persistence_to_action_date_proven": false,
+    "promotion": false,
+    "ranking": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "scientific_evidence": false,
+    "tuning": false
+  },
+  "frozen_upstream": {
+    "manifest_git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "manifest_path": "research/evidence/q221_historical_public_boundary_latest.json",
+    "manifest_receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+    "parent_map_artifact_id": 11772786096,
+    "parent_map_raw_json_sha256": "5f62867c8153fc03dec7d2d983f9017d9014e829e5cfcdf1729579539db4c0f0",
+    "parent_map_receipt_fingerprint": "ae3a3263d5e7d2545dbdaed7ba7ff1cfe3d4cd00e0403352096dcce4d4797602",
+    "parent_map_run_id": 38305074104
+  },
+  "generated_at_utc": "2026-10-15T15:33:11.019597+00:00",
+  "max_bytes_per_source": 300000,
+  "max_total_bytes": 900000,
+  "method": "One bounded capture of seven fixed pre-event corporate/SEC documents; exact token validation; no issuer map or historical publication-clock inference.",
+  "receipt_fingerprint": "4e6bde2103f6c99d9638ca14e9e2926cd30c1b55a095e4451d2acdc7b914d16f",
+  "record_type": "q221_pre_event_identity_bridge_pilot",
+  "run_provenance": {
+    "capture_receipt_fingerprint": "20f7646ecc0751edd55a4f1e4f56b5dcc48d20927a2ef29f27e7b741638370e9",
+    "capture_workflow_run_id": "38760595610",
+    "verification_receipt_fingerprint": "91814f45fe67f0ed2df69fdfd49a8c54af2fb112dc0fe886d957d1a13c0ab47c"
+  },
+  "safety": {
+    "automatic_promotion": false,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "paper_only": true
+  },
+  "schema_version": 1,
+  "source_capture_bytes": 327658,
+  "source_capture_count": 7,
+  "source_observations": [
+    {
+      "content_type": "text/html",
+      "final_url": "https://www.sec.gov/Archives/edgar/data/16058/000156459018022021/0001564590-18-022021-index.htm",
+      "http_status": 200,
+      "requested_url": "https://www.sec.gov/Archives/edgar/data/16058/000156459018022021/0001564590-18-022021-index.htm",
+      "required_token_checks": {
+        "0001564590-18-022021": true,
+        "2018-08-20": true,
+        "2018-08-20 15:13:34": true,
+        "caci international inc": true,
+        "caci-ex211_14.htm": true
+      },
+      "required_token_checks_passed": true,
+      "response_bytes": 12438,
+      "response_sha256": "8a43469e6510dc36df506a58bb3197106a084d8a774a09fe797f122f35fe5a8b",
+      "source_id": "caci_index"
+    },
+    {
+      "content_type": "text/html",
+      "final_url": "https://www.sec.gov/Archives/edgar/data/16058/000156459018022021/caci-ex211_14.htm",
+      "http_status": 200,
+      "requested_url": "https://www.sec.gov/Archives/edgar/data/16058/000156459018022021/caci-ex211_14.htm",
+      "required_token_checks": {
+        "a delaware corporation": true,
+        "caci, inc. - federal": true,
+        "significant subsidiaries of the registrant": true
+      },
+      "required_token_checks_passed": true,
+      "response_bytes": 5180,
+      "response_sha256": "cef9d7230f0c6623141ec27d538c71a53acbe03c6cd42270f871c8da58de1a2c",
+      "source_id": "caci_ex21"
+    },
+    {
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://www.sec.gov/Archives/edgar/data/1706946/000170694622000124/0001706946-22-000124-index.htm",
+      "http_status": 200,
+      "requested_url": "https://www.sec.gov/Archives/edgar/data/1706946/000170694622000124/0001706946-22-000124-index.htm",
+      "required_token_checks": {
+        "0001706946-22-000124": true,
+        "2022-08-04": true,
+        "2022-08-04 16:10:40": true,
+        "a101auroramasteragreement.htm": true
+      },
+      "required_token_checks_passed": true,
+      "response_bytes": 11931,
+      "response_sha256": "5336032672398a68e5e0b371810a84aeddd37959751657fdbd45b774809a916c",
+      "source_id": "aurora_index"
+    },
+    {
+      "content_type": "text/html",
+      "final_url": "https://www.sec.gov/Archives/edgar/data/1706946/000170694622000124/a101auroramasteragreement.htm",
+      "http_status": 200,
+      "requested_url": "https://www.sec.gov/Archives/edgar/data/1706946/000170694622000124/a101auroramasteragreement.htm",
+      "required_token_checks": {
+        "aurora flight sciences corporation": true,
+        "made as of july 4, 2022": true,
+        "wholly owned subsidiary of the boeing company": true
+      },
+      "required_token_checks_passed": true,
+      "response_bytes": 230949,
+      "response_sha256": "4807c1f8ce9110b6146e8a58a1e67dff0b223a069ffcf7ff51e2455122cfe4fd",
+      "source_id": "aurora_agreement"
+    },
+    {
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://www.sec.gov/Archives/edgar/data/866121/000086612117000027/0000866121-17-000027-index.htm",
+      "http_status": 200,
+      "requested_url": "https://www.sec.gov/Archives/edgar/data/866121/000086612117000027/0000866121-17-000027-index.htm",
+      "required_token_checks": {
+        "0000866121-17-000027": true,
+        "2017-04-28": true,
+        "oa-ex21x20161231.htm": true
+      },
+      "required_token_checks_passed": true,
+      "response_bytes": 13910,
+      "response_sha256": "1b5b48084b4f572d13a717292ad2b3f06b0801fef2b0a8bf29e0554b9a708438",
+      "source_id": "orbital_index"
+    },
+    {
+      "content_type": "text/html",
+      "final_url": "https://www.sec.gov/Archives/edgar/data/866121/000086612117000027/oa-ex21x20161231.htm",
+      "http_status": 200,
+      "requested_url": "https://www.sec.gov/Archives/edgar/data/866121/000086612117000027/oa-ex21x20161231.htm",
+      "required_token_checks": {
+        "all subsidiaries listed below are 100% owned except joint ventures": true,
+        "atk launch systems inc.": true,
+        "subsidiaries of orbital atk, inc.": true
+      },
+      "required_token_checks_passed": true,
+      "response_bytes": 9811,
+      "response_sha256": "68a2d45a57944fe3276e146c218890dbc00619a585fdca47b284fab339874f13",
+      "source_id": "orbital_ex21"
+    },
+    {
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://investor.northropgrumman.com/news-releases/news-release-details/northrop-grumman-completes-orbital-atk-acquisition-blake-larson",
+      "http_status": 200,
+      "requested_url": "https://investor.northropgrumman.com/news-releases/news-release-details/northrop-grumman-completes-orbital-atk-acquisition-blake-larson",
+      "required_token_checks": {
+        "has closed the acquisition of orbital atk inc.": true,
+        "june 6, 2018": true,
+        "orbital atk is now northrop grumman innovation systems": true
+      },
+      "required_token_checks_passed": true,
+      "response_bytes": 43439,
+      "response_sha256": "b2bcb8a61c9825b2ef28c535d9ce53edc37062e8db5e4d9da0620c2e9d87a701",
+      "source_id": "northrop_release"
+    }
+  ],
+  "status": "Q221_PRE_EVENT_IDENTITY_BRIDGE_PILOT_COMPLETE_MAPPING_UNRESOLVED",
+  "transaction_assessments": [
+    {
+      "action_date": "2019-01-03",
+      "current_parent_is_not_historical_proof": true,
+      "current_parent_name_from_prior_profile_only": "CACI INTERNATIONAL INC",
+      "current_parent_uei_from_prior_profile_only": "QSRTXLFKV857",
+      "historical_first_public_observation_proven": false,
+      "historical_parent_lineage_proven": false,
+      "issuer_symbol": null,
+      "persistence_to_action_date_proven": false,
+      "pre_event_evidence_classification": "PRE_EVENT_SUBSIDIARY_EVIDENCE_FOUND_PERSISTENCE_TO_ACTION_DATE_UNPROVEN",
+      "pre_event_sources": [
+        "caci_index",
+        "caci_ex21"
+      ],
+      "recipient_id": "28eee911-76af-7147-f760-4ec5f90bec2d-C",
+      "recipient_name_from_frozen_transaction": "CACI, INC. - FEDERAL",
+      "recipient_to_issuer_mapping_frozen": false,
+      "recipient_uei": "N3PBJAVNKF61",
+      "row_id": "CACI_2019",
+      "transaction_key": "FA875018C0180|P00003|2019-01-03|28eee911-76af-7147-f760-4ec5f90bec2d-C|N3PBJAVNKF61"
+    },
+    {
+      "action_date": "2024-01-02",
+      "current_parent_is_not_historical_proof": true,
+      "current_parent_name_from_prior_profile_only": "THE BOEING COMPANY",
+      "current_parent_uei_from_prior_profile_only": "ZE95AC36GJ76",
+      "historical_first_public_observation_proven": false,
+      "historical_parent_lineage_proven": false,
+      "issuer_symbol": null,
+      "persistence_to_action_date_proven": false,
+      "pre_event_evidence_classification": "PRE_EVENT_PARENT_RELATION_EVIDENCE_FOUND_PERSISTENCE_TO_ACTION_DATE_UNPROVEN",
+      "pre_event_sources": [
+        "aurora_index",
+        "aurora_agreement"
+      ],
+      "recipient_id": "23c9b680-370f-e3eb-79d0-f1afc23e13fc-C",
+      "recipient_name_from_frozen_transaction": "AURORA FLIGHT SCIENCES CORPORATION",
+      "recipient_to_issuer_mapping_frozen": false,
+      "recipient_uei": "K1L1BZLNPWC4",
+      "row_id": "AURORA_2024",
+      "transaction_key": "HR001123C0013|P00006|2024-01-02|23c9b680-370f-e3eb-79d0-f1afc23e13fc-C|K1L1BZLNPWC4"
+    },
+    {
+      "action_date": "2019-01-03",
+      "current_parent_is_not_historical_proof": true,
+      "current_parent_name_from_prior_profile_only": "NORTHROP GRUMMAN INNOVATION SYSTEMS LLC",
+      "current_parent_uei_from_prior_profile_only": "GJVCPEBZV574",
+      "historical_first_public_observation_proven": false,
+      "historical_parent_lineage_proven": false,
+      "issuer_symbol": null,
+      "persistence_to_action_date_proven": false,
+      "pre_event_evidence_classification": "BLOCKED_LEGAL_ENTITY_FORM_MISMATCH",
+      "pre_event_sources": [
+        "orbital_index",
+        "orbital_ex21",
+        "northrop_release"
+      ],
+      "recipient_id": "1a27c4e3-c0a0-5d50-3277-128bfbd90200-C",
+      "recipient_name_from_frozen_transaction": "ATK LAUNCH SYSTEMS LLC",
+      "recipient_to_issuer_mapping_frozen": false,
+      "recipient_uei": "GRJJTMCRKJD1",
+      "row_id": "ATK_2019",
+      "transaction_key": "FA930018FD001|P00004|2019-01-03|1a27c4e3-c0a0-5d50-3277-128bfbd90200-C|GRJJTMCRKJD1"
+    }
+  ]
+}
