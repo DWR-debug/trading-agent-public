@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_dod_097_wayback_archive_presence_preregistration",
+  "candidate_id": "Q221",
+  "status": "PREREGISTERED_BOUNDED_SOURCE_FEASIBILITY_ONLY",
+  "registered_at_utc": "2026-10-15T18:53:34Z",
+  "design_type": "Exploratory source feasibility preregistration after CDX metadata discovery and before replaying the archive payload or inspecting row contents.",
+  "frozen_source_manifest": {
+    "path": "research/evidence/q221_historical_public_boundary_latest.json",
+    "git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+    "expected_transaction_count": 348
+  },
+  "archive_capture": {
+    "filename": "FY2025_097_Contracts_Full_20250106.zip",
+    "original_url": "https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+    "wayback_capture_timestamp": "20250128184322",
+    "capture_timestamp_utc": "2025-01-28T18:43:22Z",
+    "cdx_sha1_base32": "IYPLEC2VXYNMEA2CUHSSPVKPEJRKBJQB",
+    "length_bytes": 13605284,
+    "selection_rationale": "This was the previously observed 097 contract full archive under the 20 MB cap that intersects the pre-existing FY2025 frozen sample. Selection is by archive identity and size, before inspecting archive rows."
+  },
+  "historical_inventory_context": {
+    "cdx_discovery_query": "Wayback CDX prefix inventory of 097 contract archive URLs; earlier discovery used URL-key collapse.",
+    "observed_url_count": 20,
+    "observed_url_classes": {
+      "full_archives": 19,
+      "all_fy_delta_archives": 1
+    },
+    "observed_filename_date_stamp": "20250106",
+    "observed_capture_day": "2025-01-28",
+    "limitation": "URL-coverage metadata only, not a complete historical capture timeline."
+  },
+  "frozen_row_selection": {
+    "fiscal_year": 2025,
+    "awarding_agency": "Department of Defense",
+    "agency_exception_class": "DOD_90_DAY_EXCEPTION_CANDIDATE",
+    "expected_row_count": 28,
+    "match_fields": [
+      "PIID",
+      "modification",
+      "action_date",
+      "recipient_uei"
+    ],
+    "selection_rule": "Derive all target keys from the exact pinned manifest at runtime; no post-inspection additions/removals/ranking. Composite keys must be unique; if an agency-code column exists, a matched row must show code 097."
+  },
+  "caps": {
+    "source_requests": 2,
+    "cdx_response_bytes": 5000000,
+    "archive_response_bytes": 20000000,
+    "total_response_bytes": 25000000,
+    "uncompressed_archive_bytes": 250000000,
+    "zip_members": 512,
+    "csv_files": 128,
+    "csv_rows": 2000000
+  },
+  "request_sequence": "2026-10-15T18:53:34Z",
+  "interpretation_contract": {
+    "present_in_archive_snapshot": "Present in this exact archive at the pinned Wayback capture timestamp, a known-available-by-snapshot bound only, not first-public time.",
+    "not_found_in_snapshot": "Not found in this exact snapshot only; not proof of historical absence from other public channels.",
+    "filename_date": "A filename date is not first-public timestamp.",
+    "action_or_issued_date": "Action Date and Issued Date are not first-public-observation timestamps.",
+    "public_clock_clearance": false
+  },
+  "safety_contract": {
+    "source_population_changes": false,
+    "census_restart": false,
+    "historical_first_public_observation_proven": false,
+    "event_level_public_boundary_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  }
+}
