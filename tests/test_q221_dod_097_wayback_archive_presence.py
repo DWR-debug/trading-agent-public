@@ -428,11 +428,11 @@ def test_receipt_persistence_rejects_forged_frozen_target_keys_even_with_a_valid
         persistence.validate_receipt(receipt, persistence.RECEIPT_FILENAME_R3)
 
 
-def test_r3_receipt_persistence_rejects_r2_profile_on_r3_filename(tmp_path):
+def test_r3_receipt_cannot_be_persisted_under_r2_filename(tmp_path):
     from automation import q221_dod_097_wayback_receipt_persist as persistence
 
     receipt = _write_r3_persistable_receipt(tmp_path / persistence.RECEIPT_FILENAME_R3)
-    with pytest.raises(persistence.ReceiptPersistenceError, match="R3 marker/preregistration/timeout differs"):
+    with pytest.raises(persistence.ReceiptPersistenceError, match="R2 marker/preregistration/timeout differs"):
         persistence.validate_receipt(receipt, persistence.RECEIPT_FILENAME)
 
 
