@@ -2,9 +2,9 @@
   "schema_version": 1,
   "record_type": "q221_dod_097_wayback_archive_presence_probe",
   "candidate_id": "Q221",
-  "generated_at_utc": "2026-10-15T19:51:16.352700+00:00",
+  "generated_at_utc": "2026-10-15T20:03:18.065750+00:00",
   "source_of_truth": "DWR-debug/trading-agent-public",
-  "status": "Q221_DOD_097_WAYBACK_TRANSPORT_ERROR",
+  "status": "Q221_DOD_097_ARCHIVE_REPLAY_LENGTH_MISMATCH",
   "frozen_source_manifest": {
     "path": "research/evidence/q221_historical_public_boundary_latest.json",
     "git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
@@ -22,21 +22,58 @@
   },
   "source_probe": {
     "request_cap": 2,
-    "request_count": 1,
-    "response_bytes": 0,
+    "request_count": 2,
+    "response_bytes": 13701130,
     "response_cap_total_bytes": 25000000,
-    "responses": [],
-    "transport_errors": [
-      "TimeoutError"
+    "responses": [
+      {
+        "url": "https://web.archive.org/cdx/search/cdx?url=files.usaspending.gov%2Faward_data_archive%2F&matchType=prefix&output=json&filter=statuscode%3A200&filter=original%3A.%2A097.%2AContracts.%2Azip&fl=timestamp%2Coriginal%2Cstatuscode%2Cdigest%2Clength&from=2019&to=2026&limit=100&gzip=false",
+        "http_status": 200,
+        "content_type": "application/json",
+        "response_bytes": 3330,
+        "response_sha256": "ba2a8c37c9b7751964fd8f6304d7fa666d8b445c380b262c8da9afa8323f1ba6"
+      },
+      {
+        "url": "https://web.archive.org/web/20250128184322id_/https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+        "http_status": 200,
+        "content_type": "application/zip",
+        "response_bytes": 13697800,
+        "response_sha256": "e9e952812886ffddd5d50ef6b712e58c804d5e01034a491f1f43432ef565c1bc"
+      }
     ],
-    "request_sequence": "2026-10-15T19:35:11Z",
+    "transport_errors": [],
+    "request_sequence": "2026-10-15T19:55:24Z",
     "manifest_blob_sha1_verified": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
     "request_marker_validated": true,
     "preregistration_validated": true,
-    "request_profile": "R2",
-    "one_shot_attempt": 2,
-    "preregistration_path": "research/preregistrations/q221_dod_097_wayback_archive_presence_r2_2026_10_15.json",
-    "request_marker_path": "research/run_requests/q221_dod_097_wayback_archive_presence_r2.trigger"
+    "request_profile": "R3",
+    "one_shot_attempt": 3,
+    "preregistration_path": "research/preregistrations/q221_dod_097_wayback_archive_presence_r3_2026_10_15.json",
+    "request_marker_path": "research/run_requests/q221_dod_097_wayback_archive_presence_r3.trigger",
+    "request_timeout_seconds": 60,
+    "cdx_inventory": {
+      "http_status": 200,
+      "content_type": "application/json",
+      "response_sha256": "ba2a8c37c9b7751964fd8f6304d7fa666d8b445c380b262c8da9afa8323f1ba6",
+      "response_bytes": 3330,
+      "captured_record_count": 20,
+      "unique_original_url_count": 20,
+      "unique_capture_days": [
+        "20250128"
+      ],
+      "unique_filename_date_stamps": [
+        "20250106"
+      ],
+      "pinned_target_capture": {
+        "timestamp": "20250128184322",
+        "original": "https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+        "statuscode": "200",
+        "digest": "IYPLEC2VXYNMEA2CUHSSPVKPEJRKBJQB",
+        "length": "13605284"
+      },
+      "pinned_target_verified": true,
+      "scope": "bounded CDX prefix inventory; not proof of complete capture history"
+    }
   },
   "frozen_row_selection": {
     "fiscal_year": 2025,
@@ -94,7 +131,7 @@
     "paper_only": true,
     "live_trading_enabled": false,
     "orders_enabled": false,
-    "source_requests_made": 1,
+    "source_requests_made": 2,
     "source_receipts_modified": false,
     "source_population_changed": false,
     "census_restarted": false,
@@ -111,10 +148,10 @@
   },
   "errors": [
     {
-      "code": "Q221_DOD_097_WAYBACK_TRANSPORT_ERROR",
-      "message": "TimeoutError"
+      "code": "Q221_DOD_097_ARCHIVE_REPLAY_LENGTH_MISMATCH",
+      "message": "archive bytes differ from CDX"
     }
   ],
   "next_gate": "Retain blocker; this one-shot authorizes no retry or archive expansion.",
-  "receipt_fingerprint": "712c9446bc6062775dac00d617c0b31e1d5d9724b827dd2c2059d884861af64e"
+  "receipt_fingerprint": "895a6d4e343cb535866df81ce06d6d824e1d05b1c7af114aa3befeb5c5473a5b"
 }

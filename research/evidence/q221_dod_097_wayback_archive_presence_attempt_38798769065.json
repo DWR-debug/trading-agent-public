@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_dod_097_wayback_archive_presence_probe",
+  "candidate_id": "Q221",
+  "generated_at_utc": "2026-10-15T20:03:18.065750+00:00",
+  "source_of_truth": "DWR-debug/trading-agent-public",
+  "status": "Q221_DOD_097_ARCHIVE_REPLAY_LENGTH_MISMATCH",
+  "frozen_source_manifest": {
+    "path": "research/evidence/q221_historical_public_boundary_latest.json",
+    "git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+    "expected_transaction_count": 348
+  },
+  "archive_capture": {
+    "filename": "FY2025_097_Contracts_Full_20250106.zip",
+    "original_url": "https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+    "wayback_replay_url": "https://web.archive.org/web/20250128184322id_/https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+    "wayback_capture_timestamp": "20250128184322",
+    "capture_timestamp_utc": "2025-01-28T18:43:22Z",
+    "cdx_sha1_base32": "IYPLEC2VXYNMEA2CUHSSPVKPEJRKBJQB",
+    "length_bytes": 13605284
+  },
+  "source_probe": {
+    "request_cap": 2,
+    "request_count": 2,
+    "response_bytes": 13701130,
+    "response_cap_total_bytes": 25000000,
+    "responses": [
+      {
+        "url": "https://web.archive.org/cdx/search/cdx?url=files.usaspending.gov%2Faward_data_archive%2F&matchType=prefix&output=json&filter=statuscode%3A200&filter=original%3A.%2A097.%2AContracts.%2Azip&fl=timestamp%2Coriginal%2Cstatuscode%2Cdigest%2Clength&from=2019&to=2026&limit=100&gzip=false",
+        "http_status": 200,
+        "content_type": "application/json",
+        "response_bytes": 3330,
+        "response_sha256": "ba2a8c37c9b7751964fd8f6304d7fa666d8b445c380b262c8da9afa8323f1ba6"
+      },
+      {
+        "url": "https://web.archive.org/web/20250128184322id_/https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+        "http_status": 200,
+        "content_type": "application/zip",
+        "response_bytes": 13697800,
+        "response_sha256": "e9e952812886ffddd5d50ef6b712e58c804d5e01034a491f1f43432ef565c1bc"
+      }
+    ],
+    "transport_errors": [],
+    "request_sequence": "2026-10-15T19:55:24Z",
+    "manifest_blob_sha1_verified": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "request_marker_validated": true,
+    "preregistration_validated": true,
+    "request_profile": "R3",
+    "one_shot_attempt": 3,
+    "preregistration_path": "research/preregistrations/q221_dod_097_wayback_archive_presence_r3_2026_10_15.json",
+    "request_marker_path": "research/run_requests/q221_dod_097_wayback_archive_presence_r3.trigger",
+    "request_timeout_seconds": 60,
+    "cdx_inventory": {
+      "http_status": 200,
+      "content_type": "application/json",
+      "response_sha256": "ba2a8c37c9b7751964fd8f6304d7fa666d8b445c380b262c8da9afa8323f1ba6",
+      "response_bytes": 3330,
+      "captured_record_count": 20,
+      "unique_original_url_count": 20,
+      "unique_capture_days": [
+        "20250128"
+      ],
+      "unique_filename_date_stamps": [
+        "20250106"
+      ],
+      "pinned_target_capture": {
+        "timestamp": "20250128184322",
+        "original": "https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+        "statuscode": "200",
+        "digest": "IYPLEC2VXYNMEA2CUHSSPVKPEJRKBJQB",
+        "length": "13605284"
+      },
+      "pinned_target_verified": true,
+      "scope": "bounded CDX prefix inventory; not proof of complete capture history"
+    }
+  },
+  "frozen_row_selection": {
+    "fiscal_year": 2025,
+    "awarding_agency": "Department of Defense",
+    "agency_exception_class": "DOD_90_DAY_EXCEPTION_CANDIDATE",
+    "expected_transaction_count": 28,
+    "match_fields": [
+      "PIID",
+      "modification",
+      "action_date",
+      "recipient_uei"
+    ],
+    "target_keys": [
+      "FA238424CB001|P00001|2025-01-02|e4f166e8-db1c-b7aa-1fa5-f9bd4d7879f5-C|LTMGBJ76B9D8",
+      "FA251824F0028|P00004|2025-01-02|29a66fd6-9784-a425-ae4c-6b055b6e7c63-C|W8Q1WBFN1VH5",
+      "FA703724C0007|P00002|2025-01-02|e3aee88a-bcd0-2ce0-044b-3616a1128d5d-C|JLAZY7RHKPJ3",
+      "FA807520F0051|P00209|2025-01-02|876f1621-8b69-d47c-7fa6-933c63b9da44-C|KTMAJCY6JXM3",
+      "FA807521F0046|P00067|2025-01-02|a0a87c1c-b46f-7c1f-9eb0-a389f77904a8-C|L693MQDFLKD1",
+      "FA807521F0051|P00054|2025-01-02|a0a87c1c-b46f-7c1f-9eb0-a389f77904a8-C|L693MQDFLKD1",
+      "FA807524F0037|P00005|2025-01-02|a0a87c1c-b46f-7c1f-9eb0-a389f77904a8-C|L693MQDFLKD1",
+      "FA864922P0867|P00002|2025-01-02|2fa35dc2-f918-6141-d93a-b6e85dd1a810-C|LCFJUGQDGHC7",
+      "FA864923P1000|P00002|2025-01-02|f6b11b75-3527-5f8e-43c6-d98e158feecd-C|JJC5XBP9DNF1",
+      "FA865021C5405|P00010|2025-01-02|b12ed364-6971-ed8c-fd20-c2b09b90a0ff-C|C3DAVH4VJDG3",
+      "FA865022C5292|P00050|2025-01-02|b8850f4e-012b-fe07-135e-5a49250e9653-C|HX4BQCW632M9",
+      "FA875019C0202|P00025|2025-01-02|cea32117-8765-0c74-65c9-1093e1db4f66-C|DL9DNJ5MGXM4",
+      "FA945122C0014|P00019|2025-01-02|43d3e6c3-0908-78aa-9f11-3c96054a37d2-C|VM45UTL9JTH1",
+      "H9240524C0007|P00002|2025-01-02|3e01e0d6-80fd-1df8-fd7c-08efc2828a82-C|L9Z1ASN3B8E7",
+      "H9240524F0003|P00004|2025-01-02|875a4072-7b37-6250-a5ab-8428c8e47565-C|GTJHZE4M7YK1",
+      "HC102825F0023|P00003|2025-01-02|8e3a0e1d-383f-4c17-79f3-c7958c70c063-C|UFZCFEVTJG77",
+      "N0001419C1007|P00010|2025-01-02|a43aff3e-a570-0cb9-f0e5-3f0b2cc7d6e9-C|SRG2J1WS9X63",
+      "N0001422C1025|P00011|2025-01-02|65b74487-e29a-fedf-cf53-3fa912b4ce42-C|KFP1XYK24DZ8",
+      "N0002424CS183|P00002|2025-01-02|f880dbf4-5f45-4fe2-7d47-7d79d62ae5ff-C|LUPETBHCEU19",
+      "N0042121C0002|P00012|2025-01-02|c8e3c1b2-847b-fd38-8430-6da62d956103-C|U3NKNFLNQ613",
+      "N0042124F0223|P00009|2025-01-02|5f914a14-5846-8f8a-aa4b-58ff187995f2-C|N69MTSWBLK77",
+      "N6833522C0018|P00009|2025-01-02|f2421335-7cbc-e2ae-5e3c-a18e15cee45e-C|RMG1AZ1ZH8Q7",
+      "N6833523C0169|P00005|2025-01-02|f2421335-7cbc-e2ae-5e3c-a18e15cee45e-C|RMG1AZ1ZH8Q7",
+      "N6833523C0251|P00005|2025-01-02|0109d8ea-0069-1cb2-d72d-bc372862a219-C|DA91DUWSMSQ7",
+      "N6833525C0125|P00001|2025-01-02|4d9c90e7-9101-5b51-dd0d-ca86d687e1ef-C|MJZSUKN6B2N8",
+      "W81XWH20F0075|P00013|2025-01-02|628d6fa2-36e2-2432-deb5-f9fbd3fe95fb-C|QTJZT9K41S61",
+      "W911NF25P0014|0|2025-01-02|b12ed364-6971-ed8c-fd20-c2b09b90a0ff-C|C3DAVH4VJDG3",
+      "W912HZ24P0132|P00001|2025-01-02|3cd58ddd-dc57-65dd-bdac-fce87d55dfe3-C|KNXMRN2SD8J6"
+    ]
+  },
+  "interpretation": {
+    "first_public_observation_time_proven": false,
+    "event_level_public_boundary_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "positive_row_presence_meaning": "Present in this exact archive as captured by Wayback; not first-public time.",
+    "negative_row_presence_meaning": "Not found in this exact snapshot only; not evidence of historical absence from another channel.",
+    "archive_filename_date_is_not_publication_clock": true,
+    "action_date_and_issued_date_are_not_public_observation_time": true,
+    "no_name_similarity_mapping": true
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "source_requests_made": 2,
+    "source_receipts_modified": false,
+    "source_population_changed": false,
+    "census_restarted": false,
+    "historical_first_public_observation_proven": false,
+    "event_level_public_boundary_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "errors": [
+    {
+      "code": "Q221_DOD_097_ARCHIVE_REPLAY_LENGTH_MISMATCH",
+      "message": "archive bytes differ from CDX"
+    }
+  ],
+  "next_gate": "Retain blocker; this one-shot authorizes no retry or archive expansion.",
+  "receipt_fingerprint": "895a6d4e343cb535866df81ce06d6d824e1d05b1c7af114aa3befeb5c5473a5b"
+}
