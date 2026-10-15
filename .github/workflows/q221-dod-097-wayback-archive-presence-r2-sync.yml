@@ -1,0 +1,146 @@
+name: Q221 DoD 097 Wayback Receipt Persistence (Recovery R2)
+
+on:
+  workflow_run:
+    workflows: ["Q221 DoD 097 Wayback Archive Schema and Row-Presence Probe (Recovery R2)"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: trading-agent-q221-dod-097-wayback-receipt-sync-r2
+  cancel-in-progress: false
+
+jobs:
+  persist:
+    if: >-
+      ${{
+        github.event.workflow_run.repository.full_name == 'DWR-debug/trading-agent-public' &&
+        github.event.workflow_run.head_branch == 'master' &&
+        github.event.workflow_run.conclusion != 'cancelled' &&
+        github.event.workflow_run.conclusion != 'skipped'
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+      SOURCE_RUN_URL: ${{ github.event.workflow_run.html_url }}
+      SOURCE_COMMIT: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Download exact source-run artifact
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: ${{ runner.temp }}/q221-dod-097-r2-artifact
+
+      - name: Validate and materialize immutable receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ["RUNNER_TEMP"]) / "q221-dod-097-r2-artifact"
+          matches = list(root.rglob("q221-dod-097-wayback-presence-r2.json"))
+          if len(matches) != 1:
+              raise SystemExit(f"EXPECTED_EXACTLY_ONE_R2_RECEIPT_GOT_{len(matches)}")
+          source = matches[0]
+          receipt = json.loads(source.read_text(encoding="utf-8"))
+          fingerprint = receipt.get("receipt_fingerprint")
+          if not isinstance(fingerprint, str) or len(fingerprint) != 64:
+              raise SystemExit("R2_RECEIPT_FINGERPRINT_MISSING")
+          payload = {k: v for k, v in receipt.items() if k != "receipt_fingerprint"}
+          canonical = json.dumps(
+              payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False
+          ).encode("utf-8")
+          if hashlib.sha256(canonical).hexdigest() != fingerprint:
+              raise SystemExit("R2_RECEIPT_FINGERPRINT_MISMATCH")
+
+          allowed_types = {
+              "q221_dod_097_wayback_archive_presence_probe",
+              "q221_dod_097_wayback_archive_presence_recovery_fallback_receipt",
+          }
+          if receipt.get("record_type") not in allowed_types or receipt.get("candidate_id") != "Q221":
+              raise SystemExit("R2_RECEIPT_IDENTITY_INVALID")
+          safety = receipt.get("safety")
+          if not isinstance(safety, dict) or safety.get("paper_only") is not True:
+              raise SystemExit("R2_PAPER_ONLY_ASSERTION_MISSING")
+          for key in (
+              "live_trading_enabled", "orders_enabled", "performance_authorization",
+              "holdout_selection", "ranking", "tuning", "promotion", "live_execution",
+          ):
+              if safety.get(key) is not False:
+                  raise SystemExit("R2_SAFETY_GATE_NOT_CLOSED:" + key)
+
+          if receipt["record_type"] == "q221_dod_097_wayback_archive_presence_probe":
+              probe = receipt.get("source_probe", {})
+              if probe.get("request_profile") != "R2" or probe.get("one_shot_attempt") != 2:
+                  raise SystemExit("R2_REQUEST_PROFILE_PROVENANCE_INVALID")
+              count = probe.get("request_count")
+              if not isinstance(count, int) or not 0 <= count <= 2:
+                  raise SystemExit("R2_SOURCE_REQUEST_COUNT_INVALID")
+          else:
+              if receipt.get("probe_attempt_number") != 2 or receipt.get("recovery_of_workflow_run_id") != 38791554425:
+                  raise SystemExit("R2_FALLBACK_LINEAGE_INVALID")
+              if receipt.get("source_probe", {}).get("request_count_known") is not False:
+                  raise SystemExit("R2_FALLBACK_MUST_PRESERVE_UNKNOWN_OUTCOME")
+
+          evidence = Path("research/evidence")
+          evidence.mkdir(parents=True, exist_ok=True)
+          raw = source.read_bytes()
+          attempt = evidence / f"q221_dod_097_wayback_archive_presence_attempt_{os.environ['SOURCE_RUN_ID']}.json"
+          latest = evidence / "q221_dod_097_wayback_archive_presence_latest.json"
+          if attempt.exists():
+              raise SystemExit("IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS")
+          attempt.write_bytes(raw)
+          latest.write_bytes(raw)
+          print("Q221_R2_RECEIPT_FINGERPRINT=" + fingerprint)
+          print("Q221_R2_SOURCE_RUN=" + os.environ["SOURCE_RUN_URL"])
+          print("Q221_R2_SOURCE_COMMIT=" + os.environ["SOURCE_COMMIT"])
+          print("Q221_R2_RECEIPT_PERSISTENCE_INPUT=VALIDATED")
+          PY
+
+      - name: Publish immutable receipt and latest pointer with fast-forward retries
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: persist Q221 DoD 097 Wayback receipt R2 run ${{ github.event.workflow_run.id }}"
+        run: |
+          set -euo pipefail
+          attempt_file="research/evidence/q221_dod_097_wayback_archive_presence_attempt_${SOURCE_RUN_ID}.json"
+          latest="research/evidence/q221_dod_097_wayback_archive_presence_latest.json"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if python automation/github_contents_publish.py \
+              --repository "${GITHUB_REPOSITORY}" \
+              --branch master \
+              --base-sha "${base_sha}" \
+              --file "${attempt_file}=${attempt_file}" \
+              --file "${latest}=${latest}"; then
+              exit 0
+            fi
+            sleep "${attempt}"
+          done
+          echo "::error::Q221 R2 evidence publication failed after retries"
+          exit 1
