@@ -97,6 +97,9 @@ def test_q220_timeline_workflow_is_integrity_registered_and_explicit_request_onl
     assert "workflow_dispatch:" not in workflow
     assert "https://www.sec.gov" not in workflow
     assert "actions/download-artifact@v6" in workflow
+    assert 'path: q220-arm64' in workflow
+    assert 'Path("q220-arm64/receipt.json")' in workflow
+    assert 'Path("q220-arm64/arm64/receipt.json")' not in workflow
 
 
 def test_timeline_request_freezes_both_committed_receipt_blobs_and_no_network_sources():
