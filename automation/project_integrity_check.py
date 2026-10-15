@@ -343,6 +343,7 @@ REQUIRED_FILES = (
     ROOT / ".github" / "workflows" / "q221-fpds-public-atom-identity-bridge.yml",
     ROOT / "automation" / "q221_fpds_public_atom_identity_bridge.py",
     ROOT / "docs" / "research_design" / "Q221_FPDS_HISTORICAL_IDENTIFIER_BRIDGE_2026-10-15.md",
+    ROOT / "docs" / "research_design" / "Q221_FPDS_PUBLIC_ATOM_IDENTITY_BRIDGE_RESULT_2026-10-15.md",
     ROOT / "research" / "preregistrations" / "q221_fpds_public_atom_identity_bridge_2026_10_15.json",
     ROOT / "research" / "run_requests" / "q221_fpds_public_atom_identity_bridge.trigger",
     ROOT / "tests" / "test_q221_fpds_public_atom_identity_bridge.py",
