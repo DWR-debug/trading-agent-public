@@ -91,5 +91,7 @@ def test_source_script_does_not_follow_redirects_or_persist_source_bodies():
     assert "redirect_request" in source
     assert '"response_persisted": False' in source
     assert '"source_bodies_persisted": False' in source
+    assert "POST_CUTOVER_IDENTIFIER_REGIME_UEI_AND_NAME_MATCH_ON_CURRENT_RECORD_NOT_HISTORICAL_SNAPSHOT_PROOF" in source
+    assert "CONTEMPORANEOUS_UEI_REGIME_RECORD_AND_NAME_MATCH" not in source
     assert 'historical_first_public_observation_proven": False' in source
     assert 'recipient_to_issuer_mapping_frozen": False' in source
