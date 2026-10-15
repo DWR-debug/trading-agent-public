@@ -126,7 +126,8 @@ jobs:
           evidence=Path("research/evidence")
           evidence.mkdir(parents=True, exist_ok=True)
           raw=source.read_bytes()
-          attempt=evidence / f"q221_dod_097_cdx_mimetype_diagnostic_attempt_${SOURCE_RUN_ID}.json"
+          run_id = os.environ["SOURCE_RUN_ID"]
+          attempt=evidence / f"q221_dod_097_cdx_mimetype_diagnostic_attempt_{run_id}.json"
           latest=evidence / "q221_dod_097_cdx_mimetype_diagnostic_latest.json"
           if attempt.exists():
               raise SystemExit("R4_IMMUTABLE_RECEIPT_ALREADY_EXISTS")
