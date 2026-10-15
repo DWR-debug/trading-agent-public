@@ -801,8 +801,10 @@ def validate_request_and_prereg(request: dict[str, str], prereg: dict[str, Any])
     if (
         prereg.get("record_type") != "q221_pre_event_identity_bridge_pilot_preregistration"
         or prereg.get("candidate_id") != "Q221"
-        or prereg.get("source_manifest_receipt_fingerprint") != MANIFEST_FP
-        or prereg.get("parent_map_receipt_fingerprint") != PARENT_MAP_FP
+        or prereg.get("frozen_manifest", {}).get("receipt_fingerprint") != MANIFEST_FP
+        or prereg.get("frozen_manifest", {}).get("git_blob_sha1") != MANIFEST_BLOB_SHA1
+        or prereg.get("frozen_current_parent_leads", {}).get("receipt_fingerprint") != PARENT_MAP_FP
+        or prereg.get("frozen_current_parent_leads", {}).get("raw_json_sha256") != PARENT_MAP_RAW_SHA256
         or prereg.get("transaction_keys") != {k: v["transaction_key"] for k, v in TRANSACTIONS.items()}
         or prereg.get("source_urls") != [x["url"] for x in SOURCES]
         or prereg.get("limits", {}).get("maximum_requests") != len(SOURCES)
