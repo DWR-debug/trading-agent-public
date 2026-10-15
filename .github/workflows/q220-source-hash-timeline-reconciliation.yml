@@ -1,0 +1,294 @@
+name: Q220 Source Hash Timeline Reconciliation
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q220_source_hash_timeline_reconciliation.trigger"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q220-source-hash-timeline-reconciliation
+  cancel-in-progress: false
+
+jobs:
+  analyze-x64:
+    name: Ubuntu x64 — reconcile frozen historical receipts
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      analysis_fingerprint: ${{ steps.analysis.outputs.analysis_fingerprint }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Install local test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Verify historical/current interpretation contracts
+        run: python -m pytest -q tests/test_q220_source_hash_timeline_reconciliation.py
+
+      - name: Reconcile only the two pinned committed receipts
+        id: analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q220_source_hash_timeline_reconciliation \
+            --repo-root . \
+            --output q220-work/x64/receipt.json
+
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("q220-work/x64/receipt.json")
+          row = json.loads(path.read_text(encoding="utf-8"))
+          payload = dict(row)
+          saved = payload.pop("receipt_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+          assert saved == actual, "OUTER_RECEIPT_FINGERPRINT_INVALID"
+          assert row["status"] == "HISTORICAL_HASH_MATCH_ATTESTED_CURRENT_LINEAGE_UNRESOLVED"
+          assert row["frozen_expected"]["historical_match_attested"] is True
+          assert row["frozen_expected"]["present_in_current_whole_primary_observation_set"] is False
+          assert row["first_known_blocked"]["same_compiler_code_as_last_positive"] is True
+          assert row["first_observed_transition_window"]["server_side_transition_time_proven"] is False
+          assert row["same_code_population_capture_shift"]["root_cause_proven"] is False
+          assert row["interpretation_scope"]["current_gate_positive"] is False
+          assert row["interpretation_scope"]["authoritative_source_vintage_proven"] is False
+          assert row["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+          }
+          print("analysis_fingerprint=" + row["analysis_fingerprint"])
+          print("receipt_fingerprint=" + row["receipt_fingerprint"])
+          PY
+
+      - name: Preserve immutable x64 reconciliation receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-hash-timeline-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-work/
+          if-no-files-found: error
+          retention-days: 30
+
+  reproduce-arm64:
+    name: Ubuntu ARM64 — independent deterministic reproduction
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [analyze-x64]
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Install local test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Verify historical/current interpretation contracts
+        run: python -m pytest -q tests/test_q220_source_hash_timeline_reconciliation.py
+
+      - name: Download the exact x64 reconciliation receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-hash-timeline-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-first-result
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Read the expected analysis fingerprint
+        id: expected
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          row = json.loads(Path("q220-first-result/x64/receipt.json").read_text(encoding="utf-8"))
+          print("fingerprint=" + row["analysis_fingerprint"])
+          PY
+
+      - name: Independently reproduce from the same committed evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q220_source_hash_timeline_reconciliation \
+            --repo-root . \
+            --expected-analysis-fingerprint "${{ steps.expected.outputs.fingerprint }}" \
+            --output q220-work/arm64/receipt.json
+
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          row = json.loads(Path("q220-work/arm64/receipt.json").read_text(encoding="utf-8"))
+          payload = dict(row)
+          saved = payload.pop("receipt_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+          assert saved == actual, "OUTER_RECEIPT_FINGERPRINT_INVALID"
+          assert row["frozen_expected"]["historical_match_attested"] is True
+          assert row["frozen_expected"]["historical_raw_body_preserved"] is False
+          assert row["first_known_blocked"]["same_compiler_code_as_last_positive"] is True
+          assert row["interpretation_scope"]["current_gate_positive"] is False
+          assert row["safety"]["paper_only"] is True
+          assert row["safety"]["live_trading_enabled"] is False
+          assert row["safety"]["orders_enabled"] is False
+          assert row["safety"]["automatic_promotion"] is False
+          PY
+
+      - name: Preserve immutable ARM64 reconciliation receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-hash-timeline-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-work/arm64/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-receipt:
+    name: Verify cross-architecture agreement and publish reconciliation
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [analyze-x64, reproduce-arm64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Download x64 and ARM64 reconciliation receipts
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-hash-timeline-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-x64
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download independent ARM64 receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q220-hash-timeline-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q220-arm64
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Check exact frozen inputs and combine matching analyses
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          def blob_sha(path):
+              data = Path(path).read_bytes()
+              return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
+
+          assert blob_sha("research/evidence/q220_complete_submission_representation_audit_38619590525.json") == "a33d72025c091ebb6ed93c601df7e0e24551b521"
+          assert blob_sha("research/evidence/q220_source_hash_lineage_latest.json") == "ead271b6afd6fea8964856c70bbd4cc9d0fe0bb1"
+
+          x64 = json.loads(Path("q220-x64/x64/receipt.json").read_text(encoding="utf-8"))
+          arm64 = json.loads(Path("q220-arm64/arm64/receipt.json").read_text(encoding="utf-8"))
+          if x64.get("analysis_fingerprint") != arm64.get("analysis_fingerprint"):
+              raise SystemExit("Q220_TIMELINE_CROSS_ARCH_FINGERPRINT_MISMATCH")
+          if x64.get("status") != arm64.get("status") or x64.get("frozen_expected") != arm64.get("frozen_expected"):
+              raise SystemExit("Q220_TIMELINE_CROSS_ARCH_CLASSIFICATION_MISMATCH")
+          if x64.get("safety") != arm64.get("safety"):
+              raise SystemExit("Q220_TIMELINE_CROSS_ARCH_SAFETY_MISMATCH")
+
+          result = dict(x64)
+          result["cross_arch_reproduction"] = {
+              "status": "DETERMINISTIC_ANALYSIS_MATCHED",
+              "same_analysis_fingerprint": True,
+              "x64_analysis_fingerprint": x64["analysis_fingerprint"],
+              "arm64_analysis_fingerprint": arm64["analysis_fingerprint"],
+              "x64_receipt_fingerprint": x64["receipt_fingerprint"],
+              "arm64_receipt_fingerprint": arm64["receipt_fingerprint"],
+              "x64_platform": "ubuntu-24.04",
+              "arm64_platform": "ubuntu-24.04-arm",
+              "run_id": int("${{ github.run_id }}"),
+              "run_attempt": int("${{ github.run_attempt }}"),
+          }
+          result["generated_at_utc"] = datetime.now(timezone.utc).isoformat()
+          result.pop("receipt_fingerprint", None)
+          result["receipt_fingerprint"] = hashlib.sha256(
+              json.dumps(result, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+
+          target = Path("research/evidence/q220_source_hash_timeline_reconciliation_latest.json")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+          assert result["historical_positive"]["source_hash_failure_count"] == 0
+          assert result["first_known_blocked"]["source_hash_failure_count"] == 55
+          assert result["frozen_expected"]["historical_match_attested"] is True
+          assert result["frozen_expected"]["present_in_current_whole_primary_observation_set"] is False
+          assert result["interpretation_scope"]["authoritative_source_vintage_proven"] is False
+          assert result["interpretation_scope"]["current_gate_positive"] is False
+          assert result["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+          }
+          print(json.dumps({
+              "status": result["status"],
+              "analysis_fingerprint": result["analysis_fingerprint"],
+              "receipt_fingerprint": result["receipt_fingerprint"],
+              "historical_match_attested": result["frozen_expected"]["historical_match_attested"],
+              "current_expected_hash_present": result["frozen_expected"]["present_in_current_whole_primary_observation_set"],
+              "root_cause_proven": result["same_code_population_capture_shift"]["root_cause_proven"],
+              "current_gate_positive": result["interpretation_scope"]["current_gate_positive"],
+          }, sort_keys=True))
+          PY
+
+      - name: Publish receipt with fast-forward-safe source control
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: publish Q220 historical hash timeline reconciliation"
+        run: >-
+          python automation/github_contents_publish.py
+          --repository "$GITHUB_REPOSITORY"
+          --branch master
+          --base-sha latest
+          --file "research/evidence/q220_source_hash_timeline_reconciliation_latest.json=research/evidence/q220_source_hash_timeline_reconciliation_latest.json"
+
+      - name: Upload immutable cross-architecture reconciliation artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q220-hash-timeline-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/evidence/q220_source_hash_timeline_reconciliation_latest.json
+          if-no-files-found: warn
+          retention-days: 30
