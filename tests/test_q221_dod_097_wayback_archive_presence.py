@@ -275,7 +275,7 @@ def test_r2_receipt_sync_validates_fingerprint_safety_and_persists_immutably():
     assert "IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS" in persistence
     assert "q221_dod_097_wayback_archive_presence_attempt_" in text
     assert "github_contents_publish.py" in text
-    assert "live_trading_enabled" in text
+    assert '"live_trading_enabled"' in persistence
 
 
 
