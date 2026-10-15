@@ -129,3 +129,17 @@ def test_workflow_is_master_marker_only_and_one_shot_guarded():
     assert "workflow_dispatch:" not in triggers
     assert "Q221_097_ONE_SHOT_GUARD=PASS" in text
     assert "one-shot source request" in text.lower()
+
+
+
+def test_receipt_writer_persists_a_verifiable_canonical_fingerprint(tmp_path):
+    path = tmp_path / "attempt-receipt.json"
+    receipt = probe._base_receipt()
+    receipt["status"] = "TEST_ONLY_RECEIPT_WRITER"
+    probe._write_receipt(path, receipt)
+    saved = probe._json(path)
+    assert saved["receipt_fingerprint"] == probe._fingerprint(saved)
+    assert saved["status"] == "TEST_ONLY_RECEIPT_WRITER"
+    assert saved["safety"]["source_requests_made"] == 0
+    assert saved["safety"]["historical_first_public_observation_proven"] is False
+    assert saved["safety"]["performance_authorization"] is False
