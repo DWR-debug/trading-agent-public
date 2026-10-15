@@ -1,0 +1,87 @@
+name: Q221 DoD 097 Wayback Receipt Persistence (Recovery R2)
+
+on:
+  workflow_run:
+    workflows: ["Q221 DoD 097 Wayback Archive Schema and Row-Presence Probe (Recovery R2)"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: trading-agent-q221-dod-097-wayback-receipt-sync-r2
+  cancel-in-progress: false
+
+jobs:
+  persist:
+    if: >-
+      ${{
+        github.event.workflow_run.repository.full_name == 'DWR-debug/trading-agent-public' &&
+        github.event.workflow_run.head_branch == 'master' &&
+        github.event.workflow_run.conclusion != 'cancelled' &&
+        github.event.workflow_run.conclusion != 'skipped'
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+      SOURCE_RUN_URL: ${{ github.event.workflow_run.html_url }}
+      SOURCE_COMMIT: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Download exact source-run artifact
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: ${{ runner.temp }}/q221-dod-097-r2-artifact
+
+      - name: Validate and materialize immutable receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q221_dod_097_wayback_receipt_persist \
+            --artifact-root "$RUNNER_TEMP/q221-dod-097-r2-artifact" \
+            --output-dir research/evidence \
+            --run-id "$SOURCE_RUN_ID"
+          echo "Q221_R2_SOURCE_RUN=$SOURCE_RUN_URL"
+          echo "Q221_R2_SOURCE_COMMIT=$SOURCE_COMMIT"
+
+      - name: Publish immutable receipt and latest pointer with fast-forward retries
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: persist Q221 DoD 097 Wayback receipt R2 run ${{ github.event.workflow_run.id }}"
+        run: |
+          set -euo pipefail
+          attempt_file="research/evidence/q221_dod_097_wayback_archive_presence_attempt_${SOURCE_RUN_ID}.json"
+          latest="research/evidence/q221_dod_097_wayback_archive_presence_latest.json"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if python automation/github_contents_publish.py \
+              --repository "${GITHUB_REPOSITORY}" \
+              --branch master \
+              --base-sha "${base_sha}" \
+              --file "${attempt_file}=${attempt_file}" \
+              --file "${latest}=${latest}"; then
+              exit 0
+            fi
+            sleep "${attempt}"
+          done
+          echo "::error::Q221 R2 evidence publication failed after retries"
+          exit 1
