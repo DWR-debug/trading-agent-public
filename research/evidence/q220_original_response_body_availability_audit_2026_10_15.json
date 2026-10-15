@@ -1,0 +1,220 @@
+{
+  "candidate_id": "Q220",
+  "decision": {
+    "next_allowed_action": "Offline audit of new, distinct archived artifacts only; otherwise stop this lineage path and preserve the blocker.",
+    "next_gate": "Only reopen source-vintage work if a distinct immutable artifact containing original direct-primary response bytes or an authoritative contemporaneous source-version record is located. Do not repeat SEC Feed/primary-document downloads, infer a byte cause from the uniform length shift, rewrite the frozen hash set, or reopen the Q220 PIT gate.",
+    "reason": "The retained artifact inventory contains hashes, lengths, headers, source metadata, or bodies from a different complete-submission representation; it does not contain the original direct-primary response bytes from the frozen capture. No byte-level reconstruction can be made from hashes and lengths alone.",
+    "status": "RETAIN_PROVENANCE_GAP_NO_FURTHER_IDENTICAL_SOURCE_RERUN"
+  },
+  "findings": {
+    "complete_submission_audit_persists_full_txt_responses": false,
+    "complete_submission_audit_preserves_three_alternate_route_document_blocks": true,
+    "current_git_tree_contains_q220_named_raw_body_file": false,
+    "exact_byte_level_cause_identifiable_from_retained_sources": false,
+    "expected_hashes_unchanged": true,
+    "five_profile_probe_persists_full_responses": false,
+    "historical_positive_independent_receipt_contains_raw_direct_primary_bytes": false,
+    "historical_source_vintage_proven": false,
+    "later_compiler_and_forensic_receipts_contain_raw_direct_primary_bytes": false,
+    "none_of_three_alternate_route_blocks_matches_its_frozen_direct_primary_sha256": true,
+    "original_population_receipt_contains_raw_direct_primary_bytes": false,
+    "q220_historical_pit_gate_positive": false,
+    "q220_independent_reproduction_gate_current": false,
+    "source_population_unchanged": true
+  },
+  "generated_at_utc": "2026-10-15T11:04:30Z",
+  "receipt_fingerprint": "9d3bab479450124d07d8f19640aa82fc899c5087b7a630f9c9afea02c56d586c",
+  "record_type": "q220_original_response_body_availability_audit",
+  "repository_snapshot": {
+    "branch": "master",
+    "commit_sha": "dbe45ea03456e4533f7651a40f3f58e8747d810b",
+    "q220_fixture_git_blob_sha1": "2a3abbff6c6950e4f11d85dba92cb9c57a5c7ee0",
+    "q220_fixture_path": "research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json",
+    "q220_named_raw_body_file_count": 0,
+    "raw_body_extensions_searched": [
+      ".html",
+      ".htm",
+      ".txt",
+      ".sgml",
+      ".xml",
+      ".nc",
+      ".tar",
+      ".zip",
+      ".bin"
+    ],
+    "tree_entry_count": 3053,
+    "tree_truncated": false
+  },
+  "retained_artifacts": [
+    {
+      "artifact_id": 11710195878,
+      "artifact_name": "q220-as-filed-population-38155914188-1",
+      "artifact_zip_bytes": 2302234,
+      "artifact_zip_sha256": "b72ccf9cf0bb79d1037e388d095ca642b911978df3b3cb3073b0a5d81d561b3b",
+      "basis": "55-row metadata receipt stores primary_document_sha256 and primary_document_bytes; no raw document body is stored.",
+      "contains_raw_direct_primary_bodies": false,
+      "role": "frozen_55_row_population_receipt",
+      "run_id": 38155914188
+    },
+    {
+      "artifact_id": 11712140975,
+      "artifact_name": "q220-as-filed-route-38155914188-1",
+      "artifact_zip_bytes": 348890,
+      "artifact_zip_sha256": "a7dd89d81b3665c110ba0d2927d70cc1da0f8615885d63184002df4d6d3834a8",
+      "basis": "Contains per-record hashes/lengths and route metadata only.",
+      "contains_raw_direct_primary_bodies": false,
+      "role": "independent_as_filed_route_metadata",
+      "run_id": 38155914188
+    },
+    {
+      "artifact_id": 11717643698,
+      "artifact_name": "q220-independent-pit-reproduction-38183038217-1",
+      "artifact_zip_bytes": 1714,
+      "artifact_zip_sha256": "1147d01f71d11c5436b85791bbd4157c8db8fe8d6d11791461627325b6d4477b",
+      "basis": "The positive run receipt records checks/fingerprints but not the 55 independently retrieved bodies.",
+      "contains_raw_direct_primary_bodies": false,
+      "role": "historical_positive_independent_reproduction",
+      "run_id": 38183038217
+    },
+    {
+      "artifact_id": 11729007177,
+      "artifact_name": "q220-historical-representation-pit-38210402239-1",
+      "artifact_zip_bytes": 6633,
+      "artifact_zip_sha256": "1780ac90f403b977d0f80235964c0d828f89534c701d92ffecf36c564120b778",
+      "basis": "Blocked compiler metadata identifies the 55 hash failures; it has no raw response body fields.",
+      "contains_raw_direct_primary_bodies": false,
+      "role": "first_blocked_compiler_receipt",
+      "run_id": 38210402239
+    },
+    {
+      "artifact_id": 11749259509,
+      "artifact_name": "q220-primary-source-vintage-forensics-38254139755-1",
+      "artifact_zip_bytes": 3936,
+      "artifact_zip_sha256": "d6c409c771eb0a909075acef09f8ccc6e6eb957f3e94ab3ffb81de3011ef4c09",
+      "basis": "Forensic receipt contains sample hashes/lengths and archive comparison status, not the downloaded raw body bytes.",
+      "contains_raw_direct_primary_bodies": false,
+      "role": "original_feed_forensics_receipt",
+      "run_id": 38254139755
+    },
+    {
+      "artifact_id": 11751436149,
+      "artifact_name": "q220-bounded-header-evidence-38258251764-1",
+      "artifact_zip_bytes": 2582,
+      "artifact_zip_sha256": "f0965f9b230ff19ae3c263c26d0950692a083bc56a3ddb4d56a89739c1458c26",
+      "basis": "Explicitly header-only source responses; no Feed or primary document downloaded.",
+      "contains_raw_direct_primary_bodies": false,
+      "role": "header_only_evidence",
+      "run_id": 38258251764
+    },
+    {
+      "artifact_id": 11838034399,
+      "artifact_name": "q220-single-feed-boundary-validation-38446029194-1",
+      "artifact_zip_bytes": 2495,
+      "artifact_zip_sha256": "76a07de16efc6805a5650f33d031e8b03e6dbbbaccfa6c3d80f48cb8f5a0ba3a",
+      "basis": "Receipt reports the original Feed's extracted-text hash/length and current route observations, not raw direct-primary bodies.",
+      "contains_raw_direct_primary_bodies": false,
+      "role": "single_feed_boundary_metadata",
+      "run_id": 38446029194
+    },
+    {
+      "artifact_id": 11907246485,
+      "artifact_name": "q220-http-representation-sensitivity-38590133217-1",
+      "artifact_zip_bytes": 2212,
+      "artifact_zip_sha256": "ed8083ad8984cb42527e74193e1e682f1ca59cfc2bcab98b1c4794ca6092807a",
+      "basis": "Stores response hashes/lengths, metadata and limited prefix/suffix fingerprints; no complete response body is persisted.",
+      "contains_raw_direct_primary_bodies": false,
+      "role": "five_profile_http_repeatability_probe",
+      "run_id": 38590133217
+    },
+    {
+      "artifact_id": 11921560717,
+      "artifact_name": "q220-complete-submission-capture-38619590525-1",
+      "artifact_zip_bytes": 877020,
+      "artifact_zip_sha256": "7ef25dce9cc424cbf77958a48df2214053fb74fc7235773f07d9d817ea956af4",
+      "contains_alternate_route_primary_document_blocks": true,
+      "contains_complete_submission_txt_bodies": false,
+      "contains_raw_direct_primary_bodies": false,
+      "interpretation": "These are selected <DOCUMENT> blocks extracted from the complete-submission .txt route. They are not the original full direct-primary HTTP response bodies and none matches its frozen expected direct-primary SHA-256.",
+      "retained_blocks": [
+        {
+          "accession": "0000064040-19-000059",
+          "bytes": 4774346,
+          "frozen_expected_sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+          "matches_frozen_expected": false,
+          "path": "primary-document-blocks/0000064040-19-000059/spgi-20181231x10k.htm.sgml",
+          "sha256": "cd5f2a074e7e1858bf45a5225944f5eec0d7352fdbf61c0789404645d4b2c512"
+        },
+        {
+          "accession": "0001564590-19-003382",
+          "bytes": 10558528,
+          "frozen_expected_sha256": "b024964aa602547d102af1f9cd51c61a3d723ab25b21ef5686b02ac8d4f40dd1",
+          "matches_frozen_expected": false,
+          "path": "primary-document-blocks/0001564590-19-003382/dvn-10k_20181231.htm.sgml",
+          "sha256": "6369f2207e113e72a6529cc1a66d2c1f54eef77bd82b10bc7132ca15e629c768"
+        },
+        {
+          "accession": "0000064040-25-000052",
+          "bytes": 4133826,
+          "frozen_expected_sha256": "afe05282d5d5af7f30607af8f17e682f1ca0a6f4",
+          "matches_frozen_expected": false,
+          "path": "primary-document-blocks/0000064040-25-000052/spgi-20241231.htm.sgml",
+          "sha256": "f4eecb1a270e56f2c74607a8ffccf3de512cc8134f2b5ac8d1cfd2478e7ea45b"
+        }
+      ],
+      "role": "complete_submission_capture_with_alternate_representation_blocks",
+      "run_id": 38619590525
+    },
+    {
+      "artifact_id": 11955293266,
+      "artifact_name": "q220-source-hash-lineage-x64-38698289935-1",
+      "artifact_zip_bytes": 11235,
+      "artifact_zip_sha256": "a6944d6dd06ecaa6365d1fd0b70c76688b47a2e7bdfe5e6243911b364237375d",
+      "contains_pinned_input_metadata_receipts": true,
+      "contains_raw_direct_primary_bodies": false,
+      "role": "offline_x64_lineage_reconciliation_with_pinned_input_receipts",
+      "run_id": 38698289935
+    },
+    {
+      "artifact_id": 11955288234,
+      "artifact_name": "q220-source-hash-lineage-arm64-38698289935-1",
+      "artifact_zip_bytes": 2464,
+      "artifact_zip_sha256": "bf0f1cf73762ee1ae53a89916a107568cc73a8d741a504959b0bba3ccafc59c1",
+      "contains_raw_direct_primary_bodies": false,
+      "role": "offline_arm64_lineage_reconciliation",
+      "run_id": 38698289935
+    },
+    {
+      "artifact_id": 11954749019,
+      "artifact_name": "q220-source-hash-lineage-final-38698289935-1",
+      "artifact_zip_bytes": 2718,
+      "artifact_zip_sha256": "7d841ebe6c8ddb4322c037821c972e09a40e533488aacaec86fa683994f6f1b0",
+      "contains_raw_direct_primary_bodies": false,
+      "role": "published_offline_hash_lineage_receipt",
+      "run_id": 38698289935
+    }
+  ],
+  "review_scope": {
+    "direct_primary_document_requests": 0,
+    "limitation": "This is a targeted inventory of the retained Q220 artifacts listed below, not a claim that every Action artifact in all repository history has been exhaustively downloaded.",
+    "method": "Inspect current Git tree plus the listed original-run and follow-up GitHub Actions artifacts; download and inspect ZIP directory entries and JSON payload shape locally.",
+    "network_source_requests_made": 0,
+    "review_is_exhaustive_over_all_actions_history": false,
+    "sec_feed_redownloads": 0
+  },
+  "safety": {
+    "automatic_promotion": false,
+    "holdout_selection": false,
+    "live_execution": false,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "paid_api_budget_usd": 0,
+    "paper_only": true,
+    "performance_authorization": false,
+    "promotion": false,
+    "ranking": false,
+    "tuning": false
+  },
+  "schema_version": 1,
+  "source_of_truth": "DWR-debug/trading-agent-public",
+  "status": "ORIGINAL_DIRECT_PRIMARY_BYTES_NOT_PRESENT_IN_REVIEWED_RETAINED_ARTIFACTS"
+}
