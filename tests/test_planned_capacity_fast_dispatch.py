@@ -9,6 +9,9 @@ def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backsto
     monitor_a = (ROOT / ".github/workflows/research-completion-monitor-a.yml").read_text(encoding="utf-8")
     monitor_b = (ROOT / ".github/workflows/research-completion-monitor-b.yml").read_text(encoding="utf-8")
     assert 'cron: "*/5 * * * *"' in dispatcher
+    # Completion events own immediate wakes; unfiltered master pushes duplicated them.
+    dispatcher_triggers = dispatcher.split("permissions:", 1)[0]
+    assert "  push:" not in dispatcher_triggers
     assert "workflow_run:" in dispatcher
     for workflow_name in (
         "Top-4 Candidate Slot Research",
@@ -25,6 +28,17 @@ def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backsto
     assert '      - "*Source*"' in monitor_a
     assert '      - "Evidence Graph*"' in monitor_a
     assert "gh workflow run planned-capacity-fast-dispatch.yml" in monitor_a
+    # The direct dispatcher trigger owns these names; Monitor A must not wake a second run.
+    for workflow_name in (
+        "Top-4 Candidate Slot Research",
+        "Top-4 Candidate Research Capacity",
+        "Q104 I19 Historical 13F Identity Census",
+        "Q089 Contract Audit",
+        "Q185-Q186 Windows Bounded Reproduction",
+        "H06 PIT Independent Reproduction (self-hosted)",
+        "Free AI Worker Fabric",
+    ):
+        assert f"github.event.workflow_run.name != '{workflow_name}'" in monitor_a
     assert "workflow_run:" not in monitor_b
 
 
