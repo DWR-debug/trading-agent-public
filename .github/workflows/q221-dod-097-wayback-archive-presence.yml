@@ -1,0 +1,114 @@
+name: Q221 DoD 097 Wayback Archive Schema and Row-Presence Probe
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q221_dod_097_wayback_archive_presence.trigger"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q221-dod-097-wayback-row-presence
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact marker commit
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.16"
+
+      - name: Install bounded test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Prevent re-use of this one-shot source request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/workflows/q221-dod-097-wayback-archive-presence.yml/runs?branch=master&per_page=100" > "$RUNNER_TEMP/q221-097-prior-runs.json"
+          jq -e --argjson current "$CURRENT_RUN_ID" '
+            (.total_count < 100) and
+            ([.workflow_runs[]? | select(.id != $current)] | length == 0)
+          ' "$RUNNER_TEMP/q221-097-prior-runs.json" >/dev/null
+          echo "Q221_097_ONE_SHOT_GUARD=PASS"
+
+      - name: Test frozen pins and archive parser offline
+        run: python -m pytest -q tests/test_q221_dod_097_wayback_archive_presence.py
+
+      - name: Validate source pins and selected-key set before network access
+        run: >-
+          python -m automation.q221_dod_097_wayback_archive_presence
+          --repo-root .
+          --prereg research/preregistrations/q221_dod_097_wayback_archive_presence_2026_10_15.json
+          --request research/run_requests/q221_dod_097_wayback_archive_presence.trigger
+          --output "$RUNNER_TEMP/q221-dod-097-wayback-presence.json"
+          --validate-only
+
+      - name: Make the two-request bounded Wayback inspection
+        id: capture
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q221_dod_097_wayback_archive_presence \
+            --repo-root . \
+            --prereg research/preregistrations/q221_dod_097_wayback_archive_presence_2026_10_15.json \
+            --request research/run_requests/q221_dod_097_wayback_archive_presence.trigger \
+            --output "$RUNNER_TEMP/q221-dod-097-wayback-presence.json"
+
+      - name: Upload bounded receipt only (never upload archive bytes)
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-dod-097-wayback-archive-presence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/q221-dod-097-wayback-presence.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Publish receipt summary
+        if: always()
+        shell: bash
+        run: |
+          if [[ ! -s "$RUNNER_TEMP/q221-dod-097-wayback-presence.json" ]]; then
+            echo "No probe receipt exists; inspect the failed step before retrying." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          p = Path("${{ runner.temp }}/q221-dod-097-wayback-presence.json")
+          r = json.loads(p.read_text(encoding="utf-8"))
+          print("# Q221 DoD 097 archived row-presence probe")
+          print("")
+          for key in ("status", "receipt_fingerprint"):
+              print(f"- **{key}:** {r.get(key, 'not available')}")
+          print(f"- Source requests: {r.get('source_probe', {}).get('request_count', 0)}")
+          print(f"- Response bytes: {r.get('source_probe', {}).get('response_bytes', 0)}")
+          observed = r.get("archive_schema_and_row_presence", {})
+          print(f"- CSV schema recognized: {observed.get('schema_recognized', False)}")
+          print(f"- Row counts: {json.dumps(observed.get('presence_counts', {}), sort_keys=True)}")
+          print("- Historical first-public/PIT, mapping, performance and execution gates remain false.")
+          PY
+
+      - name: Keep failed or blocked capture visibly fail-closed
+        if: always() && steps.capture.outcome != 'success'
+        run: |
+          echo "The bounded source inspection failed or remained blocked; inspect the immutable receipt."
+          exit 1
