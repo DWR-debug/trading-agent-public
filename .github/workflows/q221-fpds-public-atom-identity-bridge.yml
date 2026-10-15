@@ -1,0 +1,302 @@
+name: Q221 FPDS Public Atom Identity Bridge Feasibility
+
+on:
+  # Explicit request marker only; test/code edits must never repeat the bounded source requests.
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q221_fpds_public_atom_identity_bridge.trigger"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q221-fpds-public-atom-identity-bridge
+  cancel-in-progress: false
+
+jobs:
+  capture-x64:
+    name: Ubuntu x64 — four-record public FPDS source probe
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    outputs:
+      analysis_fingerprint: ${{ steps.capture.outputs.analysis_fingerprint }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Install bounded local test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Test fixed source contract before network access
+        run: >-
+          python -m pytest -q
+          tests/test_q221_fpds_public_atom_identity_bridge.py
+          tests/test_q221_fpds_public_atom_identity_bridge_workflow.py
+
+      - name: Capture exactly four fixed PIID-scoped FPDS Atom responses
+        id: capture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q221_fpds_public_atom_identity_bridge \
+            --mode capture \
+            --repo-root . \
+            --output q221-fpds-work/capture/receipt.json
+
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+
+          row = json.loads(Path("q221-fpds-work/capture/receipt.json").read_text(encoding="utf-8"))
+          assert row["record_type"] == "q221_fpds_public_atom_identity_bridge_feasibility"
+          assert row["request_contract"]["requests_attempted"] == 4
+          assert row["request_contract"]["total_response_bytes"] <= 4_000_000
+          assert row["source_contract"]["redirects_followed"] is False
+          assert row["source_contract"]["sam_contract_awards_api_called"] is False
+          assert row["source_contract"]["source_bodies_persisted"] is False
+          assert row["aggregate"]["recipient_to_issuer_mapping_frozen"] is False
+          assert row["aggregate"]["historical_parent_lineage_proven"] is False
+          assert row["aggregate"]["historical_first_public_observation_proven"] is False
+          assert row["aggregate"]["q221_gate_positive"] is False
+          assert row["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+              "performance_authorization": False,
+              "holdout_selection": False,
+              "ranking": False,
+              "tuning": False,
+              "promotion": False,
+              "live_execution": False,
+              "paid_api_budget_usd": 0,
+          }
+          print("analysis_fingerprint=" + row["analysis_fingerprint"])
+          PY
+
+      - name: Preserve redacted source observations and capture receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-fpds-public-atom-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-fpds-work/capture/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  validate-arm64:
+    name: Ubuntu ARM64 — independent offline receipt validation
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [capture-x64]
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Install bounded local test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Test fixed source contract before receipt validation
+        run: >-
+          python -m pytest -q
+          tests/test_q221_fpds_public_atom_identity_bridge.py
+          tests/test_q221_fpds_public_atom_identity_bridge_workflow.py
+
+      - name: Download the exact x64 capture receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-fpds-public-atom-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-fpds-capture
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Validate the immutable capture offline with zero network requests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q221_fpds_public_atom_identity_bridge \
+            --mode verify \
+            --repo-root . \
+            --input q221-fpds-capture/receipt.json \
+            --output q221-fpds-work/arm64/validation.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          capture = json.loads(Path("q221-fpds-capture/receipt.json").read_text(encoding="utf-8"))
+          validation = json.loads(Path("q221-fpds-work/arm64/validation.json").read_text(encoding="utf-8"))
+          assert validation["status"] == "DETERMINISTIC_CAPTURE_RECEIPT_VALIDATED"
+          assert validation["analysis_fingerprint"] == capture["analysis_fingerprint"]
+          assert validation["network_requests_made"] == 0
+          assert validation["source_gate_positive"] is False
+          assert validation["recipient_to_issuer_mapping_frozen"] is False
+          PY
+
+      - name: Preserve offline ARM64 validation receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-fpds-public-atom-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-fpds-work/arm64/validation.json
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-receipt:
+    name: Reconcile receipt fingerprints and publish diagnostic-only evidence
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [capture-x64, validate-arm64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Download exact x64 source probe receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-fpds-public-atom-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-fpds-x64
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download exact ARM64 offline validation
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-fpds-public-atom-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-fpds-arm64
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Reconcile, fingerprint, and publish the diagnostic receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: publish bounded Q221 FPDS public identity bridge diagnostic"
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          source_path = Path("q221-fpds-x64/receipt.json")
+          validation_path = Path("q221-fpds-arm64/validation.json")
+          if not source_path.is_file() or not validation_path.is_file():
+              raise SystemExit("Q221_FPDS_SOURCE_OR_VALIDATION_RECEIPT_MISSING")
+          receipt = json.loads(source_path.read_text(encoding="utf-8"))
+          validation = json.loads(validation_path.read_text(encoding="utf-8"))
+          if validation.get("analysis_fingerprint") != receipt.get("analysis_fingerprint"):
+              raise SystemExit("Q221_FPDS_X64_ARM64_ANALYSIS_FINGERPRINT_MISMATCH")
+          if validation.get("capture_receipt_fingerprint") != receipt.get("receipt_fingerprint"):
+              raise SystemExit("Q221_FPDS_VALIDATION_CAPTURE_FINGERPRINT_MISMATCH")
+          if validation.get("network_requests_made") != 0:
+              raise SystemExit("Q221_FPDS_ARM64_NETWORK_REQUESTS_NOT_ZERO")
+          expected_safety = {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+              "performance_authorization": False,
+              "holdout_selection": False,
+              "ranking": False,
+              "tuning": False,
+              "promotion": False,
+              "live_execution": False,
+              "paid_api_budget_usd": 0,
+          }
+          if receipt.get("safety") != expected_safety:
+              raise SystemExit("Q221_FPDS_SAFETY_CONTRACT_MISMATCH")
+          for key in ("recipient_to_issuer_mapping_frozen", "historical_parent_lineage_proven", "historical_first_public_observation_proven", "q221_gate_positive"):
+              if receipt.get("aggregate", {}).get(key) is not False:
+                  raise SystemExit("Q221_FPDS_AUTHORITY_DRIFT:" + key)
+
+          receipt["cross_arch_validation"] = {
+              "status": "DETERMINISTIC_CAPTURE_RECEIPT_VALIDATED_NOT_SOURCE_REPLAYED",
+              "analysis_fingerprint": validation["analysis_fingerprint"],
+              "capture_receipt_fingerprint": validation["capture_receipt_fingerprint"],
+              "validation_receipt_fingerprint": validation["receipt_fingerprint"],
+              "validation_platform": "ubuntu-24.04-arm",
+              "network_requests_made_on_validation_platform": 0,
+              "workflow_run_id": int(os.environ.get("GITHUB_RUN_ID", "0")),
+              "run_attempt": int(os.environ.get("GITHUB_RUN_ATTEMPT", "1")),
+          }
+          receipt["generated_at_utc"] = datetime.now(timezone.utc).isoformat()
+          receipt.pop("receipt_fingerprint", None)
+          receipt["receipt_fingerprint"] = hashlib.sha256(
+              json.dumps(receipt, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+
+          output = Path("research/evidence/q221_fpds_public_atom_identity_bridge_latest.json")
+          output.parent.mkdir(parents=True, exist_ok=True)
+          output.write_text(json.dumps(receipt, sort_keys=True, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+          print(json.dumps({
+              "status": receipt["status"],
+              "analysis_fingerprint": receipt["analysis_fingerprint"],
+              "receipt_fingerprint": receipt["receipt_fingerprint"],
+              "requests_attempted": receipt["request_contract"]["requests_attempted"],
+              "exact_record_uei_and_name_match_count": receipt["aggregate"]["exact_record_uei_and_name_match_count"],
+              "q221_gate_positive": receipt["aggregate"]["q221_gate_positive"],
+          }, sort_keys=True))
+          PY
+
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          path = Path("research/evidence/q221_fpds_public_atom_identity_bridge_latest.json")
+          row = json.loads(path.read_text(encoding="utf-8"))
+          payload = dict(row)
+          saved = payload.pop("receipt_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+          assert saved == actual
+          assert row["aggregate"]["q221_gate_positive"] is False
+          assert row["aggregate"]["recipient_to_issuer_mapping_frozen"] is False
+          assert row["interpretation"]["performance_authorization"] is False
+          assert row["safety"]["live_trading_enabled"] is False
+          PY
+
+          python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha latest \
+            --file "research/evidence/q221_fpds_public_atom_identity_bridge_latest.json=research/evidence/q221_fpds_public_atom_identity_bridge_latest.json"
+
+      - name: Preserve the final diagnostic receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-fpds-public-atom-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/evidence/q221_fpds_public_atom_identity_bridge_latest.json
+          if-no-files-found: warn
+          retention-days: 30
