@@ -10,7 +10,7 @@ R2 source run [#38797148893](https://github.com/DWR-debug/trading-agent-public/a
 
 R3 freezes a per-request socket/open timeout of **60 seconds**, changed from 25 seconds in R2, as a direct response to that observed timeout. This changes no scientific gate and does not authorize retries within a request or a third request.
 
-Unchanged: exact archive `FY2025_097_Contracts_Full_20250106.zip`; pinned Wayback capture `20250128184322`; CDX SHA-1/Base32 `IYPLEC2VXYNMEA2CUHSSPVKPEJRKBJQB`; expected length 13,605,284 bytes; original manifest Git blob SHA-1 `b78cf6f7b48af3f914ee7c6d06a38f6485b0438f`; its fingerprint `9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4); the same 28 keys derived at run time from the same 348-key manifest; at most two GET requests to `web.archive.org`; the same CDX/archive/total response and ZIP/CSV caps; no redirects; no archive bytes persisted or uploaded.
+Unchanged: exact archive `FY2025_097_Contracts_Full_20250106.zip`; pinned Wayback capture `20250128184322`; CDX SHA-1/Base32 `IYPLEC2VXYNMEA2CUHSSPVKPEJRKBJQB`; expected length 13,605,284 bytes; original manifest Git blob SHA-1 `b78cf6f7b48af3f914ee7c6d06a38f6485b0438f`; its fingerprint `9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4`; the same 28 keys derived at run time from the same 348-key manifest; at most two GET requests to `web.archive.org`; the same CDX/archive/total response and ZIP/CSV caps; no redirects; no archive bytes persisted or uploaded.
 
 ## Interpretation and hard gates
 
