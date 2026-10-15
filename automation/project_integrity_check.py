@@ -44,6 +44,7 @@ ACTIVE_WORKFLOWS = {
     "q104-i19-residual-source-lineage-r4.yml",
     "q104-i19-residual-source-lineage-r5.yml",
     "q104-i19-residual-source-lineage-r6.yml",
+    "q104-i19-residual-policy-applicability-r7.yml",
     "q104-i19-filing-date-change-header-probe.yml",
     "q104-i19-filing-date-precedence-review.yml",
     "q104-i19-cross-vintage-precedence-review.yml",
