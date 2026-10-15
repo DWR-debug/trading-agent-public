@@ -49,6 +49,7 @@ ACTIVE_WORKFLOWS = {
     "q104-i19-cross-vintage-precedence-review.yml",
     "q221-recipient-parent-identity-probe.yml",
     "q221-current-parent-identity-map.yml",
+    "q221-pre-event-parent-identity-feasibility.yml",
     "q221-transaction-parent-uei-probe.yml",
     "q104-i19-cik-role-lineage-diagnostic.yml",
     "q104-i19-missing-shard-recovery.yml",
@@ -338,6 +339,11 @@ REQUIRED_FILES = (
     ROOT / "tests" / "test_s10_utility_task.py",
     ROOT / "tests" / "test_android_phone_receipt_sync.py",
     ROOT / "tests" / "test_s10_throughput_probe.py",
+    ROOT / "research" / "preregistrations" / "q221_pre_event_parent_identity_feasibility_2026_10_15.json",
+    ROOT / "research" / "run_requests" / "q221_pre_event_parent_identity_feasibility.trigger",
+    ROOT / "automation" / "q221_pre_event_parent_identity_feasibility.py",
+    ROOT / "tests" / "test_q221_pre_event_parent_identity_feasibility.py",
+    ROOT / "tests" / "test_q221_pre_event_parent_identity_workflow.py",
 )
 
 
