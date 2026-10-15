@@ -237,9 +237,9 @@ def validate_frozen_inputs(
             source_key = "action_date" if key == "transaction_date" else key
             if str(tx.get(source_key) or "") != str(spec.get(key) or ""):
                 raise FeasibilityError(f"FROZEN_BOUNDARY_FIELD_MISMATCH:{spec['record_id']}:{key}")
-        if tx.get("recipient_to_issuer_status") != "UNMAPPED_NO_FROZEN_PRE_EVENT_IDENTITY_RECEIPT":
+        if tx.get("recipient_to_issuer_status") != spec.get("recipient_to_issuer_status") or tx.get("recipient_to_issuer_status") != "UNMAPPED_NO_FROZEN_PRE_EVENT_IDENTITY_RECEIPT":
             raise FeasibilityError("FROZEN_ROW_MAPPING_STATUS_DRIFT:" + spec["record_id"])
-        if tx.get("issuer_symbol") is not None or tx.get("mapping_authority") is not None:
+        if tx.get("issuer_symbol") != spec.get("issuer_symbol") or tx.get("mapping_authority") != spec.get("mapping_authority"):
             raise FeasibilityError("FROZEN_ROW_MAPPING_AUTHORITY_DRIFT:" + spec["record_id"])
 
         map_row = profile_by_uei.get(str(spec["recipient_uei"]))
@@ -422,6 +422,9 @@ def build_analysis(
                 "recipient_name": spec["recipient_name"],
                 "recipient_uei": spec["recipient_uei"],
                 "recipient_id": spec["recipient_id"],
+                "recipient_to_issuer_status": spec["recipient_to_issuer_status"],
+                "issuer_symbol": spec["issuer_symbol"],
+                "mapping_authority": spec["mapping_authority"],
                 "current_parent_name": spec["current_parent_name"],
                 "current_parent_uei": spec["current_parent_uei"],
                 "pre_event_parent_filing_contains_child": True,
@@ -446,6 +449,12 @@ def build_analysis(
                 "role": spec["role"],
                 "transaction_key": spec["transaction_key"],
                 "transaction_date": event_date,
+                "recipient_name": spec["recipient_name"],
+                "recipient_uei": spec["recipient_uei"],
+                "recipient_id": spec["recipient_id"],
+                "recipient_to_issuer_status": spec["recipient_to_issuer_status"],
+                "issuer_symbol": spec["issuer_symbol"],
+                "mapping_authority": spec["mapping_authority"],
                 "current_parent_name": spec["current_parent_name"],
                 "current_parent_uei": spec["current_parent_uei"],
                 "control_filing_date": source_date,
