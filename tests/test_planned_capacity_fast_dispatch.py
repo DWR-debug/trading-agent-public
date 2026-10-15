@@ -33,6 +33,7 @@ def test_fast_dispatch_uses_canonical_completion_monitor_and_five_minute_backsto
         "Top-4 Candidate Slot Research",
         "Top-4 Candidate Research Capacity",
         "Q104 I19 Historical 13F Identity Census",
+        "Q104 I22 Independent PIT Reproduction",
         "Q089 Contract Audit",
         "Q185-Q186 Windows Bounded Reproduction",
         "H06 PIT Independent Reproduction (self-hosted)",

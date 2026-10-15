@@ -27,6 +27,7 @@ jobs:
       github.event_name == 'workflow_run' &&
       github.event.workflow_run.head_branch == github.event.repository.default_branch &&
       github.event.workflow_run.event != 'workflow_dispatch' &&
+      github.event.workflow_run.name != 'Q104 I22 Independent PIT Reproduction' &&
       github.event.workflow_run.name != 'Top-4 Candidate Slot Research' &&
       github.event.workflow_run.name != 'Top-4 Candidate Research Capacity' &&
       github.event.workflow_run.name != 'Q104 I19 Historical 13F Identity Census' &&
