@@ -121,7 +121,7 @@ def validate_sensitivity_observations(sensitivity: dict[str,Any]) -> dict[str,An
             or row.get("requested_url")!=PRIMARY_URL
             or row.get("final_url")!=PRIMARY_URL
             or row.get("last_modified")!=LAST_MODIFIED
-            or "body" in row
+            or row.get("body") is not None
         ):
             raise DiagnosticError("PINNED_SENSITIVITY_PROFILE_OBSERVATION_MISMATCH")
     return {
