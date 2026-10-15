@@ -98,7 +98,7 @@ jobs:
             row = json.loads(Path("q221-capture/receipt.json").read_text(encoding="utf-8"))
             if row.get("status") == "Q221_PRE_EVENT_IDENTITY_BRIDGE_CAPTURE_COMPLETE":
                 print("analysis_fingerprint=" + row["analysis_fingerprint"])
-            PY
+          PY
           fi
           exit "$capture_rc"
 
