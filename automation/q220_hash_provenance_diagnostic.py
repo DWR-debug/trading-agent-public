@@ -13,8 +13,10 @@ from typing import Any
 CANDIDATE="Q220"
 SOURCE_RECEIPT_FP="c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075"
 POPULATION_FP="158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543"
-# Exact current canonical compiler receipt captured 2026-10-15T04:41:43Z. The target accession changed body hash/length while URL and Last-Modified remained unchanged; the prior probe is independently pinned below.
-COMPILER_FP="1ca885190d7b277c809ac8a6c3386a637e7750df6bb51755260c9bd7351f868d"
+# Stable compiler identity is pinned; latest-receipt generation timestamps are volatile.
+COMPILER_CODE_SHA256="08f904ef38cbf8b1fb3adbf8542d9642c786ffc0d2be51fd56546263e7f1264c"
+SOURCE_FIXTURE_PATH="research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json"
+SOURCE_FIXTURE_BLOB_SHA1="2a3abbff6c6950e4f11d85dba92cb9c57a5c7ee0"
 SENSITIVITY_RUN_ID="38590133217"
 SENSITIVITY_ARTIFACT_ID=11907246485
 SENSITIVITY_ARTIFACT_NAME="q220-http-representation-sensitivity-38590133217-1"
@@ -56,6 +58,62 @@ def find_receipt(root: Path) -> Path:
     paths=sorted(root.rglob("receipt.json"))
     if len(paths)!=1: raise DiagnosticError(f"PINNED_ARTIFACT_RECEIPT_COUNT_INVALID:{len(paths)}")
     return paths[0]
+
+def git_blob_sha1(raw: bytes) -> str:
+    return hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\\0" + raw).hexdigest()
+
+
+def read_pinned_fixture(path: Path) -> dict[str,Any]:
+    raw=path.read_bytes()
+    if git_blob_sha1(raw)!=SOURCE_FIXTURE_BLOB_SHA1:
+        raise DiagnosticError("FROZEN_FIXTURE_GIT_BLOB_SHA_MISMATCH")
+    fixture=json.loads(raw.decode("utf-8"))
+    if (
+        fixture.get("candidate_id")!="Q220"
+        or fixture.get("status")!="Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED"
+        or fixture.get("receipt_fingerprint")!=SOURCE_RECEIPT_FP
+        or fp(fixture)!=SOURCE_RECEIPT_FP
+        or fixture.get("source_population_receipt_fingerprint")!=POPULATION_FP
+        or fixture.get("source_hash_failure_count")!=55
+        or len(fixture.get("source_hash_failures",[]))!=55
+        or fixture.get("verified_primary_document_count")!=0
+        or fixture.get("gate_positive") is not False
+    ):
+        raise DiagnosticError("FROZEN_FIXTURE_CONTRACT_MISMATCH")
+    return fixture
+
+
+def validate_current_compiler_receipt(compiler: dict[str,Any], fixture: dict[str,Any]) -> None:
+    """Validate stable receipt identity without pinning a volatile generated_at_utc."""
+    if (
+        compiler.get("candidate_id")!="Q220"
+        or compiler.get("status")!="Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED"
+        or compiler.get("receipt_fingerprint")!=fp(compiler)
+        or compiler.get("compiler_code_sha256")!=COMPILER_CODE_SHA256
+        or compiler.get("source_population_receipt_fingerprint")!=POPULATION_FP
+        or compiler.get("source_hash_failure_count")!=55
+        or len(compiler.get("source_hash_failures",[]))!=55
+        or compiler.get("verified_primary_document_count")!=0
+        or compiler.get("gate_positive") is not False
+    ):
+        raise DiagnosticError("CURRENT_COMPILER_STABLE_CONTRACT_MISMATCH")
+    fixture_rows={str(x.get("record_key") or ""):x for x in fixture.get("source_hash_failures",[])}
+    compiler_rows={str(x.get("record_key") or ""):x for x in compiler.get("source_hash_failures",[])}
+    if len(fixture_rows)!=55 or len(compiler_rows)!=55 or set(fixture_rows)!=set(compiler_rows) or "" in compiler_rows:
+        raise DiagnosticError("CURRENT_COMPILER_FROZEN_KEY_SET_MISMATCH")
+    for key, row in compiler_rows.items():
+        frozen_error=str(fixture_rows[key].get("error") or "")
+        observed_error=str(row.get("error") or "")
+        frozen_sha=re.search(r"expected=([0-9a-f]{64})",frozen_error)
+        observed_sha=re.search(r"expected=([0-9a-f]{64})",observed_error)
+        frozen_bytes=re.search(r"expected_bytes=(\d+)",frozen_error)
+        observed_bytes=re.search(r"expected_bytes=(\d+)",observed_error)
+        if (
+            not frozen_sha or not observed_sha or frozen_sha.group(1)!=observed_sha.group(1)
+            or not frozen_bytes or not observed_bytes or frozen_bytes.group(1)!=observed_bytes.group(1)
+        ):
+            raise DiagnosticError("CURRENT_COMPILER_FROZEN_EXPECTED_HASH_CONTRACT_MISMATCH:"+key)
+
 
 def classify_primary_hashes(expected_sha: str, observations: list[dict[str,Any]]) -> dict[str,Any]:
     whole=[x for x in observations if x.get("scope")=="whole_primary_document" and x.get("sha256")]
@@ -136,13 +194,10 @@ def validate_sensitivity_observations(sensitivity: dict[str,Any]) -> dict[str,An
     }
 
 
-def build_analysis(compiler: dict[str,Any], forensics: dict[str,Any], header: dict[str,Any], sensitivity: dict[str,Any], single: dict[str,Any]) -> dict[str,Any]:
-    if compiler.get("candidate_id")!="Q220" or compiler.get("status")!="Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED":
-        raise DiagnosticError("CURRENT_COMPILER_NOT_BLOCKED_SOURCE")
-    if compiler.get("receipt_fingerprint")!=COMPILER_FP or fp(compiler)!=COMPILER_FP:
-        raise DiagnosticError("CURRENT_COMPILER_FINGERPRINT_MISMATCH")
-    if compiler.get("source_population_receipt_fingerprint")!=POPULATION_FP or compiler.get("source_hash_failure_count")!=55 or compiler.get("verified_primary_document_count")!=0:
-        raise DiagnosticError("COMPILER_SOURCE_POPULATION_CONTRACT_MISMATCH")
+def build_analysis(compiler: dict[str,Any], forensics: dict[str,Any], header: dict[str,Any], sensitivity: dict[str,Any], single: dict[str,Any], fixture: dict[str,Any]|None=None) -> dict[str,Any]:
+    if fixture is None:
+        fixture=read_pinned_fixture(Path(SOURCE_FIXTURE_PATH))
+    validate_current_compiler_receipt(compiler,fixture)
     if forensics.get("record_type")!="q220_original_sec_feed_primary_hash_forensics" or forensics.get("status")!="FORENSIC_COMPARISON_INCOMPLETE":
         raise DiagnosticError("PINNED_FORENSICS_RECEIPT_STATUS_MISMATCH")
     if forensics.get("receipt_fingerprint")!=FORENSICS_FP or fp(forensics)!=FORENSICS_FP:
@@ -216,7 +271,7 @@ def build_analysis(compiler: dict[str,Any], forensics: dict[str,Any], header: di
         "schema_version":1,"record_type":"q220_offline_source_hash_lineage_diagnostic",
         "candidate_id":"Q220","status":"Q220_SOURCE_HASH_LINEAGE_UNRESOLVED_MULTIPLE_OBSERVED_HASHES",
         "source_receipts":{
-            "compiler_receipt_fingerprint":COMPILER_FP,"compiler_source_population_fingerprint":POPULATION_FP,
+            "compiler_receipt_fingerprint":compiler["receipt_fingerprint"],"compiler_code_sha256":compiler["compiler_code_sha256"],"compiler_source_population_fingerprint":POPULATION_FP,
             "frozen_fixture_receipt_fingerprint":SOURCE_RECEIPT_FP,
             "forensics_run_id":FORENSICS_RUN_ID,"forensics_artifact_id":FORENSICS_ARTIFACT_ID,
             "forensics_artifact_name":FORENSICS_ARTIFACT_NAME,"forensics_receipt_fingerprint":FORENSICS_FP,
@@ -254,7 +309,8 @@ def run(repo_root: Path, forensics_dir: Path, header_dir: Path, sensitivity_dir:
     forensics=read_json(find_receipt(forensics_dir))
     header=read_json(find_receipt(header_dir))
     sensitivity=read_json(find_receipt(sensitivity_dir))
-    core=build_analysis(compiler,forensics,header,sensitivity,single)
+    fixture=read_pinned_fixture(repo_root/SOURCE_FIXTURE_PATH)
+    core=build_analysis(compiler,forensics,header,sensitivity,single,fixture)
     if expected_analysis_fingerprint and core["analysis_fingerprint"]!=expected_analysis_fingerprint:
         raise DiagnosticError("CROSS_ARCH_ANALYSIS_FINGERPRINT_MISMATCH")
     result={**core,"generated_at_utc":datetime.now(timezone.utc).isoformat()}
