@@ -175,6 +175,88 @@ def test_r2_workflow_has_its_own_master_only_one_shot_guard_and_marker():
 
  
  
+def _write_r2_persistable_receipt(path, *, fallback=False):
+    import json
+    from automation import q221_dod_097_wayback_receipt_persist as persistence
+
+    if fallback:
+        receipt = {
+            "schema_version": 1,
+            "record_type": "q221_dod_097_wayback_archive_presence_recovery_fallback_receipt",
+            "candidate_id": "Q221",
+            "probe_attempt_number": 2,
+            "recovery_of_workflow_run_id": 38791554425,
+            "status": "Q221_DOD_097_RECEIPT_PERSISTENCE_FAILED_SOURCE_OUTCOME_UNKNOWN",
+            "source_probe": {
+                "request_cap": 2, "request_count": None, "request_count_known": False,
+                "response_bytes": None, "responses": [], "response_outcome_known": False,
+            },
+            "archive_schema_and_row_presence": None,
+            "safety": {
+                "paper_only": True, "live_trading_enabled": False, "orders_enabled": False,
+                "scientific_evidence": False, "performance_authorization": False, "holdout_selection": False,
+                "ranking": False, "tuning": False, "promotion": False, "live_execution": False,
+            },
+        }
+    else:
+        receipt = probe._base_receipt()
+        receipt["source_probe"].update({
+            "request_profile": "R2", "one_shot_attempt": 2,
+            "preregistration_path": probe.PREREG_PATH_R2,
+            "request_marker_path": probe.REQUEST_PATH_R2,
+            "request_marker_validated": True, "preregistration_validated": True,
+            "request_count": 1, "response_bytes": 10, "responses": [{"http_status": 200}],
+        })
+    receipt["receipt_fingerprint"] = persistence.canonical_fingerprint(receipt)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+    return receipt
+
+
+def test_r2_receipt_persistence_accepts_only_a_pinned_fingerprinted_probe_receipt(tmp_path):
+    import json
+    from automation import q221_dod_097_wayback_receipt_persist as persistence
+
+    artifact = tmp_path / "artifacts" / "q221-r2"
+    artifact.mkdir(parents=True)
+    source = artifact / persistence.RECEIPT_FILENAME
+    original = _write_r2_persistable_receipt(source)
+    result = persistence.persist_receipt(artifact, tmp_path / "evidence", "123456")
+    attempt = Path(result["attempt_path"])
+    latest = Path(result["latest_path"])
+    assert attempt.read_bytes() == source.read_bytes()
+    assert latest.read_bytes() == source.read_bytes()
+    assert json.loads(attempt.read_text(encoding="utf-8"))["receipt_fingerprint"] == original["receipt_fingerprint"]
+    with pytest.raises(persistence.ReceiptPersistenceError, match="IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS"):
+        persistence.persist_receipt(artifact, tmp_path / "evidence", "123456")
+
+
+def test_r2_receipt_persistence_rejects_bad_fingerprint_and_open_safety_flags(tmp_path):
+    from automation import q221_dod_097_wayback_receipt_persist as persistence
+
+    source = tmp_path / persistence.RECEIPT_FILENAME
+    receipt = _write_r2_persistable_receipt(source)
+    receipt["receipt_fingerprint"] = "0" * 64
+    with pytest.raises(persistence.ReceiptPersistenceError, match="canonical fingerprint differs"):
+        persistence.validate_receipt(receipt)
+
+    receipt["receipt_fingerprint"] = persistence.canonical_fingerprint(receipt)
+    receipt["safety"]["live_trading_enabled"] = True
+    receipt["receipt_fingerprint"] = persistence.canonical_fingerprint(receipt)
+    with pytest.raises(persistence.ReceiptPersistenceError, match="live_trading_enabled"):
+        persistence.validate_receipt(receipt)
+
+
+def test_r2_receipt_persistence_accepts_fail_closed_unknown_outcome_fallback(tmp_path):
+    from automation import q221_dod_097_wayback_receipt_persist as persistence
+
+    source = tmp_path / persistence.RECEIPT_FILENAME
+    _write_r2_persistable_receipt(source, fallback=True)
+    result = persistence.persist_receipt(tmp_path, tmp_path / "evidence", "654321")
+    assert Path(result["attempt_path"]).is_file()
+    assert Path(result["latest_path"]).is_file()
+
+
 def test_r2_receipt_sync_validates_fingerprint_safety_and_persists_immutably():
     text = (ROOT / ".github/workflows/q221-dod-097-wayback-archive-presence-r2-sync.yml").read_text(encoding="utf-8")
     triggers = text.split("permissions:", 1)[0]
@@ -185,8 +267,8 @@ def test_r2_receipt_sync_validates_fingerprint_safety_and_persists_immutably():
     assert "conclusion != 'cancelled'" in text
     assert "actions: read" in text
     assert "contents: write" in text
+    assert "automation.q221_dod_097_wayback_receipt_persist" in text
     assert "receipt_fingerprint" in text
-    assert "R2_RECEIPT_FINGERPRINT_MISMATCH" in text
     assert "q221_dod_097_wayback_archive_presence_attempt_" in text
     assert "IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS" in text
     assert "github_contents_publish.py" in text
