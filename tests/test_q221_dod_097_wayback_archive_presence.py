@@ -200,6 +200,8 @@ def _write_r2_persistable_receipt(path, *, fallback=False):
         }
     else:
         receipt = probe._base_receipt()
+        frozen = probe.validate_frozen_inputs(ROOT, ROOT / probe.PREREG_PATH_R2, ROOT / probe.REQUEST_PATH_R2)
+        receipt["frozen_row_selection"]["target_keys"] = [target["transaction_key"] for target in frozen["targets"]]
         receipt["source_probe"].update({
             "request_profile": "R2", "one_shot_attempt": 2,
             "preregistration_path": probe.PREREG_PATH_R2,
@@ -368,6 +370,7 @@ def _write_r3_persistable_receipt(path):
         ROOT, ROOT / probe.PREREG_PATH_R3, ROOT / probe.REQUEST_PATH_R3
     )
     receipt = probe._base_receipt()
+    receipt["frozen_row_selection"]["target_keys"] = [target["transaction_key"] for target in validated["targets"]]
     receipt["status"] = "Q221_DOD_097_WAYBACK_TRANSPORT_ERROR"
     receipt["errors"] = [{"code": "Q221_DOD_097_WAYBACK_TRANSPORT_ERROR", "message": "TimeoutError"}]
     receipt["next_gate"] = "Retain blocker; this one-shot authorizes no retry or archive expansion."
@@ -413,6 +416,16 @@ def test_r3_receipt_persistence_accepts_the_preregistered_timeout_and_preserves_
     assert original["source_probe"]["transport_errors"] == ["TimeoutError"]
     assert original["safety"]["performance_authorization"] is False
     assert original["safety"]["live_execution"] is False
+
+
+def test_receipt_persistence_rejects_forged_frozen_target_keys_even_with_a_valid_fingerprint(tmp_path):
+    from automation import q221_dod_097_wayback_receipt_persist as persistence
+
+    receipt = _write_r3_persistable_receipt(tmp_path / persistence.RECEIPT_FILENAME_R3)
+    receipt["frozen_row_selection"]["target_keys"][0] = "FORGED|KEY|MUST|NOT|PASS"
+    receipt["receipt_fingerprint"] = persistence.canonical_fingerprint(receipt)
+    with pytest.raises(persistence.ReceiptPersistenceError, match="receipt keys differ from pinned manifest"):
+        persistence.validate_receipt(receipt, persistence.RECEIPT_FILENAME_R3)
 
 
 def test_r3_receipt_persistence_rejects_r2_profile_on_r3_filename(tmp_path):
