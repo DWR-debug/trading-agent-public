@@ -72,22 +72,18 @@ jobs:
               raise SystemExit("R4_MARKER_PATH_INVALID")
           if receipt.get("target_count_from_frozen_manifest") != 28:
               raise SystemExit("R4_FROZEN_TARGET_COUNT_INVALID")
-          if receipt.get("frozen_source_manifest") != {
+          manifest=receipt.get("frozen_source_manifest",{})
+          expected_manifest = {
               "path":"research/evidence/q221_historical_public_boundary_latest.json",
               "git_blob_sha1":"b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
               "receipt_fingerprint":"9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
               "expected_transaction_count":348,
-              "git_blob_sha1_verified":receipt.get("frozen_source_manifest",{}).get("git_blob_sha1_verified"),
-          }:
-              # Allow the additional verification field only if it equals the same pinned blob.
-              manifest=receipt.get("frozen_source_manifest",{})
-              if any(manifest.get(k)!=v for k,v in {
-                  "path":"research/evidence/q221_historical_public_boundary_latest.json",
-                  "git_blob_sha1":"b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
-                  "receipt_fingerprint":"9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
-                  "expected_transaction_count":348,
-              }.items()):
-                  raise SystemExit("R4_MANIFEST_PIN_MISMATCH")
+          }
+          if any(manifest.get(k)!=v for k,v in expected_manifest.items()):
+              raise SystemExit("R4_MANIFEST_PIN_MISMATCH")
+          probe = receipt.get("source_probe",{})
+          if probe.get("request_count",0) > 0 and manifest.get("git_blob_sha1_verified") != expected_manifest["git_blob_sha1"]:
+              raise SystemExit("R4_MANIFEST_WAS_NOT_VERIFIED_BEFORE_SOURCE_REQUEST")
           safety = receipt.get("safety",{})
           if safety.get("paper_only") is not True:
               raise SystemExit("R4_PAPER_ONLY_MISSING")
