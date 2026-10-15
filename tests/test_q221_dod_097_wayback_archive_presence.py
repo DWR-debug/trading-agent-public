@@ -45,7 +45,7 @@ def test_frozen_input_contract_selects_exactly_28_existing_fy2025_dod_rows():
 
 def test_r2_recovery_is_separately_registered_and_preserves_the_exact_frozen_scope():
     original = probe.validate_frozen_inputs(ROOT)
-    recovery = probe.validate_frozen_inputs(ROOT, probe.PREREG_PATH_R2, probe.REQUEST_PATH_R2)
+    recovery = probe.validate_frozen_inputs(ROOT, ROOT / probe.PREREG_PATH_R2, ROOT / probe.REQUEST_PATH_R2)
     assert recovery["request_profile"] == "R2"
     assert recovery["attempt_number"] == 2
     assert recovery["request"]["REQUEST_SEQUENCE"] == probe.R2_REQUEST_SEQUENCE
@@ -64,8 +64,9 @@ def test_r1_and_r2_markers_are_not_interchangeable():
         probe._marker(ROOT / probe.REQUEST_PATH_R2, probe.FROZEN_REQUEST)
     with pytest.raises(probe.ProbeError, match="marker differs"):
         probe._marker(ROOT / probe.REQUEST_PATH, probe.FROZEN_REQUEST_R2)
-    with pytest.raises(probe.ProbeError, match="PROFILE_MISMATCH"):
-        probe.validate_frozen_inputs(ROOT, probe.PREREG_PATH, probe.REQUEST_PATH_R2)
+    with pytest.raises(probe.ProbeError) as exc:
+        probe.validate_frozen_inputs(ROOT, ROOT / probe.PREREG_PATH, ROOT / probe.REQUEST_PATH_R2)
+    assert exc.value.status == "Q221_DOD_097_PREREGISTRATION_PROFILE_MISMATCH"
 
 
 def test_frozen_cdx_capture_pin_and_mismatch_fail_closed():
