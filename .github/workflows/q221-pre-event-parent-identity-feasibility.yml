@@ -1,0 +1,347 @@
+name: Q221 Pre-Event Parent Identity Feasibility
+
+on:
+  # Explicit request marker only: code/test/doc edits never repeat the five SEC requests.
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q221_pre_event_parent_identity_feasibility.trigger"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q221-pre-event-parent-identity-feasibility
+  cancel-in-progress: false
+
+jobs:
+  fetch-and-analyze-x64:
+    name: Ubuntu x64 — bounded five-document source audit
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      analysis_fingerprint: ${{ steps.analysis.outputs.analysis_fingerprint }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Install bounded local test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Test frozen sample, source pins, and non-authority contract
+        run: >-
+          python -m pytest -q
+          tests/test_q221_pre_event_parent_identity_feasibility.py
+          tests/test_q221_pre_event_parent_identity_workflow.py
+
+      - name: Verify exact immutable current-parent map run and artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38305074104" > "$RUNNER_TEMP/q221-parent-map-run.json"
+          jq -e '
+            .id == 38305074104
+            and .name == "Q221 Current Parent Identity Lead Map"
+            and .status == "completed"
+            and .conclusion == "success"
+            and .head_branch == "master"
+            and .head_sha == "179aab94f12bf15aff05a4fea7010872d8fa8317"
+          ' "$RUNNER_TEMP/q221-parent-map-run.json" >/dev/null
+
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/38305074104/artifacts?per_page=100" > "$RUNNER_TEMP/q221-parent-map-artifacts.json"
+          jq -e '
+            [.artifacts[]? |
+              select(
+                .id == 11772786096
+                and .name == "q221-current-parent-identity-map-38305074104-1"
+                and .expired == false
+              )
+            ] | length == 1
+          ' "$RUNNER_TEMP/q221-parent-map-artifacts.json" >/dev/null
+
+      - name: Download only the pinned 247-profile parent-map receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-current-parent-identity-map-38305074104-1
+          path: q221-work/parent-map
+          run-id: 38305074104
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Fetch five pinned SEC documents within strict request and byte caps
+        id: analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q221_pre_event_parent_identity_feasibility \
+            --repo-root . \
+            --parent-map-artifact q221-work/parent-map \
+            --source-dir q221-work/sec-docs \
+            --fetch-sources \
+            --output q221-work/x64/receipt.json
+
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          row = json.loads(Path("q221-work/x64/receipt.json").read_text(encoding="utf-8"))
+          assert row["status"] == "Q221_PRE_EVENT_PARENT_SOURCE_FEASIBILITY_COMPLETE_LINEAGE_UNRESOLVED"
+          assert row["sample_counts"] == {
+              "pre_event_parent_exhibit_cases": 4,
+              "post_event_successor_name_controls": 1,
+              "total_frozen_cases": 5,
+          }
+          assert row["interpretation"]["recipient_to_issuer_mapping_frozen"] is False
+          assert row["interpretation"]["historical_parent_lineage_proven"] is False
+          assert row["interpretation"]["historical_first_public_observation_proven"] is False
+          assert row["safety"]["paper_only"] is True
+          assert row["safety"]["live_trading_enabled"] is False
+          assert row["safety"]["orders_enabled"] is False
+          assert row["safety"]["automatic_promotion"] is False
+          assert row["safety"]["paid_api_budget_usd"] == 0
+          print("analysis_fingerprint=" + row["analysis_fingerprint"])
+          PY
+
+      - name: Preserve exact downloaded documents, frozen map, and x64 receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-pre-event-parent-identity-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-work/
+          if-no-files-found: error
+          retention-days: 30
+
+  reproduce-arm64:
+    name: Ubuntu ARM64 — independent offline reproduction
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [fetch-and-analyze-x64]
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.15"
+
+      - name: Install bounded local test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Test frozen sample, source pins, and non-authority contract
+        run: >-
+          python -m pytest -q
+          tests/test_q221_pre_event_parent_identity_feasibility.py
+          tests/test_q221_pre_event_parent_identity_workflow.py
+
+      - name: Download the exact x64 documents, hashes, frozen map, and result
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-pre-event-parent-identity-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-first-result
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Read expected deterministic analysis fingerprint
+        id: expected
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          path = Path("q221-first-result/x64/receipt.json")
+          if not path.is_file():
+              raise SystemExit("Q221_X64_RECEIPT_MISSING")
+          row = json.loads(path.read_text(encoding="utf-8"))
+          print("fingerprint=" + row["analysis_fingerprint"])
+          PY
+
+      - name: Reproduce analysis offline from the exact same SEC bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q221_pre_event_parent_identity_feasibility \
+            --repo-root . \
+            --parent-map-artifact q221-first-result/parent-map \
+            --source-dir q221-first-result/sec-docs \
+            --expected-analysis-fingerprint "${{ steps.expected.outputs.fingerprint }}" \
+            --output q221-work/arm64/receipt.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          row = json.loads(Path("q221-work/arm64/receipt.json").read_text(encoding="utf-8"))
+          assert row["status"] == "Q221_PRE_EVENT_PARENT_SOURCE_FEASIBILITY_COMPLETE_LINEAGE_UNRESOLVED"
+          assert row["sample_counts"]["pre_event_parent_exhibit_cases"] == 4
+          assert row["sample_counts"]["post_event_successor_name_controls"] == 1
+          assert row["interpretation"]["recipient_to_issuer_mapping_frozen"] is False
+          assert row["interpretation"]["q221_gate_positive"] is False
+          assert row["safety"]["paper_only"] is True
+          assert row["safety"]["live_trading_enabled"] is False
+          assert row["safety"]["orders_enabled"] is False
+          assert row["safety"]["automatic_promotion"] is False
+          PY
+
+      - name: Preserve independent ARM64 receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-pre-event-parent-identity-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-work/arm64/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-receipt:
+    name: Verify deterministic agreement and publish diagnostic-only receipt
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: [fetch-and-analyze-x64, reproduce-arm64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Download x64 receipt and frozen source bundle
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-pre-event-parent-identity-x64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-x64-bundle
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Download ARM64 reproduction receipt
+        uses: actions/download-artifact@v6
+        with:
+          name: q221-pre-event-parent-identity-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q221-arm64-result
+          run-id: ${{ github.run_id }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Verify cross-architecture equality and assemble receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          x64 = json.loads(Path("q221-x64-bundle/x64/receipt.json").read_text(encoding="utf-8"))
+          arm64 = json.loads(Path("q221-arm64-result/receipt.json").read_text(encoding="utf-8"))
+          for key in ("analysis_fingerprint", "status", "sample_counts", "frozen_inputs", "observations"):
+              if x64.get(key) != arm64.get(key):
+                  raise SystemExit("Q221_CROSS_ARCH_MISMATCH:" + key)
+          if x64["analysis_fingerprint"] != "${{ needs.fetch-and-analyze-x64.outputs.analysis_fingerprint }}":
+              raise SystemExit("Q221_X64_OUTPUT_FINGERPRINT_MISMATCH")
+
+          expected_safety = {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+              "paid_api_budget_usd": 0,
+          }
+          if x64.get("safety") != expected_safety or arm64.get("safety") != expected_safety:
+              raise SystemExit("Q221_CROSS_ARCH_SAFETY_MISMATCH")
+          interpretation = x64.get("interpretation", {})
+          for key in (
+              "historical_parent_lineage_proven",
+              "historical_first_public_observation_proven",
+              "recipient_to_issuer_mapping_frozen",
+              "q221_gate_positive",
+              "performance_authorization",
+              "promotion",
+              "live_execution",
+          ):
+              if interpretation.get(key) is not False:
+                  raise SystemExit("Q221_AUTHORITY_INVARIANT_FAILED:" + key)
+
+          result = dict(x64)
+          result["cross_arch_reproduction"] = {
+              "status": "DETERMINISTIC_ANALYSIS_MATCHED",
+              "same_analysis_fingerprint": True,
+              "x64_analysis_fingerprint": x64["analysis_fingerprint"],
+              "arm64_analysis_fingerprint": arm64["analysis_fingerprint"],
+              "x64_platform": "ubuntu-24.04",
+              "arm64_platform": "ubuntu-24.04-arm",
+              "run_id": int("${{ github.run_id }}"),
+              "run_attempt": int("${{ github.run_attempt }}"),
+          }
+          result["generated_at_utc"] = datetime.now(timezone.utc).isoformat()
+          result.pop("receipt_fingerprint", None)
+          result["receipt_fingerprint"] = hashlib.sha256(
+              json.dumps(result, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+
+          out = Path("research/evidence/q221_pre_event_parent_identity_feasibility_latest.json")
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+          print(json.dumps({
+              "status": result["status"],
+              "analysis_fingerprint": result["analysis_fingerprint"],
+              "receipt_fingerprint": result["receipt_fingerprint"],
+              "pre_event_parent_exhibit_cases": result["sample_counts"]["pre_event_parent_exhibit_cases"],
+              "recipient_to_issuer_mapping_frozen": result["interpretation"]["recipient_to_issuer_mapping_frozen"],
+              "q221_gate_positive": result["interpretation"]["q221_gate_positive"],
+          }, sort_keys=True))
+          PY
+
+      - name: Recheck final evidence contract before publishing
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          path = Path("research/evidence/q221_pre_event_parent_identity_feasibility_latest.json")
+          row = json.loads(path.read_text(encoding="utf-8"))
+          payload = dict(row)
+          saved = payload.pop("receipt_fingerprint")
+          actual = hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")).hexdigest()
+          assert saved == actual
+          assert row["cross_arch_reproduction"]["same_analysis_fingerprint"] is True
+          assert row["sample_counts"]["pre_event_parent_exhibit_cases"] == 4
+          assert row["interpretation"]["child_identifier_bridge_to_frozen_uei_proven"] is False
+          assert row["interpretation"]["historical_parent_lineage_proven"] is False
+          assert row["interpretation"]["recipient_to_issuer_mapping_frozen"] is False
+          assert row["interpretation"]["q221_gate_positive"] is False
+          assert row["safety"] == {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False, "automatic_promotion": False, "paid_api_budget_usd": 0}
+          PY
+
+      - name: Publish by fast-forward-safe GitHub contents update
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: publish Q221 pre-event parent identity feasibility"
+        run: >-
+          python automation/github_contents_publish.py
+          --repository "$GITHUB_REPOSITORY"
+          --branch master
+          --base-sha latest
+          --file "research/evidence/q221_pre_event_parent_identity_feasibility_latest.json=research/evidence/q221_pre_event_parent_identity_feasibility_latest.json"
+
+      - name: Preserve final immutable diagnostic receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-pre-event-parent-identity-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/evidence/q221_pre_event_parent_identity_feasibility_latest.json
+          if-no-files-found: warn
+          retention-days: 30
