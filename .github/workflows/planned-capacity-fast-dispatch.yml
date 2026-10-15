@@ -1,8 +1,7 @@
 name: Planned Capacity Fast Dispatch
 
 on:
-  push:
-    branches: [master]
+  # Research completions wake the planner; this schedule is only a health-check/backstop.
   schedule:
     - cron: "*/5 * * * *"
   workflow_run:
