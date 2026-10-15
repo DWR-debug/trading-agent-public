@@ -43,6 +43,31 @@ def test_frozen_input_contract_selects_exactly_28_existing_fy2025_dod_rows():
     assert probe.MAX_TOTAL_BYTES == 25_000_000
 
 
+def test_r2_recovery_is_separately_registered_and_preserves_the_exact_frozen_scope():
+    original = probe.validate_frozen_inputs(ROOT)
+    recovery = probe.validate_frozen_inputs(ROOT, probe.PREREG_PATH_R2, probe.REQUEST_PATH_R2)
+    assert recovery["request_profile"] == "R2"
+    assert recovery["attempt_number"] == 2
+    assert recovery["request"]["REQUEST_SEQUENCE"] == probe.R2_REQUEST_SEQUENCE
+    assert recovery["preregistration"]["recovery"]["prior_workflow_run_id"] == 38791554425
+    assert recovery["preregistration"]["recovery"]["source_request_count_known"] is False
+    assert recovery["preregistration"]["recovery"]["archive_outcome_known"] is False
+    assert recovery["targets"] == original["targets"]
+    assert recovery["manifest_blob_sha1"] == original["manifest_blob_sha1"]
+    assert recovery["preregistration_path"] == probe.PREREG_PATH_R2
+    assert recovery["request_marker_path"] == probe.REQUEST_PATH_R2
+    assert recovery["request"]["LIVE_EXECUTION"] == "false"
+
+
+def test_r1_and_r2_markers_are_not_interchangeable():
+    with pytest.raises(probe.ProbeError, match="marker differs"):
+        probe._marker(ROOT / probe.REQUEST_PATH_R2, probe.FROZEN_REQUEST)
+    with pytest.raises(probe.ProbeError, match="marker differs"):
+        probe._marker(ROOT / probe.REQUEST_PATH, probe.FROZEN_REQUEST_R2)
+    with pytest.raises(probe.ProbeError, match="PROFILE_MISMATCH"):
+        probe.validate_frozen_inputs(ROOT, probe.PREREG_PATH, probe.REQUEST_PATH_R2)
+
+
 def test_frozen_cdx_capture_pin_and_mismatch_fail_closed():
     row = {"timestamp":probe.CAPTURE_TIMESTAMP,"original":probe.ARCHIVE_URL,"statuscode":"200",
            "digest":probe.CDX_SHA1_BASE32,"length":str(probe.CDX_LENGTH)}
@@ -132,6 +157,20 @@ def test_workflow_is_master_marker_only_and_one_shot_guarded():
     assert "Ensure a fail-closed fallback receipt exists" in text
     assert "Q221_DOD_097_RECEIPT_PERSISTENCE_FAILED_SOURCE_OUTCOME_UNKNOWN" in text
     assert '"request_count_known": False' in text
+
+
+def test_r2_workflow_has_its_own_master_only_one_shot_guard_and_marker():
+    text = (ROOT / ".github/workflows/q221-dod-097-wayback-archive-presence-r2.yml").read_text(encoding="utf-8")
+    triggers = text.split("permissions:", 1)[0]
+    assert "branches: [master]" in triggers
+    assert "research/run_requests/q221_dod_097_wayback_archive_presence_r2.trigger" in triggers
+    assert "schedule:" not in triggers
+    assert "workflow_dispatch:" not in triggers
+    assert "q221-dod-097-wayback-archive-presence-r2.yml/runs" in text
+    assert "Q221_097_ONE_SHOT_GUARD=PASS" in text
+    assert "probe_attempt_number" in text
+    assert "recovery_of_workflow_run_id" in text
+    assert "upload-artifact@v6" in text
 
 
 
