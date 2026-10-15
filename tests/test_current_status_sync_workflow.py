@@ -1,4 +1,7 @@
+import json
 from pathlib import Path
+
+from automation.sync_current_operational_status import q221_fpds_identity_bridge_sentence
 
 WORKFLOW = Path(__file__).parents[1] / ".github" / "workflows" / "current-status-sync.yml"
 
@@ -56,3 +59,30 @@ def test_status_generator_surfaces_q220_http_representation_probe_result():
     assert "HTTP_REPRESENTATION_INVARIANT_AT_PROBE_TIME" in source
     assert "870aa4fdae7eda932bb8f50ebb9eab1a7781ee503fb5120dea5b0f099e4fd65c" in source
     assert "Do not repeat this probe or fetch further primary documents." in source
+
+
+def test_status_generator_surfaces_only_the_pinned_q221_fpds_redirect_stop():
+    sentence = q221_fpds_identity_bridge_sentence()
+    assert "run #38712516839" in sentence
+    assert "all four returned HTTP 302" in sentence
+    assert "response bytes were 0" in sentence
+    assert "0 exact record/UEI/name matches" in sentence
+    assert "network requests" in sentence or "offline validation" in sentence
+    assert "all 348 transaction public-clock rows remain unproven" in sentence
+    assert "all 247 recipient-to-issuer mappings remain unfrozen" in sentence
+    assert "Do not repeat this route or follow its redirects" in sentence
+
+
+def test_status_generator_fails_closed_if_q221_fpds_receipt_changes():
+    path = Path("research/evidence/q221_fpds_public_atom_identity_bridge_latest.json")
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    baseline = q221_fpds_identity_bridge_sentence(receipt)
+    assert "all four returned HTTP 302" in baseline
+
+    altered = dict(receipt)
+    altered["observations"] = [dict(row) for row in receipt["observations"]]
+    altered["observations"][0]["http_status"] = 200
+
+    blocked = q221_fpds_identity_bridge_sentence(altered)
+    assert "fails its pinned validation" in blocked
+    assert "all four returned HTTP 302" not in blocked
