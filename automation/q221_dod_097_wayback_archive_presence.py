@@ -55,6 +55,18 @@ FROZEN_REQUEST = {
     "TUNING": "false", "PROMOTION": "false", "LIVE_EXECUTION": "false",
     "REQUEST_SEQUENCE": "2026-10-15T18:53:34Z",
 }
+
+# R2 is a distinct reviewed recovery. The original one-shot marker and
+# preregistration remain byte-for-byte unchanged and cannot authorize this run.
+PREREG_PATH_R2 = "research/preregistrations/q221_dod_097_wayback_archive_presence_r2_2026_10_15.json"
+REQUEST_PATH_R2 = "research/run_requests/q221_dod_097_wayback_archive_presence_r2.trigger"
+R2_REQUEST_SEQUENCE = "2026-10-15T19:35:11Z"
+FROZEN_REQUEST_R2 = {
+    **{key: value for key, value in FROZEN_REQUEST.items()
+       if key != "RUN_Q221_DOD_097_WAYBACK_ARCHIVE_PRESENCE"},
+    "RUN_Q221_DOD_097_WAYBACK_ARCHIVE_PRESENCE_R2": "true",
+    "REQUEST_SEQUENCE": R2_REQUEST_SEQUENCE,
+}
 ALIASES = {
     "piid": ("award_id_piid", "piid"),
     "modification": ("modification_number", "modification", "mod_number"),
@@ -101,7 +113,7 @@ def _json(path: Path) -> dict:
     return obj
 
 
-def _marker(path: Path) -> dict[str, str]:
+def _marker(path: Path, expected_request: dict[str, str] = FROZEN_REQUEST) -> dict[str, str]:
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
     except OSError as exc:
@@ -114,15 +126,33 @@ def _marker(path: Path) -> dict[str, str]:
         if not re.fullmatch(r"[A-Z0-9_]+", key) or not val or key in out:
             raise ProbeError("Q221_DOD_097_REQUEST_MARKER_INVALID", "key/value at line " + str(i))
         out[key] = val
-    if out != FROZEN_REQUEST:
-        raise ProbeError("Q221_DOD_097_REQUEST_MARKER_PIN_MISMATCH", "marker differs from frozen request")
+    if out != expected_request:
+        raise ProbeError("Q221_DOD_097_REQUEST_MARKER_PIN_MISMATCH", "marker differs from frozen request profile")
     datetime.strptime(out["REQUEST_SEQUENCE"], "%Y-%m-%dT%H:%M:%SZ")
     return out
 
 
-def _validate_prereg(p: dict) -> None:
-    if p.get("schema_version") != 1 or p.get("record_type") != "q221_dod_097_wayback_archive_presence_preregistration":
+def _validate_prereg(
+    p: dict, expected_request: dict[str, str] = FROZEN_REQUEST
+) -> None:
+    is_r2 = expected_request.get("RUN_Q221_DOD_097_WAYBACK_ARCHIVE_PRESENCE_R2") == "true"
+    expected_type = (
+        "q221_dod_097_wayback_archive_presence_recovery_preregistration"
+        if is_r2 else "q221_dod_097_wayback_archive_presence_preregistration"
+    )
+    if p.get("schema_version") != 1 or p.get("record_type") != expected_type:
         raise ProbeError("Q221_DOD_097_PREREGISTRATION_TYPE_INVALID", "type/version differs")
+    if is_r2:
+        expected_recovery = {
+            "prior_workflow_run_id": 38791554425,
+            "prior_attempt_status": "Q221_DOD_097_ONE_SHOT_ATTEMPT_FAILED_RECEIPT_NOT_PERSISTED_NO_ROW_RESULT",
+            "source_request_count_known": False,
+            "archive_outcome_known": False,
+            "original_marker_reuse_authorized": False,
+            "reason": "The first probe failed while serializing its receipt. Its source request count and archive outcome are unknown; this R2 attempt has a separate preregistration and marker.",
+        }
+        if p.get("attempt_number") != 2 or p.get("recovery") != expected_recovery:
+            raise ProbeError("Q221_DOD_097_RECOVERY_PREREGISTRATION_INVALID", "recovery lineage differs")
     if p.get("frozen_source_manifest") != {
         "path": MANIFEST_PATH, "git_blob_sha1": MANIFEST_BLOB, "receipt_fingerprint": MANIFEST_FP,
         "expected_transaction_count": MANIFEST_COUNT,
@@ -157,7 +187,7 @@ def _validate_prereg(p: dict) -> None:
     ):
         if safety.get(k) is not False:
             raise ProbeError("Q221_DOD_097_PREREGISTRATION_SAFETY_MISMATCH", k)
-    if p.get("request_sequence") != FROZEN_REQUEST["REQUEST_SEQUENCE"]:
+    if p.get("request_sequence") != expected_request["REQUEST_SEQUENCE"]:
         raise ProbeError("Q221_DOD_097_PREREGISTRATION_SEQUENCE_MISMATCH", "request sequence differs")
 
 
@@ -212,9 +242,29 @@ def select_frozen_targets(manifest: dict) -> list[dict]:
 
 
 def validate_frozen_inputs(root: Path, prereg_path: Path | None = None, request_path: Path | None = None) -> dict:
-    prereg = _json(prereg_path or (root / PREREG_PATH))
-    _validate_prereg(prereg)
-    request = _marker(request_path or (root / REQUEST_PATH))
+    root = root.resolve()
+    request_file = Path(request_path) if request_path is not None else root / REQUEST_PATH
+    try:
+        request_rel = request_file.resolve().relative_to(root).as_posix()
+    except ValueError as exc:
+        raise ProbeError("Q221_DOD_097_REQUEST_PROFILE_PATH_INVALID", "request path is outside repo root") from exc
+    profiles = {
+        REQUEST_PATH: ("R1", FROZEN_REQUEST, PREREG_PATH, 1),
+        REQUEST_PATH_R2: ("R2", FROZEN_REQUEST_R2, PREREG_PATH_R2, 2),
+    }
+    if request_rel not in profiles:
+        raise ProbeError("Q221_DOD_097_REQUEST_PROFILE_NOT_ALLOWED", request_rel)
+    request_profile, expected_request, expected_prereg_rel, attempt_number = profiles[request_rel]
+    prereg_file = Path(prereg_path) if prereg_path is not None else root / expected_prereg_rel
+    try:
+        prereg_rel = prereg_file.resolve().relative_to(root).as_posix()
+    except ValueError as exc:
+        raise ProbeError("Q221_DOD_097_PREREGISTRATION_PATH_INVALID", "preregistration path is outside repo root") from exc
+    if prereg_rel != expected_prereg_rel:
+        raise ProbeError("Q221_DOD_097_PREREGISTRATION_PROFILE_MISMATCH", prereg_rel)
+    prereg = _json(prereg_file)
+    _validate_prereg(prereg, expected_request)
+    request = _marker(request_file, expected_request)
     path = root / MANIFEST_PATH
     try:
         raw = path.read_bytes()
@@ -226,8 +276,11 @@ def validate_frozen_inputs(root: Path, prereg_path: Path | None = None, request_
     manifest = _json(path)
     if manifest.get("candidate_id") != "Q221" or manifest.get("receipt_fingerprint") != MANIFEST_FP:
         raise ProbeError("Q221_DOD_097_MANIFEST_RECEIPT_FP_MISMATCH", "candidate/receipt differs")
-    return {"preregistration": prereg, "request": request, "manifest_blob_sha1": blob,
-            "targets": select_frozen_targets(manifest)}
+    return {
+        "preregistration": prereg, "request": request, "manifest_blob_sha1": blob,
+        "targets": select_frozen_targets(manifest), "request_profile": request_profile,
+        "attempt_number": attempt_number, "preregistration_path": prereg_rel, "request_marker_path": request_rel,
+    }
 
 
 def build_cdx_query_url() -> str:
@@ -487,9 +540,14 @@ def run_probe(root: Path, prereg_path: Path | None = None, request_path: Path | 
         inputs = validate_frozen_inputs(root, prereg_path, request_path)
         targets = inputs["targets"]
         receipt["frozen_row_selection"]["target_keys"] = [t["transaction_key"] for t in targets]
-        receipt["source_probe"].update({"request_sequence": inputs["request"]["REQUEST_SEQUENCE"],
-                                        "manifest_blob_sha1_verified": inputs["manifest_blob_sha1"],
-                                        "request_marker_validated": True, "preregistration_validated": True})
+        receipt["source_probe"].update({
+            "request_sequence": inputs["request"]["REQUEST_SEQUENCE"],
+            "manifest_blob_sha1_verified": inputs["manifest_blob_sha1"],
+            "request_marker_validated": True, "preregistration_validated": True,
+            "request_profile": inputs["request_profile"], "one_shot_attempt": inputs["attempt_number"],
+            "preregistration_path": inputs["preregistration_path"],
+            "request_marker_path": inputs["request_marker_path"],
+        })
         status, cdx, headers = fetch(build_cdx_query_url(), state, MAX_CDX_BYTES)
         rows = parse_cdx_rows(cdx)
         pin = verify_pinned_capture(rows)
