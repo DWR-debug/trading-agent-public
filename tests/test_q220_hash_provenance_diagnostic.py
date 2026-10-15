@@ -5,7 +5,7 @@ import pytest
 
 from automation.q220_hash_provenance_diagnostic import (
     CANDIDATE,
-    COMPILER_FP,
+    COMPILER_CODE_SHA256,
     EXPECTED_SHA,
     LAST_MODIFIED,
     PRIMARY_URL,
@@ -18,6 +18,8 @@ from automation.q220_hash_provenance_diagnostic import (
     DiagnosticError,
     classify_primary_hashes,
     fp,
+    read_pinned_fixture,
+    validate_current_compiler_receipt,
     validate_sensitivity_observations,
 )
 
@@ -116,19 +118,60 @@ def test_sensitivity_receipt_rejects_mutated_body_hash_or_metadata():
         validate_sensitivity_observations(receipt)
 
 
-def test_current_canonical_compiler_receipt_matches_current_pin():
+def test_current_canonical_compiler_receipt_matches_stable_frozen_contract():
     root = Path(__file__).resolve().parents[1]
     compiler = json.loads(
         (root / "research/evidence/q220_historical_representation_pit_latest.json")
         .read_text(encoding="utf-8")
     )
+    fixture = read_pinned_fixture(
+        root / "research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json"
+    )
 
     assert compiler["candidate_id"] == CANDIDATE
     assert compiler["status"] == "Q220_HISTORICAL_REPRESENTATION_PIT_BLOCKED"
-    assert compiler["receipt_fingerprint"] == COMPILER_FP
-    assert fp(compiler) == COMPILER_FP
+    assert compiler["receipt_fingerprint"] == fp(compiler)
+    assert compiler["compiler_code_sha256"] == COMPILER_CODE_SHA256
     assert compiler["source_population_receipt_fingerprint"] == POPULATION_FP
     assert compiler["source_hash_failure_count"] == 55
     assert len(compiler["source_hash_failures"]) == 55
     assert compiler["verified_primary_document_count"] == 0
     assert compiler["gate_positive"] is False
+    validate_current_compiler_receipt(compiler, fixture)
+
+
+def test_q220_receipt_generation_timestamp_does_not_invalidate_same_frozen_compiler():
+    root = Path(__file__).resolve().parents[1]
+    compiler = json.loads(
+        (root / "research/evidence/q220_historical_representation_pit_latest.json")
+        .read_text(encoding="utf-8")
+    )
+    fixture = read_pinned_fixture(
+        root / "research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json"
+    )
+
+    refreshed = dict(compiler)
+    refreshed["generated_at_utc"] = "2099-01-01T00:00:00+00:00"
+    refreshed["receipt_fingerprint"] = fp(refreshed)
+
+    validate_current_compiler_receipt(refreshed, fixture)
+
+
+def test_q220_compiler_rejects_changed_frozen_expected_hash_even_with_valid_receipt_fp():
+    root = Path(__file__).resolve().parents[1]
+    compiler = json.loads(
+        (root / "research/evidence/q220_historical_representation_pit_latest.json")
+        .read_text(encoding="utf-8")
+    )
+    fixture = read_pinned_fixture(
+        root / "research/fixtures/q220_historical_representation_pit_2026-10-12T071514Z.json"
+    )
+
+    mutated = json.loads(json.dumps(compiler))
+    mutated["source_hash_failures"][0]["error"] = mutated["source_hash_failures"][0]["error"].replace(
+        "expected=27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+        "expected=eeeeeeeeeefbeef0000000000000000000000000000000000000000000000000",
+    )
+    mutated["receipt_fingerprint"] = fp(mutated)
+    with pytest.raises(DiagnosticError, match="FROZEN_EXPECTED_HASH_CONTRACT_MISMATCH"):
+        validate_current_compiler_receipt(mutated, fixture)
