@@ -227,8 +227,9 @@ def test_r2_receipt_persistence_accepts_only_a_pinned_fingerprinted_probe_receip
     assert attempt.read_bytes() == source.read_bytes()
     assert latest.read_bytes() == source.read_bytes()
     assert json.loads(attempt.read_text(encoding="utf-8"))["receipt_fingerprint"] == original["receipt_fingerprint"]
-    with pytest.raises(persistence.ReceiptPersistenceError, match="IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS"):
+    with pytest.raises(persistence.ReceiptPersistenceError) as exc:
         persistence.persist_receipt(artifact, tmp_path / "evidence", "123456")
+    assert exc.value.code == "IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS"
 
 
 def test_r2_receipt_persistence_rejects_bad_fingerprint_and_open_safety_flags(tmp_path):
@@ -271,8 +272,8 @@ def test_r2_receipt_sync_validates_fingerprint_safety_and_persists_immutably():
     persistence = (ROOT / "automation/q221_dod_097_wayback_receipt_persist.py").read_text(encoding="utf-8")
     assert "canonical_fingerprint" in persistence
     assert "R2_RECEIPT_FINGERPRINT_MISMATCH" in persistence
+    assert "IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS" in persistence
     assert "q221_dod_097_wayback_archive_presence_attempt_" in text
-    assert "IMMUTABLE_R2_ATTEMPT_RECEIPT_ALREADY_EXISTS" in text
     assert "github_contents_publish.py" in text
     assert "live_trading_enabled" in text
 
