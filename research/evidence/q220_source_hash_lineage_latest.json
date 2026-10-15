@@ -1,0 +1,162 @@
+{
+  "analysis_fingerprint": "380bc17bdec6c390c4f282ff25cbabbd1c6dcb2a2847a9af6d60711df3dac35e",
+  "candidate_id": "Q220",
+  "classification": {
+    "body_variants_are_separately_scoped": true,
+    "distinct_whole_primary_sha256": [
+      "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+      "2693819652172f0c218394ef036eb3f4af95c2a7077f624f6efcd990df370172",
+      "ccd9060d023c3ca8e5fc5d3fd43a67c394dfd97ef1e42a72f71c4ca630cd2f63",
+      "fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3"
+    ],
+    "distinct_whole_primary_sha256_count": 4,
+    "frozen_expected_hash_reproduced": false,
+    "same_url_same_last_modified_multiple_hashes": true,
+    "whole_primary_observation_count": 4
+  },
+  "cross_arch_reproduction": {
+    "arm64_analysis_fingerprint": "380bc17bdec6c390c4f282ff25cbabbd1c6dcb2a2847a9af6d60711df3dac35e",
+    "arm64_platform": "ubuntu-24.04-arm",
+    "arm64_receipt_fingerprint": "0b3eba00472c4c8258d4e42b4ce2e336e72cbf93d6c6a5a09315f12b8c646404",
+    "run_attempt": 1,
+    "run_id": 38698289935,
+    "same_analysis_fingerprint": true,
+    "status": "DETERMINISTIC_ANALYSIS_MATCHED",
+    "x64_analysis_fingerprint": "380bc17bdec6c390c4f282ff25cbabbd1c6dcb2a2847a9af6d60711df3dac35e",
+    "x64_platform": "ubuntu-24.04",
+    "x64_receipt_fingerprint": "029475303a9b5f3e58af8b3dfec9bd3faee52f7496ccf5dc4e16d6273f2066e1"
+  },
+  "generated_at_utc": "2026-10-15T07:23:16.041458+00:00",
+  "header_context": {
+    "acceptance_clock_proves_body_vintage": false,
+    "header_receipt_no_feed_downloads": true,
+    "header_receipt_no_primary_document_downloads": true,
+    "header_receipt_source_download_bytes": 101547
+  },
+  "interpretation_scope": {
+    "diagnostic_only": true,
+    "expected_hash_changed": false,
+    "feed_archive_downloaded_by_this_diagnostic": false,
+    "frozen_hash_reproduced": false,
+    "gate_positive": false,
+    "holdout_selection": false,
+    "live_execution": false,
+    "performance_authorization": false,
+    "primary_document_downloaded_by_this_diagnostic": false,
+    "promotion": false,
+    "ranking": false,
+    "scientific_evidence": false,
+    "source_receipts_modified": false,
+    "source_vintage_proven": false,
+    "tuning": false
+  },
+  "next_gate": "Identify an authoritative pinned source-vintage record or preserve the blocked state. Do not fetch another Feed/primary document, rewrite expected hashes, or re-run the census to force a match.",
+  "observations": [
+    {
+      "bytes": 4774458,
+      "last_modified": "Wed, 13 Feb 2019 11:02:53 GMT",
+      "scope": "frozen_expected_value",
+      "sha256": "27177e35cf02e7b66c24aee89bfc97a00f12f7022c6e584e3b48dc70d56abc83",
+      "source": "frozen_expected_primary_document",
+      "url": "https://www.sec.gov/Archives/edgar/data/64040/000006404019000059/spgi-20181231x10k.htm"
+    },
+    {
+      "bytes": 4774458,
+      "last_modified": "Wed, 13 Feb 2019 11:02:53 GMT",
+      "scope": "whole_primary_document",
+      "sha256": "08039132d6d6d1692d1f7552193c70a04cad4c1dcadad1cfa3ca2b8b4efe3fdb",
+      "source": "original_forensics_current_primary",
+      "url": "https://www.sec.gov/Archives/edgar/data/64040/000006404019000059/spgi-20181231x10k.htm"
+    },
+    {
+      "bytes": 4774457,
+      "last_modified": "Wed, 13 Feb 2019 11:02:53 GMT",
+      "probe_receipt_fingerprint": "870aa4fdae7eda932bb8f50ebb9eab1a7781ee503fb5120dea5b0f099e4fd65c",
+      "replicate_count": 5,
+      "scope": "whole_primary_document",
+      "sha256": "fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3",
+      "source": "http_sensitivity_probe_five_identical_responses",
+      "url": "https://www.sec.gov/Archives/edgar/data/64040/000006404019000059/spgi-20181231x10k.htm"
+    },
+    {
+      "bytes": 4774465,
+      "last_modified": "Wed, 13 Feb 2019 11:02:53 GMT",
+      "scope": "whole_primary_document",
+      "sha256": "ccd9060d023c3ca8e5fc5d3fd43a67c394dfd97ef1e42a72f71c4ca630cd2f63",
+      "source": "current_compiler_observation",
+      "url": "https://www.sec.gov/Archives/edgar/data/64040/000006404019000059/spgi-20181231x10k.htm"
+    },
+    {
+      "bytes": 4774465,
+      "last_modified": "Wed, 13 Feb 2019 11:02:53 GMT",
+      "scope": "whole_primary_document",
+      "sha256": "2693819652172f0c218394ef036eb3f4af95c2a7077f624f6efcd990df370172",
+      "source": "single_feed_boundary_later_primary_response",
+      "url": "https://www.sec.gov/Archives/edgar/data/64040/000006404019000059/spgi-20181231x10k.htm"
+    },
+    {
+      "bytes": 26429640,
+      "last_modified": "Thu, 14 Feb 2019 03:46:35 GMT",
+      "scope": "complete_submission_member",
+      "sha256": "e73d211f2bb02f099d9a8559735fb627678d7db0e3b11ae491eb80ae2b45fa54",
+      "source": "original_daily_feed_submission_member",
+      "url": "https://www.sec.gov/Archives/edgar/Feed/2019/QTR1/20190213.nc.tar.gz"
+    },
+    {
+      "bytes": 4774237,
+      "last_modified": null,
+      "scope": "raw_textblock_body",
+      "sha256": "aa1f89efdf13029de9dd8f7eb020502dd518d4350513d4ef041ba67d902ef368",
+      "source": "raw_textblock_extraction",
+      "url": null
+    },
+    {
+      "bytes": 4774236,
+      "last_modified": null,
+      "scope": "raw_textblock_body",
+      "sha256": "54d62d26b31bd4e8a94b1f49c1641f2fc69c79cd5b4290d11d9191a4e9db39d0",
+      "source": "raw_textblock_variant_drop_leading_linebreak",
+      "url": null
+    },
+    {
+      "bytes": 4774235,
+      "last_modified": null,
+      "scope": "raw_textblock_body",
+      "sha256": "bbaee52940cc5f2327445da95e98e46705d90b58a615edcd2d83df08da3a6fc1",
+      "source": "raw_textblock_variant_drop_outer_linebreaks",
+      "url": null
+    }
+  ],
+  "receipt_fingerprint": "acdec97252ba86d844f97fea2b11b755bef91769cd7badd53a5fedcc811bd059",
+  "record_key": "0000064040|0000064040-19-000059|10-K|2019-02-13",
+  "record_type": "q220_offline_source_hash_lineage_diagnostic",
+  "safety": {
+    "automatic_promotion": false,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "paper_only": true
+  },
+  "schema_version": 1,
+  "source_receipts": {
+    "compiler_receipt_fingerprint": "1ca885190d7b277c809ac8a6c3386a637e7750df6bb51755260c9bd7351f868d",
+    "compiler_source_population_fingerprint": "158e84963e7fe4a8d32f91939011a6b23dfdbf7fcec0eeca2cb97be56634f543",
+    "forensics_artifact_id": 11749259509,
+    "forensics_artifact_name": "q220-primary-source-vintage-forensics-38254139755-1",
+    "forensics_receipt_fingerprint": "840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b",
+    "forensics_run_id": "38254139755",
+    "frozen_fixture_receipt_fingerprint": "c7fc53c9ef2daaef9caee29c0ba1084602c0bf4b24c6d2a13cb812b7b592c075",
+    "header_artifact_id": 11751436149,
+    "header_artifact_name": "q220-bounded-header-evidence-38258251764-1",
+    "header_receipt_fingerprint": "39bf95fa15bf149094d5b56c90e58622c2339d452fd138c6deb0a463668f85b4",
+    "header_run_id": "38258251764",
+    "sensitivity_artifact_id": 11907246485,
+    "sensitivity_artifact_name": "q220-http-representation-sensitivity-38590133217-1",
+    "sensitivity_receipt_fingerprint": "870aa4fdae7eda932bb8f50ebb9eab1a7781ee503fb5120dea5b0f099e4fd65c",
+    "sensitivity_request_fingerprint": "211b2afacf8eddf0b8b56aaf9ee7896e14d5788ba88e9ada0d98be101158f0e2",
+    "sensitivity_run_id": "38590133217",
+    "single_feed_artifact_id": 11838034399,
+    "single_feed_run_id": 38446029194,
+    "single_feed_summary_upstream_fingerprint": "fe98cecb579d15ecf6e48c3b84a3a699345bf840745e9be0c7cfcd972aebf03a"
+  },
+  "status": "Q220_SOURCE_HASH_LINEAGE_UNRESOLVED_MULTIPLE_OBSERVED_HASHES"
+}
