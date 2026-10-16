@@ -187,6 +187,9 @@ def test_r4_workflows_and_sync_keep_replay_and_scientific_gates_closed():
     assert "workflow_dispatch:" not in wf and "schedule:" not in wf
     assert "q221-dod-097-cdx-mimetype-diagnostic-r4.yml/runs" in wf
     assert "no archive replay" in wf.lower()
+    assert "python -m automation.q221_dod_097_wayback_cdx_mimetype_diagnostic" in wf
+    assert (ROOT / "automation" / "q221_dod_097_wayback_cdx_mimetype_diagnostic.py").is_file()
+    assert "python -m automation.q221_dod_097_cdx_mimetype_diagnostic" not in wf
     sync = (ROOT / ".github/workflows/q221-dod-097-cdx-mimetype-diagnostic-r4-sync.yml").read_text(encoding="utf-8")
     assert "q221-dod-097-cdx-mimetype-diagnostic-r4.json" in sync
     assert "q221_dod_097_cdx_mimetype_diagnostic_attempt_" in sync
