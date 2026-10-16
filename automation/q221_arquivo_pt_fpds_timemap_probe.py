@@ -22,6 +22,17 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 REQUEST_PATH = "research/run_requests/q221_arquivo_pt_fpds_timemap_probe.trigger"
 PREREG_PATH = "research/preregistrations/q221_arquivo_pt_fpds_timemap_probe_2026_10_16.json"
+REQUEST_PATH_R2 = "research/run_requests/q221_arquivo_pt_fpds_timemap_probe_r2.trigger"
+PREREG_PATH_R2 = "research/preregistrations/q221_arquivo_pt_fpds_timemap_probe_r2_2026_10_16.json"
+R1_FAILURE_ATTEMPT_PATH = "research/evidence/q221_arquivo_pt_fpds_timemap_attempt_38863558147.json"
+R1_FAILURE_ATTEMPT_BLOB_SHA1 = "049c75c80b267434b62c654c4fa9a9d8bc3f4068"
+R1_FAILURE_ATTEMPT_FINGERPRINT = "1b983784ea7b8d2d496021560b324195e9c219eafc9c538e7be32b232599aaae"
+R1_REASON = "DISTINCT_ARCHIVE_METADATA_LOOKUP_FOR_FOUR_FROZEN_FPDS_FEED_URLS"
+R2_REASON = "DISTINCT_ARCHIVE_METADATA_LOOKUP_AFTER_R1_PYTEST_BOOTSTRAP_FAILURE_ZERO_SOURCE_REQUESTS"
+SUPPORTED_CONTRACTS = {
+    PREREG_PATH: {"request_path": REQUEST_PATH, "reason": R1_REASON},
+    PREREG_PATH_R2: {"request_path": REQUEST_PATH_R2, "reason": R2_REASON},
+}
 BOUNDARY_PATH = "research/evidence/q221_historical_public_boundary_latest.json"
 PRE_EVENT_PATH = "research/evidence/q221_pre_event_parent_identity_feasibility_latest.json"
 PRIOR_FPDS_PATH = "research/evidence/q221_fpds_public_atom_identity_bridge_latest.json"
@@ -98,7 +109,7 @@ EXPECTED_RECORDS = (
 
 EXPECTED_REQUEST_VALUES = {
     "RUN_Q221_ARQUIVO_PT_FPDS_TIMEMAP_PROBE": "true",
-    "REASON": "DISTINCT_ARCHIVE_METADATA_LOOKUP_FOR_FOUR_FROZEN_FPDS_FEED_URLS",
+    "REASON": R1_REASON,
     "BOUNDARY_PATH": BOUNDARY_PATH,
     "BOUNDARY_GIT_BLOB_SHA1": BOUNDARY_BLOB_SHA1,
     "BOUNDARY_RECEIPT_FINGERPRINT": BOUNDARY_FP,
@@ -170,7 +181,9 @@ def analysis_fingerprint(value: dict[str, Any]) -> str:
     return sha256(raw)
 
 
-def read_key_value_request(path: Path) -> dict[str, str]:
+def read_key_value_request(
+    path: Path, *, prereg_path: str = PREREG_PATH, expected_reason: str = R1_REASON
+) -> dict[str, str]:
     values: dict[str, str] = {}
     for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
         if not line or line.strip() != line or "=" not in line:
@@ -179,16 +192,18 @@ def read_key_value_request(path: Path) -> dict[str, str]:
         if not key or not value or key in values:
             raise ProbeError(f"Q221_ARQUIVO_REQUEST_INVALID_KEY_VALUE:{line_no}")
         values[key] = value
-    if set(values) != set(EXPECTED_REQUEST_VALUES) | {"REQUEST_SEQUENCE"}:
+    expected_values = dict(EXPECTED_REQUEST_VALUES)
+    expected_values["PREREG_PATH"] = prereg_path
+    expected_values["REASON"] = expected_reason
+    if set(values) != set(expected_values) | {"REQUEST_SEQUENCE"}:
         raise ProbeError("Q221_ARQUIVO_REQUEST_KEY_SET_MISMATCH")
-    for key, expected in EXPECTED_REQUEST_VALUES.items():
+    for key, expected in expected_values.items():
         if values.get(key) != expected:
             raise ProbeError("Q221_ARQUIVO_REQUEST_VALUE_MISMATCH:" + key)
     if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", values["REQUEST_SEQUENCE"]):
         raise ProbeError("Q221_ARQUIVO_REQUEST_SEQUENCE_INVALID")
     datetime.fromisoformat(values["REQUEST_SEQUENCE"].replace("Z", "+00:00"))
     return values
-
 
 def read_object(path: Path, error_code: str) -> tuple[dict[str, Any], bytes]:
     try:
@@ -202,7 +217,17 @@ def read_object(path: Path, error_code: str) -> tuple[dict[str, Any], bytes]:
 
 
 def validate_preflight(repo_root: Path, request_path: Path, prereg_path: Path) -> dict[str, Any]:
-    request = read_key_value_request(request_path)
+    try:
+        request_rel = request_path.resolve().relative_to(repo_root.resolve()).as_posix()
+        prereg_rel = prereg_path.resolve().relative_to(repo_root.resolve()).as_posix()
+    except ValueError as exc:
+        raise ProbeError("Q221_ARQUIVO_CONTRACT_PATH_OUTSIDE_REPOSITORY") from exc
+    contract = SUPPORTED_CONTRACTS.get(prereg_rel)
+    if not contract or contract["request_path"] != request_rel:
+        raise ProbeError("Q221_ARQUIVO_CONTRACT_PATH_PAIR_MISMATCH")
+    request = read_key_value_request(
+        request_path, prereg_path=prereg_rel, expected_reason=contract["reason"]
+    )
     prereg, prereg_raw = read_object(prereg_path, "Q221_ARQUIVO_PREREG_INVALID")
     if prereg.get("record_type") != "q221_arquivo_pt_fpds_timemap_probe_preregistration" or prereg.get("candidate_id") != "Q221":
         raise ProbeError("Q221_ARQUIVO_PREREG_IDENTITY_MISMATCH")
@@ -224,6 +249,45 @@ def validate_preflight(repo_root: Path, request_path: Path, prereg_path: Path) -
     for key, expected in pins:
         if frozen.get(key) != expected:
             raise ProbeError("Q221_ARQUIVO_PREREG_FROZEN_INPUT_MISMATCH:" + key)
+
+    previous_arquivo_attempt = None
+    if prereg_rel == PREREG_PATH_R2:
+        expected_prior = {
+            "prior_arquivo_attempt_path": R1_FAILURE_ATTEMPT_PATH,
+            "prior_arquivo_attempt_git_blob_sha1": R1_FAILURE_ATTEMPT_BLOB_SHA1,
+            "prior_arquivo_attempt_receipt_fingerprint": R1_FAILURE_ATTEMPT_FINGERPRINT,
+            "prior_arquivo_archive_metadata_requests_attempted": 0,
+            "prior_arquivo_failure_reason_code": "PREFLIGHT_FAILED_NO_SOURCE_REQUESTS",
+            "prior_arquivo_run_id": 38863558147,
+        }
+        for key, expected in expected_prior.items():
+            if frozen.get(key) != expected:
+                raise ProbeError("Q221_ARQUIVO_R2_PRIOR_ATTEMPT_PIN_MISMATCH:" + key)
+        previous_arquivo, previous_arquivo_raw = read_object(
+            repo_root / R1_FAILURE_ATTEMPT_PATH, "Q221_ARQUIVO_R1_FAILURE_RECEIPT_INVALID"
+        )
+        if git_blob_sha1(previous_arquivo_raw) != R1_FAILURE_ATTEMPT_BLOB_SHA1:
+            raise ProbeError("Q221_ARQUIVO_R1_FAILURE_BLOB_SHA_MISMATCH")
+        if (
+            previous_arquivo.get("workflow_run_id") != 38863558147
+            or previous_arquivo.get("receipt_fingerprint") != R1_FAILURE_ATTEMPT_FINGERPRINT
+            or canonical_fingerprint(previous_arquivo) != R1_FAILURE_ATTEMPT_FINGERPRINT
+            or previous_arquivo.get("status") != "Q221_ARQUIVO_PT_PREFLIGHT_REJECTED"
+            or previous_arquivo.get("errors", [{}])[0].get("code") != "PREFLIGHT_FAILED_NO_SOURCE_REQUESTS"
+            or previous_arquivo.get("source_contract", {}).get("archive_metadata_requests_attempted") != 0
+            or previous_arquivo.get("source_contract", {}).get("archive_request_count_known") is not True
+            or previous_arquivo.get("observations") != []
+        ):
+            raise ProbeError("Q221_ARQUIVO_R1_FAILURE_RECEIPT_STATE_MISMATCH")
+        previous_arquivo_attempt = {
+            "path": R1_FAILURE_ATTEMPT_PATH,
+            "git_blob_sha1": R1_FAILURE_ATTEMPT_BLOB_SHA1,
+            "receipt_fingerprint": R1_FAILURE_ATTEMPT_FINGERPRINT,
+            "workflow_run_id": 38863558147,
+            "source_requests_attempted": 0,
+            "failure_reason_code": "PREFLIGHT_FAILED_NO_SOURCE_REQUESTS",
+        }
+
     archive = prereg.get("official_archive", {})
     if archive.get("name") != "Arquivo.pt Memento TimeMap" or archive.get("time_map_template") != TIME_MAP_BASE_URL + "{fully-percent-encoded-exact-original-url}":
         raise ProbeError("Q221_ARQUIVO_ARCHIVE_CONTRACT_MISMATCH")
@@ -318,11 +382,14 @@ def validate_preflight(repo_root: Path, request_path: Path, prereg_path: Path) -
 
     return {
         "request": request,
+        "request_path": request_rel,
+        "preregistration_path": prereg_rel,
         "preregistration": prereg,
         "preregistration_git_blob_sha1": git_blob_sha1(prereg_raw),
         "boundary": boundary,
         "pre_event": pre_event,
         "prior_fpds": prior,
+        "previous_arquivo_attempt": previous_arquivo_attempt,
         "records": list(EXPECTED_RECORDS),
     }
 
@@ -523,7 +590,14 @@ def add_fingerprints(receipt: dict[str, Any]) -> dict[str, Any]:
     return receipt
 
 
-def fallback_receipt(run_id: int | None, reason: str, *, source_requests_known_zero: bool) -> dict[str, Any]:
+def fallback_receipt(
+    run_id: int | None,
+    reason: str,
+    *,
+    source_requests_known_zero: bool,
+    request_path: str = REQUEST_PATH,
+    prereg_path: str = PREREG_PATH,
+) -> dict[str, Any]:
     attempted = 0 if source_requests_known_zero else None
     receipt = {
         "schema_version": 1,
@@ -531,8 +605,8 @@ def fallback_receipt(run_id: int | None, reason: str, *, source_requests_known_z
         "candidate_id": "Q221",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "workflow_run_id": run_id,
-        "preregistration_path": PREREG_PATH,
-        "request_path": REQUEST_PATH,
+        "preregistration_path": prereg_path,
+        "request_path": request_path,
         "source_contract": {
             "archive": "Arquivo.pt Memento TimeMap",
             "archive_metadata_requests_attempted": attempted,
@@ -592,7 +666,18 @@ def capture(repo_root: Path, request_path: Path, prereg_path: Path, run_id: int 
     try:
         frozen = validate_preflight(repo_root, request_path, prereg_path)
     except (ProbeError, OSError, ValueError) as exc:
-        return fallback_receipt(run_id, str(exc), source_requests_known_zero=True)
+        try:
+            request_rel = request_path.resolve().relative_to(repo_root.resolve()).as_posix()
+        except ValueError:
+            request_rel = REQUEST_PATH
+        try:
+            prereg_rel = prereg_path.resolve().relative_to(repo_root.resolve()).as_posix()
+        except ValueError:
+            prereg_rel = PREREG_PATH
+        return fallback_receipt(
+            run_id, str(exc), source_requests_known_zero=True,
+            request_path=request_rel, prereg_path=prereg_rel,
+        )
     budget = ResponseBudget()
     observations = []
     for record in frozen["records"]:
@@ -631,9 +716,9 @@ def capture(repo_root: Path, request_path: Path, prereg_path: Path, run_id: int 
         "candidate_id": "Q221",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "workflow_run_id": run_id,
-        "preregistration_path": PREREG_PATH,
+        "preregistration_path": frozen["preregistration_path"],
         "preregistration_git_blob_sha1": frozen["preregistration_git_blob_sha1"],
-        "request_path": REQUEST_PATH,
+        "request_path": frozen["request_path"],
         "frozen_inputs": {
             "boundary_path": BOUNDARY_PATH,
             "boundary_git_blob_sha1": BOUNDARY_BLOB_SHA1,
@@ -700,6 +785,8 @@ def capture(repo_root: Path, request_path: Path, prereg_path: Path, run_id: int 
             "live_execution": False,
         },
     }
+    if frozen.get("previous_arquivo_attempt") is not None:
+        receipt["frozen_inputs"]["prior_arquivo_attempt"] = frozen["previous_arquivo_attempt"]
     return add_fingerprints(receipt)
 
 
@@ -815,10 +902,20 @@ def main() -> int:
     if args.mode == "fallback":
         if args.output is None:
             raise SystemExit("--output is required in fallback mode")
+        try:
+            request_rel = args.request.resolve().relative_to(args.repo_root.resolve()).as_posix()
+        except ValueError:
+            request_rel = REQUEST_PATH
+        try:
+            prereg_rel = args.prereg.resolve().relative_to(args.repo_root.resolve()).as_posix()
+        except ValueError:
+            prereg_rel = PREREG_PATH
         receipt = fallback_receipt(
             args.run_id,
             args.reason,
             source_requests_known_zero=bool(args.source_requests_known_zero),
+            request_path=request_rel,
+            prereg_path=prereg_rel,
         )
         write_json(args.output, receipt)
         return 0
