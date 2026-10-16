@@ -1,0 +1,2245 @@
+{
+  "schema_version": "1.0",
+  "record_type": "q104_i22_independent_pit_reproduction",
+  "task_id": "Q-2026-10-12-104-I22-INDEPENDENT-PIT",
+  "candidate_id": "Q104:I22",
+  "reproduction_code_sha": "784b4be5c0d227e5fe3db6ee2df1cb96966f59a4",
+  "status": "Q104_I22_INDEPENDENT_PIT_REPRODUCED_NON_OVERLAP_REVIEW_REQUIRED",
+  "validation_outcome": "INDEPENDENT_PIT_REPRODUCED",
+  "upstream_inputs": {
+    "source_workflow_run_id": 38274043682,
+    "source_master_sha": "65c879498e3f5d494e1d6c9749418bc0bf137a31",
+    "reconciliation_receipt_fingerprint": "058bba7fd9aebb9d30cc5294fc71548ebe9bd9f11d5ee38a558936b29ecfb9a0",
+    "q107_coverage_fingerprint": "ea3a3fd1c33c3de984b60bad069ed611729c25faa8272211a81e9ce85e1dd6dd",
+    "q107_snapshot_fingerprint": "c5eb39fcd802eb73c6c71d4bdbb0c0ec0f132db77c5c0a2c37b4ba1277edf036",
+    "q108_receipt_fingerprint": "07dcc87087f6a762ecbddaab0298625fb1bf50123df48758fa5c9f6d56bdc8c3",
+    "preregistration": "research/preregistrations/q104_i22_filing_arrival_2026_10_01.json"
+  },
+  "frozen_market_data": {
+    "status": "Q107_FROZEN_CSVS_VERIFIED",
+    "symbol_count": 8,
+    "common_timestamp_count": 3500,
+    "selected_start": "2011-10-24T13:30:00+00:00",
+    "selected_end": "2025-09-24T13:30:00+00:00",
+    "datasets": {
+      "SPGI": {
+        "candle_count": 3500,
+        "dataset_fingerprint": "e52267c8cf857d6a855305ef6ed67dee385e783dd917c4d9f7ca71d198d8238a",
+        "first_timestamp": "2011-10-24T13:30:00+00:00",
+        "last_timestamp": "2025-09-24T13:30:00+00:00"
+      },
+      "NDAQ": {
+        "candle_count": 3500,
+        "dataset_fingerprint": "d276e415e3b6045aa62c0d34d13d6b845f4762747d528aafeb399d037ab18a2d",
+        "first_timestamp": "2011-10-24T13:30:00+00:00",
+        "last_timestamp": "2025-09-24T13:30:00+00:00"
+      },
+      "AMP": {
+        "candle_count": 3500,
+        "dataset_fingerprint": "c214edb7ce208b19ee60554969bce3db281d234ce562fb67cc7219f1d498745a",
+        "first_timestamp": "2011-10-24T13:30:00+00:00",
+        "last_timestamp": "2025-09-24T13:30:00+00:00"
+      },
+      "RJF": {
+        "candle_count": 3500,
+        "dataset_fingerprint": "4619534469b74fc9d0a48aa2275caf313e1a42f280001f5dd351b0d2d3aa434a",
+        "first_timestamp": "2011-10-24T13:30:00+00:00",
+        "last_timestamp": "2025-09-24T13:30:00+00:00"
+      },
+      "WMB": {
+        "candle_count": 3500,
+        "dataset_fingerprint": "f15a98fd79c39a299aef2a46337e1f3706e4f94af9d792cf17bc29c8250ea58b",
+        "first_timestamp": "2011-10-24T13:30:00+00:00",
+        "last_timestamp": "2025-09-24T13:30:00+00:00"
+      },
+      "VLO": {
+        "candle_count": 3500,
+        "dataset_fingerprint": "74e3462b5d17ccea0b090501c92deac2f2f123db297038763a8ed4c02556998e",
+        "first_timestamp": "2011-10-24T13:30:00+00:00",
+        "last_timestamp": "2025-09-24T13:30:00+00:00"
+      },
+      "DVN": {
+        "candle_count": 3500,
+        "dataset_fingerprint": "f9ab72ed4007c90368621a5aedc65037e0db7e11559b5ff8c36e4f2b1e0acc54",
+        "first_timestamp": "2011-10-24T13:30:00+00:00",
+        "last_timestamp": "2025-09-24T13:30:00+00:00"
+      },
+      "EMN": {
+        "candle_count": 3500,
+        "dataset_fingerprint": "4efa9f104826377717e9599d808a2c619a831baa62da715e37b62983a7aeb80a",
+        "first_timestamp": "2011-10-24T13:30:00+00:00",
+        "last_timestamp": "2025-09-24T13:30:00+00:00"
+      }
+    }
+  },
+  "registered_universe_non_overlap": {
+    "status": "Q107_REGISTERED_UNIVERSE_SYMBOL_DISJOINT",
+    "registered_universe_count": 56,
+    "peer_universe_count": 55,
+    "overlaps": [],
+    "non_overlap_proven": true
+  },
+  "compiler_reproduction": {
+    "x64_receipt_fingerprint": "53b0d7df16c997d0daaaa706b5e713d3596110be4bf839595ec3044e959be236",
+    "arm64_receipt_fingerprint": "7400ac67a0b120cb1aac894f48d25e8a53c85a1b6e44f8fc5fd7ba3eda3f47bd",
+    "x64_arm64_semantic_equality": true,
+    "independent_source_refetch_semantic_equality": true,
+    "independent_filing_count": 2209,
+    "eligible_issuer_session_sum": 2011,
+    "per_symbol_filing_counts": {
+      "SPGI": 296,
+      "NDAQ": 258,
+      "AMP": 182,
+      "RJF": 446,
+      "WMB": 293,
+      "VLO": 271,
+      "DVN": 232,
+      "EMN": 231
+    },
+    "per_symbol_eligible_sessions": {
+      "SPGI": 270,
+      "NDAQ": 249,
+      "AMP": 180,
+      "RJF": 421,
+      "WMB": 251,
+      "VLO": 256,
+      "DVN": 169,
+      "EMN": 215
+    },
+    "amendment_accession_events": 43,
+    "accessions_unique_within_symbol": true,
+    "raw_source_response_hashes": [
+      {
+        "url": "https://data.sec.gov/submissions/CIK0000064040.json",
+        "http_status": 200,
+        "bytes": 164298,
+        "sha256": "798f6b9f554c0ceac1d84a22998a5b89bc14c11bc085cebac0f18628c1c63b78"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0000064040-submissions-001.json",
+        "http_status": 200,
+        "bytes": 181789,
+        "sha256": "cd8faa57ce92e32f823628d287fb846ba1fff78c1255250db4a0b494abd7be26"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0001120193.json",
+        "http_status": 200,
+        "bytes": 156653,
+        "sha256": "1979abe78f0c6748e5ed8f8e314880f8b334089d99dfcd501633f3e354d38148"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0001120193-submissions-001.json",
+        "http_status": 200,
+        "bytes": 226806,
+        "sha256": "954fd95e32e8fed5ae3c188e8ced2ecd17267607540622c23e72e8555958ae33"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0000820027.json",
+        "http_status": 200,
+        "bytes": 157195,
+        "sha256": "210c20b63050989cc28aa8b5f9d9a5d55bae6fbb940c4755ab8369e9ac20360c"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0000820027-submissions-001.json",
+        "http_status": 200,
+        "bytes": 299476,
+        "sha256": "99d2cda4eb4261653f6b93ea26db5d014cbf7ab792c897746bc5c663492c9228"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0000720005.json",
+        "http_status": 200,
+        "bytes": 148741,
+        "sha256": "91512803d08619c289923cb8d96ba8713ac25e8bca078c97d3c4ab6f989a64f1"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0000720005-submissions-001.json",
+        "http_status": 200,
+        "bytes": 300050,
+        "sha256": "48f0ddd2f1de2e4f53c932b06554e5b53853544330902db42c905c43fdb9be7f"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0000107263.json",
+        "http_status": 200,
+        "bytes": 160966,
+        "sha256": "ff1ee714576bebacb723937dc8cfb6e51cf42215ae70603fbc718b61d49c3327"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0000107263-submissions-001.json",
+        "http_status": 200,
+        "bytes": 317679,
+        "sha256": "284518768250221bbe302ceb010ceddf7e584ddc355344117a5074c399cd2fa2"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0001035002.json",
+        "http_status": 200,
+        "bytes": 165401,
+        "sha256": "d88e4367e269d7ff955f19b3dbb62efaebd312004d93cb3fb4644d579bfde519"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0001035002-submissions-001.json",
+        "http_status": 200,
+        "bytes": 203685,
+        "sha256": "cc9102dc35c02942a53aee2a0054a327987d3ba12d06451ebcbf76ac5862d7b0"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0001090012.json",
+        "http_status": 200,
+        "bytes": 159173,
+        "sha256": "c249c6fe23f2fcb250bfc3c5f49d15131c54e4c2dde9ea01ffa5a439b4a08df3"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0001090012-submissions-001.json",
+        "http_status": 200,
+        "bytes": 189908,
+        "sha256": "d055da6e5f71ecfa4c362d1b6fd91337821cb439e62bea9fe6a8124eb8c97c4c"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0000915389.json",
+        "http_status": 200,
+        "bytes": 161907,
+        "sha256": "6e1f81fa48a0d0691e2aeb5700fc7f8fb4d0051a914efb2eb50ac47464ff4c77"
+      },
+      {
+        "url": "https://data.sec.gov/submissions/CIK0000915389-submissions-001.json",
+        "http_status": 200,
+        "bytes": 231039,
+        "sha256": "62a845c794339f23a7e40d6e31590e964bddc5bc32877e4a2ae2098a43b9bd1b"
+      }
+    ],
+    "request_count": 16,
+    "downloaded_bytes": 3224766,
+    "resource_limits": {
+      "max_requests": 40,
+      "max_response_bytes": 26214400,
+      "max_total_bytes": 262144000,
+      "timeout_seconds": 45
+    }
+  },
+  "pit_invariance_checks": {
+    "prefix_reproductions": {
+      "SPGI:2015-12-31": {
+        "status": "PASS",
+        "filing_count": 100,
+        "eligible_session_count": 85,
+        "decision_session_count": 1258
+      },
+      "SPGI:2020-12-31": {
+        "status": "PASS",
+        "filing_count": 192,
+        "eligible_session_count": 176,
+        "decision_session_count": 2517
+      },
+      "SPGI:2025-09-24": {
+        "status": "PASS",
+        "filing_count": 296,
+        "eligible_session_count": 270,
+        "decision_session_count": 3704
+      },
+      "NDAQ:2015-12-31": {
+        "status": "PASS",
+        "filing_count": 95,
+        "eligible_session_count": 91,
+        "decision_session_count": 1258
+      },
+      "NDAQ:2020-12-31": {
+        "status": "PASS",
+        "filing_count": 177,
+        "eligible_session_count": 170,
+        "decision_session_count": 2517
+      },
+      "NDAQ:2025-09-24": {
+        "status": "PASS",
+        "filing_count": 258,
+        "eligible_session_count": 249,
+        "decision_session_count": 3704
+      },
+      "AMP:2015-12-31": {
+        "status": "PASS",
+        "filing_count": 64,
+        "eligible_session_count": 64,
+        "decision_session_count": 1258
+      },
+      "AMP:2020-12-31": {
+        "status": "PASS",
+        "filing_count": 125,
+        "eligible_session_count": 125,
+        "decision_session_count": 2517
+      },
+      "AMP:2025-09-24": {
+        "status": "PASS",
+        "filing_count": 182,
+        "eligible_session_count": 180,
+        "decision_session_count": 3704
+      },
+      "RJF:2015-12-31": {
+        "status": "PASS",
+        "filing_count": 162,
+        "eligible_session_count": 156,
+        "decision_session_count": 1258
+      },
+      "RJF:2020-12-31": {
+        "status": "PASS",
+        "filing_count": 319,
+        "eligible_session_count": 306,
+        "decision_session_count": 2517
+      },
+      "RJF:2025-09-24": {
+        "status": "PASS",
+        "filing_count": 446,
+        "eligible_session_count": 421,
+        "decision_session_count": 3704
+      },
+      "WMB:2015-12-31": {
+        "status": "PASS",
+        "filing_count": 119,
+        "eligible_session_count": 110,
+        "decision_session_count": 1258
+      },
+      "WMB:2020-12-31": {
+        "status": "PASS",
+        "filing_count": 219,
+        "eligible_session_count": 201,
+        "decision_session_count": 2517
+      },
+      "WMB:2025-09-24": {
+        "status": "PASS",
+        "filing_count": 293,
+        "eligible_session_count": 251,
+        "decision_session_count": 3704
+      },
+      "VLO:2015-12-31": {
+        "status": "PASS",
+        "filing_count": 106,
+        "eligible_session_count": 101,
+        "decision_session_count": 1258
+      },
+      "VLO:2020-12-31": {
+        "status": "PASS",
+        "filing_count": 202,
+        "eligible_session_count": 191,
+        "decision_session_count": 2517
+      },
+      "VLO:2025-09-24": {
+        "status": "PASS",
+        "filing_count": 271,
+        "eligible_session_count": 256,
+        "decision_session_count": 3704
+      },
+      "DVN:2015-12-31": {
+        "status": "PASS",
+        "filing_count": 90,
+        "eligible_session_count": 69,
+        "decision_session_count": 1258
+      },
+      "DVN:2020-12-31": {
+        "status": "PASS",
+        "filing_count": 165,
+        "eligible_session_count": 121,
+        "decision_session_count": 2517
+      },
+      "DVN:2025-09-24": {
+        "status": "PASS",
+        "filing_count": 232,
+        "eligible_session_count": 169,
+        "decision_session_count": 3704
+      },
+      "EMN:2015-12-31": {
+        "status": "PASS",
+        "filing_count": 85,
+        "eligible_session_count": 84,
+        "decision_session_count": 1258
+      },
+      "EMN:2020-12-31": {
+        "status": "PASS",
+        "filing_count": 162,
+        "eligible_session_count": 157,
+        "decision_session_count": 2517
+      },
+      "EMN:2025-09-24": {
+        "status": "PASS",
+        "filing_count": 231,
+        "eligible_session_count": 215,
+        "decision_session_count": 3704
+      }
+    },
+    "input_order_invariance": {
+      "SPGI": true,
+      "NDAQ": true,
+      "AMP": true,
+      "RJF": true,
+      "WMB": true,
+      "VLO": true,
+      "DVN": true,
+      "EMN": true
+    },
+    "future_acceptance_invariance": {
+      "SPGI": true,
+      "NDAQ": true,
+      "AMP": true,
+      "RJF": true,
+      "WMB": true,
+      "VLO": true,
+      "DVN": true,
+      "EMN": true
+    },
+    "all_passed": true
+  },
+  "mechanism_non_overlap": {
+    "status": "I22_MECHANISM_SIGNATURE_NON_OVERLAP_REVIEW_REQUIRED",
+    "candidate_count": 122,
+    "peer_comparison_count": 121,
+    "complete_comparison_count": 0,
+    "incomplete_comparison_count": 121,
+    "dimensions": [
+      "mechanism_tokens",
+      "source_components",
+      "source_domains"
+    ],
+    "candidate_metadata": {
+      "mechanism_token_count": 48,
+      "source_component_count": 3,
+      "source_domain_count": 2
+    },
+    "non_overlap_proven": false,
+    "comparisons": [
+      {
+        "peer": "C32",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.019231,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "C33",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.018868,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q097:I15",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.0,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q097:I16",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.0,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q097:I17",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.0,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q097:I18",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.0,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q104:I19",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.096386,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q104:I20",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.103896,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q104:I21",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.010989,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q104:M6",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.048193,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q104:R9",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.047059,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q109:C32",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.225352,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q109:C33",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.051948,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q109:I23",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.105263,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q109:I24",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.131579,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q109:N1",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.090909,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q109:N2",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.054054,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q109:N7",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.12381,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q123:I25",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.127907,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q125:M1",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.040541,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q126",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.128205,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q127",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.038462,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q128",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.0375,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q129",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.02439,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q130",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.098592,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q131",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.081081,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q132",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.048193,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q133",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.058824,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q134",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.023256,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q135",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.051282,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q136",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.038462,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q137",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.068493,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q138",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.064103,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q139",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.037037,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q140",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.027027,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q141",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.025641,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q142",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.025641,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q143",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.058824,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q144",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.092105,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q145",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.051282,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q146",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.034884,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q147",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.02381,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q148",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.038462,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q149",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.050633,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q150",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.074074,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q151",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.052632,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q152",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.050633,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q153",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.051282,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q154",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.049383,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q155",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.052632,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q156",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.047619,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q157",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.053333,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q158",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.061728,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q159",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.0375,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q160",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.037037,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q161",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.038961,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q162",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.04,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q163",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.050633,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q164",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.064103,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q165",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.037975,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q166",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.047059,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q167",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.060976,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q168",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.049383,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q169",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.046512,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q170",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.035714,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q171",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.089888,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q172",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.049383,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q173",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.034091,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q174",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.058824,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q175",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.033333,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q176",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.051282,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q177",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.049383,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q178",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.060976,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q179",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.098765,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q180",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.044444,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q181",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.057471,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q182",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.058824,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q183",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.059524,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q184",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.047059,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q185",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.066116,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q186",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.053333,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q187",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.069307,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q188",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.0625,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q189",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.055556,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q190",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.05,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q191",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.046729,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q192",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.050505,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q193",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.008197,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q194",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.012195,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q195",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.014085,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q196",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.028571,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q197",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.011905,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q198",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.051724,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q199",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.0,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q201",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.013333,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q202",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.023529,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q203",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.022727,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q204",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.031915,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q205",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.022727,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q210",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.011765,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q211",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.029412,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q212",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.041096,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q213",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.015152,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q214",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.066667,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q215",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.012195,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q216",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.0,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q217",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.011765,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q218",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "components",
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.013699,
+        "component_jaccard": 0.4,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q219",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "components",
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.012658,
+        "component_jaccard": 0.4,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q220",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "components",
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.013158,
+        "component_jaccard": 0.2,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q221",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "components",
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.012346,
+        "component_jaccard": 0.25,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q222",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.021277,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q224",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.024691,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q227",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.030303,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q228",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.023256,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q229",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.02381,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q230",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.012048,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q231",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.044444,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q233",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.0,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q234",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.020979,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      },
+      {
+        "peer": "Q235",
+        "signature_coverage_complete": false,
+        "observed_dimensions": [
+          "tokens"
+        ],
+        "missing_dimensions": [
+          "components",
+          "source_domains"
+        ],
+        "complete_score": null,
+        "token_jaccard": 0.033898,
+        "component_jaccard": null,
+        "domain_jaccard": null
+      }
+    ],
+    "note": "Partial signatures cannot establish orthogonality. Review only; no performance authority."
+  },
+  "next_gate": "review candidate-specific mechanism signature completeness; do not authorize performance",
+  "governance": {
+    "new_market_data_for_performance": false,
+    "backtest": false,
+    "performance_evaluation": false,
+    "holdout_selection": false,
+    "candidate_selection": false,
+    "candidate_ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "performance_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "generated_at_utc": "2026-10-14T07:11:55.539355+00:00",
+  "receipt_fingerprint": "923afa1165e9f161caea6be187abb7eceeefc313b49cac5faa42849d701592ff"
+}
