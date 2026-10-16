@@ -193,7 +193,7 @@ def test_r4_workflows_and_sync_keep_replay_and_scientific_gates_closed():
     assert "github.event.workflow_run.head_branch == 'master'" in sync
     assert 'run_id = os.environ["SOURCE_RUN_ID"]' in sync
     assert 'attempt=evidence / f"q221_dod_097_cdx_mimetype_diagnostic_attempt_{run_id}.json"' in sync
-    assert "${SOURCE_RUN_ID}" not in sync
+    assert 'attempt_file="research/evidence/q221_dod_097_cdx_mimetype_diagnostic_attempt_${SOURCE_RUN_ID}.json"' in sync
     integrity = (ROOT / "automation/project_integrity_check.py").read_text(encoding="utf-8")
     assert '"q221-dod-097-cdx-mimetype-diagnostic-r4.yml"' in integrity
     assert '"q221-dod-097-cdx-mimetype-diagnostic-r4-sync.yml"' in integrity
