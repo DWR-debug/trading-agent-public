@@ -1418,6 +1418,80 @@ def test_windows_regression_bootstrap_retries_transient_package_index_failures()
 
 
 
+def test_bounded_planner_explains_completed_slots_and_blocked_prerequisites(monkeypatch):
+    from automation import generate_resource_dashboard as dashboard
+
+    monkeypatch.setattr(
+        dashboard,
+        "q221_public_clock_status",
+        lambda: {"state": "complete", "progress_percent": 100, "detail": "fixed vintage receipt already exists"},
+    )
+
+    resources = [
+        {"name": "Windows self-hosted A", "capacity_state": "available", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "Windows self-hosted B", "capacity_state": "available", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "Windows self-hosted C", "capacity_state": "available", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "GitHub-hosted Ubuntu x64", "capacity_state": "available", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "GitHub-hosted ARM64", "capacity_state": "available", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+        {"name": "Free AI pool", "capacity_state": "available", "current_assignments": 0, "research_capacity_slots": 1, "research_slots_free": 1},
+    ]
+    dashboard_top3 = [
+        {"code": "Q104:I19", "next_gate": "historical 13F census"},
+        {"code": "Q220", "next_gate": "historical XBRL PIT compiler"},
+        {"code": "Q221", "next_gate": "historical USAspending public clock + issuer mapping"},
+    ]
+    successful_slots = [
+        {"id": 100 + i, "name": "Top-4 Candidate Slot Research", "display_title": f"Top-4 Slot {slot} {candidate} all",
+         "path": ".github/workflows/top4-candidate-slot-research.yml", "status": "completed", "conclusion": "success"}
+        for i, (slot, candidate) in enumerate([
+            ("windows", "Q220"), ("ubuntu_x64", "Q220"), ("ubuntu_arm64", "Q220"),
+            ("windows", "Q221"), ("ubuntu_x64", "Q221"), ("ubuntu_arm64", "Q221"),
+        ])
+    ]
+    recent_runs = successful_slots + [{
+        "id": 200,
+        "name": "Q104 I19 Historical 13F Identity Census",
+        "path": ".github/workflows/q104-i19-13f-historical-identity-census.yml",
+        "status": "completed",
+        "conclusion": "failure",
+    }]
+
+    plan = dashboard.planned_capacity_plan(
+        resources,
+        [],
+        dashboard_top3,
+        {},
+        {},
+        recent_runs=recent_runs,
+    )
+    suppression = plan[0]["planner_suppression_reasons"]
+    q220 = next(x for x in suppression if x["plan_id"] == "Q220-AS-FILED-REPRESENTATION")
+    q221 = next(x for x in suppression if x["plan_id"] == "Q221-USASPENDING-PUBLIC-CLOCK")
+    q104 = next(x for x in suppression if x["plan_id"] == "Q104-I19-INDEPENDENT-REPRO")
+
+    assert q220["reason_code"] == "NO_ELIGIBLE_PREFERRED_RESOURCE"
+    assert q221["reason_code"] == "NO_ELIGIBLE_PREFERRED_RESOURCE"
+    assert {x["reason_code"] for x in q220["resource_blockers"]} == {
+        "PREFERRED_RESOURCE_CANDIDATE_SLOT_ALREADY_COMPLETED"
+    }
+    assert {x["reason_code"] for x in q221["resource_blockers"]} == {
+        "PREFERRED_RESOURCE_CANDIDATE_SLOT_ALREADY_COMPLETED"
+    }
+    assert q104["reason_code"] == "PREREQUISITE_BLOCKED"
+    assert q104["readiness"] == "BLOCKED_UNTIL_COMPILER_RECEIPT"
+    assert not any(
+        item.get("plan_id") in {"Q220-AS-FILED-REPRESENTATION", "Q221-USASPENDING-PUBLIC-CLOCK"}
+        and item.get("scheduled") is True
+        for row in plan for item in row["planned_assignments"]
+    )
+    assert all(row["planner_suppression_reasons"] == suppression for row in plan)
+    assert not any(
+        item.get("candidate") not in {"Q104:I19", "Q220", "Q221"}
+        and item.get("scheduled") is True
+        for row in plan for item in row["planned_assignments"]
+    )
+
+
 def test_empty_executable_plan_is_classified_as_operational_attention():
     from automation.planned_capacity_fast_dispatch import classify_dispatch_status
 
