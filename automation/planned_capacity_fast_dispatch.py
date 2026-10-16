@@ -502,26 +502,141 @@ def resource_capacity_for_plan(snapshot: dict[str, Any], row: dict[str, Any]) ->
 def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], max_dispatches: int = 4) -> dict[str, Any]:
     focus_candidates = effective_focus_candidates(snapshot)
     focus_skips: list[dict[str, Any]] = []
-    planned = []
-    for row in snapshot.get("planned_capacity", []):
+    prefilter_decisions: list[dict[str, Any]] = []
+    planned: list[dict[str, Any]] = []
+    planned_capacity_rows = snapshot.get("planned_capacity", [])
+    if not isinstance(planned_capacity_rows, list):
+        prefilter_decisions.append({
+            "decision": "INVALID_PLANNED_CAPACITY_CONTAINER",
+            "reason": "planned_capacity must be a list; dispatch is fail-closed",
+            "observed_type": type(planned_capacity_rows).__name__,
+        })
+        planned_capacity_rows = []
+    elif not planned_capacity_rows:
+        prefilter_decisions.append({
+            "decision": "NO_CAPACITY_ROWS_IN_SNAPSHOT",
+            "reason": "the bounded planner returned no resource capacity rows",
+        })
+
+    planned_assignment_count = 0
+    valid_assignment_count = 0
+    scheduled_assignment_count = 0
+    dispatchable_assignment_count = 0
+    scheduled_dispatchable_assignment_count = 0
+    capacity_rows_without_assignments = 0
+
+    def observed_reason(item: dict[str, Any], fallback: str) -> str:
+        for field in ("blocked_reason", "dispatch_reason", "reason", "unallocated_reason", "basis", "readiness", "execution_status", "dispatch_condition"):
+            value = item.get(field)
+            if value is not None and str(value).strip():
+                return str(value)
+        return fallback
+
+    for row in planned_capacity_rows:
+        if not isinstance(row, dict):
+            prefilter_decisions.append({
+                "decision": "SKIP_INVALID_CAPACITY_ROW",
+                "reason": "capacity row was not an object; row cannot authorize dispatch",
+                "observed_type": type(row).__name__,
+            })
+            continue
+
         resource = str(row.get("resource") or "")
         _current, _slots, resource_free = resource_capacity_for_plan(snapshot, row)
-        for item in row.get("planned_assignments", []):
-            if not isinstance(item, dict) or not item.get("scheduled"):
+        assignments = row.get("planned_assignments", [])
+        if not isinstance(assignments, list):
+            prefilter_decisions.append({
+                "decision": "SKIP_INVALID_PLANNED_ASSIGNMENTS_CONTAINER",
+                "resource": resource,
+                "reason": "planned_assignments must be a list; row cannot authorize dispatch",
+                "observed_type": type(assignments).__name__,
+            })
+            assignments = []
+
+        if not assignments:
+            capacity_rows_without_assignments += 1
+            prefilter_decisions.append({
+                "decision": "NO_PLANNED_ASSIGNMENTS_FOR_RESOURCE",
+                "resource": resource,
+                "reason": str(row.get("unallocated_reason") or "bounded planner supplied no assignment for this resource"),
+                "capacity_state": str(row.get("capacity_state") or "unreported"),
+                "current_assignments": row.get("current_assignments"),
+                "research_capacity_slots": row.get("research_capacity_slots"),
+                "research_slots_free": row.get("research_slots_free"),
+                "planned_count": row.get("planned_count"),
+                "blocked_count": row.get("blocked_count"),
+            })
+            continue
+
+        for assignment_index, item in enumerate(assignments):
+            planned_assignment_count += 1
+            if not isinstance(item, dict):
+                prefilter_decisions.append({
+                    "decision": "SKIP_INVALID_PLANNED_ASSIGNMENT",
+                    "resource": resource,
+                    "assignment_index": assignment_index,
+                    "reason": "planned assignment was not an object; assignment cannot authorize dispatch",
+                    "observed_type": type(item).__name__,
+                })
                 continue
-            if not item.get("dispatchable"):
-                continue
+
+            valid_assignment_count += 1
+            plan_id = item.get("plan_id")
             candidate = str(item.get("candidate") or "")
+            readiness = str(item.get("readiness") or "")
+            scheduled = bool(item.get("scheduled"))
+            dispatchable = bool(item.get("dispatchable"))
+            if scheduled:
+                scheduled_assignment_count += 1
+            if dispatchable:
+                dispatchable_assignment_count += 1
+
+            diagnostics = {
+                "plan_id": plan_id,
+                "candidate": candidate,
+                "resource": resource,
+                "readiness": readiness or None,
+                "basis": item.get("basis"),
+                "scheduled": scheduled,
+                "dispatchable": dispatchable,
+                "execution_workflow": item.get("execution_workflow"),
+            }
+            if not scheduled:
+                prefilter_decisions.append({
+                    **diagnostics,
+                    "decision": "SKIP_NOT_SCHEDULED",
+                    "reason_code": str(item.get("reason_code") or "PLANNER_DID_NOT_SCHEDULE"),
+                    "reason": observed_reason(item, "bounded planner marked scheduled=false"),
+                })
+                continue
+            if not dispatchable:
+                prefilter_decisions.append({
+                    **diagnostics,
+                    "decision": "SKIP_NOT_DISPATCHABLE",
+                    "reason_code": str(item.get("reason_code") or "PLANNER_MARKED_NON_DISPATCHABLE"),
+                    "reason": observed_reason(item, "bounded planner marked dispatchable=false"),
+                })
+                continue
+            scheduled_dispatchable_assignment_count += 1
+
             if candidate not in focus_candidates:
                 focus_skips.append({
-                    "plan_id": item.get("plan_id"),
+                    "plan_id": plan_id,
                     "candidate": candidate,
+                    "resource": resource,
                     "decision": "SKIP_FOCUS_LOCK",
+                    "reason_code": "CANDIDATE_OUTSIDE_FIXED_FOCUS_ALLOWLIST",
                     "allowed_candidates": sorted(focus_candidates),
                 })
                 continue
             workflow = item.get("execution_workflow")
             if not workflow:
+                prefilter_decisions.append({
+                    **diagnostics,
+                    "decision": "SKIP_MISSING_EXECUTION_WORKFLOW",
+                    "reason_code": "NO_EXECUTION_ROUTE",
+                    "reason": "scheduled/dispatchable assignment has no execution_workflow",
+                })
                 continue
             resource_meta = next(
                 (
@@ -558,7 +673,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     failure_counts = slot_failure_counts(runs)
     workflow_failure_streak = workflow_failure_streaks(runs)
     zero_active = len(work) == 0
-    decisions = list(focus_skips)
+    decisions = list(prefilter_decisions) + list(focus_skips)
     dispatches = []
     seen_dispatch_keys: set[tuple[str, str, str, str]] = set()
     chosen_slot_scopes: set[tuple[str, str]] = set()
@@ -938,6 +1053,22 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         # Multi-resource exclusivity is enforced by explicit resource leases above,
         # not by stopping the entire dispatch pulse. Other free resources may fill now.
 
+    suppression_counts: dict[str, int] = {}
+    for decision in decisions:
+        name = str(decision.get("decision") or "UNKNOWN_DECISION")
+        suppression_counts[name] = suppression_counts.get(name, 0) + 1
+    planning_diagnostics = {
+        "capacity_row_count": len(planned_capacity_rows),
+        "capacity_rows_without_assignments": capacity_rows_without_assignments,
+        "planned_assignment_count": planned_assignment_count,
+        "valid_planned_assignment_count": valid_assignment_count,
+        "scheduled_assignment_count": scheduled_assignment_count,
+        "dispatchable_assignment_count": dispatchable_assignment_count,
+        "scheduled_dispatchable_assignment_count": scheduled_dispatchable_assignment_count,
+        "routable_focus_assignment_count": len(planned),
+        "suppression_count": len(decisions),
+        "suppression_counts": suppression_counts,
+    }
     return {
         "schema_version": 1,
         "record_type": "planned_capacity_fast_dispatch",
@@ -946,6 +1077,7 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
         "planned_executable_count": len(planned),
         "dispatches": dispatches,
         "decisions": decisions,
+        "planning_diagnostics": planning_diagnostics,
         "max_dispatches": max_dispatches,
         "scientific_evidence": False,
         "performance_authorization": False,
@@ -986,6 +1118,39 @@ def classify_dispatch_status(plan: dict[str, Any]) -> dict[str, Any]:
         "NO_DISPATCH_AFTER_GUARDS",
         "DISPATCH_REQUEST_FAILED",
     }
+    if status == "NEEDS_ATTENTION_ZERO_EXECUTABLE_PLAN":
+        diagnostics = plan.get("planning_diagnostics") or {}
+        capacity_rows = int(diagnostics.get("capacity_row_count") or 0)
+        assignment_count = int(diagnostics.get("valid_planned_assignment_count") or 0)
+        scheduled_count = int(diagnostics.get("scheduled_assignment_count") or 0)
+        scheduled_dispatchable_count = int(diagnostics.get("scheduled_dispatchable_assignment_count") or 0)
+        routable_count = int(diagnostics.get("routable_focus_assignment_count") or 0)
+        if capacity_rows == 0:
+            reason_code = "NO_CAPACITY_ROWS_IN_SNAPSHOT"
+            reason = "The snapshot contains no capacity rows; no dispatch is permitted."
+        elif assignment_count == 0:
+            reason_code = "BOUNDED_PLANNER_EMITTED_NO_ASSIGNMENTS"
+            reason = "The bounded planner did not assign independent, ready, non-duplicate work to any resource."
+        elif scheduled_count == 0:
+            reason_code = "ALL_PLANNED_ASSIGNMENTS_UNSCHEDULED"
+            reason = "Every planned assignment was marked unscheduled by the bounded planner."
+        elif scheduled_dispatchable_count == 0:
+            reason_code = "NO_SCHEDULED_DISPATCHABLE_ASSIGNMENTS"
+            reason = "No scheduled assignment is marked dispatchable by the bounded planner's existing gates."
+        elif routable_count == 0:
+            reason_code = "NO_ASSIGNMENT_PASSED_FOCUS_AND_ROUTE_FILTERS"
+            reason = "No scheduled, dispatchable assignment passed the fixed candidate allowlist and execution-route checks."
+        else:
+            reason_code = "ALL_ROUTABLE_ASSIGNMENTS_BLOCKED_BY_DISPATCH_GUARDS"
+            reason = "Routable assignments existed, but the existing duplicate, capacity, prerequisite or retry guards suppressed them."
+        plan["operational_attention_reason_code"] = reason_code
+        plan["operational_attention_reason"] = reason
+        plan["operational_follow_up"] = "Inspect decisions and planning_diagnostics; do not widen the candidate allowlist or bypass research gates."
+    elif status == "NO_DISPATCH_AFTER_GUARDS":
+        plan["operational_attention_reason_code"] = "ALL_ROUTABLE_ASSIGNMENTS_BLOCKED_BY_DISPATCH_GUARDS"
+        plan["operational_attention_reason"] = "Routable assignments existed, but the existing duplicate, capacity, prerequisite or retry guards suppressed them."
+        plan["operational_follow_up"] = "Inspect per-assignment decisions; do not bypass research gates."
+
     plan["dispatch_request_count"] = len(results)
     plan["dispatch_request_failure_count"] = len(failed_requests)
     return plan
