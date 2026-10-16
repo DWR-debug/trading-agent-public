@@ -33,6 +33,9 @@ jobs:
         with:
           python-version: "3.13.16"
 
+      - name: Install the test dependency used by the mandatory offline contract suite
+        run: python -m pip install --disable-pip-version-check pytest
+
       - name: Refuse repeated use of this one-shot source probe
         env:
           GH_TOKEN: ${{ github.token }}

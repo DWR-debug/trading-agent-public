@@ -7,7 +7,9 @@ from automation.q221_arquivo_pt_fpds_timemap_probe import (
     EXPECTED_RECORDS,
     MAX_REQUESTS,
     PREREG_PATH,
+    PREREG_PATH_R2,
     REQUEST_PATH,
+    REQUEST_PATH_R2,
     ProbeError,
     NoRedirect,
     analysis_fingerprint,
@@ -129,3 +131,26 @@ def test_actual_preregistration_and_upstream_receipts_pass_offline_preflight():
     assert result["prior_fpds"]["workflow_run_id"] == 38712516839
     assert result["boundary"]["sampled_transaction_count"] == 348
     assert result["pre_event"]["interpretation"]["recipient_to_issuer_mapping_frozen"] is False
+
+
+
+def test_r2_preflight_pins_the_r1_zero_source_request_failure():
+    root = Path(__file__).resolve().parents[1]
+    result = validate_preflight(root, root / REQUEST_PATH_R2, root / PREREG_PATH_R2)
+    assert len(result["records"]) == 4
+    assert result["request_path"] == REQUEST_PATH_R2
+    assert result["preregistration_path"] == PREREG_PATH_R2
+    assert result["previous_arquivo_attempt"] == {
+        "path": "research/evidence/q221_arquivo_pt_fpds_timemap_attempt_38863558147.json",
+        "git_blob_sha1": "049c75c80b267434b62c654c4fa9a9d8bc3f4068",
+        "receipt_fingerprint": "1b983784ea7b8d2d496021560b324195e9c219eafc9c538e7be32b232599aaae",
+        "workflow_run_id": 38863558147,
+        "source_requests_attempted": 0,
+        "failure_reason_code": "PREFLIGHT_FAILED_NO_SOURCE_REQUESTS",
+    }
+
+
+def test_r2_preflight_rejects_crossed_request_and_preregistration():
+    root = Path(__file__).resolve().parents[1]
+    with pytest.raises(ProbeError, match="CONTRACT_PATH_PAIR_MISMATCH"):
+        validate_preflight(root, root / REQUEST_PATH, root / PREREG_PATH_R2)
