@@ -357,6 +357,8 @@ REQUIRED_FILES = (
     ROOT / "tests" / "test_android_phone_receipt_sync.py",
     ROOT / "tests" / "test_s10_throughput_probe.py",
     ROOT / "tests" / "test_temporal_identity_state_spine_workflow.py",
+    ROOT / "automation" / "temporal_identity_state_spine.py",
+    ROOT / "tests" / "test_temporal_identity_state_spine.py",
     ROOT / ".github" / "workflows" / "q221-dod-097-wayback-archive-presence-r2.yml",
     ROOT / ".github" / "workflows" / "q221-dod-097-wayback-archive-presence-r2-sync.yml",
     ROOT / ".github" / "workflows" / "q221-dod-097-wayback-archive-presence-r3.yml",
