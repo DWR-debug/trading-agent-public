@@ -1447,6 +1447,99 @@ def test_empty_executable_plan_is_classified_as_operational_attention():
     assert classified["live_execution"] is False
 
 
+def test_zero_executable_plan_exposes_each_blocker_without_bypassing_gates():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates, classify_dispatch_status
+
+    snapshot = {
+        "focus_candidates": ["Q104:I19", "Q220", "Q221"],
+        "work_assignments": [],
+        "resources": [
+            {"name": "Windows self-hosted A", "research_capacity_slots": 1, "research_slots_free": 1, "capacity_state": "available"},
+            {"name": "Windows self-hosted B", "research_capacity_slots": 1, "research_slots_free": 1, "capacity_state": "available"},
+            {"name": "Windows self-hosted C", "research_capacity_slots": 1, "research_slots_free": 1, "capacity_state": "available"},
+        ],
+        "planned_capacity": [
+            {
+                "resource": "Windows self-hosted A",
+                "capacity_state": "available",
+                "planned_assignments": [{
+                    "plan_id": "Q221-CLOCK-ALREADY-COMPLETE",
+                    "candidate": "Q221",
+                    "readiness": "COMPLETE_POLICY_VINTAGES_NEXT_GATE_NEEDS_NEW_WORKPACK",
+                    "basis": "the next award-level public-clock stage requires a distinct workpack",
+                    "scheduled": True,
+                    "dispatchable": False,
+                    "execution_workflow": ".github/workflows/top4-candidate-slot-research.yml",
+                }],
+            },
+            {
+                "resource": "Windows self-hosted B",
+                "capacity_state": "available",
+                "planned_assignments": [{
+                    "plan_id": "Q104-I19-INDEPENDENT-REPRO",
+                    "candidate": "Q104:I19",
+                    "readiness": "BLOCKED_UNTIL_COMPILER_RECEIPT",
+                    "basis": "a positive compiler receipt is required before independent reproduction",
+                    "execution_status": "blocked_on_prerequisite",
+                    "scheduled": False,
+                    "dispatchable": False,
+                    "execution_workflow": None,
+                }],
+            },
+            {
+                "resource": "Windows self-hosted C",
+                "capacity_state": "available",
+                "unallocated_reason": "no independent ready non-duplicate work assigned by bounded planner",
+                "planned_assignments": [],
+            },
+        ],
+    }
+
+    plan = dispatch_candidates(snapshot, [], max_dispatches=6)
+    assert plan["planned_executable_count"] == 0
+    assert plan["dispatches"] == []
+    decisions = plan["decisions"]
+    q221 = next(x for x in decisions if x.get("plan_id") == "Q221-CLOCK-ALREADY-COMPLETE")
+    q104 = next(x for x in decisions if x.get("plan_id") == "Q104-I19-INDEPENDENT-REPRO")
+    empty_resource = next(x for x in decisions if x.get("resource") == "Windows self-hosted C")
+    assert q221["decision"] == "SKIP_NOT_DISPATCHABLE"
+    assert "distinct workpack" in q221["reason"]
+    assert q104["decision"] == "SKIP_NOT_SCHEDULED"
+    assert "positive compiler receipt" in q104["reason"]
+    assert empty_resource["decision"] == "NO_PLANNED_ASSIGNMENTS_FOR_RESOURCE"
+    assert empty_resource["reason"] == "no independent ready non-duplicate work assigned by bounded planner"
+    diagnostics = plan["planning_diagnostics"]
+    assert diagnostics["capacity_row_count"] == 3
+    assert diagnostics["planned_assignment_count"] == 2
+    assert diagnostics["scheduled_assignment_count"] == 1
+    assert diagnostics["scheduled_dispatchable_assignment_count"] == 0
+    assert diagnostics["capacity_rows_without_assignments"] == 1
+
+    classified = classify_dispatch_status(plan)
+    assert classified["status"] == "NEEDS_ATTENTION_ZERO_EXECUTABLE_PLAN"
+    assert classified["operational_attention_required"] is True
+    assert classified["operational_attention_reason_code"] == "NO_SCHEDULED_DISPATCHABLE_ASSIGNMENTS"
+    assert classified["dispatch_request_count"] == 0
+    assert classified["paper_only"] is True
+    assert classified["performance_authorization"] is False
+    assert classified["holdout_selection"] is False
+    assert classified["ranking"] is False
+    assert classified["tuning"] is False
+    assert classified["promotion"] is False
+    assert classified["live_execution"] is False
+
+
+def test_empty_capacity_snapshot_reports_a_specific_fail_closed_reason():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates, classify_dispatch_status
+
+    plan = dispatch_candidates({"focus_candidates": ["Q104:I19", "Q220", "Q221"], "planned_capacity": []}, [], max_dispatches=6)
+    classified = classify_dispatch_status(plan)
+    assert classified["dispatches"] == []
+    assert any(x["decision"] == "NO_CAPACITY_ROWS_IN_SNAPSHOT" for x in classified["decisions"])
+    assert classified["status"] == "NEEDS_ATTENTION_ZERO_EXECUTABLE_PLAN"
+    assert classified["operational_attention_reason_code"] == "NO_CAPACITY_ROWS_IN_SNAPSHOT"
+
+
 def test_dispatch_status_does_not_claim_child_run_from_accepted_request():
     from automation.planned_capacity_fast_dispatch import classify_dispatch_status
 
