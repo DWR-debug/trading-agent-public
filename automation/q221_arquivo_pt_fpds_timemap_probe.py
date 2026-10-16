@@ -30,7 +30,8 @@ BOUNDARY_FP = "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4"
 PRE_EVENT_FP = "7b969cc7dd0a5c5e94050c9e99b797e59b77d20712e51661b1b281fb170dd953"
 PRE_EVENT_ANALYSIS_FP = "75a9818d18436dbf24beb877b00431c0c46015cad4a35efc66a07e2d9c69832f"
 PRIOR_FPDS_BLOB_SHA1 = "af5cb7aaeec92b162ad69817df4917687cdfcf56"
-PRIOR_FPDS_FP = "77966d35322e4b4a2fb4d67da27adb43a3ad9f3f854242a83696899709983c8f"
+PRIOR_FPDS_FP = "f041edf725388a47aeb1ec96076bfbffcdc8946acc87fb4c8cb515f8c3c03817"
+PRIOR_FPDS_CAPTURE_FP = "77966d35322e4b4a2fb4d67da27adb43a3ad9f3f854242a83696899709983c8f"
 TIME_MAP_BASE_URL = "https://arquivo.pt/wayback/timemap/json/"
 ALLOWED_ARCHIVE_HOST = "arquivo.pt"
 MAX_REQUESTS = 4
@@ -218,6 +219,7 @@ def validate_preflight(repo_root: Path, request_path: Path, prereg_path: Path) -
         ("pre_event_feasibility_receipt_fingerprint", PRE_EVENT_FP),
         ("prior_fpds_probe_run_id", 38712516839),
         ("prior_fpds_probe_receipt_fingerprint", PRIOR_FPDS_FP),
+        ("prior_fpds_capture_receipt_fingerprint", PRIOR_FPDS_CAPTURE_FP),
     )
     for key, expected in pins:
         if frozen.get(key) != expected:
@@ -303,6 +305,8 @@ def validate_preflight(repo_root: Path, request_path: Path, prereg_path: Path) -
         raise ProbeError("Q221_ARQUIVO_PRIOR_FPDS_BLOB_SHA_MISMATCH")
     if prior.get("receipt_fingerprint") != PRIOR_FPDS_FP or canonical_fingerprint(prior) != PRIOR_FPDS_FP:
         raise ProbeError("Q221_ARQUIVO_PRIOR_FPDS_RECEIPT_FINGERPRINT_MISMATCH")
+    if prior.get("cross_arch_validation", {}).get("capture_receipt_fingerprint") != PRIOR_FPDS_CAPTURE_FP:
+        raise ProbeError("Q221_ARQUIVO_PRIOR_FPDS_CAPTURE_FINGERPRINT_MISMATCH")
     prior_rows = prior.get("observations")
     if not isinstance(prior_rows, list) or len(prior_rows) != MAX_REQUESTS:
         raise ProbeError("Q221_ARQUIVO_PRIOR_FPDS_ROW_COUNT_MISMATCH")
@@ -367,7 +371,7 @@ def parse_timemap_jsonl(body: bytes, expected_url: str) -> list[dict[str, Any]]:
             "capture_timestamp_utc": parse_timestamp(timestamp),
             "indexed_original_url": original,
             "exact_original_url_match": original == expected_url,
-            "source_http_status": str(item.get("status") or item.get("http_status") or ""),
+            "source_http_status": str(item.get("status") or item.get("statuscode") or item.get("http_status") or ""),
             "mime": str(item.get("mime") or item.get("mimetype") or item.get("mime-detected") or "")[:160],
             "digest": str(item.get("digest") or "")[:160],
             "record_length": str(item.get("length") or "")[:40],
@@ -579,7 +583,10 @@ def capture(repo_root: Path, request_path: Path, prereg_path: Path, run_id: int 
     observations = []
     for record in frozen["records"]:
         try:
-            observations.append(fetch_timemap(record["source_url"], budget))
+            row = fetch_timemap(record["source_url"], budget)
+            row["record_id"] = record["record_id"]
+            row["transaction_key"] = record["transaction_key"]
+            observations.append(row)
         except Exception as exc:
             observations.append({
                 "record_id": record["record_id"],
@@ -618,6 +625,7 @@ def capture(repo_root: Path, request_path: Path, prereg_path: Path, run_id: int 
             "pre_event_receipt_fingerprint": PRE_EVENT_FP,
             "prior_fpds_blob_sha1": PRIOR_FPDS_BLOB_SHA1,
             "prior_fpds_receipt_fingerprint": PRIOR_FPDS_FP,
+            "prior_fpds_capture_receipt_fingerprint": PRIOR_FPDS_CAPTURE_FP,
             "record_count": len(frozen["records"]),
         },
         "source_contract": {
