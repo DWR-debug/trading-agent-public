@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_dod_097_cdx_mimetype_diagnostic",
+  "candidate_id": "Q221",
+  "generated_at_utc": "2026-10-16T05:19:14.228824+00:00",
+  "source_of_truth": "DWR-debug/trading-agent-public",
+  "status": "Q221_DOD_097_CDX_MIMETYPE_DIAGNOSTIC_COMPLETE",
+  "request": {
+    "request_sequence": "2026-10-16T05:15:19Z",
+    "preregistration_path": "research/preregistrations/q221_dod_097_cdx_mimetype_diagnostic_r5_2026_10_16.json",
+    "request_marker_path": "research/run_requests/q221_dod_097_cdx_mimetype_diagnostic_r5.trigger",
+    "endpoint": "https://web.archive.org/cdx/search/cdx",
+    "fields": [
+      "timestamp",
+      "original",
+      "mimetype",
+      "statuscode",
+      "digest",
+      "length"
+    ],
+    "request_cap": 1,
+    "timeout_seconds": 60,
+    "archive_replay_requests_allowed": false,
+    "archive_payload_download_allowed": false
+  },
+  "frozen_source_manifest": {
+    "path": "research/evidence/q221_historical_public_boundary_latest.json",
+    "git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+    "expected_transaction_count": 348,
+    "git_blob_sha1_verified": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f"
+  },
+  "target_archive": {
+    "filename": "FY2025_097_Contracts_Full_20250106.zip",
+    "original_url": "https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+    "wayback_capture_timestamp": "20250128184322",
+    "capture_timestamp_utc": "2025-01-28T18:43:22Z",
+    "cdx_sha1_base32": "IYPLEC2VXYNMEA2CUHSSPVKPEJRKBJQB",
+    "cdx_length_bytes": 13605284
+  },
+  "prior_r3_evidence": {
+    "workflow_run_id": 38798769065,
+    "receipt_git_blob_sha1": "91e45f71a2b31721375f8fa0812ebac038fc8d1f",
+    "receipt_fingerprint": "895a6d4e343cb535866df81ce06d6d824e1d05b1c7af114aa3befeb5c5473a5b",
+    "status": "Q221_DOD_097_ARCHIVE_REPLAY_LENGTH_MISMATCH",
+    "archive_replay_bytes": 13697800,
+    "pinned_cdx_length_bytes": 13605284,
+    "archive_replay_sha256": "e9e952812886ffddd5d50ef6b712e58c804d5e01034a491f1f43432ef565c1bc",
+    "cdx_response_sha256": "ba2a8c37c9b7751964fd8f6304d7fa666d8b445c380b262c8da9afa8323f1ba6"
+  },
+  "target_count_from_frozen_manifest": 28,
+  "cdx_inventory": {
+    "http_status": 200,
+    "content_type": "application/json",
+    "content_length_header": "",
+    "content_encoding": "",
+    "transfer_encoding": "chunked",
+    "response_bytes": 3701,
+    "response_sha256": "79f8c1542cc4605a374d59189fafc11c878f93ddd82cfd5d7134c1f919120770",
+    "record_count": 20,
+    "unique_original_url_count": 20,
+    "target_capture": {
+      "timestamp": "20250128184322",
+      "original": "https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+      "mimetype": "application/zip",
+      "statuscode": "200",
+      "digest": "IYPLEC2VXYNMEA2CUHSSPVKPEJRKBJQB",
+      "length": "13605284"
+    },
+    "target_capture_verified": true,
+    "mimetype_class": "ordinary_cdx_mimetype",
+    "scope": "same bounded CDX prefix/filter scope as R3; metadata only, no archive replay"
+  },
+  "source_probe": {
+    "request_profile": "R5_CDX_METADATA_ONLY",
+    "request_count": 1,
+    "response_bytes": 3701,
+    "responses": [
+      {
+        "url": "https://web.archive.org/cdx/search/cdx?url=files.usaspending.gov%2Faward_data_archive%2F&matchType=prefix&output=json&filter=statuscode%3A200&filter=original%3A.%2A097.%2AContracts.%2Azip&fl=timestamp%2Coriginal%2Cmimetype%2Cstatuscode%2Cdigest%2Clength&from=2019&to=2026&limit=100&gzip=false",
+        "http_status": 200,
+        "content_type": "application/json",
+        "content_length_header": "",
+        "content_encoding": "",
+        "transfer_encoding": "chunked",
+        "response_bytes": 3701,
+        "response_sha256": "79f8c1542cc4605a374d59189fafc11c878f93ddd82cfd5d7134c1f919120770"
+      }
+    ],
+    "transport_errors": [],
+    "archive_replay_request_count": 0,
+    "archive_payload_downloaded": false
+  },
+  "interpretation": {
+    "diagnostic_only": true,
+    "mimetype_interprets_cdx_metadata_only": true,
+    "archive_schema_examined": false,
+    "transaction_row_presence_examined": false,
+    "first_public_observation_time_proven": false,
+    "event_level_public_boundary_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "positive_or_negative_historical_row_result_available": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false,
+    "archive_replay_allowed": false,
+    "archive_payload_persisted": false,
+    "archive_schema_examined": false,
+    "transaction_row_presence_examined": false,
+    "source_population_changed": false,
+    "census_restarted": false,
+    "alternate_source_used": false,
+    "automatic_retry": false,
+    "source_requests_made": 1
+  },
+  "errors": [],
+  "next_gate": "No transaction-row or historical public-clock gate is changed by this metadata diagnostic.",
+  "receipt_fingerprint": "a29529db8730d85c3c72a2b773033faa39653ef62a9d69703ce5a60433a9fc9d"
+}
