@@ -52,7 +52,7 @@ class DiagnosticError(ValueError):
 
 
 def git_blob_sha1(raw: bytes) -> str:
-    header = b"blob " + str(len(raw)).encode("ascii") + b"\\0"
+    header = b"blob " + str(len(raw)).encode("ascii") + b"\0"
     return hashlib.sha1(header + raw).hexdigest()
 
 
@@ -275,7 +275,7 @@ def run_diagnostic(root: Path, output_path: Path, fetcher=None) -> dict:
             "response_body_read_bytes": 0, "archive_payload_body_read": False, "archive_payload_persisted": False})
         receipt["receipt_fingerprint"] = canonical_fingerprint(receipt)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False, allow_nan=False) + "\\n", encoding="utf-8")
+        output_path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
     return receipt
 
 
