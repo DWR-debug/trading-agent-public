@@ -337,8 +337,19 @@ def parse_cdx_body(raw: bytes, expected_original_url: str) -> dict[str, Any]:
         payload = json.loads(raw.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ProbeError("Q221_WAYBACK_CDX_SCHEMA_INVALID", type(exc).__name__) from exc
-    if not isinstance(payload, list) or not payload:
-        raise ProbeError("Q221_WAYBACK_CDX_SCHEMA_INCOMPLETE", "missing JSON field header")
+    if not isinstance(payload, list):
+        raise ProbeError("Q221_WAYBACK_CDX_SCHEMA_INCOMPLETE", "expected JSON array")
+    # The upstream JsonWriter emits its header only when at least one CDX row is written.
+    # With zero rows, the writer emits an empty JSON array followed by a newline.
+    if not payload:
+        return {
+            "query_completed": True,
+            "status": "CDX_METADATA_RESPONSE_VALID_EMPTY",
+            "capture_count": 0,
+            "exact_original_url_capture_count": 0,
+            "exact_original_url_http_200_capture_count": 0,
+            "captures": [],
+        }
     if payload[0] != list(OUTPUT_FIELDS):
         raise ProbeError("Q221_WAYBACK_CDX_FIELD_HEADER_MISMATCH")
     rows = payload[1:]
