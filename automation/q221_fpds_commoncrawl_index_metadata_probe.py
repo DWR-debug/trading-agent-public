@@ -405,6 +405,9 @@ def parse_jsonl_body(raw: bytes, record: dict[str, Any]) -> dict[str, Any]:
             raise ProbeError("Q221_COMMONCRAWL_NONEXACT_URL_RETURNED:" + str(index))
         if not isinstance(item["timestamp"], str) or not re.fullmatch(r"\d{14}", item["timestamp"]):
             raise ProbeError("Q221_COMMONCRAWL_TIMESTAMP_INVALID:" + str(index))
+        capture_date = item["timestamp"][:8]
+        if not record["crawl_start_date"].replace("-", "") <= capture_date <= record["crawl_end_date"].replace("-", ""):
+            raise ProbeError("Q221_COMMONCRAWL_TIMESTAMP_OUTSIDE_COLLECTION_WINDOW:" + str(index))
         if not isinstance(item["status"], str) or not re.fullmatch(r"\d{3}", item["status"]):
             raise ProbeError("Q221_COMMONCRAWL_STATUS_INVALID:" + str(index))
         if not isinstance(item["mime"], str) or not item["mime"] or not isinstance(item["digest"], str):
