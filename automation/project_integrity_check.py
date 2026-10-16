@@ -392,6 +392,7 @@ REQUIRED_FILES = (
     ROOT / "docs" / "research_design" / "Q221_SAM_PUBLIC_DELTA_SOURCE_FEASIBILITY_ADJUDICATION_R1_2026-10-16.md",
     ROOT / "docs" / "research_design" / "Q221_ARQUIVO_PT_FPDS_TIMEMAP_PROBE_2026-10-16.md",
     ROOT / "docs" / "research_design" / "Q221_ARQUIVO_PT_FPDS_TIMEMAP_PROBE_R2_2026-10-16.md",
+    ROOT / "docs" / "research_design" / "Q221_ARQUIVO_PT_FPDS_TIMEMAP_R2_RESULT_2026-10-16.md",
     ROOT / ".github" / "workflows" / "q221-arquivo-pt-fpds-timemap-probe.yml",
     ROOT / ".github" / "workflows" / "q221-arquivo-pt-fpds-timemap-probe-r2.yml",
     ROOT / "automation" / "q221_arquivo_pt_fpds_timemap_probe.py",
