@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_arquivo_pt_fpds_timemap_probe_preregistration",
+  "candidate_id": "Q221",
+  "preregistered_at_utc": "2026-10-16T07:00:06Z",
+  "study_mode": "BOUNDED_ARCHIVE_METADATA_FEASIBILITY",
+  "selection_disclosure": "Reuse exactly the four purposively selected transaction rows from the frozen Q221 pre-event identity feasibility sample and the completed FPDS Atom probe. This sample is not random and supports no prevalence inference.",
+  "frozen_inputs": {
+    "boundary_path": "research/evidence/q221_historical_public_boundary_latest.json",
+    "boundary_git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "boundary_receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+    "pre_event_feasibility_path": "research/evidence/q221_pre_event_parent_identity_feasibility_latest.json",
+    "pre_event_feasibility_receipt_fingerprint": "7b969cc7dd0a5c5e94050c9e99b797e59b77d20712e51661b1b281fb170dd953",
+    "prior_fpds_probe_run_id": 38712516839,
+    "prior_fpds_probe_receipt_fingerprint": "f041edf725388a47aeb1ec96076bfbffcdc8946acc87fb4c8cb515f8c3c03817",
+    "prior_fpds_capture_receipt_fingerprint": "77966d35322e4b4a2fb4d67da27adb43a3ad9f3f854242a83696899709983c8f",
+    "r1_failed_attempt_receipt_path": "research/evidence/q221_arquivo_pt_fpds_timemap_attempt_38863558147.json",
+    "r1_failed_attempt_receipt_git_blob_sha1": "049c75c80b267434b62c654c4fa9a9d8bc3f4068",
+    "r1_failed_attempt_receipt_fingerprint": "1b983784ea7b8d2d496021560b324195e9c219eafc9c538e7be32b232599aaae"
+  },
+  "official_archive": {
+    "name": "Arquivo.pt Memento TimeMap",
+    "documentation_url": "https://dados.gov.pt/en/datasets/memento-api-url-search",
+    "time_map_template": "https://arquivo.pt/wayback/timemap/json/{fully-percent-encoded-exact-original-url}",
+    "response_format": "newline-delimited JSON metadata",
+    "access_mode": "archive metadata only; never request an archived replay URL or an origin URL",
+    "source_url_set": "The exact four original FPDS Atom URLs already fixed in the prior receipt; no query widening and no new transaction keys."
+  },
+  "records": [
+    {
+      "record_id": "CACI_2019_PRE_EVENT",
+      "transaction_key": "FA875018C0180|P00003|2019-01-03|28eee911-76af-7147-f760-4ec5f90bec2d-C|N3PBJAVNKF61",
+      "piid": "FA875018C0180",
+      "modification_number": "P00003",
+      "action_date": "2019-01-03",
+      "recipient_uei": "N3PBJAVNKF61",
+      "recipient_id": "28eee911-76af-7147-f760-4ec5f90bec2d-C",
+      "accepted_legal_names": [
+        "CACI, INC. - FEDERAL"
+      ],
+      "pre_event_accession": "0001564590-18-022021",
+      "identifier_regime_at_action": "DUNS_AUTHORITATIVE_UEI_NOT_YET_AUTHORITATIVE",
+      "source_url": "https://www.fpds.gov/dbsight/FEEDS/ATOM?FEEDNAME=PUBLIC&q=PIID%3A%22FA875018C0180%22"
+    },
+    {
+      "record_id": "BOOZ_ALLEN_2020_PRE_EVENT",
+      "transaction_key": "FA807520F0004|0|2020-01-02|ffca72e5-fba2-798a-6969-2a6c45e9f985-C|JCBMLGPE6Z71",
+      "piid": "FA807520F0004",
+      "modification_number": "0",
+      "action_date": "2020-01-02",
+      "recipient_uei": "JCBMLGPE6Z71",
+      "recipient_id": "ffca72e5-fba2-798a-6969-2a6c45e9f985-C",
+      "accepted_legal_names": [
+        "BOOZ ALLEN HAMILTON INC",
+        "Booz Allen Hamilton Inc."
+      ],
+      "pre_event_accession": "0001443646-18-000100",
+      "identifier_regime_at_action": "DUNS_AUTHORITATIVE_UEI_NOT_YET_AUTHORITATIVE",
+      "source_url": "https://www.fpds.gov/dbsight/FEEDS/ATOM?FEEDNAME=PUBLIC&q=PIID%3A%22FA807520F0004%22"
+    },
+    {
+      "record_id": "OSI_AS_E_2023_PRE_EVENT",
+      "transaction_key": "70RWMD23C00000001|0|2023-01-03|f857dc49-8bdd-480e-25fb-f2be8c9d65c2-C|CNB9EF8VHML3",
+      "piid": "70RWMD23C00000001",
+      "modification_number": "0",
+      "action_date": "2023-01-03",
+      "recipient_uei": "CNB9EF8VHML3",
+      "recipient_id": "f857dc49-8bdd-480e-25fb-f2be8c9d65c2-C",
+      "accepted_legal_names": [
+        "AMERICAN SCIENCE & ENGINEERING INC",
+        "American Science and Engineering, Inc."
+      ],
+      "pre_event_accession": "0001104659-22-092999",
+      "identifier_regime_at_action": "UEI_AUTHORITATIVE",
+      "source_url": "https://www.fpds.gov/dbsight/FEEDS/ATOM?FEEDNAME=PUBLIC&q=PIID%3A%2270RWMD23C00000001%22"
+    },
+    {
+      "record_id": "NORTHROP_2024_PRE_EVENT",
+      "transaction_key": "FA865124FB001|0|2024-01-02|c19bef58-16e3-f32b-b699-25b3078161f8-C|FVSEZFPCQ316",
+      "piid": "FA865124FB001",
+      "modification_number": "0",
+      "action_date": "2024-01-02",
+      "recipient_uei": "FVSEZFPCQ316",
+      "recipient_id": "c19bef58-16e3-f32b-b699-25b3078161f8-C",
+      "accepted_legal_names": [
+        "NORTHROP GRUMMAN SYSTEMS CORPORATION",
+        "Northrop Grumman Systems Corporation"
+      ],
+      "pre_event_accession": "0001133421-23-000006",
+      "identifier_regime_at_action": "UEI_AUTHORITATIVE",
+      "source_url": "https://www.fpds.gov/dbsight/FEEDS/ATOM?FEEDNAME=PUBLIC&q=PIID%3A%22FA865124FB001%22"
+    }
+  ],
+  "execution_limits": {
+    "exact_archive_url_queries": 4,
+    "requests_per_fixed_original_url": 1,
+    "automatic_retries": 0,
+    "follow_redirects": false,
+    "request_timeout_seconds": 35,
+    "minimum_gap_between_requests_seconds": 1,
+    "max_response_bytes_each": 500000,
+    "max_total_response_bytes": 2000000,
+    "max_timemap_rows_per_url": 500,
+    "archived_replay_requests": 0,
+    "direct_fpds_requests": 0,
+    "sam_api_requests": 0,
+    "usaspending_requests": 0,
+    "sec_requests": 0,
+    "commoncrawl_index_requests": 0,
+    "wayback_archive_requests": 0,
+    "target_key_expansion": false,
+    "archive_payloads_downloaded": false,
+    "response_bodies_persisted": false,
+    "recipient_identity_mappings_added": false,
+    "frozen_transaction_rows_modified": false,
+    "source_hashes_modified": false
+  },
+  "decision_rules": {
+    "metadata_complete": "All four TimeMap requests return HTTP 200 and parse according to the fixed NDJSON contract, including a valid zero-row response.",
+    "metadata_incomplete": "Any transport, HTTP, schema, or response-limit failure; no retry is allowed.",
+    "positive_capture_metadata": "An exact-original-URL capture with an archive timestamp and source HTTP status is a candidate for future separately preregistered replay inspection; metadata alone does not prove an exact transaction tuple exists in the archived payload.",
+    "negative_or_empty_result": "Applies only to the exact URL in this archive index; it does not prove historical absence from FPDS, SAM.gov, USAspending, or every public channel.",
+    "gate_policy": "Historical first-public observation, event-level public boundary, pre-event recipient-to-issuer mapping, scientific evidence, and every performance or execution gate remain false."
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "protocol_revision": "R2",
+  "revision_reason": "R1 stopped in its offline-test setup before preflight: pytest was absent, a fail-closed receipt proved zero archive/origin requests, and no source access occurred. R2 is separately registered with a distinct one-shot workflow and marker; pytest installation now precedes tests and preflight. It does not repeat any source request from R1 because R1 made zero.",
+  "retry_lineage": {
+    "record_type": "q221_arquivo_pt_fpds_r1_failed_before_source_requests",
+    "receipt_path": "research/evidence/q221_arquivo_pt_fpds_timemap_attempt_38863558147.json",
+    "receipt_git_blob_sha1": "049c75c80b267434b62c654c4fa9a9d8bc3f4068",
+    "receipt_fingerprint": "1b983784ea7b8d2d496021560b324195e9c219eafc9c538e7be32b232599aaae",
+    "workflow_run_id": 38863558147,
+    "prior_archive_request_count": 0,
+    "prior_archive_request_count_known": true,
+    "prior_origin_requests": 0,
+    "prior_archived_replay_requests": 0,
+    "reason": "R1 failed before preflight because pytest was unavailable in the workflow environment; its immutable receipt records PREFLIGHT_FAILED_NO_SOURCE_REQUESTS.",
+    "authorized_action": "A distinct R2 preregistration and distinct one-shot workflow may proceed to preflight; source requests occur only if all frozen pins and the R1 zero-request receipt are valid."
+  }
+}
