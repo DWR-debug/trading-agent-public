@@ -494,7 +494,7 @@ def fetch_timemap(source_url: str, budget: ResponseBudget) -> dict[str, Any]:
         # a potentially truncated TimeMap as complete metadata.
         observation.update({"status": "RESPONSE_LIMIT_REACHED_OR_TRUNCATED", "query_completed": False})
         return observation
-    if body.strip() and "json" not in content_type.lower() and "ndjson" not in content_type.lower():
+    if "json" not in content_type.lower() and "ndjson" not in content_type.lower():
         observation.update({"status": "UNEXPECTED_CONTENT_TYPE", "query_completed": False})
         return observation
     try:
