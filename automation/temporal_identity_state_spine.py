@@ -148,6 +148,12 @@ def compile_spine(contract:dict, relation:dict, specs:dict, registry:dict)->dict
         },
         "registry_source_count":len(registry.get("source_lattice",[])),
     }
+    # Separate the semantic result from the volatile runtime timestamp.
+    # content_fingerprint below still seals the full emitted record, including
+    # generated_at_utc and this stable analysis_fingerprint.
+    analysis_payload = dict(out)
+    analysis_payload.pop("generated_at_utc", None)
+    out["analysis_fingerprint"] = sha256_json(analysis_payload)
     out["content_fingerprint"]=sha256_json(out)
     return out
 
