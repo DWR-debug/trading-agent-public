@@ -220,6 +220,7 @@ def validate_preflight(repo_root: Path, request_path: Path, prereg_path: Path) -
         "prior_arquivo_receipt_path": PRIOR_ARCHIVE_RECEIPT_PATH,
         "prior_arquivo_receipt_git_blob_sha1": PRIOR_ARCHIVE_RECEIPT_BLOB_SHA1,
         "prior_arquivo_receipt_fingerprint": PRIOR_ARCHIVE_RECEIPT_FINGERPRINT,
+        "prior_arquivo_disposition": "METADATA_ROUTE_UNAVAILABLE_FOR_FROZEN_URLS; NO_ARCHIVE_ABSENCE_INFERENCE",
         "prior_arquivo_workflow_run_id": 38869362949,
         "transaction_key_count": 4,
     }
