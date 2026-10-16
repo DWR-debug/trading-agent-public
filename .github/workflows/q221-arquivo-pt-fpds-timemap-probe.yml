@@ -24,7 +24,7 @@ jobs:
       - name: Checkout the exact request-marker commit
         uses: actions/checkout@v5
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
           persist-credentials: false
 
@@ -35,8 +35,8 @@ jobs:
 
       - name: Refuse repeated use of this one-shot source probe
         env:
-          GH_TOKEN: \${{ github.token }}
-          CURRENT_RUN_ID: \${{ github.run_id }}
+          GH_TOKEN: ${{ github.token }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
         shell: bash
         run: |
           set -euo pipefail
@@ -78,9 +78,9 @@ jobs:
       - name: Write a fail-closed receipt if capture did not persist one
         if: always()
         env:
-          PREFLIGHT_OUTCOME: \${{ steps.preflight.outcome }}
-          RECEIPT_PATH: \${{ runner.temp }}/q221-arquivo-timemap-receipt.json
-          RUN_ID: \${{ github.run_id }}
+          PREFLIGHT_OUTCOME: ${{ steps.preflight.outcome }}
+          RECEIPT_PATH: ${{ runner.temp }}/q221-arquivo-timemap-receipt.json
+          RUN_ID: ${{ github.run_id }}
         shell: bash
         run: |
           set -euo pipefail
@@ -116,22 +116,22 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q221-arquivo-pt-fpds-timemap-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q221-arquivo-pt-fpds-timemap-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            \${{ runner.temp }}/q221-arquivo-timemap-receipt.json
-            \${{ runner.temp }}/q221-arquivo-timemap-validation.json
+            ${{ runner.temp }}/q221-arquivo-timemap-receipt.json
+            ${{ runner.temp }}/q221-arquivo-timemap-validation.json
           if-no-files-found: error
           retention-days: 90
 
       - name: Persist immutable attempt receipt and latest pointer on master
         if: always() && steps.preflight.outcome != 'cancelled'
         env:
-          GH_TOKEN: \${{ github.token }}
-          SOURCE_RUN_ID: \${{ github.run_id }}
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ github.run_id }}
         shell: bash
         run: |
           set -euo pipefail
-          attempt="research/evidence/q221_arquivo_pt_fpds_timemap_attempt_\${SOURCE_RUN_ID}.json"
+          attempt="research/evidence/q221_arquivo_pt_fpds_timemap_attempt_${SOURCE_RUN_ID}.json"
           latest="research/evidence/q221_arquivo_pt_fpds_timemap_latest.json"
           mkdir -p research/evidence
           test ! -e "$attempt"
@@ -140,7 +140,7 @@ jobs:
           git fetch origin master --quiet
           base_sha="$(git rev-parse origin/master)"
           python automation/github_contents_publish.py \
-            --repository "\${GITHUB_REPOSITORY}" \
+            --repository "${GITHUB_REPOSITORY}" \
             --branch master \
             --base-sha "$base_sha" \
             --file "$attempt=$attempt" \
@@ -149,9 +149,9 @@ jobs:
       - name: Preserve fail-closed conclusion if any required step failed
         if: always()
         env:
-          PREFLIGHT_OUTCOME: \${{ steps.preflight.outcome }}
-          CAPTURE_OUTCOME: \${{ steps.capture.outcome }}
-          VERIFY_OUTCOME: \${{ steps.verify.outcome }}
+          PREFLIGHT_OUTCOME: ${{ steps.preflight.outcome }}
+          CAPTURE_OUTCOME: ${{ steps.capture.outcome }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
         shell: bash
         run: |
           set -euo pipefail
