@@ -391,6 +391,7 @@ REQUIRED_FILES = (
     ROOT / "tests" / "test_q221_dod_097_wayback_replay_head_r6.py",
 
     ROOT / "docs" / "research_design" / "Q221_DOD_097_REPLAY_LENGTH_DISCREPANCY_ADJUDICATION_R1_2026-10-16.md",
+    ROOT / "docs" / "research_design" / "GLOBAL_ASSET_PRICING_EVIDENCE_AND_NORTH_STAR_DERIVATIONS_2026-10-16.md",
     ROOT / "docs" / "research_design" / "Q104_I19_CIK_ROLE_LINEAGE_DIAGNOSTIC_RESULT_2026-10-12.md",
     ROOT / "docs" / "research_design" / "Q221_SAM_PUBLIC_DELTA_SOURCE_FEASIBILITY_ADJUDICATION_R1_2026-10-16.md",
     ROOT / ".github" / "workflows" / "q221-sam-api-credential-preflight.yml",
