@@ -190,12 +190,9 @@ def test_r5_workflows_and_sync_keep_replay_and_scientific_gates_closed():
     assert "python -m automation.q221_dod_097_wayback_cdx_mimetype_diagnostic_r5" in wf
     assert (ROOT / "automation" / "q221_dod_097_wayback_cdx_mimetype_diagnostic_r5.py").is_file()
     assert "python -m automation.q221_dod_097_cdx_mimetype_diagnostic" not in wf
-    assert "python -m automation.q221_dod_097_wayback_cdx_mimetype_diagnostic" in wf
-    assert (ROOT / "automation" / "q221_dod_097_wayback_cdx_mimetype_diagnostic_r5.py").is_file()
-    assert "python -m automation.q221_dod_097_cdx_mimetype_diagnostic" not in wf
     sync = (ROOT / ".github/workflows/q221-dod-097-cdx-mimetype-diagnostic-r5-sync.yml").read_text(encoding="utf-8")
     assert "q221-dod-097-cdx-mimetype-diagnostic-r5.json" in sync
-    assert "q221_dod_097_cdx_mimetype_diagnostic_attempt_" in sync
+    assert "q221_dod_097_cdx_mimetype_diagnostic_r5_attempt_" in sync
     assert "github.event.workflow_run.head_branch == 'master'" in sync
     assert 'run_id = os.environ["SOURCE_RUN_ID"]' in sync
     assert 'attempt=evidence / f"q221_dod_097_cdx_mimetype_diagnostic_r5_attempt_{run_id}.json"' in sync
