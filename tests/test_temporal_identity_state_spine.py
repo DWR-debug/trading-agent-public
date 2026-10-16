@@ -1,4 +1,4 @@
-from automation.temporal_identity_state_spine import compile_spine
+from automation.temporal_identity_state_spine import compile_spine, sha256_json
 
 def base():
     return {
@@ -105,3 +105,23 @@ def test_state_transition_rejects_noop():
 def test_historical_nodes_are_reported_but_do_not_fail_current_candidate_integrity():
     out=compile_spine(base(),relation(),specs(),registry())
     assert out["graph_integrity"]["current_candidate_reference_integrity_ok"] is True
+
+
+
+def test_analysis_fingerprint_is_stable_and_content_fingerprint_seals_full_output():
+    first = compile_spine(base(), relation(), specs(), registry())
+    second = compile_spine(base(), relation(), specs(), registry())
+
+    assert first["analysis_fingerprint"] == second["analysis_fingerprint"]
+
+    analysis_payload = dict(first)
+    analysis_payload.pop("generated_at_utc")
+    analysis_payload.pop("analysis_fingerprint")
+    analysis_payload.pop("content_fingerprint")
+    assert first["analysis_fingerprint"] == sha256_json(analysis_payload)
+
+    content_payload = dict(first)
+    content_payload.pop("content_fingerprint")
+    assert first["content_fingerprint"] == sha256_json(content_payload)
+    assert first["safety"]["PAPER_ONLY"] is True
+    assert first["safety"]["LIVE_TRADING_ENABLED"] is False
