@@ -295,6 +295,7 @@ ACTIVE_WORKFLOWS = {
     "q220-textblock-mismatch-diagnostic.yml",
     "q221-historical-award-public-boundary.yml",
     "q221-monthly-archive-inventory-probe.yml",
+    "q221-sam-api-credential-preflight.yml",
     "q221-arquivo-pt-fpds-timemap-probe.yml",
     "q221-arquivo-pt-fpds-timemap-probe-r2.yml",
     "groq-free-adversarial-worker.yml",
