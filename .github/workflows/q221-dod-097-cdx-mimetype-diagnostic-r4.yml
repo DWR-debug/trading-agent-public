@@ -51,7 +51,7 @@ jobs:
 
       - name: Validate pinned inputs offline before network access
         run: >-
-          python -m automation.q221_dod_097_cdx_mimetype_diagnostic
+          python -m automation.q221_dod_097_wayback_cdx_mimetype_diagnostic
           --repo-root .
           --prereg research/preregistrations/q221_dod_097_cdx_mimetype_diagnostic_r4_2026_10_15.json
           --request research/run_requests/q221_dod_097_cdx_mimetype_diagnostic_r4.trigger
@@ -64,7 +64,7 @@ jobs:
         shell: bash
         run: |
           set +e
-          python -m automation.q221_dod_097_cdx_mimetype_diagnostic \
+          python -m automation.q221_dod_097_wayback_cdx_mimetype_diagnostic \
             --repo-root . \
             --prereg research/preregistrations/q221_dod_097_cdx_mimetype_diagnostic_r4_2026_10_15.json \
             --request research/run_requests/q221_dod_097_cdx_mimetype_diagnostic_r4.trigger \
