@@ -399,10 +399,8 @@ class ResponseBudget:
 
 
 def _read_limited(stream: Any, limit: int) -> bytes:
-    body = stream.read(limit + 1)
-    if len(body) > limit:
-        raise ProbeError("Q221_ARQUIVO_RESPONSE_OVER_LIMIT")
-    return body
+    """Read at most the remaining byte budget; never probe beyond the cap."""
+    return stream.read(limit)
 
 
 def fetch_timemap(source_url: str, budget: ResponseBudget) -> dict[str, Any]:
@@ -446,6 +444,20 @@ def fetch_timemap(source_url: str, budget: ResponseBudget) -> dict[str, Any]:
         with opener.open(request, timeout=TIMEOUT_SECONDS) as response:
             status = int(getattr(response, "status", 200))
             content_type = str(response.headers.get("Content-Type", ""))
+            declared_length = str(response.headers.get("Content-Length", ""))
+            try:
+                declared_bytes = int(declared_length) if declared_length else None
+            except ValueError:
+                declared_bytes = None
+            if declared_bytes is not None and declared_bytes > limit:
+                observation.update({
+                    "http_status": status,
+                    "content_type": content_type,
+                    "response_expected_bytes": declared_bytes,
+                    "status": "RESPONSE_OVER_LIMIT",
+                    "query_completed": False,
+                })
+                return observation
             body = _read_limited(response, limit)
     except urllib.error.HTTPError as exc:
         # No redirect target is followed, and error bodies are not fetched/persisted.
@@ -477,8 +489,10 @@ def fetch_timemap(source_url: str, budget: ResponseBudget) -> dict[str, Any]:
     if status != 200:
         observation["status"] = f"HTTP_{status}"
         return observation
-    if len(body) > limit:
-        observation.update({"status": "RESPONSE_OVER_LIMIT", "query_completed": False})
+    if len(body) == limit:
+        # At the exact limit the archive may have more bytes, so do not parse
+        # a potentially truncated TimeMap as complete metadata.
+        observation.update({"status": "RESPONSE_LIMIT_REACHED_OR_TRUNCATED", "query_completed": False})
         return observation
     if body.strip() and "json" not in content_type.lower() and "ndjson" not in content_type.lower():
         observation.update({"status": "UNEXPECTED_CONTENT_TYPE", "query_completed": False})
@@ -582,6 +596,8 @@ def capture(repo_root: Path, request_path: Path, prereg_path: Path, run_id: int 
     budget = ResponseBudget()
     observations = []
     for record in frozen["records"]:
+        if budget.used >= MAX_TOTAL_RESPONSE_BYTES:
+            break
         try:
             row = fetch_timemap(record["source_url"], budget)
             row["record_id"] = record["record_id"]
