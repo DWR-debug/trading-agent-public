@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
@@ -6,7 +7,7 @@ import pytest
 
 from automation.q221_fpds_wayback_cdx_metadata_probe import (
     EXPECTED_RECORDS, OUTPUT_FIELDS, REQUEST_PATH, PREREG_PATH, ProbeError,
-    build_cdx_url, build_fallback_receipt, parse_cdx_body, read_marker,
+    build_cdx_url, build_fallback_receipt, git_blob_sha1, parse_cdx_body, read_marker,
     validate_preflight, validate_receipt,
 )
 
@@ -62,7 +63,42 @@ def test_header_only_cdx_response_is_valid_empty_metadata_result():
     assert parsed["exact_original_url_http_200_capture_count"] == 0
 
 
-@pytest.mark.parametrize("body", [b"", b"[]", b'{"captures": []}', b"not-json"])
+def test_empty_json_array_response_is_a_valid_exact_query_with_zero_captures():
+    parsed = parse_cdx_body(b"[]\n", EXPECTED_RECORDS[0]["source_url"])
+    assert parsed["query_completed"] is True
+    assert parsed["status"] == "CDX_METADATA_RESPONSE_VALID_EMPTY"
+    assert parsed["capture_count"] == 0
+    assert parsed["exact_original_url_capture_count"] == 0
+    assert parsed["exact_original_url_http_200_capture_count"] == 0
+
+
+def test_r1_empty_responses_are_adjudicated_from_immutable_receipt_without_network():
+    path = ROOT / "research/evidence/q221_fpds_wayback_cdx_metadata_attempt_38900486932.json"
+    raw = path.read_bytes()
+    assert git_blob_sha1(raw) == "844dd2da40c9ca32adfccb1c2a4d2bcea590af86"
+    receipt = json.loads(raw.decode("utf-8"))
+    validate_receipt(receipt)
+    assert receipt["receipt_fingerprint"] == "84dc038f080aafbbedb5338fa66a77781fe10619fbb1aad6e750345e6d4ca39b"
+    assert receipt["status"] == "Q221_WAYBACK_CDX_METADATA_INCOMPLETE"
+    observations = receipt["observations"]
+    assert len(observations) == 4
+    expected_empty_json_sha256 = hashlib.sha256(b"[]\n").hexdigest()
+    for observation in observations:
+        assert observation["http_status"] == 200
+        assert observation["content_type"] == "application/json"
+        assert observation["response_bytes"] == 3
+        assert observation["response_sha256"] == expected_empty_json_sha256
+        assert observation["response_body_persisted"] is False
+        assert observation["status"] == "Q221_WAYBACK_CDX_SCHEMA_INCOMPLETE"
+    assert receipt["source_contract"]["archive_metadata_requests_attempted"] == 4
+    assert receipt["source_contract"]["archived_replay_requests"] == 0
+    assert receipt["source_contract"]["direct_fpds_requests"] == 0
+    assert receipt["aggregate"]["historical_first_public_observation_proven"] is False
+    assert receipt["aggregate"]["recipient_to_issuer_mapping_frozen"] is False
+
+
+
+@pytest.mark.parametrize("body", [b"", b'{"captures": []}', b"not-json"])
 def test_empty_or_wrong_shape_is_incomplete_not_a_no_hit(body):
     with pytest.raises(ProbeError):
         parse_cdx_body(body, EXPECTED_RECORDS[0]["source_url"])
