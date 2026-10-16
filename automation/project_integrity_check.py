@@ -400,6 +400,7 @@ REQUIRED_FILES = (
     ROOT / "docs" / "research_design" / "Q221_ARQUIVO_PT_FPDS_TIMEMAP_PROBE_R2_2026-10-16.md",
     ROOT / "docs" / "research_design" / "Q221_ARQUIVO_PT_FPDS_TIMEMAP_R2_RESULT_2026-10-16.md",
     ROOT / "docs" / "research_design" / "Q221_FPDS_WAYBACK_CDX_METADATA_PROBE_R1_2026-10-16.md",
+    ROOT / "docs" / "research_design" / "Q221_FPDS_WAYBACK_CDX_EMPTY_RESULT_ADJUDICATION_R1_2026-10-16.md",
     ROOT / ".github" / "workflows" / "q221-fpds-wayback-cdx-metadata-probe.yml",
     ROOT / "automation" / "q221_fpds_wayback_cdx_metadata_probe.py",
     ROOT / "research" / "preregistrations" / "q221_fpds_wayback_cdx_metadata_probe_r1_2026_10_16.json",
