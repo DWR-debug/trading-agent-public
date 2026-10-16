@@ -382,6 +382,7 @@ REQUIRED_FILES = (
     ROOT / "research" / "run_requests" / "q221_dod_097_wayback_replay_head_r6.trigger",
     ROOT / "tests" / "test_q221_dod_097_wayback_replay_head_r6.py",
 
+    ROOT / "docs" / "research_design" / "Q221_DOD_097_REPLAY_LENGTH_DISCREPANCY_ADJUDICATION_R1_2026-10-16.md",
     ROOT / "docs" / "research_design" / "Q221_DOD_097_WAYBACK_ARCHIVE_PRESENCE_R3_2026-10-15.md",
     ROOT / "research" / "preregistrations" / "q221_dod_097_wayback_archive_presence_r3_2026_10_15.json",
     ROOT / "research" / "run_requests" / "q221_dod_097_wayback_archive_presence_r3.trigger",
