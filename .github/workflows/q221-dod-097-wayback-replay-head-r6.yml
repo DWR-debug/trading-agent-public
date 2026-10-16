@@ -1,0 +1,99 @@
+name: Q221 DoD 097 Wayback Replay HEAD Metadata Diagnostic (R6)
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q221_dod_097_wayback_replay_head_r6.trigger"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q221-dod-097-wayback-replay-head-r6
+  cancel-in-progress: false
+
+jobs:
+  diagnostic:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Checkout exact marker commit
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.16"
+
+      - name: Install bounded test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Prevent re-use of this one-shot R6 HEAD request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/workflows/q221-dod-097-wayback-replay-head-r6.yml/runs?branch=master&per_page=100" > "$RUNNER_TEMP/q221-r6-prior-runs.json"
+          jq -e --argjson current "$CURRENT_RUN_ID" '(.total_count < 100) and ([.workflow_runs[]? | select(.id != $current)] | length == 0)' "$RUNNER_TEMP/q221-r6-prior-runs.json" >/dev/null
+          echo "Q221_R6_ONE_SHOT_GUARD=PASS"
+
+      - name: Validate exact prior receipts and frozen pins offline
+        run: >-
+          python -m automation.q221_dod_097_wayback_replay_head_diagnostic_r6
+          --repo-root .
+          --output "$RUNNER_TEMP/q221-r6-head.json"
+          --validate-only
+
+      - name: Capture one HEAD response's allowlisted headers only
+        id: diagnostic
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q221_dod_097_wayback_replay_head_diagnostic_r6 --repo-root . --output "$RUNNER_TEMP/q221-r6-head.json"
+
+      - name: Ensure receipt exists and states its observed request count
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$RUNNER_TEMP/q221-r6-head.json" || { echo "::error::R6 receipt missing; no automatic source retry is authorized."; exit 1; }
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"q221-r6-head.json"
+          r=json.loads(p.read_text(encoding="utf-8"))
+          print("# Q221 R6 HEAD-only metadata diagnostic")
+          print("- Status: "+str(r.get("status")))
+          print("- Receipt fingerprint: "+str(r.get("receipt_fingerprint")))
+          print("- HTTP method: HEAD")
+          print("- Response body bytes read: 0")
+          print("- Archive GET requests: 0")
+          print("- Headers: "+json.dumps(r.get("http_metadata",{}).get("headers",{}),sort_keys=True))
+          print("- Public-boundary / row-presence gate changed: false")
+          PY
+
+      - name: Upload JSON receipt only
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-dod-097-wayback-replay-head-r6-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/q221-r6-head.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Keep failed diagnostics fail-closed
+        if: steps.diagnostic.outcome == 'failure' || steps.diagnostic.outcome == 'cancelled'
+        shell: bash
+        run: |
+          echo "::error::R6 did not produce a successful metadata observation; no gate changes."
+          exit 1
