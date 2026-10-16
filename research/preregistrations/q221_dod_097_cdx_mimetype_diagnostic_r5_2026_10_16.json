@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_dod_097_cdx_mimetype_diagnostic_preregistration",
+  "candidate_id": "Q221",
+  "attempt_number": 5,
+  "registered_at_utc": "2026-10-16T05:15:19Z",
+  "request_sequence": "2026-10-16T05:15:19Z",
+  "design_type": "Separately preregistered one-shot CDX metadata-only diagnostic after R4 failed its offline preflight due to a workflow Python module import-path mismatch before any source request. R5 asks the same frozen MIME metadata question using one bounded CDX GET only. It does not replay the ZIP or inspect transaction rows.",
+  "source_of_truth": "DWR-debug/trading-agent-public",
+  "source_manifest": {
+    "path": "research/evidence/q221_historical_public_boundary_latest.json",
+    "git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+    "receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+    "expected_transaction_count": 348,
+    "frozen_target_count": 28
+  },
+  "target_archive": {
+    "filename": "FY2025_097_Contracts_Full_20250106.zip",
+    "original_url": "https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+    "wayback_capture_timestamp": "20250128184322",
+    "capture_timestamp_utc": "2025-01-28T18:43:22Z",
+    "cdx_sha1_base32": "IYPLEC2VXYNMEA2CUHSSPVKPEJRKBJQB",
+    "cdx_length_bytes": 13605284
+  },
+  "prior_attempt": {
+    "workflow_run_id": 38798769065,
+    "receipt_git_blob_sha1": "91e45f71a2b31721375f8fa0812ebac038fc8d1f",
+    "receipt_fingerprint": "895a6d4e343cb535866df81ce06d6d824e1d05b1c7af114aa3befeb5c5473a5b",
+    "status": "Q221_DOD_097_ARCHIVE_REPLAY_LENGTH_MISMATCH",
+    "cdx_status": 200,
+    "cdx_response_bytes": 3330,
+    "cdx_response_sha256": "ba2a8c37c9b7751964fd8f6304d7fa666d8b445c380b262c8da9afa8323f1ba6",
+    "archive_replay_status": 200,
+    "archive_replay_content_type": "application/zip",
+    "archive_replay_bytes": 13697800,
+    "archive_replay_sha256": "e9e952812886ffddd5d50ef6b712e58c804d5e01034a491f1f43432ef565c1bc",
+    "expected_cdx_length_bytes": 13605284,
+    "outcome": "CDX target capture verified; raw replay rejected on length mismatch before ZIP/CSV inspection. No row result."
+  },
+  "diagnostic_contract": {
+    "question": "What MIME type does CDX assign to the exact pinned target capture, and what basic HTTP response metadata accompanies the bounded CDX response?",
+    "endpoint": "https://web.archive.org/cdx/search/cdx",
+    "same_prefix_and_filters_as_r3": true,
+    "cdx_fields": [
+      "timestamp",
+      "original",
+      "mimetype",
+      "statuscode",
+      "digest",
+      "length"
+    ],
+    "expected_exact_capture_timestamp": "20250128184322",
+    "max_source_requests": 1,
+    "max_cdx_response_bytes": 5000000,
+    "per_request_timeout_seconds": 60,
+    "redirect_policy": "reject",
+    "archive_replay_request_count": 0,
+    "archive_payload_download_allowed": false,
+    "archive_bytes_persisted_or_uploaded": false,
+    "no_retries": true,
+    "no_alternate_sources": true
+  },
+  "recovery": {
+    "prior_workflow_run_id": 38798769065,
+    "prior_receipt_git_blob_sha1": "91e45f71a2b31721375f8fa0812ebac038fc8d1f",
+    "prior_status": "Q221_DOD_097_ARCHIVE_REPLAY_LENGTH_MISMATCH",
+    "prior_cdx_target_capture_verified": true,
+    "prior_replay_bytes": 13697800,
+    "prior_pinned_length_bytes": 13605284,
+    "prior_length_difference_bytes": 92516,
+    "prior_row_presence_result_available": false,
+    "prior_receipt_request_count": 2,
+    "original_r1_r2_r3_markers_reused": false,
+    "reason": "R4 run 38854562926 failed during offline preflight because the workflow attempted to import the non-existent module automation.q221_dod_097_cdx_mimetype_diagnostic; the metadata-request step was skipped, so source_requests_made remained zero. R5 is a separately preregistered one-shot metadata request, not a retry of a source request; it never replays the archived ZIP or inspects contract rows.",
+    "r4_preflight_failure": {
+      "workflow_run_id": 38854562926,
+      "status": "Q221_DOD_097_CDX_MIMETYPE_DIAGNOSTIC_PREFLIGHT_MODULE_IMPORT_FAILURE",
+      "source_requests_made": 0,
+      "failed_step": "Validate pinned inputs offline before network access",
+      "error": "No module named automation.q221_dod_097_cdx_mimetype_diagnostic"
+    }
+  },
+  "interpretation_limits": {
+    "positive_cdx_capture_metadata": "Confirms only the matching CDX index row for the exact timestamp and URL.",
+    "cdx_mimetype": "Diagnostic metadata only; it does not repair or waive the R3 replay mismatch.",
+    "row_presence": "Not examined.",
+    "event_level_public_boundary_proven": false,
+    "first_public_observation_time_proven": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "historical_absence_proven": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false,
+    "archive_replay_allowed": false,
+    "archive_payload_persisted": false,
+    "archive_schema_examined": false,
+    "transaction_row_presence_examined": false,
+    "source_population_changed": false,
+    "census_restarted": false,
+    "alternate_source_used": false,
+    "automatic_retry": false
+  }
+}

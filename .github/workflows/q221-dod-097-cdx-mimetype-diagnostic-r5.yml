@@ -1,0 +1,114 @@
+name: Q221 DoD 097 CDX MIME Diagnostic (R5)
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q221_dod_097_cdx_mimetype_diagnostic_r5.trigger"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-q221-dod-097-cdx-mimetype-diagnostic-r5
+  cancel-in-progress: false
+
+jobs:
+  diagnostic:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact marker commit
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.16"
+
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Prevent re-use of this one-shot R5 metadata request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/workflows/q221-dod-097-cdx-mimetype-diagnostic-r5.yml/runs?branch=master&per_page=100" > "$RUNNER_TEMP/q221-097-r5-prior-runs.json"
+          jq -e --argjson current "$CURRENT_RUN_ID" '
+            (.total_count < 100) and
+            ([.workflow_runs[]? | select(.id != $current)] | length == 0)
+          ' "$RUNNER_TEMP/q221-097-r5-prior-runs.json" >/dev/null
+          echo "Q221_097_R5_ONE_SHOT_GUARD=PASS"
+
+      - name: Validate pinned inputs offline before network access
+        run: >-
+          python -m automation.q221_dod_097_wayback_cdx_mimetype_diagnostic_r5
+          --repo-root .
+          --prereg research/preregistrations/q221_dod_097_cdx_mimetype_diagnostic_r5_2026_10_16.json
+          --request research/run_requests/q221_dod_097_cdx_mimetype_diagnostic_r5.trigger
+          --output "${{ runner.temp }}/q221-dod-097-cdx-mimetype-diagnostic-r5.json"
+          --validate-only
+
+      - name: Make one metadata-only CDX request (no archive replay)
+        id: diagnostic
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          python -m automation.q221_dod_097_wayback_cdx_mimetype_diagnostic_r5 \
+            --repo-root . \
+            --prereg research/preregistrations/q221_dod_097_cdx_mimetype_diagnostic_r5_2026_10_16.json \
+            --request research/run_requests/q221_dod_097_cdx_mimetype_diagnostic_r5.trigger \
+            --output "$RUNNER_TEMP/q221-dod-097-cdx-mimetype-diagnostic-r5.json"
+          rc=$?
+          if [[ ! -s "$RUNNER_TEMP/q221-dod-097-cdx-mimetype-diagnostic-r5.json" ]]; then
+            echo "::error::R5 diagnostic receipt missing"
+            exit 2
+          fi
+          echo "Q221_097_R5_RECEIPT_PRESENT=true"
+          exit "$rc"
+
+      - name: Upload the JSON metadata receipt only
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-dod-097-cdx-mimetype-diagnostic-r5-${{ github.run_id }}
+          path: ${{ runner.temp }}/q221-dod-097-cdx-mimetype-diagnostic-r5.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Publish bounded diagnostic summary
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ["RUNNER_TEMP"]) / "q221-dod-097-cdx-mimetype-diagnostic-r5.json"
+          r = json.loads(p.read_text(encoding="utf-8"))
+          print("# Q221 DoD 097 CDX MIME Diagnostic (R5)")
+          print(f"- Status: {r.get('status')}")
+          print(f"- Receipt fingerprint: {r.get('receipt_fingerprint')}")
+          print(f"- Source requests: {r.get('source_probe', {}).get('request_count', 0)}")
+          print("- Archive replay requests: 0")
+          print("- Transaction rows inspected: false")
+          print(f"- Target CDX record: {json.dumps(r.get('cdx_inventory', {}).get('target_capture'), sort_keys=True)}")
+          print(f"- Errors: {json.dumps(r.get('errors', []), sort_keys=True)}")
+          print("- All scientific/performance/live-execution gates remain closed.")
+          PY
+
+      - name: Fail closed unless the pinned CDX MIME metadata was inspected
+        if: steps.diagnostic.outcome == 'failure' || steps.diagnostic.outcome == 'cancelled'
+        shell: bash
+        run: |
+          echo "::error::R5 diagnostic did not establish the pinned CDX metadata"
+          exit 1
