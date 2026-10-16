@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "record_type": "q221_dod_097_wayback_replay_head_metadata_diagnostic",
+  "candidate_id": "Q221",
+  "generated_at_utc": "2026-10-16T05:43:21.749732+00:00",
+  "source_of_truth": "DWR-debug/trading-agent-public",
+  "status": "Q221_R6_HEAD_METADATA_CAPTURED",
+  "request": {
+    "request_sequence": "2026-10-16T05:36:08Z",
+    "preregistration_path": "research/preregistrations/q221_dod_097_wayback_replay_head_r6_2026_10_16.json",
+    "request_marker_path": "research/run_requests/q221_dod_097_wayback_replay_head_r6.trigger",
+    "method": "HEAD",
+    "url": "https://web.archive.org/web/20250128184322id_/https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+    "timeout_seconds": 60,
+    "request_cap": 1,
+    "archive_replay_get_allowed": false,
+    "archive_payload_download_allowed": false
+  },
+  "lineage": {
+    "manifest": {
+      "path": "research/evidence/q221_historical_public_boundary_latest.json",
+      "git_blob_sha1": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f",
+      "receipt_fingerprint": "9e738733d369bf4a954e74cd999c4ba462cf0f9a4fa44aa65c74c637cf3b11f4",
+      "expected_transaction_count": 348,
+      "frozen_target_count": 28
+    },
+    "r3": {
+      "path": "research/evidence/q221_dod_097_wayback_archive_presence_attempt_38798769065.json",
+      "git_blob_sha1": "91e45f71a2b31721375f8fa0812ebac038fc8d1f",
+      "receipt_fingerprint": "895a6d4e343cb535866df81ce06d6d824e1d05b1c7af114aa3befeb5c5473a5b",
+      "status": "Q221_DOD_097_ARCHIVE_REPLAY_LENGTH_MISMATCH",
+      "request_count": 2,
+      "archive_replay_response_bytes": 13697800,
+      "cdx_length_bytes": 13605284,
+      "length_difference_bytes": 92516
+    },
+    "r5": {
+      "path": "research/evidence/q221_dod_097_cdx_mimetype_diagnostic_r5_attempt_38855135000.json",
+      "git_blob_sha1": "9f2eb4d0e1efb419e39cb2cb8909842fd93f8164",
+      "receipt_fingerprint": "a29529db8730d85c3c72a2b773033faa39653ef62a9d69703ce5a60433a9fc9d",
+      "status": "Q221_DOD_097_CDX_MIMETYPE_DIAGNOSTIC_COMPLETE",
+      "request_count": 1,
+      "mimetype": "application/zip",
+      "target_timestamp": "20250128184322",
+      "cdx_length_bytes": 13605284
+    },
+    "manifest_blob_sha1_verified": "b78cf6f7b48af3f914ee7c6d06a38f6485b0438f"
+  },
+  "http_metadata": {
+    "http_status": 200,
+    "headers": {
+      "content-length": "13697800",
+      "content-type": "application/zip",
+      "date": "Fri, 16 Oct 2026 05:43:23 GMT",
+      "server": "nginx",
+      "accept-ranges": "bytes"
+    },
+    "response_body_read_bytes": 0
+  },
+  "source_probe": {
+    "request_count": 1,
+    "responses": [
+      {
+        "method": "HEAD",
+        "url": "https://web.archive.org/web/20250128184322id_/https://files.usaspending.gov/award_data_archive/FY2025_097_Contracts_Full_20250106.zip",
+        "http_status": 200,
+        "headers": {
+          "content-length": "13697800",
+          "content-type": "application/zip",
+          "date": "Fri, 16 Oct 2026 05:43:23 GMT",
+          "server": "nginx",
+          "accept-ranges": "bytes"
+        },
+        "response_body_read_bytes": 0
+      }
+    ],
+    "transport_errors": [],
+    "archive_endpoint_request_count": 1,
+    "archive_replay_get_request_count": 0,
+    "archive_payload_body_read": false,
+    "archive_payload_persisted": false,
+    "response_body_read_bytes": 0
+  },
+  "interpretation": {
+    "diagnostic_only": true,
+    "head_headers_describe_current_server_response": true,
+    "archived_payload_bytes_verified": false,
+    "cdx_length_explained": false,
+    "archive_schema_examined": false,
+    "transaction_row_presence_examined": false,
+    "first_public_observation_time_proven": false,
+    "event_level_public_boundary_proven": false,
+    "recipient_to_issuer_mapping_frozen": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false,
+    "source_population_changed": false,
+    "census_restarted": false,
+    "alternate_source_used": false,
+    "automatic_retry": false,
+    "archive_replay_get_allowed": false,
+    "archive_payload_download_allowed": false,
+    "archive_payload_persisted": false,
+    "archive_schema_examined": false,
+    "transaction_row_presence_examined": false,
+    "recipient_to_issuer_mapping_frozen": false,
+    "historical_first_public_observation_proven": false,
+    "event_level_public_boundary_proven": false,
+    "source_requests_made": 1,
+    "archive_endpoint_request_count": 1,
+    "archive_replay_get_request_count": 0,
+    "response_body_read_bytes": 0,
+    "archive_payload_body_read": false
+  },
+  "errors": [],
+  "next_gate": "HEAD response metadata only. The R3 body/CDX length discrepancy and all historical public-clock gates remain unresolved.",
+  "receipt_fingerprint": "7e9299b743381716251b87e976bf5c23e6511b4b2cc9457b0660bc7346a4b882"
+}
