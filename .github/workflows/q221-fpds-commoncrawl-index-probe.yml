@@ -1,0 +1,163 @@
+name: Q221 FPDS Common Crawl Index Probe R1
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q221_fpds_commoncrawl_index_metadata_probe.trigger"
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: trading-agent-q221-commoncrawl-index-metadata-probe-r1
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact request-marker commit
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.16"
+
+      - name: Install test dependency for mandatory offline checks
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Enforce one-shot source request guard
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$GITHUB_REPOSITORY/actions/workflows/q221-fpds-commoncrawl-index-probe.yml/runs?branch=master&per_page=100" > "$RUNNER_TEMP/prior-runs.json"
+          jq -e --argjson current "$CURRENT_RUN_ID" '
+            (.total_count < 100) and
+            ([.workflow_runs[]? | select(.id != $current)] | length == 0)
+          ' "$RUNNER_TEMP/prior-runs.json" >/dev/null
+          echo "Q221_COMMONCRAWL_ONE_SHOT_GUARD=PASS"
+
+      - name: Run offline parser and invariant tests
+        run: python -m pytest -q tests/test_q221_fpds_commoncrawl_index_metadata_probe.py
+
+      - name: Validate immutable pins and request budget before archive access
+        id: preflight
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          python -m automation.q221_fpds_commoncrawl_index_metadata_probe \
+            --mode validate-only \
+            --repo-root . \
+            --request research/run_requests/q221_fpds_commoncrawl_index_metadata_probe.trigger \
+            --prereg research/preregistrations/q221_fpds_commoncrawl_index_metadata_probe_r1_2026_10_16.json
+
+      - name: Capture pre-event Common Crawl index metadata only
+        id: capture
+        if: steps.preflight.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          python -m automation.q221_fpds_commoncrawl_index_metadata_probe \
+            --mode capture \
+            --repo-root . \
+            --request research/run_requests/q221_fpds_commoncrawl_index_metadata_probe.trigger \
+            --prereg research/preregistrations/q221_fpds_commoncrawl_index_metadata_probe_r1_2026_10_16.json \
+            --run-id "$GITHUB_RUN_ID" \
+            --output "$RUNNER_TEMP/q221-commoncrawl-index-r1-receipt.json"
+
+      - name: Ensure an explicit fail-closed receipt exists
+        if: always()
+        env:
+          PREFLIGHT_OUTCOME: ${{ steps.preflight.outcome }}
+          RECEIPT_PATH: ${{ runner.temp }}/q221-commoncrawl-index-r1-receipt.json
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -s "$RECEIPT_PATH" ]]; then
+            echo "Q221_COMMONCRAWL_RECEIPT_PRESENT=true"
+            exit 0
+          fi
+          if [[ "$PREFLIGHT_OUTCOME" == "success" ]]; then
+            python -m automation.q221_fpds_commoncrawl_index_metadata_probe \
+              --mode fallback --run-id "$RUN_ID" \
+              --reason "CAPTURE_STEP_DID_NOT_PERSIST_RECEIPT_REQUEST_COUNT_UNKNOWN" \
+              --output "$RECEIPT_PATH"
+          else
+            python -m automation.q221_fpds_commoncrawl_index_metadata_probe \
+              --mode fallback --run-id "$RUN_ID" \
+              --request-count-known-zero \
+              --reason "PREFLIGHT_FAILED_NO_SOURCE_REQUESTS" \
+              --output "$RECEIPT_PATH"
+          fi
+
+      - name: Independently verify receipt offline
+        id: verify
+        if: always()
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          python -m automation.q221_fpds_commoncrawl_index_metadata_probe \
+            --mode verify \
+            --input "$RUNNER_TEMP/q221-commoncrawl-index-r1-receipt.json" \
+            --output "$RUNNER_TEMP/q221-commoncrawl-index-r1-validation.json"
+
+      - name: Upload immutable receipt and validation
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q221-commoncrawl-index-metadata-r1-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/q221-commoncrawl-index-r1-receipt.json
+            ${{ runner.temp }}/q221-commoncrawl-index-r1-validation.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist immutable receipt and latest pointer on master
+        if: always() && steps.preflight.outcome != 'cancelled'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          attempt="research/evidence/q221_fpds_commoncrawl_index_metadata_attempt_${SOURCE_RUN_ID}.json"
+          latest="research/evidence/q221_fpds_commoncrawl_index_metadata_latest.json"
+          mkdir -p research/evidence
+          test ! -e "$attempt"
+          cp "$RUNNER_TEMP/q221-commoncrawl-index-r1-receipt.json" "$attempt"
+          cp "$attempt" "$latest"
+          git fetch origin master --quiet
+          base_sha="$(git rev-parse origin/master)"
+          python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha "$base_sha" \
+            --file "$attempt=$attempt" \
+            --file "$latest=$latest"
+
+      - name: Preserve fail-closed conclusion
+        if: always()
+        env:
+          PREFLIGHT_OUTCOME: ${{ steps.preflight.outcome }}
+          CAPTURE_OUTCOME: ${{ steps.capture.outcome }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$PREFLIGHT_OUTCOME" != "success" || "$CAPTURE_OUTCOME" != "success" || "$VERIFY_OUTCOME" != "success" ]]; then
+            echo "Q221 Common Crawl index probe incomplete; immutable fail-closed receipt was preserved."
+            exit 1
+          fi
