@@ -6,6 +6,8 @@ import pytest
 from automation.q221_arquivo_pt_fpds_timemap_probe import (
     EXPECTED_RECORDS,
     MAX_REQUESTS,
+    PREREG_PATH,
+    REQUEST_PATH,
     ProbeError,
     NoRedirect,
     analysis_fingerprint,
@@ -14,6 +16,7 @@ from automation.q221_arquivo_pt_fpds_timemap_probe import (
     parse_timemap_jsonl,
     read_key_value_request,
     timemap_request_url,
+    validate_preflight,
     verify_receipt,
 )
 
@@ -117,3 +120,12 @@ def test_verifier_rejects_gate_mutation_and_receipt_mutation():
     mutated = dict(receipt)
     mutated["status"] = "GATE_CLEARED"
     assert verify_receipt(mutated)["validation_status"] == "FAILED_CLOSED"
+
+
+def test_actual_preregistration_and_upstream_receipts_pass_offline_preflight():
+    root = Path(__file__).resolve().parents[1]
+    result = validate_preflight(root, root / REQUEST_PATH, root / PREREG_PATH)
+    assert len(result["records"]) == 4
+    assert result["prior_fpds"]["workflow_run_id"] == 38712516839
+    assert result["boundary"]["sampled_transaction_count"] == 348
+    assert result["pre_event"]["interpretation"]["recipient_to_issuer_mapping_frozen"] is False
