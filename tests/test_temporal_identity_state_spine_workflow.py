@@ -16,6 +16,7 @@ def test_windows_spine_result_is_staged_to_workspace_before_artifact_upload():
     staging = workflow[stage_start:upload_start]
 
     assert stage_start < upload_start
+    assert "        if: always()\n        shell: cmd" in staging
     assert r'SOURCE=%REPO_SRC%\research\runs\spine\${{ matrix.wave }}\%GITHUB_RUN_ID%\spine.json' in staging
     assert r'DEST=%GITHUB_WORKSPACE%\research\runs\spine\${{ matrix.wave }}\%GITHUB_RUN_ID%' in staging
     assert 'if not exist "%SOURCE%"' in staging
