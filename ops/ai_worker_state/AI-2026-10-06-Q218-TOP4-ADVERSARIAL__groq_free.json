@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
   "context_fingerprint": "af33b9bd08de8c944f12d3a4cdc141f7abbbe4c1b589cdd91f1ff50ecf3ee0ec",
-  "observed_at_utc": "2026-10-15T21:17:33.027211Z",
+  "observed_at_utc": "2026-10-16T04:21:05.850413Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 3.623,
-  "stdout": "**Worker Handoff – Q218 Adversarial Review**\n\n| # | Failure Mode | Smallest Deterministic Falsifier | Exact Artifact Required | Why it Fails |\n|---|--------------|----------------------------------|------------------------|--------------|\n| 1 | **Incorrect 10‑K ↔ 8‑K pairing** | A 10‑K that has *no* 8‑K with an acceptance timestamp in the interval (prev‑10‑K, target‑10‑K] but the code still pairs it to the *latest* 8‑K in the window. | SEC JSON for a ticker where the `filings.recent` array contains: <br>• 10‑K with `filingDate` = 2026‑01‑15, `acceptanceDatetime` = 2026‑01‑16 <br>• 8‑K with `filingDate` = 2026‑01‑10, `acceptanceDatetime` = 2026‑01‑11 <br>• 8‑K with `filingDate` = 2026‑01‑20, `acceptanceDatetime` = 2026‑01‑21 | The algorithm will pair the 10‑K to the 8‑K dated 2026‑01‑20 (latest in window) even though its acceptance is *after* the 10‑K’s acceptance, violating the rule. |\n| 2 | **Missing or malformed acceptance timestamps** | A filing where `acceptanceDatetime` is absent or set to `null`. | SEC JSON where a 10‑K entry has `acceptanceDatetime` = `null` and an 8‑K entry has a valid timestamp. | The code checks `acceptance_datetime_found`; if `False`, the 10‑K is excluded from pairing, potentially dropping valid pairs. |\n| 3 | **Amendments mis‑treated** | A 10‑K/A that is an amendment to a prior 10‑K but the code treats it as a new 10‑K. | SEC JSON containing: <br>• 10‑K with `form` = \"10-K\", `filingDate` = 2025‑12‑31, `acceptanceDatetime` = 2025‑12‑31 <br>• 10‑K/A with `form` = \"10-K/A\", `filingDate` = 2026‑01‑15, `acceptanceDatetime` = 2026‑01‑15 | The algorithm will consider the amendment as a separate 10‑K, potentially pairing it to an 8‑K that actually belongs to the original 10‑K. |\n| 4 | **Report‑date vs event‑date ambiguity** | A filing where `reportDate` ≠ `filingDate` and the code uses `filingDate` for the event clock. | SEC JSON where a 10‑K has `filingDate` = 2026‑01‑10, `reportDate` = 2026‑01‑08, `acceptanceDatetime` = 2026‑01‑11. | The event clock should be the *acceptance* timestamp, but if the code mistakenly uses `reportDate`, the pairing window shifts, producing false pairs. |\n| 5 | **False pairing of earnings releases** | An 8‑K that contains an earnings release (Item 2.02) but is *not* the latest eligible 8‑K before the target 10‑K. | SEC JSON where two 8‑Ks exist: <br>• 8‑K (Item 2.02) with `filingDate` = 2026‑01‑05, `acceptanceDatetime` = 2026‑01‑06 <br>• 8‑K (Item 2.02) with `filingDate` = 2026‑01‑12, `acceptanceDatetime` = 2026‑01‑13 <br>• 10‑K with `filingDate` = 2026‑01‑15, `acceptanceDatetime` = 2026‑01‑16 | The algorithm will pair the 10‑K to the 8‑K dated 2026‑01‑12 (latest in window) even though the earlier 8‑K contains the earnings release that should be paired. |\n| 6 | **Voluntary vs mandatory channel mis‑classification** | A voluntary 8‑K (e.g., Item 7.01) that the code treats as a mandatory earnings release. | SEC JSON where an 8‑K has `form` = \"8-K\", `items` includes `\"7.01\"`, `filingDate` = 2026‑01‑20, `acceptanceDatetime` = 2026‑01‑21 | The pairing rule selects “Item‑2.02/Exhibit‑99.1‑style 8‑K”; if the code does not filter by item, a voluntary 8‑K could be paired, inflating the “mandatory” channel. |\n| 7 | **Issuer identity drift** | A ticker that has changed its CIK between the two dates used in the census. | SEC JSON where `cik` for a symbol changes between two consecutive filings (e.g., 2025‑12‑31 vs 2026‑01‑15). | The static `SEC_CIKS` mapping will mis‑associate filings, leading to wrong issuer_results. |\n| 8 | **Semantic wedge collapse to length/complexity** | Two unrelated filings (e.g., a 10‑K and an 8‑K from different issuers) that both exceed the 150 MB cap, causing the algorithm to pair them based solely on size. | SEC ZIP containing: <br>• 10‑K from issuer A, 120 MB <br>• 8‑K from issuer B, 140 MB <br>Both have identical `acceptanceDatetime` ranges. | The algorithm’s “latest eligible” rule may pair them because size is the only distinguishing feature, collapsing the semantic wedge. |\n\n---\n\n### Counterarguments (possible defenses)\n\n| # | Defense | Conditions |\n|---|---------|------------|\n| 1 | The algorithm intentionally uses the *latest* 8‑K to capture the most recent earnings release; earlier 8‑Ks are considered redundant. | If the business logic accepts that only the latest 8‑K matters. |\n| 2 | SEC filings sometimes omit `acceptanceDatetime`; the code falls back to `filingDate`. | If the fallback is documented and acceptable. |\n| 3 | Amendments are treated as new filings to preserve a one‑to‑one mapping; the original 10‑K is archived separately. | If the research goal is to capture the latest disclosure state. |\n| 4 | `reportDate` is rarely used for event clocks; the code uses `filingDate` consistently. | If the research protocol specifies `filingDate` as the event clock. |\n| 5 | The rule “latest eligible” is meant to avoid double‑counting earnings releases. | If multiple 8‑Ks exist, only the most recent is relevant. |\n| 6 | All 8‑Ks are considered mandatory for the pairing rule; voluntary 8‑Ks are excluded by item filtering. | If the code actually filters by item. |\n| 7 | The static `SEC_CIKS` mapping is refreshed nightly; drift is negligible. | If the mapping is updated frequently. |\n| 8 | The 150 MB cap is a hard limit; any filing above it is excluded from pairing. | If the cap is enforced before pairing. |\n\n---\n\n### Concrete Next Actions\n\n1. **Collect minimal test cases**  \n   * Create a small SEC JSON file for each failure mode (as outlined above).  \n   * Store each file in `research/adversarial_tests/`.\n\n2. **Run the `sec_submission_census` function** on each test file.  \n   * Capture the output `issuer_results` and verify whether the pairing matches the expected outcome.\n\n3. **Validate timestamp handling**  \n   * For mode 2, confirm that filings with `acceptanceDatetime` = `null` are excluded or handled as per design.\n\n4. **Check amendment logic**  \n   * For mode 3, ensure that 10‑K/A entries are flagged as amendments and not treated as new 10‑Ks.\n\n5. **Verify item filtering**  \n   * For mode 5 and 6, inspect the `items` array in 8‑K filings to confirm that only Item 2.02/Exhibit‑99.1‑style 8‑Ks are considered.\n\n6. **Audit issuer mapping**  \n   * For mode 7, compare the `cik` field across consecutive filings for a symbol to detect drift.\n\n7. **Test semantic wedge collapse**  \n   * For mode 8, create two large filings from different issuers and confirm that the algorithm does not pair them unless the logic explicitly allows size‑based pairing.\n\n8. **Document findings**  \n   * Record any deviations from expected behavior in a markdown report (`docs/adversarial_review_Q218.md`).\n\n---\n\n### Uncertainty\n\n* The current code snippet is incomplete; some logic (e.g., `in_window` condition) is truncated.  \n* It is unclear whether the implementation actually filters 8‑Ks by item or by acceptance timestamp only.  \n* The handling of `acceptanceDatetime` missing values is not shown; assumptions may be wrong.  \n* The mapping of `SEC_CIKS` may be refreshed elsewhere; the static dict may not be the source of truth.  \n\nThese uncertainties should be clarified by inspecting the full implementation and any associated unit tests.",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.31,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5307, Requested 5693. Please try again in 22.5s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-e5ef54b8-a967-4eb6-896f-2c075fff058d",
-  "usage": {
-    "queue_time": 0.228804215,
-    "prompt_tokens": 5067,
-    "prompt_time": 0.276623833,
-    "completion_tokens": 2733,
-    "completion_time": 2.954274089,
-    "total_tokens": 7800,
-    "total_time": 3.230897922,
-    "completion_tokens_details": {
-      "reasoning_tokens": 640
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-16T04:21:06.160514Z",
+    "blocked_until_utc": "2026-10-16T05:21:06.160514Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5307, Requested 5693. Please try again in 22.5s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
