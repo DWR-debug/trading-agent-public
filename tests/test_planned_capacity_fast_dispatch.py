@@ -1614,6 +1614,70 @@ def test_empty_capacity_snapshot_reports_a_specific_fail_closed_reason():
     assert classified["operational_attention_reason_code"] == "NO_CAPACITY_ROWS_IN_SNAPSHOT"
 
 
+def test_dispatch_receipt_includes_upstream_planner_suppression_reasons():
+    from automation.planned_capacity_fast_dispatch import dispatch_candidates, classify_dispatch_status
+
+    snapshot = {
+        "focus_candidates": ["Q104:I19", "Q220", "Q221"],
+        "work_assignments": [],
+        "planner_suppression_reasons": [
+            {
+                "plan_id": "Q220-AS-FILED-REPRESENTATION",
+                "candidate": "Q220",
+                "reason_code": "NO_ELIGIBLE_PREFERRED_RESOURCE",
+                "reason": "No preferred resource was eligible after successful candidate-slot guards.",
+                "preferred_resources": ["Windows self-hosted B", "GitHub-hosted ARM64"],
+                "resource_blockers": [
+                    {"resource": "Windows self-hosted B", "reason_code": "PREFERRED_RESOURCE_CANDIDATE_SLOT_ALREADY_COMPLETED"}
+                ],
+            }
+        ],
+        "resources": [
+            {"name": "Windows self-hosted B", "research_capacity_slots": 1, "research_slots_free": 1, "capacity_state": "available"},
+            {"name": "Windows self-hosted C", "research_capacity_slots": 1, "research_slots_free": 1, "capacity_state": "available"},
+        ],
+        "planned_capacity": [
+            {
+                "resource": "Windows self-hosted B",
+                "capacity_state": "available",
+                "planned_assignments": [],
+            },
+            {
+                "resource": "Windows self-hosted C",
+                "capacity_state": "available",
+                "planned_assignments": [{
+                    "plan_id": "Q104-I19-INDEPENDENT-REPRO",
+                    "candidate": "Q104:I19",
+                    "readiness": "BLOCKED_UNTIL_COMPILER_RECEIPT",
+                    "basis": "positive compiler receipt is required first",
+                    "scheduled": False,
+                    "dispatchable": False,
+                    "execution_workflow": None,
+                }],
+            },
+        ],
+    }
+
+    plan = classify_dispatch_status(dispatch_candidates(snapshot, [], max_dispatches=6))
+    assert plan["dispatches"] == []
+    assert plan["planned_executable_count"] == 0
+    queue_decision = next(x for x in plan["decisions"] if x.get("decision") == "PLANNER_QUEUE_ITEM_SUPPRESSED")
+    assert queue_decision["plan_id"] == "Q220-AS-FILED-REPRESENTATION"
+    assert queue_decision["planner_reason_code"] == "NO_ELIGIBLE_PREFERRED_RESOURCE"
+    assert queue_decision["resource_blockers"][0]["reason_code"] == "PREFERRED_RESOURCE_CANDIDATE_SLOT_ALREADY_COMPLETED"
+    assert plan["planning_diagnostics"]["planner_queue_suppression_count"] == 1
+    assert plan["planning_diagnostics"]["planner_queue_suppression_counts"]["NO_ELIGIBLE_PREFERRED_RESOURCE"] == 1
+    assert plan["operational_attention_reason_code"] == "BOUNDED_PLANNER_QUEUE_ITEMS_SUPPRESSED"
+    assert plan["status"] == "NEEDS_ATTENTION_ZERO_EXECUTABLE_PLAN"
+    assert plan["paper_only"] is True
+    assert plan["performance_authorization"] is False
+    assert plan["holdout_selection"] is False
+    assert plan["ranking"] is False
+    assert plan["tuning"] is False
+    assert plan["promotion"] is False
+    assert plan["live_execution"] is False
+
+
 def test_dispatch_status_does_not_claim_child_run_from_accepted_request():
     from automation.planned_capacity_fast_dispatch import classify_dispatch_status
 
