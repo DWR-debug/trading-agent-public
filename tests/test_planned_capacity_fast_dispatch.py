@@ -1421,6 +1421,8 @@ def test_windows_regression_bootstrap_retries_transient_package_index_failures()
 def test_bounded_planner_explains_completed_slots_and_blocked_prerequisites(monkeypatch):
     from automation import generate_resource_dashboard as dashboard
 
+    monkeypatch.setattr(dashboard, "q104_census_clock_complete", lambda receipt: False)
+    monkeypatch.setattr(dashboard, "q104_historical_compilation_status", lambda: {"state": "blocked"})
     monkeypatch.setattr(
         dashboard,
         "q221_public_clock_status",
