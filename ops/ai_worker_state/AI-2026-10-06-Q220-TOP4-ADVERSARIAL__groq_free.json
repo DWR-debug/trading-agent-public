@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-10-15T21:17:32.863260Z",
+  "observed_at_utc": "2026-10-16T04:21:04.163117Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.349,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5316, Requested 5341. Please try again in 19.9275s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 4.032,
+  "stdout": "**Worker Handoff – Q220 Candidate (Financial‑Statement‑Notes Schema Gate)**  \n*Scope: Methods‑review of XBRL representation, taxonomy, and data‑quality aspects. No performance or ranking.*\n\n| # | Failure Mode | Minimal Deterministic Falsifier | Exact Artifact Needed | Counter‑Argument (why it might not be a failure) | Next Action |\n|---|--------------|---------------------------------|-----------------------|-----------------------------------------------|-------------|\n| 1 | **Missing or corrupted XBRL text‑block** | ZIP that omits `txt.txt`/`txt.tsv` or contains a zero‑byte file | `missing_txt.zip` – same archive except `txt.txt` removed | The gate only checks presence; if the file is present but empty, the header may still be parsed. | Verify that `txt.txt` contains at least one non‑empty line and that the first line is a valid XBRL `<xbrl>` element. |\n| 2 | **Presentation‑role mapping mismatch** | XBRL file where a `<presentationItem>` references a `<contextRef>` that does not exist | `bad_role_mapping.xml` – single XBRL document with a dangling contextRef | The gate never inspects presentation roles; a mismatch would not surface. | Parse the XBRL with an XBRL validator to confirm that every presentation role references a valid context. |\n| 3 | **Taxonomy‑extension change** | XBRL file that imports a taxonomy extension not present in the 2009 archive (e.g., `us-gaap-2020.xsd`) | `new_taxonomy.xml` – XBRL document importing a newer extension | The gate only checks file presence, not taxonomy version. | Compare the `schemaLocation` attributes against the set of schemas in the archive; flag any that are missing. |\n| 4 | **Undeclared custom namespace** | XBRL file that uses a namespace prefix without a corresponding `xmlns` declaration | `undeclared_ns.xml` – XBRL with `<myns:Fact>` but no `xmlns:myns` | The gate does not parse XML; such a file would pass the gate but be invalid XBRL. | Run an XML namespace validator on each XBRL file. |\n| 5 | **Section identity mismatch** | XBRL file where a `<section>` element’s `id` attribute does not match the expected section header in `sub.txt` | `bad_section.xml` – XBRL with mismatched section IDs | The gate does not cross‑check section IDs. | Cross‑validate section IDs against the `sub.txt` mapping. |\n| 6 | **Narrative tokenization inconsistency** | XBRL file whose `<text>` element contains non‑UTF‑8 characters or control codes that break tokenization | `bad_narrative.xml` – XBRL with `\\x1B` escape sequences in narrative | The gate only reads the first 262 kB; tokenization errors would be silent. | Tokenize the narrative with a strict UTF‑8 tokenizer and flag any decoding errors. |\n| 7 | **Amended filing structure change** | XBRL file from an amended filing that adds a new `<amendment>` element not present in the original | `amended_filing.xml` – amended XBRL with extra top‑level element | The gate does not detect amendments; the structure may still be valid. | Detect `<amendment>` elements and compare the set of top‑level tags against the original filing. |\n| 8 | **Future‑current XBRL contamination** | XBRL file that contains a `<period>` with a future endDate relative to the filing date | `future_period.xml` – XBRL with `endDate` > filing date | The gate does not check dates; such contamination would be invisible. | Validate that all `<period>` endDates are ≤ filing date. |\n| 9 | **Duplicate facts** | XBRL file that contains two identical `<fact>` elements (same concept, context, unit) | `duplicate_facts.xml` – XBRL with duplicate facts | The gate does not detect duplicates; they would pass. | Build a hash of `(concept, context, unit)` for each fact and flag duplicates. |\n|10 | **Period/Unit/Context misalignment** | XBRL file where a fact’s `<unitRef>` points to a unit that does not exist in the `<unit>` list | `bad_unit.xml` – XBRL with dangling unitRef | The gate never inspects units; the mismatch would be silent. | Cross‑check each `unitRef` against the `<unit>` elements. |\n|11 | **Representation mismatch proxies filing length** | XBRL file that is syntactically correct but contains a large amount of filler text (e.g., Lorem Ipsum) in `<text>` elements | `filler_text.xml` – XBRL with >10 kB of filler narrative | The gate only checks header counts; length may be used as a proxy for completeness. | Measure narrative length and compare against a threshold; flag files that exceed the threshold without substantive content. |\n\n---\n\n### Counter‑Arguments (Why the gate might still be adequate)\n\n* The gate’s primary purpose is to confirm that the archive contains the expected member files and that each file has a header row.  \n* For many downstream analyses, the presence of the files and the existence of headers may be sufficient; deeper XBRL semantics can be validated in later, dedicated XBRL‑validation gates.  \n* The archive is a historical snapshot; the risk of future contamination is low if the archive is immutable.\n\n---\n\n### Concrete Next Actions\n\n1. **Create a minimal test ZIP** (`missing_txt.zip`) that omits `txt.txt` and run the gate to confirm that `required_member_presence[\"txt\"]` becomes `False`.  \n2. **Generate a set of synthetic XBRL files** (`bad_role_mapping.xml`, `new_taxonomy.xml`, etc.) that exercise each failure mode.  \n3. **Extend the gate** (in a separate branch) to parse the XBRL files and perform the checks listed above, producing a detailed diagnostics report.  \n4. **Document the expected schema** for each member file (e.g., `sub.txt` must contain a `section_id` column) and add a schema‑validation step.  \n5. **Add a unit test** that feeds the synthetic files into the extended gate and verifies that each failure mode is detected.  \n\n---\n\n### Uncertainty\n\n* The current gate does not parse XBRL; therefore, we cannot be certain that the archive’s XBRL content is semantically correct.  \n* It is unknown whether the 2009 archive contains any of the failure modes listed; the synthetic tests will reveal this.  \n* The impact of each failure mode on downstream trading‑agent logic is not yet quantified; further research is required to assess risk.  \n\n*End of handoff.*",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-15T21:17:33.212095Z",
-    "blocked_until_utc": "2026-10-15T22:17:33.212095Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5316, Requested 5341. Please try again in 19.9275s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-630cbf6a-aa7d-46ba-8198-ec130ff100f9",
+  "usage": {
+    "queue_time": 0.075327747,
+    "prompt_tokens": 5094,
+    "prompt_time": 0.271237317,
+    "completion_tokens": 2980,
+    "completion_time": 3.134429344,
+    "total_tokens": 8074,
+    "total_time": 3.405666661,
+    "completion_tokens_details": {
+      "reasoning_tokens": 1510
+    }
   }
 }\n
