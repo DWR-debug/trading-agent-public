@@ -721,6 +721,31 @@ def verify_receipt(receipt: dict[str, Any]) -> dict[str, Any]:
             errors.append("Q221_ARQUIVO_CAPTURE_ORIGIN_REQUEST_POLICY_MISMATCH")
         if contract.get("archive_metadata_requests_attempted") is not None and contract.get("archive_metadata_requests_attempted") > MAX_REQUESTS:
             errors.append("Q221_ARQUIVO_CAPTURE_REQUEST_LIMIT_EXCEEDED")
+        observations = receipt.get("observations", [])
+        if not isinstance(observations, list) or len(observations) > MAX_REQUESTS:
+            errors.append("Q221_ARQUIVO_CAPTURE_OBSERVATION_COUNT_INVALID")
+            observations = []
+        if contract.get("archive_request_count_known") is True and contract.get("archive_metadata_requests_attempted") != len(observations):
+            errors.append("Q221_ARQUIVO_CAPTURE_REQUEST_COUNT_MISMATCH")
+        frozen_urls = {row["source_url"] for row in EXPECTED_RECORDS}
+        observed_urls = []
+        for row in observations:
+            if not isinstance(row, dict) or row.get("source_url") not in frozen_urls:
+                errors.append("Q221_ARQUIVO_CAPTURE_SOURCE_URL_OUTSIDE_FROZEN_SET")
+                continue
+            observed_urls.append(row["source_url"])
+            if row.get("method") != "GET" or row.get("response_body_persisted") is not False:
+                errors.append("Q221_ARQUIVO_CAPTURE_METHOD_OR_BODY_PERSISTENCE_INVALID")
+        if len(observed_urls) != len(set(observed_urls)):
+            errors.append("Q221_ARQUIVO_CAPTURE_DUPLICATE_URL_QUERY")
+        if contract.get("response_bodies_persisted") is not False:
+            errors.append("Q221_ARQUIVO_CAPTURE_BODY_PERSISTENCE_INVALID")
+        safety = receipt.get("safety", {})
+        if safety.get("paper_only") is not True:
+            errors.append("Q221_ARQUIVO_CAPTURE_PAPER_ONLY_INVALID")
+        for key in ("live_trading_enabled", "orders_enabled", "automatic_promotion", "performance_authorization", "holdout_selection", "ranking", "tuning", "promotion", "live_execution"):
+            if safety.get(key) is not False:
+                errors.append("Q221_ARQUIVO_CAPTURE_SAFETY_FLAG_INVALID:" + key)
         for key in ("historical_first_public_observation_proven", "event_level_public_boundary_proven", "recipient_to_issuer_mapping_frozen", "q221_gate_positive"):
             if receipt.get("aggregate", {}).get(key) is not False:
                 errors.append("Q221_ARQUIVO_CAPTURE_GATE_STATE_INVALID:" + key)
