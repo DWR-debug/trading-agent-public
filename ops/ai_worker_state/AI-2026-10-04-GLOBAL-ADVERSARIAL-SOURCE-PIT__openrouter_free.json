@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-17T20:57:32.444581Z",
+  "observed_at_utc": "2026-10-18T05:07:22.370048Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 28.379,
-  "stdout": "# Adversarial Source/PIT Readiness Review — Worker Handoff\n\n**Task ID:** AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT  \n**Scope:** Q202–Q204 information-timing family + Q205 NLRB labor-representation certification channel  \n**Status:** PAPER_ONLY / LIVE_TRADING_ENABLED=False / ORDERS_ENABLED=False  \n\n---\n\n## 1. Summary of Findings\n\n### A. Q202–Q204 Information-Timing Family\n\n- **Source-feasibility receipts** are mapped to `research/evidence/q202_q204_information_timing_feasibility_latest.json`.\n- **Durability classification:** All three candidates (Q202, Q203, Q204) are currently classified as **PROVISIONAL_LIVE_PROBE_ONLY** by `source_readiness_snapshot_guard.py`.\n- **Missing artifact:** No immutable dated snapshot or frozen historical archive fingerprint is bound to the receipt.\n- **Risk vector:** Endpoint drift (e.g., SEC EDGAR bulk data schema revisions, API response format changes) could retroactively invalidate source-readiness claims without a pinned vintage.\n\n### B. Q205 NLRB Labor-Representation Certification Channel\n\n- **Status:** Discovery-only; quarantined.\n- **No source-feasibility receipt exists** in `RECEIPTS` map of `source_readiness_snapshot_guard.py`.\n- **Risk vector:** NLRB certification data is published via live dashboards and press releases. Without a frozen snapshot, any future PIT construction would be vulnerable to:\n  - Same-day/date-only leakage (certification dates ≠ public observation timestamps).\n  - Revision lineage ambiguity (withdrawn certifications, consent elections).\n  - Cross-candidate confounding with Q202–Q204 (both involve regulatory event timing).\n\n---\n\n## 2. Counterarguments & Disagreement Preservation\n\n| Claim | Counterargument |\n|-------|-----------------|\n| \"Live endpoint probe confirms data availability.\" | Availability ≠ durability. Endpoint can change schema, remove fields, or alter publication cadence post-hoc. |\n| \"Current documentation page describes the data format.\" | Documentation is mutable. Only a frozen snapshot with SHA-256 binding ensures reproducibility. |\n| \"NLRB certifications are public record.\" | Public ≠ immutable. Certification withdrawal, correction notices, and delayed filings create revision lineage risks. |\n\n---\n\n## 3. Concrete Next Actions\n\n### For Q202–Q204:\n\n1. **Minimal Deterministic Falsifier:**  \n   Re-run `source_readiness_snapshot_guard.py` after binding an immutable snapshot. If classification remains `PROVISIONAL_LIVE_PROBE_ONLY`, the candidate fails the durability gate.\n\n2. **Exact Missing Artifact:**  \n   A frozen historical archive (e.g., SEC EDGAR bulk submission archive ZIP) with:\n   - `snapshot_sha256`\n   - `archive_fingerprint`\n   - `immutable_historical_snapshot` flag set to `true`\n   - Bound to `research/evidence/q202_q204_information_timing_feasibility_latest.json`\n\n3. **Synthetic Mutation Test:**  \n   Apply a future-mutation test on a historical filing date within the Q202–Q204 lineage. If the candidate’s inference changes when the event clock is shifted by 1–5 sessions, clock discipline is violated.\n\n### For Q205:\n\n1. **Minimal Deterministic Falsifier:**  \n   Construct a frozen NLRB certification snapshot (CSV or JSON) with:\n   - `snapshot_sha256`\n   - `immutable_historical_snapshot` flag\n   - Explicit `public_observation_timestamp` per certification\n   - Bound to a new receipt file: `research/evidence/q205_nlrb_certification_feasibility_latest.json`\n\n2. **Exact Missing Artifact:**  \n   A pinned NLRB certification dataset (e.g., from NLRB.gov or a third-party archive) with:\n   - Revision/withdrawal lineage metadata\n   - Frozen issuer-to-certification mapping\n   - Public observation timestamp (not just certification date)\n\n3. **Cross-Candidate Confounding Check:**  \n   Verify no overlap in issuer exposure sets between Q205 and Q202–Q204. If overlap exists, require independent mechanism justification per `anti_convergence_rule`.\n\n---\n\n## 4. Uncertainty & Open Questions\n\n- **Q202–Q204:** Are the information-timing clocks aligned with SEC’s `<FILING-DATE>` or acceptance timestamps? The CURRENT_STATUS.md notes a one-day discrepancy in 13F filings — this must be resolved before PIT clock binding.\n- **Q205:** Does NLRB publish a machine-readable certification feed with revision history? If not, manual scraping introduces non-determinism.\n- **General:** Are synthetic mutation tests compiled per-candidate, or is a shared compiler used? Candidate-specific compilers may invalidate generic mutation results.\n\n---\n\n## 5. Structured Action Handoff\n\n```json\n{\n  \"handoff_type\": \"ADVERSARIAL_SOURCE_PIT_REVIEW\",\n  \"reviewer\": \"Independent Adversarial Methods Reviewer\",\n  \"date\": \"2026-10-17\",\n  \"targets\": {\n    \"Q202-Q204\": {\n      \"status\": \"PROVISIONAL_LIVE_PROBE_ONLY\",\n      \"blockers\": [\n        \"No immutable historical snapshot bound to receipt\",\n        \"Unresolved SEC 13F date discrepancy (acceptance vs. filing date)\",\n        \"No synthetic mutation test results in candidate-specific compiler\"\n      ],\n      \"next_action\": \"Bind frozen SEC EDGAR archive snapshot with SHA-256 fingerprint to q202_q204_information_timing_feasibility_latest.json\",\n      \"falsifier\": \"Re-run source_readiness_snapshot_guard.py; classification must change to DURABLE_HISTORICAL_BOUND\"\n    },\n    \"Q205\": {\n      \"status\": \"DISCOVERY_ONLY_QUARANTINED\",\n      \"blockers\": [\n        \"No source-feasibility receipt exists\",\n        \"No frozen NLRB certification snapshot\",\n        \"No public observation timestamp discipline\"\n      ],\n      \"next_action\": \"Create q205_nlrb_certification_feasibility_latest.json with immutable snapshot binding and public observation clock\",\n      \"falsifier\": \"Snapshot must include snapshot_sha256, immutable_historical_snapshot=true, and per-certification public_observation_timestamp\"\n    }\n  },\n  \"forbidden_actions\": [\n    \"performance_authorization\",\n    \"holdout_selection\",\n    \"parameter_tuning\",\n    \"promotion_decision\",\n    \"live_execution\"\n  ],\n  \"scientific_authority\": false\n}\n```\n\n--- \n\n**Note:** This review is worker material only. All findings must be independently verified by deterministic project tooling before influencing any research decision.",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 56.372,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1792270652-Bd0qSOim4XzipONOAjI4",
-  "usage": {
-    "prompt_tokens": 5818,
-    "completion_tokens": 1534,
-    "total_tokens": 7352,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 0,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
