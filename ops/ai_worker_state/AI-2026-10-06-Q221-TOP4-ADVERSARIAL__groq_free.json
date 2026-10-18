@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "fca22e97174fa0dd40fa39fc32008874634bbf1ba71fb19e2e9e0c18592fd46d",
-  "observed_at_utc": "2026-10-18T04:19:03.735104Z",
+  "observed_at_utc": "2026-10-18T10:54:52.341903Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 2.782,
-  "stdout": "**Worker Handoff – Q221 USAspending Clock & Data Integrity Review**\n\n| Section | Content |\n|---------|---------|\n| **1. Findings** | • **Publication Timing** – The current gate only checks for the presence of the phrases “WITHIN FIVE DAYS” and “FOLLOWING MORNING” in the About‑the‑Data PDF. No extraction of the actual *publication timestamp* (e.g., `2026‑10‑05T08:00:00Z`) is performed, nor is the timestamp compared against the contract’s stated release window. <br>• **Award vs. Modification Semantics** – The gate flags the presence of “CONTRACT OR MODIFICATION” or “CONTRACT AWARD OR MODIFICATION” but does not distinguish between an *award* (initial contract) and a *modification* (subsequent change). Consequently, a modification that occurs after the contract’s effective date could be mis‑classified as an award. <br>• **Transaction History** – The script only records the HTTP status and content type of the API endpoint; it never pulls or validates the actual transaction records (e.g., award, modification, cancellation). <br>• **R&D Classification & Competition Fields** – No checks are performed against the R&D classification codes or competition fields (e.g., `PSC`, `NAICS`). <br>• **PSC Stability** – The gate does not verify that the `PSC` codes used in the dataset are stable across the contract period or that any code changes are properly versioned. <br>• **Recipient‑to‑Issuer Mapping** – No mapping file is fetched or validated; the gate assumes the mapping is correct without evidence. <br>• **Parent/Subsidiary Changes** – The script does not detect changes in corporate structure that could affect the mapping of recipients to issuers. <br>• **Pre‑Event Capability Proxies** – No proxy data (e.g., pre‑award capability statements) are retrieved or checked. <br>• **Historical Prefix Leakage** – The gate does not guard against future production contracts (post‑contract‑end) being inadvertently included in the historical prefix dataset. |\n| **2. Counter‑Arguments / Weaknesses** | • The presence of a phrase in the PDF does **not** guarantee that the contract’s public‑observation clock is respected; the PDF may be updated after the fact. <br>• The “FOLLOWING MORNING” phrase could refer to a *general* publication policy, not the specific contract’s release time. <br>• The API endpoint may return a generic schema; without parsing the transaction payload, the gate cannot confirm that award and modification events are correctly timestamped. <br>• PSC and R&D codes are subject to periodic revisions; without a versioned lookup, the gate cannot detect drift. <br>• Recipient‑to‑issuer mapping is dynamic; a static snapshot may be stale. <br>• Parent/subsidiary changes can alter the effective issuer; without a corporate hierarchy feed, the gate cannot detect mis‑attribution. <br>• Pre‑event capability proxies are often stored in separate datasets; the gate does not fetch them, so it cannot verify that the pre‑event state is consistent with the contract. <br>• The historical prefix may include contracts that were signed after the contract’s end date if the dataset is not filtered by `contract_end_date`. |\n| **3. Minimal Deterministic Falsifiers** | 1. **Publication Date Shift** – Create a synthetic About‑the‑Data PDF where the “FOLLOWING MORNING” phrase is replaced with a date that is *one day earlier* than the contract’s effective date. Verify that the gate still passes. <br>2. **Award vs. Modification Swap** – Generate a transaction record where an award event is labeled as a modification and vice versa. Confirm that the gate does not flag the mis‑classification. <br>3. **PSC Code Change** – Introduce a new PSC code in the dataset that is not present in the official PSC list for the contract period. Check that the gate does not detect the inconsistency. <br>4. **Recipient Mapping Tampering** – Alter the recipient‑to‑issuer mapping file to map a recipient to an incorrect issuer. Verify that the gate still reports success. <br>5. **Parent/Subsidiary Flip** – Simulate a corporate acquisition that changes the issuer of a recipient after the contract’s start date. Ensure the gate does not flag the change. <br>6. **Historical Prefix Leak** – Append a future contract (signed after the contract’s end date) to the historical dataset and confirm that the gate still passes. |\n| **4. Exact Missing Artifacts** | • **Official Publication Timestamp** – A machine‑readable file (e.g., JSON or CSV) containing the exact `publication_datetime` for each contract. <br>• **Award/Modification Event Log** – A dataset that lists every award and modification with `event_type`, `event_timestamp`, and `contract_id`. <br>• **R&D Classification Reference** – A versioned list of R&D classification codes with effective dates. <br>• **PSC Code Reference** – A versioned list of PSC codes with effective dates and descriptions. <br>• **Recipient‑to‑Issuer Mapping File** – A current, versioned mapping table that includes `recipient_id`, `issuer_id`, `effective_date`, `termination_date`. <br>• **Corporate Hierarchy Feed** – A dataset of parent‑subsidiary relationships with effective dates. <br>• **Pre‑Event Capability Proxy Dataset** – A file containing pre‑award capability statements with timestamps. <br>• **Historical Prefix Filter** – A manifest that lists all contracts included in the historical prefix, each with `contract_start_date` and `contract_end_date`. |\n| **5. Concrete Next Actions** | 1. **Extract Publication Timestamps** – Extend `q221_usaspending_public_clock_gate.py` to parse the PDF for a date/time stamp (e.g., using regex on “Published on” or similar). Store the extracted timestamp and compare it against the contract’s `effective_date`. <br>2. **Validate Award vs. Modification** – Add logic to fetch the transaction history endpoint, parse the JSON payload, and assert that each event’s `event_type` matches the contract’s definition (award vs. modification). <br>3. **Implement PSC & R&D Checks** – Download the official PSC and R&D classification lists, version‑tag them, and cross‑validate all codes present in the dataset. <br>4. **Verify Recipient‑to‑Issuer Mapping** – Pull the latest mapping file from the official source, compare it against the dataset’s mapping, and flag any mismatches. <br>5. **Track Corporate Changes** – Integrate a corporate hierarchy feed and ensure that any recipient whose issuer changes during the contract period is flagged. <br>6. **Filter Historical Prefix** – Add a pre‑filter that excludes any contract whose `contract_end_date` is after the current contract’s `effective_date`. <br>7. **Create Falsifier Scripts** – Write small scripts that generate the falsifiers listed above and run them against the updated gate to confirm that failures are detected. |\n| **6. Uncertainty** | • The About‑the‑Data PDF may not contain a machine‑readable timestamp; OCR or manual extraction may be required. <br>• The API may enforce rate limits or require authentication; this could impede automated fetching of transaction history. <br>• Versioning of PSC/R&D codes may not be publicly available; assumptions about effective dates may introduce errors. <br>• Corporate hierarchy data may be incomplete or lag behind real‑time changes, leading to false negatives. <br>• The historical prefix manifest may not be maintained; manual verification may be needed. |\n\n**End of Handoff**",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.375,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6111, Requested 5629. Please try again in 28.05s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-774d5083-00d8-483a-ad05-9e4558ed7882",
-  "usage": {
-    "queue_time": 0.049965338,
-    "prompt_tokens": 5072,
-    "prompt_time": 0.253532373,
-    "completion_tokens": 2156,
-    "completion_time": 2.241943104,
-    "total_tokens": 7228,
-    "total_time": 2.495475477,
-    "completion_tokens_details": {
-      "reasoning_tokens": 489
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-18T10:54:52.717440Z",
+    "blocked_until_utc": "2026-10-18T11:54:52.717440Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6111, Requested 5629. Please try again in 28.05s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
