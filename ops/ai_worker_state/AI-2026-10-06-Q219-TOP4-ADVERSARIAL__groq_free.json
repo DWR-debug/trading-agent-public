@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
   "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
-  "observed_at_utc": "2026-10-18T04:19:05.106893Z",
+  "observed_at_utc": "2026-10-18T10:54:51.793793Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.155,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5297, Requested 6095. Please try again in 25.439999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.842,
+  "stdout": "**Worker Handoff – Q219 Options‑Source Breadth Gate Review**\n\n| Section | Content |\n|---------|---------|\n| **Summary** | Q219 is a discovery‑only gate that checks the breadth of the Q129 options source. The current implementation pulls the Q129 release from GitHub, a secondary “piekstra” repo, and the CBOE archive, then reports a handful of boolean flags. The gate makes several implicit assumptions about data provenance, timestamp semantics, and the relationship between filing changes and option‑only state. |\n| **Findings** | 1. **Non‑immutable data sources** – The script pulls live HTTP endpoints (GitHub API, CBOE archive, GitHub raw URLs).  <br>2. **Unverified asset list** – It assumes all `_options.parquet` assets belong to the intended universe and that their names uniquely identify underlying symbols.  <br>3. **Timestamp semantics** – The script uses `datetime.now(timezone.utc)` for `generated_at_utc` and does not validate that the EOD snapshot time (4 PM ET) is correctly aligned with the SEC acceptance clock.  <br>4. **Same‑session leakage** – No check that the same‑day snapshot is not derived from a later intraday source or that the snapshot is truly “end‑of‑day”.  <br>5. **Implied‑volatility fields** – The Q129 contract lists no required IV columns; the script never verifies that IV, IV‑smoothed, or IV‑rank fields exist.  <br>6. **Event‑window definition** – The gate does not encode the event‑window (e.g., “next‑regular‑session boundary”) nor verify that the source data respects it.  <br>7. **Cross‑market wedge claim** – The script reports a boolean “is_broad_individual_equity_option_source” but does not demonstrate that the breadth adds information beyond the filing change or the options‑only state.  <br>8. **Placeholder fields** – Several payload keys (`cboe_is_quotes_iv_oi_source_proven`, `free_…`) are hard‑coded or incomplete, reducing auditability.  <br>9. **Missing provenance checks** – No hash or checksum comparison against a frozen snapshot of the Q129 release or the alt store.  <br>10. **Assumed mapping** – The script infers underlying symbols by splitting on `\"_options.parquet\"`, which fails for symbols containing underscores (e.g., “BRK.A”). |\n| **Counterarguments** | • The GitHub API",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-18T04:19:05.262235Z",
-    "blocked_until_utc": "2026-10-18T05:19:05.262235Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5297, Requested 6095. Please try again in 25.439999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-901b384b-2f06-41a3-8f1e-1768ac45c31a",
+  "usage": {
+    "queue_time": 0.00366896,
+    "prompt_tokens": 5378,
+    "prompt_time": 0.296796441,
+    "completion_tokens": 3200,
+    "completion_time": 3.372207956,
+    "total_tokens": 8578,
+    "total_time": 3.669004397,
+    "completion_tokens_details": {
+      "reasoning_tokens": 2645
+    }
   }
 }\n
