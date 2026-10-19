@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `d0a8567e2f3c4c9397ab5f1983bebf30b277eb39`
+**Current operational snapshot:** `94676575791b6b1fbcf3692d6a4eddd453334d78`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-19T13:54:58.131258+00:00`
+**Generated (UTC):** `2026-10-19T19:34:47.082946+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -140,7 +140,7 @@ This checkpoint preserves what was known at that time. It is historical context,
 - Source-feasibility latest receipt: **DISCOVERY_SOURCE_FEASIBILITY_COMPLETED**.
 - Q179 ClinicalTrials.gov, Q180 NHTSA, Q181 OSHA/DOL, Q183 NTSB and Q184 FCC currently pass the bounded source probe; Q182 FERC eLibrary remains **runner-access blocked** where the GitHub-hosted probe receives HTTP 403.
 - PIT Readiness R1 latest receipt: **PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE**.
-- Latest Q179–Q184 PIT receipt fingerprint: `edda7bf1247f0e908e4655f61df4838a239dc22c8fea4e8d64daa16560d502a1`.
+- Latest Q179–Q184 PIT receipt fingerprint: `703f2cc19a328a902a7b76c53e666614e66434a5f407fb107f5cb2d2e48b7f11`.
 - Candidate-level PIT status remains non-authorizing; all six current statuses are surfaced directly in `research/evidence/q179_q184_pit_readiness_r1_latest.json`.
 - Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
 ### Q197–Q201 Orthogonal Information Frontier
@@ -176,7 +176,7 @@ This checkpoint preserves what was known at that time. It is historical context,
 ### Q169 R4 Independent NOAA Reproduction
 
 - Independent reproduction status: **Q169_R4_INDEPENDENT_REPRODUCTION_COMPLETED**.
-- Persistent receipt fingerprint: `09e52c15a8a84583a94fb540ec5d761e021e9f16ec95b50eddefb76deb2445a7`.
+- Persistent receipt fingerprint: `f3c61d18738ffc6894b437d4f1242f24e7a1749c9c672cb8df70c6c4cf261e87`.
 - All fixed R3 archive samples reproduced = **True**.
 - Candidate-specific exposure map frozen = **False**; revision lineage reconstructed = **False**.
 - This strengthens NOAA source/archive provenance only; candidate PIT validation and performance remain closed.
