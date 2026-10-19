@@ -1,6 +1,6 @@
 {
-  "coverage_receipt_fingerprint": "0724c76744c7080175583c4c750822385a294ebcce1cbe2e66f9b146d14f13d7",
-  "receipt_fingerprint": "cad36ff00634de773329aa24b17349be3a8fb0fbd5999520abb1d4b6a4a37377",
+  "coverage_receipt_fingerprint": "7a831170f78360425b8b0f672e5f772fe3c424b9155f65d37f9e9c6a144895e4",
+  "receipt_fingerprint": "a9cc8199aaabca053d35d356b16ee6961a76d2d333d8f75d2968b4d0ef474335",
   "results": {
     "AMP": {
       "checks": {
@@ -50,6 +50,30 @@
       "warc_date": "2025-03-24T00:36:44Z",
       "warc_record_sha256": "66bcd13b59a4f7ebfccab927ec03c2398117c6bdee4344e791e2fdf37b205221"
     },
+    "SPGI": {
+      "checks": {
+        "http_content_length_boundary_exact": true,
+        "http_status_line_present": true,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
+        "target_matches_index_url": true,
+        "target_uri_present": true,
+        "warc_date_present": true,
+        "warc_payload_digest_present": true,
+        "warc_version_present": true
+      },
+      "compressed_sha256": "0f2fc040dd995e553845cf4c856ae0659a6b14b5293880ff7b79133021bedc35",
+      "http_status_line": "HTTP/1.1 200 ",
+      "index_digest": "XEU4QWNIXXFKQCMSMCYA2PBOTEVSEVEI",
+      "indexed_timestamp": "20250317151929",
+      "payload_bytes": 115477,
+      "payload_sha1_base32": "XEU4QWNIXXFKQCMSMCYA2PBOTEVSEVEI",
+      "status": "WARC_RECONSTRUCTED",
+      "symbol": "SPGI",
+      "target_uri": "https://investor.spglobal.com/ir-home/default.aspx",
+      "warc_date": "2025-03-17T15:19:29Z",
+      "warc_record_sha256": "167eae7a182c167b91c6d0914cce02e08fa354226df7bb6ca80c7290274e3b0c"
+    },
     "VLO": {
       "checks": {
         "http_content_length_boundary_exact": true,
@@ -95,12 +119,12 @@
     "threshold_search": false,
     "variant_search": false
   },
-  "source_commit": "85c2ab371d404c8aae49d0fa6f58112f526e7c4b",
+  "source_commit": "dff908af75c7f9172a452ffe459718dd0c1cae5c",
   "summary": {
     "blocked": 0,
-    "capture_candidates": 3,
+    "capture_candidates": 4,
     "infra_blocked": 0,
-    "warc_reconstructed": 3
+    "warc_reconstructed": 4
   },
   "task_id": "Q-2026-10-03-Q171-WARC-RECONSTRUCTION"
 }
