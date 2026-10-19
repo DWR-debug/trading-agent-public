@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-18T21:02:21.461918Z",
+  "observed_at_utc": "2026-10-19T05:19:11.943160Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 67.334,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 88.87,
+  "stdout": "{\n  \"findings\": \"Q202-Q204 information-timing candidates show provisional source-feasibility readiness (per source_readiness_snapshot_guard and orthogonal_pit_next_gate.py) lacking immutable historical snapshot binding. Q205 NLRB labor-representation channel has no source/PIT receipt and remains discovery-only. All seven attack vectors apply: (1) current-endpoint drift risk due to live-probe-only basis; (2) unverified historical observation/publication timestamp discipline; (3) unexamined revision/amendment/Q",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1792387152-23Mb0Pq1l7O14IV5WJBL",
+  "usage": {
+    "prompt_tokens": 6001,
+    "completion_tokens": 3200,
+    "total_tokens": 9201,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3080,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
