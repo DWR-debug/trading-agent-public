@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-19T14:00:50.654710Z",
+  "observed_at_utc": "2026-10-19T22:38:29.288507Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 8.143,
-  "stdout": "User Safety: safe",
+  "duration_seconds": 34.645,
+  "stdout": "**Adversarial Review – Source/PIT Readiness (Q202‑Q204 & Q205)**  \n\n**Findings**  \n1. **Provisional source‑feasibility status** – The receipt `q202_q204_information_timing_feasibility_latest.json` is classified as *PROVISIONAL_LIVE_PROBE_ONLY* (no durable binding such as `snapshot_sha256`, `immutable_historical_snapshot`, `vintage_sha256`, etc.). The same pattern appears for Q203 and Q204.  \n2. **Missing immutable historical snapshot** – No dated snapshot/vintage or frozen artifact is bound to the receipt, so the source cannot serve as durable historical evidence for PIT.  \n3. **Unclear revision/amendment lineage** – The receipt does not expose any `revision`,",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1792418455-QBcSYpwbphCUrKlzps7r",
+  "response_id": "gen-1792449509-js0aH72ZXLYfSK4GiHp3",
   "usage": {
-    "prompt_tokens": 6087,
-    "completion_tokens": 184,
-    "total_tokens": 6271,
+    "prompt_tokens": 4944,
+    "completion_tokens": 3198,
+    "total_tokens": 8142,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 207,
+      "reasoning_tokens": 0,
       "image_tokens": 0,
       "audio_tokens": 0
     }
