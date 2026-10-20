@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-10-20T11:25:05.104897Z",
+  "observed_at_utc": "2026-10-20T16:50:52.624522Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 3.357,
-  "stdout": "**Worker Handoff – Q220 (SEC Financial Statement Notes Archive) – Adversarial Source/PIT Review**\n\n| # | Failure Mode | Description | Minimal Deterministic Falsifier | Exact Artifact Needed |\n|---|--------------|-------------|---------------------------------|-----------------------|\n| 1 | **As‑Filed XBRL Text‑Block Integrity** | The archive claims to contain “as‑filed” XBRL text‑blocks, but the extraction routine may have altered whitespace, line‑breaks, or removed comments. | Load a known XBRL file from the archive, re‑serialize it using the same parser, and compare byte‑by‑byte to the original. | `2009q1_notes.zip` → `txt.txt` (or any `.txt` containing raw XBRL). |\n| 2 | **Presentation‑Role Mapping Accuracy** | The mapping from presentation‑role to fact hierarchy may be inferred incorrectly if the taxonomy extension is not fully applied. | Parse the same XBRL file with the base taxonomy and with the extension; compare the resulting role‑to‑node mapping. | Same XBRL file as above; base taxonomy (`us-gaap-2009-01-01.xsd`) and extension file. |\n| 3 | **Taxonomy‑Extension Changes** | Extensions may add new elements or alter element semantics; the gate assumes a static taxonomy. | Identify an element that is only present in the extension; attempt to parse it with the base taxonomy and expect failure. | Extension file from the archive (e.g., `us-gaap-2009-01-01-ext.xsd`). |\n| 4 | **Custom Namespace Handling** | Custom namespaces may be omitted or incorrectly resolved, leading to mis‑identified facts. | Create a minimal XBRL snippet that uses a custom namespace prefix; run the parser and verify that the namespace URI is correctly resolved. | A crafted XBRL snippet embedded in a test file. |\n| 5 | **Section Identity Consistency** | Section numbers in the notes may be re‑ordered or duplicated across filings; the gate assumes one‑to‑one mapping. | Take two filings that reference the same section number but have different content; check that the parser does not merge them. | Two distinct `.txt` files from the archive that share a section header. |\n| 6 | **Narrative Tokenization Robustness** | Tokenization logic may split on whitespace only, missing punctuation‑bound tokens or merging multi‑word tokens. | Feed a narrative containing hyphenated words, apostrophes, and ellipses; verify that token boundaries match the original text. | A narrative excerpt from `txt.txt`. |\n| 7 | **Amended Filings Detection** | The gate does not flag amended filings; an amendment may introduce duplicate facts or altered periods. | Locate a filing that is an amendment (look for `amended` flag in metadata); compare fact lists before and after amendment. | Metadata file indicating amendment status (e.g., `sub.txt` entry). |\n| 8 | **Future/Current XBRL Contamination** | The archive may contain XBRL files that reference future taxonomy versions, causing parsing errors. | Parse a file that references a taxonomy version newer than the base; expect a resolution error. | A file with a `schemaLocation` pointing to a future version. |\n| 9 | **Duplicate Fact Detection** | Duplicate facts (same context, unit, and concept) may be present due to filing errors; the gate does not detect them. | Count occurrences of each `(context, unit, concept)` triple; flag any count > 1. | Any `.txt` file with repeated fact entries. |\n|10 | **Period/Unit/Context Alignment** | Facts may reference contexts that do not match the filing period or units that are not defined. | Validate that every fact’s `contextRef` resolves to a context whose period matches the filing date, and that every `unitRef` is defined. | The same XBRL file; accompanying context and unit definitions. |\n|11 | **Representation Mismatch vs. Filing Length** | The gate assumes that any representation mismatch is due to content differences, not simply longer/shorter files. | Compare the size of the raw XBRL file to the size of the parsed fact list; if size difference > 10 % but fact count unchanged, flag potential readability issue. | File size metrics from `txt.txt`. |\n\n---\n\n### Counterarguments & Observations\n\n1. **Archive Member Presence** – The gate currently only checks for the presence of the 12 required member files (`sub.txt`, `tag.tsv`, etc.). It does **not** verify that each file contains the expected schema or that the data within is consistent with the XBRL files.  \n2. **XBRL Parsing Assumptions** – The parsing logic is not part of the gate; it is assumed to be handled downstream. Therefore, any parsing errors (e.g., namespace resolution, context mismatches) are invisible to the gate.  \n3. **Temporal Consistency** – The gate does not enforce that the filing dates in the metadata match the dates implied by the XBRL contexts.  \n4. **Custom Taxonomy Extensions** – The archive may include custom extensions that are not referenced in the base taxonomy, leading to silent failures when facts are extracted.  \n\n---\n\n### Concrete Next Actions\n\n| Action | Owner | Deadline | Notes |\n|--------|-------|----------|-------|\n| 1. Extract `2009q1_notes.zip` locally and list all member files. | Research Engineer | 2026‑10‑25 | Confirm that all 12 required files exist. |\n| 2. Identify a representative XBRL file within the archive (e.g., a `.txt` containing raw XBRL). | Research Engineer | 2026‑10‑26 | Use the file for all subsequent parsing tests. |\n| 3. Implement a lightweight XBRL parser that can load the base taxonomy and any extensions. | Research Engineer | 2026‑10‑28 | Use `lxml` or `xml.etree.ElementTree` with namespace support. |\n| 4. Run the 11 falsifiers listed above against the chosen XBRL file. | Research Engineer | 2026‑10‑30 | Record pass/fail and any error messages. |\n| 5. Document any failures in a structured report (JSON or Markdown). | Research Engineer | 2026‑10‑31 | Include artifact paths, expected vs. actual outcomes. |\n| 6. If failures are found, propose minimal gate modifications (e.g., add context‑period validation). | Research Lead | 2026‑11‑02 | Ensure changes remain within the “source‑only” scope. |\n\n---\n\n### Uncertainty & Risks\n\n- **Archive Integrity** – We assume the ZIP archive is intact; any corruption would invalidate tests.  \n- **Taxonomy Availability** – Base and extension taxonomies may not be bundled with the archive; external download may be required.  \n- **Parser Limitations** – A lightweight parser may not fully emulate downstream extraction logic; some failures may be false positives.  \n- **Version Drift** – The archive is from 2009 Q1; newer filings may use different schemas, so findings may not generalize to current data.  \n\n---\n\n**End of Handoff**",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.371,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5460, Requested 5625. Please try again in 23.1375s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-401830b0-5f1b-4820-83f4-96638747df61",
-  "usage": {
-    "queue_time": 0.092776036,
-    "prompt_tokens": 5092,
-    "prompt_time": 0.298607891,
-    "completion_tokens": 2303,
-    "completion_time": 2.376215378,
-    "total_tokens": 7395,
-    "total_time": 2.674823269,
-    "completion_tokens_details": {
-      "reasoning_tokens": 765
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-20T16:50:52.995136Z",
+    "blocked_until_utc": "2026-10-20T17:50:52.995136Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5460, Requested 5625. Please try again in 23.1375s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
