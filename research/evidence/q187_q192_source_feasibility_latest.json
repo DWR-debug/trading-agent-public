@@ -103,7 +103,7 @@
         }
       ],
       "clock_contract": "Recall publication state is distinct from incident/manufacture dates. Historical public-observation timing and revisions/withdrawals must be kept separate.",
-      "content_sha256": "6023f01d0c868429d3033d51897001a826c7b0fe98ec0c359a105c0c71ed5db9"
+      "content_sha256": "5d854b13d836be92ff7bb83e9f9c154fedaafdc8171533a143efe7cb11ec639f"
     },
     "EPA_ECHO": {
       "urls": [
@@ -134,7 +134,7 @@
         }
       ],
       "clock_contract": "Facility/event dates are not interchangeable with the public ECHO refresh/extraction boundary. Historical PIT must use the documented refresh clock and prevent later refreshes from rewriting the prefix.",
-      "content_sha256": "b1ebab2d793ef5df5f35133d170515be6421cf82066672c62ad79c2f8ebebd6b"
+      "content_sha256": "c2eb592d4f4f544fe46363fe9f2926a559c3af917f9cd029514c3ff9279c5d2f"
     },
     "USPTO_PATENT": {
       "urls": [
@@ -166,7 +166,7 @@
         }
       ],
       "clock_contract": "Patent issue/publication date is distinct from later bulk-data refreshes. For Q191 the science-publication boundary must be separately proven and same-day ambiguous ordering must be excluded.",
-      "content_sha256": "0b479cbadf848ff50900b2079f518ee3f12b22b4d241ad0acc4571276f06f7eb"
+      "content_sha256": "3ab03bf91b4d623c542fa4aedef6e6319e84b0a63b1dfa4e71bd88cfd2dd573f"
     },
     "CROSSREF": {
       "urls": [
@@ -188,7 +188,7 @@
         }
       ],
       "clock_contract": "Crossref deposit/publication metadata is not automatically an exact public-dissemination timestamp; historical stage ordering must be proven.",
-      "content_sha256": "91fffc0f212259f9d07de015c6b4fcc605e846d0e1bdf8db54d58019e8800fd0"
+      "content_sha256": "769dc779544841a12ae51bcdfba309b3805046a30d6cbfca57b4785dc4845824"
     },
     "FDA_SHORTAGES": {
       "urls": [
@@ -238,7 +238,7 @@
         }
       ],
       "clock_contract": "Shortage start/resolution dates are distinct from first public observation. Historical daily-list state must be reconstructed without allowing current records to overwrite earlier prefixes.",
-      "content_sha256": "c986754f2cb68a45781b6bcc8810a8775dd0d7fd04b8f087f383056c760697fe"
+      "content_sha256": "f4e57c7f8e3eb152c211055562ec70d188675d3f0ec6348c4803a31ea0faf2eb"
     }
   },
   "candidate_results": [
@@ -311,5 +311,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "9955467f22f181e83a7177ae3dd020ef50d388b39b4d7bd36e3e803f97ed8cd7"
+  "receipt_fingerprint": "7938e96b000ba6b3f785f3ffa6e15a385b23304b6e5d1875cad31477e51d204a"
 }
