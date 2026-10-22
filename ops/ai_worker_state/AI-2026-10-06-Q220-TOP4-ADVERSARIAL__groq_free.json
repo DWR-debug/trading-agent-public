@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-10-22T04:31:12.644986Z",
+  "observed_at_utc": "2026-10-22T11:40:46.737429Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.562,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5576, Requested 5378. Please try again in 22.155s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.571,
+  "stdout": "**Worker Handoff – Q220 Methods Review (XBRL‑Text‑Block & Presentation‑Role Mapping)**  \n\n| # | Failure Mode | Minimal Deterministic Falsifier | Exact Artifact Needed | Counter‑Argument (why it might *not* be a failure) |\n|---|--------------|---------------------------------|-----------------------|----------------------------------------------------|\n| 1 | **XBRL text‑block not “as‑filed”** | Compute a SHA‑256 of the raw XBRL file in the archive and compare to the SHA‑256 of the same filing’s XBRL file fetched directly from the SEC EDGAR “raw” endpoint. | 1. URL of the original XBRL file (e.g., `https://www.sec.gov/Archives/edgar/data/<CIK>/<accession>/index.htm` → download the `.xml` file). 2. Path to the XBRL file inside the archive (e.g., `sub/2029/2029-01-01.xml`). | The archive may be a “cleaned” copy that removes non‑XBRL artefacts but still preserves the core text‑block. |\n| 2 | **Presentation‑role mapping altered** | Extract the `<presentationRole>` elements from the taxonomy in the archive and compare to those in the original filing’s taxonomy. | 1. Original taxonomy file (`us-gaap-2023-01-01.xsd` or equivalent) from EDGAR. 2. Taxonomy file inside the archive (e.g., `pre/pre.txt`). | The archive may use a canonical taxonomy that is functionally equivalent but with different role identifiers. |\n| 3 | **Taxonomy‑extension changes** | Verify that any `<extension>` elements in the archive’s taxonomy match those in the original filing’s taxonomy. | 1. Original taxonomy extension file (`us-gaap-2023-01-01-extensions.xsd`). 2. Extension file in the archive (`pre/pre.txt`). | The archive may intentionally exclude extensions that are not required for the candidate’s PIT. |\n| 4 | **Custom namespaces missing or altered** | List all namespace prefixes in the archive’s XBRL files and compare to the original filing’s namespace declarations. | 1. Original XBRL file (see #1). 2. Archive XBRL file. | The archive may use a subset of namespaces that still satisfy the candidate’s requirements. |\n| 5 | **Section identity mismatch** | Compare the `<section>` tags (or equivalent grouping) in the archive to those in the original filing. | 1. Original XBRL file. 2. Archive XBRL file. | The archive may reorganise sections for readability but keep the underlying fact set identical. |\n| 6 | **Narrative tokenization altered** | Tokenise the narrative text (e.g., `<us-gaap:NotesOnFinancialStatements>`) in both the original and archive and compute a diff of token counts. | 1. Original XBRL file. 2. Archive XBRL file. | Tokenisation may be performed for downstream NLP but the raw text remains unchanged. |\n| 7 | **Amended filings not flagged** | Check the `<amendment>` flag in the original filing’s header and verify that the archive’s metadata reflects the same status. | 1. Original filing header (`<accessionNumber>` with `<amendment>` element). 2. Archive metadata (e.g., `sub/sub.txt` or `tag/tag.txt`). | The archive may omit amendment flags if they are not needed for the candidate. |\n| 8 | **Future/current XBRL contamination** | Verify that the filing dates in the archive do not exceed the fixed end date (`2026‑10‑05`). | 1. Original filing header. 2. Archive metadata. | The archive may include “future” filings that are intentionally excluded by the candidate’s contract. |\n| 9 | **Duplicate facts** | Detect duplicate `<us-gaap:Fact>` IDs within a single XBRL document in the archive. | 1. Archive XBRL file. | Duplicate facts may be harmless if the candidate only counts unique IDs. |\n| 10 | **Period/Unit/Context mis‑alignment** | Parse `<context>` definitions and compare period and unit references to the facts that reference them. | 1. Archive XBRL file. | The archive may normalise contexts but still preserve the same period/unit semantics. |\n| 11 | **Representation mismatch proxies filing length/readability** | Compare the byte‑size of the archive’s XBRL file to the original. | 1. Original XBRL file. 2. Archive XBRL file. | The archive may truncate whitespace or comments, reducing size but not altering fact content. |\n\n---\n\n### Counter‑Arguments (Why the above may *not* be a failure)\n\n* The archive is explicitly part of the source contract; any intentional transformations (e.g., whitespace removal, namespace simplification) are acceptable if they preserve the fact set.\n* The candidate’s PIT may only require the presence of facts, not the exact raw text or taxonomy structure.\n* The archive may be a “cleaned” copy that removes non‑essential metadata (e.g., amendment flags) to reduce noise.\n\n---\n\n### Concrete Next Actions\n\n1. **Select a representative filing** (e.g., a 10‑K from a listed issuer within the fixed window).  \n2. **Download the original XBRL file** from EDGAR and compute its SHA‑256.  \n3. **Extract the corresponding XBRL file** from the archive (`sub/…/…xml`) and compute its SHA‑256.  \n4. **Run the comparison scripts** for each failure mode (tokenisation, namespace list, context alignment).  \n5. **Document any discrepancies** with line‑by‑line diffs and record the artifact paths.  \n6. **Report findings** in the same structured table, noting whether each falsifier succeeded or failed.  \n7. **If any falsifier fails**, flag the candidate for a design‑blocker review; otherwise, mark the failure mode as “validated as acceptable”.\n\n---\n\n### Uncertainty\n\n* The archive’s documentation does not explicitly state whether it is a verbatim copy or a cleaned version; thus, some transformations may be intentional.  \n* The candidate’s contract does not enumerate all permissible transformations, so the boundary between acceptable and unacceptable changes remains ambiguous.  \n* Without a deterministic, immutable snapshot of the original filings, any comparison is provisional; a frozen historical artifact is required before a definitive conclusion can be drawn.",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-22T04:31:13.207547Z",
-    "blocked_until_utc": "2026-10-22T05:31:13.207547Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5576, Requested 5378. Please try again in 22.155s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-ece51451-dadd-40a2-a14b-2ef67a80a380",
+  "usage": {
+    "queue_time": 0.228912708,
+    "prompt_tokens": 5089,
+    "prompt_time": 0.419267696,
+    "completion_tokens": 2347,
+    "completion_time": 2.589648269,
+    "total_tokens": 7436,
+    "total_time": 3.008915965,
+    "completion_tokens_details": {
+      "reasoning_tokens": 959
+    }
   }
 }\n
