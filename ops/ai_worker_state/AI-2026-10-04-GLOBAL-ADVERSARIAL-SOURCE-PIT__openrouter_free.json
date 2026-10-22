@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-22T05:21:09.475363Z",
+  "observed_at_utc": "2026-10-22T12:24:35.569528Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 37.109,
-  "stdout": "\n\n# Adversarial Source/PIT Review — Q202–Q204 & Q205 Extension\n\n**Task:** `AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT`\n**Reviewer:** Independent adversarial methods reviewer (bounded worker)\n**Standard:** Grok Q194–Q201 review extended to Q202–Q204 information-timing family and Q205 NLRB labor-representation channel.\n\n---\n\n## 1. Findings (Attack Surface)\n\n### 1.1 Q202–Q204 Information-Timing Family\n\n**Finding 1 — Candidate contract is absent from the visible spec file.**\nThe file `research/candidates/orthogonal_candidate_specs_2026-10-04.json` contains contracts for Q194–Q201 (and possibly Q198) but **no Q202, Q203, or Q204 entries** are visible in the supplied context. The next-gate compiler (`automation/orthogonal_pit_next_gate.py`) references these candidates and maps them to `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`, but the mechanism definitions, event clocks, features, cheap falsifiers, and gates are not present in the context. **This is a structural gap**: without the candidate contract, it is impossible to verify whether the proposed information-timing mechanism is coherent, falsifiable, or orthogonal.\n\n**Finding 2 — \"Information absence\" as a mechanism is undefined.**\nThe task scope describes \"Q202-Q204 information absence.\" Absence of information is not an information clock. Unless the mechanism specifies *what information is absent*, *how absence is detected*, and *why absence should predict returns*, the candidate is unfalsifiable. The current context provides no such definition.\n\n**Finding 3 — Feasibility receipt durability is unverified.**\nThe source-readiness guard maps Q202–Q204 to `research/evidence/q202_q204_information_timing_feasibility_latest.json`. The guard's `classify()` function would return `PROVISIONAL_LIVE_PROBE_ONLY` unless the receipt contains a durable key (`immutable_historical_snapshot`, `dated_snapshot`, `snapshot_sha256`, etc.). The context does not show the receipt contents, but the next-gate compiler's output (`IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`) strongly implies the receipt **lacks** such a binding. If so, the feasibility claim is provisional and cannot support PIT authorization.\n\n**Finding 4 — Financing transmission confounding.**\nThe scope mentions \"financing transmission\" alongside Q202–Q204. If the information-timing signal is derived from financing events (e.g., debt issuance, equity offerings), then the mechanism may be confounded with known corporate-finance predictors. The candidate must declare its mechanism lineage and demonstrate novelty distance ≥ 0.8 from any existing price-only or financing-only lineage. No such declaration is visible.\n\n**Finding 5 — Public-information latency is assumed, not measured.**\n\"Public-information latency\" is listed as a frontier topic, but latency must be *measured* (observation timestamp minus dissemination timestamp) rather than *assumed*. If the candidate uses a proxy (e.g., filing date vs. receipt date), it inherits the exact same cross-publication source-field conflict documented in `docs/CURRENT_STATUS.md` for SEC 13F (FILING_DATE vs. EDGAR header date differing by 1–3 calendar days). That conflict is unresolved and directly threatens any information-timing candidate's clock discipline.\n\n### 1.2 Q205 NLRB Labor-Representation Certification Channel\n\n**Finding 6 — Discovery-only status is a hard blocker.**\nQ205 is explicitly described as \"discovery-only and not yet source/PIT validated.\" It has no feasibility receipt, no candidate contract, and no next-gate entry in the compiler. **No adversarial review of source/PIT readiness can proceed** because there is no claimed readiness to attack. The only legitimate observation is that the channel is quarantined and must remain so until a frozen historical artifact exists.\n\n**Finding 7 — NLRB certification latency is structurally unknown.**\nNLRB labor-representation certifications involve multiple stages: petition filing, election, certification, potential objections, recounts, and appeals. The \"public observation boundary\" could be any of these stages. Without a frozen mapping of which stage constitutes the admissible event clock, the candidate is vulnerable to:\n- **Retrospective stage-switching**: redefining the event clock after observing outcomes.\n- **Revision lineage**: election objections and recounts create amendment chains that can retroactively change the \"public state.\"\n- **Same-day leakage**: if the certification date is used as a proxy for the observation boundary, date-only leakage is likely.\n\n**Finding 8 — Frozen entity/exposure mapping is unbounded.**\nThe mechanism presumably maps NLRB certification events to exposed issuers (e.g., employers with certified bargaining units). This mapping must be frozen before outcome observation. But collective-bargaining-unit composition can change over time (hiring, divestiture, plant closures). Without an immutable historical snapshot of the entity-exposure mapping at each event date, the candidate cannot demonstrate that the exposure was known *at the event clock* and not retrofitted.\n\n**Finding 9 — Cross-candidate overlap with Q194–Q201.**\nQ194 (therapeutic-substitution pressure) and Q195 (inspection-to-enforcement escalation) are regulatory-information mechanisms. Q205 (NLRB labor representation) is also a regulatory-information mechanism. If the same regulatory-database source feeds multiple candidates, there is a **shared-lineage confound**: a single source revision or mapping change would simultaneously affect multiple candidates, violating the independence assumption required for cross-candidate consensus. The candidate must declare its source lineage and demonstrate it does not reuse any source already consumed by Q194–Q201.\n\n---\n\n## 2. Counterarguments (What Would Rebut These Findings)\n\n1. **On missing Q202–Q204 contracts**: The candidate specs file may be a later version (`orthogonal_candidate_specs_2026-10-05.json` is referenced by the next-gate compiler) or the contracts may be in a separate file not included in the context. If the contracts exist and are frozen, the review should be deferred until they are supplied.\n\n2. **On \"information absence\"**: The mechanism may be well-defined in the full receipt (e.g., \"absence of a scheduled macroeconomic release\" or \"absence of a regulatory filing\"). If the receipt defines the absence boundary, the finding of undefinedness is premature.\n\n3. **On durability**: The Q202–Q204 feasibility receipt may contain a durable binding that is not visible in the context. The next-gate compiler's output is consistent with either a missing durable binding *or* a compiler that defaults to requiring one regardless.\n\n4. **On Q205**: Discovery-only status is appropriate for a newly quarantined channel. The adversarial review can still identify the *minimum artifacts required* to exit discovery-only status, which is a constructive contribution rather than a block.\n\n---\n\n## 3. Concrete Next Actions (Minimal Deterministic Falsifiers)\n\n### For Q202–Q204\n\n| # | Action | Minimal Deterministic",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 25.477,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1792646470-Tlcg7VZv9thHuTjHHZ63",
-  "usage": {
-    "prompt_tokens": 5560,
-    "completion_tokens": 3200,
-    "total_tokens": 8760,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1753,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
