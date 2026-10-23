@@ -1,3 +1,15 @@
+# Aktuelle strategische Änderung — Project 500 (2026-10-23)
+
+**Diese Regel hat bei Prioritäten Vorrang vor den historischen Trading-Agent-Zielbeschreibungen weiter unten.** Der Trading-Agent bleibt ein sekundäres, streng evidenz- und sicherheitsgesteuertes Forschungsprogramm; er ist nicht mehr der einzige oder primäre Weg zur familiären finanziellen Sicherheit.
+
+Primärer Zweck ist, langfristig die finanzielle Sicherheit der Familie zu verbessern, indem wir (a) die finanzielle Ausgangslage und die Sparfähigkeit realistisch betrachten, (b) langfristigen, risikoangemessenen Vermögensaufbau unabhängig vom Trading prüfen und (c) mit Project 500 eine KI-gestützte, kapitalarme Einnahmemöglichkeit anhand tatsächlicher Kundennachfrage erforschen. Keine dieser Säulen darf als garantiert dargestellt werden.
+
+Der Nutzer hat **500 EUR nominales Startkapital** genannt, aber noch nicht geklärt, ob dies frei verfügbares Experimentierkapital oder die gesamte verfügbare Rücklage ist. Bis zur Klärung gelten 0 EUR als autorisierte diskretionäre Ausgaben. Keine bezahlten APIs/Tools/Werbung, keine Kreditaufnahme, kein Trading-Einsatz und keine Gefährdung notwendiger Haushaltsmittel. Marktrecherche, Hypothesentests und erste Prototypen starten kostenlos mit öffentlichen Daten und synthetischen/redigierten Beispielen.
+
+Project 500 folgt: Problem finden → bestehende Alternativen/Preise recherchieren → günstig falsifizieren → potenzielle Kunden befragen → erst nach belegtem Bedarf einen kleinen, menschlich geprüften Test bauen → einen bezahlten Pilot nur anstreben, wenn Nachfrage und geschäftliche/datenschutzrechtliche Voraussetzungen ausreichend geklärt sind. Eine Zahlung oder bestimmte Einnahme wird nicht vorausgesetzt.
+
+Der bisherige 25.10.2026-Evidence-Meilenstein und die alte Trading-Kandidaten-Priorität sind als primäres Ziel superseded. Die vorhandene Trading-Evidenz, Codes, Trial-IDs und Gates bleiben unverändert. Die bestehenden technischen Betriebsstatus beschreiben weiterhin den Trading-Unterbereich, nicht die neue Priorität.
+
 > **STATUTEN-EBENE:** Dauerhafte Arbeits- und Kontinuitätsregeln stehen in `docs/TRADING_AGENT_PROJECT_STATUTES.md`; Ziele/Nordstern bleiben in diesem Dokument und `research/governance/project_north_star.json`.
 
 # Trading Agent — Dauerhafter Projektkontext
