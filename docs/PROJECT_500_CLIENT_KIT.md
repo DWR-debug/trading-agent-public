@@ -135,6 +135,21 @@ Zuerst freiwillige Kontakte, Empfehlungen, lokale Unternehmernetzwerke, Veransta
 
 **STOP:** keine wiederkehrende Nachfrage, keine erreichbaren Käufer, kein messbarer Nutzen gegenüber kostenlosen Alternativen, unvertretbare Daten-/Haftungsrisiken oder keine glaubwürdige Lieferfähigkeit.
 
+## 9a. Kostenfreier Qualifizierungsweg vor einem echten Kundentermin
+
+Vor dem Verkauf eines Piloten muss der Anbieter die Inhalte tatsächlich beherrschen. Die KI kann beim Erstellen der Materialien helfen, ersetzt aber weder eigene Übung noch fachliche Sorgfalt.
+
+Empfohlene Vorbereitung ohne Ausgaben:
+1. **EU-Kommission — Repositorium für KI-Kompetenzpraktiken:** Beispiele bestehender organisationaler Maßnahmen studieren; die Kommission sagt ausdrücklich, dass die bloße Übernahme eines Beispiels keine Compliance-Vermutung schafft.  
+   https://digital-strategy.ec.europa.eu/de/policies/repository-ai-literacy-practices
+2. **Mittelstand-Digital — KI-Trainer-Angebote:** kostenfreie, anbieterneutrale KMU-Unterstützung nutzen. Das Train-the-Trainer-Angebot richtet sich besonders an Multiplikatoren wie Kammern, Verbände und Wirtschaftsförderungen; Zugang/Voraussetzungen vorab prüfen.  
+   https://www.mittelstand-digital.de/MD/Redaktion/DE/Artikel/ki-train-the-trainer.html
+3. **KI-Campus:** passende kostenlose Lernangebote zu KI und Arbeitswelt belegen, sofern sie zum gewählten Kundensegment passen.  
+   https://ki-campus.org/
+4. **Interne Probe-Schulung:** das Material mit synthetischen Beispielen durchspielen, Antworten auf kritische Fragen üben und die Prüflisten testen. Kein echter Kundenpilot, bis der Ablauf klar und zuverlässig demonstriert werden kann.
+
+Die Qualifizierung soll ehrlich benannt werden. Keine Zertifizierung oder berufliche Erfahrung behaupten, die nicht erworben wurde.
+
 ## 9. KI-Unterstützung und Verantwortung
 
 Die KI kann den Trainer vorbereiten: Unterrichtsunterlagen, Übungen, Beispieldaten, Vorlagen, Checklisten, Übungsdialoge, Angebotsentwürfe, Auswertung anonymisierter Rückmeldungen und Gegenprüfung. Der Nutzer bleibt der sichtbare Dienstleister, muss die Materialien verstehen, Ergebnisse prüfen und darf keine Fachqualifikation behaupten, die er nicht besitzt. Vor dem ersten Kundentermin wird eine interne Probe-Schulung durchgeführt.
