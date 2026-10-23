@@ -48,6 +48,13 @@ Der frühere 2.000-EUR-Wert im Trading-Agent-Projekt bleibt eine historische Sim
    Quelle: https://www.dihk.de/de/newsroom/digitalisierung-2025-herausforderungen-und-fortschritte-fuer-unternehmen-157712
 
 
+8. **Wettbewerb bei KI-Angebotserstellung im Handwerk:** Es gibt bereits öffentlich beschriebene KI-gestützte Angebots-Workflows, darunter `handwerk.ki` und `KI-Syndikat`. Die Anbieterbeschreibungen zeigen, dass die allgemeine Idee "aus Notizen ein Angebot erstellen" nicht als neu oder differenziert behandelt werden darf. Die dort genannten Einsparungen sind Anbieter-/Beispielangaben und keine unabhängige Wirksamkeitsprüfung.  
+   Quellen: https://www.handwerk.ki/wissen/ki-angebotserstellung und https://www.ki-syndikat.de/usecases/handwerk/01-angebotserstellung/
+
+9. **Digitalisierungsstand im Handwerk:** Laut der von Bitkom veröffentlichten Befragung von 504 Handwerksunternehmen (Erhebung in KW 23–29 2025) bieten 85 % bereits mindestens einen digitalen Service an; 68 % bieten digitalen Angebotsversand und 62 % digitalen Rechnungsversand. Diese Verbreitung ist ein Warnsignal gegen das Ersetzen etablierter Angebots-/Rechnungssysteme; ein neuer Dienst müsste einen klaren, bislang ungelösten vorgelagerten oder nachgelagerten Engpass adressieren.  
+   Quelle: https://bitkom-research.de/studien/handwerk-2025
+
+
 ### Aussagegrenze
 
 Quellen belegen, dass KI-Anwendung und öffentliche Daten vorhanden sind und es Konkurrenzprodukte gibt. Sie belegen **nicht** unsere Zahlungsbereitschaft, die Kundenakquise, die individuelle Lieferfähigkeit oder irgendeine Erfolgswahrscheinlichkeit. Diese Lücken werden mit direkten Gesprächen und einem kleinen Test geprüft.
@@ -66,11 +73,11 @@ Die vorläufige Reihenfolge bezieht sich nur auf die Kosten der Falsifikation un
 
 ### H1 — Ein enger Dokumenteneingang-zu-Arbeitsliste-Service
 
-**Hypothese:** Kleine technische Dienstleister, Wartungs-/Montagebetriebe oder spezialisierte Händler verlieren regelmäßig Zeit, wenn Anfrage-E-Mails und angehängte PDFs in eine strukturierte Angebots-/Arbeitsvorbereitung übertragen werden müssen. Ein KI-unterstützter, menschlich geprüfter Dienst könnte strukturierte Entwürfe, fehlende Angaben und Rückfragen liefern, ohne verbindliche Angebote, Buchungen oder technische Sicherheitsentscheidungen autonom freizugeben.
+**Hypothese:** Kleine technische Dienstleister oder spezialisierte Händler verlieren regelmäßig Zeit an einem eng abgegrenzten, vorgelagerten Schritt: verstreute Anfrage-E-Mails, Fotos und Anhänge müssen in eine prüfbare Aufgabenliste mit fehlenden Angaben, Rückfragen und Quellenverweisen überführt werden, bevor ihr bestehendes Angebots-/ERP-System genutzt wird. Das wäre ein zu prüfender möglicher Fokus, kein bereits belegtes Marktdefizit. Wir bieten ausdrücklich **keinen generischen KI-Angebotsgenerator** an: solche Angebote existieren bereits und der Wettbewerb ist sichtbar.
 
 **Was wir noch nicht wissen:** Wie oft geschieht der Vorgang? Wie viel Zeit kostet er? Ist er schmerzhaft genug, dass ein Betrieb dafür zahlt? Welche Software nutzt er bereits? Können wir die Sicherheit/Genauigkeit mit verfügbarer Expertise garantieren?
 
-**Billigster Test:** Mit synthetischen Beispielen ein Ergebnis-Mock-up erstellen und 8–10 passende Betriebe zu ihrem letzten realen Prozess befragen. Zuerst Problem und Aufwand ermitteln, nicht eine Lösung verkaufen. Keine echten personenbezogenen oder vertraulichen Kundenunterlagen in öffentliche KI-Tools hochladen.
+**Billigster Test:** Mit synthetischen Beispielen ein 1-seitiges Mock-up für den vorgelagerten Intake-Schritt erstellen; vor weiteren Arbeiten 8–10 passende Betriebe zu ihrem letzten realen Prozess befragen. Fragen, welche Software sie bereits verwenden und welcher Schritt damit offenbleibt. Zuerst Problem und Aufwand ermitteln, nicht eine Lösung verkaufen. Keine echten personenbezogenen oder vertraulichen Kundenunterlagen in öffentliche KI-Tools hochladen.
 
 **Stop-Kriterien:** Kein wiederkehrender Schmerz, keine klare Zeit-/Qualitätswirkung, existierende Software löst das Problem ausreichend, oder Daten-/Qualitätsrisiken sind nicht mit einem menschlichen Freigabeschritt beherrschbar.
 
