@@ -52,6 +52,14 @@ Der frühere 2.000-EUR-Wert im Trading-Agent-Projekt bleibt eine historische Sim
 
 Quellen belegen, dass KI-Anwendung und öffentliche Daten vorhanden sind und es Konkurrenzprodukte gibt. Sie belegen **nicht** unsere Zahlungsbereitschaft, die Kundenakquise, die individuelle Lieferfähigkeit oder irgendeine Erfolgswahrscheinlichkeit. Diese Lücken werden mit direkten Gesprächen und einem kleinen Test geprüft.
 
+## Kostenloser externer Gegencheck
+
+Mittelstand-Digital bietet KI-Trainer-Unterstützung bundesweit kostenfrei und anbieterneutral für KMU an. Das ist keine Kundenvalidierung und kein Förder- oder Umsatzzusage, aber eine zusätzliche unabhängige Möglichkeit, einen eng begrenzten Workflow, Risiken und vorhandene Alternativen prüfen zu lassen. Eine konkrete regionale oder thematische Anlaufstelle muss anhand des Wohn-/Wirtschaftsstandorts und des jeweiligen Angebots geprüft werden. Für Januar 2027 ist ein neues Netzwerk aus sechs regionalen und elf fach-/branchenbezogenen Zentren angekündigt; einzelne Zentren sollen schrittweise bis Mitte 2027 starten.
+
+Quellen:
+- Aktuelles Mittelstand-Digital KI-Trainer-Angebot: https://www.mittelstand-digital.de/MD/Navigation/DE/Praxis/KI-Trainer/ki-trainer.html
+- Neues kostenfreies, anbieterneutrales Netzwerk ab 2027 (Pressemitteilung vom 20.10.2026): https://www.mittelstand-digital.de/MD/Redaktion/DE/Pressemitteilungen/2026/2026-10-20-neues-netzwerk-mittelstand-digital.html
+
 ## Drei initiale Hypothesen (alle noch UNVALIDIERT)
 
 Die vorläufige Reihenfolge bezieht sich nur auf die Kosten der Falsifikation und den Umfang eines ersten Piloten; sie ist weder Umsatzprognose noch Erfolgsranking.
