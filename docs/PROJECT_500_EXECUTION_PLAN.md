@@ -1,9 +1,9 @@
 # Project 500 — Ausführungsplan und dauerhafter Handoff
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Effective:** 2026-10-23  
 **Strategische Priorität:** Primary  
-**Finanzielle Ausgaben vor Liquiditätsklärung:** EUR 0  
+**Bestätigtes Projektkapital:** EUR 500; kein zusätzliches Kapital  
 **Nächste Review:** 2026-10-30  
 **30-Tage-Entscheidungsfenster:** bis 2026-11-22 (kein Einkommensversprechen)
 
@@ -13,16 +13,18 @@ Ziel ist eine realistische, kostengünstige Suche nach einer KI-gestützten Dien
 
 Nicht-Ziele: garantierte Einnahmen, eine „revolutionäre“ Idee behaupten ohne Marktvalidierung, ein großes SaaS-Produkt vor Kundenkontakt bauen, mit bezahlten Tools oder Werbung auf Verdacht starten, Haushaltsrücklagen riskieren, oder einen Trading-Backtest als Einkommen behandeln.
 
-## Kapitalregel
+## Kapitalregel — Nutzerklärung vom 2026-10-23
 
-Der Nutzer hat 500 EUR nominales Startkapital genannt. Es ist noch nicht geklärt, ob das Geld frei verfügbar oder die gesamte Rücklage ist. Deshalb gelten vor einer Klärung:
+Der Nutzer hat bestätigt: **500 EUR sind als verfügbares Projektkapital vorhanden; mehr Kapital steht nicht zur Verfügung.** Dies ist die harte Obergrenze für Project 500. Es gibt keine Annahme, dass zusätzliches Kapital später bereitgestellt wird.
 
-- bestätigtes frei disponierbares Kapital: 0 EUR;
-- autorisierte diskretionäre Ausgaben: 0 EUR;
-- keine Trading-Einsätze, Darlehen, bezahlten APIs/Software, Werbung oder Registrierungsausgaben aus diesem Betrag;
-- vorerst nur kostenlose Recherche, öffentliche Daten, Kundeninterviews ohne bezahlte Tools und Prototypen mit synthetischen oder redigierten Daten.
+- **Phase 0 — Nachfragevalidierung: 0 EUR Ausgaben.** Kostenlose Recherche, Opt-in-Gespräche, öffentliche Quellen und synthetische Demo.
+- **Phase 1 — Mini-Demo: maximal 50 EUR kumulierte Ausgaben**, und erst wenn mindestens fünf tatsächliche Gespräche einen wiederkehrenden, ungelösten Engpass stützen. Keine Werbung und keine kostenpflichtigen KI-APIs.
+- **Phase 2 — Pilotvorbereitung: maximal weitere 150 EUR**, nur nach konkretem schriftlichem Pilotinteresse und dokumentierter Kostenbegründung. Gesamte Ausgaben vor dem ersten bezahlten Auftrag höchstens 200 EUR; **mindestens 300 EUR bleiben unangetastet**, bis ein bezahlter Auftrag vorliegt.
+- Vor jeder tatsächlichen Ausgabe wird der konkrete Posten, Zweck und Preis geprüft. Keine Kreditaufnahme, kein Trading-Einsatz dieses Kapitals, keine automatische Abonnements und keine bezahlte Werbung.
+- Vor bezahlter Leistung sind Gewerbe-/Steuer-/Rechnungs- und ggf. Versicherungsfragen für die tatsächliche Situation zu klären. Der Plan ist keine Rechts- oder Steuerberatung.
+- Vor tatsächlichem Kundenmaterial werden Datenschutz, Auftragsverarbeitung und Werkzeugfreigabe geprüft; zunächst nur synthetische oder hinreichend anonymisierte Beispiele verwenden.
 
-Der frühere 2.000-EUR-Wert im Trading-Agent-Projekt bleibt eine historische Simulationskonfiguration, keine Aussage über verfügbares Vermögen. Der 500-EUR-Trading-Canary war ebenfalls Simulation und darf nicht mit frei verfügbarem Kapital gleichgesetzt werden.
+Der historische 2.000-EUR-Wert bleibt ausschließlich eine Simulationseinstellung der Trading-Forschung; er ist kein zusätzlich verfügbares Kapital. Der 500-EUR-Trading-Canary war eine getrennte historische Simulation. **Die 500 EUR von Project 500 werden nicht zum Trading-Kapital.**
 
 ## Erste Recherche: belastbare Fakten und Aussagegrenzen
 
@@ -71,37 +73,50 @@ Quellen:
 
 Die vorläufige Reihenfolge bezieht sich nur auf die Kosten der Falsifikation und den Umfang eines ersten Piloten; sie ist weder Umsatzprognose noch Erfolgsranking.
 
-### H1 — Ein enger Dokumenteneingang-zu-Arbeitsliste-Service
+### H1 — KI-Startklar-Pilot: Mitarbeiter befähigen und einen Arbeitsablauf umsetzen
 
-**Hypothese:** Kleine technische Dienstleister oder spezialisierte Händler verlieren regelmäßig Zeit an einem eng abgegrenzten, vorgelagerten Schritt: verstreute Anfrage-E-Mails, Fotos und Anhänge müssen in eine prüfbare Aufgabenliste mit fehlenden Angaben, Rückfragen und Quellenverweisen überführt werden, bevor ihr bestehendes Angebots-/ERP-System genutzt wird. Das wäre ein zu prüfender möglicher Fokus, kein bereits belegtes Marktdefizit. Wir bieten ausdrücklich **keinen generischen KI-Angebotsgenerator** an: solche Angebote existieren bereits und der Wettbewerb ist sichtbar.
+**Kernhypothese:** Unternehmen wollen KI nicht nur erklärt bekommen. Ein Teil benötigt Hilfe, aus allgemeinem Interesse eine begrenzte, sichere und messbare tägliche Anwendung zu machen. Wir testen ein kompaktes Einführungsprogramm aus verständlicher Mitarbeiterschulung, einem risikoarmen betrieblichen Anwendungsfall, einer menschlichen Prüfroutine und einem kurzen Follow-up. Das ist eine Hypothese; tatsächliche Zahlungsbereitschaft muss erst nachgewiesen werden.
 
-**Was wir noch nicht wissen:** Wie oft geschieht der Vorgang? Wie viel Zeit kostet er? Ist er schmerzhaft genug, dass ein Betrieb dafür zahlt? Welche Software nutzt er bereits? Können wir die Sicherheit/Genauigkeit mit verfügbarer Expertise garantieren?
+**Zielsegment zur ersten Prüfung:** zunächst Unternehmen mit etwa 10–49 Beschäftigten und einem office-lastigen, wiederkehrenden Arbeitsablauf. Nicht automatisch eine ganze Branche wählen: Die erste Nische soll aus den tatsächlich erreichbaren Gesprächspartnern und wiederkehrenden Problemen abgeleitet werden.
 
-**Billigster Test:** Mit synthetischen Beispielen ein 1-seitiges Mock-up für den vorgelagerten Intake-Schritt erstellen; vor weiteren Arbeiten 8–10 passende Betriebe zu ihrem letzten realen Prozess befragen. Fragen, welche Software sie bereits verwenden und welcher Schritt damit offenbleibt. Zuerst Problem und Aufwand ermitteln, nicht eine Lösung verkaufen. Keine echten personenbezogenen oder vertraulichen Kundenunterlagen in öffentliche KI-Tools hochladen.
+**Vorläufiges Angebot — „KI-Startklar-Pilot“ (10 Arbeitstage, online):**
+- 20-minütiges Passungs-/Zielgespräch, ohne vertrauliche Daten;
+- 90-minütiger Workshop für bis zu fünf Beschäftigte;
+- Auswahl von genau einem risikoarmen Prozess (beispielsweise Besprechungsnotizen strukturieren, öffentlich verfügbare Informationen zusammenfassen oder einen ersten Textentwurf vorbereiten);
+- ein einfacher, auf den Prozess zugeschnittener Arbeitsablauf mit Prompt-/Eingabevorlage, Datenampel, Faktenprüfliste und klarer menschlicher Freigabe;
+- ein kurzer Vorher/Nachher-Test anhand von Zeitaufwand, Nacharbeit und Fehlern;
+- ein 20-minütiger Review nach etwa 10–14 Tagen und ein einseitiger nächster-Schritte-Plan.
 
-**Stop-Kriterien:** Kein wiederkehrender Schmerz, keine klare Zeit-/Qualitätswirkung, existierende Software löst das Problem ausreichend, oder Daten-/Qualitätsrisiken sind nicht mit einem menschlichen Freigabeschritt beherrschbar.
+**Nicht enthalten:** große Softwareintegration, autonome Entscheidungen, Nutzung von Kunden-/Personaldaten in nicht freigegebenen Tools, Rechts-/Datenschutzberatung, Zertifizierung oder Garantie, dass gesetzliche Pflichten vollständig erfüllt werden. Kein Hochrisiko-Anwendungsfall im ersten Pilot.
 
-### H2 — Ein manuell geprüfter „Bid/No-Bid“-Kurzbericht für eine einzelne Nische
+**Preis-Hypothese:** ein klar begrenzter erster Pilot für rund **390 EUR Gesamtpreis** (endgültige Angebots-/Rechnungsdarstellung erst nach Klärung der steuerlichen Voraussetzungen). Dieser Preis ist eine zu testende Hypothese, kein nachgewiesener optimaler Marktpreis. Öffentliche Wettbewerber nennen etwa 399 EUR für einen Workshop bzw. 499 EUR für KI-Schulung und zugleich deutlich höhere Inhouse-Preise; kostenfreie, neutrale KMU-Unterstützung existiert ebenfalls. Daher wird nicht „KI-Wissen“ allein verkauft, sondern die Umsetzung und Messung eines einzelnen, freigegebenen Arbeitsablaufs. Quellen: https://pharen.de/leistungen/ ; https://www.nolo.marketing/leistungen/ki-schulung/ ; https://www.mittelstand-digital.de/MD/Navigation/DE/Praxis/KI-Trainer/ki-trainer.html
 
-**Hypothese:** Eine eng definierte Anbietergruppe braucht nicht noch einen allgemeinen Alarmdienst, sondern eine kurze, nachvollziehbare Prüfung, warum eine bestimmte Ausschreibung zu ihrem Angebot passt oder nicht passt, welche Fristen gelten und welche Angaben noch fehlen.
+**Billigster Test:** vor Erstellung eines fertigen Kurses zehn Gespräche mit passenden, freiwillig ansprechbaren Betrieben führen. Nicht „Würden Sie KI nutzen?“ fragen, sondern nach dem letzten echten Arbeitsablauf, Zeitaufwand, Fehlern, existierenden Tools, Schulungserfahrung und bisheriger Zahlungsbereitschaft. Danach ein einseitiges Angebotsmuster präsentieren und Preisreaktion/konkreten nächsten Schritt dokumentieren. Kein Interesse als Verkauf werten; entscheidendes Signal ist die Bereitschaft zu einem bezahlten, begrenzten Pilotauftrag.
 
-**Quellen-/Technikvorteil:** TED bietet öffentliche Such-/Download-Schnittstellen. Originalquelle und Funddatum können bei jedem Treffer verlinkt werden.
+**Stop-/Überarbeitungskriterien:** keine wiederkehrende Aufgabe; kostenlose Mittelstand-Digital-Angebote erfüllen den Bedarf bereits vollständig; kein Interesse an der konkreten Umsetzung; kein messbarer Nutzen; die benötigte Qualifikation, Datenverarbeitung oder Haftung lässt sich nicht ehrlich und risikoarm abdecken.
 
-**Wettbewerbsrisiko:** Es existieren bereits Gratisdienste und Abos ab 39–99 EUR pro Monat sowie höherpreisige Analyseprodukte. Wir sollten nur weitergehen, wenn Gespräche einen konkreten Nischenbedarf belegen, der von vorhandenen Tools nicht ausreichend bedient wird.
+**Wettbewerbs- und Rechtsgrenze:** Der Markt für KI-Schulungen ist bereits besetzt. Ein Verzeichnis zählte im Oktober 2026 234 Schulungsanbieter; private Angebote veröffentlichen beispielsweise Einstiegspreise um 399–499 EUR sowie höhere Inhouse-Preise. Das macht das Angebot nicht unmöglich, aber generische KI-Kurse sind kein Differenzierungsmerkmal. Artikel 4 der EU-KI-Verordnung betrifft Maßnahmen zur KI-Kompetenz; nach der aktuellen Kommissionsdarstellung bleibt die Verpflichtung bestehen, schreibt aber kein spezifisches individuelles Niveau und kein bestimmtes Schulungsformat bzw. Zertifikat vor. Wir dürfen daher keine Angstwerbung betreiben und nicht behaupten, unser Pilot garantiere Compliance. Quelle: https://digital-strategy.ec.europa.eu/de/faqs/ai-literacy-questions-answers und https://www.ki-beratungsatlas.de/ki-schulung/
 
-**Billigster Test:** 10 Interviews in genau einer Berufs-/Anbietergruppe; daraus manuell höchstens fünf beispielhafte, quellverlinkte Kurzberichte erstellen, zunächst anhand öffentlich zugänglicher Bekanntmachungen. Keine Aussage als Rechts-/Vergabeberatung, keine unbelegten „Gewinnchancen“, keine automatische Angebotsabgabe.
+### H2 — Dokumenteneingang zu einer geprüften Arbeitsliste
 
-**Stop-Kriterien:** generische Alerts reichen aus; kein nachweisbarer Vorteil gegenüber Free-Tarifen; Datenabdeckung oder Aktualität nicht zuverlässig; niemand will einen konkreten Pilotpreis diskutieren.
+**Hypothese:** Kleine technische Dienstleister oder spezialisierte Händler verlieren regelmäßig Zeit, wenn Anfragen, Fotos und Anhänge vor der vorhandenen Angebotssoftware in strukturierte Aufgaben, offene Angaben und Rückfragen überführt werden müssen. Wir bieten ausdrücklich keinen generischen KI-Angebotsgenerator an.
 
-### H3 — Kleiner KI-Workflow-Audit mit einem messbaren Vorher/Nachher
+**Test:** Erst im Kundeninterview prüfen, ob dieser vorgelagerte Schritt tatsächlich ungelöst bleibt. Nur bei bestätigtem Bedarf mit synthetischen Beispielen ein einseitiges Mock-up erstellen. Keine vertraulichen Kundenunterlagen in öffentliche KI-Tools hochladen.
 
-**Hypothese:** Kleine Unternehmen haben bereits einzelne KI-Werkzeuge, aber keinen klar eingegrenzten Arbeitsablauf, der messbar Zeit spart. Wir identifizieren einen einzigen Prozess, dokumentieren einen sicheren manuellen Ablauf und demonstrieren einen kleinen, kontrollierten Prototypen statt allgemeiner KI-Beratung.
+**Stop-Kriterien:** bestehende Software löst den Schritt bereits ausreichend, kein wiederkehrender Schmerz oder kein wirtschaftlich messbarer Zusatznutzen.
 
-**Differenzierung:** Keine generische „KI-Strategie“, kein behaupteter Expertenstatus. Ein Prozess, ein Ergebnisformat, ein vorher definierter Nutzenmaßstab und ein menschlicher Freigabeschritt.
+### H3 — Quellverlinkter „Bid/No-Bid“-Kurzbericht für genau eine Anbieter-Nische
 
-**Billigster Test:** Kurze Interviews; erfragen, welcher wiederkehrende Vorgang zuletzt manuell erledigt werden musste und wie Erfolg gemessen würde. Kostenlose, begrenzte Demonstration mit synthetischen Daten. Erst dann über einen bezahlten Pilot sprechen.
+**Hypothese:** Eine enge Anbietergruppe braucht nicht noch einen allgemeinen Ausschreibungsalarm, sondern eine kurze, quellverlinkte Vorprüfung, warum eine Ausschreibung zu ihrem Leistungsangebot passt, welche Fristen und Mindestanforderungen sichtbar sind und welche Punkte der Mensch klären muss.
 
-**Risiko:** Breiter Wettbewerbsmarkt; Vertrauen und Glaubwürdigkeit entscheiden; das Angebot muss auf einer tatsächlichen, begrenzten Fähigkeit beruhen. Keine Behauptung, professionelle Rechts-, Steuer-, Sicherheits- oder Datenschutzberatung zu ersetzen.
+**Wettbewerbsrisiko:** Es existieren bereits kostenfreie Monitorings und günstige Abonnements. Dieser Ansatz wird nur weiterverfolgt, wenn Interviews einen konkreten Bedarf belegen, den vorhandene Tools nicht ausreichend lösen.
+
+**Billigster Test:** Nur öffentliche Bekanntmachungen nutzen, höchstens fünf manuell geprüfte Kurzberichte als Demo erstellen und jede Aussage zur Originalquelle zurückführen. Keine Rechts-/Vergabeberatung, keine Aussagen über Zuschlagswahrscheinlichkeiten und keine automatische Angebotsabgabe.
+
+**Stop-Kriterien:** kostenlose Alternativen reichen aus, kein nachgewiesener Zusatznutzen oder kein konkretes Pilotinteresse.
+
+### Aktuelle Grenze für die KI-Kompetenz-Aussage
+Die Europäische Kommission beschreibt Artikel 4 der KI-Verordnung nach den 2026 erfolgten Änderungen so, dass KI-Kompetenzmaßnahmen weiterhin relevant sind, aber kein spezifisches Kompetenzniveau und keine bestimmte Form oder Zertifizierung allgemein vorgeschrieben ist. Eine allgemeine Schulung kann ein Bestandteil angemessener Maßnahmen sein, ist aber kein pauschaler Compliance-Nachweis. Wir positionieren das Angebot als praktische Weiterbildung und Arbeitsablaufhilfe, nicht als Rechtsberatung oder Compliance-Zertifizierung. Quelle: https://digital-strategy.ec.europa.eu/de/faqs/ai-literacy-questions-answers
 
 ## Die ersten 14 Tage
 
