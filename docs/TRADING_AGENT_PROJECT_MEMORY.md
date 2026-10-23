@@ -7,7 +7,7 @@ This section supersedes earlier priority/deadline language below whenever there 
 **Capital guard (confirmed 2026-10-23):** exactly €500 are available as Project 500 capital; no additional capital is available. It is not the trading bankroll. Spend €0 before validation interviews; after at least five interviews support a recurring problem, cumulative spend may be at most €50; only after documented serious pilot intent, at most €150 additional pre-revenue spend may be considered. Preserve ≥€300 until first paid order. Every actual expense requires item-specific review. No loans, paid ads or recurring paid APIs; no household-essential risk.
 
 **Execution protocol for every new `trading agent` chat:**
-1. Read `docs/PROJECT_500_EXECUTION_PLAN.md` first; then read `research/governance/project_north_star.json`, this file, `docs/TRADING_AGENT_CHAT_ENTRYPOINT.md`, and `docs/PROJECT_CONTEXT.md`.
+1. Read `docs/PROJECT_500_EXECUTION_PLAN.md` and `docs/PROJECT_500_CLIENT_KIT.md` first; then read `research/governance/project_north_star.json`, this file, `docs/TRADING_AGENT_CHAT_ENTRYPOINT.md`, and `docs/PROJECT_CONTEXT.md`.
 2. Verify current public master and technical/operational/evidence sources independently; do not assume the legacy current-status candidate focus is the user's primary goal.
 3. Research three distinct narrow customer-problem hypotheses from reliable current sources, compare competition and existing alternatives, label inference vs evidence, and design cheap falsification tests.
 4. Prioritize no-cost discovery and direct proof of pain/willingness-to-pay. Do not fabricate customer validation, send outreach, register services or spend money on the user's behalf without the needed specifics/permissions.
