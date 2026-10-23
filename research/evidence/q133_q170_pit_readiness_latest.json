@@ -527,7 +527,7 @@
       "name": "Competition-enforcement shock × industry network",
       "next_gate": "event publication clock and fixed peer/exposure graph",
       "performance_authorized": false,
-      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE",
       "required_contract_dimensions": {
         "archive": [
           "historical enforcement dataset",
@@ -556,7 +556,7 @@
         "SEC_EDGAR_SUBMISSIONS"
       ],
       "source_sample_statuses": {
-        "DOJ_ANTITRUST": "PIT_SAMPLE_PARSE_UNRESOLVED",
+        "DOJ_ANTITRUST": "INFRA_ACCESS_BLOCKED",
         "FTC_DATA": "SOURCE_DATA_SAMPLE_REACHABLE",
         "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
       }
@@ -694,7 +694,7 @@
       }
     }
   ],
-  "receipt_fingerprint": "79ada5cf676b137f79884271cde479f441116946af49933bbb3a091e6bf9cd98",
+  "receipt_fingerprint": "d03b25cd07072a0f858b1cea57631f2f56cb70657217f3aa58446f7262bb861e",
   "receipt_type": "q133_q170_pit_readiness_r1",
   "safety": {
     "AUTOMATIC_PROMOTION": false,
@@ -726,7 +726,7 @@
   },
   "source_results": {
     "BTS_FAF": {
-      "content_sha256": "9ad4e783c486a16322dca4c61ca53629db2f538288ac81bb586766e3769754b6",
+      "content_sha256": "7fe91be92e35d3c30806ec77ede51749af3121d9159302f56fee46ef5d400223",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -734,7 +734,7 @@
       "url": "https://www.bts.gov/faf"
     },
     "CFTC_RELEASE": {
-      "content_sha256": "cf84b73d0ca582e7a9b86ff443430a8ba5f180bf5c2de04cf4a8ecfe09fba302",
+      "content_sha256": "413de0645867297b2ffc0d5c5e6f085950987986dfcfdc3ffb33246e23520275",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -742,7 +742,7 @@
       "url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm"
     },
     "COURTLISTENER": {
-      "content_sha256": "b57e4baae0a176fdbb6c8bee91b2c08e2c04b561b97debc3c8f6cb1dcd6e658d",
+      "content_sha256": "2a6bf97b28d6fe7f4f850469ea40fd16ad189bb54297ed77fac4ee1a0da7547b",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -750,7 +750,7 @@
       "url": "https://www.courtlistener.com/help/"
     },
     "CROSSREF_API": {
-      "content_sha256": "20acbeaacbc7b6786f372f2bc3ea02a9634934b34eb8e5c4f15dd6c6d7ff3a10",
+      "content_sha256": "bb8ddf9d4dc69c155496f46b8a424e14c6149c8d732425c3f63a687b7d97b174",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -758,18 +758,18 @@
       "url": "https://api.crossref.org/works?filter=from-created-date:2025-01-01,until-created-date:2025-01-02&rows=1"
     },
     "DOJ_ANTITRUST": {
-      "content_sha256": "5611eaa50bc53eb9571cef3411f736bc14f7f49a9000fa7fb76ac250b590e95c",
-      "http_status": 200,
+      "content_sha256": "2181cd70fe0609a8491b5ac90d5df124bed1092cec0275e4104d336ff0c922b6",
+      "http_status": 400,
       "missing_markers": [
         "Press Releases",
         "Antitrust"
       ],
-      "sample_status": "PIT_SAMPLE_PARSE_UNRESOLVED",
+      "sample_status": "INFRA_ACCESS_BLOCKED",
       "source_id": "DOJ_ANTITRUST",
       "url": "https://www.justice.gov/atr/press-releases"
     },
     "EIA_OPEN": {
-      "content_sha256": "637cf275062aa3a36fd1fd8aec4f6c705c994806f1478f0ec05976faabf2879e",
+      "content_sha256": "e70a667092dee19bf418655b5f282b039249fd8a9aa31a88e78769c67c766298",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -785,7 +785,7 @@
       "url": "https://www.epa.gov/enviro/envirofacts-data-service-api"
     },
     "FTC_DATA": {
-      "content_sha256": "24c96056b7b82d9e6989ac1b0ff580211cd203513a522fa311818e61d5974c1b",
+      "content_sha256": "9a393411b54ea842daa78ce7d6df4cabe9e0ceae1048aa7c8d5b643a3be9e1ff",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -793,7 +793,7 @@
       "url": "https://search.ftc.gov/policy-notices/open-government/data-sets"
     },
     "GOVINFO": {
-      "content_sha256": "04235bb1cde55c46f15727d033ba7219fc90ab25cdc9ed5c5aec8fd4fdd4426f",
+      "content_sha256": "5cb65914d73107c1376d8f20f1567c52b3f6b6798153174d8dd25e4b8bdf5887",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -809,7 +809,7 @@
       "url": "https://lda.gov/api/tos/"
     },
     "NOAA_SWPC": {
-      "content_sha256": "82fe176ed602b5b85074dff8615f3a2a5052d8a66b138009885509ccf7ddf99f",
+      "content_sha256": "28db6cf7d9eb6811044d7767bf10eaf97761816c2d16ee6b2034e80cd7e60091",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -825,7 +825,7 @@
       "url": "https://api.fda.gov/device/recall.json?limit=1"
     },
     "OPENFDA_DRUG": {
-      "content_sha256": "b6596a8838c63cb05e4804a3e43bf2eda3a6dfb03bd551944150303c2a98369d",
+      "content_sha256": "a4593571f879090ce575e26ad329f42f5d0666177c8729d6f2a20ccf371994ec",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -849,7 +849,7 @@
       "url": "https://data.sec.gov/submissions/CIK0000320193.json"
     },
     "SEC_FOIA": {
-      "content_sha256": "9728ffd81a3fa00d6f403e8faf5659a153974df87a8c30b87e54256c74d3b220",
+      "content_sha256": "d2a084f7058fe21acbc051864c0f04510c2e09bd2f88b680a5154635a900e337",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
@@ -865,7 +865,7 @@
       "url": "https://api.usaspending.gov/docs/endpoints"
     },
     "USGS_EARTHQUAKE": {
-      "content_sha256": "ec930abc27077d832dd8b3590839535520d4996b285133850f2f2647a702169e",
+      "content_sha256": "9b69977079ec67439b6cb27f5cf377b0c67e5cd0303c0223d0dd72b9b41aa04c",
       "http_status": 200,
       "missing_markers": [],
       "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
