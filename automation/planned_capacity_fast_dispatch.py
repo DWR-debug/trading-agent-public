@@ -504,6 +504,29 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     focus_skips: list[dict[str, Any]] = []
     prefilter_decisions: list[dict[str, Any]] = []
     planned: list[dict[str, Any]] = []
+    queue_suppression_reasons = snapshot.get("planner_suppression_reasons", [])
+    if not isinstance(queue_suppression_reasons, list):
+        prefilter_decisions.append({
+            "decision": "INVALID_PLANNER_SUPPRESSION_CONTAINER",
+            "reason": "planner_suppression_reasons must be a list; dispatch remains fail-closed",
+            "observed_type": type(queue_suppression_reasons).__name__,
+        })
+        queue_suppression_reasons = []
+    for item in queue_suppression_reasons:
+        if not isinstance(item, dict):
+            prefilter_decisions.append({
+                "decision": "INVALID_PLANNER_SUPPRESSION_RECORD",
+                "reason": "planner suppression record was not an object",
+                "observed_type": type(item).__name__,
+            })
+            continue
+        prefilter_decisions.append({
+            **item,
+            "decision": "PLANNER_QUEUE_ITEM_SUPPRESSED",
+            "planner_reason_code": str(item.get("reason_code") or "UNCLASSIFIED_PLANNER_SUPPRESSION"),
+            "reason": str(item.get("reason") or "The bounded planner suppressed this queue item."),
+            "queue_stage": "CAPACITY_PLANNER",
+        })
     planned_capacity_rows = snapshot.get("planned_capacity", [])
     if not isinstance(planned_capacity_rows, list):
         prefilter_decisions.append({
@@ -1060,6 +1083,15 @@ def dispatch_candidates(snapshot: dict[str, Any], runs: list[dict[str, Any]], ma
     planning_diagnostics = {
         "capacity_row_count": len(planned_capacity_rows),
         "capacity_rows_without_assignments": capacity_rows_without_assignments,
+        "planner_queue_suppression_count": len(queue_suppression_reasons),
+        "planner_queue_suppression_counts": {
+            str(code): sum(1 for item in queue_suppression_reasons
+                          if isinstance(item, dict) and str(item.get("reason_code") or "UNCLASSIFIED_PLANNER_SUPPRESSION") == str(code))
+            for code in sorted({
+                str(item.get("reason_code") or "UNCLASSIFIED_PLANNER_SUPPRESSION")
+                for item in queue_suppression_reasons if isinstance(item, dict)
+            })
+        },
         "planned_assignment_count": planned_assignment_count,
         "valid_planned_assignment_count": valid_assignment_count,
         "scheduled_assignment_count": scheduled_assignment_count,
@@ -1128,9 +1160,15 @@ def classify_dispatch_status(plan: dict[str, Any]) -> dict[str, Any]:
         if capacity_rows == 0:
             reason_code = "NO_CAPACITY_ROWS_IN_SNAPSHOT"
             reason = "The snapshot contains no capacity rows; no dispatch is permitted."
+        elif assignment_count == 0 and int(diagnostics.get("planner_queue_suppression_count") or 0) > 0:
+            reason_code = "BOUNDED_PLANNER_QUEUE_ITEMS_SUPPRESSED"
+            reason = "The bounded planner suppressed candidate workpacks before assigning them to resources; inspect planner queue suppression decisions for prerequisite, focus, duplicate and completed-slot reasons."
         elif assignment_count == 0:
             reason_code = "BOUNDED_PLANNER_EMITTED_NO_ASSIGNMENTS"
-            reason = "The bounded planner did not assign independent, ready, non-duplicate work to any resource."
+            reason = "The bounded planner did not emit a candidate assignment; no dispatch is permitted."
+        elif scheduled_count == 0 and int(diagnostics.get("planner_queue_suppression_count") or 0) > 0:
+            reason_code = "BOUNDED_PLANNER_QUEUE_ITEMS_SUPPRESSED"
+            reason = "The bounded planner's candidate workpacks were suppressed before they could be scheduled; inspect queue suppression decisions and do not bypass the recorded gates."
         elif scheduled_count == 0:
             reason_code = "ALL_PLANNED_ASSIGNMENTS_UNSCHEDULED"
             reason = "Every planned assignment was marked unscheduled by the bounded planner."

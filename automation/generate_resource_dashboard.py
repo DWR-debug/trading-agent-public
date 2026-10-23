@@ -2152,44 +2152,147 @@ def planned_capacity_plan(
     # preview; dispatch remains gated by actual free capacity.
     assigned_candidates: set[str] = set()
     plans: dict[str, list[dict[str, Any]]] = {str(r["name"]): [] for r in resources}
+    planner_suppression_reasons: list[dict[str, Any]] = []
+
+    def suppress_queue_item(
+        item: dict[str, Any],
+        reason_code: str,
+        reason: str,
+        **detail: Any,
+    ) -> None:
+        record = {
+            "plan_id": str(item.get("plan_id") or ""),
+            "candidate": str(item.get("candidate") or ""),
+            "lane": str(item.get("lane") or ""),
+            "readiness": str(item.get("readiness") or ""),
+            "reason_code": reason_code,
+            "reason": reason,
+        }
+        if item.get("basis"):
+            record["basis"] = str(item.get("basis"))
+        if item.get("preferred"):
+            record["preferred_resources"] = list(item.get("preferred") or [])
+        record.update(detail)
+        planner_suppression_reasons.append(record)
 
     for item in sorted(queue, key=lambda x: (priority_bonus(x), queue.index(x))):
         candidate = str(item["candidate"])
-        if candidate not in FOCUS_CANDIDATES:
-            continue
         plan_id = str(item.get("plan_id") or "")
+        if candidate not in FOCUS_CANDIDATES:
+            suppress_queue_item(
+                item,
+                "QUEUE_CANDIDATE_OUTSIDE_FOCUS_ALLOWLIST",
+                "Candidate is outside the fixed execution focus; the planner does not route it.",
+                allowed_candidates=sorted(FOCUS_CANDIDATES),
+            )
+            continue
+
         if candidate == "Q104:I19" and plan_id == "Q104-I19-CENSUS":
             # Never advertise a duplicate full census while the existing six-shard
             # run is active, and never blindly retry a failed full census. Its
             # terminal workflow routes to targeted receipt recovery instead.
             if q104_census_active or q104_census_terminal_failure:
+                suppress_queue_item(
+                    item,
+                    "Q104_CENSUS_REQUIRES_TARGETED_RECOVERY",
+                    "The full Q104:I19 census is active or has a terminal failure; only receipt-targeted recovery may proceed.",
+                    active_census=q104_census_active,
+                    terminal_census_failure=q104_census_terminal_failure,
+                )
                 continue
+
         if candidate in {"Q218", "Q219", "Q220", "Q221"} and candidate in active_candidate_names and not item.get("allow_parallel_with_candidate", False):
+            suppress_queue_item(
+                item,
+                "CANDIDATE_ALREADY_ACTIVE_IN_SLOT_WORKFLOW",
+                "A current candidate-scoped run is active and parallel work is not authorized for this queue item.",
+            )
             continue
+
         candidate_active = any(candidate.lower() in value and "free ai" not in value for value in active_text)
         if candidate_active and not item.get("allow_parallel_with_candidate", False):
+            suppress_queue_item(
+                item,
+                "CANDIDATE_ALREADY_ACTIVE_IN_WORK_ASSIGNMENTS",
+                "An active non-AI work assignment already covers this candidate; duplicate candidate work is suppressed.",
+            )
             continue
+
         if candidate in assigned_candidates and not item.get("allow_parallel_with_candidate", False):
+            suppress_queue_item(
+                item,
+                "CANDIDATE_ALREADY_ASSIGNED_IN_CURRENT_PLAN",
+                "A higher-priority non-parallel workpack for this candidate is already assigned in the current plan.",
+            )
             continue
+
         if candidate == "Q218":
-            plan_id = str(item.get("plan_id") or "")
             if plan_id == "Q218-SOURCE" and q218_receipts["source_complete"]:
+                suppress_queue_item(
+                    item,
+                    "Q218_SOURCE_GATE_ALREADY_COMPLETE",
+                    "The current-context immutable Q218 source receipt already closes this gate.",
+                )
                 continue
             if plan_id == "Q218-EVENT-PAIR" and q218_receipts["event_pair_complete"]:
+                suppress_queue_item(
+                    item,
+                    "Q218_EVENT_PAIR_GATE_ALREADY_COMPLETE",
+                    "The current-context immutable Q218 event-pair receipt already closes this gate.",
+                )
                 continue
             if plan_id == "Q218-INDEPENDENT-ARCH":
                 if not (q218_receipts["source_complete"] and q218_receipts["event_pair_complete"]):
+                    missing = [
+                        gate for gate, complete in (
+                            ("source", q218_receipts["source_complete"]),
+                            ("event_pair", q218_receipts["event_pair_complete"]),
+                        ) if not complete
+                    ]
+                    suppress_queue_item(
+                        item,
+                        "Q218_INDEPENDENT_REPRO_PREREQUISITES_INCOMPLETE",
+                        "Independent architecture reproduction requires both positive current-context source and event-pair receipts.",
+                        missing_prerequisites=missing,
+                    )
                     continue
                 if q218_receipts["independent_complete"]:
+                    suppress_queue_item(
+                        item,
+                        "Q218_INDEPENDENT_REPRO_ALREADY_COMPLETE",
+                        "The current-context immutable independent-reproduction receipt already closes this gate.",
+                    )
                     continue
             if plan_id == "Q218-FRESH-SYMBOL-REPLICATION" and not q218_prereg.get("performance_executed"):
+                suppress_queue_item(
+                    item,
+                    "Q218_FRESH_SYMBOL_REPLICATION_REQUIRES_COMPLETED_ONE_SHOT",
+                    "Fresh-symbol replication remains blocked until the fixed one-shot performance trial has executed under its separate authorization.",
+                )
                 continue
             if plan_id == "Q218-FRESH-SYMBOL-REPLICATION" and q218_replication_complete:
+                suppress_queue_item(
+                    item,
+                    "Q218_FRESH_SYMBOL_REPLICATION_ALREADY_COMPLETE",
+                    "The frozen Q218 fresh-symbol replication already has a positive current receipt.",
+                )
                 continue
+
         if item.get("plan_id") == "Q218-ADVERSARIAL" and any("free ai" in value and "q218" in value for value in active_text):
+            suppress_queue_item(
+                item,
+                "Q218_ADVERSARIAL_REVIEW_ALREADY_ACTIVE",
+                "A Q218 adversarial review is already active in the Free AI pool.",
+            )
             continue
         if item.get("plan_id") == "Q221-ADVERSARIAL" and any("free ai" in value and "q221" in value for value in active_text):
+            suppress_queue_item(
+                item,
+                "Q221_ADVERSARIAL_REVIEW_ALREADY_ACTIVE",
+                "A Q221 adversarial review is already active in the Free AI pool.",
+            )
             continue
+
         # Q218 Independent Architecture is receipt-driven. Static top4
         # next_gate metadata may legitimately lag the immutable receipt index
         # and must never block a scientifically ready next step.
@@ -2199,19 +2302,62 @@ def planned_capacity_plan(
                 and q218_receipts["event_pair_complete"]
                 and not q218_receipts["independent_complete"]
             ):
+                missing = [
+                    gate for gate, complete in (
+                        ("source", q218_receipts["source_complete"]),
+                        ("event_pair", q218_receipts["event_pair_complete"]),
+                    ) if not complete
+                ]
+                suppress_queue_item(
+                    item,
+                    "Q218_INDEPENDENT_REPRO_CURRENT_CONTEXT_GUARD",
+                    "Current receipt-index guards do not expose an eligible independent Q218 reproduction.",
+                    missing_prerequisites=missing,
+                    independent_complete=q218_receipts["independent_complete"],
+                )
                 continue
-        if item["readiness"].startswith("BLOCKED_"):
+
+        readiness = str(item.get("readiness") or "")
+        if readiness.startswith("BLOCKED_"):
+            suppress_queue_item(
+                item,
+                "PREREQUISITE_BLOCKED",
+                str(item.get("basis") or f"Readiness is {readiness}; prerequisite must be satisfied before work is scheduled."),
+                readiness=readiness,
+            )
             continue
+
         if item.get("execution_workflow") == ".github/workflows/ai-worker-fabric.yml":
             task_id = str((item.get("execution_workflow_inputs") or {}).get("task_id") or "")
             if task_id and ai_task_completed_with_current_context(task_id, root=ROOT):
+                suppress_queue_item(
+                    item,
+                    "AI_TASK_ALREADY_COMPLETED_IN_CURRENT_CONTEXT",
+                    "The exact bounded AI review task is already completed for the current source context.",
+                    task_id=task_id,
+                )
                 continue
+
         placed = False
         eligible_resources: list[tuple[dict[str, Any], bool]] = []
+        resource_blockers: list[dict[str, Any]] = []
         for resource_name in item["preferred"]:
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
-            if resource is None or len(plans.get(resource_name, [])) >= 1:
+            if resource is None:
+                resource_blockers.append({
+                    "resource": resource_name,
+                    "reason_code": "PREFERRED_RESOURCE_NOT_CONFIGURED",
+                    "reason": "Preferred resource is not present in the current resource snapshot.",
+                })
                 continue
+            if len(plans.get(resource_name, [])) >= 1:
+                resource_blockers.append({
+                    "resource": resource_name,
+                    "reason_code": "PREFERRED_RESOURCE_ALREADY_HAS_PLAN",
+                    "reason": "The bounded planner permits at most one preview assignment per resource.",
+                })
+                continue
+
             slot = resource_slot(resource_name)
             # A prior successful Q221 slot predates the new historical policy-vintage
             # gate unless a positive fingerprinted receipt closes that exact stage.
@@ -2222,9 +2368,22 @@ def planned_capacity_plan(
                 and q221_vintage_gate.get("state") != "complete"
             )
             if slot is not None and (slot, candidate) in completed_slots and not q221_vintage_gate_still_open:
+                resource_blockers.append({
+                    "resource": resource_name,
+                    "resource_slot": slot,
+                    "reason_code": "PREFERRED_RESOURCE_CANDIDATE_SLOT_ALREADY_COMPLETED",
+                    "reason": "A successful current candidate/resource slot already exists; no duplicate slot is queued.",
+                })
                 continue
             if slot is not None and (slot, candidate) in active_slot_scopes:
+                resource_blockers.append({
+                    "resource": resource_name,
+                    "resource_slot": slot,
+                    "reason_code": "PREFERRED_RESOURCE_CANDIDATE_SLOT_ALREADY_ACTIVE",
+                    "reason": "The same candidate/resource slot is currently active.",
+                })
                 continue
+
             reported_free = resource.get("research_slots_free")
             if reported_free is not None:
                 has_free_capacity = int(reported_free) > 0
@@ -2267,6 +2426,12 @@ def planned_capacity_plan(
             break
         if placed:
             continue
+        suppress_queue_item(
+            item,
+            "NO_ELIGIBLE_PREFERRED_RESOURCE",
+            "No preferred resource was eligible after the existing capacity, duplicate-slot and completed-slot guards.",
+            resource_blockers=resource_blockers,
+        )
 
     # Surface genuinely useful blocked follow-on capacity without presenting it as queued work.
     c_resource = "Windows self-hosted C"
@@ -2298,6 +2463,7 @@ def planned_capacity_plan(
             "planned_count": sum(1 for x in plans.get(name, []) if x.get("scheduled")),
             "blocked_count": sum(1 for x in plans.get(name, []) if not x.get("scheduled")),
             "unallocated_reason": None if plans.get(name) else "no independent ready non-duplicate work assigned by bounded planner",
+            "planner_suppression_reasons": planner_suppression_reasons,
         })
     return rows
 

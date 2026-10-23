@@ -268,6 +268,10 @@ def compile_direct_snapshot(
         "resources": resources,
         "work_assignments": work,
         "planned_capacity": plan,
+        "planner_suppression_reasons": (
+            list(plan[0].get("planner_suppression_reasons") or [])
+            if plan and isinstance(plan[0], dict) else []
+        ),
         "focus_candidates": list(dashboard.FOCUS_CANDIDATES),
         "safety": {
             "paper_only": True,
