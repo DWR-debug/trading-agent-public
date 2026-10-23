@@ -2,7 +2,7 @@
 
 This section supersedes earlier priority/deadline language below whenever there is a conflict. Older trading research records remain historical evidence; they are not deleted or silently rewritten.
 
-**Primary goal:** make progress toward durable family financial security without depending on a trading windfall. The primary active program is Project 500: discover and validate an AI-assisted service/product that can be tested with very low capital, beginning with no paid spending until capital liquidity is confirmed. Long-term prudent wealth-building remains a separate foundation. The Trading Agent trading-research pipeline is secondary and remains paper-only.
+**Primary goal:** make progress toward durable family financial security without depending on a trading windfall. The primary active program is Project 500: discover and validate an AI-assisted service/product that can be tested with very low capital, beginning with zero spending before validation and staged spending only from the confirmed €500 cap after the documented gates. Long-term prudent wealth-building remains a separate foundation. The Trading Agent trading-research pipeline is secondary and remains paper-only.
 
 **Capital guard (confirmed 2026-10-23):** exactly €500 are available as Project 500 capital; no additional capital is available. It is not the trading bankroll. Spend €0 before validation interviews; after at least five interviews support a recurring problem, cumulative spend may be at most €50; only after documented serious pilot intent, at most €150 additional pre-revenue spend may be considered. Preserve ≥€300 until first paid order. Every actual expense requires item-specific review. No loans, paid ads or recurring paid APIs; no household-essential risk.
 
