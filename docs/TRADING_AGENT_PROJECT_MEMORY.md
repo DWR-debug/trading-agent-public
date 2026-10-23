@@ -4,7 +4,7 @@ This section supersedes earlier priority/deadline language below whenever there 
 
 **Primary goal:** make progress toward durable family financial security without depending on a trading windfall. The primary active program is Project 500: discover and validate an AI-assisted service/product that can be tested with very low capital, beginning with no paid spending until capital liquidity is confirmed. Long-term prudent wealth-building remains a separate foundation. The Trading Agent trading-research pipeline is secondary and remains paper-only.
 
-**Capital guard:** the user stated €500 as nominal start capital, but has not confirmed whether it is spare capital or the household's only available buffer. Treat authorised discretionary spend as €0 until clarified. No investing/trading with this amount, paid APIs, software subscriptions, ads, loans, or other risk of essential family funds.
+**Capital guard (confirmed 2026-10-23):** exactly €500 are available as Project 500 capital; no additional capital is available. It is not the trading bankroll. Spend €0 before validation interviews; after at least five interviews support a recurring problem, cumulative spend may be at most €50; only after documented serious pilot intent, at most €150 additional pre-revenue spend may be considered. Preserve ≥€300 until first paid order. Every actual expense requires item-specific review. No loans, paid ads or recurring paid APIs; no household-essential risk.
 
 **Execution protocol for every new `trading agent` chat:**
 1. Read `docs/PROJECT_500_EXECUTION_PLAN.md` first; then read `research/governance/project_north_star.json`, this file, `docs/TRADING_AGENT_CHAT_ENTRYPOINT.md`, and `docs/PROJECT_CONTEXT.md`.
