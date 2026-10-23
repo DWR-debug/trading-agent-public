@@ -4,11 +4,15 @@
   "status": "ACTIVE",
   "effective_date": "2026-10-02",
   "project": "Trading Agent OS",
-  "primary_goal": "Build a scientifically validated, reproducible, autonomous and risk-controlled Trading Agent that, only after sufficient evidence and formal authorization, can generate sustainable realized-P&L cashflow that can support the user's family through variable withdrawals while preserving a defensible capital base.",
+  "primary_goal": "Primary: improve durable family financial security through prudent financial planning and evidence-led validation of a low-capital AI-assisted income opportunity (Project 500). The Trading Agent remains a secondary, paper-only research option and must never be assumed to generate income.",
   "success_condition": [
-    "Robust reproducible out-of-sample and holdout evidence across formal gates before deployment consideration.",
-    "Later withdrawal logic based on realized P&L, with required reinvestment and risk reserves before withdrawal.",
-    "Full auditability through provenance, immutable reconciliation and durable evidence records."
+    "The family's financial plan is grounded in actual income, expenses, obligations and liquidity, without assuming any trading profits.",
+    "Project 500 produces evidence-based keep/change/stop decisions for specific customer-problem hypotheses before paid build-out.",
+    "A bounded paid pilot is a target only if real customer demand and legal/operational prerequisites are demonstrated; no income outcome is guaranteed.",
+    "Long-term wealth-building choices are evaluated separately from speculative trading.",
+    "Any later trading contribution requires robust reproducible out-of-sample and holdout evidence across the existing formal gates before deployment consideration.",
+    "Any later trading withdrawal logic is based on realized P&L after required reinvestment and risk reserves.",
+    "Full auditability is preserved through provenance, immutable reconciliation and durable evidence records."
   ],
   "financial_intent": {
     "actual_capital_available_eur": 0,
@@ -16,7 +20,12 @@
     "reference_capital_is_simulation_only": true,
     "withdrawals_variable": true,
     "withdrawal_basis": "realized P&L after required reinvestment and risk reserves",
-    "family_support_is_the_long_term_purpose": true
+    "family_support_is_the_long_term_purpose": true,
+    "user_stated_nominal_start_capital_eur": 500,
+    "start_capital_liquidity_verified": false,
+    "authorized_experiment_spend_eur": 0,
+    "spend_requires_explicit_confirmation_after_liquidity_review": true,
+    "reference_capital_scope": "Legacy trading research simulation only; not actual available funds."
   },
   "non_negotiable_constraints": {
     "PAPER_ONLY": true,
@@ -27,15 +36,29 @@
     "scientific_evidence_cannot_be_created_by_ai_output_alone": true
   },
   "operating_principles": [
-    "Evidence before interpretation.",
-    "Coverage and PIT before performance.",
+    "Project 500 and family financial resilience are the primary strategic priority; trading is secondary.",
+    "Evidence before interpretation; explicit separation of sourced fact, inference and hypothesis.",
+    "Validate real customer pain and willingness to pay before building or spending.",
+    "Use free sources and tools first; assume zero discretionary spending until the stated €500 liquidity is clarified.",
+    "Prefer cheap falsification, small reversible experiments and human review over speculative full automation.",
+    "No income, customer demand, trading edge or date-specific outcome is guaranteed.",
+    "Coverage and PIT before trading performance.",
     "Immutable reconciliation before claims.",
     "Negative evidence remains first-class evidence.",
-    "More compute may accelerate research but may never relax scientific gates.",
+    "More compute may accelerate useful work but may never relax scientific or safety gates.",
     "Historical capability receipts and current live resource availability must remain separate states.",
-    "Maximize useful continuous occupancy of free capacity without artificial work, duplicate work or runtime padding.",
+    "Maximize useful work without artificial work, duplicate work or runtime padding.",
     "Persist durable goals, decisions, progress and continuity in canonical repository layers so subsequent chats can resume without relying on transcript memory."
   ],
   "source_of_truth_role": "Defines project intent only. Technical truth remains current public master; scientific truth remains ledger, checkpoints and workflow evidence.",
-  "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md"
+  "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
+  "current_strategy": {
+    "name": "Project 500",
+    "status": "PRIMARY",
+    "effective_date": "2026-10-23",
+    "objective": "Discover and validate a narrow customer problem that can be solved with AI-assisted services or lightweight tools, starting with free research and cheap falsification; long-term investing is a separate, non-guaranteed foundation.",
+    "legacy_trading_priority": "SECONDARY",
+    "supersedes_primary_deadline": "2026-10-25 trading evidence-pack milestone",
+    "paid_pilot_is_guaranteed": false
+  }
 }
