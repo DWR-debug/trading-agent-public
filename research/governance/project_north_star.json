@@ -22,10 +22,16 @@
     "withdrawal_basis": "realized P&L after required reinvestment and risk reserves",
     "family_support_is_the_long_term_purpose": true,
     "user_stated_nominal_start_capital_eur": 500,
-    "start_capital_liquidity_verified": false,
+    "start_capital_liquidity_verified": true,
     "authorized_experiment_spend_eur": 0,
     "spend_requires_explicit_confirmation_after_liquidity_review": true,
-    "reference_capital_scope": "Legacy trading research simulation only; not actual available funds."
+    "reference_capital_scope": "Legacy trading research simulation only; not actual available funds.",
+    "project_500_available_capital_eur": 500,
+    "project_500_total_budget_cap_eur": 500,
+    "project_500_pre_revenue_spend_cap_eur": 200,
+    "project_500_minimum_reserve_until_first_paid_order_eur": 300,
+    "spend_requires_explicit_item_specific_confirmation": true,
+    "user_statement": "Exactly EUR 500 are available as Project 500 capital; no more capital is available. These funds are not trading capital."
   },
   "non_negotiable_constraints": {
     "PAPER_ONLY": true,
@@ -56,9 +62,31 @@
     "name": "Project 500",
     "status": "PRIMARY",
     "effective_date": "2026-10-23",
-    "objective": "Discover and validate a narrow customer problem that can be solved with AI-assisted services or lightweight tools, starting with free research and cheap falsification; long-term investing is a separate, non-guaranteed foundation.",
+    "objective": "Discover and validate a practical AI implementation and employee enablement service for SMEs, beginning with a tightly scoped, human-reviewed workflow pilot and current evidence of customer demand. Only €500 total Project 500 capital is available; the trading system remains secondary and its capital remains zero actual trading capital.",
     "legacy_trading_priority": "SECONDARY",
     "supersedes_primary_deadline": "2026-10-25 trading evidence-pack milestone",
-    "paid_pilot_is_guaranteed": false
+    "paid_pilot_is_guaranteed": false,
+    "core_offer": "KI-Startklar-Pilot: train up to five employees and implement one low-risk workflow, with a tailored guide, human verification checklist, pre/post measurement and short follow-up; legal/compliance certification is excluded.",
+    "initial_price_hypothesis_eur": 390,
+    "initial_price_is_validated": false,
+    "ai_act_claim_guard": "Never promise AI Act compliance or imply a mandatory standard certificate; sell practical AI literacy and safe workflow implementation only.",
+    "budget_gates": [
+      {
+        "stage": "validation",
+        "minimum_evidence": "start before paid customer discovery",
+        "max_cumulative_spend_eur": 0
+      },
+      {
+        "stage": "prototype",
+        "minimum_evidence": "at least five interviews support a recurring unsolved problem",
+        "max_cumulative_spend_eur": 50
+      },
+      {
+        "stage": "pre_revenue_pilot_preparation",
+        "minimum_evidence": "documented serious pilot intent from a prospect",
+        "max_cumulative_spend_eur": 200,
+        "minimum_reserve_until_first_paid_order_eur": 300
+      }
+    ]
   }
 }
