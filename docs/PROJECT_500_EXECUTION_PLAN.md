@@ -99,7 +99,8 @@ Die vorläufige Reihenfolge bezieht sich nur auf die Kosten der Falsifikation un
 
 ### Tage 4–7: Kundenproblem prüfen
 
-- Mindestens 8–10 Gespräche anstreben, wenn erreichbare Personen dies ermöglichen.
+- Mindestens 8–10 Gespräche anstreben, wenn erreichbare Personen dies ermöglichen. Zuerst bestehende Kontakte, ausdrückliche Empfehlungen, Opt-in-Communities oder Veranstaltungen nutzen.
+- **Keine unaufgeforderte E-Mail-Werbung, Massen-DMs oder kalten Werbeanrufe als Standardkanal verwenden.** § 7 UWG regelt unzumutbare Belästigung; Werbe-E-Mails benötigen grundsätzlich vorherige ausdrückliche Einwilligung. Ob eine konkrete Forschungsanfrage bereits als Werbung gilt, hängt vom Inhalt/Kontext ab. Bei Zweifeln sicheren Opt-in-Kanal verwenden und aktuelle Hinweise prüfen: https://www.gesetze-im-internet.de/uwg_2004/__7.html und https://www.ihk.de/ostwuerttemberg/produktmarken/recht/recht-a-z/internet-und-neue-medien/werbung-mittels-telefon-sms-fax-e-mail-oder-brief/was-ist-erlaubt-3291380
 - Fragen: „Welche Aufgabe wiederholt sich häufig?“, „Wie haben Sie den letzten Fall gelöst?“, „Wie viele Minuten/Stunden kostet sie?“, „Was läuft schief?“, „Welche Alternative nutzen Sie?“, „Haben Sie schon für eine Lösung gezahlt?“
 - Kein Pitch vor der Bedarfsermittlung. Ergebnisse mit anonymisierten Notizen und klarer Trennung zwischen Zitat, Interpretation und Annahme dokumentieren.
 - Kein Gespräch oder „Interesse“ als Zahlungsbeweis zählen.
@@ -115,7 +116,7 @@ Die vorläufige Reihenfolge bezieht sich nur auf die Kosten der Falsifikation un
 
 > Guten Tag, ich untersuche gerade, wie kleine Unternehmen einen bestimmten wiederkehrenden Büroprozess erledigen und wo dabei unnötiger Zeitaufwand entsteht. Ich entwickle noch keine fertige Software und möchte Ihnen zunächst nichts verkaufen. Dürfte ich Ihnen drei bis fünf kurze Fragen zu einem konkreten Ablauf stellen? Besonders hilfreich wäre ein Beispiel aus der letzten Woche: Was musste manuell übertragen, geprüft oder nachverfolgt werden, wie lange hat es gedauert und welche Lösung nutzen Sie heute? Ich interessiere mich für ehrliche Erfahrungen – auch wenn der Prozess bereits gut gelöst ist.
 
-Dieser Text ist ein Entwurf. Es wurden keine Kontakte angeschrieben.
+Dieser Text ist ein Entwurf für einen zulässigen Opt-in-/Bestandskontakt-Kanal oder für eine Community, die solche Forschungsanfragen ausdrücklich erlaubt; nicht als pauschale Erlaubnis zur unaufgeforderten E-Mail-/Telefonakquise verstehen. Es wurden keine Kontakte angeschrieben.
 
 ## Messregeln
 
