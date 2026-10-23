@@ -41,6 +41,13 @@ Der frühere 2.000-EUR-Wert im Trading-Agent-Projekt bleibt eine historische Sim
 5. **BVMW, November 2025:** Die Empfehlungen zur KI-Implementierung betonen klare Ziele, Datenqualität und die Ausrichtung auf ein konkretes betriebliches Problem. Dies passt zu kleinen, menschlich geprüften Prozesspiloten und spricht gegen „KI um der KI willen“.  
    Quelle: https://www.bvmw.de/uploads/topics/Internet-und-Digitalisierung/Downloads/Impulspapier-KI-Implementierung-11-2025.pdf
 
+6. **Statistisches Bundesamt (Stand 24. November 2025), IKT-Erhebung für Unternehmen ab 10 Beschäftigten:** 26 % nutzten 2025 KI; bei den Unternehmen, die KI erwogen, bislang aber nicht nutzten, nannten 72 % fehlendes Wissen, 62 % rechtliche Unklarheit, 60 % Datenschutzbedenken, 45 % Systeminkompatibilität, 44 % Datenverfügbarkeit/-qualität und 32 % Kosten. Diese Gründe sind wertvolle Interviewfragen, aber keine Zahlungsnachweise. Die Grundgesamtheit unterscheidet sich von der KfW-Mittelstandsstatistik, deshalb werden die Prozentsätze nicht direkt gleichgesetzt.  
+   Quellen: https://www.destatis.de/DE/Themen/Branchen-Unternehmen/Unternehmen/IKT-in-Unternehmen-IKT-Branche/IKT-U-Erhebung/info.html und https://www.destatis.de/DE/Themen/Branchen-Unternehmen/Unternehmen/IKT-in-Unternehmen-IKT-Branche/Tabellen/ikti-gegen-nutzung-kuenstliche-intelligenz.html
+
+7. **DIHK-Digitalisierungsumfrage 2025:** 60 % der befragten Unternehmen meldeten fehlende Ressourcen für Digitalisierungsprojekte, 54 % hielten Digitalisierung für zu komplex und 42 % nannten Kosten als Hürde. Das unterstützt die Richtung eines sehr eng begrenzten, transparenten Piloten statt eines breiten Transformationsprojekts; die Umfrage beweist keine konkrete Nachfrage nach unserem Angebot.  
+   Quelle: https://www.dihk.de/de/newsroom/digitalisierung-2025-herausforderungen-und-fortschritte-fuer-unternehmen-157712
+
+
 ### Aussagegrenze
 
 Quellen belegen, dass KI-Anwendung und öffentliche Daten vorhanden sind und es Konkurrenzprodukte gibt. Sie belegen **nicht** unsere Zahlungsbereitschaft, die Kundenakquise, die individuelle Lieferfähigkeit oder irgendeine Erfolgswahrscheinlichkeit. Diese Lücken werden mit direkten Gesprächen und einem kleinen Test geprüft.
