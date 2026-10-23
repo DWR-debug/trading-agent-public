@@ -1,0 +1,87 @@
+name: Global Physical Economy Source PIT Probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      fail_on_fetch_error:
+        description: "Fail the job after preserving the receipt if any bounded source fetch is incomplete."
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-global-physical-economy-source-probe
+  cancel-in-progress: false
+
+jobs:
+  source_probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Capture bounded international source metadata
+        id: probe
+        shell: bash
+        env:
+          FAIL_ON_FETCH_ERROR: ${{ inputs.fail_on_fetch_error }}
+        run: |
+          set -euo pipefail
+          output="research/runs/global_physical_economy_source_probe/${GITHUB_RUN_ID}.json"
+          args=(--output "$output")
+          if [[ "$FAIL_ON_FETCH_ERROR" == "true" ]]; then
+            args+=(--fail-on-fetch-error)
+          fi
+          python -m automation.global_physical_economy_source_probe "${args[@]}"
+
+      - name: Write receipt summary
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path("research/runs/global_physical_economy_source_probe") / f"{os.environ['GITHUB_RUN_ID']}.json"
+          summary = Path(os.environ["GITHUB_STEP_SUMMARY"])
+          if not path.exists():
+              summary.write_text("## Global physical-economy probe\nNo receipt was written. Inspect the failed step.\n", encoding="utf-8")
+              raise SystemExit(0)
+          receipt = json.loads(path.read_text(encoding="utf-8"))
+          successful = sum(r.get("capture_state") == "COMPLETE_JSON_HTTP_200" for r in receipt.get("requests", []))
+          lines = [
+              "# Global physical-economy source probe",
+              "",
+              f"- Receipt status: **{receipt.get('status')}**",
+              f"- Requests: {len(receipt.get('requests', []))}",
+              f"- Complete JSON HTTP 200: {successful}",
+              f"- Historical PIT gate: **{receipt.get('historical_pit_gate', {}).get('status')}**",
+              "- Performance gate opened: **false**",
+              "",
+              "This source probe is non-authorizing. Successful current retrieval does not prove historical PIT validity.",
+          ]
+          summary.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+
+      - name: Upload immutable bounded receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-physical-economy-source-probe-${{ github.run_id }}
+          path: research/runs/global_physical_economy_source_probe/${{ github.run_id }}.json
+          if-no-files-found: error
+          retention-days: 90

@@ -94,6 +94,7 @@ ACTIVE_WORKFLOWS = {
     "q133-q170-pit-readiness.yml",
     "q148-r1-wpsr-source-clock.yml",
     "q148-r1-persist-receipt.yml",
+    "global-physical-economy-source-probe.yml",
     "q169-noaa-swpc-pit-readiness.yml",
     "q169-noaa-swpc-pit-independent-reproduction.yml",
     "full-suite-verification.yml",
