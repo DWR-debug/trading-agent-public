@@ -1,3 +1,15 @@
+# Aktuelle strategische Änderung — Project 500 (2026-10-23)
+
+**Diese Regel hat bei Prioritäten Vorrang vor den historischen Trading-Agent-Zielbeschreibungen weiter unten.** Der Trading-Agent bleibt ein sekundäres, streng evidenz- und sicherheitsgesteuertes Forschungsprogramm; er ist nicht mehr der einzige oder primäre Weg zur familiären finanziellen Sicherheit.
+
+Primärer Zweck ist, langfristig die finanzielle Sicherheit der Familie zu verbessern, indem wir (a) die finanzielle Ausgangslage und die Sparfähigkeit realistisch betrachten, (b) langfristigen, risikoangemessenen Vermögensaufbau unabhängig vom Trading prüfen und (c) mit Project 500 eine KI-gestützte, kapitalarme Einnahmemöglichkeit anhand tatsächlicher Kundennachfrage erforschen. Keine dieser Säulen darf als garantiert dargestellt werden.
+
+Der Nutzer hat am 2026-10-23 bestätigt: **500 EUR sind das verfügbare Projektkapital; mehr Kapital steht nicht zur Verfügung.** Dieses Kapital gehört zu Project 500, nicht zum Trading. Vor Gesprächen und Validierung bleiben Ausgaben bei 0 EUR. Bei nachgewiesenem wiederkehrendem Problem ist eine kumulierte Ausgabe bis 50 EUR denkbar; erst nach konkretem schriftlichem Pilotinteresse können weitere 150 EUR erwogen werden. Vor dem ersten bezahlten Auftrag bleiben mindestens 300 EUR unangetastet. Jeder tatsächliche Ausgabeposten wird einzeln geprüft. Keine Kredite, keine bezahlten APIs/Ads und keine Gefährdung notwendiger Haushaltsmittel. Recherche, Hypothesentests und erste Prototypen starten kostenlos mit öffentlichen Daten und synthetischen/redigierten Beispielen.
+
+Project 500 folgt: Problem finden → bestehende Alternativen/Preise recherchieren → günstig falsifizieren → potenzielle Kunden befragen → erst nach belegtem Bedarf einen kleinen, menschlich geprüften Test bauen → einen bezahlten Pilot nur anstreben, wenn Nachfrage und geschäftliche/datenschutzrechtliche Voraussetzungen ausreichend geklärt sind. Eine Zahlung oder bestimmte Einnahme wird nicht vorausgesetzt.
+
+Der bisherige 25.10.2026-Evidence-Meilenstein und die alte Trading-Kandidaten-Priorität sind als primäres Ziel superseded. Die vorhandene Trading-Evidenz, Codes, Trial-IDs und Gates bleiben unverändert. Die bestehenden technischen Betriebsstatus beschreiben weiterhin den Trading-Unterbereich, nicht die neue Priorität.
+
 > **STATUTEN-EBENE:** Dauerhafte Arbeits- und Kontinuitätsregeln stehen in `docs/TRADING_AGENT_PROJECT_STATUTES.md`; Ziele/Nordstern bleiben in diesem Dokument und `research/governance/project_north_star.json`.
 
 # Trading Agent — Dauerhafter Projektkontext

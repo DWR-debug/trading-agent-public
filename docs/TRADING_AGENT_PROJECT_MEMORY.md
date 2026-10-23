@@ -1,3 +1,23 @@
+# CURRENT STRATEGIC DECISION — Project 500 (effective 2026-10-23)
+
+This section supersedes earlier priority/deadline language below whenever there is a conflict. Older trading research records remain historical evidence; they are not deleted or silently rewritten.
+
+**Primary goal:** make progress toward durable family financial security without depending on a trading windfall. The primary active program is Project 500: discover and validate an AI-assisted service/product that can be tested with very low capital, beginning with zero spending before validation and staged spending only from the confirmed €500 cap after the documented gates. Long-term prudent wealth-building remains a separate foundation. The Trading Agent trading-research pipeline is secondary and remains paper-only.
+
+**Capital guard (confirmed 2026-10-23):** exactly €500 are available as Project 500 capital; no additional capital is available. It is not the trading bankroll. Spend €0 before validation interviews; after at least five interviews support a recurring problem, cumulative spend may be at most €50; only after documented serious pilot intent, at most €150 additional pre-revenue spend may be considered. Preserve ≥€300 until first paid order. Every actual expense requires item-specific review. No loans, paid ads or recurring paid APIs; no household-essential risk.
+
+**Execution protocol for every new `trading agent` chat:**
+1. Read `docs/PROJECT_500_EXECUTION_PLAN.md` and `docs/PROJECT_500_CLIENT_KIT.md` first; then read `research/governance/project_north_star.json`, this file, `docs/TRADING_AGENT_CHAT_ENTRYPOINT.md`, and `docs/PROJECT_CONTEXT.md`.
+2. Verify current public master and technical/operational/evidence sources independently; do not assume the legacy current-status candidate focus is the user's primary goal.
+3. Research three distinct narrow customer-problem hypotheses from reliable current sources, compare competition and existing alternatives, label inference vs evidence, and design cheap falsification tests.
+4. Prioritize no-cost discovery and direct proof of pain/willingness-to-pay. Do not fabricate customer validation, send outreach, register services or spend money on the user's behalf without the needed specifics/permissions.
+5. Build a prototype only after evidence justifies it; start with synthetic/redacted data and human review. Check commercial/legal/privacy requirements before any real client data or paid delivery.
+6. Log decisions, sources, costs, uncertainties and results in canonical project files; update the next-chat handoff whenever a material decision occurs.
+
+**Thirty-day target:** one clear evidence-based decision on a low-capital offer, ideally a bounded paid pilot if customer validation and business prerequisites support it. This is an experiment target, not an income guarantee or a deadline to force a sale.
+
+**Legacy trading work:** current operational status may still identify Q104:I19, Q220 and Q221 as its technical focus. Do not delete their evidence or change frozen contracts. Do not automatically continue or expand their workload as the top project priority. No new trading-candidate dispatch just because old configuration still advertises it; check active jobs, only act on genuine nonduplicate work and preserve all formal gates.
+
 > **VERBINDLICHE PROJEKTSTATUTEN:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` ist die kanonische sprachliche Regelung für dauerhafte Prinzipien, Nutzkapazität, Kontinuität und Projektgedächtnis. Maschinenmirror: `research/governance/project_statutes.json`.
 
 ## Kanonische Startregel für neue "trading agent"-Chats — 2026-09-28

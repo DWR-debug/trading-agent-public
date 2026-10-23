@@ -1,3 +1,15 @@
+## Strategic priority — Project 500 (effective 2026-10-23; supersedes older prioritization)
+
+For new chats triggered by `trading agent`, **Project 500 is the primary project goal**: improve the family's financial security by finding and validating a low-capital, AI-assisted income opportunity, with prudent long-term wealth-building as a parallel foundation. The trading research OS is a secondary option, not the only path and not an assumed source of income.
+
+Required first read: `docs/PROJECT_500_EXECUTION_PLAN.md` and `docs/PROJECT_500_CLIENT_KIT.md`, then `research/governance/project_north_star.json`, this entrypoint, `docs/TRADING_AGENT_PROJECT_MEMORY.md`, `docs/PROJECT_CONTEXT.md`, and finally the current technical/operational sources below. The current operational file may still report legacy Q104:I19/Q220/Q221 research focus; that describes the legacy trading subsystem and **does not override the new strategic priority**. Do not dispatch new candidate-specific trading work just because an old queue lists it; inspect current jobs and avoid duplicates, and perform only useful already-authorized work.
+
+The user confirmed **exactly €500 are available as Project 500 capital; no more capital is available**. This is a hard project budget, not trading capital. Before real evidence, spend €0. After at least five interviews confirm recurring pain, at most €50 cumulative spending is eligible; only after concrete written pilot interest may up to €150 additional pre-revenue spend be considered. Maximum pre-revenue spend €200; preserve at least €300 until the first paid order. Each actual expense needs an item-specific check; no paid APIs/ads/loans, no trading investment of these funds, and no income/customer outcome is presumed.
+
+Goal sequence: (1) protect the confirmed €500 total Project 500 budget using staged caps in the execution plan, (2) research three distinct customer-problem hypotheses using current sources, competitors and cheap falsifiers, (3) run no-cost customer discovery, (4) prototype the KI-Startklar pilot only after demand evidence warrants it, (5) seek a bounded paid pilot only when appropriate business/legal/data-handling conditions are clear. A paid pilot is a target, never a guarantee. The first 30 days measure verified customer evidence and decisions, not promised income. Preserve truthfulness: AI-generated output is not evidence of demand or profitability; report failed tests and stop weak ideas.
+
+The old 2026-10-25 trading Evidence-Pack milestone, "M2/4x" trading ambition and any wording making trading the exclusive financial route are superseded for prioritization. Historical trading records remain intact. Keep all existing trading safety constraints: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, `AUTOMATIC_PROMOTION=False`. Do not alter them to meet financial pressure.
+
 > **DAUERHAFTE STATUTENREGEL:** Vor jeder `trading agent`-Weiterentwicklung ist `docs/TRADING_AGENT_PROJECT_STATUTES.md` zu berücksichtigen. Wichtige dauerhafte Entscheidungen werden in die passende kanonische Ebene persistiert und nicht nur im Chat belassen.
 
 # Trading Agent — Chat-Einstiegspunkt

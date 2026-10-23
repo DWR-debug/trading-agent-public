@@ -1,3 +1,15 @@
+# Project 500 – neue Kapitalregel (2026-10-23)
+
+Der Nutzer hat am 2026-10-23 bestätigt: **500 EUR stehen als gesamtes Projektkapital für Project 500 zur Verfügung; weiteres Kapital nicht.** Die Obergrenze für das gesamte Vorhaben beträgt 500 EUR. Das Geld wird nicht für Trading verwendet.
+
+- Vor Kundenvalidierung: 0 EUR Ausgaben.
+- Nach mindestens fünf Gesprächen, die einen wiederkehrenden Engpass belegen: höchstens 50 EUR kumulierte Ausgabe.
+- Erst nach konkret dokumentiertem Pilotinteresse: bis zu weitere 150 EUR; somit höchstens 200 EUR Ausgaben vor erstem bezahltem Auftrag und mindestens 300 EUR unberührt lassen.
+- Konkrete Ausgaben erfordern eine einzelne Prüfung von Nutzen, Preis und Notwendigkeit. Keine bezahlten APIs, Werbung, Kredite oder automatischen Abonnements.
+- Vor bezahlter Lieferung die konkrete gewerbliche, steuerliche, Rechnungs- und ggf. Versicherungsfrage prüfen.
+
+Der historische `HYPOTHETICAL_STARTING_CAPITAL_EUR=2000`-Wert bleibt ausschließlich eine Simulationseinstellung der bestehenden Trading-Forschung, nicht tatsächliches oder zusätzliches Vermögen. Der historische 500-EUR-Trading-Canary war ebenfalls eine getrennte Simulation.
+
 # Trading Agent — Finanzielle Zielparameter
 
 Stand: 2026-09-25
