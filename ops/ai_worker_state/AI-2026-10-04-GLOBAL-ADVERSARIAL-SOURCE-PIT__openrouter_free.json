@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-23T17:26:43.263656Z",
+  "observed_at_utc": "2026-10-23T21:40:48.747518Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 340.325,
-  "stdout": "## Adversarial Review: Q202-Q204 Information-Timing Family & Q205 NLRB Channel\n\n### 1. Overview\n\nThe Q202-Q204 cluster constitutes the \"information-timing family\" targeting SEC filing-arrival and regulatory-information-dispersion signals. Q205 adds the \"NLRB labor-representation certification channel\" (discovery-only, unvalidated). Per the hard invariants, **all source/PIT readiness must be bound to immutable dated snapshots or frozen historical artifacts**—live endpoints and current documentation pages are provisional only.\n\n---\n\n### 2. Candidate-Specific Falsification Plans\n\n#### Q202: SEC Filing-Arrival & Information-Timing Mechanism\n\n**Core Hypothesis:** Early filing arrivals relative to public observation boundaries generate detectable information-timing advantages.\n\n**Adversarial Attack Vectors:**\n\n| Vector | Risk | Minimal Falsifier | Missing Artifact |\n|--------|------|-------------------|------------------|\n| **Publication-Timestamp Mismatch** | EDGAR filing date ≠ public observation date (e.g., 1-business-day lag seen in Q104:I19). If Q202 relies on observation-boundary proxies, a delayed publication could invalidate the timing edge. | Shift the public-observation boundary forward/backward by 1–5 trading sessions while holding calendar fixed; recompute inferred timing advantage. If the advantage disappears when the boundary aligns with actual disclosure release, the mechanism fails. | **Immutable historical snapshot** of the earliest defensible public-observation timestamp for each shortage/transition event, with explicit filing-date reconciliation. |\n| **Revision/Amendment Lineage** | Post-filing amendments could retroactively alter the effective information timing window. | Trace revision history for all filed documents; confirm no later amendments altered the core information signal. | **Complete revision and amendment lineage** for each Q202 target document, including QC/prosecution records. |\n| **Cross-Candidate Overlap** | Q202 may share underlying event signals with Q203/Q204 (e.g., same shortage type, overlapping issuer sets). | Compute feature correlation matrix across Q202-Q204 candidate features; flag >0.8 correlation in binary shortage-state indicators. | **Orthogonal event-definition contracts** for each candidate, independently verified against frozen public-observation records. |\n\n**Concrete Next Action:**  \nGenerate a deterministic falsifier by shifting the public-observation boundary ±1 session and re-running the Q202 timing inference. If the statistical significance of the timing edge vanishes, the mechanism is not robust. Required artifact: **immutable historical snapshot** of the earliest publicly observable shortage record (with filing-date reconciliation).\n\n---\n\n#### Q203: SEC XBRL Fundamental-Change State Mechanism\n\n**Core Hypothesis:** Changes in SEC XBRL fundamental classification states (e.g., revenue recognition, expense categorization) create exploitable information-timing patterns.\n\n**Adversarial Attack Vectors:**\n\n| Vector | Risk | Minimal Falsifier | Missing Artifact |\n|--------|------|-------------------|------------------|\n| **XBRL Schema Evolution** | Future schema revisions could invalidate parsing logic or shift meaning of fields. | Freeze the XBRL schema version used for extraction; validate that all parsed fields map 1:1 to the frozen schema. | **Frozen XBRL schema version** and **parsing lineage** (extraction → normalization → feature engineering) with SHA-256 anchors. |\n| **Public-Information Latency** | Time between XBRL update publication and market absorption varies by issuer. | Measure end-to-end latency distribution across a held-out set of symbols; flag outliers beyond 95% percentile. | **Latency histogram** computed against a static reference point (e.g., known market-wide absorption benchmarks). |\n| **Same-Day Leakage** | If XBRL updates are posted on the same day as market opening, arbitrage opportunities vanish. | Simulate a same-day observation scenario: delay all XBRL updates to the next business day and recompute timing edges. | **Historical XBRL update timestamps** aligned to market open times for each symbol. |\n\n**Concrete Next Action:**  \nCompute the XBRL parsing pipeline against the **immutable historical snapshot** of the most recent XBRL update for each candidate symbol. If the pipeline produces stable feature vectors across multiple days, the mechanism is viable. Required artifact: **frozen XBRL schema + parsing lineage** with immutable hash.\n\n---\n\n#### Q204: Treasury Auction Demand & Fiscal-Liquidity States\n\n**Core Hypothesis:** Federal Reserve/Treasury auction demand signals (bid/ask volumes, pricing dispersion) provide information-timing advantages.\n\n**Adversarial Attack Vectors:**\n\n| Vector | Risk | Minimal Falsifier | Missing Artifact |\n|--------|------|-------------------|------------------|\n| **Auction Timing Alignment** | Auctions often occur on scheduled calendars (e.g., weekly Fed meetings); misalignment with market hours creates arbitrage windows. | Shift the auction observation boundary by ±1 week and measure timing-edge persistence. If the edge collapses, the mechanism depends on calendar alignment rather than genuine information. | **Immutable historical snapshot** of auction schedules and bid/ask sequences, with explicit calendar alignment markers. |\n| **Financing Transmission Lag** | Liquidity from auctions may take time to enter markets; early observers could front-run. | Introduce a deliberate processing delay (e.g., 24-hour buffer) between auction completion and public observation; recompute timing advantage. | **Processing-latency artifact** showing how delays affect signal detection. |\n| **Cross-Candidate Convergence** | Q202 and Q204 may converge on similar liquidity signals (e.g., both respond to Treasury auction volume). | Compute mutual information between Q202 and Q204 feature distributions; flag high redundancy (>0.85). | **Orthogonal feature decomposition** isolating Q202-specific vs. shared components. |\n\n**Concrete Next Action:**  \nRun the Q204 timing inference with a **deliberate 24-hour observation delay** (simulating processing lag). If the detected timing edge persists, the mechanism is robust to latency. Required artifact: **immutable snapshot** of the auction schedule and bid/ask streams with explicit delay markers.\n\n---\n\n#### Q205: NLRB Labor-Representation Certification Channel (Discovery-Only)\n\n**Status:** Quarantined; discovery-only, not yet source/PIT validated.\n\n**Adversarial Attack Vectors:**\n\n| Vector | Risk | Minimal Falsifier | Missing Artifact |\n|--------|------|-------------------|------------------|\n| **Quarantine Status** | The channel is explicitly marked *not yet source/PIT validated*. Any analysis relying on it violates the hard invariant. | Attempt to reproduce the PIT (Proof-of-Interest/Transaction) for Q205 using immutable historical snapshots. If impossible due to quarantine, the candidate cannot proceed. | **Explicit immutable historical snapshot** of the NLRB labor-representation certification process (including any archived filings). |\n| **Information Source Quality** | NLRB certifications may involve internal agency processes not publicly indexed. | Compare the quality of publicly available NLRB filings against the claimed certification channel; identify gaps. | **Frozen public-observation timeline** of NLRB labor-representation events with provenance. |\n| **Overlap with Other Channels** | Q205 may duplicate signals from Q194 (shortage pressure) or Q195 (inspection/enforcement). | Perform feature correlation across Q205 and adjacent candidates; flag redundant signals. | **Independent event-definition contracts** for Q205, distinct from Q194/Q195. |\n\n**Concrete Next Action:**  \nAttempt to locate an **immutable historical snapshot** of the Q205 NLRB labor-representation certification chain. If none exists (expected given quarantine), the candidate must be **blocked** per the hard invariant. Required artifact: **frozen NLRB certification lineage** with SHA-",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 32.045,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1792776403-KTZd6jCxC88vnT9wETkP",
-  "usage": {
-    "prompt_tokens": 5720,
-    "completion_tokens": 3200,
-    "total_tokens": 8920,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 5712,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1503,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
