@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_type": "trading_agent_chat_decision_log",
   "purpose": "Durable operational continuity for future Trading Agent OS chats. Entries are operational notes, not scientific evidence, performance authorization, ranking, or live-trading permission.",
-  "updated_at_utc": "2026-10-12T05:47:48Z",
+  "updated_at_utc": "2026-10-14T07:14:00Z",
   "safety": {
     "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
@@ -11,6 +11,61 @@
     "paid_usage_usd": 0
   },
   "entries": [
+    {
+      "date_utc": "2026-10-14T07:14:00Z",
+      "candidate": "Q104:I22 INDEPENDENT PIT",
+      "status": "INDEPENDENT PIT REPRODUCED · NON-OVERLAP REVIEW REQUIRED",
+      "title": "Preserve the first successful pinned independent Q104:I22 reproduction",
+      "decision": "Run #38526675922 independently reproduces the fixed eight-issuer SEC filing-arrival population using the exact compiler artifacts and immutable reconciliation receipt from run #38274043682. It matches 2,209 filing events across 2,011 eligible issuer sessions; all 24 fixed prefix checks pass, input-order and future-acceptance invariance pass for all eight issuers, x64/ARM64 semantic outputs agree, and the independent SEC refetch agrees semantically. Immutable receipt fingerprint 923afa1165e9f161caea6be187abb7eceeefc313b49cac5faa42849d701592ff. The separate mechanism-signature review remains incomplete: 0/121 peer comparisons have complete token/component/domain signatures.",
+      "next_action": "Complete a metadata-only audit of missing source_component and source_domain signatures for all 121 peer candidates from existing registered contracts/receipts. Do not infer missing metadata, calculate performance, select holdouts, rank, tune, promote, place orders, or enable live execution.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38526675922",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38526675922",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-14T07:14:00Z",
+      "candidate": "Q127-R4 FINRA OFFICIAL LISTING",
+      "status": "OFFICIAL CURRENT LISTING VERIFIED · HISTORICAL PUBLICATION TIME UNPROVEN",
+      "title": "Record the four-file FINRA official listing check",
+      "decision": "Run #38526554657 made two bounded official-listing metadata requests (863,158 bytes). Each of the four frozen daily files (2024-02-05, 2024-07-01, 2025-01-02, 2025-09-24) appeared exactly once and no Updated badge dates were listed. Receipt fingerprint b54dadc8b25ed14ecd14aa0abb0719e293634ce9b235573c03c4595620479d29. The probe did not download any target file, and does not prove historical listing snapshots, revision lineage, or exact first-public time.",
+      "next_action": "Preserve this as a negative/limited source result. Do not repeat the same Wayback/Common Crawl 504 routes. Only pursue a distinct, low-cost historical index if it can establish a meaningful capture timestamp; same-day PIT stays closed.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38526554657",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38526554657",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-14T07:14:00Z",
+      "candidate": "Q120-R2 CFTC RELEASE EXCEPTIONS",
+      "status": "OFFICIAL EXCEPTION ROWS INVENTORIED · CALENDAR INCOMPLETE",
+      "title": "Record the CFTC report-date exception inventory",
+      "decision": "Run #38479765335 parsed 30 rows from the CFTC Historical Special Announcements table; 28 rows changed between original and new publish date and two kept the same day. Receipt fingerprint b92f42f2c3f8dbf8f7cfd8499be44b4130c154c415e14e97f831da9230b846dc. The CFTC release schedule is not a complete historical release calendar and these rows do not establish exact first-public timestamps for unlisted dates.",
+      "next_action": "If a pinned 822-date TFF report population and its exact upstream receipt remain available, build a read-only date-set crosswalk for explicitly listed exceptions only; leave every unlisted date unknown rather than applying a normal-Friday assumption.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38479765335",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38479765335",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-14T07:14:00Z",
+      "candidate": "Q220 AS-FILED XBRL REPRESENTATION",
+      "status": "BLOCKED · 55/55 PRIMARY-DOCUMENT HASH MISMATCHES",
+      "title": "Keep frozen Q220 hashes and original byte provenance unresolved",
+      "decision": "The frozen population and expected hashes remain unchanged. Two bounded SEC daily-feed samples had matching accession/CIK/form/filing-date identity but neither the frozen hash nor current document/extracted variants matched; the third approximately 1.11 GB source download was incomplete. Original captured primary-document bytes were not retained in the historical population receipt, so the exact historical byte provenance cannot yet be reconstructed.",
+      "next_action": "Do not repeat the large feed download or rewrite hashes. Continue only with a cheap existing-receipt/commit-history provenance audit or a distinct pinned immutable source copy; if none exists, retain the fail-closed blocker.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38439183202",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38432733615",
+      "scientific_evidence": false
+    },
+    {
+      "date_utc": "2026-10-14T07:14:00Z",
+      "candidate": "Q221 HISTORICAL PUBLIC BOUNDARY",
+      "status": "BLOCKED · HISTORICAL PUBLIC TIME UNPROVEN",
+      "title": "Stop repeating the failed transaction API and catalogue route",
+      "decision": "The fixed public-boundary sample contains 348 transactions across seven fiscal years; historic public-observation time remains unresolved for 348/348, and 247/247 recipient identity candidates remain unmapped to issuer. The monthly full/delta archive catalogue exposes no multi-date archive series. The frozen transaction-level parent-UEI probe returned HTTP 503 twice before count preflight or payload download.",
+      "next_action": "Do not make a third request to the same 503 path and do not infer first-public time from current Last Modified, Action Date, Issued Date, or archive capture names. A different transaction-level timestamped version source or a separately pinned, independently bounded metadata route is required.",
+      "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38432733615",
+      "related_run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/38436121951",
+      "scientific_evidence": false
+    },
     {
       "date_utc": "2026-10-12T05:47:48Z",
       "candidate": "Q104:I19 TARGETED ACCEPTANCE REPAIR",
