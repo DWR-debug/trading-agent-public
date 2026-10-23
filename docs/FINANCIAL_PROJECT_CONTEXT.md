@@ -1,3 +1,9 @@
+# Project 500 – neue Kapitalregel (2026-10-23)
+
+Der Nutzer hat 500 EUR als nominales Startkapital genannt. Es ist **nicht bestätigt**, ob dieser Betrag frei disponibel ist oder die gesamte Rücklage darstellt. Bis zur Klärung: `confirmed_discretionary_capital_eur=0`, `authorised_experiment_spend_eur=0`. Keine Transaktionen, Trading-Einsätze, kostenpflichtigen Services oder sonstige Ausgaben hieraus veranlassen oder empfehlen, bevor die Liquiditäts-/Rücklagenlage klar ist.
+
+Der historische `HYPOTHETICAL_STARTING_CAPITAL_EUR=2000`-Wert gilt ausschließlich als Simulationseinstellung der bestehenden Trading-Forschung, nicht als tatsächliches Vermögen. Der 500-EUR-Trading-Canary ist ebenfalls historisch simulativ. Project 500 beginnt mit kostenfreier Recherche und Kundenbedarfsvalidierung; Kapitalausgaben sind ein gesonderter späterer Entscheid.
+
 # Trading Agent — Finanzielle Zielparameter
 
 Stand: 2026-09-25
