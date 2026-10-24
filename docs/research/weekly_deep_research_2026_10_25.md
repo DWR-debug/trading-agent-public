@@ -36,7 +36,7 @@ EIA-930 supplies hourly demand, generation and interchange data for US balancing
 Official data contract: https://www.eia.gov/electricity/930-content/about.html
 
 PJM publishes queue cycles/status and Data Miner feeds, but release notes document reloads, field changes and corrections. A current queue table is not a versioned historical status record.  
-Sources: https://insidelines.pjm.com/over-600-new-generation-projects-seek-to-connect-under-pjms-reformed-process/ ; https://www.pjm.com/markets-and-operations/etools/data-miner-2/data-miner-2-release-notes
+Sources: https://insidelines.pjm.com/over-600-projects-enter-phase-1-of-pjms-new-interconnection-process/ ; https://www.pjm.com/markets-and-operations/etools/data-miner-2/data-miner-2-release-notes
 
 **Parked design idea, no candidate ID:** Compute-Commitment-to-Delivery Gap × Local Grid Constraint. The state would be the gap between a documented facility capacity commitment/milestone sequence and an independently dated interconnection/energization status, conditional on local grid constraints—not announcement size alone. The first stage would freeze document-to-facility/parent mapping and distinguish announced, queued, approved, under construction, energized and withdrawn states. Queue status, announced MW and actual load must never be treated as interchangeable.
 
@@ -45,7 +45,7 @@ Sources: https://insidelines.pjm.com/over-600-new-generation-projects-seek-to-co
 ### B. Earth observation × accounting/disclosure: thermal infrared activity
 
 Xue, Zhang and Zhao, “Nowcasting Firms’ Operating Activities from Satellite Data on Thermal Infrared Radiation,” appeared online at Cambridge University Press on 2025-09-08 and in JFQA 61(3), May 2026. It reports associations between thermal infrared radiation and factory operating activity for 28,236 factories of Chinese listed firms. The publisher page acknowledges data support from Alt Data Tech; it does not establish a free, reusable historical source archive with a reproducible first-public clock.  
-Publisher: https://www.cambridge.org/core/journals/journal-of-financial-and-quantitative-finance/article/abs/nowcasting-firms-operating-activities-from-satellite-data-on-thermal-infrared-radiation/9298EBE11C14AAF091E261E286536DD1
+Publisher: https://www.cambridge.org/core/journals/journal-of-financial-and-quantitative-analysis/article/abs/nowcasting-firms-operating-activities-from-satellite-data-on-thermal-infrared-radiation/9298EBE11C14AAF091E261E286536DD1
 
 USGS publishes Landsat surface-temperature products, but acquisition time is not the first-public time of a particular processed product version; cloud cover, revisit intervals, product changes and facility mapping also matter.  
 Official source: https://www.usgs.gov/centers/eros/science/usgs-eros-archive-landsat-archives-landsat-level-2-provisional-surface
