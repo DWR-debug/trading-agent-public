@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "fca22e97174fa0dd40fa39fc32008874634bbf1ba71fb19e2e9e0c18592fd46d",
-  "observed_at_utc": "2026-10-24T10:49:19.179552Z",
+  "observed_at_utc": "2026-10-24T15:50:26.799886Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 4.104,
-  "stdout": "**Worker Handoff – Q221 USAspending Clock & Data‑Integrity Review**\n\n| Section | Content |\n|---------|---------|\n| **Findings** | 1. **Clock source is only a PDF** – the code pulls the “About‑the‑Data” PDF and searches for key phrases, but never validates the *actual* publication timestamp of the award data.  <br>2. **No award‑vs‑modification semantics** – the code does not inspect award records to confirm that a modification is recorded after the initial award, nor that the modification date is later than the award date.  <br>3. **Transaction history omitted** – the API endpoint is queried only for its existence; no transaction list is fetched or checked against the claimed publication window.  <br>4. **R&D classification, competition fields, PSC stability** – none of these fields are extracted or verified; the code does not confirm that PSC codes are unchanged over time or that R&D flags are present.  <br>5. **Recipient‑to‑issuer mapping missing** – the code never maps the award recipient to the issuer (e.g., parent company) or verifies that the mapping is consistent across the dataset.  <br>6. **Parent/subsidiary changes ignored** – no check that a recipient’s corporate structure (parent, subsidiary) is correctly reflected in the award record.  <br>7. **Pre‑event capability proxies absent** – the code does not capture any proxy fields that indicate whether a contract was pre‑qualified or pre‑approved.  <br>8. **Risk of future production contracts leaking into historical prefix** – the code does not filter the dataset by award date, so a contract awarded after the historical period could be inadvertently included.  <br>9. **Historical applicability not verified** – the “About‑the‑Data” PDF may be updated; the code does not confirm that the PDF version matches the data release period for the transaction class in question.  <br>10. **Missing artifacts** – no logs of publication dates, no mapping of award vs modification, no PSC code history, no R&D/competition field definitions, no recipient‑to‑issuer mapping tables, no parent/subsidiary change logs, no pre‑event capability proxy definitions, no list of future contracts that appear in the historical dataset. |\n| **Counterarguments** | • *“The PDF contains the necessary dates.”* – The PDF is a static document; it may be updated after the fact and does not embed the exact timestamp of each award’s publication.  <br>• *“The API endpoint guarantees all transaction classes are present.”* – The code only checks the endpoint’s existence; it does not enumerate or timestamp the transactions.  <br>• *“PSC codes are stable.”* – PSC codes have changed over time; without a historical code‑change log, stability cannot be assumed.  <br>• *“Recipient‑to‑issuer mapping is trivial.”* – Many awards list only a recipient ID; mapping to the issuer (especially in parent‑subsidiary structures) requires an external corporate hierarchy source.  <br>• *“Future contracts cannot leak into historical data.”* – The dataset is a snapshot; if a contract is added after the historical period but the snapshot includes it, the data will be mis‑dated. |\n| **Next Actions (deterministic falsifiers & missing artifacts)** | 1. **Fetch a known award** (e.g., award ID `CONT_AWD_1332KP23FNEEB0050_1330`) and parse its JSON.  <br>   - Verify `awardDate` and any `modificationDate` fields.  <br>   - Assert that `modificationDate` > `awardDate`.  <br>   - If not, flag a falsifier.  <br>2. **Enumerate transaction history** for a specific transaction class (e.g., `CONTRACT`).  <br>   - Call `/API/V2/TRANSACTIONS/` with filters for class and date range.  <br>   - Compare the earliest transaction date in the API to the publication date claimed in the PDF.  <br>   - If mismatch, record falsifier.  <br>3. **Retrieve PSC code history** for a sample PSC (e.g., `PSC 123`).  <br>   - Query the PSC lookup endpoint (if available) or parse the PSC definitions file.  <br>   - Confirm that the code’s description and effective date match the period of the award.  <br>4. **Extract R&D and competition fields** from the award JSON.  <br>   - Check for presence of `R&D` flag and `Competition` field.  <br>   - If missing or inconsistent, flag.  <br>5. **Build recipient‑to‑issuer mapping**.  <br>   - Use the `recipientId` and cross‑reference with the `issuerId` in the award record.  <br>   - Validate against an external corporate hierarchy source (e.g., OpenCorporates).  <br>6. **Detect parent/subsidiary changes**.  <br>   - For a recipient that has changed parent, confirm that the award record reflects the current parent at the award date.  <br>7. **Identify pre‑event capability proxies**.  <br>   - Look for fields such as `preQualified`, `preApproved`, or similar.  <br>   - If absent, note the missing artifact.  <br>8. **Audit for future contract leakage**.  <br>   - Filter awards where `awardDate` > historical period end (`2026-10-05`).  <br>   - Verify that such awards are excluded from the historical snapshot.  <br>9. **Version‑match the About‑the‑Data PDF**.  <br>   - Download the PDF, compute its SHA‑256, and compare to a known historical version (if available).  <br>   - If the PDF is newer, flag that the clock may be mis‑aligned.  <br>10. **Compile missing artifact list**.  <br>   - Publication timestamp log.  <br>   - Award‑vs‑modification mapping table.  <br>   - Transaction class history log.  <br>   - PSC code change history.  <br>   - R&D/competition field definitions.  <br>   - Recipient‑to‑issuer mapping table.  <br>   - Parent/subsidiary change log.  <br>   - Pre‑event capability proxy definitions.  <br>   - Future contract inclusion list. |\n| **Uncertainty** | • The exact format and availability of award JSON fields (e.g., `modificationDate`) are not guaranteed; the API may change.  <br>• PSC code history may not be publicly exposed; an external lookup may be required.  <br>• Corporate hierarchy data for recipient‑to‑issuer mapping may be incomplete or out‑of‑date.  <br>• The “About‑the‑Data” PDF may not contain a precise publication timestamp; the PDF may be updated without reflecting the original release date.  <br>• Future contract leakage risk depends on the snapshot methodology, which is not documented in the current code.  <br>• The code’s reliance on a single PDF and API endpoint may miss edge‑case transaction classes or special award types. |\n\n**Summary**  \nThe current Q221 clock gate implementation verifies only the presence of certain phrases in a static PDF and the existence of an API endpoint. It does not validate the actual award publication dates, award‑vs‑modification semantics, transaction history, PSC stability, R&D/competition fields, recipient‑to‑issuer mapping, parent/subsidiary changes, pre‑event proxies, or the exclusion of future contracts from the historical snapshot. The above next actions provide deterministic falsifiers and a roadmap to gather the missing artifacts needed for a robust, historically‑applicable public‑observation clock.",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.165,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5746, Requested 5538. Please try again in 24.63s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-42116009-8b3e-4d29-8fb0-70ec9e7f4730",
-  "usage": {
-    "queue_time": 0.084179379,
-    "prompt_tokens": 5070,
-    "prompt_time": 0.353693006,
-    "completion_tokens": 3177,
-    "completion_time": 3.286627334,
-    "total_tokens": 8247,
-    "total_time": 3.64032034,
-    "completion_tokens_details": {
-      "reasoning_tokens": 1458
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-24T15:50:26.964818Z",
+    "blocked_until_utc": "2026-10-24T16:50:26.964818Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5746, Requested 5538. Please try again in 24.63s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
