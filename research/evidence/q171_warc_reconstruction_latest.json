@@ -1,6 +1,6 @@
 {
-  "coverage_receipt_fingerprint": "e2254ffb77a0adbd26a8d9cf3560b8811b376ccb508dd702982438a9b1c41705",
-  "receipt_fingerprint": "8199d3e38625bb235f2d3e56ae0a52e7c3510c2817ac6c5661617d7e054cc3b3",
+  "coverage_receipt_fingerprint": "48eacaa6f6b91e6ed62191e4e55ef50e7c425a4a4baba5ed3e436ab2c71d7222",
+  "receipt_fingerprint": "beed60a833eec50a252e56044f34edbf74a90d969094cb920af843e5cf2c4d81",
   "results": {
     "AMP": {
       "checks": {
@@ -50,6 +50,30 @@
       "warc_date": "2025-03-24T00:36:44Z",
       "warc_record_sha256": "66bcd13b59a4f7ebfccab927ec03c2398117c6bdee4344e791e2fdf37b205221"
     },
+    "SPGI": {
+      "checks": {
+        "http_content_length_boundary_exact": true,
+        "http_status_line_present": true,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
+        "target_matches_index_url": true,
+        "target_uri_present": true,
+        "warc_date_present": true,
+        "warc_payload_digest_present": true,
+        "warc_version_present": true
+      },
+      "compressed_sha256": "0f2fc040dd995e553845cf4c856ae0659a6b14b5293880ff7b79133021bedc35",
+      "http_status_line": "HTTP/1.1 200 ",
+      "index_digest": "XEU4QWNIXXFKQCMSMCYA2PBOTEVSEVEI",
+      "indexed_timestamp": "20250317151929",
+      "payload_bytes": 115477,
+      "payload_sha1_base32": "XEU4QWNIXXFKQCMSMCYA2PBOTEVSEVEI",
+      "status": "WARC_RECONSTRUCTED",
+      "symbol": "SPGI",
+      "target_uri": "https://investor.spglobal.com/ir-home/default.aspx",
+      "warc_date": "2025-03-17T15:19:29Z",
+      "warc_record_sha256": "167eae7a182c167b91c6d0914cce02e08fa354226df7bb6ca80c7290274e3b0c"
+    },
     "VLO": {
       "checks": {
         "http_content_length_boundary_exact": true,
@@ -62,17 +86,17 @@
         "warc_payload_digest_present": true,
         "warc_version_present": true
       },
-      "compressed_sha256": "101e2cb15ed5f222cb2bf13cfd346ee5aa0efc008eea8d297f005cf6e7a899b6",
+      "compressed_sha256": "dc1ec1d4dee0c6c742763b07f02066a6db10667d0bdaf40d992d65531f92f300",
       "http_status_line": "HTTP/1.1 200 ",
-      "index_digest": "X4SFZKGZGV5SRVZY2RHXLG2NEYPLESB7",
-      "indexed_timestamp": "20250907225925",
-      "payload_bytes": 77902,
-      "payload_sha1_base32": "X4SFZKGZGV5SRVZY2RHXLG2NEYPLESB7",
+      "index_digest": "IMRNCI3WPFNEQGEWTQ2JSMFO7KJYFCUG",
+      "indexed_timestamp": "20250315073343",
+      "payload_bytes": 74609,
+      "payload_sha1_base32": "IMRNCI3WPFNEQGEWTQ2JSMFO7KJYFCUG",
       "status": "WARC_RECONSTRUCTED",
       "symbol": "VLO",
       "target_uri": "https://investorvalero.com/home/default.aspx",
-      "warc_date": "2025-09-07T22:59:25Z",
-      "warc_record_sha256": "21db48578e367ef9c7d1ac00790cf3b17e94d575a7abb3142cb695150c8d6132"
+      "warc_date": "2025-03-15T07:33:43Z",
+      "warc_record_sha256": "ca02cd8f765c5973311858695f256f39efa173d6f7cdb860d35d3e3a8878cfae"
     }
   },
   "safety": {
@@ -95,12 +119,12 @@
     "threshold_search": false,
     "variant_search": false
   },
-  "source_commit": "548c0219519776efd4427510777dbc3841845b97",
+  "source_commit": "f059e35ddfacfd30af9c3712953c331562abf511",
   "summary": {
     "blocked": 0,
-    "capture_candidates": 3,
+    "capture_candidates": 4,
     "infra_blocked": 0,
-    "warc_reconstructed": 3
+    "warc_reconstructed": 4
   },
   "task_id": "Q-2026-10-03-Q171-WARC-RECONSTRUCTION"
 }
