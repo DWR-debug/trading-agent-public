@@ -1501,15 +1501,15 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-24T01:45:15.179773+00:00",
-    "next_research_focus": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. Q104:I22 has a positive independent PIT receipt but remains a separate, non-dispatched mechanism-signature and non-overlap review; this does not authorize performance. Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and full-suite verification passed on its tested revision. Frozen census run #38168441086 is terminal; repair run #38231636160 reported 7,452 repaired/25 unresolved but undercounted residual accessions. Incremental run #38250105408 reused the exact six prior repaired-shard fingerprints and reports 53 unique unresolved accession keys, zero new attempts and zero repairs across 17 SEC archives (43 CIK/form/filing-date conflicts; 10 SEC_COMPLETE_SUBMISSION_HTTP_404). PR #1363 is merged (3c0f084405b3ccc293c16dd9f0bd5affa53d3ac1): it fixes recovery-receipt accounting without relaxing identity rules. Read-only residual lineage run #38255701998 completed LINEAGE_DIAGNOSTIC_COMPLETE (receipt c0881b295d37fa34925103b30acbb893a78bbbe230af6e637576dfda4fac86f7): 4/4 frozen accessions, 12/12 SEC header probes, both source ZIPs byte-identical to the original receipt pins, 91,535,030 aggregate bytes under the 150 MB cap. In all four samples accession, filer CIK and form agree across sources, but the SEC 13F bulk SUBMISSION.FILING_DATE differs from the EDGAR header date by one calendar/business day: 2015-02-18 vs 2015-02-17 in two samples and 2020-08-10 vs 2020-08-07 in two. The acceptance timestamps are present and consistent across all three header routes. SEC's own 13F data-set readme warns the extracted data may contain discrepancies with other publication formats and is not a substitute for the full filing; EDGAR's PDS specification identifies <FILING-DATE> as the assigned official filing date. Treat this as an unresolved cross-publication source-field conflict, not a license for date arithmetic or a blanket override. Keep all 53 residuals and historical/acceptance-time gates closed; do not repair the receipts or restart the census. R4 run #38574180245 (receipt 8be8fd68de0324a331d2b587a540b605ac5c6e9a71ec203fa9d2fc089450fb3c) added one separately pinned 2017 Q2 case: bulk filing date 2017-05-31 versus EDGAR header date 2017-04-21; acceptance 2017-05-31T14:33:43; DATE-OF-FILING-DATE-CHANGE 2017-06-01 appeared on index and raw-SGML routes but was absent from the bounded complete-submission header prefix. The archive matched its frozen hash and byte-length pins, and all three routes agreed on accession, CIK and form. This single preselected diagnostic does not change the immutable 14-row aggregate, establish prevalence or first-public time, choose production precedence, repair a receipt, or clear a gate. Continue source/PIT-only work only on additional frozen inputs that offer new information; do not restart the census. R5 run #38582684174 (receipt 3d9bc88c1f43e4efac88e4528d5ac2c4b6a017beccdbe2e0e821ff150b7cd8a5) added accession 0000950123-15-003183 from the already represented 2015 Q1 archive: frozen bulk filing date 2015-02-18 versus EDGAR header date 2015-02-17; acceptance 2015-02-17T18:51:10 agrees across all three routes; DATE-OF-FILING-DATE-CHANGE 2015-02-20 appears on index and raw-SGML routes but not the bounded complete-submission prefix. The archive matched the frozen 42,434,965-byte/SHA-256 pin and all 3/3 routes completed under the 50 MB cap. R5 is a distinct row, not a new archive vintage; it does not change the immutable 14-row aggregate, establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. R6 run #38588100012 (receipt 5571f2a8c496d32583b4b7a6bd5d6fee71533e889a5e75b434d1d84031c59522; artifact 11905763813) added accession 0000950123-13-006989 from a separately pinned 2013 Q3 archive (36,457,022 bytes; SHA-256 aa20c79d552722cb7bae8cefe3e63cd61a0929a4d5234c0b5d9ce1c75309a616). Bulk filing date 2013-08-15 differs from EDGAR header date 2013-08-14; acceptance 2013-08-14T21:51:40 is consistent across the two successful header routes; DATE-OF-FILING-DATE-CHANGE 2013-08-26 appears on raw SGML but not the bounded complete-submission header prefix; the index-header route returned HTTP 404. The original census HTTP 503 and later recovery FILING_DATE_MISMATCH remain separate pinned states. Total downloaded bytes were 36,466,001 under the 40 MB cap. R6 is an additional diagnostic row, not a modification of the immutable 14-row aggregate; it does not establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. Keep all 53 residuals and historical/acceptance-time gates closed. The frozen concept-specific PIT compiler/independent reproduction remains closed for the full residual set: the 36 verified date-mismatch rows are admissible only for a non-destructive sidecar; seven identity-conflict and ten complete-submission HTTP 404 branches remain unresolved, and historical first-public/PIT timing is unproven. Q220 historical prefix/PIT compiler is BLOCKED: Current compiler receipt reports 55 primary-document hash mismatches. The independent reproduction references a different compiler fingerprint and is not current; it cannot reopen this gate. Next gate: repair source hash mismatches or reconcile TextBlock/presentation mapping gaps before independent reproduction; performance authorization remains closed. Current compiler receipt fingerprint 551101657c5fd866ca54af45d9eebd2ffdeea691c2ebe82cc9a268f6fb87788c.  Q220: original SEC daily Feed forensic run #38233685159 ended fail-closed with FORENSIC_COMPARISON_INCOMPLETE: 0/3 comparisons, 2,829,769,099 bytes downloaded, and no original submission member found. The source-path correction preserves the frozen receipt, population fingerprint, all 55 expected hashes and three preselected sample keys: the daily .nc.tar.gz member is accession.nc; .dissem is a distinct PDS subscriber naming convention. PR #1364 corrected the source path; PR #1366 corrected bounded HTTP streaming, separated the 150 MB outer .nc wrapper limit from the unchanged 30 MB primary-document limit, and fixed pre-document <TYPE> parsing. Post-fix run #38254139755 is terminal FORENSIC_COMPARISON_INCOMPLETE (0/3; 2,829,769,099 bytes downloaded; receipt fingerprint 840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b). All three Feed archives and .nc wrappers were completely fetched and identity fields accession/CIK/form/filing date matched, but each original Feed submission header lacks ACCEPTANCE-DATETIME; all 55 frozen primary-document hash mismatches also remain. Do not redownload these multi-GB Feeds. Read-only header-only run #38258251764 completed HEADER_EVIDENCE_COMPLETE: 9/9 official EDGAR header routes, receipt fingerprint 39bf95fa15bf149094d5b56c90e58622c2339d452fd138c6deb0a463668f85b4, 101,547 bytes; no Feed or primary documents downloaded. All three fixed samples have matching accession/CIK/form/filing-date and identical ACCEPTANCE-DATETIME values across index headers, raw .hdr.sgml, and header-only .txt prefixes. DATE-OF-FILING-DATE-CHANGE was also captured: for 0000064040-19-000059 the acceptance was 2019-02-12T18:15:22 before the EDGAR filing date 2019-02-13, and its change date is 2019-02-12; the other two samples show acceptance and change date on the filing date. This is supplemental timestamp evidence only; all 55 source-hash mismatches remain and both Q220 gates stay closed. Bounded five-request HTTP representation probe [run #38590133217](https://github.com/DWR-debug/trading-agent-public/actions/runs/38590133217) completed HTTP_REPRESENTATION_INVARIANT_AT_PROBE_TIME (receipt fingerprint 870aa4fdae7eda932bb8f50ebb9eab1a7781ee503fb5120dea5b0f099e4fd65c; request sequence 2026-10-14T15:29:01Z). All five complete HTTP 200 responses were byte-identical at 4,774,457 bytes with SHA-256 fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3; total response bytes were 23,872,285 and response bodies were not persisted. The observed bytes match none of the frozen expected, prior-captured, prior-current, or Feed-extracted body hashes/lengths. This makes request-profile and repeatability variation unsupported as the explanation at probe time; it does not establish historical source vintage or clear any gate. Do not repeat this probe or fetch further primary documents. Next, trace the frozen expected versus observed primary-document hashes and their source-vintage provenance without redownloading multi-GB Feeds or fetching primary documents. Do not change source pins, population, sample keys, expected hashes or research gates to force a pass. Q221: the 348-row frozen public-boundary sample is complete under its bounded sample contract, but first-public-observation time remains unproven for all 348 rows and all 247 recipient identities remain unmapped to issuers. The archived five policy vintages do not prove an individual award/modification clock. A fixed exploratory exact-Wayback-CDX spot check of seven award-page URLs (one per frozen year window, derived from frozen generated_internal_id values) found one captured exact URL and six no-hit responses; the captured HTML responses were only 2,171–2,696 bytes and no row-level transaction payload was verified. This is low-coverage source discovery only; no-hit is not proof of historical absence. The official GSA/SAM Contract Awards API requires a SAM.gov API key; publicDeltaDate is documented as a filter over Last Modified Date or Reveal Date, not proof that the response exposes a reproducible transaction-level first-public timestamp or retained old versions. No authenticated request was made, and unrevealed DoD data has additional role restrictions. Treat it as a desk-check lead only, not a dispatch-ready source contract. Next: do not expand the exact-page route across the 348-key sample. Seek a source with timestamped transaction-level versions or a bounded archive whose transaction-row presence can be validated, and separately freeze transaction-class applicability and pre-event recipient-to-issuer mapping. Preserve DoD/USACE 90-day, FAR 30-day, and correction-lineage checks; never map from name similarity. Q221 FPDS public-Atom identity-bridge probe [run #38712516839](https://github.com/DWR-debug/trading-agent-public/actions/runs/38712516839) used exactly four preregistered PIID requests; all four returned HTTP 302 and were blocked without following redirects. No response body was retained, total response bytes were 0, and there were 0 exact record/UEI/name matches. The capture receipt and ARM64 offline validation agree on analysis fingerprint 732a23385f9a5346e7a0806e342647658e6a4f88ea3d1ee233b956ead4277309; this validates the bounded negative result, not historical identity. Do not repeat this route or follow its redirects. No SAM.gov API request was made because no API key is assumed. Q221 remains blocked: all 348 transaction public-clock rows remain unproven and all 247 recipient-to-issuer mappings remain unfrozen. Continue only with a separately reviewed, actually authorized historical record-level source; all performance and execution gates remain closed. [Persisted receipt](https://github.com/DWR-debug/trading-agent-public/blob/master/research/evidence/q221_fpds_public_atom_identity_bridge_latest.json). Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred.  Q219 remains paused; its prior evidence is preserved. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs. Q104:I19 independent admissibility review [PR #1484] is current for exactly 36 frozen date-mismatch rows: all 36 pass identity/header/acceptance consistency and bulk-versus-header date-difference checks (31 have three successful header routes; 5 have two, including only the four frozen R7 index-header 404 exceptions). Persisted sidecar research/evidence/q104_i19_residual_filing_date_sidecar_latest.json contains 36 sorted, source-pinned rows and has been revalidated against the exact source receipt and independent review. Admissible scope is a non-destructive research sidecar only: preserve bulk FILING_DATE unchanged, retain the EDGAR header filing date as a separate field with a discrepancy flag, keep ACCEPTANCE-DATETIME separate from first-public-observation time, and retain DATE-OF-FILING-DATE-CHANGE as separate metadata (17 observed; 15 differ from header date and 2 match). The seven CIK/form-conflict and ten complete-submission HTTP 404 rows remain outside this review. Production precedence/joins, historical PIT and first-public-time clearance, performance, holdout, ranking, tuning, promotion and live execution remain blocked. Input R7 review receipt fingerprint de6c5feca4e27f020b77890a6b00e67a87735d6572070f263ba56d8ee24d0444.",
+    "generated_at_utc": "2026-10-24T06:30:19.880749+00:00",
+    "next_research_focus": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. Q104:I22 has a positive independent PIT receipt but remains a separate, non-dispatched mechanism-signature and non-overlap review; this does not authorize performance. Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and full-suite verification passed on its tested revision. Frozen census run #38168441086 is terminal; repair run #38231636160 reported 7,452 repaired/25 unresolved but undercounted residual accessions. Incremental run #38250105408 reused the exact six prior repaired-shard fingerprints and reports 53 unique unresolved accession keys, zero new attempts and zero repairs across 17 SEC archives (43 CIK/form/filing-date conflicts; 10 SEC_COMPLETE_SUBMISSION_HTTP_404). PR #1363 is merged (3c0f084405b3ccc293c16dd9f0bd5affa53d3ac1): it fixes recovery-receipt accounting without relaxing identity rules. Read-only residual lineage run #38255701998 completed LINEAGE_DIAGNOSTIC_COMPLETE (receipt c0881b295d37fa34925103b30acbb893a78bbbe230af6e637576dfda4fac86f7): 4/4 frozen accessions, 12/12 SEC header probes, both source ZIPs byte-identical to the original receipt pins, 91,535,030 aggregate bytes under the 150 MB cap. In all four samples accession, filer CIK and form agree across sources, but the SEC 13F bulk SUBMISSION.FILING_DATE differs from the EDGAR header date by one calendar/business day: 2015-02-18 vs 2015-02-17 in two samples and 2020-08-10 vs 2020-08-07 in two. The acceptance timestamps are present and consistent across all three header routes. SEC's own 13F data-set readme warns the extracted data may contain discrepancies with other publication formats and is not a substitute for the full filing; EDGAR's PDS specification identifies <FILING-DATE> as the assigned official filing date. Treat this as an unresolved cross-publication source-field conflict, not a license for date arithmetic or a blanket override. Keep all 53 residuals and historical/acceptance-time gates closed; do not repair the receipts or restart the census. R4 run #38574180245 (receipt 8be8fd68de0324a331d2b587a540b605ac5c6e9a71ec203fa9d2fc089450fb3c) added one separately pinned 2017 Q2 case: bulk filing date 2017-05-31 versus EDGAR header date 2017-04-21; acceptance 2017-05-31T14:33:43; DATE-OF-FILING-DATE-CHANGE 2017-06-01 appeared on index and raw-SGML routes but was absent from the bounded complete-submission header prefix. The archive matched its frozen hash and byte-length pins, and all three routes agreed on accession, CIK and form. This single preselected diagnostic does not change the immutable 14-row aggregate, establish prevalence or first-public time, choose production precedence, repair a receipt, or clear a gate. Continue source/PIT-only work only on additional frozen inputs that offer new information; do not restart the census. R5 run #38582684174 (receipt 3d9bc88c1f43e4efac88e4528d5ac2c4b6a017beccdbe2e0e821ff150b7cd8a5) added accession 0000950123-15-003183 from the already represented 2015 Q1 archive: frozen bulk filing date 2015-02-18 versus EDGAR header date 2015-02-17; acceptance 2015-02-17T18:51:10 agrees across all three routes; DATE-OF-FILING-DATE-CHANGE 2015-02-20 appears on index and raw-SGML routes but not the bounded complete-submission prefix. The archive matched the frozen 42,434,965-byte/SHA-256 pin and all 3/3 routes completed under the 50 MB cap. R5 is a distinct row, not a new archive vintage; it does not change the immutable 14-row aggregate, establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. R6 run #38588100012 (receipt 5571f2a8c496d32583b4b7a6bd5d6fee71533e889a5e75b434d1d84031c59522; artifact 11905763813) added accession 0000950123-13-006989 from a separately pinned 2013 Q3 archive (36,457,022 bytes; SHA-256 aa20c79d552722cb7bae8cefe3e63cd61a0929a4d5234c0b5d9ce1c75309a616). Bulk filing date 2013-08-15 differs from EDGAR header date 2013-08-14; acceptance 2013-08-14T21:51:40 is consistent across the two successful header routes; DATE-OF-FILING-DATE-CHANGE 2013-08-26 appears on raw SGML but not the bounded complete-submission header prefix; the index-header route returned HTTP 404. The original census HTTP 503 and later recovery FILING_DATE_MISMATCH remain separate pinned states. Total downloaded bytes were 36,466,001 under the 40 MB cap. R6 is an additional diagnostic row, not a modification of the immutable 14-row aggregate; it does not establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. Keep all 53 residuals and historical/acceptance-time gates closed. The frozen concept-specific PIT compiler/independent reproduction remains closed for the full residual set: the 36 verified date-mismatch rows are admissible only for a non-destructive sidecar; seven identity-conflict and ten complete-submission HTTP 404 branches remain unresolved, and historical first-public/PIT timing is unproven. Q220 historical prefix/PIT compiler is BLOCKED: Current compiler receipt reports 55 primary-document hash mismatches. The independent reproduction references a different compiler fingerprint and is not current; it cannot reopen this gate. Next gate: repair source hash mismatches or reconcile TextBlock/presentation mapping gaps before independent reproduction; performance authorization remains closed. Current compiler receipt fingerprint 89fc11008ce0d109e99bc104885cb9bfdf62c4f1432398a8f7621d949784daf7.  Q220: original SEC daily Feed forensic run #38233685159 ended fail-closed with FORENSIC_COMPARISON_INCOMPLETE: 0/3 comparisons, 2,829,769,099 bytes downloaded, and no original submission member found. The source-path correction preserves the frozen receipt, population fingerprint, all 55 expected hashes and three preselected sample keys: the daily .nc.tar.gz member is accession.nc; .dissem is a distinct PDS subscriber naming convention. PR #1364 corrected the source path; PR #1366 corrected bounded HTTP streaming, separated the 150 MB outer .nc wrapper limit from the unchanged 30 MB primary-document limit, and fixed pre-document <TYPE> parsing. Post-fix run #38254139755 is terminal FORENSIC_COMPARISON_INCOMPLETE (0/3; 2,829,769,099 bytes downloaded; receipt fingerprint 840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b). All three Feed archives and .nc wrappers were completely fetched and identity fields accession/CIK/form/filing date matched, but each original Feed submission header lacks ACCEPTANCE-DATETIME; all 55 frozen primary-document hash mismatches also remain. Do not redownload these multi-GB Feeds. Read-only header-only run #38258251764 completed HEADER_EVIDENCE_COMPLETE: 9/9 official EDGAR header routes, receipt fingerprint 39bf95fa15bf149094d5b56c90e58622c2339d452fd138c6deb0a463668f85b4, 101,547 bytes; no Feed or primary documents downloaded. All three fixed samples have matching accession/CIK/form/filing-date and identical ACCEPTANCE-DATETIME values across index headers, raw .hdr.sgml, and header-only .txt prefixes. DATE-OF-FILING-DATE-CHANGE was also captured: for 0000064040-19-000059 the acceptance was 2019-02-12T18:15:22 before the EDGAR filing date 2019-02-13, and its change date is 2019-02-12; the other two samples show acceptance and change date on the filing date. This is supplemental timestamp evidence only; all 55 source-hash mismatches remain and both Q220 gates stay closed. Bounded five-request HTTP representation probe [run #38590133217](https://github.com/DWR-debug/trading-agent-public/actions/runs/38590133217) completed HTTP_REPRESENTATION_INVARIANT_AT_PROBE_TIME (receipt fingerprint 870aa4fdae7eda932bb8f50ebb9eab1a7781ee503fb5120dea5b0f099e4fd65c; request sequence 2026-10-14T15:29:01Z). All five complete HTTP 200 responses were byte-identical at 4,774,457 bytes with SHA-256 fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3; total response bytes were 23,872,285 and response bodies were not persisted. The observed bytes match none of the frozen expected, prior-captured, prior-current, or Feed-extracted body hashes/lengths. This makes request-profile and repeatability variation unsupported as the explanation at probe time; it does not establish historical source vintage or clear any gate. Do not repeat this probe or fetch further primary documents. Next, trace the frozen expected versus observed primary-document hashes and their source-vintage provenance without redownloading multi-GB Feeds or fetching primary documents. Do not change source pins, population, sample keys, expected hashes or research gates to force a pass. Q221: the 348-row frozen public-boundary sample is complete under its bounded sample contract, but first-public-observation time remains unproven for all 348 rows and all 247 recipient identities remain unmapped to issuers. The archived five policy vintages do not prove an individual award/modification clock. A fixed exploratory exact-Wayback-CDX spot check of seven award-page URLs (one per frozen year window, derived from frozen generated_internal_id values) found one captured exact URL and six no-hit responses; the captured HTML responses were only 2,171–2,696 bytes and no row-level transaction payload was verified. This is low-coverage source discovery only; no-hit is not proof of historical absence. The official GSA/SAM Contract Awards API requires a SAM.gov API key; publicDeltaDate is documented as a filter over Last Modified Date or Reveal Date, not proof that the response exposes a reproducible transaction-level first-public timestamp or retained old versions. No authenticated request was made, and unrevealed DoD data has additional role restrictions. Treat it as a desk-check lead only, not a dispatch-ready source contract. Next: do not expand the exact-page route across the 348-key sample. Seek a source with timestamped transaction-level versions or a bounded archive whose transaction-row presence can be validated, and separately freeze transaction-class applicability and pre-event recipient-to-issuer mapping. Preserve DoD/USACE 90-day, FAR 30-day, and correction-lineage checks; never map from name similarity. Q221 FPDS public-Atom identity-bridge probe [run #38712516839](https://github.com/DWR-debug/trading-agent-public/actions/runs/38712516839) used exactly four preregistered PIID requests; all four returned HTTP 302 and were blocked without following redirects. No response body was retained, total response bytes were 0, and there were 0 exact record/UEI/name matches. The capture receipt and ARM64 offline validation agree on analysis fingerprint 732a23385f9a5346e7a0806e342647658e6a4f88ea3d1ee233b956ead4277309; this validates the bounded negative result, not historical identity. Do not repeat this route or follow its redirects. No SAM.gov API request was made because no API key is assumed. Q221 remains blocked: all 348 transaction public-clock rows remain unproven and all 247 recipient-to-issuer mappings remain unfrozen. Continue only with a separately reviewed, actually authorized historical record-level source; all performance and execution gates remain closed. [Persisted receipt](https://github.com/DWR-debug/trading-agent-public/blob/master/research/evidence/q221_fpds_public_atom_identity_bridge_latest.json). Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred.  Q219 remains paused; its prior evidence is preserved. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs. Q104:I19 independent admissibility review [PR #1484] is current for exactly 36 frozen date-mismatch rows: all 36 pass identity/header/acceptance consistency and bulk-versus-header date-difference checks (31 have three successful header routes; 5 have two, including only the four frozen R7 index-header 404 exceptions). Persisted sidecar research/evidence/q104_i19_residual_filing_date_sidecar_latest.json contains 36 sorted, source-pinned rows and has been revalidated against the exact source receipt and independent review. Admissible scope is a non-destructive research sidecar only: preserve bulk FILING_DATE unchanged, retain the EDGAR header filing date as a separate field with a discrepancy flag, keep ACCEPTANCE-DATETIME separate from first-public-observation time, and retain DATE-OF-FILING-DATE-CHANGE as separate metadata (17 observed; 15 differ from header date and 2 match). The seven CIK/form-conflict and ten complete-submission HTTP 404 rows remain outside this review. Production precedence/joins, historical PIT and first-public-time clearance, performance, holdout, ranking, tuning, promotion and live execution remain blocked. Input R7 review receipt fingerprint de6c5feca4e27f020b77890a6b00e67a87735d6572070f263ba56d8ee24d0444.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
     "record_type": "trading_agent_chat_handoff",
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "42ca2001b453c547918895a523965ccc471e94b9"
+    "source_master_sha": "ac558d0497baec2b81ba32310f338d7ec8b0c32b"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1785,9 +1785,9 @@
       "receipt_status": "S10_UTILITY_ACCEPTED",
       "routing_uses_presence_receipt": false,
       "scientific_evidence": false,
-      "source_commit": "fcb75e0314a8e21ab61d7715d33ca8647e30ec19",
+      "source_commit": "2e39e2de837a0bb50e78ee596b996380c0b0f581",
       "status": "S10_UTILITY_ACCEPTED",
-      "workflow_run_id": "40036621334"
+      "workflow_run_id": "40049582708"
     },
     "scientific_compute": {
       "canonical_path": "GitHub-hosted deterministic workflows",
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-24T01:45:15.179773+00:00",
+  "generated_at_utc": "2026-10-24T06:30:19.880749+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2476,7 +2476,7 @@
         "source_id": "FCC_ULS"
       }
     ],
-    "receipt_fingerprint": "139ffc01d59f35be2f13d323111fd554da05715d46dc419d430d996ddde72e7c",
+    "receipt_fingerprint": "1e86f249d42f577caae1224206bdb3d7bc9d0c4353a87f7a6edb12c2e5b8da70",
     "receipt_type": "q179_q184_pit_readiness_r1",
     "safety": {
       "AUTOMATIC_PROMOTION": false,
@@ -2507,7 +2507,7 @@
       },
       "https://catalog.data.gov/dataset/dol-enforcement-data-inspection": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "b74e28be8b824046baf23bc36c33b73c08364967454a6f5f0357b9917a01d23a",
+        "content_sha256": "7bb9341d2e71a9e2f75303edec2b4ecc7a298b4fd5dec72b68da65d3f04d75fa",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
@@ -2521,7 +2521,7 @@
       },
       "https://ferc.gov/what-elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "ce9ba509a34ccf81fbac83f310e397b74c2cc7692eea079271badd5c8b12af91",
+        "content_sha256": "678ca498469eb637b34596d8ce34a50ee41420a107bec1e6c09c66b14332406d",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2532,14 +2532,14 @@
       },
       "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "6e41d816054a80becb258ab0240fe6529acf3c94d7915828ec584dfcdb013775",
+        "content_sha256": "197541e418ee547a66325153f398d74e184272fa232702ccc3d46aeec4d68015",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
       },
       "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "74c12c44c447b282e73ab3421115c2de282f34350ec9146093b8483e94129507",
+        "content_sha256": "9ed8f36dbb3368353f8aacaca648717abdb401d99b05e0a2f34aef5732948ae3",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2550,21 +2550,21 @@
       },
       "https://www.nhtsa.gov/nhtsa-datasets-and-apis": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "6990d197a9a8eea43abdcf60320ea134cc7fdbbc82c6c6eaffa00311e80a9a26",
+        "content_sha256": "29602d73690578ca68a05c1c8e2cbc5fa25c33b6f21409ef0d48aa2c901c83c9",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
       },
       "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "9236eb784b975d2a50be654dc61bd204d6bbaef084629c33d085ff7f33cfa9c7",
+        "content_sha256": "53db04ff97ba17afdb36e3ff56ffd74fae0c377f94e5a3bfb0ba896e61501cdc",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx"
       },
       "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "faf1d1591f805a6f0110d6f7b8804cacbcda99716347e6155de1156a6173ad87",
+        "content_sha256": "56097b9cb6a3c3a4517340a4ff29f43885c60a9f6734ea4a37bd1d289bf2dc2b",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx"
@@ -2866,7 +2866,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "bb1e15da788c4ab16011b88871b5bad82184d11c4b71828c6083f3f24fb3c4ba",
+    "receipt_fingerprint": "089e513c051d18223a4a80dff90524804695ddf0b8da4a5701bcacf88ba68f04",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2901,7 +2901,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "5e84f353380a8c819941b0a3363fb8dd6f7f9b13fee483a0eb69b197f0102672",
+        "content_sha256": "d05348fc6e896bc56ded48d052d3a2a3156122d4815284db2c0f6cebf00eae32",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2925,7 +2925,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "35889f1ddf24e925fdfa6237f3ecdad2500827ae2c0cdf3aca99d45f1a48cb88",
+        "content_sha256": "724124ca894ce88f2fa4fb4a72bea79399971647363ac28204ee6be8b7867f68",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -2946,7 +2946,7 @@
           }
         ],
         "clock_contract": "For post-2023 grants the official eGrant provides a documented public-access boundary; earlier history requires separate proof.",
-        "content_sha256": "048e486e8b0018760d8a295835fbbd61a5e0302f3d5220e4aec94146b7ad83ed",
+        "content_sha256": "ae31cc641b5b6e46000f84fa46dd2171a8b4ffeef70ba926259efef6b0907b12",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2963,7 +2963,7 @@
           }
         ],
         "clock_contract": "The Official Gazette is an official weekly publication boundary; issue date is distinct from later bulk-data refreshes.",
-        "content_sha256": "8d82bc1821327eda57e2e17fb93c4e3173ed03fd54e3f0e7cbba78a9f91e8a86",
+        "content_sha256": "1708702e5a5c8f40b981cd5cfa4455172a9102fcbc2d8665d07cdbb1e9ed8beb",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2980,7 +2980,7 @@
           }
         ],
         "clock_contract": "PatentsView bulk refresh/vintage is distinct from patent issue/publication timing.",
-        "content_sha256": "a10a7d1802ba2cd8e8f27a67925cd6f05558f79e0db878bd7deed806cbd3728b",
+        "content_sha256": "1f8bdc7aa60d60efcdf43c97901fd64c0af832ec544a7f51b10b825dc51ef9ac",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -3050,7 +3050,7 @@
       "historical_weekly_grant_route_proven": false,
       "legacy_bibliographic_route_may_be_redirected": true
     },
-    "receipt_fingerprint": "8d6adce91384208b4a43eee1b420af720173ba109613b7814bcf10e7d6925169",
+    "receipt_fingerprint": "a6a224f0a3a745ad61491cedecf3533d8f82b61d502c39c5fa7f99e1de8f6865",
     "receipt_type": "q186_pit_readiness_r2",
     "safety": {
       "AUTOMATIC_PROMOTION": false,
@@ -3073,14 +3073,14 @@
     },
     "source_results": {
       "USPTO_EGRANTS": {
-        "content_sha256": "048e486e8b0018760d8a295835fbbd61a5e0302f3d5220e4aec94146b7ad83ed",
+        "content_sha256": "ae31cc641b5b6e46000f84fa46dd2171a8b4ffeef70ba926259efef6b0907b12",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
         "url": "https://www.uspto.gov/patents/apply/patent-center/egrants"
       },
       "USPTO_GAZETTE_INDEX": {
-        "content_sha256": "8d82bc1821327eda57e2e17fb93c4e3173ed03fd54e3f0e7cbba78a9f91e8a86",
+        "content_sha256": "1708702e5a5c8f40b981cd5cfa4455172a9102fcbc2d8665d07cdbb1e9ed8beb",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -3118,14 +3118,14 @@
         "url": "https://developer.uspto.gov/product/patent-grant-bibliographic-datasgml"
       },
       "USPTO_PATENTSVIEW": {
-        "content_sha256": "c1af61fc155d0dc4c0664ab90798b22ea866312dfc6b84f7a88966cc7ed174dd",
+        "content_sha256": "735f56a686d9440158aabdd2d2bc6abf9bb85cdec468a562842a39a9e41a0a5a",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
         "url": "https://www.uspto.gov/ip-policy/economic-research/patentsview"
       },
       "USPTO_PATENT_AUTHORITY": {
-        "content_sha256": "455afda45381572e3ef3a4b2a949b8322641762ea101def7a65fbf46d0e2612a",
+        "content_sha256": "2e6e66d6c1667a052563b8c6ae636f3a042d542c55b3d0b390d38bb4df18fad1",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -3153,7 +3153,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "59f7ad9d10ea727b076ef6f1c1bea5b2b9d2f213977c7f1280cb89569a480e90",
+    "receipt_fingerprint": "a63ff5153443f7651c79de957bcf5c4a54544ebd88a60008987d00f3fef76fcc",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -3225,7 +3225,7 @@
             "url": "https://www.archives.gov/federal-register/faqs"
           }
         ],
-        "content_sha256": "6b916ab25cfc69589862587d16f9dd5c0f9639312f55d3ba39ca7b916c85dafa",
+        "content_sha256": "1b3027202dd2519c4e63a1629780c5f1907a319ace53678ba0e9b5eb24be56b3",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3244,7 +3244,7 @@
             "url": "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json"
           }
         ],
-        "content_sha256": "bacdceadd38bc05ad937ee3c7f8c04a69662c4cddc28776d3ffa9bd9d5a8e321",
+        "content_sha256": "080591dd4523476968decf18d964114438a5f7d80b75fd4bb8cc90e23bd31c95",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3735,7 +3735,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000",
-        "content_sha256": "3bf3e0ba3b5b8e7f5049400ddcf4dc8779afffea69c86c64374c59a7d4c374ae",
+        "content_sha256": "5f997fb0726132fce07636f80cf7664a22a8ae1319abc0a3d8bcf52d863cfe2b",
         "http_status": 200,
         "parsed": {
           "api_count": 124,
@@ -3958,7 +3958,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2026-10-02&per_page=1000",
-        "content_sha256": "e36e77db7434b70b522985415a7b683c7b9513c7e637a14c4ccba1325b6f2d68",
+        "content_sha256": "e73542316b94d74973218527dbca65ff22986ee3211ba429cd862f2e8ff91607",
         "http_status": 200,
         "parsed": {
           "api_count": 108,
@@ -4180,7 +4180,7 @@
         "status": "API_PARSED"
       }
     ],
-    "receipt_fingerprint": "dcf9a2655ea7ac9b1463fd637debd01ef5e04bcb3290b8451a2ab92378d16814",
+    "receipt_fingerprint": "cd7ca763dabc353c3d87a138a186daa5c52eb17d7be8c3d57fcd0fd0e899a01f",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4245,7 +4245,7 @@
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "43750138a0f4e506191bc93512f3266d4ddae12ef96a0e65c440af32292dcb06",
+    "receipt_fingerprint": "115a2a2031ffeef0bf4825fc6639c95ed98e4990d2af14cd9a8bd5e49ea99751",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4319,7 +4319,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "8d10f1818de579ac498eeb147ef001f3255f8b634af2a21bea66c5205ee2f50f",
+        "content_sha256": "735c7ac02205d7e91043153461859bf38cdf4990fd1ada044569c8e1f2c68fdb",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4366,14 +4366,14 @@
       "Q204_FR_20200110": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-01-10&per_page=1000",
       "Q204_FR_20201216": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000"
     },
-    "generated_at_utc": "2026-10-23T21:37:46Z",
+    "generated_at_utc": "2026-10-24T04:59:05Z",
     "governance": {
       "historical_pit_validated": false,
       "live_execution": false,
       "performance_authorized": false,
       "promotion_authorized": false
     },
-    "receipt_fingerprint": "1dca820eb66fc21498ebebb20f3be4acc799e6702b91da3576d0e08cafc19bf8",
+    "receipt_fingerprint": "6ac4127dda7cb34e348b4906d8277571df57504ce6ccef5f14681ba77cf79c50",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4509,7 +4509,7 @@
         },
         "2020-12-16": {
           "api_count": 124,
-          "content_sha256": "3bf3e0ba3b5b8e7f5049400ddcf4dc8779afffea69c86c64374c59a7d4c374ae",
+          "content_sha256": "5f997fb0726132fce07636f80cf7664a22a8ae1319abc0a3d8bcf52d863cfe2b",
           "correction_or_withdrawal_note_count": 2,
           "http_status": 200,
           "missing_filed_timestamp_count": 1,
@@ -4667,44 +4667,44 @@
     ],
     "recent_commits": [
       {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "42ca2001b453c547918895a523965ccc471e94b9",
-        "timestamp": "2026-10-24T01:43:26Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "86309943359a384c1e28371758037fd44a5176b1",
-        "timestamp": "2026-10-24T01:42:07Z"
-      },
-      {
         "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "bbe0b2c7ef936c09a6c680cc77e15be3e2d91678",
-        "timestamp": "2026-10-24T01:23:49Z"
+        "sha": "ac558d0497baec2b81ba32310f338d7ec8b0c32b",
+        "timestamp": "2026-10-24T06:26:19Z"
       },
       {
         "message": "OPS: advance paper-forward MTM state",
-        "sha": "2e39e2de837a0bb50e78ee596b996380c0b0f581",
-        "timestamp": "2026-10-24T01:22:26Z"
+        "sha": "e36bd9fc59a5b2dcbdf0eab7785e6ab6ca61d709",
+        "timestamp": "2026-10-24T06:13:08Z"
       },
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "6165c1d8121799a2f279ec02aca6bc7eb6d92fc9",
-        "timestamp": "2026-10-24T01:05:31Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "731b70bbb58dc674a47eca794a96062d51ff62ab",
-        "timestamp": "2026-10-23T23:21:15Z"
+        "sha": "4f408f1d40247fdcbafcf714f3bd5510a55bea7e",
+        "timestamp": "2026-10-24T05:50:20Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "903528cfb594388f599807404ab473197ca23cd9",
-        "timestamp": "2026-10-23T23:13:08Z"
+        "sha": "30fecad70842e4bb979a430eb1144e5f526a41d1",
+        "timestamp": "2026-10-24T05:04:06Z"
       },
       {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "fcb75e0314a8e21ab61d7715d33ca8647e30ec19",
-        "timestamp": "2026-10-23T22:54:12Z"
+        "message": "OPS: record AI worker state",
+        "sha": "4a2afecb0c617f724108c891c5a71dcb4135f096",
+        "timestamp": "2026-10-24T05:02:20Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "7c0deebdcf2ece11405906da3f3f0a55de329f27",
+        "timestamp": "2026-10-24T05:01:15Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "e6ba2501b462abad2d4596067685f06843c4824c",
+        "timestamp": "2026-10-24T04:59:23Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "961669f8952b1ef8add4634c22891330898c9df7",
+        "timestamp": "2026-10-24T04:59:07Z"
       }
     ]
   },
@@ -4764,7 +4764,7 @@
     },
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-    "next_research_focus_recorded": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. Q104:I22 has a positive independent PIT receipt but remains a separate, non-dispatched mechanism-signature and non-overlap review; this does not authorize performance. Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and full-suite verification passed on its tested revision. Frozen census run #38168441086 is terminal; repair run #38231636160 reported 7,452 repaired/25 unresolved but undercounted residual accessions. Incremental run #38250105408 reused the exact six prior repaired-shard fingerprints and reports 53 unique unresolved accession keys, zero new attempts and zero repairs across 17 SEC archives (43 CIK/form/filing-date conflicts; 10 SEC_COMPLETE_SUBMISSION_HTTP_404). PR #1363 is merged (3c0f084405b3ccc293c16dd9f0bd5affa53d3ac1): it fixes recovery-receipt accounting without relaxing identity rules. Read-only residual lineage run #38255701998 completed LINEAGE_DIAGNOSTIC_COMPLETE (receipt c0881b295d37fa34925103b30acbb893a78bbbe230af6e637576dfda4fac86f7): 4/4 frozen accessions, 12/12 SEC header probes, both source ZIPs byte-identical to the original receipt pins, 91,535,030 aggregate bytes under the 150 MB cap. In all four samples accession, filer CIK and form agree across sources, but the SEC 13F bulk SUBMISSION.FILING_DATE differs from the EDGAR header date by one calendar/business day: 2015-02-18 vs 2015-02-17 in two samples and 2020-08-10 vs 2020-08-07 in two. The acceptance timestamps are present and consistent across all three header routes. SEC's own 13F data-set readme warns the extracted data may contain discrepancies with other publication formats and is not a substitute for the full filing; EDGAR's PDS specification identifies <FILING-DATE> as the assigned official filing date. Treat this as an unresolved cross-publication source-field conflict, not a license for date arithmetic or a blanket override. Keep all 53 residuals and historical/acceptance-time gates closed; do not repair the receipts or restart the census. R4 run #38574180245 (receipt 8be8fd68de0324a331d2b587a540b605ac5c6e9a71ec203fa9d2fc089450fb3c) added one separately pinned 2017 Q2 case: bulk filing date 2017-05-31 versus EDGAR header date 2017-04-21; acceptance 2017-05-31T14:33:43; DATE-OF-FILING-DATE-CHANGE 2017-06-01 appeared on index and raw-SGML routes but was absent from the bounded complete-submission header prefix. The archive matched its frozen hash and byte-length pins, and all three routes agreed on accession, CIK and form. This single preselected diagnostic does not change the immutable 14-row aggregate, establish prevalence or first-public time, choose production precedence, repair a receipt, or clear a gate. Continue source/PIT-only work only on additional frozen inputs that offer new information; do not restart the census. R5 run #38582684174 (receipt 3d9bc88c1f43e4efac88e4528d5ac2c4b6a017beccdbe2e0e821ff150b7cd8a5) added accession 0000950123-15-003183 from the already represented 2015 Q1 archive: frozen bulk filing date 2015-02-18 versus EDGAR header date 2015-02-17; acceptance 2015-02-17T18:51:10 agrees across all three routes; DATE-OF-FILING-DATE-CHANGE 2015-02-20 appears on index and raw-SGML routes but not the bounded complete-submission prefix. The archive matched the frozen 42,434,965-byte/SHA-256 pin and all 3/3 routes completed under the 50 MB cap. R5 is a distinct row, not a new archive vintage; it does not change the immutable 14-row aggregate, establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. R6 run #38588100012 (receipt 5571f2a8c496d32583b4b7a6bd5d6fee71533e889a5e75b434d1d84031c59522; artifact 11905763813) added accession 0000950123-13-006989 from a separately pinned 2013 Q3 archive (36,457,022 bytes; SHA-256 aa20c79d552722cb7bae8cefe3e63cd61a0929a4d5234c0b5d9ce1c75309a616). Bulk filing date 2013-08-15 differs from EDGAR header date 2013-08-14; acceptance 2013-08-14T21:51:40 is consistent across the two successful header routes; DATE-OF-FILING-DATE-CHANGE 2013-08-26 appears on raw SGML but not the bounded complete-submission header prefix; the index-header route returned HTTP 404. The original census HTTP 503 and later recovery FILING_DATE_MISMATCH remain separate pinned states. Total downloaded bytes were 36,466,001 under the 40 MB cap. R6 is an additional diagnostic row, not a modification of the immutable 14-row aggregate; it does not establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. Keep all 53 residuals and historical/acceptance-time gates closed. The frozen concept-specific PIT compiler/independent reproduction remains closed for the full residual set: the 36 verified date-mismatch rows are admissible only for a non-destructive sidecar; seven identity-conflict and ten complete-submission HTTP 404 branches remain unresolved, and historical first-public/PIT timing is unproven. Q220 historical prefix/PIT compiler is BLOCKED: Current compiler receipt reports 55 primary-document hash mismatches. The independent reproduction references a different compiler fingerprint and is not current; it cannot reopen this gate. Next gate: repair source hash mismatches or reconcile TextBlock/presentation mapping gaps before independent reproduction; performance authorization remains closed. Current compiler receipt fingerprint 551101657c5fd866ca54af45d9eebd2ffdeea691c2ebe82cc9a268f6fb87788c.  Q220: original SEC daily Feed forensic run #38233685159 ended fail-closed with FORENSIC_COMPARISON_INCOMPLETE: 0/3 comparisons, 2,829,769,099 bytes downloaded, and no original submission member found. The source-path correction preserves the frozen receipt, population fingerprint, all 55 expected hashes and three preselected sample keys: the daily .nc.tar.gz member is accession.nc; .dissem is a distinct PDS subscriber naming convention. PR #1364 corrected the source path; PR #1366 corrected bounded HTTP streaming, separated the 150 MB outer .nc wrapper limit from the unchanged 30 MB primary-document limit, and fixed pre-document <TYPE> parsing. Post-fix run #38254139755 is terminal FORENSIC_COMPARISON_INCOMPLETE (0/3; 2,829,769,099 bytes downloaded; receipt fingerprint 840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b). All three Feed archives and .nc wrappers were completely fetched and identity fields accession/CIK/form/filing date matched, but each original Feed submission header lacks ACCEPTANCE-DATETIME; all 55 frozen primary-document hash mismatches also remain. Do not redownload these multi-GB Feeds. Read-only header-only run #38258251764 completed HEADER_EVIDENCE_COMPLETE: 9/9 official EDGAR header routes, receipt fingerprint 39bf95fa15bf149094d5b56c90e58622c2339d452fd138c6deb0a463668f85b4, 101,547 bytes; no Feed or primary documents downloaded. All three fixed samples have matching accession/CIK/form/filing-date and identical ACCEPTANCE-DATETIME values across index headers, raw .hdr.sgml, and header-only .txt prefixes. DATE-OF-FILING-DATE-CHANGE was also captured: for 0000064040-19-000059 the acceptance was 2019-02-12T18:15:22 before the EDGAR filing date 2019-02-13, and its change date is 2019-02-12; the other two samples show acceptance and change date on the filing date. This is supplemental timestamp evidence only; all 55 source-hash mismatches remain and both Q220 gates stay closed. Bounded five-request HTTP representation probe [run #38590133217](https://github.com/DWR-debug/trading-agent-public/actions/runs/38590133217) completed HTTP_REPRESENTATION_INVARIANT_AT_PROBE_TIME (receipt fingerprint 870aa4fdae7eda932bb8f50ebb9eab1a7781ee503fb5120dea5b0f099e4fd65c; request sequence 2026-10-14T15:29:01Z). All five complete HTTP 200 responses were byte-identical at 4,774,457 bytes with SHA-256 fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3; total response bytes were 23,872,285 and response bodies were not persisted. The observed bytes match none of the frozen expected, prior-captured, prior-current, or Feed-extracted body hashes/lengths. This makes request-profile and repeatability variation unsupported as the explanation at probe time; it does not establish historical source vintage or clear any gate. Do not repeat this probe or fetch further primary documents. Next, trace the frozen expected versus observed primary-document hashes and their source-vintage provenance without redownloading multi-GB Feeds or fetching primary documents. Do not change source pins, population, sample keys, expected hashes or research gates to force a pass. Q221: the 348-row frozen public-boundary sample is complete under its bounded sample contract, but first-public-observation time remains unproven for all 348 rows and all 247 recipient identities remain unmapped to issuers. The archived five policy vintages do not prove an individual award/modification clock. A fixed exploratory exact-Wayback-CDX spot check of seven award-page URLs (one per frozen year window, derived from frozen generated_internal_id values) found one captured exact URL and six no-hit responses; the captured HTML responses were only 2,171–2,696 bytes and no row-level transaction payload was verified. This is low-coverage source discovery only; no-hit is not proof of historical absence. The official GSA/SAM Contract Awards API requires a SAM.gov API key; publicDeltaDate is documented as a filter over Last Modified Date or Reveal Date, not proof that the response exposes a reproducible transaction-level first-public timestamp or retained old versions. No authenticated request was made, and unrevealed DoD data has additional role restrictions. Treat it as a desk-check lead only, not a dispatch-ready source contract. Next: do not expand the exact-page route across the 348-key sample. Seek a source with timestamped transaction-level versions or a bounded archive whose transaction-row presence can be validated, and separately freeze transaction-class applicability and pre-event recipient-to-issuer mapping. Preserve DoD/USACE 90-day, FAR 30-day, and correction-lineage checks; never map from name similarity. Q221 FPDS public-Atom identity-bridge probe [run #38712516839](https://github.com/DWR-debug/trading-agent-public/actions/runs/38712516839) used exactly four preregistered PIID requests; all four returned HTTP 302 and were blocked without following redirects. No response body was retained, total response bytes were 0, and there were 0 exact record/UEI/name matches. The capture receipt and ARM64 offline validation agree on analysis fingerprint 732a23385f9a5346e7a0806e342647658e6a4f88ea3d1ee233b956ead4277309; this validates the bounded negative result, not historical identity. Do not repeat this route or follow its redirects. No SAM.gov API request was made because no API key is assumed. Q221 remains blocked: all 348 transaction public-clock rows remain unproven and all 247 recipient-to-issuer mappings remain unfrozen. Continue only with a separately reviewed, actually authorized historical record-level source; all performance and execution gates remain closed. [Persisted receipt](https://github.com/DWR-debug/trading-agent-public/blob/master/research/evidence/q221_fpds_public_atom_identity_bridge_latest.json). Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred.  Q219 remains paused; its prior evidence is preserved. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs. Q104:I19 independent admissibility review [PR #1484] is current for exactly 36 frozen date-mismatch rows: all 36 pass identity/header/acceptance consistency and bulk-versus-header date-difference checks (31 have three successful header routes; 5 have two, including only the four frozen R7 index-header 404 exceptions). Persisted sidecar research/evidence/q104_i19_residual_filing_date_sidecar_latest.json contains 36 sorted, source-pinned rows and has been revalidated against the exact source receipt and independent review. Admissible scope is a non-destructive research sidecar only: preserve bulk FILING_DATE unchanged, retain the EDGAR header filing date as a separate field with a discrepancy flag, keep ACCEPTANCE-DATETIME separate from first-public-observation time, and retain DATE-OF-FILING-DATE-CHANGE as separate metadata (17 observed; 15 differ from header date and 2 match). The seven CIK/form-conflict and ten complete-submission HTTP 404 rows remain outside this review. Production precedence/joins, historical PIT and first-public-time clearance, performance, holdout, ranking, tuning, promotion and live execution remain blocked. Input R7 review receipt fingerprint de6c5feca4e27f020b77890a6b00e67a87735d6572070f263ba56d8ee24d0444.",
+    "next_research_focus_recorded": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. Q104:I22 has a positive independent PIT receipt but remains a separate, non-dispatched mechanism-signature and non-overlap review; this does not authorize performance. Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and full-suite verification passed on its tested revision. Frozen census run #38168441086 is terminal; repair run #38231636160 reported 7,452 repaired/25 unresolved but undercounted residual accessions. Incremental run #38250105408 reused the exact six prior repaired-shard fingerprints and reports 53 unique unresolved accession keys, zero new attempts and zero repairs across 17 SEC archives (43 CIK/form/filing-date conflicts; 10 SEC_COMPLETE_SUBMISSION_HTTP_404). PR #1363 is merged (3c0f084405b3ccc293c16dd9f0bd5affa53d3ac1): it fixes recovery-receipt accounting without relaxing identity rules. Read-only residual lineage run #38255701998 completed LINEAGE_DIAGNOSTIC_COMPLETE (receipt c0881b295d37fa34925103b30acbb893a78bbbe230af6e637576dfda4fac86f7): 4/4 frozen accessions, 12/12 SEC header probes, both source ZIPs byte-identical to the original receipt pins, 91,535,030 aggregate bytes under the 150 MB cap. In all four samples accession, filer CIK and form agree across sources, but the SEC 13F bulk SUBMISSION.FILING_DATE differs from the EDGAR header date by one calendar/business day: 2015-02-18 vs 2015-02-17 in two samples and 2020-08-10 vs 2020-08-07 in two. The acceptance timestamps are present and consistent across all three header routes. SEC's own 13F data-set readme warns the extracted data may contain discrepancies with other publication formats and is not a substitute for the full filing; EDGAR's PDS specification identifies <FILING-DATE> as the assigned official filing date. Treat this as an unresolved cross-publication source-field conflict, not a license for date arithmetic or a blanket override. Keep all 53 residuals and historical/acceptance-time gates closed; do not repair the receipts or restart the census. R4 run #38574180245 (receipt 8be8fd68de0324a331d2b587a540b605ac5c6e9a71ec203fa9d2fc089450fb3c) added one separately pinned 2017 Q2 case: bulk filing date 2017-05-31 versus EDGAR header date 2017-04-21; acceptance 2017-05-31T14:33:43; DATE-OF-FILING-DATE-CHANGE 2017-06-01 appeared on index and raw-SGML routes but was absent from the bounded complete-submission header prefix. The archive matched its frozen hash and byte-length pins, and all three routes agreed on accession, CIK and form. This single preselected diagnostic does not change the immutable 14-row aggregate, establish prevalence or first-public time, choose production precedence, repair a receipt, or clear a gate. Continue source/PIT-only work only on additional frozen inputs that offer new information; do not restart the census. R5 run #38582684174 (receipt 3d9bc88c1f43e4efac88e4528d5ac2c4b6a017beccdbe2e0e821ff150b7cd8a5) added accession 0000950123-15-003183 from the already represented 2015 Q1 archive: frozen bulk filing date 2015-02-18 versus EDGAR header date 2015-02-17; acceptance 2015-02-17T18:51:10 agrees across all three routes; DATE-OF-FILING-DATE-CHANGE 2015-02-20 appears on index and raw-SGML routes but not the bounded complete-submission prefix. The archive matched the frozen 42,434,965-byte/SHA-256 pin and all 3/3 routes completed under the 50 MB cap. R5 is a distinct row, not a new archive vintage; it does not change the immutable 14-row aggregate, establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. R6 run #38588100012 (receipt 5571f2a8c496d32583b4b7a6bd5d6fee71533e889a5e75b434d1d84031c59522; artifact 11905763813) added accession 0000950123-13-006989 from a separately pinned 2013 Q3 archive (36,457,022 bytes; SHA-256 aa20c79d552722cb7bae8cefe3e63cd61a0929a4d5234c0b5d9ce1c75309a616). Bulk filing date 2013-08-15 differs from EDGAR header date 2013-08-14; acceptance 2013-08-14T21:51:40 is consistent across the two successful header routes; DATE-OF-FILING-DATE-CHANGE 2013-08-26 appears on raw SGML but not the bounded complete-submission header prefix; the index-header route returned HTTP 404. The original census HTTP 503 and later recovery FILING_DATE_MISMATCH remain separate pinned states. Total downloaded bytes were 36,466,001 under the 40 MB cap. R6 is an additional diagnostic row, not a modification of the immutable 14-row aggregate; it does not establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. Keep all 53 residuals and historical/acceptance-time gates closed. The frozen concept-specific PIT compiler/independent reproduction remains closed for the full residual set: the 36 verified date-mismatch rows are admissible only for a non-destructive sidecar; seven identity-conflict and ten complete-submission HTTP 404 branches remain unresolved, and historical first-public/PIT timing is unproven. Q220 historical prefix/PIT compiler is BLOCKED: Current compiler receipt reports 55 primary-document hash mismatches. The independent reproduction references a different compiler fingerprint and is not current; it cannot reopen this gate. Next gate: repair source hash mismatches or reconcile TextBlock/presentation mapping gaps before independent reproduction; performance authorization remains closed. Current compiler receipt fingerprint 89fc11008ce0d109e99bc104885cb9bfdf62c4f1432398a8f7621d949784daf7.  Q220: original SEC daily Feed forensic run #38233685159 ended fail-closed with FORENSIC_COMPARISON_INCOMPLETE: 0/3 comparisons, 2,829,769,099 bytes downloaded, and no original submission member found. The source-path correction preserves the frozen receipt, population fingerprint, all 55 expected hashes and three preselected sample keys: the daily .nc.tar.gz member is accession.nc; .dissem is a distinct PDS subscriber naming convention. PR #1364 corrected the source path; PR #1366 corrected bounded HTTP streaming, separated the 150 MB outer .nc wrapper limit from the unchanged 30 MB primary-document limit, and fixed pre-document <TYPE> parsing. Post-fix run #38254139755 is terminal FORENSIC_COMPARISON_INCOMPLETE (0/3; 2,829,769,099 bytes downloaded; receipt fingerprint 840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b). All three Feed archives and .nc wrappers were completely fetched and identity fields accession/CIK/form/filing date matched, but each original Feed submission header lacks ACCEPTANCE-DATETIME; all 55 frozen primary-document hash mismatches also remain. Do not redownload these multi-GB Feeds. Read-only header-only run #38258251764 completed HEADER_EVIDENCE_COMPLETE: 9/9 official EDGAR header routes, receipt fingerprint 39bf95fa15bf149094d5b56c90e58622c2339d452fd138c6deb0a463668f85b4, 101,547 bytes; no Feed or primary documents downloaded. All three fixed samples have matching accession/CIK/form/filing-date and identical ACCEPTANCE-DATETIME values across index headers, raw .hdr.sgml, and header-only .txt prefixes. DATE-OF-FILING-DATE-CHANGE was also captured: for 0000064040-19-000059 the acceptance was 2019-02-12T18:15:22 before the EDGAR filing date 2019-02-13, and its change date is 2019-02-12; the other two samples show acceptance and change date on the filing date. This is supplemental timestamp evidence only; all 55 source-hash mismatches remain and both Q220 gates stay closed. Bounded five-request HTTP representation probe [run #38590133217](https://github.com/DWR-debug/trading-agent-public/actions/runs/38590133217) completed HTTP_REPRESENTATION_INVARIANT_AT_PROBE_TIME (receipt fingerprint 870aa4fdae7eda932bb8f50ebb9eab1a7781ee503fb5120dea5b0f099e4fd65c; request sequence 2026-10-14T15:29:01Z). All five complete HTTP 200 responses were byte-identical at 4,774,457 bytes with SHA-256 fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3; total response bytes were 23,872,285 and response bodies were not persisted. The observed bytes match none of the frozen expected, prior-captured, prior-current, or Feed-extracted body hashes/lengths. This makes request-profile and repeatability variation unsupported as the explanation at probe time; it does not establish historical source vintage or clear any gate. Do not repeat this probe or fetch further primary documents. Next, trace the frozen expected versus observed primary-document hashes and their source-vintage provenance without redownloading multi-GB Feeds or fetching primary documents. Do not change source pins, population, sample keys, expected hashes or research gates to force a pass. Q221: the 348-row frozen public-boundary sample is complete under its bounded sample contract, but first-public-observation time remains unproven for all 348 rows and all 247 recipient identities remain unmapped to issuers. The archived five policy vintages do not prove an individual award/modification clock. A fixed exploratory exact-Wayback-CDX spot check of seven award-page URLs (one per frozen year window, derived from frozen generated_internal_id values) found one captured exact URL and six no-hit responses; the captured HTML responses were only 2,171–2,696 bytes and no row-level transaction payload was verified. This is low-coverage source discovery only; no-hit is not proof of historical absence. The official GSA/SAM Contract Awards API requires a SAM.gov API key; publicDeltaDate is documented as a filter over Last Modified Date or Reveal Date, not proof that the response exposes a reproducible transaction-level first-public timestamp or retained old versions. No authenticated request was made, and unrevealed DoD data has additional role restrictions. Treat it as a desk-check lead only, not a dispatch-ready source contract. Next: do not expand the exact-page route across the 348-key sample. Seek a source with timestamped transaction-level versions or a bounded archive whose transaction-row presence can be validated, and separately freeze transaction-class applicability and pre-event recipient-to-issuer mapping. Preserve DoD/USACE 90-day, FAR 30-day, and correction-lineage checks; never map from name similarity. Q221 FPDS public-Atom identity-bridge probe [run #38712516839](https://github.com/DWR-debug/trading-agent-public/actions/runs/38712516839) used exactly four preregistered PIID requests; all four returned HTTP 302 and were blocked without following redirects. No response body was retained, total response bytes were 0, and there were 0 exact record/UEI/name matches. The capture receipt and ARM64 offline validation agree on analysis fingerprint 732a23385f9a5346e7a0806e342647658e6a4f88ea3d1ee233b956ead4277309; this validates the bounded negative result, not historical identity. Do not repeat this route or follow its redirects. No SAM.gov API request was made because no API key is assumed. Q221 remains blocked: all 348 transaction public-clock rows remain unproven and all 247 recipient-to-issuer mappings remain unfrozen. Continue only with a separately reviewed, actually authorized historical record-level source; all performance and execution gates remain closed. [Persisted receipt](https://github.com/DWR-debug/trading-agent-public/blob/master/research/evidence/q221_fpds_public_atom_identity_bridge_latest.json). Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred.  Q219 remains paused; its prior evidence is preserved. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs. Q104:I19 independent admissibility review [PR #1484] is current for exactly 36 frozen date-mismatch rows: all 36 pass identity/header/acceptance consistency and bulk-versus-header date-difference checks (31 have three successful header routes; 5 have two, including only the four frozen R7 index-header 404 exceptions). Persisted sidecar research/evidence/q104_i19_residual_filing_date_sidecar_latest.json contains 36 sorted, source-pinned rows and has been revalidated against the exact source receipt and independent review. Admissible scope is a non-destructive research sidecar only: preserve bulk FILING_DATE unchanged, retain the EDGAR header filing date as a separate field with a discrepancy flag, keep ACCEPTANCE-DATETIME separate from first-public-observation time, and retain DATE-OF-FILING-DATE-CHANGE as separate metadata (17 observed; 15 differ from header date and 2 match). The seven CIK/form-conflict and ten complete-submission HTTP 404 rows remain outside this review. Production precedence/joins, historical PIT and first-public-time clearance, performance, holdout, ranking, tuning, promotion and live execution remain blocked. Input R7 review receipt fingerprint de6c5feca4e27f020b77890a6b00e67a87735d6572070f263ba56d8ee24d0444.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -4802,7 +4802,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "42ca2001b453c547918895a523965ccc471e94b9",
+  "source_master_sha": "ac558d0497baec2b81ba32310f338d7ec8b0c32b",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4916,6 +4916,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "40051193002"
+    "run_id": "40070450215"
   }
 }
