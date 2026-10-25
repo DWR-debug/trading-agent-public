@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
   "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
-  "observed_at_utc": "2026-10-25T04:30:10.476849Z",
+  "observed_at_utc": "2026-10-25T11:15:06.711748Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.601,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5189, Requested 5699. Please try again in 21.66s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.324,
+  "stdout": "**Worker Handoff – Q219 Options‑Source Breadth Gate (Methods Review)**  \n\n| Section | Content |\n|---------|---------|\n| **1. Findings** | 1. **Q129 Source Contract Scope** – The contract lists only SPY, QQQ, IWM as assets; the “broad source” flag is set but no evidence of additional equities is provided. <br>2. **Direct Validation Gap** – The gate script only checks that the GitHub release URL returns HTTP 200; it does **not** verify that the release payload matches the contract’s SHA‑256 or that the data is byte‑identical to the contract’s `options_source_statement`. <br>3. **Implied‑Volatility Absence** – The `REQUIRED` set in `q129_options_pit_reproduction.py` excludes any implied‑volatility columns; the script never checks for their presence or absence. <br>4. **Timestamp Semantics** – The contract claims “4:00 PM ET end‑of‑day snapshot”, yet the scripts only confirm a `date` column; they do not validate that the `date` values correspond to 4:00 PM ET or that no intraday timestamps exist. <br>5. **Same‑Session Leakage** – No inspection of raw parquet metadata or row‑group timestamps is performed; a single‑session data point could leak the exact observation time. <br>6. **Calendar‑Roll Validation** – The scripts do not cross‑check `expiration` dates against the official CBOE expiration calendar, so roll‑over logic cannot be verified. <br>7. **Cross‑Market Wedge Value** – The gate does not compare the options‑only state to the filing‑change state; it is unclear whether the wedge adds any orthogonal information. |\n| **2. Counter‑Arguments / Risks** | • The contract’s “broad source” claim may be misleading if the release contains only the three ETFs; downstream models could assume a larger universe. <br>• Without byte‑level validation, a malicious actor could replace the release with a different dataset that still satisfies the structural checks. <br>• Missing implied‑volatility fields could silently alter risk‑adjusted return calculations. <br>• If the `date` column is derived from a different clock (e.g., UTC midnight), the event‑clock assumption fails, potentially biasing event‑window definitions. <br>• Same‑session timestamps could create look‑ahead bias if the model uses the exact time of observation. <br>• Incorrect roll logic could mis‑align option expirations with underlying price data, corrupting any event‑based analysis. <br>• If the options‑only state is fully correlated with the filing‑change state, the wedge offers no new information and the candidate should be rejected on the orthogonality criterion. |\n| **3. Concrete Next Actions (Deterministic Falsifiers)** | 1. **Immutable Release Snapshot** – Download the Q129 release (`data‑v1`) and store a SHA‑256‑verified, time‑stamped copy in the repository. Verify that the stored hash matches the contract’s `sha256`. <br>2. **Broadness Verification** – Parse the release’s asset list and confirm that the underlying symbols set equals `{SPY, QQQ, IWM}`. Flag any additional symbols; if present, update the contract or reject the breadth claim. <br>3. **Implied‑Volatility Check** – Load each parquet file with `pyarrow` and assert that columns `implied_volatility` or similar are **absent**; if present, record the column names and decide whether to treat them as noise or as a new feature. <br>4. **Timestamp Semantics Test** – For a random sample of rows, convert the `date` field to a datetime at 4:00 PM ET and compare to the file’s creation/modification timestamp; flag any discrepancies. <br>5. **Same‑Session Leakage Test** – Inspect parquet metadata for row‑group timestamps or any column that could encode the exact observation time; if found, require a transformation to a pure date. <br>6. **Calendar‑Roll Validation** – Cross‑reference each `expiration` value against the official CBOE calendar (downloaded from `https://www.cboe.com/.../historical_data/`). Assert that every expiration falls on a valid CBOE option expiration date. <br>7. **Cross‑Market Wedge Comparison** – Compute a simple correlation (e.g., Pearson) between the binary event flag for filing‑change and the binary event flag for options‑only state across the same universe and horizon. If the correlation is > 0.95, flag the wedge as non‑orthogonal. <br>8. **Documentation Gap Closure** – Add a `source_validation.md` file that records the immutable snapshot, the SHA‑256, and the results of the above checks. |\n| **4. Uncertainty / Open Questions** | • The contract’s `broad_source_lead` status is “BREADTH_LEAD_REQUIRES_DIRECT_HTTP_VALIDATION”; we have not performed a full HTTP validation of the source beyond a 200 status. <br>• The CBOE archive fetch in the gate script only retrieves the archive page; it does not download or parse the actual option‑volume data, so roll‑over validation remains incomplete. <br>• The event‑clock definition relies on the assumption that the `date` column is a pure calendar date; without inspecting the raw parquet timestamps, we cannot rule out intraday leakage. <br>• The cross‑market wedge’s informational value is only assessed via a simple correlation; a more nuanced statistical test may be required to confirm orthogonality. |\n\n**Summary**  \nThe current Q219 gate implementation falls short of rigorously validating the breadth, timestamp semantics, implied‑volatility absence, calendar‑roll correctness, and orthogonality of the options‑only state. The proposed deterministic falsifiers above will expose any violations and provide the immutable artifacts needed for downstream gates to make an informed decision.",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-25T04:30:11.078242Z",
-    "blocked_until_utc": "2026-10-25T05:30:11.078242Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5189, Requested 5699. Please try again in 21.66s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-6d943c28-c94a-42ab-a76e-1a537fd01996",
+  "usage": {
+    "queue_time": 0.25172427,
+    "prompt_tokens": 5382,
+    "prompt_time": 0.400210428,
+    "completion_tokens": 2099,
+    "completion_time": 2.5042076570000003,
+    "total_tokens": 7481,
+    "total_time": 2.904418085,
+    "completion_tokens_details": {
+      "reasoning_tokens": 806
+    }
   }
 }\n
