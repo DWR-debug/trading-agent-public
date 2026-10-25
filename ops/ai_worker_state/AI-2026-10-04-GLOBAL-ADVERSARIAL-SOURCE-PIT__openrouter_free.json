@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-25T11:59:03.736774Z",
+  "observed_at_utc": "2026-10-25T16:48:56.608198Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 20.816,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 28.735,
+  "stdout": "## Worker handoff — AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT\n\n**Boundary flags:** `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, `AUTOMATIC_PROMOTION=False`.  \n**Output type:** worker material only. The review is not scientific evidence and authorizes no performance, promotion, or live trading.\n\n### Findings\n\n1. **Durability posture is the central blocker.**\n   - The fail-closed guard requires durable binding via keys such as `immutable_historical_snapshot`, `dated_snapshot`, `snapshot_sha256`, `historical_snapshot_sha256`, `vintage_sha256`, `archive_fingerprint`, or an `archive_contract`.\n   - Without such a binding, source readiness is classified `PROVISIONAL_LIVE_PROBE_ONLY`.\n   - For the Q202-Q204 information-timing family, the deterministic next gate is `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`.\n   - Therefore, current endpoint/docs/hash/API probes cannot establish durable historical PIT readiness for Q202-Q204.\n\n2. **Current-endpoint drift remains unexhausted.**\n   - The Grok Q194-Q201 review already found current endpoint/API reachability and current hashes are not durable historical PIT proof.\n   - The same challenge standard must be applied to Q202-Q204 and the newly quarantined Q205 NLRB channel.\n\n3. **Q202-Q204 information timing needs stricter clock discipline.**\n   - The candidate decision boundary is `event_public_observation_boundary`; if only a date is available, use the next regular trading-session boundary and do not infer an intraday clock.\n   - The supplied context reports an unresolved SEC cross-publication conflict: SEC 13F bulk `SUBMISSION.FILING_DATE` vs EDGAR header date, with acceptance timestamps consistent across routes.\n   - This remains an unresolved source-field conflict, not a license for date arithmetic or override.\n\n4. **Q205 NLRB channel is discovery-only and not source/PIT validated.**\n   - The newly quarantined Q205 NLRB labor-representation certification channel must not be advanced as source/PIT validated.\n   - It requires independent scrutiny of public observation time, effective date, certification status, actor identity, materiality/transmission relevance, and revision lineage.\n\n5. **Lineage, mapping, and residual risks remain open.**\n   - Frozen census and repair lineage context indicates unresolved residual/accession issues and source conflicts.\n   - Keep historical/acceptance-time gates closed; do not repair receipts or restart census based on this review.\n   - Need frozen pre-event entity/exposure mappings and revision/amendment/correction/QC/prosecution lineage.\n\n### Counterarguments / Disagreements\n\n- The conservative guard and deterministic compiler are appropriate fail-closed mechanisms, but they do not themselves prove PIT validity",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1792946937-5D2pGSeQWLeemNJbeLvA",
+  "usage": {
+    "prompt_tokens": 4991,
+    "completion_tokens": 3200,
+    "total_tokens": 8191,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3327,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
