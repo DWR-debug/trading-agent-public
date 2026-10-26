@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-10-26T04:34:05.989052Z",
+  "observed_at_utc": "2026-10-26T12:48:36.960148Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.646,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5041, Requested 5579. Please try again in 19.65s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 4.134,
+  "stdout": "**Q220 – SEC Financial Statement Notes Archive (2009 Q1) – Methods‑Review Handoff**\n\n| # | Failure Mode | Minimal Deterministic Falsifier | Exact Artifact Needed | Counter‑Argument (why it may be benign) |\n|---|--------------|---------------------------------|-----------------------|----------------------------------------|\n| 1 | **Missing or incorrect presentation‑role mapping** | `txt.txt` header lacks a `presentationRole` column or contains duplicate role names. | `txt.txt` – first line (header) | The archive may intentionally omit presentation roles for brevity; downstream consumers can infer roles from context. |\n| 2 | **Uncaptured taxonomy‑extension changes** | `tag.txt` header contains tags that are not present in the base US‑GAAP taxonomy (e.g., `us-gaap:NetIncomeLossExtension`). | `tag.txt` – header line | Extensions may be optional and handled by a later taxonomy‑merge step; the archive is a snapshot, not a live taxonomy. |\n| 3 | **Custom namespace prefixes not resolved** | `sub.txt` header contains prefixes like `xbrli:`, `us-gaap:`, `custom:` that are not declared in the accompanying `dim.txt`. | `sub.txt` – header line | Custom namespaces may be declared in an external XBRL instance document not included in the archive. |\n| 4 | **Ambiguous section identity (duplicate IDs)** | Two rows in `sub.txt` share the same `sectionId`. | `sub.txt` – rows 10‑20 (example duplicate) | Duplicate IDs could be intentional (e.g., sub‑sections) and resolved by hierarchical context. |\n| 5 | **Inconsistent narrative tokenization** | Token counts in `txt.txt` differ from those in `pre.txt` for the same narrative ID. | `txt.txt` & `pre.txt` – matching `narrativeId` rows | Tokenization rules may differ between the two files (e.g., whitespace vs. punctuation). |\n| 6 | **Amended filings not flagged** | `tag.txt` contains an `Amendment` flag but the corresponding `sub.txt` row lacks an `amendedFrom` reference. | `tag.txt` – row with `Amendment` flag | Amendments may be recorded only in the tag layer; the sub layer may be intentionally minimal. |\n| 7 | **Future‑date contamination** | `num.txt` contains a `periodEnd` date beyond the archive’s `FIXED_END` (2026‑10‑05). | `num.txt` – rows with `periodEnd` > 2026‑10‑05 | Future dates may be placeholders for provisional filings; the archive may include them for completeness. |\n| 8 | **Duplicate facts across files** | Two rows in `num.txt` share the same `factId` but differ in value. | `num.txt` – duplicate `factId` rows | Duplicate facts could represent re‑filings or corrections; the archive may preserve both for audit trail. |\n| 9 | **Period/Unit/Context mis‑alignment** | A fact in `num.txt` references a `contextId` whose period in `sub.txt` does not match the fact’s `periodStart`/`periodEnd`. | `sub.txt` (context) & `num.txt` (fact) – matching `contextId` | Contexts may be reused across multiple facts; mis‑alignment could be a downstream mapping error rather than an archive issue. |\n|10 | **Representation mismatch proxies filing length** | Correlation between `archive_bytes` (from `run()` output) and the number of facts in `num.txt` is > 0.9. | `run()` output JSON – `archive_bytes`; `num.txt` – fact count | Large files may simply contain more facts; the mismatch may not affect the candidate’s logic if only fact counts are used. |\n\n---\n\n### Concrete Next Actions\n\n1. **Validate Header Consistency**  \n   *Script:* `validate_headers.py` – read `sub.txt`, `tag.txt`, `dim.txt`, `num.txt`, `txt.txt`, `pre.txt`; assert that each required column exists and is unique.  \n   *Artifact:* Log file listing any missing/duplicate columns.\n\n2. **Taxonomy‑Extension Check**  \n   *Script:* `check_extensions.py` – compare tags in `tag.txt` against a static list of base US‑GAAP tags; flag unknown tags.  \n   *Artifact:* Report of unknown tags with line numbers.\n\n3. **Namespace Resolution Test**  \n   *Script:* `namespace_check.py` – parse `sub.txt` prefixes; cross‑reference with `dim.txt` namespace declarations.  \n   *Artifact:* List of prefixes without declarations.\n\n4. **Duplicate Section ID Scan**  \n   *Script:* `duplicate_sections.py` – hash `sectionId` in `sub.txt`; report duplicates.  \n   *Artifact:* Duplicate IDs with row numbers.\n\n5. **Narrative Tokenization Alignment**  \n   *Script:* `token_alignment.py` – compare token counts for each `narrativeId` between `txt.txt` and `pre.txt`.  \n   *Artifact:* Mismatched token counts with sample rows.\n\n6. **Amendment Flag Consistency**  \n   *Script:* `amendment_consistency.py` – ensure every `Amendment` flag in `tag.txt` has a corresponding `amendedFrom` in `sub.txt`.  \n   *Artifact:* List of unmatched amendment flags.\n\n7. **Future‑Date Filter**  \n   *Script:* `future_date_filter.py` – flag any `periodEnd` > `FIXED_END`.  \n   *Artifact:* Rows with future dates.\n\n8. **Duplicate Fact Detection**  \n   *Script:* `duplicate_facts.py` – hash `factId` in `num.txt`; report duplicates with differing values.  \n   *Artifact:* Duplicate fact entries.\n\n9. **Context Alignment Verification**  \n   *Script:* `context_alignment.py` – cross‑check `contextId` periods in `sub.txt` vs. fact periods in `num.txt`.  \n   *Artifact:* Mis‑aligned context‑fact pairs.\n\n10. **Filing Length vs. Fact Count Correlation**  \n    *Script:* `length_fact_correlation.py` – compute Pearson correlation between `archive_bytes` and fact count; flag high correlation.  \n    *Artifact:* Correlation coefficient and sample file sizes.\n\n---\n\n### Uncertainty & Caveats\n\n- **Archive Scope:** The 2009 Q1 notes archive may not be a complete XBRL instance; some mapping information could be external or omitted intentionally.\n- **Taxonomy Evolution:** Taxonomy extensions may have been added after the archive’s creation; absence of a tag does not necessarily indicate a failure.\n- **Amendments & Corrections:** The archive may preserve multiple versions of a filing; duplicate facts or sections could be legitimate audit trail artifacts.\n- **Future Dates:** Some filings include provisional dates; the presence of future dates may be acceptable if the archive is meant to capture all submissions, not only finalized ones.\n- **Correlation Interpretation:** A high correlation between file size and fact count does not prove that representation mismatch is merely a proxy for length; further semantic analysis would be required.\n\n---\n\n**Deliverables for the next review cycle**\n\n1. The ten validation scripts above, each producing a deterministic log file.\n2. A consolidated report summarizing all detected failures, with artifact references.\n3. A brief commentary on whether each failure mode materially impacts the Q220 candidate’s logic (i.e., whether the candidate’s PIT construction would be invalidated).\n\n*End of handoff.*",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-26T04:34:06.634744Z",
-    "blocked_until_utc": "2026-10-26T05:34:06.634744Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5041, Requested 5579. Please try again in 19.65s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-7dca1561-2635-467c-a6e6-da07707935ef",
+  "usage": {
+    "queue_time": 0.075470436,
+    "prompt_tokens": 5090,
+    "prompt_time": 0.260504157,
+    "completion_tokens": 2590,
+    "completion_time": 3.360912332,
+    "total_tokens": 7680,
+    "total_time": 3.621416489,
+    "completion_tokens_details": {
+      "reasoning_tokens": 978
+    }
   }
 }\n
