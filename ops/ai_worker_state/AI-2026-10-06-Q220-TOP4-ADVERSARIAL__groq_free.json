@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-10-26T22:36:01.395229Z",
+  "observed_at_utc": "2026-10-27T04:52:00.750000Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,9 +44,9 @@
   },
   "status": "RATE_LIMITED",
   "returncode": 429,
-  "duration_seconds": 0.461,
+  "duration_seconds": 0.422,
   "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5317, Requested 5342. Please try again in 19.9425s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5699, Requested 5799. Please try again in 26.235s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
   "response_id": null,
@@ -54,10 +54,10 @@
   "quota_block": {
     "schema_version": 1,
     "provider": "groq_free",
-    "blocked_at_utc": "2026-10-26T22:36:01.856403Z",
-    "blocked_until_utc": "2026-10-26T23:36:01.856403Z",
+    "blocked_at_utc": "2026-10-27T04:52:01.171744Z",
+    "blocked_until_utc": "2026-10-27T05:52:01.171744Z",
     "reset_seconds": 3600,
     "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5317, Requested 5342. Please try again in 19.9425s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5699, Requested 5799. Please try again in 26.235s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
