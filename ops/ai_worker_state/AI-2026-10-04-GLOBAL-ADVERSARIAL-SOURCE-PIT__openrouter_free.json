@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-26T22:52:58.724968Z",
+  "observed_at_utc": "2026-10-27T05:35:40.994496Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 250.677,
-  "stdout": "**Worker handoff — adversarial source/PIT review (paper-only research support)**\n\n**Mandate.** Independent adversarial second opinion only. No live trading, no orders, no promotion, no performance authorization, no holdout/asset/parameter/threshold/horizon selection, no claims of deterministic validation or scientific evidence. This output is worker material and must be reproduced by deterministic project tooling before any research decision.\n\n---\n\n### 1. Findings by attack dimension\n\n| # | Attack dimension | Finding (adversarial) |\n|---|---|---|\n| 1 | Current-endpoint drift / retrospective readiness | `automation/source_readiness_snapshot_guard.py` classifies readiness as `PROVISIONAL_LIVE_PROBE_ONLY` unless a durable binding key (`immutable_historical_snapshot`, `snapshot_sha256`, `vintage_sha256`, `archive_fingerprint`, etc.) is present. The Q202–Q204 receipt path exists (`research/evidence/q202_q204_information_timing_feasibility_latest.json`), but its contents are not supplied, so durable binding cannot be confirmed. `automation/orthogonal_pit_next_gate.py` already gates Q202–Q204 at `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`. Q205 (NLRB) does not appear in either receipt mapping; it is quarantined/discovery-only with no source/PIT receipt visible. |\n| 2 | Historical observation/publication timestamps | `CURRENT_STATUS.md` documents an unresolved cross-publication source-field conflict: SEC 13F `SUBMISSION.FILING_DATE` differs from the EDGAR header date by one calendar/business day (2015-02-18 vs 2015-02-17; 2020-08-10 vs 2020-08-07) across all four frozen samples. Acceptance timestamps are consistent, but the *assigned official filing date* is contested between EDGAR PDS (`<FILING-DATE>`) and the 13F bulk readme (which warns the extracted data may disagree with other formats and is not a substitute for the full filing). For an information-timing family (Q202–Q204), this is a direct threat to the `event_public_observation_boundary` decision rule: if only a date is available, the contract says use the next regular session and do not infer an intraday clock — but the date itself is not stable across publications. |\n| 3 | Revision / amendment / correction / QC / prosecution lineage | Q104:I19 history shows format-mismatch repair (index-header vs `.hdr.sgml`), a terminal frozen census (#38168441086), a repair run that undercounted residual accessions (7,452 repaired / 25 unresolved), and an incremental run reusing six prior shard fingerprints with 53 unique unresolved accession keys, zero new attempts, zero repairs. PR #1363 fixed recovery-receipt accounting without relaxing identity rules. This demonstrates that revision lineage is not yet frozen and that residual accessions remain open. Q205 NLRB has no visible revision/withdrawal/correction lineage artifact at all. |\n| 4 | Frozen pre-event entity/exposure mappings | The shared contract requires issuer/entity mapping frozen before outcome observation, immutable for the trial. Context shows mapping instability instead: 43 CIK/form/filing-date conflicts and 10",
+  "duration_seconds": 57.25,
+  "stdout": "**Adversarial Review Handoff – Q202‑Q204 Information‑Timing Family & Q205 NLRB Labor‑Representation Channel**\n\n---\n\n### Findings\n| Candidate | Current Source/PIT Status | Core Attack Points |\n|-----------|---------------------------|--------------------|\n| **Q202** | **PROVISIONAL** – live‑probe only (no immutable snapshot key in receipt). | 1️⃣ Endpoint drift: current API may change; 2️⃣ No dated snapshot of the information‑timing source; 3️⃣ Missing frozen pre‑event exposure mapping; 4️⃣ Same‑day leakage risk (event clock vs. observation clock). |\n| **Q203** | **PROVISIONAL** – same as Q202. | Same attack surface; cheap falsifier: shift event availability forward/backward while holding calendar fixed. |\n| **Q204** | **PROVISIONAL** – same as Q202. | Same attack surface; cheap falsifier: shuffle issuer‑exposure assignments within frozen universe. |\n| **Q205** | **DISCOVERY‑ONLY** – no source/PIT receipt exists. | 1️⃣ No immutable snapshot of NLRB labor‑representation certification channel; 2️⃣ Undefined event clock and exposure mapping; 3️⃣ No revision/lineage documentation; 4️⃣ Cross‑candidate confounding risk (overlap with Q202‑Q204 timing). |\n\n**Core adversarial finding (mirroring Grok Q194‑Q201):** *Current endpoint/API reachability and current hashes are not durable historical PIT proof.* All four candidates rely on provisional live probes; none have bound immutable dated snapshots/vintages.\n\n---\n\n### Counterarguments (preserved disagreement)\n- **Provisional sufficiency claim:** Some argue live probes are acceptable for early‑stage orthogonal discovery, allowing rapid iteration",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1793055178-Uccdr6Urr75ALUnU7LPb",
+  "response_id": "gen-1793079341-sYpn9rqMqHwayimOCLJL",
   "usage": {
-    "prompt_tokens": 6001,
-    "completion_tokens": 3200,
-    "total_tokens": 9201,
+    "prompt_tokens": 4945,
+    "completion_tokens": 3196,
+    "total_tokens": 8141,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 2407,
+      "reasoning_tokens": 0,
       "image_tokens": 0,
       "audio_tokens": 0
     }
