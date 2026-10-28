@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-28T13:31:53.662489Z",
+  "observed_at_utc": "2026-10-28T22:51:36.363208Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 49.926,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 25.536,
+  "stdout": "## Worker handoff — AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT\n\n**Hard invariants observed:** `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, `AUTOMATIC_PROMOTION=False`.  \n**Worker posture:** adversarial methods review only; no validation claim, no promotion, no live trading, no gate change, no performance/holdout/parameter/asset/threshold/horizon selection.\n\n### Scope and boundary\n- Reviewed the supplied adversarial-source/PIT context for the Q202–Q204 information-timing family and the newly quarantined Q205 NLRB labor-representation certification channel.\n- The review is worker material only and is not scientific evidence.\n- No live endpoint probe, current documentation read, hash check, HTTP marker, or current API response was treated as durable historical source readiness.\n\n### Key findings\n1. **Source durability is the central blocker.**\n   - The deterministic source-readiness guard distinguishes durable historical binding from `PROVISIONAL_LIVE_PROBE_ONLY`.\n   - For Q202–Q204, the relevant receipt path is expected to be `research/evidence/q202_q204_information_timing_feasibility_latest.json`.\n   - The next-gate compiler maps Q202, Q203, and Q204 to `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`.\n   - This strongly indicates that, unless the Q202–Q204 receipt contains a durable snapshot/vintage binding, source/PIT readiness remains provisional rather than historical-proof.\n\n2. **Current endpoint/API reachability and current hashes are not durable PIT proof.**\n   - The supplied Grok Q194–Q201 adversarial review found essentially this: current endpoint/API reachability and current hashes are not durable historical PIT proof.\n   - The full required historical artifact list was truncated in the supplied context, so the Q202–Q204 review should not assume those requirements are satisfied.\n\n3. **Q202–Q204 information absence / timing family remains source-sensitive.**\n   - The shared candidate contract uses `event_public_observation_boundary`; if only a date is available, it says to use the next regular trading-session boundary and not infer an intraday clock.\n   - Adversarial concern: this is a conservative fallback, but it may still be date-only leakage or proxy timing. The exact public observation timestamp or frozen publication timestamp remains necessary.\n\n4. **Q205 NLRB channel is discovery-only and not yet source/PIT validated.**\n   - The task scope explicitly says Q205 is discovery-only and not yet source/PIT validated.\n   - The adversarial review should therefore not treat the NLRB labor-representation certification channel as a validated PIT input.\n\n5. **Cross-candidate overlap / convergence risk remains open.**\n   - Q202–Q204 may overlap with earlier Q194–Q201 source families or with Q205.\n   - The review must test whether shared sources, mappings, or outcome definitions create cross-candidate confounding rather than independent mechanisms.\n\n### Counterarguments / tensions\n- A durable snapshot may not always be required if a source is truly immutable, but the supplied guard and Grok finding indicate that live/current artifacts are insufficient by default.\n- The next regular trading-session boundary may be operationally conservative, but it is not equivalent to an observed public timestamp and may still introduce date-only or boundary-proxy assumptions.\n- The NLRB channel may be appropriately quarantined; forcing it into the same source/PIT gate before its own lineage and clock are defined could be premature.\n\n### Concrete next actions\n1. Keep Q202–Q204 source/PIT readiness blocked at `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT` unless a durable binding is present.\n2. Keep Q205 discovery-only/quarantined until separate source feasibility and PIT validation are completed.\n3. Request exact missing artifacts:\n   - Immutable dated snapshot/vintage or explicitly frozen historical artifact for Q202–Q204 information-timing sources.\n   - Snapshot SHA-256 / archive fingerprint / vintage hash.\n   - Frozen pre-event issuer/entity/exposure mapping with version/hash.\n   - Historical",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1793227896-4HFs69UurUZUr5JvfdDo",
+  "usage": {
+    "prompt_tokens": 4991,
+    "completion_tokens": 3200,
+    "total_tokens": 8191,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3038,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
