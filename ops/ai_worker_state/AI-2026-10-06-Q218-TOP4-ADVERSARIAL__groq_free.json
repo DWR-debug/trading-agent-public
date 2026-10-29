@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
   "context_fingerprint": "af33b9bd08de8c944f12d3a4cdc141f7abbbe4c1b589cdd91f1ff50ecf3ee0ec",
-  "observed_at_utc": "2026-10-29T12:51:08.668704Z",
+  "observed_at_utc": "2026-10-29T22:41:09.685024Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.722,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6721, Requested 5405. Please try again in 30.945s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.328,
+  "stdout": "**Worker Handoff – Q218 Adversarial Review**\n\n| Section | Content |\n|---------|---------|\n| **1. Findings** | 1. **Pairing Rule Ambiguity** – The census code pairs a 10‑K with the *latest* 8‑K whose *SEC acceptance timestamp* falls in the interval `(preceding 10‑K acceptance, target 10‑K acceptance]`.  The code does **not** explicitly guard against 8‑Ks that are not earnings releases, nor does it enforce that the 8‑K’s *reportDate* matches the 10‑K’s *filingDate*.  <br>2. **Missing Acceptance Timestamps** – The census logic checks `acceptance_datetime_found` but does not reject a filing if the flag is `False`.  A filing with a missing timestamp could still be considered “pairable” if other fields satisfy the rule. <br>3. **Amendment Handling** – 10‑K amendments can change the *filingDate* but the acceptance timestamp remains unchanged.  The current rule uses the acceptance timestamp only; it does not re‑evaluate the interval when a filing is amended. <br>4. **Report‑Date vs Event‑Date** – The spec’s `event_clock` is defined as “public observation boundary of the enforcement state” and explicitly states that *reportDate* should not be used as the event date.  The census code, however, pulls `filingDate` and `reportDate` from the SEC JSON but never validates that they are consistent.  <br>5. **False Earnings‑Release Pairing** – The census code filters 8‑Ks by form only (`8-K` or `8-K/A`).  It does not inspect the 8‑K’s `items` to confirm that the filing is an earnings release (e.g., Item 2.02/Exhibit‑99.1).  <br>6. **Voluntary vs Mandatory Classification** – The census does not examine the `primaryDocument` or `items` to determine whether an 8‑K is a *mandatory* earnings release or a *voluntary* disclosure.  <br>7. **Issuer Identity Drift** – The mapping `SEC_CIKS` is hard‑coded.  If a ticker’s CIK changes (e.g., due to corporate action or SEC re‑assignment), the census will fetch the wrong filing set.  <br>8. **Semantic Wedge Collapse** – The pairing rule relies solely on timestamps and form type.  It is susceptible to collapsing the semantic wedge into a simple “latest‑by‑time” rule, ignoring the substantive content of the filings.  |\n| **2. Counter‑Arguments** | • The census code is intentionally *minimal* to satisfy the “deterministic mandatory/voluntary pairing” contract.  It is not designed to be a full SEC filing validator.  <br>• The absence of a check for `acceptance_datetime_found` is a deliberate design choice to avoid false negatives when the SEC API omits the field.  <br>• The mapping of tickers to CIKs is considered “frozen” for the trial; any drift would be caught by the *historical archive* gate, not the census.  <br>• The semantic wedge collapse is mitigated by the *source‑feasibility* gate, which requires independent PIT reproduction of the pairing logic.  |\n| **3. Smallest Deterministic Falsifiers & Required Artifacts** | 1. **Mispairing due to timestamp overlap** – *Artifact*: `tests/q218_mispairing.json` containing two filings: a 10‑K with acceptance `2026‑09‑01T12:00:00Z` and an 8‑K with acceptance `2026‑09‑01T12:00:00Z` (exactly the same).  The census should pair the 8‑K, but the rule is ambiguous when timestamps are equal.  <br>2. **Missing Acceptance Timestamp** – *Artifact*: `tests/q218_missing_timestamp.json` where a 10‑K has `acceptance_datetime_found: false`.  The census should reject this filing for pairing.  <br>3. **Amendment with Changed FilingDate** – *Artifact*: `tests/q218_amendment.json` where a 10‑K amendment changes `filingDate` from `2026‑08‑15` to `2026‑09‑01` but keeps the same acceptance timestamp.  The census should still pair with the 8‑K that falls in the original interval.  <br>4. **ReportDate vs FilingDate Discrepancy** – *Artifact*: `tests/q218_reportdate_mismatch.json` where `filingDate: 2026‑09‑01` and `reportDate: 2026‑08‑31`.  The census should flag this as a potential event‑date ambiguity.  <br>5. **False Earnings‑Release Pairing** – *Artifact*: `tests/q218_false_earnings.json` containing an 8‑K with `items: [\"Item 7.01\"]` (non‑earnings).  The census should not pair it.  <br>6. **Voluntary 8‑K Misclassified** – *Artifact*: `tests/q218_voluntary_8k.json` where the 8‑K’s `primaryDocument` indicates a voluntary disclosure (e.g., “Press Release”).  The census should treat it as *voluntary* and not pair.  <br>7. **Issuer Identity Drift** – *Artifact*: `tests/q218_cik_drift.json` mapping `AAPL` to a new CIK `9999999999`.  The census should detect that the fetched filings do not match the expected CIK.  <br>8. **Semantic Wedge Collapse** – *Artifact*: `tests/q218_semantic_wedge.json` containing two 8‑Ks with identical timestamps but vastly different content (one earnings release, one unrelated press release).  The census should not pair the unrelated one.  |\n| **4. Concrete Next Actions** | 1. **Create the eight JSON test artifacts** listed above in `tests/`.  2. **Run the census code** (`automation/q218_q221_historical_source_census.py`) against each artifact and capture the output.  3. **Verify that the output matches the expected behavior** (e.g., no pairing for missing timestamps, correct handling of amendments).  4. **Document any deviations** in a `tests/q218_falsifier_results.md`.  5. **Propose a minimal patch** to the census code that adds explicit checks for `acceptance_datetime_found`, `reportDate` consistency, and 8‑K item validation.  6. **Submit a PR** to the `q218_q221_historical_source_census.py` module with the patch and the test suite.  7. **Update the candidate contract** (`research/candidates/orthogonal_candidate_specs_2026-10-05.json`) to include a new gate “pairing‑validation‑check” that requires the census to pass all falsifiers.  8. **Schedule a review** of the updated contract with the governance team. |\n| **5. Uncertainty** | • The current census code is incomplete in the repository snapshot; the full implementation may contain additional safeguards not visible here.  <br>• The SEC API may return additional metadata that could influence pairing; the falsifiers assume the minimal fields present in the snapshot.  <br>• The mapping of tickers to CIKs is considered frozen for the trial, but any future drift would need to be captured by the *historical archive* gate, which is outside the scope of this review.  <br>• The semantic wedge collapse test relies on the assumption that the census does not inspect filing content beyond form type; if future versions add content checks, the falsifier may no longer trigger.  |\n\n--- \n\n**End of Handoff**",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-29T12:51:09.390381Z",
-    "blocked_until_utc": "2026-10-29T13:51:09.390381Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6721, Requested 5405. Please try again in 30.945s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-587d8db4-8e56-48c3-8205-4039f333bad1",
+  "usage": {
+    "queue_time": 0.073017614,
+    "prompt_tokens": 5065,
+    "prompt_time": 0.31263961,
+    "completion_tokens": 2464,
+    "completion_time": 2.698528223,
+    "total_tokens": 7529,
+    "total_time": 3.011167833,
+    "completion_tokens_details": {
+      "reasoning_tokens": 748
+    }
   }
 }\n
