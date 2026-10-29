@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
   "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
-  "observed_at_utc": "2026-10-29T12:51:08.603017Z",
+  "observed_at_utc": "2026-10-29T22:41:10.925356Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 4.713,
-  "stdout": "**Worker Handoff – Q219 Options‑Source Breadth Gate Review**\n\n| Section | Summary |\n|---------|---------|\n| **Findings** | • **SEC Acceptance Clock** – The Q129 contract specifies an `observation_date_field` but does not expose the SEC acceptance timestamp. The Q219 script never checks that the options snapshot (4 PM ET) occurs after the filing’s acceptance, leaving a potential same‑session leakage. <br>• **Option EOD Timestamp Semantics** – Options data are 4 PM ET snapshots; the script assumes this is the “observation” time but does not verify that this time is consistent with the filing’s acceptance time or that the snapshot is truly end‑of‑day for the relevant market. <br>• **Same‑Session Leakage** – No logic ensures that the options snapshot date is at least one trading day after the filing date. If the snapshot is taken on the same day, the wedge may not be orthogonal. <br>• **Q129 Source Release & Contract** – The contract claims `SOURCE_FEASIBILITY_COMPLETED_INDEPENDENT_PIT_REPRODUCED`, yet the Q219 script only checks file size & SHA‑256. It does not confirm that every asset listed in the contract is present, that the `release_id` matches the contract, or that the preservation mirror is byte‑identical. <br>• **Option Contract/Calendar Roll Effects** – The dataset contains only SPY, QQQ, IWM options; the script does not verify that all expirations within the contract’s date range are present, nor does it check that roll dates are handled consistently across assets. <br>• **Stale/Absent Implied‑Volatility Fields** – The `inspect_parquet`/`inspect` helpers only require the 10 mandatory columns; implied‑volatility columns are not checked, yet many downstream models rely on IV. <br>• **Event‑Window Definition** – The wedge’s event window is not explicitly defined in the contract or script. The script merely counts assets; it does not enforce a window relative to filing or options snapshot. <br>• **Cross‑Market Wedge Value** – The script does not demonstrate that the options data adds information beyond the filing change or the options‑only state; it merely reports breadth. |\n| **Counter‑Arguments** | • The Q219 script is intentionally minimal; additional checks can be added later. <br>• The assumption that options data is independent of filing may hold if the snapshot is taken after the filing’s acceptance. |\n| **Minimal Deterministic Falsifiers** | 1. **Asset‑Integrity Test** – Download the Q129 release, verify that every asset listed in the contract exists, matches the expected size and SHA‑256, and that the `release_id` in the GitHub API matches the contract’s `release_id`. <br>2. **Timestamp Alignment Test** – For a sample filing, compare the SEC acceptance timestamp (from the filing header) with the options snapshot timestamp (4 PM ET). Flag if the snapshot ≤ acceptance. <br>3. **Implied‑Volatility Presence Test** – Inspect each options parquet file; if any of the columns `implied_volatility`, `iv`, or similar are missing, flag. <br>4. **Expiration Coverage Test** – For each underlying, enumerate all expirations in the contract’s date range; flag if any expiration is absent from the dataset. <br>5. **Same‑Session Leakage Test** – For a sample filing, ensure the options snapshot date is at least one trading day after the filing date. <br>6. **Broad‑Source Flag Test** – Verify that the script correctly sets `q129_is_broad_individual_equity_option_source` when at least one underlying is not SPY, QQQ, or IWM. |\n| **Missing Artifacts** | • Immutable, dated snapshot of the Q129 release assets (file list, sizes, hashes). <br>• Explicit mapping of SEC acceptance timestamps for the filings used in the wedge. <br>• Documentation of the event‑window definition (start, end relative to filing/acceptance). <br>• Metadata of implied‑volatility columns in the options dataset (names, types). <br>• Calendar roll schedule for options expirations (roll dates, contract months). |\n| **Concrete Next Actions** | 1. **Request & Verify Snapshot** – Obtain a byte‑identical snapshot of the Q129 release assets",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.338,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5205, Requested 5621. Please try again in 21.195s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-88d30067-fd40-4d1c-b8b2-3244e09d2dc9",
-  "usage": {
-    "queue_time": 0.172114496,
-    "prompt_tokens": 5378,
-    "prompt_time": 0.36808748,
-    "completion_tokens": 3200,
-    "completion_time": 3.947630717,
-    "total_tokens": 8578,
-    "total_time": 4.315718197,
-    "completion_tokens_details": {
-      "reasoning_tokens": 2249
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-29T22:41:11.263383Z",
+    "blocked_until_utc": "2026-10-29T23:41:11.263383Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5205, Requested 5621. Please try again in 21.195s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
