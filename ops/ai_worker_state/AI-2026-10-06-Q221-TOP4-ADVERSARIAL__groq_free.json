@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "fca22e97174fa0dd40fa39fc32008874634bbf1ba71fb19e2e9e0c18592fd46d",
-  "observed_at_utc": "2026-10-30T12:42:33.777174Z",
+  "observed_at_utc": "2026-10-30T22:13:47.168471Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 2.845,
-  "stdout": "**Worker Handoff – Q221 USAspending Clock & Data‑Integrity Review**\n\n| Section | Content |\n|---------|---------|\n| **Findings** | 1. **Clock source** – The `About‑the‑Data` PDF is used as the public‑observation clock, but the code only checks for the presence of key phrases; it does **not** verify the PDF’s publication timestamp or its version history.  <br>2. **Award vs. Modification semantics** – No parsing of the award or modification fields is performed; the gate merely flags the presence of the words “AWARD” or “MODIFICATION” in the PDF text.  <br>3. **Transaction history** – The gate never retrieves or validates any transaction records; the `transaction_class_clock_boundaries_verified` flag is hard‑coded `False`.  <br>4. **R&D classification** – No check of R&D‑specific award codes (e.g., “R&D” in the `awardTypeCode` or `productCode`) is implemented.  <br>5. **Competition fields & PSC stability** – The code does not examine `competitionTypeCode` or `productServiceCode` changes over time.  <br>6. **Recipient‑to‑Issuer mapping** – No mapping table is loaded or verified; the flag `recipient_to_issuer_mapping_verified` remains `False`.  <br>7. **Parent/Subsidiary changes** – Corporate lineage is not queried; the gate cannot detect a recipient that has changed parent or status during the historical window.  <br>8. **Pre‑event capability proxies** – No pre‑event data (e.g., `awardPeriodStartDate` vs. `awardPeriodEndDate`) is examined.  <br>9. **Risk of future production contracts leaking into the historical prefix** – The gate does not enforce any data‑retention or versioning policy; a later‑published contract could overwrite or be appended to the historical dataset without detection. |\n| **Counterarguments** | • The current gate satisfies the *design‑only* requirement: it does not rank, tune, or promote any candidate.  <br>• The hard‑coded `False` flags for historical applicability and boundary verification are intentional placeholders pending further implementation.  <br>• The use of the About‑the‑Data PDF as a clock is a *candidate* clock; the gate acknowledges that historical applicability is not proven (`historical_applicability_proven: False`). |\n| **Concrete Next Actions** | 1. **Acquire immutable historical artifacts**:<br>   - Download the *exact* About‑the‑Data PDF that was published on the first day of the historical window (e.g., 2025‑01‑01).  <br>   - Store the PDF in a versioned, immutable artifact repository (e.g., Git LFS or a dedicated artifact store) with a SHA‑256 fingerprint.  <br>   - Record the PDF’s `Last‑Modified` header and any embedded metadata timestamps.  <br>2. **Implement deterministic falsifiers**:<br>   - **Award‑vs‑Modification test**: fetch a known award record (e.g., award ID `AWD_12345`) and its subsequent modification record; assert that the modification’s `modificationDate` > award’s `awardDate`.  <br>   - **Transaction class delay test**: retrieve a transaction of class “FPDS” that historically had a 30‑day publication delay; verify that the `transactionDate` is at least 30 days after the `awardDate`.  <br>   - **PSC stability test**: query the PSC change log for a code that changed in 2024; confirm that the code’s definition in the historical window matches the version used in the dataset.  <br>   - **Recipient‑to‑Issuer mapping test**: load the official recipient‑to‑issuer mapping table; assert that every recipient in the historical dataset maps to a valid issuer and that no mapping changes occurred during the window.  <br>   - **Parent/subsidiary lineage test**: use the SEC corporate lineage API to confirm that a recipient’s parent did not change between award and modification dates.  <br>   - **Pre‑event capability test**: compare `awardPeriodStartDate` and `awardPeriodEndDate` against the award’s `awardDate` to ensure no pre‑event data is present.  <br>3. **Update the gate code** to perform the above checks and set the corresponding flags (`historical_applicability_proven`, `transaction_class_clock_boundaries_verified`, etc.) based on deterministic outcomes.  <br>4. **Document missing artifacts**: create a checklist of required artifacts (PDFs, API responses, mapping tables, PSC logs, corporate lineage snapshots) and store them in the repository under `docs/qa_artifacts/`.  <br>5. **Schedule a review**: once the artifacts are in place and the gate is updated, run the gate against the historical window and capture the output for audit. |\n| **Uncertainty** | • The exact publication date of the About‑the‑Data PDF for the historical window is unknown; without an archived copy, the clock cannot be proven.  <br>• The availability of award‑modification pairs and transaction logs for the historical period may be limited; if missing, falsifiers cannot be executed.  <br>• PSC and R&D classification change logs are not publicly versioned; assumptions about stability may be invalid.  <br>• Corporate lineage data may not be fully captured for all recipients, especially for entities that have been delisted or merged.  <br>• The risk of future production contracts leaking into the historical prefix depends on the data‑retention policy of the USAspending API, which is not documented in the current artifact set. |\n\n**Summary**  \nThe current Q221 gate is a *placeholder* that does not yet provide deterministic evidence of historical applicability. The next steps involve acquiring immutable historical artifacts, implementing concrete falsifiers for each of the identified gaps, and updating the gate to set the appropriate flags. This will expose any failure modes in the clock contract and ensure that the candidate’s public‑observation timing is truly verifiable.",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.416,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5443, Requested 5611. Please try again in 22.904999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-5a84fa24-e14d-4fee-b592-570a16fe97cb",
-  "usage": {
-    "queue_time": 0.243254656,
-    "prompt_tokens": 5070,
-    "prompt_time": 0.34730613,
-    "completion_tokens": 1897,
-    "completion_time": 2.082603805,
-    "total_tokens": 6967,
-    "total_time": 2.429909935,
-    "completion_tokens_details": {
-      "reasoning_tokens": 573
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-30T22:13:47.584468Z",
+    "blocked_until_utc": "2026-10-30T23:13:47.584468Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5443, Requested 5611. Please try again in 22.904999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
