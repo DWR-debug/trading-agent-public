@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-30T06:26:11.357695Z",
+  "observed_at_utc": "2026-10-30T13:33:40.139089Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 25.697,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 28.564,
+  "stdout": "**Findings**  \n- **Q194, Q195, Q196, Q199, Q201** – receipt `q193_q196_source_feasibility_latest.json` classifies as **PROVISIONAL_LIVE_PROBE_ONLY** (no durable historical binding). Missing: an immutable dated snapshot (e.g., archived receipt with `immutable_historical_snapshot` or `snapshot_sha256` matching the receipt fingerprint).  \n- **Q197** – receipt `q197_q198_source_feasibility_latest.json` classifies as **PROVISIONAL_LIVE_PROBE_ONLY**. Missing: a dated, immutable snapshot of the shortage‑state record (e.g., published shortage notice with verified timestamp/hash).  \n- **Q198** – receipt `q198_pit_clock_census_latest.json`; durability unknown. Missing: frozen pre‑event exposure mapping and the census run fingerprint (`archive_fingerprint`) that must be bound in the receipt.  \n- **Q202, Q203, Q204** – receipt `q202_q204_information_timing_feasibility_latest.json` classifies as **PROVISIONAL_LIVE_PROBE_ONLY**. Missing: an immutable historical snapshot of the public‑observation timestamps (e.g., SEC filing arrival dates) with a matching `historical_snapshot_sha256`.  \n- **Q229, Q230** – receipt `q229_q230_source_feasibility_latest.json` classifies as **PROVISIONAL_LIVE_PROBE_ONLY**. Missing: a dated, immutable snapshot of the NLRB labor‑representation certification filing (e.g., certified filing PDF with timestamp and SHA256) bound in the receipt.  \n\n**Counterarguments / Sources of Uncertainty**  \n- The classification relies on the `source_readiness_snapshot_guard.py` logic; without direct inspection of the actual receipt JSON files we cannot confirm the presence of durable keys (`immutable_historical_snapshot`, `snapshot_sha256`, etc.).  \n- Because multiple candidates share the same receipt file, a single missing artifact invalidates several candidates simultaneously, amplifying risk.  \n- The adversarial review assumes the receipt files exist and are readable; any discrepancy in file paths or naming could affect the assessment.  \n\n**Concrete Next Actions**  \n1. **Q194, Q195, Q196, Q199, Q201** – Obtain an immutable dated receipt (e.g., an archived version with explicit timestamp) that includes a `snapshot_sha256` (or `immutable_historical_snapshot`) matching the current receipt fingerprint. If such a file is unavailable, the candidate remains **BLOCKED_SOURCE_COMPONENTS**.  \n2. **Q197** – Request a dated, immutable",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1793367220-tNQi62URqVnzvDr7JbHQ",
+  "usage": {
+    "prompt_tokens": 6004,
+    "completion_tokens": 3200,
+    "total_tokens": 9204,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2530,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
