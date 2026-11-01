@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-31T21:51:36.417273Z",
+  "observed_at_utc": "2026-11-01T06:50:09.521137Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 36.84,
-  "stdout": "\n\n**Worker Handoff — Adversarial Source/PIT Review (Q202‑Q204, Q205)**\n\n---\n\n### 1. Findings\n\n| Candidate | Source/PIT Status | Key Vulnerability |\n|-----------|-------------------|-------------------|\n| **Q202‑Q204** (information‑timing family) | `PROVISIONAL_LIVE_PROBE_ONLY` — receipt exists but **no immutable dated snapshot** bound | All source‑readiness claims rest on a current endpoint probe. No frozen historical artifact anchors the event clock, revision lineage, or entity/exposure mappings. |\n| **Q205** (NLRB labor‑representation certification) | `DISCOVERY_ONLY` — **no source feasibility receipt** | Channel has not been demonstrated to be accessible, historically deep, or free from retrospective revision. No PIT validation possible. |\n\n**Specific attacks:**\n\n1. **Current‑endpoint drift** — The Q202‑Q204 receipt is classified as provisional because it lacks a durable binding. Any live probe is subject to drift, format changes, or outright withdrawal. A PIT trial run today would inherit whatever state the source happens to be in, not the state that would have been observable at the historical event times.\n2. **Historical observation timestamps** — Without a frozen snapshot, there is no way to verify that the public‑observation timestamps used for the event clock are immutable. Information‑timing candidates are exquisitely sensitive to whether the clock is the *dissemination* time or an *occurrence* time; the receipt does not settle this.\n3. **Revision/amendment/correction lineage** — The source data (likely SEC filings or similar) is known to have amendments and corrections. The receipt does not document the lineage of the data that would be fed into a PIT trial, so there is no guarantee that the data used would be the same as the data that was historically available.\n4. **Frozen pre‑event entity/exposure mappings** — The candidate contract requires “frozen before outcome observation” mapping. Without an immutable snapshot, the mapping cannot be frozen; any change in the source’s entity identifiers or coverage would introduce look‑ahead bias.\n5. **Same‑day/date‑only leakage** — The decision boundary says “if only a date is available, use next regular trading‑session boundary.” But the receipt provides no evidence that the candidate’s compiler actually respects this rule, because the compiler’s input data is not frozen.\n6. **Cross‑candidate overlap/confounding** — Q202‑Q204 share the information‑timing family with Q194‑Q201, which already underwent adversarial review. If the same underlying source (e.g., SEC EDGAR) is reused, the confounding is immediate and the “orthogonal” claim is weakened. The candidate specs for Q202‑Q204 are not present in the supplied context, so the overlap cannot be ruled out.\n7. **Synthetic mutation tests** — The next‑gate compiler (`orthogonal_pit_next_gate.py`) blocks Q202‑Q204 at `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`. Without the snapshot, any mutation test (e.g., shifting event times, shuffling exposures) would be run against a mutable dataset, making the test non‑reproducible and its results untrustworthy.\n\n**Q205 specific:**  \n",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 35.614,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1793483496-A0wWRaJh401zDXnWW1Jn",
-  "usage": {
-    "prompt_tokens": 5563,
-    "completion_tokens": 3200,
-    "total_tokens": 8763,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 2702,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
