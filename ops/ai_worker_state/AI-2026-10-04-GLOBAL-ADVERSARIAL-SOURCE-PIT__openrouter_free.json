@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-01T18:06:27.060642Z",
+  "observed_at_utc": "2026-11-01T22:25:33.558109Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 31.231,
-  "stdout": "**AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT**  \n**Adversarial Methods Reviewer Handoff**\n\n---\n### Reviewer Concern\nSource-feasibility readiness for the Q202–Q204 information-timing family and the Q205 NLRB labor-representation channel is **provisional** under the system's own durability guard. No receipt in the active receipt set binds these candidates to an immutable dated snapshot/vintage or explicitly frozen historical artifact. Current endpoint probes, content hashes, or documentation page references are not durable historical PIT proof.\n\n---\n### Adversarial Attack Vectors Applied\n1. **Current-endpoint drift**: Live API/EDGAR/NCURSOR probes for Q202–Q204/Q205 would reflect today's state, not the historical observation state required for PIT. Retrospective source-readiness changes between event date and probe date invalidate binding.\n2. **Historical observation/publication timestamps**: Q202–Q204 information-timing claims rely on event clocks (filing-date, disclosure-time, announcement-time). Without a frozen pre-event snapshot, the observed timestamp is mutable; EDGER header vs. SUBMISSION.FILING_DATE discrepancies (documented in Q13F bulk readme) exemplify the class of confound.\n3. **Revision/amendment/correction/QC/prosecution lineage**: NLRB certification channels have amendment/prosecution timelines that can alter the certified-entity mapping long after the event. No frozen pre-event entity/exposure mapping is present for Q205.\n4. **Frozen pre-event entity/exposure mappings**: Q202–Q204 exposure mappings (issuer/entity, product/graph) are not byte-identified against a pre-event archive. Mapping drift between event filing and later source retrieval is unverified.\n5. **Same-day/date-only leakage**: If only a calendar date is available (no session boundary), next-trading-day boundary assignment leaks same-day information. The shared contract boundary rule (\"if only a date is available, use next regular trading-session boundary and do not infer an intraday clock\") is not yet applied or verified for Q202–Q204.\n6. **Cross-candidate overlap/confounding and convergence**: Q202–Q204 belong to the information-timing family; their source clocks may overlap with Q199–Q201 or Q194–Q197 mechanisms. Without independent frozen snapshots, cross-candidate confounding is indistinguishable from signal.\n7. **Synthetic mutation test validity in candidate-specific compilers**: Mutation tests (e.g., shifting event availability 1–5 sessions, shuffling exposure assignments) require a deterministic compiler frozen to the receipt's snapshot. Without a durable binding, the same mutation may produce opposite results in a revised compiler version.\n\n---\n### Findings\n- **Q202, Q203, Q204**: All classified by `orthogonal_pit_next_gate.py` as `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`. The receipt path `research/evidence/q202_q204_information_timing_feasibility_latest.json` is absent from the provided workspace; based on the source-readiness guard schema, these would be classified `PROVISIONAL_LIVE_PROBE_ONLY` unless they contain durable-binding keys (`immutable_historical_snapshot`, `snapshot_sha256`, `archive_fingerprint`, etc.).\n- **Q205 (NLRB labor-representation certification channel)**: Explicitly noted in task scope as \"discovery-only and not yet source/PIT validated.\" Not present in the current receipt set (`RECEIPTS` dict in the guard). No artifact exists to bind it to a historical snapshot. Classification would be `NON_SOURCE_READY_STATE` until a receipt with a durable historical binding is produced.\n- **Cross-family risk**: Q202–Q204 information-timing mechanisms share the orthogonal priority lane with Q199–Q201. Without independent frozen snapshots, convergence on similar timing claims cannot be attributed to distinct information clocks.\n\n---\n### Concrete Next Actions (Minimal Deterministic Falsifiers & Exact Missing Artifacts)\n| Candidate | Missing Artifact (Exact Path/Key) | Minimal Deterministic Falsifier |\n|-----------|-----------------------------------|----------------------------------|\n",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 36.088,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1793556387-RCbQbTedRiWY4LVEkBnI",
-  "usage": {
-    "prompt_tokens": 5998,
-    "completion_tokens": 3200,
-    "total_tokens": 9198,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 2239,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
