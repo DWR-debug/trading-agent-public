@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-11-01T02:05:43.918601Z",
+  "generated_at_utc": "2026-11-01T09:07:42.275461Z",
   "provider_availability": {
     "openrouter_free": {
       "eligible": true,
@@ -12,8 +12,8 @@
     },
     "gemini_api": {
       "eligible": false,
-      "next_available_at": "2026-11-01T07:00:00Z",
-      "next_reset_at": "2026-11-01T07:00:00Z",
+      "next_available_at": "2026-11-02T08:00:00Z",
+      "next_reset_at": "2026-11-02T08:00:00Z",
       "confidence": "exact_policy",
       "reason": "Gemini daily quota reset boundary is documented at midnight Pacific Time, but remaining balance is unknown; require live preflight before admission",
       "reserve_status": "preflight_required"
@@ -27,12 +27,12 @@
       "reserve_status": "preflight_required"
     },
     "copilot_free": {
-      "eligible": false,
-      "next_available_at": "2026-12-01T00:00:00Z",
+      "eligible": true,
+      "next_available_at": null,
       "next_reset_at": "2026-12-01T00:00:00Z",
       "confidence": "exact_policy",
-      "reason": "protected project Copilot reservation is exhausted",
-      "reserve_status": "reservation_exhausted"
+      "reason": "protected Copilot reservation budget has capacity",
+      "reserve_status": "reservation_available"
     },
     "gemini_cli": {
       "eligible": false,
@@ -84,5 +84,5 @@
   "policy_is_non_authorizing": true,
   "paid_usage_allowed": false,
   "scientific_evidence_created": false,
-  "decision_fingerprint": "41f7a1d01b02a986a66f3fa7f677e5dbbecccb29750cd701148bf8904286e4e9"
+  "decision_fingerprint": "84a73dd8eca749cacdbbf12d29c22527fbdd60319c69b3054fce43df1fd5c7ac"
 }
