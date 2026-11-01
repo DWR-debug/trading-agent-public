@@ -47,21 +47,21 @@
           "http_status": 200,
           "markers_present": true,
           "missing_markers": [],
-          "content_sha256": "58588b68947169f4e945908d857053309e53f18de3d2a847a5dc6cee97b825b9",
+          "content_sha256": "38a193ca093e291bc1d75fa7e62c03ed5368e6c36385d5cae4b2c1f2f1a3f724",
           "content_length_header": null,
-          "last_modified_header": "Sun, 01 Nov 2026 05:29:01 GMT"
+          "last_modified_header": "Sun, 01 Nov 2026 17:14:40 GMT"
         },
         "historical_archive_samples": [
           {
             "url": "https://static.nhtsa.gov/odi/ffdd/rcl/RCL_FROM_2020_2024.zip",
-            "http_status": 200,
+            "http_status": 206,
             "range_status_accepted": true,
-            "content_length_header": null,
-            "content_range": null,
-            "accept_ranges": null,
+            "content_length_header": "64",
+            "content_range": "bytes 0-63/4018704",
+            "accept_ranges": "bytes",
             "zip_magic_present": true,
-            "body_prefix_sha256": "d855167eaccd4e5000c37b57656e39b42f8fbe00c3f719a74c491d576234c195",
-            "body_bytes": 512,
+            "body_prefix_sha256": "7f1d4681120179db547b123b381ea7653e77a6eab513c870f8fab4bf42a54050",
+            "body_bytes": 64,
             "content_type": "application/octet-stream"
           },
           {
@@ -72,7 +72,7 @@
             "content_range": null,
             "accept_ranges": null,
             "zip_magic_present": true,
-            "body_prefix_sha256": "e80dbdcbaac1843dd5e9f6628189b1c9b693e2a5fb5ba2d715234bb13c580b53",
+            "body_prefix_sha256": "f0517dd4bae8b9bfbe94de4f99b2d2472f094b2e6aaa3bcebd5f163cf633c418",
             "body_bytes": 512,
             "content_type": "application/octet-stream"
           }
@@ -90,7 +90,7 @@
           "http_status": 200,
           "markers_present": true,
           "missing_markers": [],
-          "content_sha256": "206dffde48faa7d09e863014f8106508fffa206f954f1bb1e21bd54f8bfe550c",
+          "content_sha256": "1ca032230f9125cc6c26c8c5de4b37d4bde863b95ef5784219b859f4f91f7550",
           "content_length_header": "115540",
           "last_modified_header": null
         },
@@ -112,8 +112,8 @@
               "issued by FERC",
               "Documents received and issued by FERC"
             ],
-            "content_sha256": "e30d6e497cbc19e17cf761a70a7f7efefca05c89dfe3b45881f341669c93013f",
-            "content_length_header": "5491",
+            "content_sha256": "087990ed440eef5929e069db2d969316fa742cf0b2355217a3f9030c79647b73",
+            "content_length_header": "5512",
             "last_modified_header": null
           },
           {
@@ -123,7 +123,7 @@
             "missing_markers": [
               "Documents received and issued by FERC"
             ],
-            "content_sha256": "cada69382a0a699391d7d4518411c0c2a892254055a134771b35e3e0e87fef9f",
+            "content_sha256": "bd7753ad8c081f2806f21af98fb1e7d046d3dbe06e78dbc56e7ef6b8bf4902a8",
             "content_length_header": "5793",
             "last_modified_header": null
           }
@@ -142,7 +142,7 @@
           "http_status": 200,
           "markers_present": true,
           "missing_markers": [],
-          "content_sha256": "f0f674477b5d361fa714243c5383656f0dc227d40936d4bb99c97e6d805cac0e",
+          "content_sha256": "b45e0b03be7abead7666a3611079b2c12b397de4f4eee68383cfa0216cf41155",
           "content_length_header": null,
           "last_modified_header": "Tue, 27 Oct 2026 14:28:17 GMT"
         },
@@ -151,7 +151,7 @@
           "http_status": 200,
           "markers_present": true,
           "missing_markers": [],
-          "content_sha256": "58322467d0b52ae2a0679831c07b0cdfbba7fc89c82717c039bf0851bcf41d54",
+          "content_sha256": "b33251d8e6da4cbe1ae897a47c9ca87b69ca51c8e026402093356780d23f2475",
           "content_length_header": null,
           "last_modified_header": null
         },
@@ -159,11 +159,11 @@
           "url": "https://data.ntsb.gov/avdata/FileDirectory/DownloadFile?fileID=C%3A%5Cavdata%5Cavall.zip",
           "http_status": 200,
           "range_status_accepted": true,
-          "content_length_header": "96583215",
+          "content_length_header": "97140358",
           "content_range": null,
           "accept_ranges": null,
           "zip_magic_present": true,
-          "body_prefix_sha256": "52157f3edfa43c00bf0da808c6f837dcdbec69526b99a0ddb0a1788df483684c",
+          "body_prefix_sha256": "dffd3dfb058ea030540262508d55844c7c9238cf9b45361b210626be1134955a",
           "body_bytes": 512,
           "content_type": "application/octet-stream"
         },
@@ -180,7 +180,7 @@
           "http_status": 200,
           "markers_present": true,
           "missing_markers": [],
-          "content_sha256": "5580d3d60b7fe827a2f785466eea2bacefd416303feb16b9ae0287e563dc1cd1",
+          "content_sha256": "c057f7107826057ae707880f3c35392298c277d2ee4432c75617951315a4ae12",
           "content_length_header": null,
           "last_modified_header": null
         },
@@ -221,5 +221,5 @@
     "ORDERS_ENABLED": false,
     "AUTOMATIC_PROMOTION": false
   },
-  "receipt_fingerprint": "fac65724670fe6363142ff8fc64d19d9f00c87f585270f41b38df47794ed7327"
+  "receipt_fingerprint": "22a8bbe2325d990bdafd612c81e3da990fb565c22feb023df787f20a1d96b286"
 }
