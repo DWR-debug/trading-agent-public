@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "fca22e97174fa0dd40fa39fc32008874634bbf1ba71fb19e2e9e0c18592fd46d",
-  "observed_at_utc": "2026-11-02T05:50:53.965304Z",
+  "observed_at_utc": "2026-11-02T15:36:48.892527Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 4.149,
-  "stdout": "**Q221 USAspending Clock‑Gate Review – Worker Handoff**\n\n| Section | Summary |\n|---------|---------|\n| **Findings** | • The current gate only verifies the presence of key phrases in the *About‑the‑Data* PDF and the API docs; it does **not** confirm actual publication timestamps or data availability.<br>• No checks are performed for award‑vs‑modification semantics, transaction history, R&D classification, competition fields, PSC stability, recipient‑to‑issuer mapping, parent/subsidiary changes, or pre‑event capability proxies.<br>• The gate sets `historical_applicability_proven`, `historical_boundary_verified`, and `transaction_class_clock_boundaries_verified` to `False`, yet it still reports `source_clock_contract_ready` as `True` if all phrase checks pass.<br>• The gate uses a live HTTP fetch of the PDF and API docs; no immutable snapshot is stored, so the contract’s historical applicability is unverified.<br>• The code does not differentiate between transaction classes (e.g., award, modification, contract, subaward) when checking publication timing. |\n| **Counterarguments** | • Relying solely on textual presence of phrases is insufficient to prove that the data for *each* transaction class was actually published on the claimed day.<br>• The “publication following morning” phrase may apply only to certain transaction types; the gate does not isolate or test each class.<br>• Award‑vs‑modification semantics are not validated; the PDF may describe one but not the other, yet the gate treats them equivalently.<br>• PSC codes and R&D classifications are dynamic; without a snapshot, the gate cannot confirm that the codes used in the historical data match the current definitions.<br>• Recipient‑to‑issuer mapping and parent/subsidiary relationships can change over time; the gate does not verify that the historical data uses the correct mapping for the period in question.<br>• Future production contracts that are dated after the historical period could be inadvertently included in the historical prefix if the gate does not check for date boundaries. |\n| **Minimal Deterministic Falsifiers** | 1. **Phrase‑level falsifier** – Download the *About‑the‑Data* PDF and search for the exact phrase “publication following morning” **for each transaction class** (award, modification, contract, subaward). If any class lacks the phrase, the gate fails.<br>2. **Timestamp falsifier** – Retrieve a sample transaction record for each class via the API, parse its `publication_date` field, and compare it to the claimed publication day. A mismatch invalidates the clock.<br>3. **Award‑vs‑Modification falsifier** – Fetch the award page and the modification page for a known contract; verify that the semantics (e.g., `award_id` vs `modification_id`) are distinct and correctly represented.<br>4. **PSC stability falsifier** – Download the PSC code list for the historical period and confirm that the codes used in the dataset are present and unchanged.<br>5. **Recipient‑to‑Issuer mapping falsifier** – Cross‑reference the recipient IDs in the historical data with the official mapping file for the same period; any discrepancy flags the gate.<br>6. **Parent/Subsidiary falsifier** – Verify that the parent company IDs in the dataset match the parent/subsidiary relationships recorded for the period.<br>7. **Pre‑event capability proxy falsifier** – Check that any pre‑event capability fields (e.g., `capability_id`) in the dataset correspond to a valid capability record dated before the event.<br>8. **Future contract leakage falsifier** – Scan the dataset for any contract dates beyond the historical end date; if found, the gate fails. |\n| **Missing Artifacts** | • **Immutable snapshot of the About‑the‑Data PDF** (date‑stamped, SHA‑256).<br>• **Immutable snapshot of the API documentation** (date‑stamped, SHA‑256).<br>• **Transaction class publication schedule** (official table mapping class → publication day).<br>• **Award‑vs‑modification semantics specification** (official schema).<br>• **R&D classification list** for the historical period.<br>• **Competition field list** for the historical period.<br>• **PSC code list** for the historical period.<br>• **Recipient‑to‑issuer mapping file** for the historical period.<br>• **Parent/subsidiary relationship file** for the historical period.<br>• **Pre‑event capability registry** for the historical period.<br>• **Historical boundary definition** (start/end dates, inclusive/exclusive). |\n| **Concrete Next Actions** | 1. **Snapshot Capture** – Download the current *About‑the‑Data* PDF and API docs, compute SHA‑256, and store in `docs/USASpending/2026-11-02/`. <br>2. **Phrase Extraction** – Run a script that extracts all occurrences of the target phrases per transaction class and outputs a CSV. <br>3. **API Sample Retrieval** – For each transaction class, fetch 10 sample records, parse publication dates, and compare to the claimed dates. <br>4. **Mapping Validation** – Obtain the official recipient‑to‑issuer and parent/subsidiary mapping files for the period and run a diff against the dataset. <br>5. **PSC & R&D Check** – Download the PSC and R&D classification lists for the period and verify that all codes in the dataset are present. <br>6. **Boundary Scan** – Run a query against the dataset to flag any contract dates beyond the historical end date. <br>7. **Report Generation** – Compile a report summarizing pass/fail for each falsifier, including evidence hashes. <br>8. **Gate Update** – Modify the gate to require all falsifiers to pass before setting `source_clock_contract_ready` to `True`. |\n| **Uncertainty** | • The exact definition of “publication following morning” may vary by transaction class; the PDF may not explicitly state this for all classes.<br>• The API may return data that is delayed or back‑filled; distinguishing between true publication time and API latency is non‑trivial.<br>• Mapping files (recipient‑to‑issuer, parent/subsidiary) may have multiple versions; determining the correct historical version requires authoritative source confirmation.<br>• PSC and R&D classification lists may have been updated after the historical period; ensuring that the dataset uses the correct version is essential but may be difficult if the dataset does not include version metadata.<br>• The gate currently treats the presence of phrases as sufficient; without timestamp verification, there remains a risk of false positives. |\n\n*No performance, ranking, tuning, holdout, or promotion decisions are made or implied.*",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.169,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6035, Requested 5388. Please try again in 25.6725s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-8a450810-36ef-4981-9796-a2794196fd1f",
-  "usage": {
-    "queue_time": 0.172150059,
-    "prompt_tokens": 5071,
-    "prompt_time": 0.308893983,
-    "completion_tokens": 3117,
-    "completion_time": 3.524551324,
-    "total_tokens": 8188,
-    "total_time": 3.833445307,
-    "completion_tokens_details": {
-      "reasoning_tokens": 1659
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-02T15:36:49.061657Z",
+    "blocked_until_utc": "2026-11-02T16:36:49.061657Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6035, Requested 5388. Please try again in 25.6725s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
