@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-01T22:25:33.558109Z",
+  "observed_at_utc": "2026-11-02T06:48:57.273284Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 36.088,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 41.11,
+  "stdout": "\n\n**Adversarial Review Handoff: Q202‑Q204 & Q205 Source/PIT Readiness**  \n*Worker material only. Not scientific evidence. No performance, promotion, or live execution.*\n\n---\n\n### Findings\n\n1. **Q202‑Q204 (information‑timing family)**  \n   - The next‑gate compiler marks all three as `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`. The shared evidence file `q202_q204_information_timing_feasibility_latest.json` is therefore **provocational live‑probe only** unless it contains a durable binding key (`immutable_historical_snapshot`, `snapshot_sha256`, etc.).  \n   - **Clock‑discipline risk**: The candidate contract says “if only a date is available, use next regular trading‑session boundary and do not infer an intraday clock.” However, the feasibility receipt may have been built from current EDGAR/XBRL endpoints that can change format, timestamp granularity, or even historical data (e.g., EDGAR’s 2023 Filing‑Date format change). Without a frozen snapshot, any retrospective source drift directly alters the inferred public‑observation boundary.  \n   - **Same‑day leakage**: If the candidate uses the EDGAR `<FILING‑DATE>` as the event clock, it may conflate the *occurrence* date with the *public‑observation* date. The CURRENT_STATUS.md already notes a 1‑day discrepancy between SUBMISSION.FILING_DATE and the EDGAR header date for 13F samples; this is an unresolved cross‑publication conflict. A candidate that relies on a single date field is vulnerable to leakage.  \n   - **Cross‑candidate overlap**: Q202‑Q204 share the SEC filing‑arrival source class with Q194‑Q201. The orthogonal‑search rule requires a minimum novelty distance of 0.8. Unless Q202‑Q204 introduce a genuinely different economic mechanism (e.g., financing transmission vs. therapeutic substitution), they may violate the anti‑convergence rule. The current compiler does not check this.\n\n2. **Q205 (NLRB labor‑representation certification channel)**  \n   - **Discovery‑only, no source/PIT validation**. It does not appear in the source‑readiness guard’s `RECEIPTS` map or the next‑gate compiler’s candidate list.  \n   - **Revision lineage risk**: NLRB certification decisions can be amended, appealed, or vacated. A historical snapshot taken today may reflect later amendments, destroying the pre‑event exposure mapping.  \n   - **Public‑observation boundary ambiguity**: The “date of decision” is not necessarily the date the information becomes publicly observable. Docket entries, press releases, or regional‑office bulletins may lag. Without a frozen mapping of decision‑date → public‑observation timestamp, the event clock is undefended.  \n   - **Entity‑mapping fragility**: The employer named in a certification may restructure before the outcome is observed. A frozen pre‑event mapping is required, but the discovery phase has not yet produced one.\n\n3. **Systemic gaps**  \n   - The `source_readiness_snapshot_guard.py` only checks for the",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1793602137-CjvNk97Z10B8K4EYYOoV",
+  "usage": {
+    "prompt_tokens": 5562,
+    "completion_tokens": 3200,
+    "total_tokens": 8762,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2769,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
