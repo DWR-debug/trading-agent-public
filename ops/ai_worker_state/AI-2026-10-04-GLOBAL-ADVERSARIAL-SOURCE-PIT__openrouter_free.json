@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-03T07:14:45.254291Z",
+  "observed_at_utc": "2026-11-03T19:50:04.466677Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 40.431,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 25.989,
+  "stdout": "**Findings**  \n- **Q202‑Q204** – The only source‑feasibility artifact listed is `research/evidence/q202_q204_information_timing_feasibility_latest.json`. The guard classifies a receipt as *DURABLE_HISTORICAL_BOUND* only if it contains one of the durable keys (e.g., `immutable_historical_snapshot`, `dated_snapshot`, `snapshot_sha256`, etc.). The excerpt of the file is not provided, so we cannot confirm the presence of any such key. Consequently, the current status is *PROVISIONAL_LIVE_PROBE_ONLY* unless an immutable dated snapshot or vintage hash is attached.  \n- **Q205 (NLRB labor‑representation certification)** – No receipt entry exists in the `RECEIPTS` map, and the scope notes that Q205 is “discovery‑only and not yet source/PIT validated.” Hence source‑feasibility readiness is *unknown* and effectively *non‑existent* until a frozen historical artifact is supplied.  \n- **Cross‑candidate overlap** – Q202, Q203, and Q204 all point to the same receipt file, creating a potential confounding of distinct information‑timing mechanisms. The frontier requires frozen pre‑event entity/exposure mappings; sharing a single receipt without explicit, candidate‑specific frozen mappings violates this requirement.  \n- **Public‑observation clock** – The candidate specifications (not shown) must tie the event clock to an immutable historical snapshot rather than a live endpoint. No evidence in the supplied context shows that the clock for Q202‑Q204 is bound to a dated, immutable artifact; the default assumption is a live probe, which is prohibited as durable evidence.  \n\n**Counterarguments**  \n- *Missing content inspection*: One could argue that the receipt file may already contain the required durable keys, and the guard’s classification would be inaccurate without reading the file. This is a factual gap; the guard’s logic is deterministic and must be verified by actually reading the file.  \n- *Future artifact availability*: It may be claimed that a dated snapshot will be generated later, making the current provisional status acceptable. The adversarial standard requires *immediate* durability; provisional status cannot be remedied retroactively without an explicit frozen artifact.  \n- *Single receipt for multiple candidates*: The overlap could be defended as a design choice to reduce duplication. However, the orthogonal frontier mandates distinct frozen mappings per candidate; conflating them introduces confounding that must be resolved, not accepted.  \n\n**Concrete Next Actions**  \n1. **Inspect durability** – Retrieve `research/evidence/q202_q204_information_timing_feasibility_latest.json` and run the `classify` function from `automation/source_readiness_snapshot_guard.py`.  \n   - *Minimal deterministic falsifier*: Presence of",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1793735404-qxgfJQtqVvIyyhStPbcO",
+  "usage": {
+    "prompt_tokens": 5999,
+    "completion_tokens": 3200,
+    "total_tokens": 9199,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2555,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
