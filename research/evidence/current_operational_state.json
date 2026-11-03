@@ -1501,7 +1501,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-11-03T16:44:22.897875+00:00",
+    "generated_at_utc": "2026-11-03T22:03:33.210885+00:00",
     "next_research_focus": "Active execution focus is locked to exactly three candidates: Q104:I19, Q220 and Q221. Q104:I22 has a positive independent PIT receipt but remains a separate, non-dispatched mechanism-signature and non-overlap review; this does not authorize performance. Q104:I19: PR #1351 merged the strict raw SEC SGML header parser fix after the index-header versus .hdr.sgml format mismatch; both CI architectures and full-suite verification passed on its tested revision. Frozen census run #38168441086 is terminal; repair run #38231636160 reported 7,452 repaired/25 unresolved but undercounted residual accessions. Incremental run #38250105408 reused the exact six prior repaired-shard fingerprints and reports 53 unique unresolved accession keys, zero new attempts and zero repairs across 17 SEC archives (43 CIK/form/filing-date conflicts; 10 SEC_COMPLETE_SUBMISSION_HTTP_404). PR #1363 is merged (3c0f084405b3ccc293c16dd9f0bd5affa53d3ac1): it fixes recovery-receipt accounting without relaxing identity rules. Read-only residual lineage run #38255701998 completed LINEAGE_DIAGNOSTIC_COMPLETE (receipt c0881b295d37fa34925103b30acbb893a78bbbe230af6e637576dfda4fac86f7): 4/4 frozen accessions, 12/12 SEC header probes, both source ZIPs byte-identical to the original receipt pins, 91,535,030 aggregate bytes under the 150 MB cap. In all four samples accession, filer CIK and form agree across sources, but the SEC 13F bulk SUBMISSION.FILING_DATE differs from the EDGAR header date by one calendar/business day: 2015-02-18 vs 2015-02-17 in two samples and 2020-08-10 vs 2020-08-07 in two. The acceptance timestamps are present and consistent across all three header routes. SEC's own 13F data-set readme warns the extracted data may contain discrepancies with other publication formats and is not a substitute for the full filing; EDGAR's PDS specification identifies <FILING-DATE> as the assigned official filing date. Treat this as an unresolved cross-publication source-field conflict, not a license for date arithmetic or a blanket override. Keep all 53 residuals and historical/acceptance-time gates closed; do not repair the receipts or restart the census. R4 run #38574180245 (receipt 8be8fd68de0324a331d2b587a540b605ac5c6e9a71ec203fa9d2fc089450fb3c) added one separately pinned 2017 Q2 case: bulk filing date 2017-05-31 versus EDGAR header date 2017-04-21; acceptance 2017-05-31T14:33:43; DATE-OF-FILING-DATE-CHANGE 2017-06-01 appeared on index and raw-SGML routes but was absent from the bounded complete-submission header prefix. The archive matched its frozen hash and byte-length pins, and all three routes agreed on accession, CIK and form. This single preselected diagnostic does not change the immutable 14-row aggregate, establish prevalence or first-public time, choose production precedence, repair a receipt, or clear a gate. Continue source/PIT-only work only on additional frozen inputs that offer new information; do not restart the census. R5 run #38582684174 (receipt 3d9bc88c1f43e4efac88e4528d5ac2c4b6a017beccdbe2e0e821ff150b7cd8a5) added accession 0000950123-15-003183 from the already represented 2015 Q1 archive: frozen bulk filing date 2015-02-18 versus EDGAR header date 2015-02-17; acceptance 2015-02-17T18:51:10 agrees across all three routes; DATE-OF-FILING-DATE-CHANGE 2015-02-20 appears on index and raw-SGML routes but not the bounded complete-submission prefix. The archive matched the frozen 42,434,965-byte/SHA-256 pin and all 3/3 routes completed under the 50 MB cap. R5 is a distinct row, not a new archive vintage; it does not change the immutable 14-row aggregate, establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. R6 run #38588100012 (receipt 5571f2a8c496d32583b4b7a6bd5d6fee71533e889a5e75b434d1d84031c59522; artifact 11905763813) added accession 0000950123-13-006989 from a separately pinned 2013 Q3 archive (36,457,022 bytes; SHA-256 aa20c79d552722cb7bae8cefe3e63cd61a0929a4d5234c0b5d9ce1c75309a616). Bulk filing date 2013-08-15 differs from EDGAR header date 2013-08-14; acceptance 2013-08-14T21:51:40 is consistent across the two successful header routes; DATE-OF-FILING-DATE-CHANGE 2013-08-26 appears on raw SGML but not the bounded complete-submission header prefix; the index-header route returned HTTP 404. The original census HTTP 503 and later recovery FILING_DATE_MISMATCH remain separate pinned states. Total downloaded bytes were 36,466,001 under the 40 MB cap. R6 is an additional diagnostic row, not a modification of the immutable 14-row aggregate; it does not establish prevalence/first-public time, choose production precedence, repair receipts, or clear a gate. Keep all 53 residuals and historical/acceptance-time gates closed. The frozen concept-specific PIT compiler/independent reproduction remains closed for the full residual set: the 36 verified date-mismatch rows are admissible only for a non-destructive sidecar; seven identity-conflict and ten complete-submission HTTP 404 branches remain unresolved, and historical first-public/PIT timing is unproven. Q220 historical prefix/PIT compiler is BLOCKED: Current compiler receipt reports 55 primary-document hash mismatches. The independent reproduction references a different compiler fingerprint and is not current; it cannot reopen this gate. Next gate: repair source hash mismatches or reconcile TextBlock/presentation mapping gaps before independent reproduction; performance authorization remains closed. Current compiler receipt fingerprint 6384024655366e27a66208da2b7b40dfffd14c8211382347a88b18ce81e8f8d3.  Q220: original SEC daily Feed forensic run #38233685159 ended fail-closed with FORENSIC_COMPARISON_INCOMPLETE: 0/3 comparisons, 2,829,769,099 bytes downloaded, and no original submission member found. The source-path correction preserves the frozen receipt, population fingerprint, all 55 expected hashes and three preselected sample keys: the daily .nc.tar.gz member is accession.nc; .dissem is a distinct PDS subscriber naming convention. PR #1364 corrected the source path; PR #1366 corrected bounded HTTP streaming, separated the 150 MB outer .nc wrapper limit from the unchanged 30 MB primary-document limit, and fixed pre-document <TYPE> parsing. Post-fix run #38254139755 is terminal FORENSIC_COMPARISON_INCOMPLETE (0/3; 2,829,769,099 bytes downloaded; receipt fingerprint 840f280cbcb1fdbe4b2fbaa88f8d7f02edf447799e13fe0171d37fcd57f3221b). All three Feed archives and .nc wrappers were completely fetched and identity fields accession/CIK/form/filing date matched, but each original Feed submission header lacks ACCEPTANCE-DATETIME; all 55 frozen primary-document hash mismatches also remain. Do not redownload these multi-GB Feeds. Read-only header-only run #38258251764 completed HEADER_EVIDENCE_COMPLETE: 9/9 official EDGAR header routes, receipt fingerprint 39bf95fa15bf149094d5b56c90e58622c2339d452fd138c6deb0a463668f85b4, 101,547 bytes; no Feed or primary documents downloaded. All three fixed samples have matching accession/CIK/form/filing-date and identical ACCEPTANCE-DATETIME values across index headers, raw .hdr.sgml, and header-only .txt prefixes. DATE-OF-FILING-DATE-CHANGE was also captured: for 0000064040-19-000059 the acceptance was 2019-02-12T18:15:22 before the EDGAR filing date 2019-02-13, and its change date is 2019-02-12; the other two samples show acceptance and change date on the filing date. This is supplemental timestamp evidence only; all 55 source-hash mismatches remain and both Q220 gates stay closed. Bounded five-request HTTP representation probe [run #38590133217](https://github.com/DWR-debug/trading-agent-public/actions/runs/38590133217) completed HTTP_REPRESENTATION_INVARIANT_AT_PROBE_TIME (receipt fingerprint 870aa4fdae7eda932bb8f50ebb9eab1a7781ee503fb5120dea5b0f099e4fd65c; request sequence 2026-10-14T15:29:01Z). All five complete HTTP 200 responses were byte-identical at 4,774,457 bytes with SHA-256 fc7dfedd605cdbc9e497bb0c0bc306c74e3f90493a68fb6025d762540ef600f3; total response bytes were 23,872,285 and response bodies were not persisted. The observed bytes match none of the frozen expected, prior-captured, prior-current, or Feed-extracted body hashes/lengths. This makes request-profile and repeatability variation unsupported as the explanation at probe time; it does not establish historical source vintage or clear any gate. Do not repeat this probe or fetch further primary documents. Next, trace the frozen expected versus observed primary-document hashes and their source-vintage provenance without redownloading multi-GB Feeds or fetching primary documents. Do not change source pins, population, sample keys, expected hashes or research gates to force a pass. Q221: the 348-row frozen public-boundary sample is complete under its bounded sample contract, but first-public-observation time remains unproven for all 348 rows and all 247 recipient identities remain unmapped to issuers. The archived five policy vintages do not prove an individual award/modification clock. A fixed exploratory exact-Wayback-CDX spot check of seven award-page URLs (one per frozen year window, derived from frozen generated_internal_id values) found one captured exact URL and six no-hit responses; the captured HTML responses were only 2,171–2,696 bytes and no row-level transaction payload was verified. This is low-coverage source discovery only; no-hit is not proof of historical absence. The official GSA/SAM Contract Awards API requires a SAM.gov API key; publicDeltaDate is documented as a filter over Last Modified Date or Reveal Date, not proof that the response exposes a reproducible transaction-level first-public timestamp or retained old versions. No authenticated request was made, and unrevealed DoD data has additional role restrictions. Treat it as a desk-check lead only, not a dispatch-ready source contract. Next: do not expand the exact-page route across the 348-key sample. Seek a source with timestamped transaction-level versions or a bounded archive whose transaction-row presence can be validated, and separately freeze transaction-class applicability and pre-event recipient-to-issuer mapping. Preserve DoD/USACE 90-day, FAR 30-day, and correction-lineage checks; never map from name similarity. Q221 FPDS public-Atom identity-bridge probe [run #38712516839](https://github.com/DWR-debug/trading-agent-public/actions/runs/38712516839) used exactly four preregistered PIID requests; all four returned HTTP 302 and were blocked without following redirects. No response body was retained, total response bytes were 0, and there were 0 exact record/UEI/name matches. The capture receipt and ARM64 offline validation agree on analysis fingerprint 732a23385f9a5346e7a0806e342647658e6a4f88ea3d1ee233b956ead4277309; this validates the bounded negative result, not historical identity. Do not repeat this route or follow its redirects. No SAM.gov API request was made because no API key is assumed. Q221 remains blocked: all 348 transaction public-clock rows remain unproven and all 247 recipient-to-issuer mappings remain unfrozen. Continue only with a separately reviewed, actually authorized historical record-level source; all performance and execution gates remain closed. [Persisted receipt](https://github.com/DWR-debug/trading-agent-public/blob/master/research/evidence/q221_fpds_public_atom_identity_bridge_latest.json). Q218 has been removed from active focus and automatic dispatch. Its consumed paper-only one-shot and existing eight-event disjoint replication remain archived descriptive evidence; do not repeat an outcome-bearing run.  Q218 primary one-shot and pre-registered fresh-symbol replication both completed in PAPER_ONLY; the immutable replication result covers 8 event pairs across GOOGL/META/ORCL/PFE (fingerprint bfed980b13d9640aece19d4ebb24ccf05b5ea4589772f64001eff29728f58bb7). The primary trial current-context revalidation remains a separate open gate. Replication output is descriptive evidence only; no holdout selection, tuning, ranking, promotion or live execution is inferred.  Q219 remains paused; its prior evidence is preserved. OpenRouter-Free Q220 CYD review (AI-2026-10-10-Q220-CYD-TAXONOMY-ADVERSARIAL; 2026-10-10T15:33:02Z; USD 0) returned repeated generic boilerplate without substantive findings. Classify it as transport-success/content-unusable, not a methods review or scientific evidence. Do not automatically repeat the unchanged prompt; retry only after changing the prompt or adding content-quality validation. Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No holdout selection, ranking, tuning, promotion or live execution is inferred from discovery outputs. Q104:I19 independent admissibility review [PR #1484] is current for exactly 36 frozen date-mismatch rows: all 36 pass identity/header/acceptance consistency and bulk-versus-header date-difference checks (31 have three successful header routes; 5 have two, including only the four frozen R7 index-header 404 exceptions). Persisted sidecar research/evidence/q104_i19_residual_filing_date_sidecar_latest.json contains 36 sorted, source-pinned rows and has been revalidated against the exact source receipt and independent review. Admissible scope is a non-destructive research sidecar only: preserve bulk FILING_DATE unchanged, retain the EDGAR header filing date as a separate field with a discrepancy flag, keep ACCEPTANCE-DATETIME separate from first-public-observation time, and retain DATE-OF-FILING-DATE-CHANGE as separate metadata (17 observed; 15 differ from header date and 2 match). The seven CIK/form-conflict and ten complete-submission HTTP 404 rows remain outside this review. Production precedence/joins, historical PIT and first-public-time clearance, performance, holdout, ranking, tuning, promotion and live execution remain blocked. Input R7 review receipt fingerprint de6c5feca4e27f020b77890a6b00e67a87735d6572070f263ba56d8ee24d0444.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1509,7 +1509,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "c0fe4afd09ad6bb55bdfe78832b59c696356fefd"
+    "source_master_sha": "cf182f9867a589dc64e6da7b43a34d9efbfc6fe5"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1774,20 +1774,20 @@
       "candidate_selection": false,
       "current_online": null,
       "current_online_verification": "NOT_PERFORMED",
-      "eligibility_basis": "completed_workflow_acceptance_receipt",
+      "eligibility_basis": "fresh_successful_utility_receipt",
       "eligible": true,
       "orchestration_available": true,
       "performance_authorization": false,
-      "presence_signal": "stale_or_unverified_receipt",
-      "presence_signal_fresh": false,
+      "presence_signal": "fresh_successful_s10_run",
+      "presence_signal_fresh": true,
       "promotion": false,
       "receipt_eligible": false,
       "receipt_status": "S10_UTILITY_ACCEPTED",
       "routing_uses_presence_receipt": false,
       "scientific_evidence": false,
-      "source_commit": "8566dad5735ef3d001503ac5c3dda5712c6e941d",
+      "source_commit": "6ba8d0e3e97af92e723b063002ec156acd114765",
       "status": "S10_UTILITY_ACCEPTED",
-      "workflow_run_id": "41561842827"
+      "workflow_run_id": "41509349039"
     },
     "scientific_compute": {
       "canonical_path": "GitHub-hosted deterministic workflows",
@@ -1822,7 +1822,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-11-03T16:44:22.897875+00:00",
+  "generated_at_utc": "2026-11-03T22:03:33.210885+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2476,7 +2476,7 @@
         "source_id": "FCC_ULS"
       }
     ],
-    "receipt_fingerprint": "8e6468d57b94ca57b4040d6328d79be272a8944b9cb70c5fe07776f590263f09",
+    "receipt_fingerprint": "ad2e0e16afa6b63f7396b2ced910446ff9a693176948c62dc3eb3b43429c3d8e",
     "receipt_type": "q179_q184_pit_readiness_r1",
     "safety": {
       "AUTOMATIC_PROMOTION": false,
@@ -2507,21 +2507,21 @@
       },
       "https://catalog.data.gov/dataset/dol-enforcement-data-inspection": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "0e2bae80ae086bfbe961f06cc14da41d343a110395517421400e642126996c12",
+        "content_sha256": "ffcf0745d8fb8744664b07c7eb51439d646be94054d886bc48fa88a07db4239f",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
       },
       "https://clinicaltrials.gov/api/v2/studies/NCT00125528": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "aa24c46dfe0cb959459bb1affd744f9df2b1e904cfebc58c8c319b4581fda1c6",
+        "content_sha256": "d0dd982e4c8989f4b15e3839a1c43eaa973865019366aa9c05238b42cde2639e",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
       },
       "https://ferc.gov/what-elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "d5f0cac014b0a4c03ba3af072e2c832b47c80841b2c11206e0cfbef8529dc5cc",
+        "content_sha256": "eb5885c940f038b00c6702f0b7778e2d108d836ece3fa1bd35f599db7af576bc",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2532,14 +2532,14 @@
       },
       "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "89a38baa567bfaedcab2def02d7d98de700ad8d449b03be5bc8f45e9555bfbdc",
+        "content_sha256": "e4f9748aae8cee61eafb69c2c554320e0b20ea21727291641cd82692ebb8354d",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
       },
       "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "bc5010772b037e0ae7c398964e5e4490fc01fc8b0817f37ac60398d9fcaccd6d",
+        "content_sha256": "fa26d6d684d925c4883b6ac5c673f8a51d71459e6de21d9d550d898b4eab8222",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2550,21 +2550,21 @@
       },
       "https://www.nhtsa.gov/nhtsa-datasets-and-apis": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "36f1222ed8046f51d709b63a43548bbbb932faa95b72acff3e136f50f4b92715",
+        "content_sha256": "3d7f865eca77c6f2de638f5796448f14f24aaeb60f9316d498fd1b41e76f5d3e",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
       },
       "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "d9a85767481a921dac6facd510d6962f0f58848fb4f00c2ece160a9437efa3d0",
+        "content_sha256": "bb0c25e450097a789ab519fe7c908563b0f10ae25787a959124a51bfec78229d",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx"
       },
       "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "a33c764a1e92bec3478f78a144e9e5d3e31eb79a709b949c02eedf57403ef5d1",
+        "content_sha256": "39cee15c886fde8c833f5253e23b3515aacb6415874a13faf9963ab3c154d2fa",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx"
@@ -2632,7 +2632,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "c8a1293bf05aec39f63b36ed3678e98279ff3dc4142f7cb03ed38e86d7fe4d4b",
+    "receipt_fingerprint": "a828574aca506b0054d45a34b9b3f306bbce0989672e847d2bd35c9f21d50a2e",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2663,7 +2663,7 @@
           }
         ],
         "clock_contract": "API posted-date fields define public availability; submitted dates are separate.",
-        "content_sha256": "aa24c46dfe0cb959459bb1affd744f9df2b1e904cfebc58c8c319b4581fda1c6",
+        "content_sha256": "d0dd982e4c8989f4b15e3839a1c43eaa973865019366aa9c05238b42cde2639e",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2680,7 +2680,7 @@
           }
         ],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
-        "content_sha256": "2a3f07d357bfd402c3351d0d80301568946d1ba03f31cd00ace9fa57ce122c81",
+        "content_sha256": "40691ecf8e24489cf19d668e7b1e40397893aa50092cd78b8e951a190bd666c0",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2710,7 +2710,7 @@
           }
         ],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
-        "content_sha256": "527bb2bd8cb6299ceb6e98f91e1b1081833eddf1f957951323d016ae86186893",
+        "content_sha256": "e4e64618389f45a406d872e557d83962802a7fa9e0c020e2424483568c7121e6",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2731,7 +2731,7 @@
           }
         ],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
-        "content_sha256": "eb519accbb81be3df78d2ca1dea380f20c625cabbe8cdff450fb1c7488ccb3f6",
+        "content_sha256": "5c5e5f447b5b3e727f5fca0a60fa46d6d7e4f52646b862a46b2cadb39a1510bf",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2748,7 +2748,7 @@
           }
         ],
         "clock_contract": "Investigation event and publication times remain distinct.",
-        "content_sha256": "77b63b85dc393152e6c6f26d67f4fd8eb17c17f5924230d29ee2fff7a1446ae0",
+        "content_sha256": "dc658bcf67eea5667a123c1e322d450beefb243d6e22ffb742e693b8e45cf21e",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2765,7 +2765,7 @@
           }
         ],
         "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
-        "content_sha256": "4395958c479ce0c4bd203c84f4921c898c3b0d1e51fc0e643136781a9a976ba0",
+        "content_sha256": "3888827176de39a8d18ed1261a22aaca5d935b0271260d3f24903f18b4e0410c",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -3153,7 +3153,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "5f4651d0415d1c88a5868d84e3e439e611cabd37a2e3cd401395230beef63bb1",
+    "receipt_fingerprint": "297f1574291643630b8074c9fcbd58401f7450ff40abd40479d8d6711770ab0a",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -3190,7 +3190,7 @@
             "url": "https://api.usaspending.gov/api/v2/awards/last_updated/"
           }
         ],
-        "content_sha256": "9c1a2b0bea1a10d650e504a50e7181a5d0eb632e83d323ef9a54dc021777ac94",
+        "content_sha256": "b9f9d9b577fee283ecef8df153cd1274d18a2633e7e28d954d73f122d09df26d",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3226,7 +3226,7 @@
             "url": "https://www.archives.gov/federal-register/faqs"
           }
         ],
-        "content_sha256": "dad59401898c2ad0b664bbfa5994430194725f2d22e43097a6b35076590dd081",
+        "content_sha256": "c048a4dc9a1e96bc44d476f096198ea79c0680b11e2c8396e8db6bb91bb21416",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3245,7 +3245,7 @@
             "url": "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json"
           }
         ],
-        "content_sha256": "08f67839c7162455f9bfb6a19605aff8d3a60dc65f7590a994fe7f0e5588f34e",
+        "content_sha256": "b68810d6434507537a9b6a2dbbdc52d9fb618cdc2593d569fc3d1aaf82bfc912",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3736,7 +3736,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000",
-        "content_sha256": "cf378594b683c5aa6194de7346fe968e6ebc83bd0dd38fbc3846f6c7c3ff6276",
+        "content_sha256": "046eaad8bab1d0b1bace9a0eec01d0dd0427cddf90b6df5521a35ccb3bfe988e",
         "http_status": 200,
         "parsed": {
           "api_count": 124,
@@ -3959,7 +3959,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2026-10-02&per_page=1000",
-        "content_sha256": "a61d43ea256a1a98eca0506745faa6cd3c57f9e3798c90707970aa55aceba8bc",
+        "content_sha256": "754810eb66dfab6ff86d9b95f09251d17004d8e6cee8e93612b95aa9d52e3d43",
         "http_status": 200,
         "parsed": {
           "api_count": 108,
@@ -4181,7 +4181,7 @@
         "status": "API_PARSED"
       }
     ],
-    "receipt_fingerprint": "a04230c8d7ef87fa20e4ed53d1be57525d5b27a1da3d0138585d5480885c4ee7",
+    "receipt_fingerprint": "96c3d4231408f3ae9acc133fed71bdbe335511b72b985499b1b32ce00f7cfedb",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4246,7 +4246,7 @@
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "6aae2ca333f5ce5374ff33e4af3dff5431e68a3b0f9c3c42409f10a5b2d1a5a6",
+    "receipt_fingerprint": "5aeb732d4a4665d0b91562508a24591c841da9ac94b2bc2b642e682e59645f9f",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4276,7 +4276,7 @@
             "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
           }
         ],
-        "content_sha256": "aa24c46dfe0cb959459bb1affd744f9df2b1e904cfebc58c8c319b4581fda1c6",
+        "content_sha256": "d0dd982e4c8989f4b15e3839a1c43eaa973865019366aa9c05238b42cde2639e",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4320,7 +4320,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "564ce1ed8175faf9bea795258a87c059d4019e31def66dbba8427487839a7f4a",
+        "content_sha256": "301ed79fc09922727e8c2ee52ee35be875e07ac5a65223f4075d1d3cb25c5316",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4367,14 +4367,14 @@
       "Q204_FR_20200110": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-01-10&per_page=1000",
       "Q204_FR_20201216": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000"
     },
-    "generated_at_utc": "2026-11-03T07:12:47Z",
+    "generated_at_utc": "2026-11-03T19:46:39Z",
     "governance": {
       "historical_pit_validated": false,
       "live_execution": false,
       "performance_authorized": false,
       "promotion_authorized": false
     },
-    "receipt_fingerprint": "1147212b6442f58551767da4c1b1d7e3568b80b5e1823ef5ca599c3a64b31e51",
+    "receipt_fingerprint": "b13006167ddbb57ceecea860245e8ebfdeeddbada0da4cd81db35e69373762d5",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4420,7 +4420,7 @@
           "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history"
         },
         "study": {
-          "content_sha256": "aa24c46dfe0cb959459bb1affd744f9df2b1e904cfebc58c8c319b4581fda1c6",
+          "content_sha256": "d0dd982e4c8989f4b15e3839a1c43eaa973865019366aa9c05238b42cde2639e",
           "http_status": 200,
           "missing_markers": [],
           "reachable": true,
@@ -4510,7 +4510,7 @@
         },
         "2020-12-16": {
           "api_count": 124,
-          "content_sha256": "cf378594b683c5aa6194de7346fe968e6ebc83bd0dd38fbc3846f6c7c3ff6276",
+          "content_sha256": "046eaad8bab1d0b1bace9a0eec01d0dd0427cddf90b6df5521a35ccb3bfe988e",
           "correction_or_withdrawal_note_count": 2,
           "http_status": 200,
           "missing_filed_timestamp_count": 1,
@@ -4677,43 +4677,43 @@
     "recent_commits": [
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "c0fe4afd09ad6bb55bdfe78832b59c696356fefd",
-        "timestamp": "2026-11-03T16:33:43Z"
+        "sha": "cf182f9867a589dc64e6da7b43a34d9efbfc6fe5",
+        "timestamp": "2026-11-03T22:00:14Z"
       },
       {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "ff8950fc6661e7bf635adfad19bc0c46467bdadc",
-        "timestamp": "2026-11-03T16:09:55Z"
+        "message": "OPS: synchronize S10 phone runtime status",
+        "sha": "ec57690ef3e33e8cf7d9bd88235a760190b2a860",
+        "timestamp": "2026-11-03T21:16:58Z"
       },
       {
         "message": "OPS: update AI credit availability plan",
-        "sha": "0d558b21e8b2122b7c2eb7310a7132c6fe5c042d",
-        "timestamp": "2026-11-03T14:35:45Z"
+        "sha": "6ecfb6e75b41ce68887a3d23244f052aa9605687",
+        "timestamp": "2026-11-03T20:36:23Z"
       },
       {
-        "message": "OPS: record Groq API key smoke test",
-        "sha": "3a3c637be730e997a265654044677b310607a54b",
-        "timestamp": "2026-11-03T14:18:51Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "363c5b9f0277f967eaa9024e28f9d7fb6ef958a7",
-        "timestamp": "2026-11-03T14:16:57Z"
+        "message": "OPS: record AI worker state",
+        "sha": "1ec47bf359abdd5fbe81120619e6a58bb9d3fcfc",
+        "timestamp": "2026-11-03T19:50:31Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "14b511ecf9b3863b4c4f1bafa6478f7d116755ad",
-        "timestamp": "2026-11-03T14:14:30Z"
+        "sha": "461b28ed256a039474e7023f58f658fc8838da53",
+        "timestamp": "2026-11-03T19:50:19Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "84c740ea1898fde2db71fb509dabc02cc7f1b171",
-        "timestamp": "2026-11-03T14:14:04Z"
+        "sha": "b5ceb9e1806868ae6221ae446feaabd9e102e6ae",
+        "timestamp": "2026-11-03T19:49:06Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "ad458d6312c0bd1957dc3d13240a29c5903a9061",
-        "timestamp": "2026-11-03T14:07:12Z"
+        "sha": "b7697dcfdd79c29121b379899b9e8477b6030b9d",
+        "timestamp": "2026-11-03T19:47:22Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "f11bc4df6bfb36043e686bbe061e53e8d5303874",
+        "timestamp": "2026-11-03T19:46:41Z"
       }
     ]
   },
@@ -4811,7 +4811,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c0fe4afd09ad6bb55bdfe78832b59c696356fefd",
+  "source_master_sha": "cf182f9867a589dc64e6da7b43a34d9efbfc6fe5",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4925,6 +4925,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "41677189610"
+    "run_id": "41727322325"
   }
 }

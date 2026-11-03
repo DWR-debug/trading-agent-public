@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `c0fe4afd09ad6bb55bdfe78832b59c696356fefd`
+**Current operational snapshot:** `cf182f9867a589dc64e6da7b43a34d9efbfc6fe5`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-11-03T16:44:22.897875+00:00`
+**Generated (UTC):** `2026-11-03T22:03:33.210885+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -140,22 +140,22 @@ This checkpoint preserves what was known at that time. It is historical context,
 - Source-feasibility latest receipt: **DISCOVERY_SOURCE_FEASIBILITY_COMPLETED**.
 - Q179 ClinicalTrials.gov, Q180 NHTSA, Q181 OSHA/DOL, Q183 NTSB and Q184 FCC currently pass the bounded source probe; Q182 FERC eLibrary remains **runner-access blocked** where the GitHub-hosted probe receives HTTP 403.
 - PIT Readiness R1 latest receipt: **PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE**.
-- Latest Q179–Q184 PIT receipt fingerprint: `8e6468d57b94ca57b4040d6328d79be272a8944b9cb70c5fe07776f590263f09`.
+- Latest Q179–Q184 PIT receipt fingerprint: `ad2e0e16afa6b63f7396b2ced910446ff9a693176948c62dc3eb3b43429c3d8e`.
 - Candidate-level PIT status remains non-authorizing; all six current statuses are surfaced directly in `research/evidence/q179_q184_pit_readiness_r1_latest.json`.
 - Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
 ### Q197–Q201 Orthogonal Information Frontier
 
-- Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `5f4651d0415d1c88a5868d84e3e439e611cabd37a2e3cd401395230beef63bb1`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.
-- Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `5f4651d0415d1c88a5868d84e3e439e611cabd37a2e3cd401395230beef63bb1`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.
-- Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `6aae2ca333f5ce5374ff33e4af3dff5431e68a3b0f9c3c42409f10a5b2d1a5a6`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.
-- Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `6aae2ca333f5ce5374ff33e4af3dff5431e68a3b0f9c3c42409f10a5b2d1a5a6`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.
+- Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `297f1574291643630b8074c9fcbd58401f7450ff40abd40479d8d6711770ab0a`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.
+- Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `297f1574291643630b8074c9fcbd58401f7450ff40abd40479d8d6711770ab0a`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.
+- Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `5aeb732d4a4665d0b91562508a24591c841da9ac94b2bc2b642e682e59645f9f`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.
+- Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `5aeb732d4a4665d0b91562508a24591c841da9ac94b2bc2b642e682e59645f9f`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.
 - Q198 historical PIT clock census: **Q198_PIT_CLOCK_CENSUS_COMPLETED**; pages parsed **4** / **4**, with fixed dates **2020/01/10, 2020/04/22, 2020/12/16, 2026/10/02**.
 - All four frontier candidates remain non-authorizing: performance/holdout selection/ranking/tuning/promotion/live execution are closed. Source readiness is not PIT validation.
 ### Q202–Q204 Information-Timing Frontier
 
-- Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `1147212b6442f58551767da4c1b1d7e3568b80b5e1823ef5ca599c3a64b31e51`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.
-- Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `1147212b6442f58551767da4c1b1d7e3568b80b5e1823ef5ca599c3a64b31e51`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.
-- Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `1147212b6442f58551767da4c1b1d7e3568b80b5e1823ef5ca599c3a64b31e51`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.
+- Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `b13006167ddbb57ceecea860245e8ebfdeeddbada0da4cd81db35e69373762d5`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.
+- Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `b13006167ddbb57ceecea860245e8ebfdeeddbada0da4cd81db35e69373762d5`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.
+- Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `b13006167ddbb57ceecea860245e8ebfdeeddbada0da4cd81db35e69373762d5`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.
 - Q202–Q204 remain source/PIT discovery tracks only: performance, holdout selection, ranking, tuning, promotion and live execution remain closed. Source feasibility is not PIT validation.
 
 ### Q148-R1 EIA WPSR Source/Clock Gate
@@ -176,7 +176,7 @@ This checkpoint preserves what was known at that time. It is historical context,
 ### Q169 R4 Independent NOAA Reproduction
 
 - Independent reproduction status: **Q169_R4_INDEPENDENT_REPRODUCTION_COMPLETED**.
-- Persistent receipt fingerprint: `5c1a1604ba7a2cf6f9c83acae58d460ba9fa431fb05f4612a022096e20d08c67`.
+- Persistent receipt fingerprint: `c22bcbbe2cced38ce79a22ee4dd73c35668993319fd103ab0ac164d6b85432bd`.
 - All fixed R3 archive samples reproduced = **True**.
 - Candidate-specific exposure map frozen = **False**; revision lineage reconstructed = **False**.
 - This strengthens NOAA source/archive provenance only; candidate PIT validation and performance remain closed.
