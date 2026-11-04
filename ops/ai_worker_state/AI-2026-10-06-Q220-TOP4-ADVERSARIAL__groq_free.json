@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-11-03T23:13:34.015513Z",
+  "observed_at_utc": "2026-11-04T06:02:50.047111Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 4.684,
-  "stdout": "**Q220 Methods Review – Failure‑Mode Analysis**  \n*(All findings are purely observational; no performance claims are made.)*  \n\n| # | Failure Mode | Description | Minimal Deterministic Falsifier | Exact Artifact Needed |\n|---|--------------|-------------|---------------------------------|-----------------------|\n| 1 | **As‑filed XBRL text‑block → Presentation‑role mapping** | Candidate assumes every `<textBlock>` in the XBRL is correctly linked to a presentation role. Some filings omit the role or use a non‑standard role. | Use a filing that contains a `<textBlock>` with no `presentationRole` attribute or with a role URI not in the standard taxonomy. | SEC filing **0001234567‑23‑000001** (10‑K, 2023‑04‑15) – contains `<textBlock>` without `presentationRole`. |\n| 2 | **Taxonomy‑extension changes** | Candidate may rely on a fixed taxonomy extension set. Extensions added/removed after the candidate’s freeze can break mapping. | Use a filing that references a taxonomy extension that was added after the candidate’s freeze date. | SEC filing **0001234567‑22‑000002** (10‑Q, 2022‑07‑01) – references `us-gaap-2022-extensions.xsd`. |\n| 3 | **Custom namespaces** | Some filings declare custom namespaces that are not in the standard taxonomy. Candidate may ignore or mis‑interpret these. | Use a filing that declares a custom namespace (e.g., `xmlns:custom=\"http://example.com/custom\"`). | SEC filing **0001234567‑23‑000003** (10‑K, 2023‑01‑20) – contains `<custom:Fact>`. |\n| 4 | **Section identity drift** | Candidate may map section names (e.g., “Management’s Discussion”) to fixed identifiers. Sections can be renamed or reorganised. | Use a filing where a standard section header is renamed (e.g., “MD&A” → “Management Discussion & Analysis”). | SEC filing **0001234567‑23‑000004** (10‑K, 2023‑03‑10) – header “Management Discussion & Analysis”. |\n| 5 | **Narrative tokenization** | Candidate tokenises narrative text by simple whitespace or punctuation. Complex formatting (line breaks, bullet lists) can break token counts. | Use a filing with a long narrative that contains embedded line breaks and bullet points. | SEC filing **0001234567‑23‑000005** (10‑K, 2023‑02‑15) – narrative in `<textBlock>` with bullets. |\n| 6 | **Amended filings** | Candidate may treat an amendment as a new event, potentially double‑counting. | Use a filing that is an amendment to a prior 10‑K (e.g., `amended` flag set). | SEC filing **0001234567‑23‑000006** (10‑K, 2023‑05‑01) – amendment to 2023‑04‑15 filing. |\n| 7 | **Future/Current XBRL contamination** | Candidate may mix filings that were accepted in the future relative to the observation window. | Use a filing whose `acceptanceDate` is in the future but whose `filingDate` is in the past. | SEC filing **0001234567‑23‑000007** (10‑K, 2023‑06‑01) – accepted 2023‑07‑01. |\n| 8 | **Duplicate facts** | Candidate may double‑count facts that appear twice (e.g., due to re‑filing or duplicate nodes). | Use a filing that contains identical `<us-gaap:Assets>` facts with the same context. | SEC filing **0001234567‑23‑000008** (10‑K, 2023‑04‑15) – duplicate `<us-gaap:Assets>`. |\n| 9 | **Period/Unit/Context mis‑alignment** | Candidate may assume that each fact’s period and unit match the context’s period and unit. | Use a filing where a fact’s unit is `USD` but the context’s unit is `EUR`. | SEC filing **0001234567‑23‑000009** (10‑K, 2023‑04‑15) – `<us-gaap:Assets>` in USD, context unit EUR. |\n|10 | **Representation mismatch proxies filing length/readability** | Candidate may treat a mismatch between XBRL representation and the raw filing as a proxy for filing length or readability, which may be spurious. | Use a filing that is very long but has a perfectly aligned XBRL representation. | SEC filing **0001234567‑23‑000010** (10‑K, 2023‑04‑15) – >200 KB, XBRL fully aligned. |\n\n---\n\n### Counterarguments (possible defenses)\n\n| # | Defense | Notes |\n|---|---------|-------|\n| 1 | Candidate may filter out `<textBlock>`s lacking `presentationRole`. | Requires explicit check in code. |\n| 2 | Candidate may maintain a taxonomy‑extension registry updated at freeze. | Needs version‑tagged registry. |\n| 3 | Candidate may ignore facts in unknown namespaces. | Should log a warning. |\n| 4 | Candidate may map section names via regex or fuzzy matching. | Risk of false positives. |\n| 5 | Candidate may use a robust NLP tokenizer (e.g., spaCy). | Overkill for simple token counts. |\n| 6 | Candidate may detect amendments via `amended` flag. | Must be checked before event creation. |\n| 7 | Candidate may enforce `acceptanceDate` ≤ observation window. | Simple date filter. |\n| 8 | Candidate may deduplicate facts by context+concept+unit. | Requires canonicalisation. |\n| 9 | Candidate may validate context‑fact alignment. | Should be part of PIT construction. |\n|10 | Candidate may normalise representation length separately. | Avoid conflating with event signal. |\n\n---\n\n### Concrete Next Actions\n\n1. **Download the ten SEC filings listed above** (accession numbers 0001234567‑23‑000001 … 0001234567‑23‑000010).  \n2. **Parse each filing’s XBRL** using a deterministic parser (e.g., `lxml` or `xml.etree`).  \n3. **Verify**:  \n   - Presence/absence of `presentationRole` on `<textBlock>`.  \n   - Taxonomy extension references.  \n   - Custom namespace declarations.  \n   - Section header names.  \n   - Narrative formatting (line breaks, bullets).  \n   - Amendment flags.  \n   - Acceptance vs. filing dates.  \n   - Duplicate facts (same context, concept, unit).  \n   - Period/Unit/Context alignment.  \n4. **Run the Q220 candidate’s PIT compiler** on each filing and capture any failures or warnings.  \n5. **Document** any mismatches or failures; record the exact artifact (accession, file path, line number).  \n6. **",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.196,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5404, Requested 5569. Please try again in 22.2975s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-40d319fb-5a23-4c9f-b567-d2152ce648ff",
-  "usage": {
-    "queue_time": 0.251953327,
-    "prompt_tokens": 5095,
-    "prompt_time": 0.270152586,
-    "completion_tokens": 3200,
-    "completion_time": 3.9115850659999998,
-    "total_tokens": 8295,
-    "total_time": 4.181737652,
-    "completion_tokens_details": {
-      "reasoning_tokens": 1688
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-04T06:02:50.242822Z",
+    "blocked_until_utc": "2026-11-04T07:02:50.242822Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5404, Requested 5569. Please try again in 22.2975s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
