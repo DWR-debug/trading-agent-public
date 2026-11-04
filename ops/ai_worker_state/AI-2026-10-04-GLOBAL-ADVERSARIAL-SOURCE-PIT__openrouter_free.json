@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-03T19:50:04.466677Z",
+  "observed_at_utc": "2026-11-04T06:58:40.009786Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 25.989,
-  "stdout": "**Findings**  \n- **Q202‑Q204** – The only source‑feasibility artifact listed is `research/evidence/q202_q204_information_timing_feasibility_latest.json`. The guard classifies a receipt as *DURABLE_HISTORICAL_BOUND* only if it contains one of the durable keys (e.g., `immutable_historical_snapshot`, `dated_snapshot`, `snapshot_sha256`, etc.). The excerpt of the file is not provided, so we cannot confirm the presence of any such key. Consequently, the current status is *PROVISIONAL_LIVE_PROBE_ONLY* unless an immutable dated snapshot or vintage hash is attached.  \n- **Q205 (NLRB labor‑representation certification)** – No receipt entry exists in the `RECEIPTS` map, and the scope notes that Q205 is “discovery‑only and not yet source/PIT validated.” Hence source‑feasibility readiness is *unknown* and effectively *non‑existent* until a frozen historical artifact is supplied.  \n- **Cross‑candidate overlap** – Q202, Q203, and Q204 all point to the same receipt file, creating a potential confounding of distinct information‑timing mechanisms. The frontier requires frozen pre‑event entity/exposure mappings; sharing a single receipt without explicit, candidate‑specific frozen mappings violates this requirement.  \n- **Public‑observation clock** – The candidate specifications (not shown) must tie the event clock to an immutable historical snapshot rather than a live endpoint. No evidence in the supplied context shows that the clock for Q202‑Q204 is bound to a dated, immutable artifact; the default assumption is a live probe, which is prohibited as durable evidence.  \n\n**Counterarguments**  \n- *Missing content inspection*: One could argue that the receipt file may already contain the required durable keys, and the guard’s classification would be inaccurate without reading the file. This is a factual gap; the guard’s logic is deterministic and must be verified by actually reading the file.  \n- *Future artifact availability*: It may be claimed that a dated snapshot will be generated later, making the current provisional status acceptable. The adversarial standard requires *immediate* durability; provisional status cannot be remedied retroactively without an explicit frozen artifact.  \n- *Single receipt for multiple candidates*: The overlap could be defended as a design choice to reduce duplication. However, the orthogonal frontier mandates distinct frozen mappings per candidate; conflating them introduces confounding that must be resolved, not accepted.  \n\n**Concrete Next Actions**  \n1. **Inspect durability** – Retrieve `research/evidence/q202_q204_information_timing_feasibility_latest.json` and run the `classify` function from `automation/source_readiness_snapshot_guard.py`.  \n   - *Minimal deterministic falsifier*: Presence of",
+  "duration_seconds": 38.879,
+  "stdout": "**Adversarial Source‑PIT Readiness Review (Q202‑Q204 + Q205 frontier)**  \n\n---\n\n### 1. Overall picture  \n- The **current operational snapshot** (`83ab94c7792d82391132675253dbe2903eb4cd1c`, generated 2026‑11‑04) does **not** itself constitute a durable historical artifact.  \n- All candidate receipts referenced in *orthogonal_pit_next_gate.py* are “latest.json” files that were generated from **live endpoints or current documentation**; none are explicitly tied to an **immutable dated snapshot** or a **frozen historical artifact** (e.g., a archived receipt with a verified SHA‑256 that predates the event).  \n- Consequently, the **majority of the frontier is provisional** (`PROVISIONAL_LIVE_PROBE_ONLY`) or **blocked** (`BLOCKED_SOURCE_COMPONENTS`). Only a few candidates have a chance of being durable if the required keys are present in their receipts.\n\n---\n\n### 2. Candidate‑by‑candidate findings  \n\n| Candidate | Gate (from *orthogonal_pit_next_gate.py*) | Receipt (path) | Durability assessment* | Key missing artifact (minimal deterministic falsifier) |\n|-----------|-------------------------------------------|----------------|------------------------|--------------------------------------------------------|\n| **Q194** | **BLOCKED_SOURCE_COMPONENTS** | `research/evidence/q193_q196_source_feasibility_latest.json` (shared) | **PROVISIONAL** – receipt status not in allowed list; no durable key evident. | Obtain a **dated, immutable receipt** (e.g., a archived JSON with a verified `snapshot_sha256` that predates the shortage event) and ensure the receipt contains at least one of `immutable_historical_snapshot`, `dated_snapshot`, `vintage_sha256`, or `archive_fingerprint`. |\n| **Q195** | **IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT** | same as Q194 | **PROVISIONAL** – no evidence of a frozen historical binding. | Provide a **snapshot‑bound receipt** (e.g., a SHA‑256 of a frozen copy of the source file taken on a specific date) that satisfies the durable key list. |\n| **Q196** | **IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT** | same as Q194 | **PROVISIONAL** – same gap. | Same as Q195. |\n| **Q197** | **IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT** | `research/evidence/q197_q198_source_feasibility_latest.json` (shared) | **PROVISIONAL** – no durable key observed. | Acquire a **historical snapshot** of the source component (e.g., a archived ZIP with timestamp) and bind it via `snapshot_sha256` or `vintage_sha256`. |\n| **Q198** | **CANDIDATE_SPECIFIC_CORRECTION_WITHDRAWAL_LINEAGE_AND_MAPPING** | `research/evidence/q198_pit_readiness_r2_latest.json` | **PROVISIONAL** – receipt may lack the required lineage mapping. | Produce a **formal withdrawal record** (e.g., a dated amendment or correction notice) that is cryptographically linked (hash‑anchored) to the receipt, satisfying `archive_fingerprint` or `receipt_fingerprint`. |\n| **Q199** | **IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT** | `res",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1793735404-qxgfJQtqVvIyyhStPbcO",
+  "response_id": "gen-1793775520-pslvfEuuOrvAKVEiP5bK",
   "usage": {
-    "prompt_tokens": 5999,
+    "prompt_tokens": 6002,
     "completion_tokens": 3200,
-    "total_tokens": 9199,
+    "total_tokens": 9202,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 2555,
+      "reasoning_tokens": 2315,
       "image_tokens": 0,
       "audio_tokens": 0
     }
