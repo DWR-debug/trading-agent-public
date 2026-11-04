@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
   "context_fingerprint": "af33b9bd08de8c944f12d3a4cdc141f7abbbe4c1b589cdd91f1ff50ecf3ee0ec",
-  "observed_at_utc": "2026-11-04T06:02:49.058489Z",
+  "observed_at_utc": "2026-11-04T14:21:09.342575Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 4.537,
-  "stdout": "**Worker Handoff – Q218 Deterministic Pairing Review**\n\n| # | Failure Mode | Description | Smallest Deterministic Falsifier | Exact Artifact Needed | Counter‑Argument / Mitigation | Next Action | Uncertainty |\n|---|--------------|-------------|----------------------------------|-----------------------|------------------------------|-------------|-------------|\n| 1 | **Incorrect 10‑K ↔ 8‑K pairing** | The algorithm selects the *latest* 8‑K whose acceptance timestamp falls in the interval (preceding 10‑K acceptance, target 10‑K acceptance]. If the 8‑K is not an earnings release or is outside the window, the pair is still returned. | One 10‑K and one 8‑K where the 8‑K’s acceptance timestamp is *after* the target 10‑K’s acceptance but still falls in the interval because the preceding 10‑K’s acceptance is very early. | Minimal JSON snippet for a single CIK containing: <br>• `form`: “10‑K”, “8‑K” <br>• `filingDate`, `reportDate` <br>• `accessionNumber` <br>• `acceptanceDatetimeFound`: true <br>• `acceptanceDatetime` (ISO‑8601) <br>• `items` array including “Item‑2.02” for the 8‑K | The code explicitly checks the interval; however, if the preceding 10‑K’s acceptance is far earlier, the interval widens and the 8‑K may slip in. | Build a unit test that feeds the snippet to `sec_submission_census()` and asserts that the 8‑K is *not* paired. | Does the code guard against a 10‑K with no acceptance timestamp? |\n| 2 | **Missing or corrupted SEC acceptance timestamps** | If `acceptanceDatetimeFound` is false or the timestamp is malformed, the algorithm may fall back to filingDate or ignore the 8‑K entirely, leading to silent mis‑pairing. | A 8‑K with `acceptanceDatetimeFound: false` and no valid `acceptanceDatetime`. | Same minimal JSON as above but with `acceptanceDatetimeFound: false` and no `acceptanceDatetime` field. | The code currently only checks `acceptanceDatetimeFound`; it does not handle the false case. | Add a test that verifies the 8‑K is excluded when `acceptanceDatetimeFound` is false. | Are there 8‑Ks in the real dataset with missing timestamps? |\n| 3 | **Filing amendments altering acceptance dates** | A 10‑K amendment (10‑K/A) may have a later acceptance timestamp than the original 10‑K, but the algorithm may still pair with the original 10‑K if it uses the older timestamp. | A 10‑K and its amendment 10‑K/A where the amendment’s acceptance is later than the original 10‑K’s acceptance, yet the algorithm pairs the amendment with the original 10‑K. | JSON snippet with two 10‑K entries: <br>• `form`: “10‑K”, “10‑K/A” <br>• `acceptanceDatetime` values such that the amendment is later. | The code currently does not distinguish between 10‑K and 10‑K/A; it treats both as “10‑K” for pairing. | Create a test that ensures the algorithm uses the *latest* 10‑K (including amendments) when determining the target 10‑K. | Does the code treat 10‑K/A as a separate entity? |\n| 4 | **Report‑date vs event‑date ambiguity** | The algorithm uses `filingDate` for the interval but the SEC’s “<FILING‑DATE>” is the official event date. If the report date differs by a day, the interval may shift. | A 10‑K where `reportDate` is one day earlier than `filingDate`, and an 8‑K whose acceptance falls between the two dates. | JSON snippet with `filingDate` and `reportDate` differing by one day. | The code currently uses `filingDate`; it ignores `reportDate`. | Add a test that verifies the interval is defined using the official `<FILING‑DATE>` (i.e., `reportDate`). | Are there systematic differences between `filingDate` and `reportDate` in the dataset? |\n| 5 | **False pairing of earnings releases** | The algorithm only checks that the 8‑K contains “Item‑2.02/Exhibit‑99.1‑style” but does not verify that the 8‑K is an earnings release (e.g., it could be a “Material Event” 8‑K). | An 8‑K that contains the required item but is *not* an earnings release, yet is paired with a 10‑K. | JSON snippet for an 8‑K with `items` containing “Item‑2.02” but with a `primaryDocument` that is a non‑earnings release. | The code’s filter is too permissive. | Create a test that feeds such an 8‑K and asserts it is *not* paired. | How often do non‑earnings 8‑Ks contain the required item? |\n| 6 | **Voluntary vs mandatory channel classification** | The candidate contract labels the 8‑K channel as “mandatory” but some 8‑Ks are voluntary (e.g., “Material Event” 8‑K). | A voluntary 8‑K that is paired with a 10‑K. | Same minimal JSON as above but with a `primaryDocument` indicating a voluntary 8‑K. | The code does not check the voluntary/mandatory flag. | Add a test that verifies only mandatory 8‑Ks are considered. | Are there 8‑Ks that are voluntary but still contain the required item? |\n| 7 | **Issuer identity drift** | The mapping from symbol → CIK may change (e.g., a company re‑brands). The algorithm uses a static `SEC_CIKS` dict, so a drift leads to pairing the wrong issuer’s filings. | A symbol that has a new CIK after the `FIXED_START` date but the code still uses the old CIK. | A JSON file that contains two sets of filings: one for the old CIK, one for the new CIK, both with the same symbol. | The code never updates `SEC_CIKS`. | Create a test that simulates a CIK change and verifies that the algorithm does not pair filings from the old CIK. | How many symbols have changed CIKs in the period? |\n| 8 | **Semantic wedge collapse to length/complexity** | The deterministic pairing may reduce to a trivial similarity metric (e.g., document length or global similarity) if the 8‑K and 10‑K share the same structure, thereby eroding orthogonality. | Two filings (10‑K and 8‑K) that are identical in structure and length but represent different events. | A pair of JSON filings where `primaryDocument` content is identical but the `filingDate` differs. | The algorithm does not compute any semantic similarity; it relies solely on timestamps. | Build a test that feeds identical documents with different dates and verifies that the pairing still occurs. | Does the current dataset contain such identical filings? |\n\n---\n\n### Counter‑Arguments / Mitigations\n\n* The code explicitly checks the acceptance‑timestamp interval, which mitigates some pairing errors, but it does not guard against missing timestamps or amendments.\n* The `sec_submission_census()` function is incomplete in the repo; the actual implementation may contain additional safeguards not visible here.\n* The `SEC_CIKS` mapping is hard‑coded; a future update to the mapping would be required to avoid drift.\n\n---\n\n### Concrete Next Actions\n\n1. **Create a minimal test harness** that loads a single CIK’s JSON filings and runs `sec_submission_census()`.  \n   *Input artifact*: `test_filing_pair.json` (see table above).  \n   *Expected output*: No pairing for cases 1–7; correct pairing for a valid 10‑K/8‑K pair.\n\n2. **Add unit tests** for each failure mode using the harness.  \n   *Test names*: `",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.484,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5628, Requested 5486. Please try again in 23.355s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-6670fec2-5021-41b6-a44e-f1ff7df0d97e",
-  "usage": {
-    "queue_time": 0.240079284,
-    "prompt_tokens": 5066,
-    "prompt_time": 0.480487386,
-    "completion_tokens": 3200,
-    "completion_time": 3.680641797,
-    "total_tokens": 8266,
-    "total_time": 4.161129183,
-    "completion_tokens_details": {
-      "reasoning_tokens": 1420
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-04T14:21:09.826681Z",
+    "blocked_until_utc": "2026-11-04T15:21:09.826681Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5628, Requested 5486. Please try again in 23.355s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
