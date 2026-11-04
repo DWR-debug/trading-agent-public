@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
   "context_fingerprint": "af33b9bd08de8c944f12d3a4cdc141f7abbbe4c1b589cdd91f1ff50ecf3ee0ec",
-  "observed_at_utc": "2026-11-04T14:21:09.342575Z",
+  "observed_at_utc": "2026-11-04T23:34:34.139735Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.484,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5628, Requested 5486. Please try again in 23.355s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.64,
+  "stdout": "**Worker Handoff – Q218 Candidate Review (Deterministic 10‑K ↔ 8‑K Pairing)**  \n*Scope: Adversarial source/PIT review only – no market‑outcome inference, no ranking, tuning, or performance authorization.*\n\n| # | Failure Mode | Smallest Deterministic Falsifier | Exact Artifact Required | Counter‑Argument / Observation |\n|---|--------------|----------------------------------|-------------------------|--------------------------------|\n| 1 | **Incorrect 10‑K ↔ 8‑K pairing due to acceptance‑timestamp ordering** | Two 10‑K filings (A1, A2) with acceptance timestamps 2025‑01‑10T10:00 and 2025‑01‑20T10:00; one 8‑K with acceptance timestamp 2025‑01‑15T10:00 that actually belongs to a prior 10‑K period. | `tests/q218_falsifier_pairing.json` – minimal SEC‑style JSON containing the three filings with `filingDate`, `reportDate`, `accessionNumber`, `primaryDocument`, `items`, and `acceptanceDatetimeFound`. | The algorithm selects the 8‑K because it falls between A1 and A2, but the content indicates it is an earnings release for the period ending 2025‑01‑05. |\n| 2 | **Missing or malformed SEC acceptance timestamps** | A 10‑K with `acceptanceDatetimeFound: false` and an 8‑K with `acceptanceDatetimeFound: true`. | `tests/q218_falsifier_missing_ts.json` – JSON where the 10‑K’s `acceptanceDatetimeFound` flag is false, forcing the algorithm to skip it or mis‑pair. | The code currently checks `acceptance_datetime_found` but does not handle the false case explicitly; this can lead to silent omission or fallback to the wrong 8‑K. |\n| 3 | **Filing amendments altering report dates without changing acceptance timestamps** | A 10‑K with original report date 2025‑01‑15, acceptance timestamp 2025‑01‑10; an amendment record changes report date to 2025‑01‑25 but keeps the same acceptance timestamp. | `tests/q218_falsifier_amendment.json` – JSON with `amendments` array containing a new `reportDate`. | The pairing rule uses the *latest* 10‑K acceptance; if the amendment changes the report date, the algorithm may still pair with an 8‑K that matches the old period, violating the intended semantics. |\n| 4 | **Report‑date vs event‑date ambiguity** | A 10‑K where `filingDate` is 2025‑01‑20 but `reportDate` is 2025‑01‑10 (i.e., filing after the reporting period). | `tests/q218_falsifier_date_ambig.json` – JSON with swapped dates. | The algorithm currently uses `filingDate` for ordering; if the event date is actually the `reportDate`, the pairing may be off by a period. |\n| 5 | **False pairing of non‑earnings 8‑K releases** | An 8‑K containing Item‑2.02 but actually a material event unrelated to earnings (e.g., a merger announcement). | `tests/q218_falsifier_non_earnings_8k.json` – JSON with `items` including Item‑2.02 but `primaryDocument` content indicating a different event. | The rule “latest eligible Item‑2.02/Exhibit‑99.1‑style 8‑K” does not filter by earnings‑specific content; thus the algorithm may pair a non‑earnings 8‑K. |\n| 6 | **Voluntary vs mandatory channel misclassification** | An 8‑K flagged as `form: \"8-K/A\"` (voluntary amendment) but the algorithm treats it as a mandatory earnings release. | `tests/q218_falsifier_voluntary_8k.json` – JSON with `form: \"8-K/A\"` and `items` containing Item‑2.02. | The code does not distinguish between 8‑K and 8‑K/A; both are considered eligible, potentially inflating the earnings‑release count. |\n| 7 | **Issuer identity drift (CIK changes)** | Two filings for the same issuer where the CIK changes between periods (e.g., due to corporate restructuring). | `tests/q218_falsifier_cik_drift.json` – JSON with two 10‑Ks for the same symbol but different CIKs. | The algorithm groups by symbol; if the CIK changes, the mapping may break, leading to orphaned 8‑Ks or mis‑paired 10‑Ks. |\n| 8 | **Semantic wedge collapse (content similarity)** | An 8‑K that is a verbatim copy of the 10‑K’s Item‑2.02 section (i.e., no new information). | `tests/q218_falsifier_wedge_collapse.json` – JSON where the 8‑K’s `primaryDocument` content is identical to the 10‑K’s Item‑2.02. | The semantic wedge assumption (that 8‑K adds new information) is violated; the candidate’s “information‑timing” advantage disappears. |\n\n---\n\n### Findings\n\n1. **Pairing rule is purely timestamp‑based** – no semantic check of 8‑K content or explicit earnings‑release flag.  \n2. **Acceptance timestamps are optional** – the code does not robustly handle missing `acceptanceDatetimeFound`.  \n3. **Amendments are ignored** – report‑date changes via amendments are not reflected in the pairing logic.  \n4. **Form distinction (8‑K vs 8‑K/A) is not respected** – voluntary amendments may be treated as mandatory.  \n5. **CIK drift is not accounted for** – issuer identity may change across filings, breaking the mapping.  \n6. **Semantic wedge assumption is implicit** – no check that 8‑K actually contains new information beyond the 10‑K.\n\n---\n\n### Counter‑Arguments / Observations\n\n- The current implementation may still produce correct pairings in many typical cases (e.g., when timestamps are present and no amendments occur).  \n- The lack of semantic checks is intentional to keep the gate deterministic and lightweight, but it opens the door to subtle mispairings that could bias downstream analyses.  \n- The acceptance‑timestamp logic is fragile if SEC’s API changes the format or omits the field for certain filings.\n\n---\n\n### Concrete Next Actions\n\n1. **Create a minimal test harness** that loads the JSON artifacts above and runs `sec_submission_census()` to verify the pairing outcome.  \n2. **Add explicit checks** in the pairing logic:\n   - Validate `acceptanceDatetimeFound` for both 10‑K and 8‑K; skip or flag if missing.  \n   - Detect and handle amendments that alter `reportDate`.  \n   - Distinguish between `form: \"8-K\"` and `form: \"8-K/A\"`; enforce mandatory‑only pairing.  \n   - Verify that the 8‑K’s `primaryDocument` contains at least one new sentence relative to the 10‑K’s Item‑2.02 (simple token‑diff).  \n3. **Document the failure modes** in the candidate contract (`docs/research_design/Q218_SPEC.md`) and update the gate compiler to flag these artifacts.  \n4. **Generate a reproducible PIT** that includes the minimal test cases and the expected pairing results.  \n5. **Schedule a code review** of the `sec_submission_census()` function to incorporate the above checks without breaking determinism.\n\n---\n\n### Uncertainty\n\n- **Acceptance timestamp availability**: It is unclear how often SEC omits `acceptanceDatetimeFound`; empirical audit of a larger sample is needed.  \n- **Amendment handling**: The current SEC JSON schema may not expose amendment history in a consistent way; further investigation is required.  \n- **CIK drift frequency**: The prevalence of CIK changes across the 2025‑2026 window is unknown; a quick scan of the SEC API may quantify this.  \n- **Semantic wedge measurement**: Defining a robust, deterministic metric for “new information” in an 8‑K remains an open research question.\n\n---",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-11-04T14:21:09.826681Z",
-    "blocked_until_utc": "2026-11-04T15:21:09.826681Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5628, Requested 5486. Please try again in 23.355s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-3356c058-d67b-4cd5-ae27-6c7563d7cc88",
+  "usage": {
+    "queue_time": 0.220504118,
+    "prompt_tokens": 5067,
+    "prompt_time": 0.252890627,
+    "completion_tokens": 2769,
+    "completion_time": 3.014899097,
+    "total_tokens": 7836,
+    "total_time": 3.267789724,
+    "completion_tokens_details": {
+      "reasoning_tokens": 998
+    }
   }
 }\n
