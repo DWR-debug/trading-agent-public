@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-05T20:16:31.795633Z",
+  "observed_at_utc": "2026-11-06T07:23:44.871941Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 15.857,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 39.857,
+  "stdout": "\n\n## Adversarial Review Handoff — Q202‑Q204 & Q205 Source/PIT Readiness\n\n**Scope:** Provider‑neutral adversarial review of the Q202‑Q204 information‑timing family and the Q205 NLRB labor‑representation channel, extending the Grok Q194‑Q201 challenge standard.\n\n**Limitations:** This review is based solely on the supplied repository context. No live probes, no workspace writes, no performance inspection. All conclusions are provisional and must be independently reproduced by deterministic project tooling.\n\n---\n\n### 1. Findings\n\n#### 1.1 Q202‑Q204 Information‑Timing Family\n\n* **Source‑readiness durability:** The receipt `research/evidence/q202_q204_information_timing_feasibility_latest.json` is classified by `automation/source_readiness_snapshot_guard.py` as `PROVISIONAL_LIVE_PROBE_ONLY` unless it contains an immutable dated snapshot/vintage. The guard’s `DURABLE_KEYS` list is explicit; if the receipt lacks any of those keys, the classification is correct and the candidate is **not** PIT‑ready. The next‑gate compiler (`automation/orthogonal_pit_next_gate.py`) already blocks all three with `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`.\n* **Current‑endpoint drift risk:** The receipt is presumably based on a live endpoint probe or current documentation hash. Per the Grok standard, this is **not** durable historical evidence. Without a frozen snapshot, any retrospective change in the source’s availability, schema, or content invalidates the feasibility claim.\n* **Historical observation timestamps:** The candidate family is described as “information absence, financing transmission, and public‑information latency.” The event clock must be a defensible public‑observation boundary, not an occurrence timestamp. The current context does not specify the exact clock source or its historical immutability. **Attack:** if the clock is derived from a live API that may have back‑filled or revised timestamps, the same‑day/date‑only leakage risk is high.\n* **Revision/amendment lineage:** No information is provided on the revision lineage of the underlying data (e.g., SEC filing corrections, financing transmission amendments). Without a frozen lineage, a later amendment could retroactively change the “information absence” state.\n* **Frozen entity/exposure mappings:** The candidate specs (if they exist) must freeze the mapping from information‑event entities to issuer/exposure entities before outcome observation. The context does not show such a mapping for Q202‑Q204. **Attack:** if the mapping is derived from a live source that can be re‑linked (e.g., CIK changes, ticker changes), the exposure is not immutable.\n* **Cross‑candidate overlap:** Q202‑Q204’s “information‑timing” label overlaps with the Q194‑Q201 family (SEC filing‑arrival, ownership transitions). The orthogonal search governance requires a minimum scheduler novelty distance of 0.8 and a declared mechanism lineage. Without a explicit lineage declaration, convergence confounding is possible. **Attack:** if Q202‑Q204 re‑uses the same SEC filing‑arrival clock as Q194, it is a variant, not an orthogonal family, and must be rejected or re‑classified.\n* **Synthetic mutation tests:** The cheap falsifiers for Q194 (shift event forward, shuffle issuer‑exposure, replace occurrence time with public‑observation time) should be re‑applied to Q202‑Q204. The context does not confirm whether these tests were run on the Q202‑Q204 compilers. **Attack:** if the mutation tests are not re‑defined for the specific information‑absence/financing‑transmission mechanisms, they may not be valid.\n\n#### 1.2 Q205 NLRB Labor‑Representation Channel\n\n* **Discovery‑only status:** The current status explicitly states Q205 is “discovery‑only and not yet source/PIT validated.” This is the weakest readiness state. No receipt exists; no source feasibility has been established.\n* **Immutable historical snapshot:** None. The entire channel is provisional.\n* **Frozen mapping risk:** The NLRB certification data must be mapped to issuer entities. Without a frozen mapping, any later change in corporate structure (merger, name change, CIK re‑assignment) would break the exposure link.\n* **Public‑observation clock:** The NLRB certification date is an *occurrence* date. The public‑observation boundary (when the certification becomes publicly observable) is unclear. Using the occurrence date as the event clock would be a direct violation of the decision‑boundary rule.\n* **Revision lineage:** NLRB certifications can be amended, withdrawn, or re‑issued. Without a frozen lineage, a later amendment could alter the “representation” state retroactively.\n* **Cross‑candidate overlap:** Q205 is a labor‑representation channel; it is orthogonal to the SEC‑based families. However, if any Q194‑Q204 candidate also uses labor‑related data, overlap must be declared.\n* **Synthetic mutation tests:** Not applicable at this stage because no compiler exists. The absence of a compiler means the candidate cannot be falsified; it is not yet a testable hypothesis.\n\n---\n\n### 2. Counterarguments (and why they fail)\n\n| Claim | Rebuttal |\n|-------|----------|\n| “The live endpoint probe is sufficient because the source is stable.” | Stability is not permanence. The Grok standard explicitly rejects live probes as durable evidence. A retrospective source change (schema migration, API deprecation, data re‑processing) is always possible and has occurred in prior SEC/EDGAR lineages. |\n| “The receipt fingerprint and file hash provide integrity.” | A hash only proves the receipt file was not modified *after* creation; it does not prove the *content* of the receipt corresponds to a frozen historical state of the source. |\n| “The next‑gate compiler already blocks the candidate, so the risk is contained.” | Blocking is correct, but the block is based on the same provisional receipt. If the receipt is later upgraded with a live probe that still lacks a durable binding, the block could be lifted prematurely. |\n| “Q205 is discovery‑only, so no attack is possible yet.” | The lack of validation is itself a finding. The attack is that the discovery process may be using non‑durable sources, and any later “validation” could inherit that fragility. |\n\n---\n\n### 3. Concrete Next Actions\n\nFor each action, the **minimal deterministic falsifier** and the **exact missing artifact** are specified.\n\n#### 3.1 Q202‑Q204: Bind to an Immutable Historical Snapshot\n\n* **Action:** Require a dated, immutable snapshot (e.g., a SHA‑256‑hashed archive of the source data as it existed on the event date) for each candidate in the Q202‑Q204 family.\n* **Falsifier:** Attempt to retrieve the same historical state from two independent archival sources (e.g., a government archive snapshot and a third‑party data vendor snapshot). If they differ, the snapshot is not immutable.\n* **Missing Artifact:** A `snapshot_sha256` field in the receipt, pointing to a byte‑identical copy of the source data frozen at the event‑date boundary, stored in an append‑only archive with a verifiable timestamp.\n\n#### 3.2 Q202‑Q204: Declare Mechanism Lineage and Novelty Distance\n\n* **Action:** Require an explicit declaration of the information‑source class and mechanism lineage for each candidate, and compute the scheduler novelty distance against all active candidates.\n* **Falsifier:** If the declared lineage is identical to an existing price‑only or SEC‑filing lineage and the novelty distance falls below 0.8, reject the candidate as non‑orthogonal.\n* **Missing Artifact:** A `lineage_declaration` block in the candidate spec, including the source class, event‑clock derivation, and a computed `novelty_distance` against every other active candidate.\n\n#### 3.3 Q202‑Q204: Verify Timestamp Integrity\n\n* **Action:** Audit the historical observation/publication timestamps for evidence of back‑filling, revision, or same‑day leakage.\n* **Falsifier:** Compare the timestamp in the frozen snapshot against an independent historical record (e.g., a newspaper archive, a",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1793949825-3yAWgoPwwF7r1isJQ7xs",
+  "usage": {
+    "prompt_tokens": 5564,
+    "completion_tokens": 3200,
+    "total_tokens": 8764,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1481,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
