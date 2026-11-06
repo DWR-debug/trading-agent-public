@@ -23,7 +23,7 @@
   },
   "candidate_fingerprint": "233139d7e349e17fa7a4025e8db8f3d6c43798e828bfe5bca1e0c216bdc439d4",
   "candidate_id": "paper-forward-operational-canary-btcusdt-1h-v1-capital-2000",
-  "candle_count": 1443,
+  "candle_count": 1447,
   "candles": [
     {
       "close": 79912.0,
@@ -11568,26 +11568,58 @@
       "open": 75855.56,
       "timestamp": "2026-11-05T22:00:00+00:00",
       "volume": 859.53046
+    },
+    {
+      "close": 76088.01,
+      "high": 76119.25,
+      "low": 75208.42,
+      "open": 75718.02,
+      "timestamp": "2026-11-05T23:00:00+00:00",
+      "volume": 1303.703
+    },
+    {
+      "close": 76332.56,
+      "high": 76416.24,
+      "low": 76056.0,
+      "open": 76088.01,
+      "timestamp": "2026-11-06T00:00:00+00:00",
+      "volume": 855.36605
+    },
+    {
+      "close": 76130.01,
+      "high": 76403.9,
+      "low": 75900.0,
+      "open": 76332.56,
+      "timestamp": "2026-11-06T01:00:00+00:00",
+      "volume": 476.36476
+    },
+    {
+      "close": 76195.62,
+      "high": 76300.0,
+      "low": 75986.52,
+      "open": 76130.01,
+      "timestamp": "2026-11-06T02:00:00+00:00",
+      "volume": 418.30318
     }
   ],
-  "feed_candle_fingerprint": "25ac13998b66aaa6301848c3eb089f43d30bdd8cba1adb8517184db30035497d",
-  "feed_fetch_fingerprint": "249de6c865caca3b8d4058623b6e1c2c051d2283ee474bcbfd3dcb2199245a65",
-  "feed_receipt_fingerprint": "a160c15798d8f79a82d71e3330963d08a03e2c0a31878fe775ac6675ad4afd33",
+  "feed_candle_fingerprint": "e33e6e7b8b70107917646d7b996d52d77cb406656d015ae7cad65759a9f0e9af",
+  "feed_fetch_fingerprint": "669cdf62b6ff4d8fede4127513cb341bf39573ba3af1f6b39cdaf6a89b4490df",
+  "feed_receipt_fingerprint": "7adcde296ee4889ae6bff0481b9ccf69cfd4e3aa91914ccbcd6bd053301c8aa2",
   "freeze_ref": "paper-forward-operational-canary-v1-capital-2000",
-  "input_fingerprint": "6d809868188389d832199c64cf82e523e8100773c268d635ded0071971fb1483",
+  "input_fingerprint": "9977a9c57940a9824e711dca7d87989cb27b0a8fcc67d2ebfe09da1ec1852d3a",
   "interval": "1h",
-  "last_market_timestamp_utc": "2026-11-05T22:00:00+00:00",
+  "last_market_timestamp_utc": "2026-11-06T02:00:00+00:00",
   "mode": "PAPER_FORWARD_SHADOW",
   "portfolio": {
     "cash_eur": 1930.7947510264707,
     "current_position_entry_price": 76426.19399999999,
     "current_position_entry_timestamp_utc": "2026-11-05T16:00:00+00:00",
-    "current_position_exposure_eur": 957.4089345652507,
+    "current_position_exposure_eur": 963.4480272624531,
     "current_position_quantity": 0.012644401702649749,
     "current_position_side": "BUY",
-    "current_position_unrealized_pnl_eur": -8.954562975389232,
+    "current_position_unrealized_pnl_eur": -2.9154702781866777,
     "fees_paid_eur": 6.91779596228994,
-    "final_equity_eur": 1921.8401880510814,
+    "final_equity_eur": 1927.8792807482841,
     "gross_traded_notional_eur": 6917.79596228994,
     "initial_capital_eur": 2000.0,
     "ledger": [
@@ -44759,13 +44791,105 @@
           "signal": "HOLD"
         },
         "unrealized_pnl_eur": -8.954562975389232
+      },
+      {
+        "action": "HOLD",
+        "cash_eur": 1930.7947510264707,
+        "close_price": 76088.01,
+        "cumulative_fees_eur": 6.91779596228994,
+        "equity_eur": 1926.518616681062,
+        "gross_traded_notional_eur": 6917.79596228994,
+        "market_timestamp_utc": "2026-11-05T23:00:00+00:00",
+        "mtm_drawdown_percent": 5.8541138844754865,
+        "position_entry_price": 76426.19399999999,
+        "position_entry_timestamp_utc": "2026-11-05T16:00:00+00:00",
+        "position_exposure_eur": 962.0873631952311,
+        "position_quantity": 0.012644401702649749,
+        "position_side": "BUY",
+        "realized_drawdown_percent": 3.4119442737994277,
+        "realized_pnl_eur": -68.2388854759885,
+        "signal": {
+          "confidence": 0.0,
+          "reason": "Signal Combiner: Score unterhalb der Entscheidungsschwelle.",
+          "signal": "HOLD"
+        },
+        "unrealized_pnl_eur": -4.276134345408825
+      },
+      {
+        "action": "HOLD",
+        "cash_eur": 1930.7947510264707,
+        "close_price": 76332.56,
+        "cumulative_fees_eur": 6.91779596228994,
+        "equity_eur": 1929.610805117445,
+        "gross_traded_notional_eur": 6917.79596228994,
+        "market_timestamp_utc": "2026-11-06T00:00:00+00:00",
+        "mtm_drawdown_percent": 5.703003577074995,
+        "position_entry_price": 76426.19399999999,
+        "position_entry_timestamp_utc": "2026-11-05T16:00:00+00:00",
+        "position_exposure_eur": 965.1795516316141,
+        "position_quantity": 0.012644401702649749,
+        "position_side": "BUY",
+        "realized_drawdown_percent": 3.4119442737994277,
+        "realized_pnl_eur": -68.2388854759885,
+        "signal": {
+          "confidence": 0.0,
+          "reason": "Signal Combiner: Score unterhalb der Entscheidungsschwelle.",
+          "signal": "HOLD"
+        },
+        "unrealized_pnl_eur": -1.1839459090257918
+      },
+      {
+        "action": "HOLD",
+        "cash_eur": 1930.7947510264707,
+        "close_price": 76130.01,
+        "cumulative_fees_eur": 6.91779596228994,
+        "equity_eur": 1927.0496815525732,
+        "gross_traded_notional_eur": 6917.79596228994,
+        "market_timestamp_utc": "2026-11-06T01:00:00+00:00",
+        "mtm_drawdown_percent": 5.828161592875325,
+        "position_entry_price": 76426.19399999999,
+        "position_entry_timestamp_utc": "2026-11-05T16:00:00+00:00",
+        "position_exposure_eur": 962.6184280667424,
+        "position_quantity": 0.012644401702649749,
+        "position_side": "BUY",
+        "realized_drawdown_percent": 3.4119442737994277,
+        "realized_pnl_eur": -68.2388854759885,
+        "signal": {
+          "confidence": 0.0,
+          "reason": "Signal Combiner: Score unterhalb der Entscheidungsschwelle.",
+          "signal": "HOLD"
+        },
+        "unrealized_pnl_eur": -3.745069473897535
+      },
+      {
+        "action": "HOLD",
+        "cash_eur": 1930.7947510264707,
+        "close_price": 76195.62,
+        "cumulative_fees_eur": 6.91779596228994,
+        "equity_eur": 1927.8792807482841,
+        "gross_traded_notional_eur": 6917.79596228994,
+        "market_timestamp_utc": "2026-11-06T02:00:00+00:00",
+        "mtm_drawdown_percent": 5.787620405925631,
+        "position_entry_price": 76426.19399999999,
+        "position_entry_timestamp_utc": "2026-11-05T16:00:00+00:00",
+        "position_exposure_eur": 963.4480272624531,
+        "position_quantity": 0.012644401702649749,
+        "position_side": "BUY",
+        "realized_drawdown_percent": 3.4119442737994277,
+        "realized_pnl_eur": -68.2388854759885,
+        "signal": {
+          "confidence": 0.0,
+          "reason": "Signal Combiner: Score unterhalb der Entscheidungsschwelle.",
+          "signal": "HOLD"
+        },
+        "unrealized_pnl_eur": -2.9154702781866777
       }
     ],
     "maximum_mtm_drawdown_percent": 6.082741215238874,
     "maximum_realized_drawdown_percent": 3.4119442737994277,
     "maximum_trade_exposure_eur": 999.4999999999972,
     "realized_pnl_eur": -68.2388854759885,
-    "total_pnl_eur": -78.15981194891856,
+    "total_pnl_eur": -72.12071925171585,
     "trade_count": 3,
     "trades": [
       {
@@ -44811,7 +44935,7 @@
         "side": "BUY"
       }
     ],
-    "unrealized_pnl_eur": -8.954562975389232
+    "unrealized_pnl_eur": -2.9154702781866777
   },
   "run_id": "b0d5270a9383f8c0f0919fe053a3c5879cc78cce6de71ff4516a424fda7c54f8",
   "safety": {
@@ -44821,10 +44945,10 @@
     "orders_enabled": false
   },
   "schema_version": 2,
-  "signal_fingerprint": "5e76ff8cc04a7751800b85d189e1127067e711c8b8dd99c8a47e3c8a8c38a9cc",
+  "signal_fingerprint": "ad564d34d655124f171e099449947e7de24c31ec734c4d4128df4f001aed58a6",
   "started_at_utc": "2026-09-06T20:00:00+00:00",
   "status": "RUNNING",
   "stopped_at_utc": null,
   "symbol": "BTCUSDT",
-  "updated_at_utc": "2026-11-05T22:00:00+00:00"
+  "updated_at_utc": "2026-11-06T02:00:00+00:00"
 }
