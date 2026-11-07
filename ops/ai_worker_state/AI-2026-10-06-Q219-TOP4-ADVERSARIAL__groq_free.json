@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
   "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
-  "observed_at_utc": "2026-11-07T12:51:54.837214Z",
+  "observed_at_utc": "2026-11-07T21:43:38.141840Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 3.99,
-  "stdout": "**Worker Handoff – Q219 Options‑Source Breadth Gate (Methods Review)**  \n\n| Section | Content |\n|---------|---------|\n| **1. Summary of Findings** | • **Source‑contract mismatch** – Q129 contract lists only SPY, QQQ, IWM options/underlyings, yet the Q219 script flags a “broad individual equity option source” if *any* underlying ≠ {SPY,QQQ,IWM}.  The contract does not explicitly allow other symbols, so the flag is unsubstantiated.  <br>• **Unvalidated alternate store** – The script fetches `https://github.com/piekstra/options-data` and simply checks for HTTP 200 and the presence of the string “gitignored”.  No evidence is provided that the data are byte‑identical to the Q129 release or that the store contains the same observation semantics (4 PM ET EOD).  <br>• **CBOE archive usage** – The script confirms a 200 HTTP status but never parses the archive for volume or IV data.  The flag `cboe_is_quotes_iv_oi_source_proven` is hard‑coded to `False`.  <br>• **Implied‑volatility absence** – The Q129 contract does **not** list an `implied_volatility` column, yet many options‑based strategies rely on IV.  The script does not check for its presence.  <br>• **Event‑clock ambiguity** – Q219’s event clock is not defined in the script or contract.  The candidate may be using the SEC acceptance timestamp, but no mapping or documentation is provided.  <br>• **Same‑session leakage risk** – The observation date field (`date`) is treated as the event date.  If the event occurs on the same calendar day, the next‑regular‑session boundary rule is violated, creating leakage.  <br>• **Calendar‑roll handling** – No logic is present to detect or adjust for options that roll to a new expiration month.  Aggregating across expirations without roll‑adjustment can bias returns.  <br>• **Cross‑market wedge justification** – The wedge claims to add information beyond a filing‑change or options‑only state, but no evidence is shown that the combination is statistically independent or that it improves predictive power. |\n| **2. Counter‑Arguments / Potential Defenses** | • The candidate may argue that the “broad source” flag is intended to capture any additional equities beyond the three listed, and that the contract’s `broad_source_lead` field merely indicates that a broader source exists.  <br>• The alt store may be a mirror; the candidate might claim that a 200 HTTP status suffices for a “direct HTTP validation” requirement.  <br>• The CBOE archive may be used for volume checks only; the candidate could argue that IV is not required for the wedge.  <br>• The event clock could be the SEC acceptance timestamp, which is frozen before the observation; the candidate may assert that the script’s lack of explicit mapping is an oversight.  <br>• Calendar roll may be handled downstream in the backtester; the candidate could claim that the breadth gate is only a discovery step. |\n| **3. Minimal Deterministic Falsifiers** | 1. **Shift Observation Date** – Re‑run the breadth gate with the `date` field advanced by +1 day (or +1–5 sessions).  If the “broad source” flag toggles or the candidate’s downstream signals change, the method is sensitive to same‑session leakage.  <br>2. **Shuffle Underlyings** – Randomly permute the underlying symbols in the dataset while preserving the number of records.  If the candidate’s wedge signals change, the method depends on specific symbol identities.  <br>3. **Implied‑Vol Check** – Inspect the parquet files for an `implied_volatility` column.  If absent, any strategy that uses IV is invalid.  <br>4. **Calendar‑Roll Test** – Identify options that expire on the same day as the observation and compare the candidate’s treatment of those contracts to a roll‑adjusted baseline.  A discrepancy indicates roll‑bias.  <br>5. **Cross‑Market Independence** – Compute the predictive power of the wedge, the filing‑change component alone, and the options‑only component alone on a held‑out sample.  If the wedge does not outperform both components, the added value is questionable. |\n| **4. Missing Artifacts / Evidence Needed** | • **Event‑Clock Documentation** – Explicit mapping from SEC acceptance timestamp to the event boundary used in Q219.  <br>• **Observation‑Semantics Verification** – Proof that the `date` field corresponds to a 4 PM ET EOD snapshot (e.g., a byte‑identical copy of the source file with a timestamp).  <br>• **Same‑Session Leakage Test Results** – A deterministic test showing that the event is frozen before the observation date.  <br>• **Implied‑Vol Presence** – Schema or sample data confirming an `implied_volatility` column (or a documented decision to exclude IV).  <br>• **Calendar‑Roll Handling** – Code or documentation describing how expirations are rolled or aggregated.  <br>• **Cross‑Market Wedge Validation** – Statistical evidence (e.g., out‑of‑sample AUC, Sharpe) that the wedge adds predictive power beyond its constituents.  <br>• **Alt‑Store Validation** – A byte‑identical snapshot of the alt store data or a signed hash comparison to the Q129 release.  <br>• **CBOE Archive Parsing** – A script or report showing that the archive contains the expected volume/IV data and that it matches the Q129 release. |\n| **5. Concrete Next Actions** | 1. **Request Documentation** – Ask the Q219 team to provide the artifacts listed in Section 4. 2. **Run Falsifiers** – Execute the falsifiers in Section 3 on the current dataset and report the outcomes. 3. **Audit Event‑Clock** – Verify that the event clock used in the wedge is the SEC acceptance timestamp and that it precedes the observation date. 4. **Validate Source Integrity** – Perform a byte‑by‑byte hash",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.148,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5369, Requested 5775. Please try again in 23.58s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-86b43494-eb8c-4a06-b4d7-8a94688ec406",
-  "usage": {
-    "queue_time": 0.075576317,
-    "prompt_tokens": 5381,
-    "prompt_time": 0.314211994,
-    "completion_tokens": 3200,
-    "completion_time": 3.423834448,
-    "total_tokens": 8581,
-    "total_time": 3.738046442,
-    "completion_tokens_details": {
-      "reasoning_tokens": 1842
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-07T21:43:38.289717Z",
+    "blocked_until_utc": "2026-11-07T22:43:38.289717Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5369, Requested 5775. Please try again in 23.58s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
