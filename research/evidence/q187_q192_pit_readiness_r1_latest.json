@@ -2,12 +2,12 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-04-Q187-Q192-PIT-READINESS-R1",
   "status": "PIT_READINESS_COMPILATION_COMPLETED",
-  "source_receipt_fingerprint": "8be08d6753fdba8c94723fb6686fda165908d091385d7e8b389ec735c0e7de09",
+  "source_receipt_fingerprint": "df9dbdfa9140a6fd6ebb21e93c03b38efc82e81ad3e70458cff051c6166afafc",
   "candidate_results": [
     {
       "candidate_id": "Q187",
-      "source_status": "BLOCKED_SOURCE_PROBE",
-      "pit_status": "PIT_READINESS_BLOCKED_BY_SOURCE",
+      "source_status": "SOURCE_PROBES_PASSED",
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_HISTORICAL_PROOF",
       "required_proofs": {
         "historical_transaction_archive_reconstructed": false,
         "public_observation_boundary_proven": false,
@@ -16,7 +16,7 @@
         "revision_history_immutable_prefix_proven": false,
         "same_day_use_proven": false
       },
-      "next_gate": "Repair/source-probe gate before PIT work",
+      "next_gate": "Run fixed historical archive/clock/mapping/revision census; no performance access",
       "performance_authorized": false,
       "selection_allowed": false,
       "ranking_allowed": false,
@@ -138,5 +138,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "b2f19191ec229b20af5e3156a3d2ea8bb12979cfdca2095adf686f70a0781b53"
+  "receipt_fingerprint": "ae147504fc6c894d4c923883f7ab77cb26783afbaad9307661fc89172ff60b92"
 }
