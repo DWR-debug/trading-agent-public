@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
   "context_fingerprint": "af33b9bd08de8c944f12d3a4cdc141f7abbbe4c1b589cdd91f1ff50ecf3ee0ec",
-  "observed_at_utc": "2026-11-08T05:51:38.257023Z",
+  "observed_at_utc": "2026-11-08T13:13:55.693773Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.13,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5393, Requested 5371. Please try again in 20.729999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.004,
+  "stdout": "**Worker Handoff – Q218 Methods Review**\n\n| # | Failure Mode | What to test (smallest deterministic falsifier) | Artifact required | Why it matters |\n|---|--------------|-----------------------------------------------|-------------------|----------------|\n| 1 | **10‑K → 8‑K pairing logic** | A 10‑K that has *two* eligible 8‑Ks in the window, but the algorithm picks the older one. | `tests/q218_pairing_fail.json` – JSON with a single symbol, two 8‑Ks with distinct `acceptanceDatetime` values, and a 10‑K whose `acceptanceDatetime` falls between them. | Guarantees that the “latest eligible” rule is enforced; otherwise the semantic wedge collapses to a single, possibly stale, event. |\n| 2 | **Missing SEC acceptance timestamps** | A filing where `acceptanceDatetimeFound` is `false` but the code still treats it as present. | `tests/q218_missing_acceptance.json` – 10‑K and 8‑K entries with `acceptanceDatetimeFound: false`. | If the flag is ignored, the pairing window may be mis‑calculated, leading to invalid event ordering. |\n| 3 | **Filing amendments (10‑K/A, 8‑K/A)** | An amendment that should *not* be paired with the original 10‑K but is treated as such. | `tests/q218_amendment_fail.json` – 10‑K/A and 8‑K/A with identical `filingDate` but different `reportDate`. | Amendments can change the economic content; mis‑pairing violates the orthogonal‑information premise. |\n| 4 | **Report‑date vs event‑date ambiguity** | A filing where `reportDate` is *earlier* than `filingDate`. | `tests/q218_report_vs_filing.json` – 10‑K with `filingDate: 2026‑10‑05`, `reportDate: 2026‑10‑04`. | The event clock must be based on the *public observation* (filingDate); using reportDate could shift the wedge. |\n| 5 | **False pairing of earnings releases** | An 8‑K that contains an earnings release but is *not* paired because the code only looks for `Item‑2.02/Exhibit‑99.1`. | `tests/q218_earnings_release_fail.json` – 8‑K with earnings release text but no matching item. | Earnings releases are a key source of information; missing them erodes the wedge’s informational value. |\n| 6 | **Voluntary vs mandatory channel classification** | A voluntary 8‑K that is flagged as mandatory in the census. | `tests/q218_voluntary_flag.json` – 8‑K with `mandatory: false` but census marks it mandatory. | Mis‑classification inflates the “mandatory” channel, potentially collapsing the wedge. |\n| 7 | **Issuer identity drift** | A symbol that has been reassigned a new CIK between `FIXED_START` and `FIXED_END`. | `tests/q218_identity_drift.json` – mapping file showing old CIK → new CIK for a symbol. | The pairing logic uses CIK to fetch filings; drift leads to missing or wrong filings. |\n| 8 | **Semantic wedge collapse via length/complexity similarity** | Two distinct events (e.g., a 10‑K and an 8‑K) that have identical `filingDate` and similar `primaryDocument` length, causing the wedge to treat them as the same event. | `tests/q218_wedge_collapse.json` – two filings with identical `filingDate` and `primaryDocument` size. | If the wedge collapses, the orthogonal information advantage is lost. |\n\n---\n\n### Findings\n\n1. **Pairing logic is fragile** – relies on strict ordering of `acceptanceDatetime`. Any missing or duplicate timestamps can produce incorrect pairings.\n2. **Acceptance flag handling is not defensive** – the code assumes `acceptanceDatetimeFound` is always `true` when present.\n3. **Amendments are not explicitly excluded** – the current filter only checks form type, not amendment status.\n4. **Event clock ambiguity** – the code uses `filingDate` for the event clock but does not guard against `reportDate` being earlier, which could shift the event boundary.\n5. **Earnings release detection is narrow** – only `Item‑2.02/Exhibit‑99.1` is considered; other earnings‑release signals are ignored.\n6. **Channel classification is hard‑coded** – no dynamic validation of mandatory vs voluntary status.\n7. **Issuer identity drift is untracked** – the static `SEC_CIKS` mapping may become stale.\n8. **Semantic wedge definition is implicit** – no explicit check that two events are distinct; length/complexity similarity could collapse the wedge.\n\n---\n\n### Counterarguments\n\n- **Pairing logic**: The current rule is deterministic and simple; adding more checks may over‑complicate the gate.\n- **Acceptance flag**: The SEC API guarantees the flag; missing values are rare.\n- **Amendments**: Treating amendments as separate filings keeps the census inclusive.\n- **Event clock**: The `filingDate` is the official public observation; `reportDate` is secondary.\n- **Earnings release detection**: The chosen item is the most common earnings‑release indicator.\n- **Channel classification**: The census data already labels mandatory vs voluntary; no need for extra logic.\n- **Issuer drift**: The mapping is refreshed nightly; drift is unlikely within the fixed window.\n- **Semantic wedge**: The wedge is defined by the pairing rule; length similarity is incidental.\n\n---\n\n### Concrete Next Actions\n\n1. **Create the eight test JSON artifacts** listed above in `tests/`. Each file should contain the minimal set of fields required by `sec_submission_census()` to trigger the failure.\n2. **Add unit tests** that load each artifact, run `sec_submission_census()`, and assert that the output deviates from the expected deterministic behavior (e.g., wrong pairing, missing flag, etc.).\n3. **Document the failure modes** in `docs/research_design/Q218_METHODS_FAULTS.md`, including the exact artifact paths and the expected vs observed outcomes.\n4. **Propose guard clauses** in `sec_submission_census()`:\n   - Verify `acceptanceDatetimeFound` before using timestamps.\n   - Exclude filings with `amendment: true`.\n   - Enforce `filingDate >= reportDate`.\n   - Explicitly detect earnings releases beyond `Item‑2.02/Exhibit‑99.1`.\n   - Validate mandatory flag against census metadata.\n   - Periodically refresh `SEC_CIKS` mapping or flag drift.\n5. **Schedule a review** of the semantic wedge definition to formalize the distinct‑event requirement and prevent accidental collapse.\n\n---\n\n### Uncertainty\n\n- The frequency of missing `acceptanceDatetimeFound` values in the SEC API is unknown; the test will reveal if this is a real risk.\n- The extent of issuer identity drift over the fixed window is not quantified; the drift test will indicate whether the static mapping suffices.\n- The impact of length/complexity similarity on the wedge is theoretical; the collapse test will show whether it is a practical concern.\n\n---",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-11-08T05:51:38.387223Z",
-    "blocked_until_utc": "2026-11-08T06:51:38.387223Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5393, Requested 5371. Please try again in 20.729999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-8507d158-7bba-4d2d-b8c0-729d420e9a67",
+  "usage": {
+    "queue_time": 0.169556915,
+    "prompt_tokens": 5069,
+    "prompt_time": 0.294129085,
+    "completion_tokens": 2147,
+    "completion_time": 2.340347741,
+    "total_tokens": 7216,
+    "total_time": 2.634476826,
+    "completion_tokens_details": {
+      "reasoning_tokens": 580
+    }
   }
 }\n
