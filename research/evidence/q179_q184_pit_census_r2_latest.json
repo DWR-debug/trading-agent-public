@@ -47,33 +47,33 @@
           "http_status": 200,
           "markers_present": true,
           "missing_markers": [],
-          "content_sha256": "ba62a3332d7d8b5a915c90e6af4ab6163eb3476405d5eadd7ae563cfae29c3cd",
+          "content_sha256": "fc7142e40efc7fab310276cb867f0a76e09938276348107a9ddc1ce767bfc7a0",
           "content_length_header": null,
-          "last_modified_header": "Mon, 09 Nov 2026 06:13:52 GMT"
+          "last_modified_header": "Mon, 09 Nov 2026 21:30:16 GMT"
         },
         "historical_archive_samples": [
           {
             "url": "https://static.nhtsa.gov/odi/ffdd/rcl/RCL_FROM_2020_2024.zip",
-            "http_status": 200,
+            "http_status": 206,
             "range_status_accepted": true,
-            "content_length_header": null,
-            "content_range": null,
-            "accept_ranges": null,
+            "content_length_header": "64",
+            "content_range": "bytes 0-63/4017132",
+            "accept_ranges": "bytes",
             "zip_magic_present": true,
-            "body_prefix_sha256": "8ab0da3dc9d72d4f7451b4cb3b7ad00b61b7b8d4ca2b171d992f0e2e7cdce45e",
-            "body_bytes": 512,
+            "body_prefix_sha256": "6dc980e87a1411d1037c2bcfac4668892fe8d6687dfadad01ac4408dc27367e7",
+            "body_bytes": 64,
             "content_type": "application/octet-stream"
           },
           {
             "url": "https://static.nhtsa.gov/odi/ffdd/rcl/RCL_FROM_2025_2026.zip",
-            "http_status": 200,
+            "http_status": 206,
             "range_status_accepted": true,
-            "content_length_header": null,
-            "content_range": null,
-            "accept_ranges": null,
+            "content_length_header": "64",
+            "content_range": "bytes 0-63/91644",
+            "accept_ranges": "bytes",
             "zip_magic_present": true,
-            "body_prefix_sha256": "8d7caefa7bf991068479770c558b03d07bed969aa8224b65f6ab71758dcd9d61",
-            "body_bytes": 512,
+            "body_prefix_sha256": "758965d15f1906c2e2a10fd3e132606894c5da9c65714f98fd73ad8a3cc22e7b",
+            "body_bytes": 64,
             "content_type": "application/octet-stream"
           }
         ],
@@ -90,7 +90,7 @@
           "http_status": 200,
           "markers_present": true,
           "missing_markers": [],
-          "content_sha256": "f9885994b461192149cd394553d3d447fbb79565b282715fbe3492b09d129deb",
+          "content_sha256": "85ca806031f46c1c51fd54adf8bd040c7fc8aa184b5c978a11119e10ac3ecfb8",
           "content_length_header": "115540",
           "last_modified_header": null
         },
@@ -112,8 +112,8 @@
               "issued by FERC",
               "Documents received and issued by FERC"
             ],
-            "content_sha256": "1fe7b7aa731af12efe3200f581dd20a7c3d5b30afa8707145399ec26cf2e1d6d",
-            "content_length_header": "5512",
+            "content_sha256": "aa6e3dd0599db95732f187b3b971c3004f055cf3fea824b47b94a422dc8ee11d",
+            "content_length_header": "5491",
             "last_modified_header": null
           },
           {
@@ -123,7 +123,7 @@
             "missing_markers": [
               "Documents received and issued by FERC"
             ],
-            "content_sha256": "c90a6ffbdaa9bd116f3e63c6c04844c14cc4224490ce0c7cb2bd445d112bcda0",
+            "content_sha256": "932cafadb3c0ed6055d07652fad8f1e727aed8da161f5bfe10920a8a28f7d60e",
             "content_length_header": "5793",
             "last_modified_header": null
           }
@@ -142,16 +142,16 @@
           "http_status": 200,
           "markers_present": true,
           "missing_markers": [],
-          "content_sha256": "ae58718f889aaf09628d5b0e750fc7c9168ebb535e8f3f67ac95b276a8b88f2a",
+          "content_sha256": "19b1338a60ea3153b40eb8bd43f575fe16d28db7c301fe8ce63e651b20efb9bf",
           "content_length_header": null,
-          "last_modified_header": "Mon, 02 Nov 2026 14:58:26 GMT"
+          "last_modified_header": "Mon, 02 Nov 2026 14:33:00 GMT"
         },
         "download_directory": {
           "url": "https://data.ntsb.gov/avdata",
           "http_status": 200,
           "markers_present": true,
           "missing_markers": [],
-          "content_sha256": "44f6916902b33021161c8367c62ae594fb83b697e2f7a9604c71c02a633c98ec",
+          "content_sha256": "06d3c47d0a20dcc3915e65a58aded83b60fe33a46b07c9c68a21501f021c692e",
           "content_length_header": null,
           "last_modified_header": null
         },
@@ -180,7 +180,7 @@
           "http_status": 200,
           "markers_present": true,
           "missing_markers": [],
-          "content_sha256": "c475134779e32f04c3ebf5194acb6eb5a42314e47bbea6653f10919115a0efd8",
+          "content_sha256": "2f259c48ff46a0f8a45f6e561efd20f0a1dc04f1095d1fd1a8fa307c53033308",
           "content_length_header": null,
           "last_modified_header": null
         },
@@ -221,5 +221,5 @@
     "ORDERS_ENABLED": false,
     "AUTOMATIC_PROMOTION": false
   },
-  "receipt_fingerprint": "ca5977a0f310297b64b91e7ef5ba70724bc5b2de6d70329f3eb051dce50b4449"
+  "receipt_fingerprint": "82a7569f24a575f56bed2b6df42a6ec62de8fa229b808988ec16398468b2e7c7"
 }
