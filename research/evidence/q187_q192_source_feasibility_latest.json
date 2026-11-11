@@ -69,7 +69,7 @@
         }
       ],
       "clock_contract": "Supplement/date/update fields describe the labeling event and database state separately. Exact first-public observation and later corrections must be reconstructed before same-day use.",
-      "content_sha256": "fca4b3cf01ed60b17a7208631573b75968873b7f12dbd15ff5ad6ff2ee686f9b"
+      "content_sha256": "24153f6ccfec75a6002ac568aade241e5f454f1fa82a7d43be2aecf1c4ad5e41"
     },
     "CPSC_RECALLS": {
       "urls": [
@@ -103,7 +103,7 @@
         }
       ],
       "clock_contract": "Recall publication state is distinct from incident/manufacture dates. Historical public-observation timing and revisions/withdrawals must be kept separate.",
-      "content_sha256": "2aa7bea0a4c022733af5584cd42e04cffa62a3c266b3a0df9ef7e303d72fbf51"
+      "content_sha256": "465fc0777443074275a5aefcde70b037e5391979b4c2208c0c92edafacc11bb2"
     },
     "EPA_ECHO": {
       "urls": [
@@ -134,7 +134,7 @@
         }
       ],
       "clock_contract": "Facility/event dates are not interchangeable with the public ECHO refresh/extraction boundary. Historical PIT must use the documented refresh clock and prevent later refreshes from rewriting the prefix.",
-      "content_sha256": "db95bb479fc430983bd5f3f940f6c3f3ce902228a2ce40d14a6db252e66a043a"
+      "content_sha256": "d78431efcd16e0eb0f060af7ba419cb513546c2fd7cc872c8d8279b267255082"
     },
     "USPTO_PATENT": {
       "urls": [
@@ -166,7 +166,7 @@
         }
       ],
       "clock_contract": "Patent issue/publication date is distinct from later bulk-data refreshes. For Q191 the science-publication boundary must be separately proven and same-day ambiguous ordering must be excluded.",
-      "content_sha256": "6171217b879449e42996be6fdd4e60c634579a3df337203220b1adc5a6a5f1a4"
+      "content_sha256": "8f79535835a49f418da93c54dfed7563d9443aae540fcd8078bff69e4083f86a"
     },
     "CROSSREF": {
       "urls": [
@@ -188,7 +188,7 @@
         }
       ],
       "clock_contract": "Crossref deposit/publication metadata is not automatically an exact public-dissemination timestamp; historical stage ordering must be proven.",
-      "content_sha256": "741eb3f98178d25d84d155d7dced653f97e8d90eaf398d6c6e5ec76a80f4f1e7"
+      "content_sha256": "b15295c382a63a3c8cbb8df31e4c634d735815b068082cf8a3cf8eb2209c0280"
     },
     "FDA_SHORTAGES": {
       "urls": [
@@ -238,7 +238,7 @@
         }
       ],
       "clock_contract": "Shortage start/resolution dates are distinct from first public observation. Historical daily-list state must be reconstructed without allowing current records to overwrite earlier prefixes.",
-      "content_sha256": "490e8ada16126df4a19e32c190a76a48d6a84702333c77cac43a39c56f8dd493"
+      "content_sha256": "78b414504714c3078fe96fd26dfb9b136d3b6befd5c4996d37f0edb479704a5e"
     }
   },
   "candidate_results": [
@@ -311,5 +311,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "22bd561cf65be8304613b8205bbaa9df893dbf1a1fdf2c1666f2ae16c51e1f14"
+  "receipt_fingerprint": "d317b60e5ba2ce2587033e6fb0f4b43ce625cc3e8e1658cca9a98a40e04b26cb"
 }
