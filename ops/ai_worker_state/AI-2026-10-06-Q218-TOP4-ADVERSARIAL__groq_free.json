@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
   "context_fingerprint": "af33b9bd08de8c944f12d3a4cdc141f7abbbe4c1b589cdd91f1ff50ecf3ee0ec",
-  "observed_at_utc": "2026-11-12T15:02:40.146055Z",
+  "observed_at_utc": "2026-11-12T23:30:38.397057Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.378,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 4990, Requested 5562. Please try again in 19.14s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 4.07,
+  "stdout": "**Q218 Candidate Gate Review – Deterministic Pairing & Identity Issues**  \n*Scope: 10‑K ↔ 8‑K event pairing, SEC acceptance timestamps, filing amendments, report‑date vs event‑date, earnings‑release classification, issuer identity drift, and semantic‑wedge collapse.*\n\n| # | Failure Mode | Description | Smallest Deterministic Falsifier | Exact Artifact(s) Needed | Counter‑argument (code‑level) | Next Action |\n|---|--------------|-------------|----------------------------------|--------------------------|------------------------------|-------------|\n| 1 | **Missing Acceptance Timestamp** | `sec_submission_census()` assumes every filing has `acceptanceDatetime`. If missing, the pairing rule cannot be applied and the code may silently skip or mis‑pair. | A single filing record where `acceptanceDatetime` is `null` or absent. | Raw JSON from `https://data.sec.gov/submissions/CIK{padded_cik}.json` for a CIK that has at least one filing with `acceptanceDatetime` missing. | The code checks `item.get(\"latest_10k\").get(\"acceptance_datetime_found\")` but never handles `None`. | 1. Pull the JSON for a known CIK (e.g., `AAPL` on a date where an amendment was filed). 2. Verify that `acceptanceDatetime` is missing. 3. Confirm that the function skips the filing or raises an error. |\n| 2 | **Unrelated 8‑K Mis‑paired as Earnings Release** | The rule selects the *latest* 8‑K by acceptance timestamp within the interval, regardless of content. A non‑earnings 8‑K (e.g., a material event 8‑K) could be paired, corrupting the semantic wedge. | A 10‑K and an 8‑K that are unrelated but whose acceptance timestamps fall in the interval. | JSON for both filings, with the 8‑K lacking Item‑2.02 or Exhibit‑99.1. | The code only filters by form type, not by Item or Exhibit. | 1. Identify a 10‑K and an 8‑K where the 8‑K is a “material event” 8‑K. 2. Extract their acceptance timestamps. 3. Run the pairing logic and confirm the 8‑K is selected. |\n| 3 | **Report‑Date vs Filing‑Date Ambiguity** | The event clock is defined as the *public observation* (acceptance timestamp). However, the code also references `filingDate` and `reportDate`. If these differ, the interval calculation may be wrong. | A filing where `filingDate` ≠ `reportDate` (e.g., filingDate 2025‑01‑10, reportDate 2025‑01‑12). | JSON for that filing. | The code currently ignores `reportDate`; it only uses `filingDate` for filtering by `FIXED_END`. | 1. Pull a filing with mismatched dates. 2. Verify that the interval logic uses `filingDate` only. 3. Document potential mis‑alignment. |\n| 4 | **False Pairing of Earnings Releases** | The rule selects the *latest* 8‑K by acceptance timestamp, but earnings releases are identified by Item‑2.02/Exhibit‑99.1. If an 8‑K contains no such item, it should be excluded. | A 10‑K and an 8‑K where the 8‑K contains no Item‑2.02 or Exhibit‑99.1 but falls in the interval. | JSON for both filings, with the 8‑K’s `items` array lacking the relevant item. | The code does not inspect `items`; it only checks form type. | 1. Find an 8‑K that is a “material event” 8‑K. 2. Run the pairing logic; confirm it pairs. 3. Propose adding an `items` filter. |\n| 5 | **Voluntary vs Mandatory Channel Mis‑classification** | The candidate assumes all 8‑Ks are voluntary earnings releases. However, some 8‑Ks (e.g., 8‑K/A) are mandatory. The code treats them the same. | A 10‑K paired with an 8‑K/A that is mandatory. | JSON for the 8‑K/A. | The code includes `\"8-K/A\"` in the form filter but does not flag mandatory status. | 1. Identify a mandatory 8‑K/A filing. 2. Verify pairing. 3. Suggest adding a `mandatory` flag in the spec. |\n| 6 | **Issuer Identity Drift** | `SEC_CIKS` is a static mapping of symbol → CIK. Companies change tickers or CIKs; the code may miss filings or mis‑associate them. | A company that changed ticker between `FIXED_START` and `FIXED_END`. | `SEC_CIKS` dict and the JSON for the old and new CIKs. | The code never updates the mapping; it assumes static identity. | 1. Search SEC for a ticker change (e.g., `F` → `FDX`). 2. Pull filings for both CIKs. 3. Check if the code captures both. |\n| 7 | **Semantic Wedge Collapse** | The pairing rule may produce the same set of pairs as a simpler rule (e.g., 10‑K ↔ 10‑K/A). If the wedge is not orthogonal, the candidate fails the orthogonal‑information requirement. | A set of filings where the latest 8‑K in the interval is always a 10‑K/A. | List of pairings produced by the current logic for a sample universe. | The code does not compare against alternative pairings. | 1. Generate pairings for a sample of 100 symbols. 2. Compare against a baseline rule (e.g., 10‑K ↔ 10‑K/A). 3. Quantify overlap. |\n\n### Counter‑arguments & Mitigations\n\n- **Missing timestamps**: The code sets `acceptance_datetime_found` to `True` only if the field exists. If missing, the filing is simply not counted as `accepted_10k` or `accepted_8k`. This may be acceptable if the goal is to only use filings with timestamps, but it silently reduces coverage.\n- **Unrelated 8‑K**: The design spec explicitly states “latest eligible Item‑2.02/Exhibit‑99.1‑style 8‑K”. The code does not enforce this, so the spec is not met.\n- **Report vs filing date**: The spec does not require aligning these dates; the code uses `filingDate` for filtering. However, the event clock is the acceptance timestamp, so the mismatch may not affect pairing.\n- **Voluntary vs mandatory**: The spec does not distinguish mandatory 8‑Ks; the code’s inclusion of 8‑K/A may be intentional. Still, the semantic wedge may be weakened if mandatory 8‑Ks are treated as earnings releases.\n- **Issuer drift**: The spec requires immutable issuer mapping for the trial. The static dict may violate this if a company changes ticker during the window.\n- **Semantic wedge**: The spec demands orthogonal information. If the pairing rule is too generic, the wedge may collapse.\n\n### Concrete Next Actions\n\n1. **Create a deterministic test harness** that:\n   - Loads the raw JSON for a list of CIKs (e.g., `AAPL`, `MSFT`, `AMZN`).\n   - Extracts `filingDate`, `reportDate`, `acceptanceDatetime`, `form`, `items`.\n   - Applies the current pairing rule.\n   - Outputs the resulting pairs.\n\n2. **Identify failure cases**:\n   - Use the harness to locate filings with missing `acceptanceDatetime`.\n   - Locate 8‑Ks lacking Item‑2.02/Exhibit‑99.1.\n   - Find 8‑K/A filings and confirm pairing.\n\n3. **",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-11-12T15:02:40.524121Z",
-    "blocked_until_utc": "2026-11-12T16:02:40.524121Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 4990, Requested 5562. Please try again in 19.14s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-554f2ab0-ba0e-4264-8ec4-18f2e0e907c5",
+  "usage": {
+    "queue_time": 0.114922922,
+    "prompt_tokens": 5065,
+    "prompt_time": 0.347419655,
+    "completion_tokens": 3200,
+    "completion_time": 3.433214139,
+    "total_tokens": 8265,
+    "total_time": 3.780633794,
+    "completion_tokens_details": {
+      "reasoning_tokens": 1474
+    }
   }
 }\n
