@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-11-12T23:30:38.443225Z",
+  "observed_at_utc": "2026-11-13T06:26:48.321341Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.293,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5437, Requested 5378. Please try again in 21.1125s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.603,
+  "stdout": "**Worker Handoff – Q220 Methods Review**\n\n| Section | Content |\n|---------|---------|\n| **Summary** | Q220 is a “schema‑gate” that only verifies the presence of expected ZIP members and basic header stats.  It does **not** inspect the XBRL payloads for semantic correctness.  The following table lists concrete failure modes that could invalidate the candidate’s source contract, the minimal deterministic falsifier for each, and the exact artifact that must be examined. |\n| **Findings** | 1. **Missing or incorrect XBRL text‑block → presentation‑role mapping**<br>   *Falsifier*: Load the XBRL file (e.g., `sub.txt`), extract `<xbrl>` → `<presentation>` mapping, assert that every `<xbrl>` element has a corresponding `<presentation>` role.<br>   *Artifact*: `sub.txt` (or any XBRL file in the ZIP).<br>2. **Taxonomy‑extension drift**<br>   *Falsifier*: Parse the `<link:schemaRef>` URI in the XBRL header, compare against the expected US‑GAAP 2009‑Q1 taxonomy URI.<br>   *Artifact*: `sub.txt` (header section).<br>3. **Custom namespace usage**<br>   *Falsifier*: Enumerate all namespace prefixes in the XBRL file, flag any that are not in the US‑GAAP 2009‑Q1 namespace set.<br>   *Artifact*: `sub.txt`.<br>4. **Section identity mismatch**<br>   *Falsifier*: Cross‑check the `<section>` IDs in the XBRL against the SEC filing’s `<section>` tags (e.g., `SEC-SECTION-1`).<br>   *Artifact*: `sub.txt` and the corresponding SEC filing metadata (not in the ZIP, but obtainable via the filing’s accession number).<br>5. **Narrative tokenization errors**<br>   *Falsifier*: Run a simple whitespace tokenizer on the `<text>` elements and compare token counts against a pre‑computed baseline for that filing.<br>   *Artifact*: `txt.txt` (contains narrative text).<br>6. **Amended filing duplicate facts**<br>   *Falsifier*: Detect duplicate `<fact>` IDs or duplicate `(contextRef, unitRef, value)` tuples within the same XBRL file.<br>   *Artifact*: `sub.txt` (or any amended filing XBRL).<br>7. **Future/current XBRL contamination**<br>   *Falsifier*: Parse the `<period>` element, ensure the `<endDate>` ≤ current date (or the filing’s reported date).<br>   *Artifact*: `sub.txt`.<br>8. **Duplicate facts across files**<br>   *Falsifier*: Build a global index of `(contextRef, unitRef, concept)` across all XBRL files in the ZIP, flag duplicates.<br>   *Artifact*: All XBRL files (`*.txt`/`*.tsv`).<br>9. **Period/Unit/Context alignment**<br>   *Falsifier*: For each fact, verify that the `contextRef` matches a `<context>` that defines the same period and unit.<br>   *Artifact*: `sub.txt`.<br>10. **Representation mismatch proxies filing length/readability**<br>   *Falsifier*: Compute file size and line count of each XBRL file, compare against the expected size distribution for 2009‑Q1 notes.<br>   *Artifact*: `sub.txt` (or any XBRL file). |\n| **Counterarguments** | • The schema gate’s minimal checks may be sufficient if the downstream PIT compiler enforces stricter validation.<br>• Some “duplicate fact” detections may be false positives due to legitimate re‑filing of the same fact in amended filings.<br>• Custom namespaces might be intentionally used for internal SEC extensions; the taxonomy‑extension check should allow a whitelist.<br>• Narrative tokenization differences may arise from locale‑specific punctuation; a simple whitespace split may over‑flag. |\n| **Concrete Next Actions** | 1. **Extract ZIP**: `unzip 2009q1_notes.zip -d /tmp/q220_notes`.<br>2. **Run XBRL validator**: Use an open‑source XBRL parser (e.g., `xbrlpy` or `Arelle`) on each `*.txt` file to surface namespace, taxonomy, and context errors.<br>3. **Automate falsifiers**: Write a lightweight Python script that iterates over all `*.txt` files, applies the 10 checks above, and logs failures with file path and line number.<br>4. **Collect artifacts**: For each failure, capture the offending file and the specific XML snippet (e.g., the `<fact>` element).<br>5. **Report**: Produce a CSV/JSON report summarizing failures per file, to be fed into the next research gate. |\n| **Uncertainty** | • The archive contains only the 2009‑Q1 notes; it is unclear whether the same issues persist in later periods (e.g., 2010‑Q1).<br>• The mapping between SEC filing sections and XBRL `<section>` IDs is not formally documented; manual cross‑check may be required.<br>• The schema gate does not enforce the presence of a `<presentation>` role; the downstream PIT compiler may or may not rely on it.<br>• The “future/current XBRL contamination” check assumes the filing’s reported date is trustworthy; if the filing date itself is wrong, the check may be invalid. |\n\n**Note**: All actions above are strictly for source‑contract validation and do not constitute performance evidence or promotion. The artifacts listed are the minimal deterministic inputs required to reproduce each falsifier.",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-11-12T23:30:38.736287Z",
-    "blocked_until_utc": "2026-11-13T00:30:38.736287Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5437, Requested 5378. Please try again in 21.1125s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-022b78a0-9d65-4ac9-b19e-8bd25670c08f",
+  "usage": {
+    "queue_time": 0.003182574,
+    "prompt_tokens": 5092,
+    "prompt_time": 0.331956941,
+    "completion_tokens": 2623,
+    "completion_time": 2.899176956,
+    "total_tokens": 7715,
+    "total_time": 3.231133897,
+    "completion_tokens_details": {
+      "reasoning_tokens": 1346
+    }
   }
 }\n
