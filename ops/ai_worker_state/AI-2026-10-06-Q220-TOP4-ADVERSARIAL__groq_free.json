@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-11-14T13:24:05.633579Z",
+  "observed_at_utc": "2026-11-14T22:16:37.060745Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.216,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5287, Requested 5596. Please try again in 21.6225s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.414,
+  "stdout": "**Q220 Methods‑Review Handoff**  \n*(All findings are design‑level; no performance claims or promotion are made.)*\n\n| # | Failure Mode | Description | Minimal Deterministic Falsifier | Exact Artifact Needed |\n|---|--------------|-------------|---------------------------------|-----------------------|\n| 1 | **As‑filed XBRL text‑block → Presentation‑role mapping** | The archive may contain XBRL notes that use presentation roles not defined in the current taxonomy (e.g., custom roles or deprecated roles). | Parse a filing that contains a `<presentation>` element with a role URI not present in the standard taxonomy. | 1. A specific SEC XBRL filing (e.g., `10-K` for a company in 2009) that includes a `<presentation>` element with a custom role URI. 2. The taxonomy file (`us-gaap-2009-01-01.xsd`) for reference. |\n| 2 | **Taxonomy‑extension changes** | Notes may reference taxonomy extensions that were added after the filing date, leading to mismatched element definitions. | Identify a filing that references a taxonomy extension (e.g., `us-gaap-2010-01-01.xsd`) but was filed in 2009. | 1. The 2009 filing’s XBRL instance. 2. The 2010 taxonomy extension file. |\n| 3 | **Custom namespaces** | Custom namespaces may be used for facts, causing ambiguity in concept resolution. | Find a filing that declares a namespace URI not present in the standard taxonomy and uses it for a fact. | 1. The XBRL instance with a `<link:roleRef>` or `<xbrli:context>` that uses a custom namespace. |\n| 4 | **Section identity** | The same narrative section may be identified by different labels across filings, breaking deterministic mapping. | Provide two filings where the same narrative section (e.g., “Management’s Discussion and Analysis”) is labeled differently (e.g., “MD&A” vs “Management Discussion”). | 1. Filing A with section header “MD&A”. 2. Filing B with section header “Management Discussion”. |\n| 5 | **Narrative tokenization** | Tokenization rules (punctuation, line breaks, hyphenation) may vary, affecting downstream text‑analysis. | Use a filing whose narrative contains unusual tokenization (e.g., hyphenated words split across lines). | 1. The XBRL instance containing the narrative text block with line‑break hyphenation. |\n| 6 | **Amended filings** | Amended filings may duplicate or contradict facts, leading to double‑counting or inconsistent state. | Locate an amended filing that contains a fact identical to a prior filing but with a different value. | 1. Original filing instance. 2. Amended filing instance (e.g., `10-K/A`). |\n| 7 | **Future/current XBRL contamination** | Future filings may include XBRL elements that are not yet valid for the filing period, contaminating the archive. | Identify a filing that uses an element introduced after the filing date (e.g., a 2012 element in a 2010 filing). | 1. The 2010 filing instance. 2. The 2012 taxonomy element definition. |\n| 8 | **Duplicate facts** | Duplicate facts within a single filing can inflate counts or misrepresent values. | Find a filing that contains two identical `<us-gaap:Assets>` facts with the same context. | 1. The XBRL instance with duplicate facts. |\n| 9 | **Period/unit/context alignment** | Facts may reference mismatched periods or units (e.g., a quarterly period with a yearly unit). | Provide a filing where a fact’s `<xbrli:context>` period does not match the unit’s period. | 1. The XBRL instance with mismatched period/unit. |\n|10 | **Representation mismatch vs. filing length/readability** | The observed mismatch may simply reflect longer filings or generic readability differences, not substantive errors. | Compare a long, well‑formatted filing with a short, poorly formatted filing that both contain the same facts. | 1. Long filing instance. 2. Short filing instance. |\n\n---\n\n### Counterarguments & Observations\n\n| # | Counterargument | Notes |\n|---|-----------------|-------|\n| 1 | The archive’s `txt.txt` file may already contain cleaned, role‑agnostic text, mitigating role mapping issues. | Need to verify that the cleaning step removes role information. |\n| 2 | Taxonomy extensions are version‑tagged; the archive may only include the taxonomy version that matches the filing date. | Verify that the taxonomy version is embedded in the filing’s `link:schemaRef`. |\n| 3 | Custom namespaces are often used for footnotes; the mapping may be deterministic if footnote IDs are preserved. | Check that footnote IDs are unique across the archive. |\n| 4 | Section headers may be standardized by the SEC’s XBRL taxonomy; variations may be limited. | Inspect the `link:roleRef` for section roles. |\n| 5 | Tokenization is handled by the SEC’s XBRL parser; inconsistencies may be rare. | Confirm that the parser normalizes line breaks. |\n| 6 | Amended filings are flagged in the taxonomy; the archive may exclude them. | Verify that the archive includes only original filings. |\n| 7 | Future contamination is unlikely if the archive is built from the SEC’s official release. | Check the release notes for the archive. |\n| 8 | Duplicate facts are prevented by the SEC’s validation rules. | Confirm that the SEC’s XBRL validator rejects duplicates. |\n| 9 | Period/unit alignment is enforced by the SEC’s XBRL validator. | Verify that the validator output is included in the archive. |\n|10 | Representation mismatch may be due to the `pre.txt` vs `txt.txt` split; the archive may already separate raw vs cleaned text. | Inspect the `pre.txt` and `txt.txt` headers. |\n\n---\n\n### Concrete Next Actions\n\n1. **Extract and parse** the `2009q1_notes.zip` archive locally (using the provided `q220_fsn_schema_gate.py` as a template).  \n2. **Identify** all XBRL instance files (`*.xml`) within the archive.  \n3. **For each filing**:  \n   - a. Extract the `<presentation>` elements and compare role URIs against the standard taxonomy.  \n   - b. Check for taxonomy extensions referenced via `<link:schemaRef>`.  \n   - c. Record any custom namespace declarations.  \n   - d. Verify section headers via `<link:roleRef>` or narrative text.  \n   - e. Tokenize narrative text and flag unusual patterns.  \n   - f. Detect amended filings by inspecting the `form` field.  \n   - g. Cross‑check facts for duplicates and period/unit alignment.  \n4. **Create deterministic falsifiers**: For each failure mode, select the smallest filing that demonstrates the issue (e.g., a single filing with a custom role).  \n5. **Document** the artifact paths and the specific lines/sections that trigger the failure.  \n6. **Report** findings in a structured JSON (similar to the table above) and attach the minimal artifacts as evidence.  \n\n---\n\n### Uncertainty & Risks\n\n- **Archive completeness**: The provided `2009q1_notes.zip` may not contain all filings; some failure modes may not be observable.  \n- **Taxonomy versioning**: Without explicit taxonomy version metadata in the filings, it may be hard to determine if an extension is truly future‑dated.  \n- **Parser behavior**: The SEC’s XBRL parser may perform implicit normalizations that are not documented; this could mask or create apparent failures.  \n- **Custom namespace resolution**: Some custom namespaces may be resolved via external registries not included in the archive.  \n\nThese uncertainties should be noted in any downstream design decisions.",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-11-14T13:24:05.850063Z",
-    "blocked_until_utc": "2026-11-14T14:24:05.850063Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5287, Requested 5596. Please try again in 21.6225s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-7606f82a-5dcb-470d-8e9b-b2fe2c0b5374",
+  "usage": {
+    "queue_time": 0.122252736,
+    "prompt_tokens": 5092,
+    "prompt_time": 0.320665928,
+    "completion_tokens": 2637,
+    "completion_time": 2.790085206,
+    "total_tokens": 7729,
+    "total_time": 3.110751134,
+    "completion_tokens_details": {
+      "reasoning_tokens": 943
+    }
   }
 }\n
