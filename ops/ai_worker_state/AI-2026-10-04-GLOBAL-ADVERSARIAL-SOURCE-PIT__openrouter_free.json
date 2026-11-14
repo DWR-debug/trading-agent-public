@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-14T07:00:30.348493Z",
+  "observed_at_utc": "2026-11-14T18:29:23.524836Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 15.727,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 17.037,
+  "stdout": "## Worker handoff — adversarial source/PIT review\n\n**Status:** `ADVERSARIAL_REVIEW_COMPLETE_ON_EMBEDDED_ARTIFACTS`  \n**Scientific authority:** false  \n**Performance authorized:** false  \n**Promotion authorized:** false  \n**Live execution:** false  \n**Scope:** Q202–Q204 information-timing family and Q205 NLRB labor-representation certification channel, with Q194–Q201 challenge standard applied.  \n**Nature:** Worker material only. Not scientific evidence. Must be independently checked/reproduced by deterministic project tooling.\n\n---\n\n## 1. Core findings\n\n1. **Current live probes are not durable PIT evidence.**  \n   A live endpoint response, current documentation page, HTTP marker, current API payload, or current content hash is provisional operational telemetry only. It does not prove that the same source state existed at the historical observation boundary.\n\n2. **Q202–Q204 readiness is not established by the supplied context.**  \n   The guard references `q202_q204_information_timing_feasibility_latest.json`, but the supplied context does not show an immutable dated snapshot/vintage, frozen archive fingerprint, or explicitly frozen historical artifact bound to the receipt. Unless such a binding is present in the actual receipt, Q202–Q204 should remain `PROVISIONAL_LIVE_PROBE_ONLY` or blocked for PIT use.\n\n3. **Q205 is discovery-only and not source/PIT validated.**  \n   Q205 is explicitly described as newly quarantined and discovery-only. It is not present in the supplied `source_readiness_snapshot_guard.py` receipt map or the supplied `orthogonal_pit_next_gate.py` receipt map. No Q205 source/PIT receipt, immutable NLRB snapshot, frozen mapping, or observation-clock artifact is shown.\n\n4. **Information absence is a confounded construct.**  \n   For Q202–Q204, “information absence” must be distinguished from vendor coverage gaps, publication lag, missing metadata, delisted/renamed entities, and source-specific revision behavior. Absence observed in a current API is not evidence of historical absence.\n\n5. **Financing transmission requires frozen exposure mapping.**  \n   Any financing-transmission channel needs a pre-event, immutable issuer/entity exposure map. If the mapping is built or revised after outcome observation, the channel is not PIT-valid.\n\n6. **Public-information latency requires an observation clock, not an occurrence clock.**  \n   Event occurrence date, filing date, acceptance date, publication date, and vendor ingestion date are distinct. If only a date is available, the contract should use the next regular trading-session boundary and must not infer an intraday clock.\n\n7. **Revision lineage is a first-class PIT risk.**  \n   SEC filings, 13F data, NLRB case records, and public-information feeds can",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1794680963-yzNJ20dh3Vfs7oguyICT",
+  "usage": {
+    "prompt_tokens": 5082,
+    "completion_tokens": 3200,
+    "total_tokens": 8282,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2636,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
