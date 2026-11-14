@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
   "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
-  "observed_at_utc": "2026-11-14T06:06:56.707944Z",
+  "observed_at_utc": "2026-11-14T13:24:07.698360Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 2.442,
-  "stdout": "**Worker Handoff – Q219 Options‑Source Breadth Gate Review**\n\n| Section | Content |\n|---------|---------|\n| **Findings** | 1. **SEC Acceptance Clock** – The gate assumes that the “observation_date_field” in the Q129 contract (`date`) is the SEC‑accepted filing date. No evidence is provided that the timestamp in the options parquet files matches the SEC acceptance time; the EOD snapshot at 4 PM ET may be *after* the SEC acceptance, creating a same‑session leakage risk. <br>2. **Option EOD Timestamp Semantics** – The contract states “4 PM ET end‑of‑day snapshot” but the automation script does not validate that the `date` column in each parquet file is indeed the 4 PM ET timestamp. The parquet files may contain a different clock (e.g., UTC, market close, or a proprietary “snapshot” time). <br>3. **Same‑Session Leakage** – The script does not compare the options snapshot timestamp to the SEC filing acceptance timestamp. If the options data is published *before* the SEC acceptance, the candidate could be using future information. <br>4. **Q129 Source Release & Contract Selection** – The script pulls the release via the GitHub API (`/releases/289029018`) but does not verify that the assets listed in the release match the contract’s `options_source_statement`. The contract claims “original 104‑symbol source”, yet the release only contains 3 symbols (SPY, QQQ, IWM). <br>5. **Option Contract / Calendar Roll Effects** – The parquet files contain only `expiration` and `strike` columns; there is no evidence that the data includes implied‑volatility or that roll‑over logic (e.g., next‑month contracts) is handled. <br>6. **Stale / Absent Implied‑Volatility Fields** – The `REQUIRED` set in `q129_options_pit_reproduction.py` does not include an `implied_volatility` column, yet many option‑pricing models rely on it. The absence of this field is a potential source of bias. <br>7. **Event‑Window Definitions** – The contract’s `event_clock` is “public observation boundary of the enforcement state”, but the automation does not define the event window (e.g., 1‑day, 5‑day, 10‑day). Without a clear window, the candidate’s exposure mapping is ambiguous. <br>8. **Cross‑Market Wedge** – The gate checks for “broad individual equity option source” but does not demonstrate that the options data adds information beyond the SEC filing change. The script merely flags whether any underlying other than SPY/QQQ/IWM is present; it does not quantify the incremental predictive power. |\n| **Counterarguments** | • The Q129 contract may intentionally limit to the 3 ETFs because the 104‑symbol claim refers to a broader dataset that is *not* required for the Q219 wedge. <br>• The 4 PM ET snapshot may be the only available timestamp; the absence of a more granular clock could be acceptable if the candidate’s event window is long enough to absorb same‑session leakage. <br>• Implied volatility may be derived downstream; the contract may only require structural validity, not the presence of all pricing fields. |\n| **Concrete Next Actions** | 1. **Immutable Snapshot** – Capture a *time‑stamped* copy of the Q129 release JSON and the exact parquet files (hashes, sizes) and store them in a versioned artifact repository. <br>2. **Timestamp Alignment Test** – For each parquet file, extract the `date` column and compare it to the SEC filing acceptance timestamp (from the SEC’s `acceptance_timestamp` field). Flag any records where the options timestamp precedes the acceptance. <br>3. **Clock Validation** – Verify that the `date` column is indeed 4 PM ET by cross‑checking against a reliable time source (e.g., NTP or a known market‑close dataset). <br>4. **Same‑Session Leakage Falsifier** – Shift the options snapshot timestamp forward/backward by 1–5 sessions while keeping the calendar fixed; observe whether the candidate’s signal changes. <br>5. **Implied Volatility Check** – Inspect the parquet schema for an `implied_volatility` column; if absent, run a deterministic test that attempts to compute IV from bid/ask and underlying price and flag any failures. <br>6. **Event‑Window Definition** – Require an explicit event‑window specification (e.g., “5‑day post‑filing return”) in the contract; test the candidate with a 1‑day, 5‑day, and 10‑day window to see if the signal persists. <br>7. **Cross‑Market Incrementality** – Compute a simple correlation between the options‑derived signal and the SEC filing‑only signal; if the correlation is >0.95, the wedge may be redundant. <br>8. **Contract‑Release Consistency** – Verify that the `options_source_statement` in the contract matches the actual assets in the release; if not, flag a mismatch. |\n| **Uncertainty** | • The SEC acceptance timestamp may not be publicly available for all filings; if so, the timestamp alignment test may be infeasible. <br>• The 4 PM ET snapshot may be the only timestamp provided; without a more granular clock, the same‑session leakage risk cannot be fully quantified. <br>• The absence of implied volatility may be intentional; without a downstream pricing model, it is unclear whether this omission materially affects the candidate. <br>• The cross‑market wedge’s incremental value is difficult to assess without a full statistical comparison, which is outside the scope of this review. |\n\n**Summary** – The current Q219 breadth gate relies on several implicit assumptions that are not validated by the automation script. The proposed falsifiers and missing artifacts will expose potential leakage, clock mis‑alignment, and contract‑release inconsistencies, ensuring that any future performance claims are grounded in deterministic, reproducible evidence.",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.384,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7331, Requested 5962. Please try again in 39.6975s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-d4eec845-bcd0-4dda-b679-2307002157a4",
-  "usage": {
-    "queue_time": 0.076578628,
-    "prompt_tokens": 5380,
-    "prompt_time": 0.332358096,
-    "completion_tokens": 1687,
-    "completion_time": 1.844542518,
-    "total_tokens": 7067,
-    "total_time": 2.176900614,
-    "completion_tokens_details": {
-      "reasoning_tokens": 379
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-14T13:24:08.082193Z",
+    "blocked_until_utc": "2026-11-14T14:24:08.082193Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7331, Requested 5962. Please try again in 39.6975s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
