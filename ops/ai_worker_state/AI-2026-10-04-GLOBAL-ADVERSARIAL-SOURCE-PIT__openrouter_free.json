@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-14T22:44:37.142941Z",
+  "observed_at_utc": "2026-11-15T07:11:39.550879Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 28.869,
-  "stdout": "**Findings**  \n- **Q202, Q203, Q204** – The candidate specifications list each as requiring an *immutable historical snapshot* before PIT can be considered. The corresponding receipt files (`q202_q204_information_timing_feasibility_latest.json`) are referenced in `automation/source_readiness_snapshot_guard.py`, but the actual JSON content is not provided in the context. Without inspecting those files we cannot confirm whether they contain any of the durable keys (`immutable_historical_snapshot`, `snapshot_sha256`, `archive_fingerprint`, etc.) or a status in the allowed set (`DISCOVERY_SOURCE_FEASIBILITY_COMPLETED`, `SOURCE_COMPONENT_READY`, `HISTORICAL_SOURCE_COMPONENT_READY`, `SOURCE_FEASIBILITY_ONLY`).  \n- **Q205 (NLRB labor‑representation certification)** – No receipt entry exists in the `RECEIPTS` mapping, indicating that source‑feasibility readiness has not yet been captured. The scope explicitly marks Q205 as *discovery‑only* and *not yet source/PIT validated*. Consequently, there is no immutable dated snapshot or frozen artifact to bind to the receipt.  \n- **Public‑observation clock** – The candidate contracts require an “earliest defensible public observation timestamp” (or a documented next‑publication boundary). The current operational snapshot (`21fd46550c780ebe3aeb6265384eabc68fc6b9c2` generated 2026‑11‑14) is a *live* timestamp, not a historical one, and therefore does not satisfy the clock‑discipline requirement for Q202‑204.  \n- **Frozen entity/exposure mappings** – The candidate specs demand immutable mappings of issuer‑to‑exposure that are frozen before outcome observation. The provided documentation (`docs/CURRENT_STATUS.md`, `research/candidates/...`) does not contain any explicit frozen mapping for Q202‑204, nor for Q205.  \n- **Revision/lineage evidence** – The guard script checks for keys such as `archive_contract` containing durable identifiers. No evidence of a frozen amendment history or QC lineage is visible for the Q202‑204 receipts or for Q205.  \n- **Cross‑candidate overlap/confounding** – Q202, Q203, and Q204 belong to the same *information‑timing* family and share the same receipt path. This raises the risk that a single source‑drift (e.g., a revised timestamp or mapping) could simultaneously affect all three candidates, violating the orthogonal‑information principle.  \n\n**Counterarguments** (potential defenses)  \n- *Provisional durability*: The receipt files may already embed a SHA‑256 fingerprint of an immutable snapshot, satisfying the guard’s durability check even though the content is not shown.  \n- *Explicit documentation*: The `docs/CURRENT_STATUS.md` timestamp could be interpreted as the “public‑observation boundary” for the current session, thereby satisfying clock discipline if the candidate’s event clock is defined relative to that date.  \n- *Shared lineage*: The same receipt file may serve all three candidates, implying that a single frozen artifact could legitimately bind all of them, reducing the need for separate snapshots.  \n\n**Concrete Next Actions**  \n1. **Obtain the actual receipt JSON** for Q202, Q203, Q204 (and Q205 if/when it becomes available).  \n   - Minimal deterministic falsifier: Parse the file and verify the presence of at least one durable key from `DURABLE_KEYS` *and* a status in the allowed list.  \n   - Exact missing artifact: The full `q202_q204_information_timing_feasibility_latest.json` (and any analogous file for Q205).  \n\n2. **Validate the public‑observation clock** for each candidate.  \n   - Minimal deterministic falsifier: Extract the timestamp used in the candidate contract and compare it to the immutable snapshot date; ensure the timestamp is not date‑only (i.e., includes hour/minute or is explicitly tied to a documented next‑trading‑session boundary).  \n   - Exact missing artifact: The explicit event‑clock definition (date‑time) referenced in the candidate spec for Q202‑204 and Q205.  \n\n3. **Confirm frozen entity/exposure mappings**.  \n   - Minimal deterministic falsifier: Locate a mapping (e.g., issuer → exposure) that is marked as “frozen” and verify that it is immutable (no later amendment entries) and that the mapping is bound to the same immutable snapshot used for PIT.  \n   - Exact missing artifact: The frozen mapping document or data structure referenced in the candidate contract for Q202‑204 (and Q205).  \n\n4. **Run a cheap falsifier test** (as defined in each candidate’s `cheap_falsifiers` list).  \n   - Example for Q202‑204: Shift the public‑observation timestamp forward by one trading session while keeping the calendar fixed; verify that the candidate’s logical conditions still hold under the new clock. If the candidate fails, the clock discipline is violated.  \n   - Exact missing artifact: Access to the candidate’s synthetic mutation test framework (compiler) to execute the falsifier without altering the underlying receipt.  \n\n5. **Check for cross‑candidate confounding**.  \n   - Minimal deterministic falsifier: Independently verify that each candidate’s receipt contains a unique immutable snapshot identifier (e.g., distinct `snapshot_sha256`). If they share the same identifier, a single source drift could confound all three.  \n   - Exact missing artifact: The individual SHA‑256 fingerprints for each receipt file.  \n\n**Uncertainty**  \n- The content of the receipt files for Q202‑204 (and Q205) is not available; we cannot confirm durability, status, or the presence of required keys.  \n- No explicit frozen mapping or precise public‑observation timestamp is documented for Q202‑204, nor for Q205, making it impossible to assess clock discipline or entity‑exposure immutability.  \n- The overlap of the three candidates on a single receipt file introduces ambiguity about whether a single source‑drift would invalidate all three simultaneously, but this cannot be judged without inspecting the actual identifiers.  \n\n---  \n\n**Action Handoff**  \n- **Request**: Provide the full JSON receipt files for Q202, Q203, Q204 (and Q205 when available).  \n- **Validate**: Confirm each receipt contains a durable key from `DURABLE_KEYS`, a status in the allowed set, and a precise, immutable public‑observation timestamp.  \n- **Inspect**: Verify frozen entity/exposure mappings and ensure they are bound to the same immutable snapshot.  \n- **Test**: Execute the candidate‑specific cheap falsifier (e.g., shift event forward) to confirm clock discipline.  \n- **Document**: Record the SHA‑256 fingerprint of each immutable snapshot and any revision lineage evidence.  \n\nThese steps will determine whether the source/PIT readiness for Q202‑204 (and Q205) meets the immutable‑historical‑snapshot requirement or remains provisional.",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 81.418,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1794696277-ZNKPYTKz3fRFCbtQeEPH",
-  "usage": {
-    "prompt_tokens": 5999,
-    "completion_tokens": 3190,
-    "total_tokens": 9189,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1526,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
