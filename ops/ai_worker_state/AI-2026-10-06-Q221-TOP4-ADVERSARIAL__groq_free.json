@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "fca22e97174fa0dd40fa39fc32008874634bbf1ba71fb19e2e9e0c18592fd46d",
-  "observed_at_utc": "2026-11-15T06:14:12.717323Z",
+  "observed_at_utc": "2026-11-15T18:45:41.818776Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 2.929,
-  "stdout": "**Worker Handoff – Q221 USAspending Clock & Data‑Integrity Review**\n\n| Section | Summary |\n|---------|---------|\n| **Findings** | • The current clock gate (`q221_usaspending_public_clock_gate.py`) relies solely on the *About‑the‑Data* PDF to infer a “public‑observation” boundary.  <br>• The PDF contains only high‑level language; it does not encode transaction‑class‑specific timestamps or the distinction between *award* and *modification* records.  <br>• The gate checks for generic phrases (“CONTRACT OR MODIFICATION”, “WITHIN 30 DAYS”, etc.) but does not validate that the referenced transaction classes actually satisfy those clauses.  <br>• No verification of R&D classification, PSC stability, or recipient‑to‑issuer mapping is performed.  <br>• Parent/subsidiary changes are ignored; the gate assumes a static recipient‑to‑issuer mapping.  <br>• The gate does not guard against future‑dated production contracts being included in the historical prefix, a known risk in the USAspending API. |\n| **Counter‑arguments / Weaknesses** | • **Clock validity** – The PDF’s “publication following morning” language is ambiguous; it may refer to the *website* update cycle, not the API’s data refresh.  <br>• **Award vs Modification** – The presence of the phrase “CONTRACT OR MODIFICATION” does not guarantee that the API’s award endpoint returns only award‑type transactions; many award records are subsequently updated to modifications.  <br>• **Transaction history** – The gate never pulls a transaction list or checks that the API’s `transactions` endpoint actually contains the expected classes (e.g., `AWARD`, `MODIFICATION`).  <br>• **R&D classification** – No field in the current gate checks the `R&D` flag or the `R&D` classification codes that are required for certain research‑grant analyses.  <br>• **PSC stability** – PSC codes can change over time; the gate does not verify that the PSC used in a transaction matches the PSC definition valid at the transaction’s date.  <br>• **Recipient‑to‑Issuer mapping** – The gate assumes a one‑to‑one mapping; it does not validate that the `recipient_id` can be resolved to a unique `issuer_id` in the historical data.  <br>• **Parent/Subsidiary** – Many recipients are subsidiaries; the gate does not check that the parent entity is correctly linked, which can alter the exposure mapping.  <br>• **Future‑dated contracts** – The API may return contracts with future award dates; the gate does not filter or flag these, risking leakage of future data into the historical prefix. |\n| **Minimal Deterministic Falsifiers** | 1. **Award vs Modification** – Pull a known award transaction (e.g., `award_id=123456`) and its subsequent modification record. Verify that the PDF contains “CONTRACT OR MODIFICATION” but the API’s award endpoint returns only the award record, not the modification.  <br>2. **Transaction Class Timing** – For a transaction class `AWARD`, fetch the `award_date` and compare it to the `publication_date` reported in the API. If `award_date > publication_date`, the clock assumption fails.  <br>3. **PSC Stability** – Identify a PSC that changed between 2024 and 2025 (e.g., `PSC=ABC`). Pull a transaction dated 2024 with PSC `ABC` and confirm that the API’s PSC definition matches the 2024 definition, not the 2025 one.  <br>4. **Recipient‑to‑Issuer Mapping** – Select a recipient that is a subsidiary (e.g., `recipient_id=XYZ`). Resolve its parent issuer via the `recipient_parent` endpoint and confirm that the mapping matches the historical mapping used in the candidate.  <br>5. **Future‑dated Contract Leakage** – Query the API for transactions with `award_date` > current date. If any appear in the historical prefix (e.g., in the last 30 days of the prefix), the gate fails. |\n| **Exact Missing Artifacts** | • **Transaction‑class‑specific publication logs** – A CSV or JSON file listing each transaction’s `award_date`, `modification_date`, and `publication_date`.  <br>• **PSC definition history** – A versioned table of PSC codes with effective dates.  <br>• **Recipient‑to‑Issuer mapping history** – A mapping file that records parent/subsidiary relationships over time.  <br>• **R&D classification schema** – A formal definition of R&D codes and their valid date ranges.  <br>• **Award‑vs‑Modification audit trail** – A dataset that flags each award record with its modification history.  <br>• **Future‑dated contract list** – A list of all transactions with `award_date` > current date that appear in the historical prefix. |\n| **Concrete Next Actions** | 1. **Implement a lightweight API probe** that pulls a handful of award and modification records and verifies the presence/absence of modification data in the award endpoint.  <br>2. **Build a transaction‑class timing validator** that compares `award_date` vs `publication_date` for a sample of 100 transactions across all classes.  <br>3. **Acquire PSC history** from the USAspending data dictionary and cross‑check against transaction PSCs.  <br>4. **Retrieve recipient‑to‑issuer mapping** for a set of subsidiaries and confirm parent linkage.  <br>5. **Generate a future‑dated contract report** by querying the API for `award_date > today` and checking whether any appear in the historical prefix.  <br>6. **Document all missing artifacts** in a dedicated “Q221 Data‑Integrity Gap” file, including URLs, data schemas, and versioning information.  <br>7. **Update the clock gate** to incorporate at least one of the above checks (e.g., enforce that `award_date <= publication_date` for all fetched transactions). |\n| **Uncertainty** | • The exact semantics of “public‑observation” in the USAspending documentation are not fully specified; the PDF may be outdated or ambiguous.  <br>• The API’s internal publication schedule (e.g., nightly vs hourly) is not publicly documented, so any inferred clock may be off by several hours.  <br>• PSC definitions may have been retroactively updated, making historical matching non‑trivial.  <br>• The mapping between recipients and issuers may change over time; without a versioned mapping table, validation is incomplete.  <br>• Future‑dated contracts may be intentionally included for forecasting; distinguishing legitimate forecasts from leaks requires additional policy context. |\n\n**End of Handoff**",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.169,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5661, Requested 5626. Please try again in 24.6525s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-ee8c5fd7-19e5-4431-ab08-3ff3aecec1cf",
-  "usage": {
-    "queue_time": 0.169158884,
-    "prompt_tokens": 5067,
-    "prompt_time": 0.321318424,
-    "completion_tokens": 1959,
-    "completion_time": 2.082212114,
-    "total_tokens": 7026,
-    "total_time": 2.403530538,
-    "completion_tokens_details": {
-      "reasoning_tokens": 488
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-15T18:45:41.988174Z",
+    "blocked_until_utc": "2026-11-15T19:45:41.988174Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5661, Requested 5626. Please try again in 24.6525s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
