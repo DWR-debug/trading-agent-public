@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-11-15T00:12:44.280162Z",
+  "generated_at_utc": "2026-11-15T14:41:35.629868Z",
   "provider_availability": {
     "openrouter_free": {
       "eligible": true,
@@ -12,8 +12,8 @@
     },
     "gemini_api": {
       "eligible": false,
-      "next_available_at": "2026-11-15T08:00:00Z",
-      "next_reset_at": "2026-11-15T08:00:00Z",
+      "next_available_at": "2026-11-16T08:00:00Z",
+      "next_reset_at": "2026-11-16T08:00:00Z",
       "confidence": "exact_policy",
       "reason": "Gemini daily quota reset boundary is documented at midnight Pacific Time, but remaining balance is unknown; require live preflight before admission",
       "reserve_status": "preflight_required"
@@ -43,12 +43,12 @@
       "reserve_status": "preflight_required"
     },
     "groq_free": {
-      "eligible": true,
+      "eligible": false,
       "next_available_at": null,
       "next_reset_at": null,
-      "confidence": "observed_preflight",
-      "reason": "fresh explicit Groq free-only preflight passed; fixed model route is eligible",
-      "reserve_status": "preflight_passed"
+      "confidence": "unknown",
+      "reason": "Groq requires a fresh explicit free-only preflight; missing, stale or failed preflight keeps the route closed",
+      "reserve_status": "preflight_required"
     }
   },
   "task_assignments": [
@@ -68,10 +68,8 @@
     },
     {
       "task_id": "AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL",
-      "status": "ADMITTED",
-      "provider": "groq_free",
-      "provider_confidence": "observed_preflight",
-      "reason": "fresh explicit Groq free-only preflight passed; fixed model route is eligible"
+      "status": "DEFERRED_NO_FREE_PROVIDER",
+      "next_check_at": "2026-11-16T08:00:00Z"
     },
     {
       "task_id": "AI-2026-09-29-Q091-ADVERSARIAL",
@@ -84,5 +82,5 @@
   "policy_is_non_authorizing": true,
   "paid_usage_allowed": false,
   "scientific_evidence_created": false,
-  "decision_fingerprint": "ac8a3954e93c6272053654371528b6cb880653c2f8337b94ad3d61c3e0091ca6"
+  "decision_fingerprint": "2f3b6e6d279f5b1976cbaa67898243689b3f9a42d77483b93e01a79c2ef070c3"
 }
