@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-11-15T06:14:12.564066Z",
+  "observed_at_utc": "2026-11-16T06:11:15.318575Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,27 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 4.183,
-  "stdout": "**Q220 Methods‑Review Handoff**  \n*(All findings are design‑level; no performance claims are made.)*\n\n| # | Failure Mode | Description | Minimal Deterministic Falsifier | Exact Artifact Needed | Counter‑Argument (if any) |\n|---|--------------|-------------|---------------------------------|-----------------------|---------------------------|\n| 1 | **As‑filed XBRL text‑block vs. parsed representation** | Raw XBRL text‑block may contain whitespace, line‑breaks, or XML‑entity differences that alter tokenization. | Compare raw text‑block with the token stream produced by the candidate’s tokenizer; assert equality of token counts and order. | Raw XBRL instance file (e.g., `2009q1_notes.zip` → `sub.txt` or `txt.txt` containing the XBRL). | Candidate’s tokenizer uses a canonicalization step (e.g., `canonical()` in `q104_i19_xbrl_pit_compiler.py`) which should remove whitespace; if not, the mismatch is a design blocker. |\n| 2 | **Presentation‑role mapping** | Candidate may map presentation roles to taxonomy elements incorrectly or incompletely. | Verify that every `<presentationRole>` used in the instance is present in the official taxonomy’s `<presentationRole>` list. | Taxonomy XML (e.g., `us-gaap-2024-01-01.xsd` or the SEC‑specific extension). | The candidate may rely on a static mapping file; if that file is missing or outdated, the mapping is invalid. |\n| 3 | **Taxonomy‑extension changes** | SEC periodically adds new elements to the XBRL taxonomy; candidate may ignore them. | Load the instance, extract all element names, and compare against the current taxonomy; flag any unknown elements. | XBRL instance file and the latest taxonomy archive. | If the candidate explicitly excludes extensions, it may still be valid for the 2009‑Q1 data set. |\n| 4 | **Custom namespaces** | SEC may declare custom namespaces (e.g., `sec:`, `us-gaap:`) that the candidate must respect. | Parse namespace declarations; assert that every element’s namespace URI is registered in the instance’s `xmlns` map. | XBRL instance file. | The candidate’s parser uses `xml.etree.ElementTree` which preserves namespaces; if it discards them, mapping fails. |\n| 5 | **Section identity** | Narrative sections (e.g., “Management’s Discussion and Analysis”) may map to multiple contexts; ambiguity can corrupt event extraction. | For each narrative section header, check that there is a unique `<contextRef>` in the instance; assert one‑to‑one mapping. | XBRL instance file and the `sub.txt`/`txt.txt` files that contain section headers. | The candidate may use a heuristic that tolerates multiple contexts; if so, the design must document the trade‑off. |\n| 6 | **Narrative tokenization** | Tokenization of narrative text may be inconsistent (e.g., handling of hyphens, apostrophes). | Run the candidate’s tokenizer on a known narrative snippet and compare against a reference tokenizer (e.g., NLTK’s `word_tokenize`). | Narrative snippet extracted from `txt.txt`. | If the candidate uses a simple split on whitespace, the mismatch may be acceptable for the current data set. |\n| 7 | **Amended filings** | Candidate may treat an amended filing as a new event, inflating counts. | Detect the `<isAmended>` flag in the instance; assert that amended filings are not counted as separate events. | XBRL instance file. | The candidate may already filter on `isAmended`; if not, this is a design blocker. |\n| 8 | **Future/current XBRL contamination** | Candidate may inadvertently include filings dated after the fixed observation window. | Parse `<filingDate>` and `<reportDate>`; assert that all dates ≤ `FIXED_END` (`2026‑10‑05`). | XBRL instance file. | The candidate’s `sec_submission_census()` uses `FIXED_END`; if the instance contains future dates, the design must reject them. |\n| 9 | **Duplicate facts** | Duplicate fact IDs can inflate event counts. | Scan for duplicate `<id>` attributes across all facts; assert uniqueness. | XBRL instance file. | The candidate may deduplicate by context; if not, this is a design flaw. |\n| 10 | **Period/unit/context alignment** | Facts may reference contexts that do not match the period or unit declared in the instance. | For each fact, validate that its `<contextRef>` points to a `<context>` whose `<period>` matches the fact’s `<unitRef>` and that the unit is defined. | XBRL instance file. | The candidate’s `parse_filing()` expects `facts` to be a tuple of dicts; if it does not perform this check, the design is incomplete. |\n| 11 | **Representation mismatch proxies filing length** | The candidate may interpret differences in XBRL representation (e.g., element ordering) as a signal, when in fact they correlate only with filing length or readability. | Correlate a representation metric (e.g., number of elements, depth of XML tree) with filing length (bytes); assert that the correlation is not statistically significant. | XBRL instance file and its byte size. | If the candidate’s design explicitly excludes representation metrics, this is not a failure. |\n\n---\n\n### Counter‑Arguments Summary\n* The candidate’s parser (`q104_i19_xbrl_pit_compiler.py`) includes timezone handling and a `canonical()` function that may mitigate whitespace issues.\n* The `q220_fsn_schema_gate.py` script already verifies the presence of required member files; however, it does not validate the internal XBRL content.\n* The design contract for Q220 does not require full taxonomy coverage; it may intentionally ignore extensions for the 2009‑Q1 data set.\n\n---\n\n### Concrete Next Actions\n1. **Artifact Retrieval**  \n   * Download `2009q1_notes.zip` (artifact ID: `https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2009q1_notes.zip`).  \n   * Extract `sub.txt`, `txt.txt`, and any XBRL instance files referenced therein.\n\n2. **Parsing & Validation Pipeline**  \n   * Implement a lightweight XBRL parser that extracts:  \n     * Raw text‑block, section headers, `<presentationRole>`, `<context>`, `<unit>`, `<fact>` IDs, and amendment flags.  \n   * Run the falsifiers listed above against the extracted data.\n\n3. **Mapping & Taxonomy Checks**  \n   * Obtain the latest SEC‑specific XBRL taxonomy (e.g., `us-gaap-2024-01-01.xsd`).  \n   * Cross‑reference all element names and presentation roles found in the instance.\n\n4. **Statistical Correlation Test**  \n   * Compute representation metrics (e.g., element count, XML depth) and correlate with filing length.  \n   * Record the correlation coefficient; a value near zero supports the counter‑argument that representation mismatch does not proxy filing length.\n\n5. **Documentation Update**  \n   * Record the results of each falsifier in a structured report.  \n   * Highlight any design blockers (e.g., missing namespace handling, duplicate facts).\n\n6. **Review & Sign‑off**  \n   * Present the findings to the research gatekeeper for a deterministic review.  \n   * If any blocker remains, propose a design fix or a gate to exclude the problematic filings.\n\n---\n\n### Uncertainty & Risks\n* **Taxonomy Version** – The exact taxonomy version used by the 2009‑Q1 archive is not explicitly stated; using an older or newer taxonomy may affect mapping checks.\n* **Custom Namespace Declarations** – Some XBRL instances may use non‑standard prefixes; the parser must be tolerant of any URI.\n* **Amendment Flag Presence** – The 2009‑Q1 archive may not include an explicit `<isAmended>` element; alternative heuristics (e.g., `filingDate` vs. `reportDate`) may be required.\n* **Representation Metric Definition** – The choice of metric (element count vs. depth) can influence the correlation test; a robust definition should be agreed upon.\n\n---\n\n**End of Handoff**",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.345,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5672, Requested 5609. Please try again in 24.6075s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-b90e2ae7-df0f-40aa-966c-622d745c5810",
-  "usage": {
-    "queue_time": 0.2290425,
-    "prompt_tokens": 5091,
-    "prompt_time": 0.647859674,
-    "completion_tokens": 2671,
-    "completion_time": 2.80711881,
-    "total_tokens": 7762,
-    "total_time": 3.454978484,
-    "prompt_tokens_details": {
-      "cached_tokens": 256
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 894
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-16T06:11:15.663898Z",
+    "blocked_until_utc": "2026-11-16T07:11:15.663898Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5672, Requested 5609. Please try again in 24.6075s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
