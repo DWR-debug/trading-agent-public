@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "fca22e97174fa0dd40fa39fc32008874634bbf1ba71fb19e2e9e0c18592fd46d",
-  "observed_at_utc": "2026-11-17T01:50:28.169443Z",
+  "observed_at_utc": "2026-11-17T15:53:08.368954Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.138,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5568, Requested 5552. Please try again in 23.4s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 2.863,
+  "stdout": "**Worker Handoff – Q221 USAspending Clock & Data Integrity Review**\n\n| Section | Content |\n|---------|---------|\n| **Findings** | 1. **Clock contract extraction** – The `q221_usaspending_public_clock_gate.py` script pulls the current *About‑the‑Data* PDF and API docs, extracts text, and flags a handful of clauses (e.g., “CONTRACT UPDATE WITHIN FIVE DAYS”, “FOLLOWING MORNING”, “CONTRACT OR MODIFICATION”).  <br>2. **Missing historical evidence** – All flags for historical applicability (`historical_applicability_proven`, `historical_boundary_verified`, `transaction_class_clock_boundaries_verified`) are set to `False`.  No archived PDF or API snapshot is referenced.  <br>3. **Award vs. modification semantics** – The script does not parse award or modification transaction records; it only checks the presence of keywords in the PDF/API text.  No evidence that award or modification entries are correctly distinguished or that the contract language applies to both.  <br>4. **R&D classification & competition fields** – No mapping or validation of R&D classification codes or competition fields is performed.  The script assumes the current field definitions are stable.  <br>5. **PSC stability** – PSC codes are not cross‑checked against a historical reference; the script does not verify that PSC values used in the data are consistent over time.  <br>6. **Recipient‑to‑issuer mapping** – No mapping table is loaded or validated; the script does not confirm that recipient IDs correctly map to issuers for all transaction classes.  <br>7. **Parent/subsidiary changes** – The script ignores corporate hierarchy changes that could affect issuer mapping or contract interpretation.  <br>8. **Pre‑event capability proxies** – No pre‑event capability data is fetched or validated; the script only checks the presence of the PDF/API.  <br>9. **Future‑contract leakage risk** – There is no audit of the historical prefix to ensure that future production contracts are not included.  The script does not compare the historical data set against a known “cut‑off” date. |\n| **Counterarguments** | • The current PDF may contain the required clauses, but without a dated snapshot we cannot prove that the same wording existed at the time of a specific transaction.  <br>• Keyword presence in the PDF/API does not guarantee that the contract language applies to all transaction classes (e.g., awards vs. modifications).  <br>• R&D classification and competition fields have evolved; assuming stability risks mis‑labeling of transactions.  <br>• PSC codes have been re‑classified; without a historical reference we cannot confirm that the codes used in the data match the contract’s definitions.  <br>• Recipient‑to‑issuer mapping may have changed due to corporate restructurings; the script’s lack of mapping validation could allow incorrect issuer attribution.  <br>• The absence of a pre‑event capability check means the candidate may rely on data that was not publicly available at the event boundary.  <br>• Future contract leakage could silently inflate the historical data set; the script does not detect or exclude such entries. |\n| **Concrete Next Actions** | 1. **Acquire dated snapshots** – Use the Wayback Machine or USASpending’s own archive to download the *About‑the‑Data* PDF and API documentation at the exact dates of the earliest and latest transactions in the historical prefix.  <br>2. **Version‑controlled text extraction** – Re‑run the extraction on the dated PDFs/APIs and store the raw text and SHA‑256 hashes in a versioned artifact (e.g., `q221_usaspending_about_YYYYMMDD.pdf`).  <br>3. **Transaction‑class parsing** – Parse the award and modification transaction tables (CSV/JSON) for each historical period, extract the `contract_type` field, and verify that the contract language identified in the PDF applies to both classes.  <br>4. **R&D & competition mapping** – Load the official R&D classification and competition field reference tables for each historical year, and cross‑check that all transaction entries use valid codes.  <br>5. **PSC stability audit** – Retrieve the PSC code dictionary for each year and confirm that all PSC codes in the data set are present and unchanged.  <br>6. **Recipient‑to‑issuer mapping** – Build a mapping table from recipient IDs to issuers for each year, accounting for parent/subsidiary changes (use the `recipient_parent` and `issuer_parent` fields if available).  <br>7. **Pre‑event capability check** – Identify any capability‑proxy fields (e.g., `capability_id`, `capability_start_date`) and confirm that their `start_date` precedes the event boundary for each transaction.  <br>8. **Historical prefix integrity** – Compare the transaction dates in the historical prefix against the official “cut‑off” date for the data release; flag any entries dated after the cut‑off as potential leakage.  <br>9. **Deterministic falsifiers** – For each of the above checks, create a minimal test that will fail if the assumption is violated (e.g., a unit test that asserts the presence of “CONTRACT UPDATE WITHIN FIVE DAYS” in the dated PDF, or that all award transactions have `contract_type == 'award'`).  <br>10. **Artifact documentation** – Store all artifacts (dated PDFs, extracted text, mapping tables, test results) in the repository under `research/evidence/q221_*` with clear provenance metadata. |\n| **Uncertainty** | • The availability of dated PDFs/APIs may be limited; if the Wayback Machine does not have the exact snapshot, we may need to request archival copies from USASpending.  <br>• The contract language may have been updated after the historical cut‑off; distinguishing the relevant version may be ambiguous.  <br>• R&D and competition field definitions may have changed mid‑year; mapping may require manual reconciliation.  <br>• Corporate hierarchy changes may not be fully captured in the data, leading to incomplete recipient‑to‑issuer mapping.  <br>• The risk of future contract leakage cannot be fully ruled out without a comprehensive audit of all transaction dates against the official release schedule. |\n\n**Summary** – The current clock gate implementation only checks for the presence of a few keywords in the latest *About‑the‑Data* PDF and API docs, leaving many critical assumptions unverified. The above actions will provide deterministic, version‑controlled evidence to either confirm or falsify the contract’s applicability to the historical data set. No performance, ranking, or promotion decisions should be made until these artifacts are produced and reviewed.",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-11-17T01:50:28.307731Z",
-    "blocked_until_utc": "2026-11-17T02:50:28.307731Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5568, Requested 5552. Please try again in 23.4s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-572c5d2c-a64a-44d2-bc03-7c724723219f",
+  "usage": {
+    "queue_time": 0.220290133,
+    "prompt_tokens": 5068,
+    "prompt_time": 0.314872629,
+    "completion_tokens": 2089,
+    "completion_time": 2.205749703,
+    "total_tokens": 7157,
+    "total_time": 2.520622332,
+    "completion_tokens_details": {
+      "reasoning_tokens": 652
+    }
   }
 }\n
