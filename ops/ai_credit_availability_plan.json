@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-11-18T09:01:23.232011Z",
+  "generated_at_utc": "2026-11-18T17:56:25.186601Z",
   "provider_availability": {
     "openrouter_free": {
       "eligible": true,
@@ -43,12 +43,12 @@
       "reserve_status": "preflight_required"
     },
     "groq_free": {
-      "eligible": false,
+      "eligible": true,
       "next_available_at": null,
       "next_reset_at": null,
-      "confidence": "unknown",
-      "reason": "Groq requires a fresh explicit free-only preflight; missing, stale or failed preflight keeps the route closed",
-      "reserve_status": "preflight_required"
+      "confidence": "observed_preflight",
+      "reason": "fresh explicit Groq free-only preflight passed; fixed model route is eligible",
+      "reserve_status": "preflight_passed"
     }
   },
   "task_assignments": [
@@ -68,8 +68,10 @@
     },
     {
       "task_id": "AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL",
-      "status": "DEFERRED_NO_FREE_PROVIDER",
-      "next_check_at": "2026-11-19T08:00:00Z"
+      "status": "ADMITTED",
+      "provider": "groq_free",
+      "provider_confidence": "observed_preflight",
+      "reason": "fresh explicit Groq free-only preflight passed; fixed model route is eligible"
     },
     {
       "task_id": "AI-2026-09-29-Q091-ADVERSARIAL",
@@ -82,5 +84,5 @@
   "policy_is_non_authorizing": true,
   "paid_usage_allowed": false,
   "scientific_evidence_created": false,
-  "decision_fingerprint": "cd4036d9ae27b401a15699caf98703da1145677de20b7ee0e243b2d2cff335ee"
+  "decision_fingerprint": "487dd39d3276ef5dd4f02f35c97c8547a42541976467fbd5e31670c3a145fe62"
 }
