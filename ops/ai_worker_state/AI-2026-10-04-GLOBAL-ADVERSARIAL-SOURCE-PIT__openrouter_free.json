@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-18T07:56:38.692406Z",
+  "observed_at_utc": "2026-11-18T20:53:38.961339Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 33.167,
-  "stdout": "**Findings**  \n- **Q194, Q195, Q196** – share the receipt *q193_q196_source_feasibility_latest.json*. The receipt’s “status” is not known; without seeing the JSON we cannot confirm that any of the DURABLE_KEYS (e.g., `snapshot_sha256`, `immutable_historical_snapshot`) are present. Hence their source‑feasibility status is **provisional** until the receipt is inspected.  \n- **Q197** – uses *q197_q198_source_feasibility_latest.json*. No status or durable‑key evidence is visible from the file name; classification is **unknown** pending receipt audit.  \n- **Q198** – receipt *q198_pit_clock_census_latest.json* is a census file, not a source‑feasibility receipt. Its status is likely **NON_SOURCE_READY_STATE**, satisfying the gate “CANDIDATE_SPECIFIC_CORRECTION_WITHDRAWAL_LINEAGE_AND_MAPPING” only if a frozen mapping and lineage are proven.  \n- **Q199, Q201** – share *q199_q201_source_feasibility_latest.json* with Q194‑Q196; same provisional status.  \n- **Q202, Q203, Q204** – share *q202_q204_information_timing_feasibility_latest.json*. Their durability must be verified; currently **unclear**.  \n- **Q229, Q230** – share *q229_q230_source_feasibility_latest.json*; durability unknown.  \n- **",
+  "duration_seconds": 24.952,
+  "stdout": "# Worker Handoff — Adversarial Source/PIT Review\n**Task:** AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT · **Status:** worker material only · **Authority:** none (no validation, no promotion, no performance claim)\n\n---\n\n## 0. Evidence basis and its limits\n\nFindings below are derived from the supplied wiring (`source_readiness_snapshot_guard.py`, `orthogonal_pit_next_gate.py`, shared contract, QC governance file, `CURRENT_STATUS.md`) — **not** from inspection of the Q202–Q204 receipt bodies, the Q205 spec, or any mapping artifact. Those files were either absent from context or truncated. Every finding is therefore a *structural* attack on the readiness logic, and each is paired with the artifact needed to confirm or kill it. I did not see returns, holdouts, or event sets, and did not select anything.\n\n---\n\n## 1. Cross-cutting findings\n\n**F1 — The durability guard validates a label, not a provenance chain.**\n`has_durable_binding()` returns true on the *presence* of any truthy key (`snapshot_sha256`, `archive_fingerprint`, …). A receipt can satisfy `DURABLE_HISTORICAL_BOUND` with a hash computed from a download performed today. `archive_fingerprint` is especially ambiguous — it is equally consistent with a live probe fingerprint. The guard is fail-closed on *absence* but not on *provenance*.\n\n**F2 — Discovery status is promotable to durable.**\n`DISCOVERY_SOURCE_FEASIBILITY_COMPLETED` is inside the allowlist that `classify()` can upgrade to `DURABLE_HISTORICAL_BOUND`. A discovery-completion receipt is by definition not a PIT-readiness claim. This is a category error in the classifier and it is the single highest-leverage defect: it lets a discovery artifact inherit a readiness label.\n\n**F3 — Spec/compiler version skew.**\n`orthogonal_pit_next_gate.py` reads `orthogonal_candidate_specs_2026-10-05.json`; the reviewed contract is `..._2026-10-04.json`. Gate output may be attributable to an unreviewed spec revision. Until both are hashed and reconciled, no gate emission from this compiler is attributable to the contract under review.\n\n**",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1794988599-pnIcRkwHnyXdAWmjuXjL",
+  "response_id": "gen-1795035219-ZoGiKrmjcLwPxBxAN0qg",
   "usage": {
-    "prompt_tokens": 6002,
+    "prompt_tokens": 5626,
     "completion_tokens": 3200,
-    "total_tokens": 9202,
+    "total_tokens": 8826,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 2799,
+      "reasoning_tokens": 2689,
       "image_tokens": 0,
       "audio_tokens": 0
     }
