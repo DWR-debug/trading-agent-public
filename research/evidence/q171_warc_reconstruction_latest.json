@@ -1,7 +1,72 @@
 {
-  "coverage_receipt_fingerprint": "86e6251ced0d3593e0c209ecc88e03dd4e29027a8ad93a75f16b86502fd811bc",
-  "receipt_fingerprint": "e67ec07d7290b3123806f101f298959da99fab0b957e01d4db0442f30294fa52",
-  "results": {},
+  "coverage_receipt_fingerprint": "d27e1ac670ee6ea5ac530c234613306f7f3ff0d6d087350f88319cd231397d5c",
+  "receipt_fingerprint": "99bed2171900400eff2af16f3bf0b7a3ded14d67b5cedd0e3776001078c7dcc6",
+  "results": {
+    "AMP": {
+      "error": "HTTP Error 503: Service Unavailable",
+      "error_body_excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>SlowDown</Code><Message>Please reduce your request rate.</Message><RequestId>8YTXFZ2YNFYRM9EQ</RequestId><HostId>vjS0YjwdVkSVJneYpqkwfh1cw4ZOCCEHUfEfNCyCx2xPmUe1o78OjXq54pwyKfdA8PWCQtgKETbW/CRojf3bY8bKNx+jC0rb</HostId></Error>",
+      "error_type": "HTTPError",
+      "http_status": 503,
+      "status": "INFRA_ACCESS_BLOCKED",
+      "symbol": "AMP"
+    },
+    "DVN": {
+      "checks": {
+        "http_content_length_boundary_exact": true,
+        "http_status_line_present": true,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
+        "target_matches_index_url": true,
+        "target_uri_present": true,
+        "warc_date_present": true,
+        "warc_payload_digest_present": true,
+        "warc_version_present": true
+      },
+      "compressed_sha256": "0666caa1ad605f9438373803712bf10d8077fe27468498676ea7a6ca945d04fc",
+      "http_status_line": "HTTP/1.1 200 ",
+      "index_digest": "ZTMO27KYGV3TYDUZ7A4UJKYJBSTDETPQ",
+      "indexed_timestamp": "20250324003644",
+      "payload_bytes": 58603,
+      "payload_sha1_base32": "ZTMO27KYGV3TYDUZ7A4UJKYJBSTDETPQ",
+      "status": "WARC_RECONSTRUCTED",
+      "symbol": "DVN",
+      "target_uri": "https://investors.devonenergy.com/investors/default.aspx",
+      "warc_date": "2025-03-24T00:36:44Z",
+      "warc_record_sha256": "66bcd13b59a4f7ebfccab927ec03c2398117c6bdee4344e791e2fdf37b205221"
+    },
+    "SPGI": {
+      "checks": {
+        "http_content_length_boundary_exact": true,
+        "http_status_line_present": true,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
+        "target_matches_index_url": true,
+        "target_uri_present": true,
+        "warc_date_present": true,
+        "warc_payload_digest_present": true,
+        "warc_version_present": true
+      },
+      "compressed_sha256": "0f2fc040dd995e553845cf4c856ae0659a6b14b5293880ff7b79133021bedc35",
+      "http_status_line": "HTTP/1.1 200 ",
+      "index_digest": "XEU4QWNIXXFKQCMSMCYA2PBOTEVSEVEI",
+      "indexed_timestamp": "20250317151929",
+      "payload_bytes": 115477,
+      "payload_sha1_base32": "XEU4QWNIXXFKQCMSMCYA2PBOTEVSEVEI",
+      "status": "WARC_RECONSTRUCTED",
+      "symbol": "SPGI",
+      "target_uri": "https://investor.spglobal.com/ir-home/default.aspx",
+      "warc_date": "2025-03-17T15:19:29Z",
+      "warc_record_sha256": "167eae7a182c167b91c6d0914cce02e08fa354226df7bb6ca80c7290274e3b0c"
+    },
+    "VLO": {
+      "error": "HTTP Error 503: Service Unavailable",
+      "error_body_excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>SlowDown</Code><Message>Please reduce your request rate.</Message><RequestId>8YTNPQXT48F8G827</RequestId><HostId>bFHi0KDGMAJN7Q8xr66ZRxMxmXvcpd5a13EUZWkIVdzmFfqt21L9laBq1QWEhyTODq050CjPU1Mu0H2PXFeXOPh+ReeH8EeS</HostId></Error>",
+      "error_type": "HTTPError",
+      "http_status": 503,
+      "status": "INFRA_ACCESS_BLOCKED",
+      "symbol": "VLO"
+    }
+  },
   "safety": {
     "automatic_promotion": false,
     "live_trading_enabled": false,
@@ -22,12 +87,12 @@
     "threshold_search": false,
     "variant_search": false
   },
-  "source_commit": "02d8382ac32baf98d8ddc4b97fe3b83850a09ccd",
+  "source_commit": "139954b5ed72436a1f38735d72976f12f42547fa",
   "summary": {
-    "blocked": 0,
-    "capture_candidates": 0,
-    "infra_blocked": 0,
-    "warc_reconstructed": 0
+    "blocked": 2,
+    "capture_candidates": 4,
+    "infra_blocked": 2,
+    "warc_reconstructed": 2
   },
   "task_id": "Q-2026-10-03-Q171-WARC-RECONSTRUCTION"
 }
