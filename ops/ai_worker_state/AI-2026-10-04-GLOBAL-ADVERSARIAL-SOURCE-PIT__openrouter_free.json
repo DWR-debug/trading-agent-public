@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-19T07:55:50.363422Z",
+  "observed_at_utc": "2026-11-19T20:59:04.224226Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 28.092,
-  "stdout": "Independent adversarial methods review — worker material only, not scientific evidence. Invariants held: paper-only, no live execution, no promotion, no performance ranking/tuning/selection, no gate changes.\n\n## Findings\n\n1. **Q202–Q204 share one provisional receipt.** The only referenced artifact is `research/evidence/q202_q204_information_timing_feasibility_latest.json`, a \"latest\" receipt covering three distinct mechanisms (information absence, financing transmission, public-information latency). Per `automation/source_readiness_snapshot_guard.py`, a receipt without an immutable dated snapshot/vintage binding (`snapshot_sha256`, `dated_snapshot`, `archive_fingerprint`, etc.) classifies as `PROVISIONAL_LIVE_PROBE_ONLY`. The next-gate compiler already gates Q202, Q203, Q204 on `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`. A single shared receipt across three mechanisms is cross-candidate confounding: it cannot establish candidate-specific PIT readiness or candidate-specific clocks.\n\n2. **Same-day/date-only leakage is live in the timing family.** `CURRENT_STATUS.md` documents an unresolved cross-publication source-field conflict: SEC 13F bulk `SUBMISSION.FILING_DATE` differs from the EDGAR header `<FILING-DATE>` by one calendar/business day (2015-02-18 vs 2015-02-17; 2020-08-10 vs 2020-08-07), with SEC's own readme warning extracted data may disagree with the full filing. Using either date without a frozen public-observation boundary rule is date-arithmetic leakage, directly relevant to Q202–Q204 information-timing clocks.\n\n3. **Q205 NLRB has no source-feasibility receipt.** Q205 does not appear in the `RECEIPTS` maps of either `source_readiness_snapshot_guard.py` or `orthogonal_pit_next_gate.py`. It is discovery-only and not source/PIT validated. NLRB-specific revision lineage (petition → election → certification → objections/challenges → supplemental decision → court enforcement), employer-to-issuer frozen mapping, and public-observation boundary (certification issuance vs docket posting vs petition date) are all absent. Any PIT design for Q205 is premature.\n\n4. **Revision/QC lineage not bound for any inspected candidate.** No amendment/correction/QC/prosecution lineage artifacts are evidenced for Q202–Q204 or Q205. Current endpoint reachability, documentation pages, content hashes, HTTP markers, or",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 41.554,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1795074950-UJq6qsXN1xdEvsNZ4jFD",
-  "usage": {
-    "prompt_tokens": 6002,
-    "completion_tokens": 3200,
-    "total_tokens": 9202,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 2594,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
