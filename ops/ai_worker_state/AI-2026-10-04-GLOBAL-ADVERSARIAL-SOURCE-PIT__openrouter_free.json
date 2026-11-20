@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-20T07:44:52.786240Z",
+  "observed_at_utc": "2026-11-20T20:43:32.006511Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 34.32,
-  "stdout": "**Adversarial Methods Review – Q202‑Q204 Information‑Timing Family & Q205 NLRB Labor‑Representation Channel**  \n\n---\n\n### 1. Findings  \n\n| Candidate | Receipt Path (as listed) | Durability Class (from `source_readiness_snapshot_guard.py`) | Missing Durable Artifact(s) | Cross‑Candidate Overlap / Confounding |\n|-----------|--------------------------|------------------------------------------------------------|-----------------------------|----------------------------------------|\n| **Q194** | `research/evidence/q193_q196_source_feasibility_latest.json` | **PROVISIONAL_LIVE_PROBE_ONLY** (no durable key present) | Immutable dated snapshot / vintage SHA‑256 (e.g., `snapshot_sha256` or `historical_snapshot_sha256`) | Shares receipt with Q195, Q196 → same source‑readiness evidence; no distinct exposure mapping. |\n| **Q195** | same as Q194 | **PROVISIONAL_LIVE_PROBE_ONLY** | Same as Q194 | Overlaps Q194/Q196; no independent historical snapshot. |\n| **Q196** | same as Q194 | **PROVISIONAL_LIVE_PROBE_ONLY** | Same as Q194 | Overlaps Q194/Q195; no distinct frozen mapping. |\n| **Q197** | `research/evidence/q197_q198_source_feasibility_latest.json` | **PROVISIONAL_LIVE_PROBE_ONLY** | Immutable dated snapshot / vintage SHA‑256 | Overlaps Q198 (same receipt); no separate exposure lineage. |\n| **Q198** | `research/evidence/q198_pit_clock_census_latest.json` | **CANDIDATE_SPECIFIC_CORRECTION_WITHDRAWAL_LINEAGE_AND_MAPPING** (blocked) | *Candidate‑specific* correction‑withdrawal lineage & immutable exposure mapping (not captured in generic receipt) | No overlap with other Q‑candidates; isolation required. |\n| **Q199** | `research/evidence/q199_q201_source_feasibility_latest.json` | **PROVISIONAL_LIVE_PROBE_ONLY** | Immutable dated snapshot / vintage SHA‑256 | Shares receipt with Q201 → same provisional evidence. |\n| **Q201** | same as Q199 | **PROVISIONAL_LIVE_PROBE_ONLY** | Same as Q199 | Overlap; no distinct frozen mapping. |\n| **Q202** | `research/evidence/q202_q204_information_timing_feasibility_latest.json` | **PROVISIONAL_LIVE_PROBE_ONLY** | Immutable dated snapshot / vintage SHA‑256 (e.g., `vintage_sha256`) | Shares receipt with Q203, Q204 → same provisional evidence. |\n| **Q203** | same as Q202 | **PROVISIONAL_LIVE_PROBE_ONLY** | Same as Q202 | Overlap; no distinct exposure mapping. |\n| **Q204** | same as Q202 | **PROVISIONAL_LIVE_PROBE_ONLY** | Same as Q202 | Overlap; no distinct exposure mapping. |\n| **Q229** | `research/evidence/q229_q230_source_feasibility_latest.json` | **PROVISIONAL_LIVE_PROBE_ONLY** | Immutable dated snapshot / vintage SHA‑256 | Shares receipt with Q230 → same provisional evidence. |\n| **Q230** | same as Q229 | **PROVISIONAL_LIVE_PROBE_ONLY** | Same as Q229 | Overlap; no distinct exposure mapping. |\n| **Q205** (NLRB labor‑representation) | **No receipt listed** in `RECEIPTS` mapping | **UNKNOWN / NOT YET VALIDATED** | *Any* immutable dated snapshot / vintage artifact that binds the NLRB certification (e.g., a dated filing PDF with SHA‑256, a frozen “certification receipt” with `immutable_historical_snapshot` or `snapshot_sha256`). | Not yet linked to any other candidate; potential confounder if later tied to Q202‑Q204 via shared issuer/exposure. |\n\n**Key observations**\n\n* Every candidate except **Q198** relies on a *single* “latest” JSON receipt that, according to the guard logic, lacks any of the durable keys (`immutable_historical_snapshot`, `snapshot_sha256`, etc.). Hence all are **PROVISIONAL** – not bound to an immutable dated snapshot.  \n\n* **Q194‑Q196**, **Q199‑Q201**, **Q202‑Q204**, **Q229‑Q230** each use the *same* receipt file for multiple IDs, creating direct overlap/confounding. The candidate‑specific contract requires *frozen* pre‑event entity/exposure mappings; the shared receipt does not provide distinct mappings.  \n\n* **Q198** is flagged as blocked because it needs *candidate‑specific* correction‑withdrawal lineage and mapping – a piece of evidence not present in the generic receipt.  \n\n* **Q205** has no receipt at all; the task explicitly states it is “discovery‑only and not yet source/PIT validated.” Without a frozen artifact (e.g., a dated NLRB certification filing with a verifiable SHA‑256), it cannot be considered source‑feasibility ready.  \n\n---\n\n### 2. Counterarguments (Potential Defenses)\n\n| Claim | Why it is insufficient under the adversarial standard |\n|-------|------------------------------------------------------|\n| *“The ‘latest’ receipt contains a SHA‑256 hash that can serve as a durable fingerprint.”* | The guard treats any hash present **only** if it is explicitly listed as a durable key (`snapshot_sha256`, `historical_snapshot_sha256`, etc.). The receipt’s mere existence does not guarantee that the hash is bound to an immutable dated snapshot; without a verifiable vintage timestamp, the hash is still provisional. |\n| *“The current documentation page (CURRENT_STATUS.md) shows the snapshot ID `5140617bc6b40ccb27072fa766ae49a396787bf1`; this is a frozen historical artifact.”* | The operational snapshot is a *live* system identifier, not a dated historical artifact bound to the receipt. It does not satisfy the requirement for an immutable dated snapshot/vintage for source‑feasibility readiness. |\n| *“The Q205 NLRB channel will be validated later; we can treat it as a future discovery.”* | The review must assess **source‑feasibility readiness now**. Until a concrete immutable artifact (dated snapshot with durable key) is attached, Q205 remains **non‑source‑ready** and cannot be used to unblock any candidate. |\n| *“The same receipt can be reused because the underlying data (e.g., SEC filings) are immutable.”* | The contract demands *frozen pre‑event entity/exposure mappings* that are distinct per candidate. Reusing a receipt means the same mapping is applied to multiple candidates, violating the anti‑convergence rule and creating confounding. |\n\n---\n\n### 3. Concrete Next Actions  \n\n| Candidate | Minimal Deterministic Falsifier (what must be produced) | Exact Missing Artifact(s) Required |\n|-----------|------------------------------------------------------|------------------------------------|\n| **Q194, Q195, Q196** | A **dated** receipt (e.g., a PDF or JSON file with a timestamp **≤** the event public‑observation boundary) that contains at least one of the durable keys (`immutable_historical_snapshot`, `snapshot_sha256`, `historical_snapshot_sha256`, `vintage_sha256`, `archive_fingerprint`). | Provide a **vintaged** copy of `q193_q196_source_feasibility_latest.json` (or a new file) that includes a verifiable dated snapshot and the corresponding SHA‑256. |\n| **Q197** | Same as Q194‑Q196 – a dated receipt with a durable key. | A **vintaged** version of `q197_q198_source_feasibility_latest.json` containing a dated snapshot and its SHA‑256. |\n| **Q198** | A **candidate‑specific** correction‑withdrawal lineage file (e.g., a dated amendment log) **and** an immutable exposure mapping (e.g., a frozen CSV linking issuers to the frozen universe). | Provide the missing lineage file (e.g., `q198_correction_lineage.json`) with a timestamp and a SHA‑256 that satisfies a durable key, plus a separate exposure‑mapping artifact. |\n| **Q199, Q201** | A dated receipt with a durable key, distinct from the one used for Q199/Q201. | A **new** receipt file (or a revised version of `q199_q201_source_feasibility_latest.json`) that includes a dated snapshot and a unique SHA‑256, ensuring the exposure mapping is not identical to Q199/Q201. |\n| **Q202",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 15.328,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1795160693-KVCPLVv8Uv8jrFPJQRpH",
-  "usage": {
-    "prompt_tokens": 6001,
-    "completion_tokens": 3200,
-    "total_tokens": 9201,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1024,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
