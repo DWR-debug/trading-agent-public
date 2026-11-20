@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
   "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
-  "observed_at_utc": "2026-11-19T15:38:54.504593Z",
+  "observed_at_utc": "2026-11-20T00:33:39.353031Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 3.916,
-  "stdout": "**Worker Handoff – Q219 Options‑Source Breadth Gate (Methods Review)**  \n\n| Section | Content |\n|---------|---------|\n| **Findings** | 1. **Script incompleteness** – `automation/q219_options_source_breadth_gate.py` ends abruptly; missing closing braces, imports, and logic for final payload.  <br>2. **Missing event‑clock definition** – Q219 has no explicit event clock; the Q129 contract specifies a 4 PM ET EOD snapshot, but Q219 does not enforce that the options data timestamp is after the event clock.  <br>3. **Same‑session leakage risk** – If the filing‑change event occurs earlier in the same trading day, the 4 PM snapshot may already reflect the event, leaking future information.  <br>4. **No implied‑volatility validation** – The script does not check for the presence of implied‑volatility columns; many option datasets omit IV, which would invalidate downstream analyses that rely on it.  <br>5. **Calendar‑roll handling absent** – Expiration dates and contract‑roll schedules are not mapped to event windows; roll‑over could cause mis‑alignment of exposure and outcome.  <br>6. **Source provenance gaps** – The script only checks HTTP 200 for the alt store and CBOE archive; it does not verify checksums, schema, or that the data actually originates from the Q129 release.  <br>7. **Underlying‑symbol scope mismatch** – The script flags “broad individual equity option source” but does not enforce that all underlying symbols belong to the Q129 scope (SPY, QQQ, IWM).  <br>8. **Cross‑market wedge definition missing** – No formal definition of how the options‑only state adds information beyond the filing‑change event; the wedge is asserted but not quantified. |\n| **Counterarguments** | • The Q129 contract’s “observation_semantics” (4 PM ET EOD snapshot) may be sufficient if the event clock is defined elsewhere, but Q219 must explicitly enforce it.  <br>• The alt store and CBOE archive checks are placeholders; they do not guarantee data integrity.  <br>• The script’s incomplete state suggests it is a draft; however, the missing checks are critical for a robust breadth gate. |\n| **Concrete Next Actions** | 1. **Complete the script** – add missing imports, close all blocks, and construct the final JSON payload.  <br>2. **Define and enforce the event clock** – use the Q129 release acceptance timestamp (from the GitHub release API) as the event clock; require that the options data timestamp (extracted from the parquet metadata or a `date` column) is strictly later.  <br>3. **Same‑session leakage guard** – compare the filing‑change event timestamp (from the filing‑change source) to the options data timestamp; flag if they fall in the same trading session.  <br>4. **Implied‑volatility check** – add a schema validation step that ensures an `implied_vol` column exists or explicitly records its absence.  <br>5. **Calendar‑roll mapping** – build a lookup of expiration dates to event windows; ensure that roll‑over boundaries do not overlap the observation window.  <br>6. **Checksum & schema validation** – download each parquet file, compute SHA‑256, compare to the Q129 contract, and verify that the schema matches `EXPECTED_COLUMNS`.  <br>7. **Underlying‑symbol scope enforcement** – cross‑reference all underlying symbols against the Q129 scope; reject or flag any out‑of‑scope symbols.  <br>8. **Cross‑market wedge documentation** – draft a formal definition of the wedge: specify the information set of the filing‑change event alone versus the filing‑change + options‑only state; provide a simple falsifier (e.g., use a synthetic dataset where options data is identical to the filing‑change event to show no added information).  <br>9. **Deterministic falsifiers** – implement the following cheap tests: <br>   • Shift the options data timestamp forward by 1–5 sessions while keeping the calendar fixed; observe if the wedge disappears. <br>   • Shuffle underlying‑symbol to issuer mapping within the frozen universe; check if the wedge effect changes. <br>   • Replace the public‑observation time with the occurrence time in the Q129 contract and verify that the wedge result changes. <br>10. **Artifact inventory** – create a checklist of required artifacts: <br>   • Q129 release metadata (tag, id, acceptance timestamp). <br>   • Options parquet checksums and schema. <br>   • Filing‑change event timestamps. <br>   • Calendar roll schedule. <br>   • Implied‑volatility presence flag. |\n| **Uncertainty** | • The exact event‑clock for Q219 is not specified in the current documentation; clarification is needed.  <br>• It is unclear whether the options data from the alt store or CBOE archive is truly a direct copy of the Q129 release; provenance must be verified.  <br>• The cross‑market wedge may not add any predictive power beyond the filing‑change event; empirical evidence is required.  <br>• The handling of same‑session leakage depends on the precise definition of a “trading session” in the context of the filing‑change event. |\n\n**Summary**  \nThe Q219 breadth gate currently lacks critical checks on event timing, data integrity, implied‑volatility presence, and calendar‑roll alignment. The script must be completed and augmented with deterministic falsifiers and a formal wedge definition. The missing artifacts list should guide the next iteration of the gate implementation. No performance claims or live‑trading authorizations are made.",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.181,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5215, Requested 5687. Please try again in 21.765s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-4e21fec4-71ec-450b-bff9-ec703ac54835",
-  "usage": {
-    "queue_time": 0.220782754,
-    "prompt_tokens": 5380,
-    "prompt_time": 0.398323797,
-    "completion_tokens": 2754,
-    "completion_time": 2.997437233,
-    "total_tokens": 8134,
-    "total_time": 3.39576103,
-    "completion_tokens_details": {
-      "reasoning_tokens": 1501
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-20T00:33:39.533868Z",
+    "blocked_until_utc": "2026-11-20T01:33:39.533868Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5215, Requested 5687. Please try again in 21.765s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
