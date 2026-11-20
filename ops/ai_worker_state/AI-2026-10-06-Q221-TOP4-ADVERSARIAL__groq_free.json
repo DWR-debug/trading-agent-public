@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "fca22e97174fa0dd40fa39fc32008874634bbf1ba71fb19e2e9e0c18592fd46d",
-  "observed_at_utc": "2026-11-19T15:38:59.776794Z",
+  "observed_at_utc": "2026-11-20T00:33:38.329841Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.553,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7376, Requested 5536. Please try again in 36.84s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 2.871,
+  "stdout": "**Worker Handoff – Q221 USAspending Clock & Data Integrity Review**\n\n| Section | Summary |\n|---------|---------|\n| **Findings** | 1. The current clock gate (`q221_usaspending_public_clock_gate.py`) only checks for the presence of key phrases in the “About‑the‑Data” PDF and the API docs; it does **not** verify actual publication timestamps or the sequence of award‑vs‑modification events.<br>2. No evidence is collected that the “public‑observation” boundary aligns with the *actual* first availability of award or transaction data for each transaction class.<br>3. The gate ignores several critical dimensions: R&D classification, competition fields, PSC (Product Service Code) stability, recipient‑to‑issuer mapping, and corporate parent/subsidiary changes.<br>4. The gate does not guard against future production contracts (e.g., awards issued after the historical period) leaking into the historical prefix, which would invalidate the PIT assumption.<br>5. The gate’s “historical applicability proven” flag is hard‑coded to `False`; no deterministic test is performed to confirm that the same clock logic applies to past transaction classes or periods. |\n| **Counterarguments** | • The presence of phrases such as “WITHIN FIVE DAYS” or “THREE BUSINESS DAYS” does **not** guarantee that the actual data release follows those windows; the PDF may be out‑of‑date or contain policy language that is not enforced.<br>• The API endpoint documentation may describe a contract that is *planned* but not yet implemented; the gate does not check the live API for the actual delay between award and publication.<br>• PSC codes and R&D classification codes are periodically updated; without a versioned snapshot, the gate cannot confirm that the historical data used in PIT aligns with the codes in effect at the time of each transaction.<br>• Recipient‑to‑issuer mapping is dynamic (e.g., due to mergers, acquisitions, or name changes). The gate does not verify that the mapping used in PIT is consistent with the mapping at the time of each award.<br>• The gate does not detect if a contract awarded after the historical cut‑off (e.g., 2026‑10‑05) is mistakenly included in the historical dataset, which would break the assumption that all PIT data precede the outcome. |\n| **Minimal Deterministic Falsifiers** | 1. **Award‑vs‑Modification Timing** – Fetch a known award (e.g., award ID `AWD_12345`) and its modification (e.g., `MOD_12345_1`). Verify that the award’s `award_date` is earlier than the modification’s `modification_date` and that the modification’s `publication_date` is *not* earlier than the award’s `publication_date`. If the modification is published before the award, the clock assumption fails.<br>2. **Transaction Class Delay** – Retrieve a transaction of class `C` (e.g., `C` = “Contract”) with `award_date` `2025‑06‑01`. Confirm that the `publication_date` is no later than `2025‑06‑04` (3 business days). If it is later, the “three business days” rule is violated.<br>3. **PSC Stability** – Query the PSC code list for the date of the award (e.g., `2025‑06‑01`). Verify that the PSC code used in the award matches the code definition effective on that date. If the code definition changed after the award but before the publication, the mapping is inconsistent.<br>4. **Recipient‑to‑Issuer Mapping** – For a recipient ID that changed corporate structure between `2025‑01‑01` and `2025‑12‑31`, confirm that the mapping used in the award matches the mapping valid on the award date. If the mapping is from a later period, the PIT assumption is invalid.<br>5. **Historical Prefix Leakage** – Search the historical dataset for any award whose `award_date` is after the historical cut‑off (`2026‑10‑05`). If any exist, the historical prefix is contaminated. |\n| **Exact Missing Artifacts** | 1. **Timestamped Publication Log** – A CSV/JSON file listing each award/transaction ID, award date, modification date (if any), and the *actual* publication timestamp (as recorded by the system).<br>2. **Versioned PSC Code List** – A snapshot of the PSC code definitions with effective start/end dates, including the code used in each award.<br>3. **R&D Classification Snapshot** – A dated list of R&D classification codes and their definitions, with effective dates.<br>4. **Recipient‑to‑Issuer Mapping History** – A time‑stamped mapping table that records recipient IDs to issuer IDs, including change dates.<br>5. **Corporate Structure Timeline** – A dataset of parent/subsidiary relationships with effective dates, to validate that the award’s issuer was correctly identified at the time of award.<br>6. **Competition Field Definitions** – A dated list of competition field codes and their definitions.<br>7. **Historical Dataset Boundary Metadata** – A manifest that records the exact cut‑off date and the set of awards included in the historical prefix. |\n| **Concrete Next Actions** | 1. **Implement a “Publication Timestamp” Test** – Extend the clock gate to fetch a sample award and its modification, parse the `publication_date` fields, and assert the expected ordering and delay windows.<br>2. **Add PSC & R&D Code Validation** – Pull the PSC and R&D classification snapshots for the award dates and verify that the codes used in the awards match the definitions effective at that time.<br>3. **Validate Recipient‑to‑Issuer Mapping** – Retrieve the mapping history for a set of recipients and confirm that the mapping used in the award matches the mapping valid on the award date.<br>4. **Check Historical Prefix Integrity** – Run a query against the historical dataset to ensure no award dates exceed the cut‑off (`2026‑10‑05`). Flag any violations.<br>5. **Document Missing Artifacts** – Create a requirements list for the missing artifacts above and assign owners to produce them. Include versioning and archival instructions.<br>6. **Schedule a Manual Review** – Convene a small review panel to examine the fetched data and confirm that the deterministic falsifiers are satisfied before any PIT‑based candidate is considered for promotion. |\n| **Uncertainty** | • The current gate’s reliance on PDF text extraction may miss hidden metadata or embedded timestamps.<br>• The API may return data that is not yet fully synchronized with the publication system; delays between award creation and API availability are not captured.<br>• PSC and R&D classification changes may be retroactively applied; without a versioned snapshot, it is unclear whether the historical data reflects the correct definitions.<br>• Corporate structure changes may be recorded with lag; the mapping used in the award may be outdated if the change was not yet processed.<br>• The “About‑the‑Data” PDF may be updated without a new version number, making it difficult to tie a specific PDF to a specific data release. |\n\n**End of Handoff**",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-11-19T15:39:00.329417Z",
-    "blocked_until_utc": "2026-11-19T16:39:00.329417Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7376, Requested 5536. Please try again in 36.84s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-a5bd4329-77ab-42d2-904b-9b5156da9294",
+  "usage": {
+    "queue_time": 0.003602948,
+    "prompt_tokens": 5069,
+    "prompt_time": 0.327761411,
+    "completion_tokens": 2181,
+    "completion_time": 2.327525506,
+    "total_tokens": 7250,
+    "total_time": 2.6552869169999997,
+    "completion_tokens_details": {
+      "reasoning_tokens": 652
+    }
   }
 }\n
