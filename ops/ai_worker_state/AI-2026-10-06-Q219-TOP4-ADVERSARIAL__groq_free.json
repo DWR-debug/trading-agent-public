@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "e1dc3cf32dc8b72c6f74f8ad714a5091f70fed840c5bf9a8913b5829b0eaab84",
   "context_fingerprint": "8709b21376e7a2862431a57cf53db7fef981658131c2a41ab16a69f14ce60081",
-  "observed_at_utc": "2026-11-20T15:19:45.557418Z",
+  "observed_at_utc": "2026-11-20T23:57:06.813608Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.262,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5031, Requested 5579. Please try again in 19.575s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 2.915,
+  "stdout": "**Worker Handoff – Q219 Options‑Source Breadth Gate (Adversarial Review)**  \n\n| Section | Content |\n|---------|---------|\n| **Findings** | 1. **Source‑Release Drift** – Q219 gate pulls the Q129 release via the GitHub API (`/releases/289029018`). The Q129 contract records the same release ID, but the gate does **not** verify that the downloaded assets match the *exact* SHA‑256 values listed in the contract. A future release bump or a forked copy could slip through. <br>2. **Timestamp Semantics** – Q129 specifies “4 PM ET end‑of‑day snapshot” but the gate never inspects the `date` column of the parquet files to confirm that all rows are aligned to that clock. <br>3. **Implied‑Volatility Absence** – The contract and gate do not list `implied_volatility` as a required column. The dataset may therefore be missing IV, which could be critical for any volatility‑based signal. <br>4. **Same‑Session Leakage** – The gate does not enforce that the event window for the filing‑change component and the options‑only component are disjoint. If both events are observed on the same calendar day, the wedge may be tautological. <br>5. **Option‑Contract/Calendar Roll** – No check that every expected expiration (weekly, monthly, quarterly) is present for each underlying. Missing roll‑over data can bias any calendar‑roll‑based strategy. <br>6. **Underlying‑Option Mapping** – The gate only extracts the underlying symbol from the file name; it does not confirm that the `symbol` column inside the parquet matches the file‑derived symbol. <br>7. **Event‑Window Definition** – The candidate description is truncated; the gate has no explicit definition of the event window (e.g., “next regular trading day after filing change”). |\n| **Counter‑Arguments** | • The gate is intentionally lightweight; deeper validation may be delegated to the PIT reproduction script. <br>• The Q129 contract may be considered sufficient for source selection; the gate merely confirms file presence. <br>• The candidate may not require IV; the absence is acceptable if the strategy is purely price‑based. <br>• Same‑session leakage might be mitigated elsewhere in the pipeline (e.g., by a higher‑level event‑clock). |\n| **Concrete Next Actions** | 1. **Add SHA‑256 Verification** – Extend the gate to compute and compare the SHA‑256 of each downloaded asset against the values in `q129_options_source_contract_2026_10_03.json`. <br>2. **Timestamp Alignment Check** – Parse the `date` column in each parquet file and assert that all timestamps are ≤ 16:00 ET on the same calendar day. <br>3. **Implied‑Volatility Column Test** – Add a deterministic falsifier that removes the `implied_volatility` column from a copy of the dataset and verifies that the gate fails. <br>4. **Same‑Session Leakage Guard** – Require that the filing‑change event date and the options‑only observation date differ by at least one calendar day; otherwise flag a warning. <br>5. **Expiration Coverage Audit** – For each underlying, enumerate expected expirations (weekly, monthly, quarterly) over the dataset’s date range and flag any missing groups. <br>6. **Underlying‑Symbol Consistency** – Cross‑check that the `symbol` column inside each parquet matches the file‑derived symbol; flag mismatches. <br>7. **Event‑Window Documentation** – Request an explicit event‑window definition from the candidate author (e.g., “next regular trading day after filing‑change observation”) and encode it in the gate’s configuration. <br>8. **Cross‑Market Wedge Validation** – Design a minimal falsifier that replaces the options‑only component with a synthetic dataset that contains identical filing‑change information but no options data; the gate should then fail, proving that the wedge adds non‑redundant information. |\n| **Uncertainty** | • The extent to which the Q219 candidate relies on the Q129 source semantics is not fully documented; the gate may be operating under assumptions that are not formally specified. <br>• It is unclear whether the dataset’s `date` column truly reflects the 4 PM ET snapshot; without a signed acceptance timestamp, this remains an assumption. <br>• The candidate’s event‑window definition is missing; the gate’s current logic may inadvertently allow same‑session leakage. <br>• The presence or absence of implied volatility is not guaranteed; the strategy’s sensitivity to IV is unknown. <br>• The cross‑market wedge’s informational value beyond the filing‑change alone has not been empirically demonstrated; the proposed falsifier is a starting point but may need refinement. |\n\n**Summary** – The Q219 breadth gate currently performs only superficial file‑presence checks. To satisfy the research‑gate requirements, it must be augmented with deterministic, artifact‑driven validations (hash checks, timestamp alignment, column presence, expiration coverage, underlying consistency, and event‑window enforcement). The proposed falsifiers and missing artifacts provide a concrete roadmap for tightening the gate without touching performance or promotion logic.",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-11-20T15:19:45.819398Z",
-    "blocked_until_utc": "2026-11-20T16:19:45.819398Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5031, Requested 5579. Please try again in 19.575s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-295b09c0-ad01-4b89-b316-e660bc370619",
+  "usage": {
+    "queue_time": 0.030789822,
+    "prompt_tokens": 5382,
+    "prompt_time": 0.321057193,
+    "completion_tokens": 2108,
+    "completion_time": 2.205988429,
+    "total_tokens": 7490,
+    "total_time": 2.527045622,
+    "completion_tokens_details": {
+      "reasoning_tokens": 979
+    }
   }
 }\n
