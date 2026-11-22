@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "260d883b1cf1f546683bdd6b17fca3c5b3ef7590e0a952d6f4d5f02c81259085",
   "context_fingerprint": "af33b9bd08de8c944f12d3a4cdc141f7abbbe4c1b589cdd91f1ff50ecf3ee0ec",
-  "observed_at_utc": "2026-11-21T19:05:22.132832Z",
+  "observed_at_utc": "2026-11-22T19:28:09.636300Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 3.843,
-  "stdout": "**Worker Handoff – Q218 Methodology Review**\n\n| # | Failure Mode | Smallest Deterministic Falsifier | Exact Artifact Required | Findings | Counter‑Arguments | Next Actions | Uncertainty |\n|---|--------------|----------------------------------|-------------------------|----------|-------------------|--------------|-------------|\n| 1 | **10‑K → 8‑K Pairing Rule** | A 10‑K with *no* 8‑K in the acceptance window, but an 8‑K that falls *outside* the window. | `test_pairing.json` – JSON containing a single issuer with: <br>• 10‑K filingDate `2026‑01‑15`, acceptanceTimestamp `2026‑01‑20 10:00:00` <br>• 8‑K filingDate `2025‑12‑20`, acceptanceTimestamp `2025‑12‑25 09:00:00` | The current rule (`latest eligible 8‑K within (prev10K, target10K]`) will incorrectly pair the 8‑K with the 10‑K because the 8‑K’s acceptanceTimestamp is *before* the preceding 10‑K (none) and *after* the target 10‑K’s acceptanceTimestamp. | The rule is *intended* to capture earnings releases that occur *after* the preceding 10‑K and *before* the target 10‑K. However, the implementation does not enforce the *strict* upper bound; it only checks that the 8‑K’s acceptanceTimestamp is ≤ target 10‑K. | 1. Add an explicit check that the 8‑K’s acceptanceTimestamp is **strictly greater** than the preceding 10‑K’s acceptanceTimestamp. 2. Validate with the above artifact that the pairing fails. | The artifact relies on the assumption that SEC acceptance timestamps are always present and accurate. If SEC omits timestamps, the rule may still mispair. |\n| 2 | **SEC Acceptance Timestamps Missing / Inconsistent** | A filing where the SEC JSON omits `acceptanceDatetime`. | `missing_timestamp.json` – JSON for an issuer with a 10‑K that has `acceptanceDatetime` set to `null` or absent. | The code checks `item.get(\"latest_10k\").get(\"acceptance_datetime_found\") is True`. If the field is missing, the flag will be `False`, causing the issuer to be excluded from `pairable`. This may silently drop valid pairs. | The design choice to exclude missing timestamps is conservative; however, it may bias the sample toward issuers with complete metadata. | 1. Create the artifact and run `sec_submission_census()` to confirm that the issuer is omitted. 2. Add a fallback that treats missing timestamps as *unknown* rather than *false*. | It is unknown how frequently SEC omits timestamps across the full universe. |\n| 3 | **Filing Amendments (10‑K/8‑K)** | A 10‑K amendment that is filed *after* the original 10‑K but *before* the paired 8‑K. | `amendment_pairing.json` – JSON with: <br>• Original 10‑K filingDate `2025‑10‑01`, acceptanceTimestamp `2025‑10‑05 08:00:00` <br>• Amendment 10‑K filingDate `2025‑10‑15`, acceptanceTimestamp `2025‑10‑18 09:00:00` <br>• 8‑K filingDate `2025‑10‑20`, acceptanceTimestamp `2025‑10‑22 10:00:00` | The current rule selects the *latest* 10‑K within the window, which will be the amendment. The 8‑K is paired with the amendment, but the earnings release may actually belong to the original 10‑K. | The rule is *intended* to pair the most recent 10‑K, assuming that amendments supersede earlier filings. However, if the earnings release was announced in the original 10‑K, the pairing is semantically wrong. | 1. Add logic to detect amendments (`isAmended` flag) and optionally exclude them from pairing. 2. Use the artifact to confirm that the amendment is currently paired. | It is unclear how often earnings releases are tied to the original 10‑K versus the amendment. |\n| 4 | **Report‑Date vs Event‑Date Ambiguity** | A filing where `reportDate` differs from `filingDate` by >1 day. | `date_ambiguity.json` – JSON with: <br>• 10‑K filingDate `2026‑02‑10`, reportDate `2026‑02‑08` <br>• 8‑K filingDate `2026‑02‑12`, reportDate `2026‑02‑12` | The code currently uses `filingDate` for window boundaries. If the event (earnings release) is tied to `reportDate`, the pairing may shift by days, potentially misaligning the event clock. | The design specifies “public observation boundary” but does not clarify whether `filingDate` or `reportDate` should be used. | 1. Create the artifact and run the census to see if the 8‑K is paired with the 10‑K. 2. Add a parameter to switch between `filingDate` and `reportDate` and document the effect. | The SEC documentation states that `reportDate` is the “official filing date” for certain filings; the impact on pairing is uncertain. |\n| 5 | **False Pairing of Earnings Releases** | A 10‑K paired with an 8‑K that is *not* an earnings release (e.g., a material event 8‑K). | `non_earnings_8k.json` – JSON with: <br>• 10‑K filingDate `2026‑03‑01`, acceptanceTimestamp `2026‑03‑05 10:00:00` <br>• 8‑K filingDate `2026‑03‑04`, acceptanceTimestamp `2026‑03‑06 09:00:00` <br>• 8‑K `items` list does **not** contain `Item‑2.02` or `Exhibit‑99.1`. | The rule selects the *latest* 8‑K in the window regardless of content, so the non‑earnings 8‑K will be paired. | The rule’s intent is to capture earnings releases, but the implementation only checks the form type, not the content. | 1. Add a content check for `Item‑2.02` or `Exhibit‑99.1` in the 8‑K’s `items` array. 2. Use the artifact to confirm that the non‑earnings 8‑K is currently paired. | It is unknown how often non‑earnings 8‑Ks fall into the window; the cost of adding a content check may be high. |\n| 6 | **Voluntary vs Mandatory Channel Classification** | A 10‑K",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.313,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5241, Requested 6062. Please try again in 24.7725s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-a885d3b8-6cf5-43d7-9555-1b5672a2f0e1",
-  "usage": {
-    "queue_time": 0.115375142,
-    "prompt_tokens": 5066,
-    "prompt_time": 0.287623292,
-    "completion_tokens": 3200,
-    "completion_time": 3.250171279,
-    "total_tokens": 8266,
-    "total_time": 3.537794571,
-    "completion_tokens_details": {
-      "reasoning_tokens": 1676
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-22T19:28:09.948960Z",
+    "blocked_until_utc": "2026-11-22T20:28:09.948960Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5241, Requested 6062. Please try again in 24.7725s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
