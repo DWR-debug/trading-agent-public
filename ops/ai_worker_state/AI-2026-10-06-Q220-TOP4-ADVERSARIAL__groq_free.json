@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "d419c9dfdfd290b5574db61163ea3c4da86a8a5ab026c6958457871df92a30ee",
   "context_fingerprint": "b6ec90d2fba4a37601738ad0a398b1f9a40520899b55dc3d6bb53635b341f4cf",
-  "observed_at_utc": "2026-11-22T19:28:09.559401Z",
+  "observed_at_utc": "2026-11-23T07:22:53.507074Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 3.053,
-  "stdout": "**Worker Handoff – Q220 Methods Review**\n\n| # | Failure Mode | Minimal Deterministic Falsifier | Exact Artifact Needed |\n|---|---------------|---------------------------------|-----------------------|\n| 1 | **As‑filed XBRL text‑block altered** | Compare the raw `<text>` element of an instance file in the archive with the same filing’s as‑filed XBRL from EDGAR. | SEC filing `0000320193-22-000001` (10‑K, 2022‑01‑01) – instance file `10-K.xml` from both the archive and the live EDGAR archive. |\n| 2 | **Presentation‑role mapping incorrect** | Parse the instance and taxonomy, then verify that every `<presentationItem>` has a corresponding `<calculationItem>` and vice‑versa. | Taxonomy files `us-gaap-2022-01-01.xsd` and instance `10-K.xml` from the archive. |\n| 3 | **Taxonomy‑extension changes missing** | Diff the taxonomy extensions in the archive against the current SEC taxonomy‑extension set (e.g., `us-gaap-2022-01-01-ext.xsd`). | Current SEC taxonomy‑extension file `us-gaap-2022-01-01-ext.xsd` and the archived copy. |\n| 4 | **Custom namespaces mis‑declared** | Validate namespace declarations in the instance against the XBRL 2.1 spec (e.g., check that `xmlns:us-gaap=\"http://fasb.org/us-gaap/2022-01-01\"` is present). | Instance file `10-K.xml` from the archive. |\n| 5 | **Section identity mismatch** | Map each `<section>` heading in the narrative to its `<context>` ID and verify consistency. | Instance file `10-K.xml` and the accompanying `section‑map.txt` (if present). |\n| 6 | **Narrative tokenization inconsistent** | Run a deterministic tokenizer (e.g., split on whitespace, strip punctuation) on the narrative text and compare token counts to the archived `txt.tsv` header. | `txt.tsv` from the archive and the narrative text extracted from the instance. |\n| 7 | **Amended filings not represented** | Identify an amended filing (e.g., 10‑K/A) and compare its instance to the original 10‑K to detect missing or altered facts. | Original filing `0000320193-22-000001` and amended filing `0000320193-22-000002`. |\n| 8 | **Future/current XBRL contamination** | Search for `<context>` elements with `<period>` dates beyond the filing date (e.g., 2023‑01‑01 in a 2022 filing). | Instance file `10-K.xml` from the archive. |\n| 9 | **Duplicate facts present** | Detect duplicate `<fact>` IDs or identical `(context, unit, concept)` triples. | Instance file `10-K.xml`. |\n|10 | **Period/unit/context alignment errors** | Verify that each fact’s `<period>` matches the `<context>`’s `<startDate>`/`<endDate>` and that the `<unit>` matches the `<unitRef>`. | Instance file `10-K.xml`. |\n|11 | **Representation mismatch proxies filing length/readability** | Correlate the presence of missing tables (e.g., `sub.tsv`) with the total byte size of the archive; test if larger files are more likely to miss tables. | Archive ZIP file `2009q1_notes.zip` and its `archive_bytes` value from the gate output. |\n\n---\n\n### Findings\n\n1. **Potential text‑block alteration** – The archive may contain a modified `<text>` element (e.g., missing line breaks or edited content) that diverges from the as‑filed version.\n2. **Role mapping gaps** – The archive’s taxonomy may not fully capture the presentation‑to‑calculation mapping required for accurate fact extraction.\n3. **Missing taxonomy extensions** – Custom extensions added after the archive’s snapshot date may be absent, leading to incomplete fact recognition.\n4. **Namespace declaration errors** – Incorrect or missing namespace prefixes can cause parsing failures or mis‑identification of concepts.\n5. **Section‑context misalignment** – Narrative sections may be linked to wrong contexts, corrupting period or unit inference.\n6. **Tokenization drift** – The archived `txt.tsv` may use a different tokenization scheme than the original XBRL, affecting downstream NLP pipelines.\n7. **Amendment representation** – Amended filings may not be fully captured, leading to incomplete historical data.\n8. **Future‑date contamination** – Presence of future periods can break assumptions about “as‑filed” data.\n9. **Duplicate facts** – Duplicate fact IDs or identical fact triples can inflate counts or mislead aggregation.\n10. **Period/unit/context mismatches** – Inconsistent alignment can corrupt financial metrics.\n11. **Length/readability proxy** – Missing tables or fields may correlate with file size, suggesting a superficial mismatch rather than substantive data loss.\n\n---\n\n### Counterarguments\n\n- The archive’s ZIP structure and member names are explicitly part of the source contract; missing members may be intentional (e.g., optional tables).\n- The gate script only checks for presence of required members; it does not validate content, so some failures may be benign for the intended use.\n- The SEC’s own documentation acknowledges that the 13F bulk dataset may contain discrepancies; similar caveats may apply to the financial‑statement‑notes archive.\n- Some failure modes (e.g., future‑date contamination) may be rare and not materially impact downstream analyses.\n\n---\n\n### Concrete Next Actions\n\n1. **Fetch as‑filed instance** – Download `10-K.xml` for filing `0000320193-22-000001` from EDGAR and compare the `<text>` element to the archived copy.\n2. **Validate role mapping** – Run an XBRL parser (e.g., `xbrlpy`) on the instance and taxonomy to confirm all presentation items have calculation counterparts.\n3. **Diff taxonomy extensions** – Pull the latest SEC taxonomy‑extension file and perform a line‑by‑line diff against the archived copy.\n4. **Namespace check** – Use an XML validator to ensure all namespace declarations in the instance are present and correctly scoped.\n5. **Section‑context mapping** – Extract section headings and context IDs, then verify consistency via a simple script.\n6. **Tokenization test** – Tokenize the narrative text from the instance and compare token counts to those in `txt.tsv`.\n7. **Amendment comparison** – Download both original and amended filings, run a diff on fact sets, and record any missing facts.\n8. **Future‑date scan** – Search the instance for `<period>` dates beyond the filing date and flag any occurrences.\n9. **Duplicate fact detection** – Run a hash‑based duplicate detector on all facts in the instance.\n10. **Period/unit alignment** – Cross‑check each fact’s period against its context and unit against its unitRef.\n11. **Correlation analysis** – Compute the correlation between archive size and missing table presence to assess whether size drives missingness.\n\nAll actions should be performed on immutable, dated snapshots (e.g., the specific ZIP file `2009q1_notes.zip` and the specific filing `0000320193-22-000001`) to satisfy the “frozen historical artifact” requirement.\n\n---\n\n### Uncertainty\n\n- **Archive completeness** – It is unclear whether the archive includes all optional tables; missing tables may be intentional.\n- **Version drift** – The taxonomy and instance files may have evolved since the archive snapshot; differences may not indicate errors.\n- **Parsing assumptions** – The chosen tokenizer or XBRL parser may differ from the original pipeline, potentially causing false positives.\n- **Data licensing** – Some artifacts (e.g., live EDGAR downloads) may be subject to usage restrictions; ensure compliance before retrieval.\n\n---",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.362,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7647, Requested 5376. Please try again in 37.6725s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-ab5af08f-e753-4411-a507-377e62053bc8",
-  "usage": {
-    "queue_time": 0.11454673,
-    "prompt_tokens": 5096,
-    "prompt_time": 0.285326672,
-    "completion_tokens": 2381,
-    "completion_time": 2.473304627,
-    "total_tokens": 7477,
-    "total_time": 2.758631299,
-    "completion_tokens_details": {
-      "reasoning_tokens": 702
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-23T07:22:53.868926Z",
+    "blocked_until_utc": "2026-11-23T08:22:53.868926Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7647, Requested 5376. Please try again in 37.6725s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
