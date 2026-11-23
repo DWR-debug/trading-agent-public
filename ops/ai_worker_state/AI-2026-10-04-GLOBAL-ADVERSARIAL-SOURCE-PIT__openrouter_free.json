@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-22T19:58:20.493556Z",
+  "observed_at_utc": "2026-11-23T08:13:07.884561Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 36.903,
-  "stdout": "# Adversarial Source/PIT Review — Q202–Q204 + Q205 Frontier\n\n**Worker material only. Not scientific evidence. No performance, ranking, tuning, promotion, or live-trading claims are made or implied.**\n\n## 1. Framing and binding constraints\n\n- `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, `AUTOMATIC_PROMOTION=False`.\n- Review standard: Grok Q194–Q201 adversarial challenge, extended to Q202–Q204 (information-timing family) and Q205 (NLRB labor-representation certification channel, quarantined/discovery-only).\n- A live endpoint probe, current documentation page, content hash, HTTP marker, or current API response is **provisional operational telemetry only**, not durable historical source readiness. Durability requires an immutable dated snapshot/vintage or explicitly frozen historical artifact bound to the receipt.\n- `deterministic_compute: false` in the task — compiler determinism is not established; treat next-gate output as logical, not executed.\n\n## 2. Findings (adversarial attacks)\n\n",
+  "duration_seconds": 35.474,
+  "stdout": "**Worker Handoff — Adversarial Source/PIT Review (Q202‑Q204, Q205)**\n\n---\n\n### 1. Findings\n\n**Q202‑Q204 (Information‑Timing Family)**\n- The three candidates share a single receipt file (`q202_q204_information_timing_feasibility_latest.json`) and are assigned the identical next‑",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1795377500-B2lOnhnXYQD9yM0ZCw3Q",
+  "response_id": "gen-1795421588-tnfTMExMk1jo2vh1XIzL",
   "usage": {
-    "prompt_tokens": 6004,
+    "prompt_tokens": 5562,
     "completion_tokens": 3200,
-    "total_tokens": 9204,
+    "total_tokens": 8762,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 2942,
+      "reasoning_tokens": 3504,
       "image_tokens": 0,
       "audio_tokens": 0
     }
