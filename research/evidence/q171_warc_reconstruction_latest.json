@@ -1,6 +1,6 @@
 {
-  "coverage_receipt_fingerprint": "2041c5b5cd9da3eff2bbbbe9268d2ca38a39e432af7e02f380d2172e388834d6",
-  "receipt_fingerprint": "ef3129bad077a23664d9ec35599efc8ac8fb5a92e9e934cd612badd68b17e0ec",
+  "coverage_receipt_fingerprint": "6c1122b01259b264ee419c485413b5b370524a5f6b90155adffc677c66e59eda",
+  "receipt_fingerprint": "14f6ddad626a083cb2b2d85929eae3abf240ab4d60fe34701c7c627d1823dd74",
   "results": {
     "AMP": {
       "checks": {
@@ -27,12 +27,28 @@
       "warc_record_sha256": "a063d401c1f9fd58bd9c89715bf5dc1e48241158f995f90b5dcac6eaa3b884c1"
     },
     "DVN": {
-      "error": "HTTP Error 503: Service Unavailable",
-      "error_body_excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>SlowDown</Code><Message>Please reduce your request rate.</Message><RequestId>B8JW21XFC0B2QSFF</RequestId><HostId>3Thgqp2qNnWuB+inDsCwLMW52WgpJbCPx2CvLLnZLw0E3uTpuxb9prsPn8QZnN4lBo6bapKO5ys75cMcwms1OzAyShDOxIXu</HostId></Error>",
-      "error_type": "HTTPError",
-      "http_status": 503,
-      "status": "INFRA_ACCESS_BLOCKED",
-      "symbol": "DVN"
+      "checks": {
+        "http_content_length_boundary_exact": true,
+        "http_status_line_present": true,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
+        "target_matches_index_url": true,
+        "target_uri_present": true,
+        "warc_date_present": true,
+        "warc_payload_digest_present": true,
+        "warc_version_present": true
+      },
+      "compressed_sha256": "0666caa1ad605f9438373803712bf10d8077fe27468498676ea7a6ca945d04fc",
+      "http_status_line": "HTTP/1.1 200 ",
+      "index_digest": "ZTMO27KYGV3TYDUZ7A4UJKYJBSTDETPQ",
+      "indexed_timestamp": "20250324003644",
+      "payload_bytes": 58603,
+      "payload_sha1_base32": "ZTMO27KYGV3TYDUZ7A4UJKYJBSTDETPQ",
+      "status": "WARC_RECONSTRUCTED",
+      "symbol": "DVN",
+      "target_uri": "https://investors.devonenergy.com/investors/default.aspx",
+      "warc_date": "2025-03-24T00:36:44Z",
+      "warc_record_sha256": "66bcd13b59a4f7ebfccab927ec03c2398117c6bdee4344e791e2fdf37b205221"
     },
     "SPGI": {
       "checks": {
@@ -103,12 +119,12 @@
     "threshold_search": false,
     "variant_search": false
   },
-  "source_commit": "3b7f2c01bf5ccb7e2e78322b46536046f73732a9",
+  "source_commit": "50e7e4492a001d3a13902fce21d3676ce24d03a9",
   "summary": {
-    "blocked": 1,
+    "blocked": 0,
     "capture_candidates": 4,
-    "infra_blocked": 1,
-    "warc_reconstructed": 3
+    "infra_blocked": 0,
+    "warc_reconstructed": 4
   },
   "task_id": "Q-2026-10-03-Q171-WARC-RECONSTRUCTION"
 }
