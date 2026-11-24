@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "fca22e97174fa0dd40fa39fc32008874634bbf1ba71fb19e2e9e0c18592fd46d",
-  "observed_at_utc": "2026-11-24T09:43:15.543654Z",
+  "observed_at_utc": "2026-11-24T22:19:11.265643Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,24 +42,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 2.702,
-  "stdout": "**Worker Handoff – Q221 USAspending Clock & Data Integrity Review**\n\n| Section | Content |\n|---------|---------|\n| **Findings** | • The current clock gate (`q221_usaspending_public_clock_gate.py`) only inspects the *About‑the‑Data* PDF and the API docs for the presence of a handful of phrases.  <br>• No evidence is gathered that the PDF or API documentation actually reflects the *public observation boundary* for the historical period of interest (e.g., 2025‑2026).  <br>• The gate does **not** validate any transaction‑class or period‑specific data (e.g., award vs. modification, R&D classification, PSC codes, recipient‑to‑issuer mapping, parent/subsidiary changes).  <br>• The code sets flags such as `historical_applicability_proven`, `historical_boundary_verified`, and `transaction_class_clock_boundaries_verified` to `False`, but no downstream logic uses these flags.  <br>• There is no mechanism to detect or prevent future production‑contract data from being retroactively inserted into the historical prefix. |\n| **Counterarguments** | • The presence of a phrase like “CONTRACT OR MODIFICATION” in the PDF does **not** prove that the contract semantics (award vs. modification) are correctly represented in the data.  <br>• “WITHIN FIVE DAYS” or “FOLLOWING MORNING” may refer to the *current* publication cycle, not to the historical cycle that the candidate clock is supposed to anchor.  <br>• The API endpoint `/API/V2/TRANSACTIONS/` is documented, but the gate does not query it for transaction history or verify that the transaction classes (e.g., `AWARD`, `MODIFICATION`) are present and correctly timestamped.  <br>• PSC stability and competition fields are not checked; a single change in a PSC code could invalidate the clock assumption for a large set of awards.  <br>• Recipient‑to‑issuer mapping is never verified; if a recipient’s legal name changes or a subsidiary is reorganised, the mapping may be stale. |\n| **Minimal Deterministic Falsifiers** | 1. **PDF Version Drift** – Download the *About‑the‑Data* PDF at two distinct times (e.g., now and 24 h later) and compare SHA‑256 hashes.  <br>2. **Transaction Class Validation** – Query the `/API/V2/TRANSACTIONS/` endpoint for a known award (e.g., award ID `CONT_AWD_N0003019F5005_9700_N0003017G0050_9700`) and assert that the `transaction_type` field equals `AWARD` and that the `transaction_date` falls within the claimed public‑observation window.  <br>3. **PSC Stability Check** – Retrieve the list of PSC codes for the same award and compare against the official PSC code list for the period; flag any mismatches.  <br>4. **Recipient‑to‑Issuer Mapping** – Cross‑reference the award’s `recipient_name` with the `issuer_name` in the transaction record; flag discrepancies.  <br>5. **Parent/Subsidiary Change** – For the award’s recipient, query the `parent_company` field (if available) and verify that it matches the known parent at the award date.  <br>6. **Pre‑Event Capability Proxy** – Check that the award record contains a `pre_event_capability` flag or similar field; if absent, flag as missing.  <br>7. **Historical Prefix Leak** – Simulate inserting a new award dated 2024 into the historical dataset and verify that the clock gate still reports the same boundary; if it changes, the gate is vulnerable to leakage. |\n| **Missing Artifacts** | • **Dated snapshot of the About‑the‑Data PDF** for the exact period of interest (e.g., 2025‑01‑01 – 2026‑10‑05).  <br>• **Versioned API documentation** (e.g., a JSON schema or OpenAPI spec with a release date).  <br>• **Transaction history dataset** that includes award, modification, and cancellation records with timestamps.  <br>• **R&D classification list** (e.g., NAICS/PSC codes for R&D) and a mapping to the award data.  <br>• **Competition field stability table** showing any changes to competition codes over time.  <br>• **Recipient‑to‑issuer mapping table** with effective dates.  <br>• **Parent/subsidiary change log** for all recipients in the dataset.  <br>• **Pre‑event capability proxy dataset** (e.g., a field indicating whether the award was pre‑approved).  <br>• **Audit trail** documenting any retroactive data insertions into the historical prefix. |\n| **Next Actions** | 1. **Collect dated snapshots** of the About‑the‑Data PDF and API docs for the target period.  <br>2. **Implement the falsifiers** listed above as deterministic unit tests that can be run against the current dataset.  <br>3. **Augment the clock gate** to query the transaction endpoint and validate award vs. modification semantics, PSC codes, and recipient‑to‑issuer mapping.  <br>4. **Create a PSC stability registry** and a recipient‑to‑issuer mapping registry with effective dates.  <br>5. **Document any discrepancies** found by the falsifiers and propose mitigation (e.g., stricter data ingestion rules, versioned data stores).  <br>6. **Schedule a review** of the historical prefix policy to ensure no future production contracts can be retroactively inserted. |\n| **Uncertainty** | • The current code does not enforce any of the flags it sets; it is unclear whether downstream processes rely on them.  <br>• The availability of a complete transaction history for the period is uncertain; if the API limits the number of records or requires authentication, the falsifiers may fail to retrieve all needed data.  <br>• PSC and competition code changes may be documented only in external sources (e.g., NAICS updates), making it difficult to verify stability without additional data.  <br>• The mapping of recipient to issuer may change over time; without a historical mapping table, it is impossible to determine the correct mapping for past awards.  <br>• The risk of future production contracts leaking into the historical prefix is speculative; a formal audit trail is required to confirm whether such leakage is possible. |\n\n*End of handoff.*",
-  "stderr": "",
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.597,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7409, Requested 5233. Please try again in 34.815s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": "chatcmpl-166db725-72bf-4e4d-9fcd-035c0f1c5434",
-  "usage": {
-    "queue_time": 0.084237953,
-    "prompt_tokens": 5069,
-    "prompt_time": 0.271370453,
-    "completion_tokens": 2056,
-    "completion_time": 2.113737323,
-    "total_tokens": 7125,
-    "total_time": 2.385107776,
-    "completion_tokens_details": {
-      "reasoning_tokens": 638
-    }
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-11-24T22:19:11.862221Z",
+    "blocked_until_utc": "2026-11-24T23:19:11.862221Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7409, Requested 5233. Please try again in 34.815s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
   }
 }\n
