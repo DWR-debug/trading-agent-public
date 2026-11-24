@@ -45,31 +45,43 @@
         "https://www.fda.gov/drugs/drug-safety-and-availability/drug-safety-related-labeling-changes-srlc-database-overview-updates-safety-information-fda-approved"
       ],
       "http_statuses": [
-        200,
-        200
+        401,
+        401
       ],
-      "reachable": true,
-      "all_urls_reachable": true,
-      "required_markers_present": true,
-      "probe_classification": "PASS",
-      "missing_markers": [],
+      "reachable": false,
+      "all_urls_reachable": false,
+      "required_markers_present": false,
+      "probe_classification": "RUNNER_ACCESS_BLOCKED",
+      "missing_markers": [
+        "Drug Safety-related Labeling Changes",
+        "January 2016",
+        "Search Labeling by Drug Name",
+        "Search Labeling by Date Range"
+      ],
       "attempts": [
         {
           "url": "https://www.fda.gov/safety/medical-product-safety-information/drug-safety-related-labeling-changes",
-          "http_status": 200,
+          "http_status": 401,
           "missing_markers": [
+            "Drug Safety-related Labeling Changes",
+            "January 2016",
             "Search Labeling by Drug Name",
             "Search Labeling by Date Range"
           ]
         },
         {
           "url": "https://www.fda.gov/drugs/drug-safety-and-availability/drug-safety-related-labeling-changes-srlc-database-overview-updates-safety-information-fda-approved",
-          "http_status": 200,
-          "missing_markers": []
+          "http_status": 401,
+          "missing_markers": [
+            "Drug Safety-related Labeling Changes",
+            "January 2016",
+            "Search Labeling by Drug Name",
+            "Search Labeling by Date Range"
+          ]
         }
       ],
       "clock_contract": "Supplement/date/update fields describe the labeling event and database state separately. Exact first-public observation and later corrections must be reconstructed before same-day use.",
-      "content_sha256": "a93546f22c19c69d8424a31e07145304e7d2fad2d238d1adaa06fb3b080239cd"
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "CPSC_RECALLS": {
       "urls": [
@@ -103,7 +115,7 @@
         }
       ],
       "clock_contract": "Recall publication state is distinct from incident/manufacture dates. Historical public-observation timing and revisions/withdrawals must be kept separate.",
-      "content_sha256": "10f8980edebd822adaec5ecdb937837c48032dc16adb18a75ee9d71d65d835f0"
+      "content_sha256": "72d34ae38fd7c336f6007142e863f8ec67bdd0c06b8ef74ce05b646dea3187a1"
     },
     "EPA_ECHO": {
       "urls": [
@@ -134,7 +146,7 @@
         }
       ],
       "clock_contract": "Facility/event dates are not interchangeable with the public ECHO refresh/extraction boundary. Historical PIT must use the documented refresh clock and prevent later refreshes from rewriting the prefix.",
-      "content_sha256": "97f129784be6c83b00a9e6bb234222019e9d65cb264baf68057079bdfb89bff1"
+      "content_sha256": "3b819788c7de0e9cc4a906b253b20abdd45d2dbb6a7fd5eca03ce1a993f638c4"
     },
     "USPTO_PATENT": {
       "urls": [
@@ -166,7 +178,7 @@
         }
       ],
       "clock_contract": "Patent issue/publication date is distinct from later bulk-data refreshes. For Q191 the science-publication boundary must be separately proven and same-day ambiguous ordering must be excluded.",
-      "content_sha256": "5800332ca4637dfb4236d4467881558ab4d8fe577e3837511c9b1e67d8022d9f"
+      "content_sha256": "97e62912b93762b1c4868f15c1260ac499353224f01bda004d240aea09a720cc"
     },
     "CROSSREF": {
       "urls": [
@@ -188,7 +200,7 @@
         }
       ],
       "clock_contract": "Crossref deposit/publication metadata is not automatically an exact public-dissemination timestamp; historical stage ordering must be proven.",
-      "content_sha256": "927d63b4c645ce0b2ddc20d6cbe5445e1968663df132af3b934195cbc1397453"
+      "content_sha256": "cbeb99b3497df156b5dd085264e958e525652155d143062c5a810921edf04a99"
     },
     "FDA_SHORTAGES": {
       "urls": [
@@ -198,28 +210,34 @@
         "https://api.fda.gov/drug/shortages.json?limit=1"
       ],
       "http_statuses": [
-        200,
-        200,
+        401,
+        401,
         200,
         200
       ],
       "reachable": true,
-      "all_urls_reachable": true,
-      "required_markers_present": true,
-      "probe_classification": "PASS",
-      "missing_markers": [],
+      "all_urls_reachable": false,
+      "required_markers_present": false,
+      "probe_classification": "REACHABLE_MARKER_MISMATCH",
+      "missing_markers": [
+        "updated daily"
+      ],
       "attempts": [
         {
           "url": "https://www.fda.gov/drug-shortages",
-          "http_status": 200,
+          "http_status": 401,
           "missing_markers": [
+            "Drug Shortages",
             "updated daily"
           ]
         },
         {
           "url": "https://www.fda.gov/drugs/drug-shortages/frequently-asked-questions-about-drug-shortages",
-          "http_status": 200,
-          "missing_markers": []
+          "http_status": 401,
+          "missing_markers": [
+            "Drug Shortages",
+            "updated daily"
+          ]
         },
         {
           "url": "https://open.fda.gov/data/drugshortages/",
@@ -238,7 +256,7 @@
         }
       ],
       "clock_contract": "Shortage start/resolution dates are distinct from first public observation. Historical daily-list state must be reconstructed without allowing current records to overwrite earlier prefixes.",
-      "content_sha256": "1af9292caa11314754f4ea65189c8483c27e91f0ccc3cebe7c6c244307278e39"
+      "content_sha256": "fd62e17b05c2304c18c1ace8ee747ffc1832bb185ee591177da845ce7f530f20"
     }
   },
   "candidate_results": [
@@ -251,7 +269,7 @@
     },
     {
       "candidate_id": "Q188",
-      "status": "SOURCE_PROBES_PASSED",
+      "status": "BLOCKED_SOURCE_PROBE",
       "source_ids": [
         "FDA_SRLC"
       ]
@@ -280,7 +298,7 @@
     },
     {
       "candidate_id": "Q192",
-      "status": "SOURCE_PROBES_PASSED",
+      "status": "BLOCKED_SOURCE_PROBE",
       "source_ids": [
         "FDA_SHORTAGES"
       ]
@@ -311,5 +329,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "1bc9ab80e113a0b49dccca4604cba98f197c8878ab4abcda433f8401f9ae2bd8"
+  "receipt_fingerprint": "47b895767e423eb34063b0acd5935668835d49e54a356f73f6153da117b45493"
 }
