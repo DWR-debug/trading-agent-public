@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `261fc7be97a7afba903f8b21a9c07832031865b9`
+**Current operational snapshot:** `461b36a78c00ef49436dbc3e02e4cb29ae0dc7e4`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-11-25T11:40:28.359475+00:00`
+**Generated (UTC):** `2026-11-25T20:39:08.952854+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
