@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-26T08:53:43.823041Z",
+  "observed_at_utc": "2026-11-26T21:55:34.969589Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 17.555,
-  "stdout": "# Adversarial Source/PIT Review — Q202–Q204 + Q205 (Worker Material)\n\nStatus: REVIEW_COMPLETE_ON_EMBEDDED_ARTIFACTS. This is worker material only, not scientific evidence. No returns/holdouts inspected, no assets/parameters/thresholds/horizons selected, no gates altered, no performance/promotion/live authorization implied. All source-feasibility readiness below is treated as PROVISIONAL.\n\n## Scope note on what was actually inspectable\n- Q202–Q204: only a pointer to `q202_q204_information_timing_feasibility_latest.json` is visible; the receipt body was not supplied. Compiler maps Q202/Q203/Q204 → `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`.\n- Q205 (NLRB labor-representation certification): discovery-only, and it is absent from both `source_readiness_snapshot_guard.RECEIPTS` and `orthogonal_pit_next_gate.RECEIPTS/NEXT_GATES`. It has no deterministic gate wired at all.\n- The Grok Q194–Q201 standard (current reachability/hashes ≠ durable PIT proof) is accepted and extended.\n\n## Findings (adversarial)\n\n1. The durability guard is too permissive to enforce the universal rule. `has_durable_binding()` returns True on mere truthy presence of any `DURABLE_KEYS` entry (e.g. `snapshot_sha256`, `archive_fingerprint`). It does not check that the value is a dated vintage, that the hash resolves to an immutable artifact, or that it is bound to the specific candidate. A receipt carrying a hash of a *current* page would classify as `DURABLE_HISTORICAL_BOUND` — the exact failure the rule forbids. I disagree with treating this guard output as sufficient readiness evidence.\n\n2. \"latest\" receipts are mutable by construction. `..._feasibility_latest.json` naming implies overwrite-on-rerun. A readiness claim resting on a \"latest\" file has no vintage identity and cannot be reproduced as-of a date.\n\n3. Q205 is ungated and unbacked. Any statement that Q205 is \"source/PIT ready\" is an unsupported worker assertion; there is no receipt, no compiler entry, no next-gate. Discovery-only status is being implicitly treated as more than it is.\n\n4. Spec/compiler lineage mismatch. The compiler loads `orthogonal_candidate_specs_2026-10-05.json`; the supplied contract file is `..._2026-10-04.json`. Which vintage is authoritative is unresolved — a mapping/lineage drift risk.\n\n5. Real cross-publication date conflict already exists in-repo. CURRENT_STATUS documents SEC 13F `SUBMISSION.FILING_DATE` differing from EDGAR header date by one day (2015-02-18 vs 02-17; 2020-08-10 vs 08-07). This is a concrete instance of the date-only/revision-lineage hazard and shows date fields are not safe to arithmetic-over.\n\n6. Temporal inconsistency in the evidence chain. Task/review artifacts are dated 2026-10-04; CURRENT_STATUS is generated 2026-11-26 and is declared canonical. The operational snapshot postdates the artifacts under review; do not silently reconcile.\n\n7. Q202–Q204 orthogonality is unproven. All three sit in one \"information-timing\" family and plausibly share a single upstream publication clock (SEC/EDGAR). Shared upstream ⇒ convergence, not orthogonality, among the three.\n\n## Counterarguments / preserved disagreement\n- Counter to my point 1: the guard is a fail-closed *audit*, not the gate itself, and the compiler still emits `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT`. Rebuttal: an audit that can be satisfied by a current-page hash still produces a misleading `DURABLE_HISTORICAL_BOUND` label that downstream humans may trust. Disagreement preserved.\n- Counter to point 7: Q205 (NLRB) is a genuinely distinct source class and improves frontier orthogonality. Agreed — but establishment→issuer mapping may overlap Q195 facility exposure, so orthogonality is candidate-pair-specific, not family-level.\n- I do not assert Q202–Q204 or Q205 are infeasible; I assert readiness is unproven on durable",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 96.444,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1795683224-TFSC0QlvXizECScRZFLC",
-  "usage": {
-    "prompt_tokens": 5079,
-    "completion_tokens": 3200,
-    "total_tokens": 8279,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 2314,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
