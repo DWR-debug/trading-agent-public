@@ -1,14 +1,30 @@
 {
-  "coverage_receipt_fingerprint": "cd0df659475c454c18f1304f22b99089f1afb7333e1e8364adf3794495e20552",
-  "receipt_fingerprint": "ec2c19eae782669917ac7ce8ae3c84cc873876ccc6be22d4780601b42bd4b818",
+  "coverage_receipt_fingerprint": "246e70760bcaa23e49dfc776c75827a2b830663591ad259aaa20bc9137a6858e",
+  "receipt_fingerprint": "1a2b6926fd150727c081f70236a81d4615a6882eb07c56619cd060b2155b6ae7",
   "results": {
     "AMP": {
-      "error": "HTTP Error 503: Service Unavailable",
-      "error_body_excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>SlowDown</Code><Message>Please reduce your request rate.</Message><RequestId>5N4CSPJC8BHDE7J5</RequestId><HostId>HfR8uWYaXl9587lh8mFn0V7bqbYFWsHOTO0MwgiD1MCGXk++lAUAhf3mWnd68JUDZzwGePq+QwM=</HostId></Error>",
-      "error_type": "HTTPError",
-      "http_status": 503,
-      "status": "INFRA_ACCESS_BLOCKED",
-      "symbol": "AMP"
+      "checks": {
+        "http_content_length_boundary_exact": true,
+        "http_status_line_present": true,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
+        "target_matches_index_url": true,
+        "target_uri_present": true,
+        "warc_date_present": true,
+        "warc_payload_digest_present": true,
+        "warc_version_present": true
+      },
+      "compressed_sha256": "db3f474fe8b144711865c752dc6eaf84497ce0fd96e15f9535bcd4b5d67358f9",
+      "http_status_line": "HTTP/1.1 200 ",
+      "index_digest": "V4DXCUHNM6PRXEWVGONTVORWSDCWCZVJ",
+      "indexed_timestamp": "20250911183341",
+      "payload_bytes": 201245,
+      "payload_sha1_base32": "V4DXCUHNM6PRXEWVGONTVORWSDCWCZVJ",
+      "status": "WARC_RECONSTRUCTED",
+      "symbol": "AMP",
+      "target_uri": "https://ir.ameriprise.com/overview/default.aspx",
+      "warc_date": "2025-09-11T18:33:41Z",
+      "warc_record_sha256": "a063d401c1f9fd58bd9c89715bf5dc1e48241158f995f90b5dcac6eaa3b884c1"
     },
     "DVN": {
       "checks": {
@@ -103,12 +119,12 @@
     "threshold_search": false,
     "variant_search": false
   },
-  "source_commit": "e8117b2baadcb5befb0f9e4ae82b5560b41de90c",
+  "source_commit": "31972d70027ff893c7d13f90f8444918fc0adf6c",
   "summary": {
-    "blocked": 1,
+    "blocked": 0,
     "capture_candidates": 4,
-    "infra_blocked": 1,
-    "warc_reconstructed": 3
+    "infra_blocked": 0,
+    "warc_reconstructed": 4
   },
   "task_id": "Q-2026-10-03-Q171-WARC-RECONSTRUCTION"
 }
