@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "8a16f03fbf6636e6bce4717ff62799af6d74160e1d6c260efae632afe9880276",
   "context_fingerprint": "fca22e97174fa0dd40fa39fc32008874634bbf1ba71fb19e2e9e0c18592fd46d",
-  "observed_at_utc": "2026-11-27T08:10:17.327900Z",
+  "observed_at_utc": "2026-11-27T21:05:13.105179Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.553,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6623, Requested 5380. Please try again in 30.0225s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.036,
+  "stdout": "**Worker Handoff – Q221 USAspending Clock & Data‑Integrity Review**\n\n| Section | Content |\n|---------|---------|\n| **Findings** | • The current `q221_usaspending_public_clock_gate.py` only verifies the presence of key phrases in the *About‑the‑Data* PDF and the API docs; it does **not** confirm the actual publication timestamp of the data set. <br>• No check is performed against the *transaction history* for the specific award/transaction class (e.g., “Award”, “Modification”, “Transaction”) to ensure that the data for that class is indeed available within the claimed “within five days” window. <br>• The script ignores the *R&D classification* field, the *competition* field, and the *PSC (Product Service Code)* stability – all of which are required for a robust public‑observation clock. <br>• Recipient‑to‑issuer mapping is never validated; the code only fetches the API docs but does not query the `/API/V2/TRANSACTIONS/` endpoint for a sample transaction to confirm that the mapping is present and correct. <br>• Parent/subsidiary changes are not considered; the code does not check the `parent` or `subsidiary` fields in the transaction payload. <br>• The “future production contract leakage” risk is not addressed – the code does not verify that the historical prefix (e.g., `award/CONT_AWD_…`) does not contain any production‑grade contract data that could be mis‑interpreted as historical. <br>• The candidate clock relies on a single static PDF URL; if the PDF is updated or replaced, the gate will silently continue to pass. |\n| **Counterarguments** | • The presence of the phrase “WITHIN FIVE DAYS” in the PDF does **not** guarantee that the data for a given transaction class is actually released within that window; the PDF may describe a policy that is not enforced. <br>• The API docs may list the `/API/V2/TRANSACTIONS/` endpoint, but the endpoint may be rate‑limited or may return data that is not yet fully populated for the requested period. <br>• PSC codes can change over time; a static check for the string “PSC” in the PDF does not confirm that the codes used in the dataset match the current PSC taxonomy. <br>• R&D classification is often derived from the `award_type` or `product_service_code`; without parsing the actual transaction payload, the gate cannot confirm that the classification is present or accurate. <br>• The mapping of recipient to issuer can be ambiguous when a recipient is a parent entity; the code does not handle this ambiguity. <br>• The “award vs modification” semantics are not validated; the code only checks for the presence of the phrase “AWARD” or “MODIFICATION” in the PDF, not that the dataset actually contains both types of records for the same award ID. |\n| **Minimal Deterministic Falsifiers** | 1. **Shift Publication Date Test** – Download the *About‑the‑Data* PDF and parse the exact publication timestamp (e.g., from the PDF metadata or a “Last‑Modified” header). Compare it to the claimed “within five days” window for a known award. If the timestamp is > 5 days after the award date, the gate fails. <br>2. **Transaction Class Availability Test** – Query `/API/V2/TRANSACTIONS/` for a recent award ID that has both an award and a modification record. Verify that both records are returned and that the modification record’s `transaction_date` is within the claimed window. <br>3. **PSC Stability Test** – Pull the current PSC taxonomy from the official source (e.g., `https://www.fpds.gov/psc/psc.json`) and compare the PSC codes present in a sample transaction payload. If any code is missing or mismatched, the gate fails. <br>4. **Recipient‑to‑Issuer Mapping Test** – For a sample transaction, confirm that the `recipient_id` maps to the same `issuer_id` in the `award` record. If the mapping differs, the gate fails. <br>5. **Parent/Subsidiary Consistency Test** – For a sample award, verify that the `parent` field (if present) matches the `issuer_id` of the parent entity in the dataset. |\n| **Exact Missing Artifacts** | • **Timestamped PDF Metadata** – The PDF’s creation or last‑modified date, or an explicit “Publication Date” field. <br>• **Sample Transaction Payloads** – JSON examples for award, modification, and transaction classes, including `award_type`, `product_service_code`, `recipient_id`, `issuer_id`, `parent`, `subsidiary`. <br>• **PSC Taxonomy Snapshot** – A dated snapshot of the PSC taxonomy used by USAspending for the period in question. <br>• **Recipient‑to‑Issuer Mapping Table** – A static mapping file that lists each recipient’s corresponding issuer ID for the historical period. <br>• **Parent/Subsidiary Relationship File** – A dated file that lists parent‑to‑subsidiary relationships for all entities in the dataset. <br>• **Historical Prefix Validation** – A list of all award IDs that appear in the historical prefix and a confirmation that none of them correspond to production‑grade contracts (e.g., by cross‑checking with the `award_type` field). |\n| **Next Actions** | 1. **Implement a PDF‑metadata parser** to extract the exact publication timestamp and compare it against the five‑day window for a set of known award IDs. <br>2. **Extend the gate to query the `/API/V2/TRANSACTIONS/` endpoint** for a sample award ID and validate that both award and modification records exist and are within the claimed window. <br>3. **Add a PSC validation step** that downloads the current PSC taxonomy snapshot and verifies that all PSC codes in the sample transaction payload are present. <br>4. **Add recipient‑to‑issuer mapping validation** by querying the `/API/V2/RECIPIENTS/` endpoint (or equivalent) and ensuring consistency with the award record. <br>5. **Add parent/subsidiary consistency checks** by cross‑referencing the `parent` field in the award record with the parent‑to‑subsidiary mapping file. <br>6. **Create a historical prefix audit** that lists all award IDs in the historical prefix and flags any that have `award_type` values indicating production contracts. <br>7. **Document all missing artifacts** in a separate artifact‑inventory file and request their acquisition from the USAspending data team. |\n| **Uncertainty** | • The exact format and location of the publication timestamp in the *About‑the‑Data* PDF is unknown; it may be embedded in the PDF metadata or in a hidden field. <br>• The `/API/V2/TRANSACTIONS/` endpoint may require authentication or may have rate limits that could affect the feasibility of the proposed tests. <br>• The PSC taxonomy is updated periodically; without a dated snapshot, it is unclear which version applies to the historical period. <br>• The mapping between recipient and issuer may be ambiguous for entities that have changed names or structures over time; the current dataset may not capture all historical changes. <br>• The risk of future production contracts leaking into the historical prefix depends on the internal USAspending data‑management policies, which are not publicly documented. |\n\n--- \n\n**Summary**  \nThe current Q221 clock gate is insufficient for a rigorous public‑observation clock because it relies on textual presence checks rather than concrete data‑level validation. The proposed falsifiers and missing artifacts provide a clear path to strengthen the gate while remaining within the bounds of paper‑only research.",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-11-27T08:10:17.880595Z",
-    "blocked_until_utc": "2026-11-27T09:10:17.880595Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6623, Requested 5380. Please try again in 30.0225s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-b745f71c-13b8-49b3-abc1-5324ef1422c9",
+  "usage": {
+    "queue_time": 0.145771128,
+    "prompt_tokens": 5068,
+    "prompt_time": 0.271548204,
+    "completion_tokens": 2129,
+    "completion_time": 2.185914185,
+    "total_tokens": 7197,
+    "total_time": 2.457462389,
+    "completion_tokens_details": {
+      "reasoning_tokens": 459
+    }
   }
 }\n
