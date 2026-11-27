@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-26T21:55:34.969589Z",
+  "observed_at_utc": "2026-11-27T09:04:29.861238Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 96.444,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 20.179,
+  "stdout": "## Worker material — adversarial source/PIT review\n\n**Status:** provisional, non-scientific, non-authorizing. No candidate is validated, ranked, promoted, or cleared for performance/live use. Findings are conditional on supplied context; Q202–Q204 and Q205 receipt bodies were not provided.\n\n### Cross-cutting findings\n\n1. **Durable historical binding is not established by the supplied guard.**\n   - `source_readiness_snapshot_guard.py` classifies durability by presence of keys such as `immutable_historical_snapshot`, `snapshot_sha256`, or nested `archive_contract` keys.\n   - Key presence alone does not prove: dated vintage, hash-to-artifact binding, pre-event capture, revision lineage, or frozen mapping.\n   - A current endpoint probe, current documentation page, HTTP marker, or current content hash remains **provisional operational telemetry only**.\n\n2. **Public-observation clocks remain the primary leakage risk.**\n   - Required distinction: event occurrence time vs first public availability time vs publication/update time.\n   - Date-only sources may support only a next-regular-session boundary; they cannot support intraday latency claims.\n   - Retroactive posting, backfilled dockets, and “last updated” pages can create same-day/date-only leakage.\n\n3. **Revision/amendment/correction lineage is under-specified.**\n   - Need explicit lineage for amendments, corrections, withdrawals, QC changes, enforcement/prosecution updates, and docket revisions.\n   - A later snapshot must not silently rewrite the historical event state used by the compiler.\n\n4. **Frozen pre-event entity/exposure mappings are not evidenced.**\n   - Need immutable as-of mapping from source entity to issuer/exposure, including subsidiaries, legal-name changes, CIK/employer identifiers, and mapping hash.\n   - Mapping drift and cross-candidate reuse are unresolved.\n\n5. **Cross-candidate overlap/confounding is not mapped.**\n   - Q202–Q204 may share release calendars, financing/credit vintages, latency clocks, or macro/publication events.\n   - Q205 may overlap with regulatory/enforcement, labor, or issuer-exposure channels.\n   - Shared event keys and duplicate-event controls are missing.\n\n6. **Synthetic mutation tests are only valid if candidate-specific compilers consume frozen inputs.**\n   - Mutation tests must fail closed on clock shifts, mapping shuffles, occurrence-time substitution, revision injection, date-only collapse, and cross-candidate duplicate events.\n   - If a compiler can read live/current sources, mutation validity is compromised.\n\n### Candidate-family observations\n\n**Q202 — information absence**\n- Main attack: “absence” inferred from current data is retrospective and can be caused by source drift, incomplete archives, or later publication.\n- Minimal deterministic falsifier: inject a later-published item into the frozen historical snapshot and require the compiler to stop treating the earlier state as absence.\n- Exact missing artifact: frozen publication-calendar/universe snapshot with dated manifest, hash, retrieval provenance, and revision/non-publication lineage.\n\n**Q203 — financing transmission**\n- Main attack: revised financial/credit data, restatements, vintage changes, and issuer-lender mapping drift can create look-ahead or entity confounding.\n- Minimal deterministic falsifier: replace the frozen vintage with a later revised vintage and require the candidate signal/exposure to change or fail closed.\n- Exact missing artifact: dated vintage series with as-of timestamps, revision ledger, and frozen issuer/exposure mapping hash.\n\n**Q204 — public-information latency**\n- Main attack: timestamp provenance is weak; date-only records, retroactive posting, and “updated” pages can masquerade as latency.\n- Minimal deterministic falsifier: shift public availability forward by 1–5 sessions and separately substitute occurrence time for observation time; require the compiler to reject or materially change the event clock.\n- Exact missing artifact: immutable timestamped capture log with source URL, capture time, publication/update fields, and snapshot hash.\n\n**Q205 — NLRB labor-representation certification channel**\n- Status: discovery-only; not source/PIT validated. It is also absent from the supplied `source_readiness_snapshot_guard.py` and `orthogonal_pit_next_gate.py` receipt maps.\n- Main attacks: certification date vs docket posting date; amendments, withdrawals, blocked ballots, regional-office updates; employer legal-name/subsidiary-to-issuer mapping; sparse-event confounding with other labor/regulatory channels.\n-",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1795770270-cyrwJG6eCRBjhswGxdg7",
+  "usage": {
+    "prompt_tokens": 5627,
+    "completion_tokens": 3200,
+    "total_tokens": 8827,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2269,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
