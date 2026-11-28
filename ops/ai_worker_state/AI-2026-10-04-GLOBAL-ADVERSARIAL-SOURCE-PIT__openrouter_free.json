@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-11-27T21:38:36.539596Z",
+  "observed_at_utc": "2026-11-28T08:26:10.927355Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 10.681,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 113.901,
+  "stdout": "# Adversarial Source/PIT Readiness Review — Q202-Q204 & Q205\n**Worker Material Only — Not Scientific Evidence**\n\n---\n\n## 1. Executive Finding\n\n**All Q202-Q204 and Q205 source-feasibility claims remain PROVISIONAL (live-probe only).** No candidate in this family is bound to an immutable dated snapshot/vintage or explicitly frozen historical artifact. The Grok Q194-Q201 finding — \"Current endpoint/API reachability and current hashes are not durable historical PIT proof\" — applies with equal or greater force to the information-timing family and the NLRB channel.\n\n---\n\n## 2. Systematic Attack by Failure Mode\n\n### 2.1 Current-Endpoint Drift & Retrospective Source-Readiness Changes\n| Candidate | Attack Vector | Evidence Gap |\n|-----------|---------------|--------------|\n| **Q202** (Information absence) | SEC EDGAR modern log archive / bulk data endpoints have changed pagination, field names, and rate limits multiple times since 2020. A \"current probe\" of `https://www.sec.gov/Archives/edgar/daily-index/` does not prove 2015-2023 accessibility. | Missing: **Dated snapshot of EDGAR daily-index structure per vintage year** (e.g., `master.20150101.idx` SHA-256 + retrieval timestamp). |\n| **Q203** (Financing transmission) | FINRA TRACE / SEC Form D / 8-K endpoints have revised field schemas (e.g., `offeringDate` vs `dateOfFirstSale`). Current API docs ≠ historical field availability. | Missing: **Frozen FINRA TRACE schema version per quarter** + **Form D/8-K XBRL taxonomy vintage pins**. |\n| **Q204** (Public-information latency) | Same EDGAR/FINRA endpoints as Q202-Q203. Latency measurement requires *identical* request path across history. | Missing: **Immutable request/response pair archive** (WARC or equivalent) for each latency-measurement vintage. |\n| **Q205** (NLRB certification) | NLRB public data portal (`https://www.nlrb.gov/cases-decisions`) migrated from legacy ASP to modern React ~2022. Case-number format, docket fields, and PDF rendering changed. Current probe proves nothing about 2010-2022 accessibility. | Missing: **NLRB portal snapshot per migration vintage** (Internet Archive mementos with SHA-256 + content verification). |\n\n**Minimal Deterministic Falsifier (all):** Produce a single historical request/response pair (with SHA-256) from the claimed vintage that matches the current probe's field structure. If impossible → PROVISIONAL stands.\n\n---\n\n### 2.2 Historical Observation/Publication Timestamps\n| Candidate | Attack Vector | Evidence Gap |\n|-----------|---------------|--------------|\n| **Q202** | \"Filing absence\" requires knowing *when* a filing *could have appeared*. EDGAR `FILING-DATE` (header) vs `SUBMISSION.FILING_DATE` (13F bulk) already shows 1-day conflicts (per CURRENT_STATUS.md). No authoritative publication clock is frozen. | Missing: **Per-accession publication timestamp ledger** (EDGAR header `ACCEPTANCE-DATETIME` + bulk `FILED_AS_OF_DATE` + dissemination feed timestamp) bound to immutable snapshot. |\n| **Q203** | Financing events: Form D `dateOfFirstSale` is *not* a public dissemination timestamp. 8-K `periodOfReport` ≠ filing date. TRACE dissemination timestamps are proprietary. | Missing: **Unified public-observation clock** for each financing instrument type, sourced from frozen dissemination feed (e.g., SEC RSS, FINRA TRACE historical feed). |\n| **Q204** | Latency = (public observation time) − (event occurrence time). Both ends require frozen clocks. | Missing: **Paired occurrence/observation timestamp tuples** from immutable archives for a representative sample. |\n| **Q205** | NLRB certification date (`certificationDate`) is an administrative act date, not public posting date. Docket entries may be backdated. | Missing: **NLRB docket-entry publication timestamps** from frozen portal snapshots (not current API). |\n\n**Minimal Deterministic Falsifier:** For any single historical event in the candidate universe, produce the *exact* public-observation timestamp used in the candidate logic, sourced from a frozen artifact. If the timestamp comes from a live query → PROVISIONAL.\n\n---\n\n### 2.3 Revision/Amendment/Correction/QC/Prosecution Lineage\n| Candidate | Attack Vector | Evidence Gap |\n|-----------|---------------|--------------|\n| **Q202** | EDGAR filings are amended (13F-HR/A, 13F-NT/A). Bulk datasets may not reflect amendments retroactively. \"Absence\" at T may become \"presence\" at T+30. | Missing: **Amendment lineage ledger** per accession: original filing SHA-256, each amendment SHA-256, amendment timestamps, bulk-dataset revision history. |\n| **Q203** | Form D amendments (Form D/A) change offering amounts, dates, issuer info. TRACE corrections (cancels, corrections) rewrite history. | Missing: **Form D amendment chain + TRACE correction feed** frozen per vintage. |\n| **Q204** | Latency measurements on uncorrected data ≠ latency on corrected data. | Missing: **Correction-aware latency re-computation** on frozen corrected/un-corrected pairs. |\n| **Q205** | NLRB certifications can be withdrawn, reopened, or corrected (e.g., unit clarification). Current portal shows final state only. | Missing: **NLRB case docket history** (every action + timestamp) from frozen snapshots. |\n\n**Minimal Deterministic Falsifier:** Show the amendment/correction lineage for one historical case where the candidate's signal would flip. If lineage is reconstructed from live queries → PROVISIONAL.\n\n---\n\n### 2.4 Frozen Pre-Event Entity/Exposure Mappings\n| Candidate | Attack Vector | Evidence Gap |\n|-----------|---------------|--------------|\n| **Q202** | Issuer-CIK mapping changes (mergers, CIK reassignments, ticker changes). A \"missing filing\" for CIK X at T may be a filing for CIK Y (successor). | Missing: **Immutable CIK→successor-CIK→ticker mapping** as of each event date (not current CRSP/Compustat link). |\n| **Q203** | Financing vehicle → issuer mapping (SPACs, shelf registrations, subsidiaries). Form D `issuerCik` may not match operating company. | Missing: **Frozen entity-resolution graph** per vintage (SEC registrant hierarchy + Form D issuer links). |\n| **Q204** | Same as Q202-Q203. | Missing: **Same frozen mappings**. |\n| **Q205** | NLRB case → employer mapping: employer names vary (DBA, subsidiaries, name changes). No persistent ID. | Missing: **NLRB employer-name canonicalization + CIK/ticker link** frozen per vintage. |\n\n**Minimal Deterministic Falsifier:** For one event, show the exact entity mapping used, sourced from a frozen artifact dated *before* the event. If mapping is derived from current CRSP/Compustat → PROVISIONAL.\n\n---\n\n### 2.5 Same-Day/Date-Only Leakage\n| Candidate | Attack Vector | Evidence Gap |\n|-----------|---------------|--------------|\n| **Q202** | If only `FILING-DATE` (date, no time) is available, the candidate uses \"next regular session\" boundary. But EDGAR disseminates intraday. A filing at 15:59 ET on day D is public *before* close; at 16:01 ET it's next session. Date-only loses this. | Missing: **Intraday dissemination timestamps** (EDGAR header `ACCEPTANCE-DATETIME` or feed timestamps) for every accession in universe. |\n| **Q203** | Form D `dateOfFirstSale` is date-only. 8-K `periodOfReport` is date-only. TRACE has timestamps but historical feed access is gated. | Missing: **Intraday public-observation timestamps** for each financing event type. |\n| **Q204** | Latency measured in *days* when hours matter. | Missing: **Hour-resolution observation clocks** from frozen feeds. |\n| **Q205** | NLRB `certificationDate` is date-only. Docket entries may have timestamps but not frozen. | Missing: **Intraday NLRB posting timestamps** from frozen portal. |\n\n**Minimal Deterministic Falsifier:** Demonstrate that for a sample of events, the candidate's date-only boundary produces a different signal than an intraday boundary. If intraday data unavailable in frozen form → PROVISIONAL.\n\n---\n\n### 2.6 Cross-Candidate Overlap/Confounding & Convergence\n| Overlap | Attack Vector |\n|---------|---------------|\n| **Q202 ↔ Q204** | Both use EDGAR filing presence/absence and timing. Q202 \"absence\" is Q204 \"infinite latency\". Same source, same clock, same mapping → perfect confounding. |\n| **Q203 ↔ Q202/Q204** | Financing events (Q203) generate 8-K/Form D filings (Q202/Q204). A financing signal *is* a filing-timing signal. |\n| **Q205 ↔ Q203** | NLRB certification may correlate with financing stress (labor cost → capital raise). Same issuer",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1795854371-hGJUYIVTk74Ww082T06V",
+  "usage": {
+    "prompt_tokens": 6003,
+    "completion_tokens": 3200,
+    "total_tokens": 9203,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 971,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
